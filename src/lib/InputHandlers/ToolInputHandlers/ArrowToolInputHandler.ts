@@ -1,0 +1,180 @@
+import type { InputHandler } from '../InputHandler';
+import { updateLocalConstraint } from '$stores/BoardStore';
+import { localConstraintsStore } from '$stores/BoardStore';
+import { addLocalConstraint } from '$stores/LocalConstraintsStore';
+import { get } from 'svelte/store';
+import { uniqueId } from 'lodash';
+import type { TOOLID } from '$lib/Puzzle/Tools';
+import type { Grid } from '$lib/Puzzle/Grid/Grid';
+import {
+	CellPointerHandler,
+	type CellDragTapEvent
+} from '$src/lib/InputHandlers/PointerHandlers/SquareCellPointerInput';
+import {
+	arrowAddToBulb,
+	arrowAddToLast,
+	arrowAddToLines,
+	arrowConstraint,
+	arrowRemoveLastLine,
+	arrowShouldRemoveLastLine,
+	removeLineFromArrow,
+	type ArrowToolI
+} from '$lib/Puzzle/Constraints/ArrowConstraints';
+import type { GridShape } from '$lib/Types/types';
+import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
+import {
+	findArrowBulbConstraint,
+	findArrowLineConstraint
+} from '$lib/Puzzle/Constraints/LocalConstraints';
+import {
+	pushAddLocalConstraintCommand,
+	pushRemoveLocalConstraintCommand,
+	pushUpdateLocalConstraintCommand
+} from './utils';
+
+export function getArrowToolInputHandler(
+	svgRef: SVGSVGElement,
+	grid: Grid,
+	tool: TOOLID
+): InputHandler {
+	console.log('getArrowToolInputHandler');
+	const pointerHandler = new CellPointerHandler();
+	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
+
+	let currentConstraint: ArrowToolI | null = null;
+	let oldConstraint: ArrowToolI | null = null;
+	let id: string | null = null;
+
+	let bypassTap = false;
+	let bypassDragEnd = false;
+
+	enum MODE {
+		DYNAMIC = 'DYNAMIC',
+		BULB = 'BULB',
+		BODY = 'BODY'
+	}
+	let mode = MODE.DYNAMIC;
+
+	// pointer down and no match => new arrow (mode BULB)
+	// pointer down and match arrow and not shift => remove arrow
+	// pointer down and match arrow and shift => new arrow (mode BULB)
+
+	function handle(event: CellDragTapEvent) {
+		// if (!id || !newConstraint) throw "UNREACHABLE";
+		bypassTap = false;
+
+		const coords = event.cell;
+		const onGrid = isCellOnGrid(event.cell, gridShape);
+		if (!onGrid) return;
+
+		if (mode === MODE.DYNAMIC) {
+			const localConstraints = get(localConstraintsStore);
+
+			const matchLine = findArrowLineConstraint(localConstraints, tool, coords);
+			if (matchLine) {
+				const arrow = removeLineFromArrow(matchLine.arrow, matchLine.matchLineIdx);
+				pushUpdateLocalConstraintCommand(matchLine.id, matchLine.arrow, arrow, tool, true);
+				bypassDragEnd = true;
+				return;
+			}
+
+			const bulbMatch = findArrowBulbConstraint(localConstraints, tool, coords);
+			if (!bulbMatch) {
+				bypassTap = true;
+				mode = MODE.BULB;
+				id = null;
+				currentConstraint = null;
+			} else {
+				mode = MODE.BODY;
+				id = bulbMatch[0];
+				currentConstraint = bulbMatch[1];
+				currentConstraint = arrowAddToLines(currentConstraint, coords);
+				updateLocalConstraint(tool, id, currentConstraint);
+				return;
+			}
+		}
+
+		if (mode === MODE.BULB && !id) {
+			id = uniqueId();
+			currentConstraint = arrowConstraint(tool, [coords]);
+			addLocalConstraint(id, currentConstraint);
+			return;
+		} else if (mode === MODE.BULB && id && currentConstraint) {
+			currentConstraint = arrowAddToBulb(currentConstraint, coords);
+			updateLocalConstraint(tool, id, currentConstraint);
+		} else if (mode === MODE.BODY && id && currentConstraint) {
+			// add to arrow line
+			currentConstraint = arrowAddToLast(currentConstraint, coords);
+			updateLocalConstraint(tool, id, currentConstraint);
+		}
+	}
+
+	pointerHandler.onDragStart = (event: CellDragTapEvent): void => {
+		mode = MODE.DYNAMIC;
+		handle(event);
+	};
+
+	pointerHandler.onDrag = (event: CellDragTapEvent): void => {
+		handle(event);
+	};
+
+	pointerHandler.onDragEnd = () => {
+		if (bypassDragEnd) {
+			bypassDragEnd = false;
+			return;
+		}
+		
+		if (mode === MODE.BODY && id && currentConstraint) {
+			// remove last line if last line length <= 1;
+			if (arrowShouldRemoveLastLine(currentConstraint)) {
+				currentConstraint = arrowRemoveLastLine(currentConstraint);
+				updateLocalConstraint(tool, id, currentConstraint);
+			} else {
+				pushUpdateLocalConstraintCommand(id, oldConstraint, currentConstraint, tool);
+				oldConstraint = currentConstraint;
+			}
+		}
+		// push command to history
+		else if (mode === MODE.BULB) {
+			pushAddLocalConstraintCommand(id, currentConstraint, tool);
+			oldConstraint = currentConstraint;
+		}
+		mode = MODE.DYNAMIC;
+	};
+
+	pointerHandler.onTap = (event: CellDragTapEvent) => {
+		if (bypassTap) return;
+
+		const coords = event.cell;
+		const localConstraints = get(localConstraintsStore);
+
+		// on bulb tap remove Arrow
+		const matchBulb = findArrowBulbConstraint(localConstraints, tool, coords);
+		if (matchBulb) {
+			// push command to history
+			pushRemoveLocalConstraintCommand(id, currentConstraint, tool);
+			return;
+		}
+	};
+
+	const inputHandler: InputHandler = {
+		pointerDown: (event: PointerEvent): void => {
+			if (event.button !== 0) return;
+			pointerHandler.pointerDown(event, svgRef);
+		},
+		pointerMove: (event: PointerEvent): void => {
+			pointerHandler.pointerMove(event, svgRef);
+		},
+		pointerUp: (event: PointerEvent): void => {
+			pointerHandler.pointerUp(event, svgRef);
+		},
+		keyDown: (): void => {
+			return;
+		},
+		keyUp: (): void => {
+			return;
+		}
+	};
+
+	return inputHandler;
+}

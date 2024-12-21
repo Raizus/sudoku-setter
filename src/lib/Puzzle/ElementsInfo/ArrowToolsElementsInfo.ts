@@ -1,0 +1,69 @@
+import { getArrowToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/ArrowToolInputHandler';
+import { SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
+import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
+import type { SquareCellElementInfo } from '../ElementInfo';
+import { RENDER_ORDER } from '../RenderOrder';
+import { arrowUsage } from '../ToolUsage';
+
+export const arrowInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getArrowToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.ARROW,
+	order: RENDER_ORDER.ARROW_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		r: { editable: false, value: 0.35 },
+		strokeWidth: { editable: true, value: 0.05 },
+		stroke: { editable: true, value: 'var(--constraint-color-gray)' },
+		linePathOptions: {
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.25 }
+		}
+	},
+
+	meta: {
+		description:
+			'The digits along an arrow must sum to the number in the connecting pill (read left-to right or downwards) or circle. Digits may repeat on a arrow if allowed by other rules.',
+		usage: arrowUsage(),
+		tags: [],
+		categories: [
+			TOOL_CATEGORIES.ARROW_CONSTRAINT,
+			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
+			TOOL_CATEGORIES.ARROW_TOOL
+		]
+	}
+};
+
+export const averageArrowInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getArrowToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.AVERAGE_ARROW,
+	order: RENDER_ORDER.ARROW_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		r: { editable: false, value: 0.35 },
+		strokeWidth: { editable: true, value: 0.05 },
+		stroke: { editable: true, value: 'var(--constraint-color-green)' },
+		linePathOptions: {
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.25 }
+		}
+	},
+
+	meta: {
+		description: 'The digits along an arrow must average to the number in the connecting circle.',
+		usage: arrowUsage(),
+		tags: [],
+		categories: [
+			TOOL_CATEGORIES.ARROW_CONSTRAINT,
+			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
+			TOOL_CATEGORIES.ARROW_TOOL
+		]
+	}
+};

@@ -1,0 +1,30 @@
+import { getCloneToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/CloneToolInputHandler';
+import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
+import type { SquareCellElementInfo } from '../ElementInfo';
+import { RENDER_ORDER } from '../RenderOrder';
+import { SHAPE_TYPES } from '../Shape/Shape';
+
+export const cloneRegionInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, hexGrid, tool) {
+		return getCloneToolInputHandler(svgRef, hexGrid, tool);
+	},
+
+	toolId: TOOLS.CLONE_REGION,
+	order: RENDER_ORDER.CAGE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.CAGE,
+		strokeWidth: { editable: true, value: 0.03 },
+		strokeDasharray: {editable: false, value: 0},
+		stroke: { editable: true, value: 'var(--constraint-color-light-gray)' },
+		fill: { editable: false, value: 'none' },
+		inset: { editable: false, value: 0.07 }
+	},
+
+	meta: {
+		description:
+			'Clone regions contain the same digits in the same position.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.CLONE_CONSTRAINT, TOOL_CATEGORIES.LOCAL_CONSTRAINT]
+	}
+};

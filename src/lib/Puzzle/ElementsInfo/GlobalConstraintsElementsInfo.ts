@@ -1,0 +1,246 @@
+import type { AbstractElementInfo } from "../ElementInfo";
+import { TOOLS, TOOL_CATEGORIES } from "../Tools";
+
+const diagonalConstraintsDefaultCategories = [
+	TOOL_CATEGORIES.GLOBAL_CONSTRAINT,
+	TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT,
+	TOOL_CATEGORIES.DIAGONAL_CONSTRAINT
+];
+
+export const sudokuRulesDoNotApplyInfo: AbstractElementInfo = {
+	toolId: TOOLS.SUDOKU_RULES_DO_NOT_APPLY,
+	order: 0,
+
+	meta: {
+		description: "Sudoku rules do not apply.",
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	}
+};
+
+export const antiknightInfo: AbstractElementInfo = {
+	toolId: TOOLS.ANTIKNIGHT,
+	order: 0,
+
+	meta: {
+		description: "Cells that are a chess knight's move apart must not contain the same number.",
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	}
+};
+
+export const antikingInfo: AbstractElementInfo = {
+	toolId: TOOLS.ANTIKING,
+	order: 0,
+
+	meta: {
+		description: "Cells that are a chess king's move apart must not contain the same number.",
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	}
+};
+
+export const disjointGroupsInfo: AbstractElementInfo = {
+	toolId: TOOLS.DISJOINT_GROUPS,
+	order: 0,
+
+	meta: {
+		description:
+			'Cells that appear in the same position relative to their default regions must not contain the same number.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	}
+};
+
+export const nonconsecutiveInfo: AbstractElementInfo = {
+	toolId: TOOLS.NONCONSECUTIVE,
+	order: 0,
+
+	meta: {
+		description: 'Orthogonally adjacent cells must not contain consecutive numbers.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	}
+};
+
+export const nonratioInfo: AbstractElementInfo = {
+	toolId: TOOLS.NONRATIO,
+	order: 0,
+
+	meta: {
+		description: 'Orthogonally adjacent cells cannot be in 1:2 ratio.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	}
+};
+
+export const negativeDiagonalInfo: AbstractElementInfo = {
+	toolId: TOOLS.NEGATIVE_DIAGONAL,
+	order: 0,
+
+	meta: {
+		description: 'Numbers must not repeat on the negative diagonal.',
+		tags: [],
+		categories: diagonalConstraintsDefaultCategories
+	}
+};
+
+export const positiveDiagonalInfo: AbstractElementInfo = {
+	toolId: TOOLS.POSITIVE_DIAGONAL,
+	order: 0,
+
+	meta: {
+		description: 'Numbers must not repeat on the positive diagonal.',
+		tags: [],
+		categories: diagonalConstraintsDefaultCategories
+	}
+};
+
+export const negativeAntidiagonalInfo: AbstractElementInfo = {
+	toolId: TOOLS.NEGATIVE_ANTIDIAGONAL,
+	order: 0,
+
+	meta: {
+		description: 'The negative diagonal containts only 3 different numbers.',
+		tags: [],
+		categories: diagonalConstraintsDefaultCategories
+	}
+};
+
+export const positiveAntidiagonalInfo: AbstractElementInfo = {
+	toolId: TOOLS.POSITIVE_ANTIDIAGONAL,
+	order: 0,
+
+	meta: {
+		description: 'The positive diagonal containts only 3 different numbers.',
+		tags: [],
+		categories: diagonalConstraintsDefaultCategories
+	}
+};
+
+export const oddEvenParityMirrorAlongNegativeDiagonalInfo: AbstractElementInfo = {
+	toolId: TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_NEGATIVE_DIAGONAL,
+	order: 0,
+
+	meta: {
+		description: 'Odd/Even parity is reflected across the purple negative diagonal.',
+		tags: [],
+		categories: diagonalConstraintsDefaultCategories
+	}
+};
+
+export const oddEvenParityMirrorAlongPositiveDiagonalInfo: AbstractElementInfo = {
+	toolId: TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_POSITIVE_DIAGONAL,
+	order: 0,
+
+	meta: {
+		description: 'Odd/Even parity is reflected across the purple positive diagonal.',
+		tags: [],
+		categories: diagonalConstraintsDefaultCategories
+	}
+};
+
+/* --------------------------------------------------------------------------------------------------- */
+
+export const allRatiosGivenInfo: AbstractElementInfo = {
+	toolId: TOOLS.ALL_RATIOS_GIVEN,
+	order: 0,
+
+	meta: {
+		description: 'All Ratios are given.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
+
+export const allDifferencesGivenInfo: AbstractElementInfo = {
+	toolId: TOOLS.ALL_DIFFERENCES_GIVEN,
+	order: 0,
+
+	meta: {
+		description: 'All Differences are given.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
+
+export const allXGivenInfo: AbstractElementInfo = {
+	toolId: TOOLS.ALL_X_GIVEN,
+	order: 0,
+
+	meta: {
+		description: "All X's are given.",
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
+
+export const allVGivenInfo: AbstractElementInfo = {
+	toolId: TOOLS.ALL_V_GIVEN,
+	order: 0,
+
+	meta: {
+		description: "All V's are given.",
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
+
+export const allXVGivenInfo: AbstractElementInfo = {
+	toolId: TOOLS.ALL_XV_GIVEN,
+	order: 0,
+
+	meta: {
+		description: "All XV's are given.",
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
+
+export const allRadarsGivenInfo: AbstractElementInfo = {
+	toolId: TOOLS.ALL_RADARS_GIVEN,
+	order: 0,
+
+	meta: {
+		description:
+			"Cells with grey cages are radars. Radars are cells that have a value indicating the distance to the closest 'X' on their row or column (default X = 9). All radars are given.",
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
+
+export const allXYDifferencesGivenInfo: AbstractElementInfo = {
+	toolId: TOOLS.ALL_XY_DIFFERENCES_GIVEN,
+	order: 0,
+
+	meta: {
+		description:
+			'If two cells are separated by a diamond, the digits must exhibit a difference equal to the leftmost or topmost digit sharing a row or column with them. For example, the difference between R9C34 = R9C1, and the difference between R23C1 = R1C1. Not all possible diamonds are necessarily given. All XY differences are given.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
+
+export const allIndexingColumnGivenInfo: AbstractElementInfo = {
+	toolId: TOOLS.ALL_INDEXING_COLUMN_GIVEN,
+	order: 0,
+
+	meta: {
+		description:
+			'Any number X in a red cell appearing in column Y index (ie give) the column X in which the number Y appears in their respective row. All possible indexing column cells in the given columns are given.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
+
+export const allIndexingRowGivenInfo: AbstractElementInfo = {
+	toolId: TOOLS.ALL_INDEXING_ROW_GIVEN,
+	order: 0,
+
+	meta: {
+		description:
+			'Any number X in a blue cell appearing in the Yth row of a column indicates the row X where the number Y appears in that column. All possible indexing column cells in the given columns are given.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
