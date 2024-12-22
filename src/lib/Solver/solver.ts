@@ -39,7 +39,17 @@ function var int: count_unique_values(array[int] of var int: arr) =
                  forall(j in index_set(arr) where j > i)(arr[j] != arr[i]) | i in index_set(arr)]
         } in
         sum(i in index_set(arr))(bool2int(is_unique[i]))
-    endif;\n\n`;
+    endif;
+
+function array[int] of var bool: sandwich_bools(array[int] of var int: arr, int: a, int: b) =
+    [exists(j in index_set(arr) where j < i)(
+         exists(k in index_set(arr) where k > i)(
+             (arr[j] == a /\\ arr[k] == b) \\/ (arr[j] == b /\\ arr[k] == a)
+         )
+    ) | i in index_set(arr)];
+    
+function var int: sandwich_bools_sum(array[int] of var bool: arr) =
+    sum(i in index_set(arr))(bool2int(arr[i]));\n\n`;
 
 	const helper_p = `predicate multisets_equal_p(array[int] of var int: arr1, array[int] of var int: arr2) =
 	forall(i in index_set(arr1)) (
@@ -58,13 +68,28 @@ predicate member_of_p(array[int] of var int: arr, var int: val) =
 predicate regular_distance_p(array[int] of var int: arr, var int: dist) =
 	forall(i in index_set(arr) where i < max(index_set(arr))) (
 		arr[i+1] - arr[i] == dist
-	);\n\n`;
+	);
+
+predicate sum_p(array[int] of var int: arr, var int: val) =
+    sum(arr) == val;
+
+predicate maximum_p(array[int] of var int: arr, var int: max_val) =
+    forall(i in index_set(arr))(arr[i] < max_val);
+
+predicate minimum_p(array[int] of var int: arr, var int: min_val) =
+    forall(i in index_set(arr))(arr[i] > min_val);\n\n`;
 
 	const single_cell_constraints = `predicate odd_p(var int: x) =
     x mod 2 = 1;
 
 predicate even_p(var int: x) =
     x mod 2 = 0;
+
+predicate low_digit_p(var int: x, var int: val) =
+    x < val;
+
+predicate high_digit_p(var int: x, var int: val) =
+    x > val;
 
 predicate groups_opposite_parity_p(array[int] of var int: arr1, array[int] of var int: arr2) =
     (are_all_even(arr1) /\\ are_all_odd(arr2)) \\/
@@ -120,7 +145,7 @@ function var bool: farsight_f(array[int] of var int: arr, var int: val) =
     if length(arr) = 0 then
         false
     else 
-        (val - 1 >= min(index_set(arr)) /\\ val - 1 <= max(index_set(arr))) /\\ (abs(arr[val - 1] - val) = 1)
+        val >= min(index_set(arr)) /\\ val <= max(index_set(arr)) /\\ (abs(arr[val] - val) = 1)
     endif;
 
 predicate farsight_p(
@@ -131,17 +156,28 @@ predicate farsight_p(
 	array[int] of var int: arr4
 ) = farsight_f(arr1, val) \\/ farsight_f(arr2, val) \\/ farsight_f(arr3, val) \\/ farsight_f(arr4, val);	
 
-predicate indexing_column_p(array[int] of var int: row, var int: y, var int: offset) =
+predicate indexing_column_p(array[int] of var int: row, var int: y) =
     let {
-        var int: x = row[y] - offset
+        var int: x = row[y]
     } in
-        row[x] == y + offset;
-
-function var bool: is_indexing_column(array[int] of var int: row, var int: y, var int: offset) =
+        x in index_set(row) /\\ row[x] == y;
+        
+predicate sandwich_row_col_count_p(
+    array[int] of var int: row_arr, 
+    array[int] of var int: col_arr,
+    var int: r,
+    var int: c,
+    var int: val
+) = 
     let {
-        var int: x = row[y] - offset
-    } in
-        (x in index_set(row) /\\ row[x] == y + offset);\n\n`;
+        array[int] of var bool: row_bools = sandwich_bools(row_arr, 1, 9),
+        array[int] of var bool: col_bools = sandwich_bools(col_arr, 1, 9),
+        var int: row_count = sandwich_bools_sum(row_bools),
+        var int: col_count = sandwich_bools_sum(col_bools),
+        var bool: in_row = c in index_set(row_bools) /\\ row_bools[c],
+        var bool: in_col = r in index_set(col_bools) /\\ col_bools[r],
+        var int: in_both = if in_row /\\ in_col then 1 else 0 endif
+    } in (row_count + col_count - in_both) == val;\n\n`;
 
 	const edge_constraints = `predicate consecutive_p(var int: a, var int: b) =
 	abs(a - b) = 1;
@@ -199,6 +235,13 @@ predicate palindrome(array[int] of var int: arr) =
     forall(i in index_set(arr) where i <= (min(index_set(arr)) + max(index_set(arr))) div 2) (
         arr[i] == arr[max(index_set(arr)) - (i - min(index_set(arr)))]
     );
+
+predicate repeated_digits_line_p(array[int] of var int: arr) =
+    let {
+        var int: count;
+    } in forall(i in index_set(arr)) (
+        count_vars(arr, arr[i]) == count
+    ) /\\ count >= 2;
 
 predicate xv_line_p(array[int] of var int: arr) =
     forall(i in index_set(arr) where i < max(index_set(arr))) (
@@ -315,10 +358,10 @@ predicate double_renban_p(array[int] of var int: arr) =
         array[1..n] of var int: group1,        % First group
         array[1..n] of var int: group2         % Second group
     } in
-    length(arr) mod 2 = 0 /\
-    group1[1] <= group2[1] /\
-    regular_distance_p(group1, 1) /\
-    regular_distance_p(group2, 1) /\
+    length(arr) mod 2 = 0 /\\
+    group1[1] <= group2[1] /\\
+    regular_distance_p(group1, 1) /\\
+    regular_distance_p(group2, 1) /\\
     multisets_equal_p(arr, [group1[i] | i in 1..n] ++ [group2[i] | i in 1..n]);
 
 predicate renrenbanban_p(array[int] of var int: arr) =
@@ -351,7 +394,15 @@ predicate knabner_p(array[int] of var int: arr) =
     );
 
 predicate renban_or_whispers_p(array[int] of var int: arr, var int: val) = 
-	renban(arr) \\/ whispers(arr, val);\n\n`;
+	renban(arr) \\/ whispers(arr, val);
+
+predicate n_consecutive_renban_line_p(array[int] of var int: arr, int: n) =
+    % Ensure that each slice of size n satisfies the renban constraint
+    forall(start in index_set(arr) where start + n - 1 <= max(index_set(arr))) (
+        let {
+            array[start..start + n - 1] of var int: slice = arr[start..start + n - 1]
+        } in renban(slice)
+    );\n\n`;
 
 	const double_end_line_constraints = `
 predicate between_line_p(array[int] of var int: arr) =
@@ -440,14 +491,7 @@ predicate divisible_killer_cage_p(array[int] of var int: arr, var int: val) =
 predicate spotlight_cage_p(array[int] of var int: arr, var int: val) =
     alldifferent(arr) /\\ member_of_p(arr, val);\n\n`;
 
-	const outside_edge_constraints = `function array[int] of var bool: sandwich_bools(array[int] of var int: arr, int: a, int: b) =
-    [exists(j in index_set(arr) where j < i)(
-         exists(k in index_set(arr) where k > i)(
-             (arr[j] == a /\\ arr[k] == b) \\/ (arr[j] == b /\\ arr[k] == a)
-         )
-    ) | i in index_set(arr)];
-
-function var int: sandwich_sum(array[int] of var int: arr, int: a, int: b) =
+	const outside_edge_constraints = `function var int: sandwich_sum(array[int] of var int: arr, int: a, int: b) =
     sum(i in index_set(arr)) (arr[i] * bool2int(sandwich_bools(arr, a, b)[i]));
 
 predicate sandwich_sum_p(array[int] of var int: arr, var int: val, int: a, int: b) =
@@ -467,6 +511,19 @@ predicate shortsighted_x_sum_p(array[int] of var int: arr, var int: x, var int: 
 
 predicate broken_x_sum_p(array[int] of var int: arr, var int: x, var int: val) =
     x_sum(arr, x-1) == val \\/ x_sum(arr, x+1) == val;
+
+function var int: shifted_x_sum(array[int] of var int: arr, var int: n) =
+    let {
+        int: size = card(index_set(arr)),
+        int: start_index = min(index_set(arr)),
+        var int: x = arr[n]
+    } in
+	    sum(i in index_set(arr) where i >= n /\\ i < n + x)(arr[i]);
+
+% sum(arr[n:n+x]), n = arr[1], x = arr[n]
+predicate shifted_x_sum_p(array[int] of var int: arr, var int: n, var int: val) =
+    (n >= 1 /\\ n <= card(index_set(arr)) /\\ n + arr[n] - 1 <= card(index_set(arr))) /\\
+    shifted_x_sum(arr, n) == val;
 
 function var int: skyscrapers_count(array[int] of var int: arr) =
     sum(i in index_set(arr)) (
@@ -503,19 +560,10 @@ predicate battlefield_p(array[int] of var int: arr, var int: val) =
         var int: x = arr[min(index_set(arr))], 
         var int: y = arr[max(index_set(arr))]  
     } in
-    battlefield_sum(arr, x, y) == val;\n\n`;
+    battlefield_sum(arr, x, y) == val;
 
-	// 	const shifted_x_sum_f = `% sum(arr[n:n+x])
-	// function var int: shifted_x_sum(array[int] of var int: arr, var int: n, var int: x) =
-	//     let {
-	//         int: size = card(index_set(arr)),
-	//         int: start_index = min(index_set(arr))
-	//     } in
-	//     assert(start_index <= n /\\ n + x - 1 <= start_index + size - 1, "Invalid range: n and x must be within the bounds of arr") /
-	//     sum(i in index_set(arr) where i >= n /\\ i < n + x)(arr[i]);\n\n`;
-
-	// 	const shifted_x_sum_p = `predicate shifted_x_sum_p(array[int] of var int: arr, var int: n, var int: x, var int: val) =
-	// 	shifted_x_sum(arr, n, x) == val /\\ (0 <= n /\\ n + x <card(index_set(arr)));\n\n`;
+predicate x_index_p(array[int] of var int: arr, var int: x, var int: val) =
+    x in index_set(arr) /\\ arr[x] == val;\n\n`;
 
 	const outside_corner_constraints = `predicate little_killer_sum_p(array[int] of var int: arr, var int: val) =
 	sum(arr) == val;
@@ -528,7 +576,7 @@ predicate x_omit_little_killer_sum_p(array[int] of var int: arr, var int: val) =
 
 	const clone_constraints = `predicate clone_region_p(array[int] of var int: arr1, array[int] of var int: arr2) =
     length(index_set(arr1)) = length(index_set(arr2)) /\\
-    forall(i in index_set(arr1))(arr1[i] = arr2[i]);`;
+    forall(i in index_set(arr1))(arr1[i] = arr2[i]);\n\n`;
 
 	out_str +=
 		helper_f +

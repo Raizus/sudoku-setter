@@ -4,20 +4,11 @@
 	import ModalButtonsContainer from '$lib/Components/Modal/ModalButtonsContainer.svelte';
 	import { puzzleToJson } from '$lib/Puzzle/Puzzle';
 	import type { PuzzleMetaI } from '$lib/Puzzle/PuzzleMeta';
-	import { decodeFromBase64UrlSafe, encodeToBase64UrlSafe } from '$src/lib/utils/functionUtils';
+	import { decodeFromBase64UrlSafe, encodeToBase64UrlSafe, getPuzzleFilename } from '$src/lib/utils/functionUtils';
 	import { puzzleMetaStore, puzzleStore } from '$stores/BoardStore';
 
 	export let showModal = false;
 	let svgPreviewRef: SVGSVGElement | null = null;
-
-	const getPuzzleFilename = (puzzleMeta: PuzzleMetaI): string => {
-		const title = puzzleMeta.title ? puzzleMeta.title : 'hexdoku';
-		const authors = puzzleMeta.authors ? puzzleMeta.authors : ['Anonymous'];
-		const authorsStr = authors.join('_');
-		let fileName = `${title}_by_${authorsStr}`;
-		fileName = fileName.replaceAll(/[\W]/g, '');
-		return fileName;
-	};
 
 	function copyStylesInline(destinationNode: Element, sourceNode: Element) {
 		var containerElements = ['svg', 'g'];

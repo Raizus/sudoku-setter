@@ -134,8 +134,8 @@ export enum LINE_CONSTRAINTS {
 	MODULAR_LINE = 'Modular Line',
 	UNIMODULAR_LINE = 'Unimodular Line',
 	MODULAR_OR_UNIMODULAR_LINE = 'Modular Or Unimodular Line',
-	ODD_EVEN_OSCILATOR_LINE = 'Odd Even Oscilator Line',
-	HIGH_LOW_OSCILATOR_LINE = 'High Low Oscilator Line',
+	ODD_EVEN_OSCILLATOR_LINE = 'Odd Even Oscillator Line',
+	HIGH_LOW_OSCILLATOR_LINE = 'High Low Oscillator Line',
 	ENTROPIC_LINE = 'Entropic Line',
 	ENTROPIC_OR_MODULAR_LINE = 'Entropic Or Modular Line',
 

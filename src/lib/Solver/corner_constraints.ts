@@ -13,6 +13,18 @@ function getCornerVars(grid: Grid, constraint: CornerToolI) {
 	return vars;
 }
 
+function simpleCornerConstraint(
+	grid: Grid,
+	constraint: CornerToolI,
+	predicate: string
+) {
+	const vars = getCornerVars(grid, constraint);
+	const vars_str = `[${vars.join(',')}]`;
+
+	const constraint_str = `constraint ${predicate}(${vars_str});\n`;
+	return constraint_str;
+}
+
 function valuedCornerConstraint(
 	grid: Grid,
 	constraint: CornerToolI,
@@ -43,11 +55,21 @@ function cornerEvenCountConstraint(grid: Grid, constraint: CornerToolI) {
 	return constraint_str;
 }
 
+function cornerSumOfThreeEqualsTheOtherConstraint(grid: Grid, constraint: CornerToolI) {
+	const constraint_str = simpleCornerConstraint(
+		grid,
+		constraint,
+		'corner_sum_of_three_equals_the_other_p'
+	);
+	return constraint_str;
+}
+
 type ConstraintF = (grid: Grid, constraint: CornerToolI) => string;
 
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.CORNER_SUM, cornerSumConstraint],
-	[TOOLS.CORNER_EVEN_COUNT, cornerEvenCountConstraint]
+	[TOOLS.CORNER_EVEN_COUNT, cornerEvenCountConstraint],
+	[TOOLS.CORNER_SUM_OF_THREE_EQUALS_THE_OTHER, cornerSumOfThreeEqualsTheOtherConstraint]
 ]);
 
 export function cornerConstraints(

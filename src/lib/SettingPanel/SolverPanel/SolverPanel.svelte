@@ -1,48 +1,96 @@
 <script lang="ts">
-	import type { PuzzleI } from '$src/lib/Puzzle/Puzzle';
 	import { createMinizincModel } from '$src/lib/Solver/solver';
-	import { puzzleStore } from '$stores/BoardStore';
+	import { gridStore, puzzleStore } from '$stores/BoardStore';
 	import Panel from '../Subpanel/Panel.svelte';
 	import PanelHeader from '../Subpanel/PanelHeader.svelte';
 	import * as MiniZinc from 'minizinc';
+	import SolverModal from './SolverModal.svelte';
+	import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
+	import { restoreCellsValueAction } from '$src/lib/reducers/UpdateCellsActions';
+	import { executeUpdateCellsAction } from '$stores/CellsStore';
+
+	type JsonT = { [variable: string]: any } | undefined;
 
 	let isOpen = false;
 	$: puzzle = $puzzleStore;
+	$: grid = $gridStore;
+
+	let showModal = false;
+
+	const max_sols = 5;
+	let sol_count: number | null = null;
+	let status: string = '';
+
+	function getSolText(sol_count: number | null): string {
+		if (sol_count === null) return '?';
+		return String(sol_count);
+	}
+
+	function clickCb() {
+		showModal = true;
+	}
+
+	function setSolutionValues(json: JsonT) {
+		if (json === undefined) return;
+		const cell_var_regex = /^R(\d+)C(\d+)$/;
+		const cells: Cell[] = [];
+		const values: number[] = [];
+		for (const [var_name, value] of Object.entries(json)) {
+			const match = var_name.match(cell_var_regex);
+			if (!match) continue;
+			if (typeof value !== 'number') continue;
+			const [r, c] = [parseInt(match[1]), parseInt(match[2])];
+			const cell = grid.getCell(r, c);
+			if (!cell || cell.given) continue;
+			cells.push(cell);
+			values.push(value);
+		}
+
+		const action = restoreCellsValueAction(cells, values);
+		executeUpdateCellsAction(action);
+	}
 
 	async function solveModel() {
-		let sol_count = 0;
-		const max_sols = 2;
-		
+		sol_count = 0;
+		status = 'SOLVING...';
+
 		// Initialize MiniZinc
 		const model = new MiniZinc.Model();
 
 		// Define a simple MiniZinc model
 		const modelstr = createMinizincModel(puzzle);
-		console.log(modelstr);
-
 		model.addFile('test.mzn', modelstr);
 
 		const solve = model.solve({
 			options: {
 				solver: 'chuffed',
-				'num-solutions': 2
+				'num-solutions': max_sols
 			}
 		});
 
 		solve.on('solution', (solution) => {
-			console.log(solution.output.json);
+			const json = solution.output.json;
+			// console.log(json);
+			setSolutionValues(json);
+			if (solution.type === 'solution' && sol_count !== null) sol_count += 1;
 		});
+
 		solve.then((result) => {
-			console.log(result.status);
+			status = result.status;
 		});
 	}
-
 </script>
 
 <Panel bind:isOpen>
 	<PanelHeader slot="panel-header" title="Solver" bind:isOpen />
 	<svelte:fragment slot="panel-content">
+		<button class="entry-panel-button" on:click={clickCb}> Minizinc File... </button>
+		<SolverModal bind:showModal />
 		<button class="entry-panel-button" on:click={solveModel}> Solve </button>
+		<span class="text-field">{`Max. Solutions: ${max_sols}`}</span>
+		<!-- <input type="number" min={1} max={20} step={1} value={max_sols}/> -->
+		<span class="text-field">{`Solution Count: ${getSolText(sol_count)}`}</span>
+		<span class="text-field">{`Status: ${status}`}</span>
 	</svelte:fragment>
 </Panel>
 
@@ -61,4 +109,20 @@
 			background-color: var(--panel-radio-background-hover);
 		}
 	}
+
+	.text-field {
+		display: flex;
+		text-align: left;
+		font-weight: bold;
+		margin-bottom: 0.4rem;
+	}
+
+	// input {
+	// 	background-color: var(--input-background-color);
+	// 	color: var(--text-primary-color);
+	// 	border: 0;
+	// 	border-radius: 0 4px 4px 0;
+	// 	outline: none;
+	// 	padding: 1px;
+	// }
 </style>

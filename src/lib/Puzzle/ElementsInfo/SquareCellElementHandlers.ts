@@ -282,8 +282,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.MODULAR_LINE]: modularLineInfo,
 	[TOOLS.UNIMODULAR_LINE]: unimodularLineInfo,
 	[TOOLS.MODULAR_OR_UNIMODULAR_LINE]: modularOrUnimodularLineInfo,
-	[TOOLS.ODD_EVEN_OSCILATOR_LINE]: oddEvenOscilatorLineInfo,
-	[TOOLS.HIGH_LOW_OSCILATOR_LINE]: highLowOscilatorLineInfo,
+	[TOOLS.ODD_EVEN_OSCILLATOR_LINE]: oddEvenOscilatorLineInfo,
+	[TOOLS.HIGH_LOW_OSCILLATOR_LINE]: highLowOscilatorLineInfo,
 	[TOOLS.ENTROPIC_LINE]: entropicLineInfo,
 	[TOOLS.ENTROPIC_OR_MODULAR_LINE]: entropicOrModularLineInfo,
 

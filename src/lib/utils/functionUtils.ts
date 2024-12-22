@@ -1,3 +1,4 @@
+import type { PuzzleMetaI } from "../Puzzle/PuzzleMeta";
 
 export function threshold(val: number, min?: number, max?: number): number {
 	if (min !== undefined) val = Math.max(val, min);
@@ -67,3 +68,12 @@ export function counter<T>(iterable: Array<T>) {
 	}
 	return counts;
 }
+
+export function getPuzzleFilename(puzzleMeta: PuzzleMetaI): string {
+	const title = puzzleMeta.title ? puzzleMeta.title : 'hexdoku';
+	const authors = puzzleMeta.authors ? puzzleMeta.authors : ['Anonymous'];
+	const authorsStr = authors.join('_');
+	let fileName = `${title}_by_${authorsStr}`;
+	fileName = fileName.replaceAll(/[\W]/g, '');
+	return fileName;
+};

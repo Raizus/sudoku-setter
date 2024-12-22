@@ -1,1 +1,8 @@
-Create a javascript regex pattern that matches an alphanumeric word, starting with a letter and captures the whole word 
+Write a predicate 'n_consecutive_renban_line_p' which receives an array of int vars and an int var 'n' and forces the constraint:
+    - For each slice of the array of size n, the renban constraint applies, where
+
+predicate renban(array[int] of var int: arr) =
+    alldifferent(arr) /\\
+    % Ensure the absolute difference between min and max is n-1
+    max(arr) - min(arr) == card(index_set(arr)) - 1;
+

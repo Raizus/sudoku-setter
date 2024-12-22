@@ -12,12 +12,12 @@
 <div class="setting-panel-wrapper">
 	<div class="setting-panel">
 		<MenuPanel />
+		<SolverPanel />
 		<GlobalConstraintsPanel elementHandlers={squareCellElementHandlers} />
 		<LocalConstraintsPanel elementHandlers={squareCellElementHandlers} />
 		<CosmeticToolsPanel elementHandlers={squareCellElementHandlers} />
 		<ShapePanel elementHandlers={squareCellElementHandlers} />
 		<OthersPanel />
-		<SolverPanel />
 	</div>
 </div>
 

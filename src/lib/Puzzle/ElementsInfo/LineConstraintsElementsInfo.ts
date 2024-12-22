@@ -599,7 +599,7 @@ export const oddEvenOscilatorLineInfo: SquareCellElementInfo = {
 		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
 	},
 
-	toolId: TOOLS.ODD_EVEN_OSCILATOR_LINE,
+	toolId: TOOLS.ODD_EVEN_OSCILLATOR_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
@@ -632,7 +632,7 @@ export const highLowOscilatorLineInfo: SquareCellElementInfo = {
 		);
 	},
 
-	toolId: TOOLS.HIGH_LOW_OSCILATOR_LINE,
+	toolId: TOOLS.HIGH_LOW_OSCILLATOR_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {

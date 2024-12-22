@@ -149,6 +149,7 @@ export function createNewPuzzle(nRows: number, nCols: number) {
 	gridStore.update(() => grid);
 	localConstraintsStore.update(() => new LocalConstraintsDict());
 	globalConstraintsStore.update(() => new GlobalConstraintsDict());
+	puzzleMetaStore.update(() => {return {}});
 	updateSolution(undefined);
 	cellsStore.update(() => grid.getAllCells());
 }

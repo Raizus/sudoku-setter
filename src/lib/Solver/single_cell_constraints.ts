@@ -2,6 +2,7 @@ import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { CellToolI } from '../Puzzle/Constraints/SingleCellConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
+import { DIRECTION } from '../utils/directions';
 import { addHeader, cellsToVarsName, cellToVarName } from './solver_utils';
 
 function simpleSingleCellConstraint(grid: Grid, constraint: CellToolI, predicate: string) {
@@ -10,7 +11,27 @@ function simpleSingleCellConstraint(grid: Grid, constraint: CellToolI, predicate
 	if (!cell) return '';
 	const var1 = cellToVarName(cell);
 	const constraint_str = `constraint ${predicate}(${var1});\n`;
-	return constraint_str;	
+	return constraint_str;
+}
+
+function valuedSingleCellConstraint(
+	grid: Grid,
+	constraint: CellToolI,
+	predicate: string,
+	default_value: string = ''
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const var1 = cellToVarName(cell);
+
+	let value = constraint.value;
+	if (!value) value = default_value;
+	if (!value) return '';
+
+	const val = parseInt(value);
+	const constraint_str = `constraint ${predicate}(${var1}, ${val});\n`;
+	return constraint_str;
 }
 
 function oddConstraint(grid: Grid, constraint: CellToolI) {
@@ -23,7 +44,18 @@ function evenConstraint(grid: Grid, constraint: CellToolI) {
 	return constraint_str;
 }
 
-function oddMinesweeperConstraint(grid: Grid, constraint: CellToolI) {
+function lowDigitConstraint(grid: Grid, constraint: CellToolI) {
+	const constraint_str = valuedSingleCellConstraint(grid, constraint, 'low_digit_p', '5');
+	return constraint_str;
+}
+
+function highDigitConstraint(grid: Grid, constraint: CellToolI) {
+	const constraint_str = valuedSingleCellConstraint(grid, constraint, 'high_digit_p', '5');
+	return constraint_str;
+}
+
+function minesweeperConstraint(grid: Grid, constraint: CellToolI, predicate: string) {
+	// A digit in a cell with a red circle is the same as the number of the surrounding cells (not counting the cell itself) with odd numbers.
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
@@ -31,19 +63,18 @@ function oddMinesweeperConstraint(grid: Grid, constraint: CellToolI) {
 	const neighbours = grid.getNeighboorCells(cell);
 	const vars = cellsToVarsName(neighbours);
 	const vars_str = `[${vars.join(',')}]`;
-	const constraint_str = `constraint odd_count(${vars_str}) == ${var1};\n`;
+	const constraint_str = `constraint ${predicate}(${vars_str}) == ${var1};\n`;
+	return constraint_str;
+}
+
+function oddMinesweeperConstraint(grid: Grid, constraint: CellToolI) {
+	const constraint_str = minesweeperConstraint(grid, constraint, 'odd_count');
 	return constraint_str;
 }
 
 function evenMinesweeperConstraint(grid: Grid, constraint: CellToolI) {
-	const coords = constraint.cell;
-	const cell = grid.getCell(coords.r, coords.c);
-	if (!cell) return '';
-	const var1 = cellToVarName(cell);
-	const neighbours = grid.getNeighboorCells(cell);
-	const vars = cellsToVarsName(neighbours);
-	const vars_str = `[${vars.join(',')}]`;
-	const constraint_str = `constraint even_count(${vars_str}) == ${var1};\n`;
+	// A digit in a cell with a red square is the same as the number of the surrounding cells (not counting the cell itself) with even numbers. (So a total of 8 possible surrounding cells).
+	const constraint_str = minesweeperConstraint(grid, constraint, 'even_count');
 	return constraint_str;
 }
 
@@ -67,7 +98,7 @@ function orthogonalSumConstraint(grid: Grid, constraint: CellToolI) {
 	const adj_cells = grid.getOrthogonallyAdjacentCells(cell);
 	const vars = cellsToVarsName(adj_cells);
 	const vars_str = `[${vars.join(',')}]`;
-	const constraint_str = `constraint sum(${vars_str}) == ${var1};\n`;
+	const constraint_str = `constraint sum_p(${vars_str}, ${var1});\n`;
 	return constraint_str;
 }
 
@@ -79,7 +110,33 @@ function diagonallyAdjacentSumConstraint(grid: Grid, constraint: CellToolI) {
 	const adj_cells = grid.getDiagonallyAdjacentCells(cell);
 	const vars = cellsToVarsName(adj_cells);
 	const vars_str = `[${vars.join(',')}]`;
-	const constraint_str = `constraint sum(${vars_str}) == ${var1};\n`;
+	const constraint_str = `constraint sum_p(${vars_str}, ${var1});\n`;
+	return constraint_str;
+}
+
+function indexingColumnConstraint(grid: Grid, constraint: CellToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const row_cells = grid.getRow(cell.r);
+	const vars = cellsToVarsName(row_cells);
+	const vars_str = `[${vars.join(',')}]`;
+	const col = cell.c + 1;
+	const constraint_str = `constraint indexing_column_p(${vars_str}, ${col});\n`;
+	return constraint_str;
+}
+
+function indexingRowConstraint(grid: Grid, constraint: CellToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const col_cells = grid.getCol(cell.c);
+	const vars = cellsToVarsName(col_cells);
+	const vars_str = `[${vars.join(',')}]`;
+	const row = cell.r + 1;
+	const constraint_str = `constraint indexing_column_p(${vars_str}, ${row});\n`;
 	return constraint_str;
 }
 
@@ -106,14 +163,99 @@ function adjCellsOppositeDirOppositeParityConstraint(grid: Grid, constraint: Cel
 	const cell1 = grid.getCell(coords.r - 1, coords.c);
 	const cell2 = grid.getCell(coords.r + 1, coords.c);
 	const cell3 = grid.getCell(coords.r, coords.c - 1);
-    const cell4 = grid.getCell(coords.r, coords.c + 1);
-    if (!cell1 || !cell2 || !cell3 || !cell4) return '';
+	const cell4 = grid.getCell(coords.r, coords.c + 1);
+	if (!cell1 || !cell2 || !cell3 || !cell4) return '';
 
-    const var1 = cellToVarName(cell1);
-    const var2 = cellToVarName(cell2);
-    const var3 = cellToVarName(cell3);
-    const var4 = cellToVarName(cell4);
-    const constraint_str = `constraint groups_opposite_parity_p([${var1},${var2}], [${var3},${var4}]);\n`;
+	const var1 = cellToVarName(cell1);
+	const var2 = cellToVarName(cell2);
+	const var3 = cellToVarName(cell3);
+	const var4 = cellToVarName(cell4);
+	const constraint_str = `constraint groups_opposite_parity_p([${var1},${var2}], [${var3},${var4}]);\n`;
+	return constraint_str;
+}
+
+function watchtowerFarsightHelper(grid: Grid, constraint: CellToolI, predicate: string) {
+	const coords = constraint.cell;
+	const cell0 = grid.getCell(coords.r, coords.c);
+	if (!cell0) return '';
+
+	const var0 = cellToVarName(cell0);
+	const up_cells = grid.getCellsInDirection(cell0.r, cell0.c, DIRECTION.N);
+	const down_cells = grid.getCellsInDirection(cell0.r, cell0.c, DIRECTION.S);
+	const left_cells = grid.getCellsInDirection(cell0.r, cell0.c, DIRECTION.W);
+	const right_cells = grid.getCellsInDirection(cell0.r, cell0.c, DIRECTION.E);
+
+	const up_vars = '[' + cellsToVarsName(up_cells).join(',') + ']';
+	const down_vars = '[' + cellsToVarsName(down_cells).join(',') + ']';
+	const left_vars = '[' + cellsToVarsName(left_cells).join(',') + ']';
+	const right_vars = '[' + cellsToVarsName(right_cells).join(',') + ']';
+
+	const constraint_str = `constraint ${predicate}(${var0}, ${up_vars}, ${down_vars}, ${left_vars}, ${right_vars});\n`;
+	return constraint_str;
+}
+
+function watchtowerConstraint(grid: Grid, constraint: CellToolI) {
+	const constraint_str = watchtowerFarsightHelper(grid, constraint, 'is_watchtower_p');
+	return constraint_str;
+}
+
+function notWatchtowerConstraint(grid: Grid, constraint: CellToolI) {
+	const constraint_str = watchtowerFarsightHelper(grid, constraint, 'is_not_watchtower_p');
+	return constraint_str;
+}
+
+function farsightConstraint(grid: Grid, constraint: CellToolI) {
+	const constraint_str = watchtowerFarsightHelper(grid, constraint, 'farsight_p');
+	return constraint_str;
+}
+
+function sandwichRowColCountConstraint(grid: Grid, constraint: CellToolI) {
+	const coords = constraint.cell;
+	const cell0 = grid.getCell(coords.r, coords.c);
+	if (!cell0) return '';
+
+	const var0 = cellToVarName(cell0);
+
+	const row_cells = grid.getRow(cell0.r);
+	const row_vars = '[' + cellsToVarsName(row_cells).join(',') + ']';
+	const col_cells = grid.getCol(cell0.c);
+	const col_vars = '[' + cellsToVarsName(col_cells).join(',') + ']';
+	const [r, c] = [cell0.r + 1, cell0.c + 1]
+	const constraint_str = `constraint sandwich_row_col_count_p(${row_vars}, ${col_vars}, ${r}, ${c}, ${var0});\n`;
+	return constraint_str;
+}
+
+function minMaxConstraint(grid: Grid, constraints: CellToolI[], predicate: string) {
+	let out_str = '';
+	const all_max_coords = constraints.map((constraint) => constraint.cell);
+	const max_cells = new Set(
+		all_max_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
+	);
+
+	for (const constraint of constraints) {
+		const coord = constraint.cell;
+		const cell = grid.getCell(coord.r, coord.c);
+		if (!cell) continue;
+		const cell_var = cellToVarName(cell);
+
+		const adj_cells = grid
+			.getOrthogonallyAdjacentCells(cell)
+			.filter((cell2) => !max_cells.has(cell2));
+		const vars = cellsToVarsName(adj_cells);
+		const vars_str = `[${vars.join(',')}]`;
+		const constraint_str = `constraint ${predicate}(${vars_str}, ${cell_var});\n`;
+		out_str += constraint_str;
+	}
+	return out_str;
+}
+
+function maximumConstraint(grid: Grid, constraints: CellToolI[]) {
+	const constraint_str = minMaxConstraint(grid, constraints, 'maximum_p');
+	return constraint_str;
+}
+
+function minimumConstraint(grid: Grid, constraints: CellToolI[]) {
+	const constraint_str = minMaxConstraint(grid, constraints, 'minimum_p');
 	return constraint_str;
 }
 
@@ -122,6 +264,8 @@ type ConstraintF = (grid: Grid, constraint: CellToolI) => string;
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.ODD, oddConstraint],
 	[TOOLS.EVEN, evenConstraint],
+	[TOOLS.LOW_DIGIT, lowDigitConstraint],
+	[TOOLS.HIGH_DIGIT, highDigitConstraint],
 	[TOOLS.ODD_MINESWEEPER, oddMinesweeperConstraint],
 	[TOOLS.EVEN_MINESWEEPER, evenMinesweeperConstraint],
 	[TOOLS.DIAGONALLY_ADJACENT_SUM, diagonallyAdjacentSumConstraint],
@@ -131,7 +275,13 @@ const tool_map = new Map<string, ConstraintF>([
 	[
 		TOOLS.ADJACENT_CELLS_IN_DIFFERENT_DIRECTIONS_HAVE_OPPOSITE_PARITY,
 		adjCellsOppositeDirOppositeParityConstraint
-	]
+	],
+	[TOOLS.WATCHTOWER, watchtowerConstraint],
+	[TOOLS.NOT_WATCHTOWER, notWatchtowerConstraint],
+	[TOOLS.FARSIGHT, farsightConstraint],
+	[TOOLS.INDEXING_COLUMN, indexingColumnConstraint],
+	[TOOLS.INDEXING_ROW, indexingRowConstraint],
+	[TOOLS.SANDWICH_ROW_COL_COUNT, sandwichRowColCountConstraint]
 ]);
 
 export function singleCellConstraints(
@@ -146,6 +296,14 @@ export function singleCellConstraints(
 			const constraint_str = constraintF(grid, constraint as CellToolI);
 			out_str += constraint_str;
 		}
+	} else if (toolId === TOOLS.MAXIMUM) {
+		const constl = Object.values(constraints) as CellToolI[];
+		const constraint_str = maximumConstraint(grid, constl);
+		out_str += constraint_str;
+	} else if (toolId === TOOLS.MINIMUM) {
+		const constl = Object.values(constraints) as CellToolI[];
+		const constraint_str = minimumConstraint(grid, constl);
+		out_str += constraint_str;
 	}
 
 	out_str = addHeader(out_str, `${toolId}`);
