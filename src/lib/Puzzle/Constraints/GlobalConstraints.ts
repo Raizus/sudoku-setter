@@ -45,7 +45,6 @@ export class GlobalConstraintsDict extends Map<TOOLID, boolean> {
 
 		for (const [key, value] of Object.entries(data)) {
 			const tool = toolKeyFromString(key);
-			console.log(key, tool);
 			if (tool === undefined) continue;
 			if (!isToolOfType(tool, GLOBAL_CONSTRAINTS)) continue;
 

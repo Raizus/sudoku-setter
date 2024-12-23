@@ -63,7 +63,6 @@ export function getSingleCellMultiArrowToolInputHandler(
 		const direction = idxToDirection(event.direction);
 		const match = findSingleCellConstraint<CellMultiArrowToolI>(localConstraints, tool, coords);
 		if (match) {
-			console.log("yes")
 			id = match[0];
 			currentConstraint = match[1];
 

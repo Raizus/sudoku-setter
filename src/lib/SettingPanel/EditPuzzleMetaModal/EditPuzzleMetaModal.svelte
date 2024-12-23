@@ -42,7 +42,6 @@
 			ctcUrl: ctcUrlStr
 		};
 
-		// console.log(newPuzzleMeta);
 		updatePuzzleMeta(newPuzzleMeta);
 		showModal = false;
 	}

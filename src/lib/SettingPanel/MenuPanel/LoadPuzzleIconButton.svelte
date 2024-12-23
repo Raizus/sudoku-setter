@@ -24,7 +24,6 @@
 
 				const newPuzzle = puzzleFromJson(obj);
 				setPuzzle(newPuzzle);
-				console.log(newPuzzle.localConstraints);
 				resetUserState();
 			}
 		};

@@ -6,7 +6,6 @@
 
 	$: solution = $solutionStore;
     $: show_solution = $settingsStore.showSolution;
-    $: console.log(show_solution);
     $: game_mode = $gameModeStore;
 </script>
 

@@ -134,7 +134,6 @@ export class LocalConstraintsDict extends Map<TOOLID, Record<string, ConstraintT
 		if (!data) return local_constraints;
 		for (const [key, constraint_list_data] of Object.entries(data)) {
 			const tool = toolKeyFromString(key);
-			console.log(key, tool);
 			if (tool === undefined) continue;
 
 			const constraint_list_data2 = constraint_list_data as Record<string, unknown>[];
@@ -164,7 +163,6 @@ export class LocalConstraintsDict extends Map<TOOLID, Record<string, ConstraintT
 					local_constraints.addToDict(tool);
 					const id = uniqueId();
 					const shape = parseShape(constraint_data, tool);
-					console.log(shape);
 					constraint.shape = shape;
 					local_constraints.addConstraint(tool, id, constraint);
 				}
@@ -354,8 +352,6 @@ export function findUsedCloneLabels(localConstraints: LocalConstraintsDict, tool
 export function constraintToJson(constraint: ConstraintType) {
 	const jsonObj: Record<string, unknown> = {};
 
-	console.log(constraint);
-
 	if ('cells' in constraint) {
 		const cells = constraint['cells'].map((coords) => gridCoordToStr(coords));
 		jsonObj['cells'] = cells;
@@ -393,7 +389,7 @@ export function constraintToJson(constraint: ConstraintType) {
 	if ('shape' in constraint && constraint['shape']) {
 		const default_shape = getDefaultShape(constraint.toolId, squareCellElementHandlers);
 		const shapeDiff = getShapeDiff(constraint.shape, default_shape);
-		console.log(shapeDiff);
+		// console.log(shapeDiff);
 		if (shapeDiff) {
 			jsonObj['shape'] = shapeDiff;
 		}

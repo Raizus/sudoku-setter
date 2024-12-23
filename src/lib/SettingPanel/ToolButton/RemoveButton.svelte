@@ -1,9 +1,7 @@
 <script lang="ts">
 	import Trash from '$icons/Trash.svelte';
 
-	export let onTrash: () => void = () => {
-		console.log('Trash Clicked');
-	};
+	export let onTrash: () => void = () => {};
 </script>
 
 <button class="remove-button" on:click|stopPropagation={onTrash}>
