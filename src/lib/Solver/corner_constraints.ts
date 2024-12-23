@@ -2,7 +2,7 @@ import type { CornerToolI } from '../Puzzle/Constraints/CornerConstraints';
 import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { addHeader, cellsToVarsName } from './solver_utils';
+import { cellsToVarsName } from './solver_utils';
 
 function getCornerVars(grid: Grid, constraint: CornerToolI) {
 	const cells_coords = constraint.cells;
@@ -85,7 +85,5 @@ export function cornerConstraints(
 			out_str += constraint_str;
 		}
 	}
-
-	out_str = addHeader(out_str, `${toolId}`);
 	return out_str;
 }

@@ -7,7 +7,8 @@ import {
 	parityBalanceCageInfo,
 	putteriaCageInfo,
 	spotlightCageInfo,
-	sumCageInfo
+	sumCageInfo,
+	yinYangAntithesisKillerCageInfo
 } from './CageToolsElementsInfo';
 import {
 	centerPMInfo,
@@ -106,6 +107,7 @@ import {
 	rowCyclethermometerInfo,
 	rowSumLineInfo,
 	sameParityLineLineInfo,
+	splitPeasLineInfo,
 	sumLineInfo,
 	superfuzzyArrowInfo,
 	thermometerInfo,
@@ -136,6 +138,7 @@ import {
 } from './OutsideEdgeElementsInfo';
 import {
 	adjacentCellsInDifferentDirectionsHaveOpositeParityInfo,
+	countingCirclesInfo,
 	countSameParityNeighborCellsInfo,
 	diagonallyAdjacentSumInfo,
 	evenInfo,
@@ -157,7 +160,7 @@ import {
 	sandwichRowColCountInfo,
 	watchtowerInfo
 } from './SingleCellElementsInfo';
-import { coldCellsInfo, decrementFountainInfo, doublersInfo, hotCellsInfo, markedCellsInfo, negatorsInfo, vampireAndPreyInfo } from './ValueModifierConstraintsElementsInfo';
+import { coldCellsInfo, decrementFountainInfo, doublersInfo, hotCellsInfo, markedCellsInfo, negatorsInfo, vampireAndPreyInfo, YinYangInfo } from './ValueModifierConstraintsElementsInfo';
 
 export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = {
 	// Cell input elements
@@ -206,6 +209,9 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.COLD_CELLS]: coldCellsInfo,
 	[TOOLS.DECREMENT_FOUNTAIN]: decrementFountainInfo,
 
+	// Undetermined Regions Constraints
+	[TOOLS.YIN_YANG]: YinYangInfo,
+
 	// Single Cell Constraints
 	[TOOLS.ODD]: oddInfo,
 	[TOOLS.EVEN]: evenInfo,
@@ -229,6 +235,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.ADJACENT_CELLS_IN_DIFFERENT_DIRECTIONS_HAVE_OPPOSITE_PARITY]:
 		adjacentCellsInDifferentDirectionsHaveOpositeParityInfo,
 	[TOOLS.SANDWICH_ROW_COL_COUNT]: sandwichRowColCountInfo,
+	[TOOLS.COUNTING_CIRCLES]: countingCirclesInfo,
 
 	// Edge Constraints
 	[TOOLS.DIFFERENCE]: differenceInfo,
@@ -297,6 +304,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.TIGHTROPE_LINE]: tightropeLineInfo,
 	[TOOLS.DOUBLE_ARROW_LINE]: doubleArrowLineInfo,
 	[TOOLS.PRODUCT_OF_ENDS_EQUALS_SUM_OF_LINE]: productOfEndsEqualsSumOfLineInfo,
+	[TOOLS.SPLIT_PEAS]: splitPeasLineInfo,
 
 	// Arrow constraints
 	[TOOLS.ARROW]: arrowInfo,
@@ -309,6 +317,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.DIVISIBLE_KILLER_CAGE]: divisibleKillerCageInfo,
 	[TOOLS.SPOTLIGHT_CAGE]: spotlightCageInfo,
 	[TOOLS.PUTTERIA_CAGE]: putteriaCageInfo,
+	[TOOLS.YIN_YANG_ANTITHESIS_KILLER_CAGE]: yinYangAntithesisKillerCageInfo,
 
 	// Clone Constraints
 	[TOOLS.CLONE_REGION]: cloneRegionInfo,

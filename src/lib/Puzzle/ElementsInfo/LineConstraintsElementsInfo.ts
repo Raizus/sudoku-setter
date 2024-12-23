@@ -71,7 +71,8 @@ export const rowCyclethermometerInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description: "Within a row, let a 'cycle' be the path taken starting from digit A in column X and then looking at digit B in Column A, then digit C in Column B etc until the cycle returns to digit A again. The 'order' of a cycle is the number of unique digits contained in the cycle. eg A 5 in r9c1, a 9 in r9c5 and a 1 in r9c9 would force a cycle of order 3. The Order of the cycle increases along light blue thermometers starting from the bulb end.",
+		description:
+			"Within a row, let a 'cycle' be the path taken starting from digit A in column X and then looking at digit B in Column A, then digit C in Column B etc until the cycle returns to digit A again. The 'order' of a cycle is the number of unique digits contained in the cycle. eg A 5 in r9c1, a 9 in r9c5 and a 1 in r9c9 would force a cycle of order 3. The Order of the cycle increases along light blue thermometers starting from the bulb end.",
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
@@ -189,12 +190,10 @@ export const renrenbanbanLineInfo: SquareCellElementInfo = {
 
 export const nConsecutiveRenbanLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(
-			svgRef,
-			grid,
-			tool,
-			{ allowSelfIntersection: true, defaultValue: '5' },
-		);
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: true,
+			defaultValue: '5'
+		});
 	},
 
 	toolId: TOOLS.N_CONSECUTIVE_RENBAN_LINE,
@@ -282,12 +281,10 @@ export const whispersLineInfo: SquareCellElementInfo = {
 
 export const maximumAdjacentDifferenceLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(
-			svgRef,
-			grid,
-			tool,
-			{ allowSelfIntersection: true, defaultValue: '2' },
-		);
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: true,
+			defaultValue: '2'
+		});
 	},
 
 	toolId: TOOLS.MAXIMUM_ADJACENT_DIFFERENCE_LINE,
@@ -316,12 +313,10 @@ export const maximumAdjacentDifferenceLineInfo: SquareCellElementInfo = {
 
 export const renbanOrWhispersLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(
-			svgRef,
-			grid,
-			tool,
-			{ allowSelfIntersection: true, defaultValue: '5' },
-		);
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: true,
+			defaultValue: '5'
+		});
 	},
 
 	toolId: TOOLS.RENBAN_OR_WHISPERS_LINE,
@@ -401,12 +396,10 @@ export const regionSumLineInfo: SquareCellElementInfo = {
 
 export const sumLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(
-			svgRef,
-			grid,
-			tool,
-			{ allowSelfIntersection: true, defaultValue: '' },
-		);
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: true,
+			defaultValue: ''
+		});
 	},
 
 	toolId: TOOLS.SUM_LINE,
@@ -484,8 +477,7 @@ export const sameParityLineLineInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description:
-			'On same parity pink lines, numbers are all odd or all even.',
+		description: 'On same parity pink lines, numbers are all odd or all even.',
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
@@ -494,12 +486,10 @@ export const sameParityLineLineInfo: SquareCellElementInfo = {
 
 export const modularLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(
-			svgRef,
-			grid,
-			tool,
-			{ allowSelfIntersection: false, defaultValue: '3' },
-		);
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: false,
+			defaultValue: '3'
+		});
 	},
 
 	toolId: TOOLS.MODULAR_LINE,
@@ -528,12 +518,10 @@ export const modularLineInfo: SquareCellElementInfo = {
 
 export const unimodularLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(
-			svgRef,
-			grid,
-			tool,
-			{ allowSelfIntersection: true, defaultValue: '3' },
-		);
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: true,
+			defaultValue: '3'
+		});
 	},
 
 	toolId: TOOLS.UNIMODULAR_LINE,
@@ -562,12 +550,10 @@ export const unimodularLineInfo: SquareCellElementInfo = {
 
 export const modularOrUnimodularLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(
-			svgRef,
-			grid,
-			tool,
-			{ allowSelfIntersection: false, defaultValue: '3' },
-		);
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: false,
+			defaultValue: '3'
+		});
 	},
 
 	toolId: TOOLS.MODULAR_OR_UNIMODULAR_LINE,
@@ -624,12 +610,10 @@ export const oddEvenOscilatorLineInfo: SquareCellElementInfo = {
 
 export const highLowOscilatorLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(
-			svgRef,
-			grid,
-			tool,
-			{ allowSelfIntersection: true, defaultValue: '5' },
-		);
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: true,
+			defaultValue: '5'
+		});
 	},
 
 	toolId: TOOLS.HIGH_LOW_OSCILLATOR_LINE,
@@ -716,7 +700,10 @@ export const entropicOrModularLineInfo: SquareCellElementInfo = {
 
 export const indexingColumnIsXLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true , defaultValue: '5'});
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: true,
+			defaultValue: '5'
+		});
 	},
 
 	toolId: TOOLS.INDEXING_COLUMN_IS_X_LINE,
@@ -891,12 +878,10 @@ export const rowSumLineInfo: SquareCellElementInfo = {
 
 export const atLeastXLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(
-			svgRef,
-			grid,
-			tool,
-			{ allowSelfIntersection: true, defaultValue: '10' },
-		);
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: true,
+			defaultValue: '10'
+		});
 	},
 
 	toolId: TOOLS.AT_LEAST_X_LINE,
@@ -984,12 +969,10 @@ export const adjacentCellSumIsPrimeLineInfo: SquareCellElementInfo = {
 
 export const productLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(
-			svgRef,
-			grid,
-			tool,
-			{ allowSelfIntersection: true, defaultValue: '' },
-		);
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: true,
+			defaultValue: ''
+		});
 	},
 
 	toolId: TOOLS.PRODUCT_LINE,
@@ -1075,12 +1058,10 @@ export const betweenLineInfo: SquareCellElementInfo = {
 
 export const lockoutLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(
-			svgRef,
-			grid,
-			tool,
-			{ allowSelfIntersection: true, defaultValue: '4' },
-		);
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: true,
+			defaultValue: '4'
+		});
 	},
 
 	toolId: TOOLS.LOCKOUT_LINE,
@@ -1209,6 +1190,33 @@ export const productOfEndsEqualsSumOfLineInfo: SquareCellElementInfo = {
 	meta: {
 		description:
 			'The sum of the values on the orange line must equal the product of the values in its end diamonds. Values may repeat if allowed by other rules.',
+		usage: lineUsage(),
+		tags: [],
+		categories: doubleEndedLineDefaultCategories
+	}
+};
+
+export const splitPeasLineInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
+	},
+
+	toolId: TOOLS.SPLIT_PEAS,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
+		r: { editable: false, value: 0.35 },
+		strokeWidth: { editable: true, value: 0.04 },
+		stroke: { editable: true, value: 'lightgreen' },
+		linePathOptions: {
+			bezierRounding: { editable: false, value: 0.15 }
+		}
+	},
+
+	meta: {
+		description:
+			'The sum of the digits on a line strictly between two circles is equal to a concatenation of the two values in the circles, in some order. For instance, 3_346_1 could be a valid split pea line, as 3+4+6=13, which is 1 concatenated with 3.',
 		usage: lineUsage(),
 		tags: [],
 		categories: doubleEndedLineDefaultCategories

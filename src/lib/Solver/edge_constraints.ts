@@ -2,7 +2,7 @@ import type { EdgeToolI } from '../Puzzle/Constraints/EdgeConstraints';
 import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { addHeader, cellsToVarsName, cellToVarName } from './solver_utils';
+import { cellsToVarsName, cellToVarName } from './solver_utils';
 
 function getEdgeVars(grid: Grid, constraint: EdgeToolI) {
 	const cells_coords = constraint.cells;
@@ -118,7 +118,5 @@ export function edgeConstraints(
 			out_str += constraint_str;
 		}
 	}
-
-	out_str = addHeader(out_str, `${toolId}`);
 	return out_str;
 }

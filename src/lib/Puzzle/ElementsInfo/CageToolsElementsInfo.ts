@@ -15,7 +15,6 @@ const nonTypableCageDefaultCategories = [
 	TOOL_CATEGORIES.CAGE_TOOL
 ];
 
-
 const typableCageDefaultCategories = [
 	TOOL_CATEGORIES.CAGE_CONSTRAINT,
 	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
@@ -209,6 +208,28 @@ export const aquariumCageInfo: SquareCellElementInfo = {
 	meta: {
 		description:
 			'Digits cannot repeat within a cage. Cells within aquariums are either air cells or water cells, with cells outside of cages not being air or water. Water cells fill the bottoms of cages and must have digits greater than all the air cells in their cage. Rows in cages must be either all air cells or all water cells. Cages must have at least one row of air cells and one row of water cells. Additionally, the cages are “pressurized”: The air cells within any cage must have a higher average value than the number of rows above that cage in the grid. (Eg If a cage occupied only rows 7, 8 and 9 then any air cells in that cage must have an average value greater than 6.).',
+		usage: typableCageUsage(),
+		tags: [],
+		categories: typableCageDefaultCategories
+	}
+};
+
+export const yinYangAntithesisKillerCageInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getCageToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultCageValueUpdater(oldValue, key, validateCageValue),
+			defaultValue: '',
+			allowDiagonallyAdjacent: true
+		});
+	},
+
+	toolId: TOOLS.YIN_YANG_ANTITHESIS_KILLER_CAGE,
+	order: RENDER_ORDER.CAGE_TOOLS,
+
+	meta: {
+		description:
+			'Digits in cages cannot repeat and must sum to the small clue in the top left corner of the cage. However, shaded cells are treated as negative. In other words, the cage total is the sum of unshaded cells minus the sum of shaded cells.',
 		usage: typableCageUsage(),
 		tags: [],
 		categories: typableCageDefaultCategories

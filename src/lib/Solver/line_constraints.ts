@@ -3,7 +3,7 @@ import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { addHeader, cellsToVarsName } from './solver_utils';
+import { cellsToVarsName } from './solver_utils';
 
 function getLineVars(grid: Grid, constraint: LineToolI) {
 	const cells_coords = constraint.cells;
@@ -144,7 +144,22 @@ function superfuzzyArrowConstraint(grid: Grid, c_id: string, constraint: LineToo
 }
 
 function unimodularLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
-	const constraint_str = valuedLineConstraint(grid, constraint, 'unimodular_line_p');
+	const constraint_str = valuedLineConstraint(grid, constraint, 'unimodular_line_p', '3');
+	return constraint_str;
+}
+
+function modularLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = valuedLineConstraint(grid, constraint, 'modular_line_p', '3');
+	return constraint_str;
+}
+
+function modularOrUnimodularLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = valuedLineConstraint(
+		grid,
+		constraint,
+		'modular_or_unimodular_line_p',
+		'3'
+	);
 	return constraint_str;
 }
 
@@ -175,6 +190,11 @@ function tightropeLineConstraint(grid: Grid, c_id: string, constraint: LineToolI
 
 function doubleArrowConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	const constraint_str = simpleLineConstraint(grid, constraint, 'double_arrow_p');
+	return constraint_str;
+}
+
+function splitPeasConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = simpleLineConstraint(grid, constraint, 'split_peas_p');
 	return constraint_str;
 }
 
@@ -258,9 +278,12 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.UNIQUE_VALUES_LINE, uniqueValuesLineConstraint],
 	[TOOLS.REPEATED_DIGITS_LINE, repeatedDigitsLineConstraint],
 	[TOOLS.UNIMODULAR_LINE, unimodularLineConstraint],
+	[TOOLS.MODULAR_LINE, modularLineConstraint],
+	[TOOLS.MODULAR_OR_UNIMODULAR_LINE, modularOrUnimodularLineConstraint],
 	[TOOLS.BETWEEN_LINE, betweenLineConstraint],
 	[TOOLS.TIGHTROPE_LINE, tightropeLineConstraint],
 	[TOOLS.DOUBLE_ARROW_LINE, doubleArrowConstraint],
+	[TOOLS.SPLIT_PEAS, splitPeasConstraint],
 	[TOOLS.PARITY_COUNT_LINE, parityCountLineConstraint],
 	[TOOLS.PRODUCT_OF_ENDS_EQUALS_SUM_OF_LINE, productOfEndsEqualsSumOfLineConstraint],
 	[TOOLS.REGION_SUM_LINE, regionSumLineConstraint]
@@ -280,6 +303,5 @@ export function lineConstraints(
 		}
 	}
 
-	out_str = addHeader(out_str, `${toolId}`);
 	return out_str;
 }

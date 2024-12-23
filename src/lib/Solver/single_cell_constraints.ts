@@ -2,8 +2,7 @@ import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { CellToolI } from '../Puzzle/Constraints/SingleCellConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { DIRECTION } from '../utils/directions';
-import { addHeader, cellsToVarsName, cellToVarName } from './solver_utils';
+import { cellsToVarsName, cellToVarName, getDirectionsVars } from './solver_utils';
 
 function simpleSingleCellConstraint(grid: Grid, constraint: CellToolI, predicate: string) {
 	const coords = constraint.cell;
@@ -180,16 +179,7 @@ function watchtowerFarsightHelper(grid: Grid, constraint: CellToolI, predicate: 
 	if (!cell0) return '';
 
 	const var0 = cellToVarName(cell0);
-	const up_cells = grid.getCellsInDirection(cell0.r, cell0.c, DIRECTION.N);
-	const down_cells = grid.getCellsInDirection(cell0.r, cell0.c, DIRECTION.S);
-	const left_cells = grid.getCellsInDirection(cell0.r, cell0.c, DIRECTION.W);
-	const right_cells = grid.getCellsInDirection(cell0.r, cell0.c, DIRECTION.E);
-
-	const up_vars = '[' + cellsToVarsName(up_cells).join(',') + ']';
-	const down_vars = '[' + cellsToVarsName(down_cells).join(',') + ']';
-	const left_vars = '[' + cellsToVarsName(left_cells).join(',') + ']';
-	const right_vars = '[' + cellsToVarsName(right_cells).join(',') + ']';
-
+	const [up_vars, down_vars, left_vars, right_vars] = getDirectionsVars(grid, cell0);
 	const constraint_str = `constraint ${predicate}(${var0}, ${up_vars}, ${down_vars}, ${left_vars}, ${right_vars});\n`;
 	return constraint_str;
 }
@@ -207,6 +197,17 @@ function notWatchtowerConstraint(grid: Grid, constraint: CellToolI) {
 function farsightConstraint(grid: Grid, constraint: CellToolI) {
 	const constraint_str = watchtowerFarsightHelper(grid, constraint, 'farsight_p');
 	return constraint_str;
+}
+
+function radarConstraint(grid: Grid, constraint: CellToolI) {
+	const coords = constraint.cell;
+	const cell0 = grid.getCell(coords.r, coords.c);
+	if (!cell0) return '';
+
+	const var0 = cellToVarName(cell0);
+	const [up_vars, down_vars, left_vars, right_vars] = getDirectionsVars(grid, cell0);
+	const constraint_str = `constraint radar_p(${var0}, ${up_vars}, ${down_vars}, ${left_vars}, ${right_vars}, 9);\n`;
+	return constraint_str;	
 }
 
 function sandwichRowColCountConstraint(grid: Grid, constraint: CellToolI) {
@@ -259,6 +260,27 @@ function minimumConstraint(grid: Grid, constraints: CellToolI[]) {
 	return constraint_str;
 }
 
+function countingCirclesConstraint(grid: Grid, constraints: CellToolI[]) {
+	let out_str = '';
+	const all_coords = constraints.map((constraint) => constraint.cell);
+	const cells = new Set(
+		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
+	);
+	const vars = cellsToVarsName([...cells]);
+	const vars_str = `[${vars.join(',')}]`;
+
+	for (const constraint of constraints) {
+		const coord = constraint.cell;
+		const cell = grid.getCell(coord.r, coord.c);
+		if (!cell) continue;
+		const cell_var = cellToVarName(cell);
+
+		const constraint_str = `constraint count(${vars_str}, ${cell_var}) == ${cell_var};\n`;
+		out_str += constraint_str;
+	}
+	return out_str;
+}
+
 type ConstraintF = (grid: Grid, constraint: CellToolI) => string;
 
 const tool_map = new Map<string, ConstraintF>([
@@ -279,9 +301,10 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.WATCHTOWER, watchtowerConstraint],
 	[TOOLS.NOT_WATCHTOWER, notWatchtowerConstraint],
 	[TOOLS.FARSIGHT, farsightConstraint],
+	[TOOLS.RADAR, radarConstraint],
 	[TOOLS.INDEXING_COLUMN, indexingColumnConstraint],
 	[TOOLS.INDEXING_ROW, indexingRowConstraint],
-	[TOOLS.SANDWICH_ROW_COL_COUNT, sandwichRowColCountConstraint]
+	[TOOLS.SANDWICH_ROW_COL_COUNT, sandwichRowColCountConstraint],
 ]);
 
 export function singleCellConstraints(
@@ -304,8 +327,10 @@ export function singleCellConstraints(
 		const constl = Object.values(constraints) as CellToolI[];
 		const constraint_str = minimumConstraint(grid, constl);
 		out_str += constraint_str;
+	} else if (toolId === TOOLS.COUNTING_CIRCLES) {
+		const constl = Object.values(constraints) as CellToolI[];
+		const constraint_str = countingCirclesConstraint(grid, constl);
+		out_str += constraint_str;
 	}
-
-	out_str = addHeader(out_str, `${toolId}`);
 	return out_str;
 }

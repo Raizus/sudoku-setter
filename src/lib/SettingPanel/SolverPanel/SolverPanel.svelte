@@ -6,7 +6,7 @@
 	import * as MiniZinc from 'minizinc';
 	import SolverModal from './SolverModal.svelte';
 	import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
-	import { restoreCellsValueAction } from '$src/lib/reducers/UpdateCellsActions';
+	import { restoreCellsHighlightsAction, restoreCellsValueAction } from '$src/lib/reducers/UpdateCellsActions';
 	import { executeUpdateCellsAction } from '$stores/CellsStore';
 
 	type JsonT = { [variable: string]: any } | undefined;
@@ -17,7 +17,7 @@
 
 	let showModal = false;
 
-	const max_sols = 5;
+	const max_sols = 100;
 	let sol_count: number | null = null;
 	let status: string = '';
 
@@ -50,6 +50,29 @@
 		executeUpdateCellsAction(action);
 	}
 
+	function setHighlights(json: JsonT) {
+		if (json === undefined) return;
+		const yin_yang: number[][] | undefined = json['yin_yang'];
+		if (yin_yang === undefined) return;
+
+		const cells: Cell[] = [];
+		const values: number[][] = [];
+		for (let i=0; i<yin_yang.length; i++) {
+			const row = yin_yang[i];
+			for (let j=0; j<row.length; j++) {
+				const cell = grid.getCell(i, j);
+				if (!cell) continue;
+				cells.push(cell);
+				const val = row[j];
+				if (val === 0) values.push([1]);
+				else values.push([0]);
+			}
+		}
+
+		const action = restoreCellsHighlightsAction(cells, values);
+		executeUpdateCellsAction(action);
+	}
+
 	async function solveModel() {
 		sol_count = 0;
 		status = 'SOLVING...';
@@ -72,6 +95,7 @@
 			const json = solution.output.json;
 			// console.log(json);
 			setSolutionValues(json);
+			setHighlights(json);
 			if (solution.type === 'solution' && sol_count !== null) sol_count += 1;
 		});
 

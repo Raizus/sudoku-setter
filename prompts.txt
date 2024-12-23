@@ -1,8 +1,31 @@
-Write a predicate 'n_consecutive_renban_line_p' which receives an array of int vars and an int var 'n' and forces the constraint:
-    - For each slice of the array of size n, the renban constraint applies, where
+Going back to the connected_regions predicate, the constraints that you have written are not sufficient to garantee that all 0's form just ONE connected region (same for 0's). This part of the model:
+    forall(r in rows, c in cols)(
+            % For 0s
+            reachable0[r,c] = 
+                (is_start0[r,c] \/ 
+                (grid[r,c] = 0 /\ 
+                    exists(dr in -1..1, dc in -1..1 where abs(dr) + abs(dc) = 1)(
+                        r + dr in rows /\ c + dc in cols /\ 
+                        reachable0[r+dr,c+dc]
+                    ))
+                )
+        )
 
-predicate renban(array[int] of var int: arr) =
-    alldifferent(arr) /\\
-    % Ensure the absolute difference between min and max is n-1
-    max(arr) - min(arr) == card(index_set(arr)) - 1;
+will only ensure that every zero has at least one neighbour.
 
+predicate connected(array [$$E] of $$N: from,
+                    array [$$E] of $$N: to,
+                    array [$$N] of var bool: ns,
+                    array [$$E] of var bool: es)
+
+Constrains the subgraph ns and es of a given undirected graph to be connected.
+
+Parameters:
+
+    from: is the leaving node for each edge
+
+    to: is the entering node for each edge
+
+    ns: is a Boolean for each node whether it is in the subgraph
+
+    es: is a Boolean for each edge whether it is in the subgraph

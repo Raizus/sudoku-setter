@@ -507,3 +507,27 @@ export const sandwichRowColCountInfo: SquareCellElementInfo = {
 		categories: singleCellShapeDefaultCategories
 	}
 };
+
+export const countingCirclesInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.COUNTING_CIRCLES,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'lightsalmon' },
+		r: { editable: false, value: 0.35 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			'A circled digit indicates exactly how many circles contain that digit. Note: This also includes all circles which are bounding the split pea lines. If, for example, a 3 appears in a circle, then there must be exactly 3 circles that contain a 3.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};

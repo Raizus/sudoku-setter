@@ -1,32 +1,45 @@
+import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
+import type { Grid } from '../Puzzle/Grid/Grid';
 import type { PuzzleI } from '../Puzzle/Puzzle';
+import type { TOOLID } from '../Puzzle/Tools';
 import { arrowConstraints } from './arrow_constraints';
 import { cageConstraints } from './cage_constraints';
+import { cloneConstraints } from './clone_constraints';
 import { cornerConstraints } from './corner_constraints';
 import { edgeConstraints } from './edge_constraints';
 import { lineConstraints } from './line_constraints';
 import { outsideDirectionConstraints } from './outside_direction_constraints';
 import { singleCellConstraints } from './single_cell_constraints';
+import { addHeader } from './solver_utils';
+
+type ConstraintsF = (
+	grid: Grid,
+	toolId: TOOLID,
+	constraints: Record<string, ConstraintType>
+) => string;
+
+const functions_list: ConstraintsF[] = [
+	singleCellConstraints,
+	edgeConstraints,
+	cornerConstraints,
+	lineConstraints,
+	arrowConstraints,
+	cageConstraints,
+	outsideDirectionConstraints,
+	cloneConstraints
+];
 
 export function localConstraints(puzzle: PuzzleI): string {
 	let out_str = '';
 	const lconstraints = puzzle.localConstraints;
+	const grid = puzzle.grid;
 
-	for (const [toolId, clist] of lconstraints.entries()) {
-		const constraints_str_1 = singleCellConstraints(puzzle.grid, toolId, clist);
-		const constraints_str_2 = edgeConstraints(puzzle.grid, toolId, clist);
-		const constraints_str_3 = cornerConstraints(puzzle.grid, toolId, clist);
-		const constraints_str_4 = lineConstraints(puzzle.grid, toolId, clist);
-		const constraints_str_5 = arrowConstraints(puzzle.grid, toolId, clist);
-		const constraints_str_6 = cageConstraints(puzzle.grid, toolId, clist);
-		const constraints_str_7 = outsideDirectionConstraints(puzzle.grid, toolId, clist);
-		out_str +=
-			constraints_str_1 +
-			constraints_str_2 +
-			constraints_str_3 +
-			constraints_str_4 +
-			constraints_str_5 +
-			constraints_str_6 +
-			constraints_str_7;
+	for (const [toolId, c_record] of lconstraints.entries()) {
+		for (const constraintF of functions_list) {
+			let constraint_str: string = constraintF(grid, toolId, c_record);
+			constraint_str = addHeader(constraint_str, `${toolId}`);
+			out_str += constraint_str;
+		}
 	}
 
 	return out_str;

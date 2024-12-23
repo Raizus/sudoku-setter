@@ -55,8 +55,6 @@ export enum VALUE_MODIFIER_CONSTRAINTS {
 
 export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	YIN_YANG = 'Yin Yang',
-	TWO_CONTIGUOUS_REGIONS = 'Two Contiguous Regions',
-	STAR_BATTLE = 'Star Battle'
 }
 
 export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
@@ -81,7 +79,8 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	PRIME_CELL = 'Prime Cell',
 	ADJACENT_CELLS_IN_DIFFERENT_DIRECTIONS_HAVE_OPPOSITE_PARITY = 'Adjacent Cells In Different Directions Have Opposite Parity',
 	SNOWBALL = 'Snowball',
-	SANDWICH_ROW_COL_COUNT = 'Sandwich Row Column Count'
+	SANDWICH_ROW_COL_COUNT = 'Sandwich Row Column Count',
+	COUNTING_CIRCLES = 'Counting Circles'
 }
 
 export enum EDGE_CONSTRAINTS {
@@ -150,7 +149,8 @@ export enum LINE_CONSTRAINTS {
 	TIGHTROPE_LINE = 'Tightrope Line',
 	PARITY_COUNT_LINE = 'Parity Count Line',
 	DOUBLE_ARROW_LINE = 'Double Arrow Line',
-	PRODUCT_OF_ENDS_EQUALS_SUM_OF_LINE = 'Product Of Ends Equals Sum Of Line'
+	PRODUCT_OF_ENDS_EQUALS_SUM_OF_LINE = 'Product Of Ends Equals Sum Of Line',
+	SPLIT_PEAS = 'Split Peas'
 }
 
 export enum ARROW_CONSTRAINTS {
@@ -166,7 +166,8 @@ export enum CAGE_CONSTRAINTS {
 	DIVISIBLE_KILLER_CAGE = 'Divisible Killer Cage',
 	SPOTLIGHT_CAGE = 'Spotlight Cage',
 	PUTTERIA_CAGE = 'Putteria Cage',
-	AQUARIUM_CAGE = 'Aquarium Cage'
+	AQUARIUM_CAGE = 'Aquarium Cage',
+	YIN_YANG_ANTITHESIS_KILLER_CAGE = 'Yin Yang Antithesis Killer Cage'
 }
 
 export enum CLONE_CONSTRAINTS {

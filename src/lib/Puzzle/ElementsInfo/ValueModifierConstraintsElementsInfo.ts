@@ -1,5 +1,5 @@
-import type { AbstractElementInfo } from "../ElementInfo";
-import { TOOLS, TOOL_CATEGORIES } from "../Tools";
+import type { AbstractElementInfo } from '../ElementInfo';
+import { TOOLS, TOOL_CATEGORIES } from '../Tools';
 
 export const vampireAndPreyInfo: AbstractElementInfo = {
 	toolId: TOOLS.VAMPIRE_AND_PREY,
@@ -49,7 +49,6 @@ export const negatorsInfo: AbstractElementInfo = {
 	}
 };
 
-
 export const hotCellsInfo: AbstractElementInfo = {
 	toolId: TOOLS.HOT_CELLS,
 	order: 0,
@@ -83,5 +82,17 @@ export const decrementFountainInfo: AbstractElementInfo = {
 			"A set of the digits 1 to 9, one in each row, column, and box, in the grid are Fountains of Youth. The fountain 'splashes' the cells orthogonally and diagonally adjacent. A fountain does not splash itself, but can be splashed by other fountains. A cell may be splashed by multiple fountains. Each time a cell is splashed, the value of the cell is reduced by one.",
 		tags: [],
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.VALUE_MODIFIER_CONSTRAINT]
+	}
+};
+
+export const YinYangInfo: AbstractElementInfo = {
+	toolId: TOOLS.YIN_YANG,
+	order: 0,
+
+	meta: {
+		description:
+			'Shade some cells in the grid such that all shaded cells are orthogonally connected and all unshaded cells are orthogonally connected, and no 2x2 area is fully shaded or fully unshaded.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
