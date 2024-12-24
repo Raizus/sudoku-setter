@@ -8,7 +8,8 @@ import {
 	putteriaCageInfo,
 	spotlightCageInfo,
 	sumCageInfo,
-	yinYangAntithesisKillerCageInfo
+	yinYangAntithesisKillerCageInfo,
+	yinYangBreakevenKillerCageInfo
 } from './CageToolsElementsInfo';
 import {
 	centerPMInfo,
@@ -49,7 +50,8 @@ import {
 	edgeSumInfo,
 	ratioInfo,
 	xvInfo,
-	xyDifferencesInfo
+	xyDifferencesInfo,
+	yinYangKropkiInfo
 } from './EdgeToolsElementsInfo';
 import {
 	allDifferencesGivenInfo,
@@ -61,6 +63,7 @@ import {
 	allXGivenInfo,
 	allXVGivenInfo,
 	allXYDifferencesGivenInfo,
+	allYinYangKropkiGivenInfo,
 	antikingInfo,
 	antiknightInfo,
 	disjointGroupsInfo,
@@ -68,6 +71,7 @@ import {
 	negativeDiagonalInfo,
 	nonconsecutiveInfo,
 	nonratioInfo,
+	NurimisakiPathGermanWhispersInfo,
 	oddEvenParityMirrorAlongNegativeDiagonalInfo,
 	oddEvenParityMirrorAlongPositiveDiagonalInfo,
 	positiveAntidiagonalInfo,
@@ -126,6 +130,7 @@ import {
 import {
 	battlefieldInfo,
 	brokenXSumInfo,
+	outsideEdgeYinYangSumOfShadedInfo,
 	risingStreakInfo,
 	rowOrColumnRankInfo,
 	sandwichSumInfo,
@@ -152,15 +157,34 @@ import {
 	maximumInfo,
 	minimumInfo,
 	notWatchtowerInfo,
+	nurimisakiUnshadedEndpointInfo,
 	oddInfo,
 	oddMinesweeperInfo,
 	orthogonalSumInfo,
 	primeCellInfo,
 	radarInfo,
 	sandwichRowColCountInfo,
-	watchtowerInfo
+	seenRegionBordersCountInfo,
+	twoContiguousRegionsRowColumnOppositeSetCountInfo,
+	watchtowerInfo,
+	yinYangAdjacentSameShadeCountInfo,
+	yinYangMinesweeperInfo,
+	yinYangSeenShadedCellsInfo,
+	yinYangSeenUnshadedCellsInfo
 } from './SingleCellElementsInfo';
-import { coldCellsInfo, decrementFountainInfo, doublersInfo, hotCellsInfo, markedCellsInfo, negatorsInfo, vampireAndPreyInfo, YinYangInfo } from './ValueModifierConstraintsElementsInfo';
+import {
+	coldCellsInfo,
+	decrementFountainInfo,
+	doublersInfo,
+	hotCellsInfo,
+	markedCellsInfo,
+	negatorsInfo,
+	nurimisakiInfo,
+	twoContiguousRegionsInfo,
+	unknownRegionsInfo,
+	vampireAndPreyInfo,
+	yinYangInfo
+} from './ValueModifierConstraintsElementsInfo';
 
 export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = {
 	// Cell input elements
@@ -200,6 +224,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.ALL_XY_DIFFERENCES_GIVEN]: allXYDifferencesGivenInfo,
 	[TOOLS.ALL_INDEXING_COLUMN_GIVEN]: allIndexingColumnGivenInfo,
 	[TOOLS.ALL_INDEXING_ROW_GIVEN]: allIndexingRowGivenInfo,
+	[TOOLS.ALL_YIN_YANG_KROPKI_GIVEN]: allYinYangKropkiGivenInfo,
 
 	[TOOLS.VAMPIRE_AND_PREY]: vampireAndPreyInfo,
 	[TOOLS.MARKED_CELLS]: markedCellsInfo,
@@ -210,7 +235,12 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.DECREMENT_FOUNTAIN]: decrementFountainInfo,
 
 	// Undetermined Regions Constraints
-	[TOOLS.YIN_YANG]: YinYangInfo,
+	[TOOLS.UNKNOWN_REGIONS]: unknownRegionsInfo,
+	[TOOLS.YIN_YANG]: yinYangInfo,
+	[TOOLS.NURIMISAKI]: nurimisakiInfo,
+	[TOOLS.TWO_CONTIGUOUS_REGIONS]: twoContiguousRegionsInfo,
+
+	[TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS]: NurimisakiPathGermanWhispersInfo,
 
 	// Single Cell Constraints
 	[TOOLS.ODD]: oddInfo,
@@ -236,6 +266,14 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 		adjacentCellsInDifferentDirectionsHaveOpositeParityInfo,
 	[TOOLS.SANDWICH_ROW_COL_COUNT]: sandwichRowColCountInfo,
 	[TOOLS.COUNTING_CIRCLES]: countingCirclesInfo,
+	[TOOLS.YIN_YANG_MINESWEEPER]: yinYangMinesweeperInfo,
+	[TOOLS.YIN_YANG_SEEN_UNSHADED_CELLS]: yinYangSeenUnshadedCellsInfo,
+	[TOOLS.YIN_YANG_SEEN_SHADED_CELLS]: yinYangSeenShadedCellsInfo,
+	[TOOLS.YIN_YANG_ADJACENT_SAME_SHADE_COUNT]: yinYangAdjacentSameShadeCountInfo,
+	[TOOLS.TWO_CONTIGUOUS_REGIONS_ROW_COLUMN_OPPOSITE_SET_COUNT]:
+		twoContiguousRegionsRowColumnOppositeSetCountInfo,
+	[TOOLS.SEEN_REGION_BORDERS_COUNT]: seenRegionBordersCountInfo,
+	[TOOLS.NURIMISAKI_UNSHADED_ENDPOINTS]: nurimisakiUnshadedEndpointInfo,
 
 	// Edge Constraints
 	[TOOLS.DIFFERENCE]: differenceInfo,
@@ -247,6 +285,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.EDGE_MODULO]: edgeModuloInfo,
 	[TOOLS.EDGE_FACTOR]: edgeFactorInfo,
 	[TOOLS.XY_DIFFERENCES]: xyDifferencesInfo,
+	[TOOLS.YIN_YANG_KROPKI]: yinYangKropkiInfo,
 
 	// Corner Constraints
 	[TOOLS.CORNER_SUM]: cornerSumInfo,
@@ -318,6 +357,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.SPOTLIGHT_CAGE]: spotlightCageInfo,
 	[TOOLS.PUTTERIA_CAGE]: putteriaCageInfo,
 	[TOOLS.YIN_YANG_ANTITHESIS_KILLER_CAGE]: yinYangAntithesisKillerCageInfo,
+	[TOOLS.YIN_YANG_BREAKEVEN_KILLER_CAGE]: yinYangBreakevenKillerCageInfo,
 
 	// Clone Constraints
 	[TOOLS.CLONE_REGION]: cloneRegionInfo,
@@ -334,6 +374,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.X_INDEX]: xIndexInfo,
 	[TOOLS.RISING_STREAK]: risingStreakInfo,
 	[TOOLS.ROW_OR_COLUMN_RANK]: rowOrColumnRankInfo,
+	[TOOLS.OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED]: outsideEdgeYinYangSumOfShadedInfo,
 
 	// Outside Corner Constraints
 	[TOOLS.LITTLE_KILLER_SUM]: littleKillerSumInfo,

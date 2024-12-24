@@ -85,13 +85,48 @@ export const decrementFountainInfo: AbstractElementInfo = {
 	}
 };
 
-export const YinYangInfo: AbstractElementInfo = {
+export const unknownRegionsInfo: AbstractElementInfo = {
+	toolId: TOOLS.UNKNOWN_REGIONS,
+	order: 0,
+
+	meta: {
+		description:
+			'The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const yinYangInfo: AbstractElementInfo = {
 	toolId: TOOLS.YIN_YANG,
 	order: 0,
 
 	meta: {
 		description:
 			'Shade some cells in the grid such that all shaded cells are orthogonally connected and all unshaded cells are orthogonally connected, and no 2x2 area is fully shaded or fully unshaded.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const nurimisakiInfo: AbstractElementInfo = {
+	toolId: TOOLS.NURIMISAKI,
+	order: 0,
+
+	meta: {
+		description:
+			'Shade some cells so that the remaining unshaded cells form one orthogonally connected area. No 2x2 region may be entirely shaded or unshaded.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const twoContiguousRegionsInfo: AbstractElementInfo = {
+	toolId: TOOLS.TWO_CONTIGUOUS_REGIONS,
+	order: 0,
+
+	meta: {
+		description: 'Divide the grid into two sets of contiguous cells.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}

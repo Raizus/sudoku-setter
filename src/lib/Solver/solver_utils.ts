@@ -4,13 +4,22 @@ import { DIRECTION } from '../utils/directions';
 
 export function cellToVarName(cell: Cell): string {
 	const [r, c] = [cell.r, cell.c];
-	const var_name = `R${r}C${c}`;
+	// const var_name = `R${r}C${c}`;
+	const var_name = `board[${r},${c}]`;
 	return var_name;
 }
 
 export function cellsToVarsName(cells: Cell[]): string[] {
 	const vars = cells.map((cell) => cellToVarName(cell));
 	return vars;
+}
+
+export function cellToYinYangVarName(cell: Cell): string {
+	return `yin_yang[${cell.r},${cell.c}]`;
+}
+
+export function cellsToYinYangVarsName(cells: Cell[]): string[] {
+	return cells.map((cell) => cellToYinYangVarName(cell));
 }
 
 export function allDifferentConstraint(vars: string[]): string {
@@ -99,61 +108,129 @@ function array[int] of var bool: sandwich_bools(array[int] of var int: arr, int:
     ) | i in index_set(arr)];
     
 function var int: sandwich_bools_sum(array[int] of var bool: arr) =
-    sum(i in index_set(arr))(bool2int(arr[i]));\n\n`;
+    sum(i in index_set(arr))(bool2int(arr[i]));
+    
+predicate count_uninterrupted_counts_p(array[int] of var int: arr, array[int] of var 0..1: counts, var int: x) = 
+    forall(i in index_set(arr)) (
+        if arr[i] != x \\/ (i > min(index_set(arr)) /\\ counts[i-1] == 0) then
+          counts[i] = 0
+        else 
+          counts[i] = 1
+        endif
+    );
 
-	const more_helper_f = `predicate connected_regions(array[int,int] of var 0..1: grid) =
+function var int: count_uninterrupted(array[int] of var int: arr, var int: x) =
+    let {
+        % Get array bounds
+        array[index_set(arr)] of var 0..1: counts,
+        constraint count_uninterrupted_counts_p(arr, counts, x)
+    } in (
+        if length(arr) == 0 then
+            0
+        else 
+            sum(counts)
+        endif
+    );
+    
+function var int: count_different(array[int] of var int: arr, var int: x) =
+    let {
+        % Create array of boolean variables for counting
+        array[index_set(arr)] of var bool: counts = [ arr[i] != x | i in index_set(arr) ];
+    } in sum(counts);
+     
+function var int: conditional_count_f(array[int] of var int: arr, array[int] of var int: labels, var int: x, var int: label) =
+    let {
+        constraint assert(
+            index_set(arr) = index_set(labels),
+            "Arrays must have same index set"
+        )
+    } in
+    sum(i in index_set(arr))(
+        bool2int(arr[i] = x /\\ labels[i] = label)
+    );
+
+function var int: count_transitions_f(array[int] of var int: arr) =
+    if length(arr) <= 1 then 
+        0 
+    else 
+        sum(i in min(index_set(arr))..max(index_set(arr))-1)(
+            bool2int(arr[i] != arr[i+1])
+        )
+    endif;\n\n`;
+
+	const more_helper_f = `predicate connected_regions(array[int,int] of var int: grid, var int: x) =
     let {
         set of int: rows = index_set_1of2(grid);
         set of int: cols = index_set_2of2(grid);
+        int: width = max(cols) - min(cols) + 1;
+        int: height = max(rows) - min(rows) + 1;
         
-        % Find a starting point for 0s and 1s (we'll use the first occurrence of each)
-        array[rows,cols] of var bool: is_start0 = 
-            array2d(rows, cols, [
-                grid[r,c] = 0 /\\ 
-                forall(r2 in rows, c2 in cols where r2 < r \\/ (r2 = r /\\ c2 < c))
-                    (grid[r2,c2] = 1)
-                | r in rows, c in cols
-            ]);
-        array[rows,cols] of var bool: is_start1 = 
-            array2d(rows, cols, [
-                grid[r,c] = 1 /\\ 
-                forall(r2 in rows, c2 in cols where r2 < r \\/ (r2 = r /\\ c2 < c))
-                    (grid[r2,c2] = 0)
-                | r in rows, c in cols
-            ]);
+        % Create nodes array (flattened grid)
+        array[1..width*height] of var bool: ns = 
+            [grid[r,c] = x | r in rows, c in cols];
         
-        % Reachability arrays for both values
-        array[rows,cols] of var bool: reachable0;
-        array[rows,cols] of var bool: reachable1;
+        % Calculate number of edges
+        int: num_edges = (width-1)*height + (height-1)*width;
+        
+        % Create and initialize edge arrays
+        % Horizontal edges first, then vertical edges
+        array[1..num_edges] of int: from = 
+            [ if i <= (width-1)*height then
+                % Horizontal edges
+                let {
+                    int: r = (i-1) div (width-1),
+                    int: c = (i-1) mod (width-1)
+                } in r*width + c + 1
+              else
+                % Vertical edges
+                let {
+                    int: remaining = i - (width-1)*height,
+                    int: c = (remaining-1) div (height-1),
+                    int: r = (remaining-1) mod (height-1)
+                } in r*width + c + 1
+              endif
+              | i in 1..num_edges];
+
+        array[1..num_edges] of int: to = 
+            [ if i <= (width-1)*height then
+                % Horizontal edges
+                let {
+                    int: r = (i-1) div (width-1),
+                    int: c = (i-1) mod (width-1)
+                } in r*width + c + 2
+              else
+                % Vertical edges
+                let {
+                    int: remaining = i - (width-1)*height,
+                    int: c = (remaining-1) div (height-1),
+                    int: r = (remaining-1) mod (height-1)
+                } in (r+1)*width + c + 1
+              endif
+              | i in 1..num_edges];
+
+        array[1..num_edges] of var bool: es
     } in (
-        % Enforce reachability from start points
-        forall(r in rows, c in cols)(
-            % For 0s
-            reachable0[r,c] = 
-                (is_start0[r,c] \\/ 
-                (grid[r,c] = 0 /\\ 
-                    exists(dr in -1..1, dc in -1..1 where abs(dr) + abs(dc) = 1)(
-                        r + dr in rows /\\ c + dc in cols /\\ 
-                        reachable0[r+dr,c+dc]
-                    ))
-                )
+        % Set edge conditions
+        forall(i in 1..num_edges) (
+            if i <= (width-1)*height then
+                % Horizontal edges
+                let {
+                    int: r = (i-1) div (width-1) + min(rows),
+                    int: c = (i-1) mod (width-1) + min(cols)
+                } in
+                es[i] = (grid[r,c] = x /\\ grid[r,c+1] = x)
+            else
+                % Vertical edges
+                let {
+                    int: remaining = i - (width-1)*height,
+                    int: c = (remaining-1) div (height-1) + min(cols),
+                    int: r = (remaining-1) mod (height-1) + min(rows)
+                } in
+                es[i] = (grid[r,c] = x /\\ grid[r+1,c] = x)
+            endif
         ) /\\
-        forall(r in rows, c in cols)(
-            % For 1s
-            reachable1[r,c] = 
-                (is_start1[r,c] \\/ 
-                (grid[r,c] = 1 /\\ 
-                    exists(dr in -1..1, dc in -1..1 where abs(dr) + abs(dc) = 1)(
-                        r + dr in rows /\\ c + dc in cols /\\ 
-                        reachable1[r+dr,c+dc]
-                    ))
-                )
-        ) /\\
-		% All cells must be reachable from their respective start points
-        forall(r in rows, c in cols)(
-            (grid[r,c] = 0 -> reachable0[r,c]) /\\
-            (grid[r,c] = 1 -> reachable1[r,c])
-        )
+        % Apply connected constraint
+        connected(from, to, ns, es)
     );\n\n`;
 
 	const helper_p = `predicate multisets_equal_p(array[int] of var int: arr1, array[int] of var int: arr2) =
@@ -765,7 +842,8 @@ predicate yin_yang_no_crossings(array[int, int] of var 0..1: grid) =
     );
 
 predicate yin_yang_p(array[int, int] of var 0..1: grid) =
-	connected_regions(grid) /\\
+	connected_regions(grid, 0) /\\
+    connected_regions(grid, 1) /\\
 	yin_yang_four_by_four_p(grid) /\\
 	yin_yang_no_crossings(grid);
 	
@@ -789,7 +867,153 @@ predicate yin_yang_antithesis_killer_cage_p(
             arr[i]
         );
     } in
-    (sum_zeros - sum_ones = val) /\\ alldifferent(arr);\n\n`;
+    (sum_zeros - sum_ones = val) /\\ alldifferent(arr);
+    
+predicate yin_yang_minesweeper_p(array[int] of var int: yin_yang_vars, var int: cell_var) =
+    let {
+        int: start_idx = min(index_set(yin_yang_vars))
+    } in
+    % cell is unshaded
+    yin_yang_vars[start_idx] == 0 /\\
+    % sum of all shaded in the neighborhood is equal to the value in the cell
+    count_eq(yin_yang_vars, 1, cell_var);
+    
+predicate yin_yang_breakeven_killer_cage_p(
+	array[int] of var int: arr, 
+	array[int] of var 0..1: shading, 
+	var int: val
+) = 
+    let {
+        % Arrays must have same index set
+        constraint assert(
+            index_set(arr) = index_set(shading),
+            "Arrays must have same index set"
+        );
+    } in
+    alldifferent(arr) /\\
+    (sum(arr) = val) /\\ 
+    forall(i in index_set(arr))(
+        % shaded cells are even
+        shading[i] == 1 <-> arr[i] mod 2 == 0
+        % unshaded cells are odd
+        % shading[i] == 0 <-> arr[i] mod 2 == 1
+    );
+
+function var int: yin_yang_seen_sum_f(
+	array[int] of var int: arr1, 
+	array[int] of var int: arr2, 
+	array[int] of var int: arr3, 
+	array[int] of var int: arr4,
+    var int: val
+) = 
+  count_uninterrupted(arr1, val) + count_uninterrupted(arr2, val) + count_uninterrupted(arr3, val) + count_uninterrupted(arr4, val);
+
+predicate yin_yang_seen_unshaded_p(
+	var int: cell_var,
+    var int: yin_yang_var,
+	array[int] of var int: arr1, 
+	array[int] of var int: arr2, 
+	array[int] of var int: arr3, 
+	array[int] of var int: arr4,
+) = let {
+    var int: count_cell = if yin_yang_var == 0 then 1 else 0 endif;
+} in (
+    yin_yang_seen_sum_f(arr1, arr2, arr3, arr4, 0) + count_cell == cell_var /\\
+    yin_yang_var == 0
+);
+
+predicate yin_yang_seen_shaded_p(
+	var int: cell_var,
+    var int: yin_yang_var,
+	array[int] of var int: arr1, 
+	array[int] of var int: arr2, 
+	array[int] of var int: arr3, 
+	array[int] of var int: arr4,
+) = let {
+    var int: count_cell = if yin_yang_var == 1 then 1 else 0 endif;
+} in (
+    yin_yang_seen_sum_f(arr1, arr2, arr3, arr4, 1) + count_cell == cell_var /\\
+    yin_yang_var == 1
+);
+
+predicate yin_yang_adjacent_same_shade_count_p(
+	var int: cell_var,
+    var int: yin_yang_var,
+    array[int] of var int: adj_yin_yang
+) =  count(adj_yin_yang, yin_yang_var) == cell_var;
+
+predicate outside_edge_yin_yang_sum_of_shaded_p(
+    array[int] of var int: cells, 
+    array[int] of var int: yin_yang_vars, 
+    var int: val
+) =  
+    index_set(cells) = index_set(yin_yang_vars) /\\
+    sum(i in index_set(cells) where yin_yang_vars[i] == 1)(cells[i]) == val;
+    
+predicate yin_yang_kropki_p(var int: cell1, var int: cell2, var int: yin_yang1, var int: yin_yang2) =
+(
+    yin_yang1 == yin_yang2 /\\ (
+        % unshaded pair -> ratio
+        (yin_yang1 == 0 /\\ ratio_p(cell1, cell2, 2)) \\/
+        % shaded pair -> consecutive
+        (yin_yang1 == 1 /\\ consecutive_p(cell1, cell2))
+    )
+);\n\n`;
+
+	const two_contiguous_regions = `predicate two_contiguous_regions_p(array[int, int] of var 0..1: grid) =
+	connected_regions(grid, 0) /\\
+    connected_regions(grid, 1);
+
+predicate two_contiguous_regions_row_col_opposite_set_count_p(
+    array[int] of var int: row_vars,
+    array[int] of var int: col_vars, 
+    var int: cell_var,
+    var int: region_var,
+) =
+    count_different(row_vars, region_var) + count_different(col_vars, region_var) == cell_var;\n\n`;
+
+	const unknown_sudoku_regions_p = `predicate unknown_sudoku_regions_p(array[int, int] of var int: grid) =
+    forall (reg_i in 0..8) (
+        connected_regions(grid, reg_i) /\\
+        % each region has exactly 9 cells
+        count(array1d(grid), reg_i) = 9
+    );
+    
+predicate no_repeats_in_unknown_regions_p(
+    array[int, int] of var int: grid, 
+    array[int, int] of var int: regions,
+    set of int: allowed_vals
+) =
+    forall(reg_i in 0..8) (
+        % for each region, the counts of each digit is at most 1
+        forall(val in allowed_vals) (
+            conditional_count_f(array1d(grid), array1d(regions), val, reg_i) <= 1
+        )
+    );
+
+predicate unknown_regions_seen_region_border_count_p(
+    array[int] of var int: row_region_vars, 
+    array[int] of var int: col_region_vars, 
+    var int: cell
+) = count_transitions_f(row_region_vars) + count_transitions_f(col_region_vars) == cell;\n\n`;
+
+	const nurimisaki = `predicate nurimisaki_p(array[int, int] of var int: grid) =
+	connected_regions(grid, 0) /\\
+	yin_yang_four_by_four_p(grid);
+
+predicate nurimisaki_unshaded_endpoint_p(array[int] of var int: adj_cells, var int: nurimisaki_cell) = 
+    count(adj_cells, 0) == 1 /\\ nurimisaki_cell == 0;
+    
+predicate nurimisaki_count_uninterrupted_unshaded_p(
+	var int: cell_var,
+    var int: nurimisaki_var,
+	array[int] of var int: arr1, 
+	array[int] of var int: arr2, 
+	array[int] of var int: arr3, 
+	array[int] of var int: arr4,
+) = let {
+    var int: count_cell = if nurimisaki_var == 0 then 1 else 0 endif
+} in count_uninterrupted(arr1, 0) + count_uninterrupted(arr2, 0) + count_uninterrupted(arr3, 0) + count_uninterrupted(arr4, 0) + count_cell == cell_var;\n\n`;
 
 	out_str +=
 		helper_f +
@@ -805,9 +1029,22 @@ predicate yin_yang_antithesis_killer_cage_p(
 		outside_edge_constraints +
 		outside_corner_constraints +
 		clone_constraints +
-		yin_yang;
-	
+		yin_yang +
+		two_contiguous_regions +
+		unknown_sudoku_regions_p +
+		nurimisaki;
+
 	return out_str;
+}
+
+export function getDirectionCells(grid: Grid, cell: Cell) {
+	const directions = [DIRECTION.N, DIRECTION.S, DIRECTION.W, DIRECTION.E];
+	const cells2: Cell[][] = [];
+	for (const direction of directions) {
+		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
+		cells2.push(cells);
+	}
+	return cells2;
 }
 
 export function getDirectionsVars(grid: Grid, cell: Cell) {

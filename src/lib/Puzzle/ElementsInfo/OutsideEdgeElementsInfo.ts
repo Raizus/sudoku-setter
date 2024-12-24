@@ -278,3 +278,24 @@ export const rowOrColumnRankInfo: SquareCellElementInfo = {
 	}
 };
 
+export const outsideEdgeYinYangSumOfShadedInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
+			defaultValue: '',
+			cornerOrEdge: CornerOrEdge.EDGE
+		});
+	},
+
+	toolId: TOOLS.OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED,
+	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
+	meta: {
+		description:
+			'Numbers outside the grid indicate the sum of the digits in shaded cells in the corresponding row/column.',
+		usage: outsideEdgeUsage(),
+		tags: [],
+		categories: outsideEdgeDefaultCategories
+	}
+};

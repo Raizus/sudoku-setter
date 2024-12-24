@@ -2,7 +2,14 @@ import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { CellToolI } from '../Puzzle/Constraints/SingleCellConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { cellsToVarsName, cellToVarName, getDirectionsVars } from './solver_utils';
+import {
+	cellsToVarsName,
+	cellsToYinYangVarsName,
+	cellToVarName,
+	cellToYinYangVarName,
+	getDirectionCells,
+	getDirectionsVars
+} from './solver_utils';
 
 function simpleSingleCellConstraint(grid: Grid, constraint: CellToolI, predicate: string) {
 	const coords = constraint.cell;
@@ -207,7 +214,7 @@ function radarConstraint(grid: Grid, constraint: CellToolI) {
 	const var0 = cellToVarName(cell0);
 	const [up_vars, down_vars, left_vars, right_vars] = getDirectionsVars(grid, cell0);
 	const constraint_str = `constraint radar_p(${var0}, ${up_vars}, ${down_vars}, ${left_vars}, ${right_vars}, 9);\n`;
-	return constraint_str;	
+	return constraint_str;
 }
 
 function sandwichRowColCountConstraint(grid: Grid, constraint: CellToolI) {
@@ -221,7 +228,7 @@ function sandwichRowColCountConstraint(grid: Grid, constraint: CellToolI) {
 	const row_vars = '[' + cellsToVarsName(row_cells).join(',') + ']';
 	const col_cells = grid.getCol(cell0.c);
 	const col_vars = '[' + cellsToVarsName(col_cells).join(',') + ']';
-	const [r, c] = [cell0.r + 1, cell0.c + 1]
+	const [r, c] = [cell0.r + 1, cell0.c + 1];
 	const constraint_str = `constraint sandwich_row_col_count_p(${row_vars}, ${col_vars}, ${r}, ${c}, ${var0});\n`;
 	return constraint_str;
 }
@@ -281,6 +288,125 @@ function countingCirclesConstraint(grid: Grid, constraints: CellToolI[]) {
 	return out_str;
 }
 
+function yinYangMinesweeperConstraint(grid: Grid, constraint: CellToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const var1 = cellToVarName(cell);
+	const neighbours = grid.getNeighboorCells(cell);
+	const cells = [cell, ...neighbours];
+	const yin_yang_vars = cellsToYinYangVarsName(cells);
+	const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
+	const constraint_str = `constraint yin_yang_minesweeper_p(${yin_yang_vars_str}, ${var1});\n`;
+	return constraint_str;
+}
+
+function yinYangSeenCountConstraint(grid: Grid, constraint: CellToolI, predicate: string) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToVarName(cell);
+
+	const dirCells = getDirectionCells(grid, cell);
+	const yin_yang_vars: string[] = [];
+	for (const cells of dirCells) {
+		const _yin_yang_vars = '[' + cellsToYinYangVarsName(cells).join(', ') + ']';
+		yin_yang_vars.push(_yin_yang_vars);
+	}
+	const cell_yin_yang_var = cellToYinYangVarName(cell);
+	const constraint_str = `constraint ${predicate}(${cell_var}, ${cell_yin_yang_var}, ${yin_yang_vars[0]}, ${yin_yang_vars[1]}, ${yin_yang_vars[2]}, ${yin_yang_vars[3]});\n`;
+	return constraint_str;
+}
+
+function yinYangSeenUnshadedConstraint(grid: Grid, constraint: CellToolI) {
+	const constraint_str = yinYangSeenCountConstraint(grid, constraint, 'yin_yang_seen_unshaded_p');
+	return constraint_str;
+}
+
+function yinYangSeenShadedConstraint(grid: Grid, constraint: CellToolI) {
+	const constraint_str = yinYangSeenCountConstraint(grid, constraint, 'yin_yang_seen_shaded_p');
+	return constraint_str;
+}
+
+function yinYangAdjacentSameShadeCountConstraint(grid: Grid, constraint: CellToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const var1 = cellToVarName(cell);
+	const cell_yin_yang_var = cellToYinYangVarName(cell);
+	const adjacent_cells = grid.getOrthogonallyAdjacentCells(cell);
+	const adj_yin_yang_vars = cellsToYinYangVarsName(adjacent_cells);
+	const yin_yang_vars_str = `[${adj_yin_yang_vars.join(', ')}]`;
+	const constraint_str = `constraint yin_yang_adjacent_same_shade_count_p(${var1}, ${cell_yin_yang_var}, ${yin_yang_vars_str});\n`;
+	return constraint_str;
+}
+
+function twoConstiguousRegionsRowColumnOppositeSetCountConstraint(
+	grid: Grid,
+	constraint: CellToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToVarName(cell);
+	const region_var = `two_contiguous_regions[${cell.r},${cell.c}]`;
+
+	const row_cells = grid.getRow(cell.r);
+	const col_cells = grid.getCol(cell.c);
+	const row_region_vars =
+		'[' +
+		row_cells.map((cell2) => `two_contiguous_regions[${cell2.r},${cell2.c}]`).join(', ') +
+		']';
+	const col_region_vars =
+		'[' +
+		col_cells.map((cell2) => `two_contiguous_regions[${cell2.r},${cell2.c}]`).join(', ') +
+		']';
+
+	const constraint_str = `constraint two_contiguous_regions_row_col_opposite_set_count_p(${row_region_vars}, ${col_region_vars}, ${cell_var}, ${region_var});\n`;
+	return constraint_str;
+}
+
+function seenRegionBordersCountConstraint(grid: Grid, constraint: CellToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToVarName(cell);
+
+	const row_cells = grid.getRow(cell.r);
+	const col_cells = grid.getCol(cell.c);
+	const row_region_vars =
+		'[' + row_cells.map((cell2) => `unknown_regions[${cell2.r},${cell2.c}]`).join(', ') + ']';
+	const col_region_vars =
+		'[' + col_cells.map((cell2) => `unknown_regions[${cell2.r},${cell2.c}]`).join(', ') + ']';
+
+	const constraint_str = `constraint unknown_regions_seen_region_border_count_p(${row_region_vars}, ${col_region_vars}, ${cell_var});\n`;
+	return constraint_str;
+}
+
+function nurimisakiUnshadedEndpointsConstraint(grid: Grid, constraint: CellToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToVarName(cell);
+	const cell_nurimisaki = `nurimisaki[${cell.r},${cell.c}]`;
+
+	const adj_cells = grid.getOrthogonallyAdjacentCells(cell);
+	const adj_nurimisaki_vars =
+		'[' + adj_cells.map((cell2) => `nurimisaki[${cell2.r},${cell2.c}]`).join(', ') + ']';
+
+	const dirCells = getDirectionCells(grid, cell);
+	const nurimisaki_vars: string[] = [];
+	for (const cells of dirCells) {
+		const _nurimisaki_vars =
+			'[' + cells.map((cell2) => `nurimisaki[${cell2.r}, ${cell2.c}]`).join(', ') + ']';
+		nurimisaki_vars.push(_nurimisaki_vars);
+	}
+	let out_str = `constraint nurimisaki_unshaded_endpoint_p(${adj_nurimisaki_vars}, ${cell_nurimisaki});\n`;
+	out_str += `constraint nurimisaki_count_uninterrupted_unshaded_p(${cell_var}, ${cell_nurimisaki}, ${nurimisaki_vars[0]}, ${nurimisaki_vars[1]}, ${nurimisaki_vars[2]}, ${nurimisaki_vars[3]});\n`;
+
+	return out_str;
+}
+
 type ConstraintF = (grid: Grid, constraint: CellToolI) => string;
 
 const tool_map = new Map<string, ConstraintF>([
@@ -305,6 +431,16 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.INDEXING_COLUMN, indexingColumnConstraint],
 	[TOOLS.INDEXING_ROW, indexingRowConstraint],
 	[TOOLS.SANDWICH_ROW_COL_COUNT, sandwichRowColCountConstraint],
+	[TOOLS.YIN_YANG_MINESWEEPER, yinYangMinesweeperConstraint],
+	[TOOLS.YIN_YANG_SEEN_UNSHADED_CELLS, yinYangSeenUnshadedConstraint],
+	[TOOLS.YIN_YANG_SEEN_SHADED_CELLS, yinYangSeenShadedConstraint],
+	[TOOLS.YIN_YANG_ADJACENT_SAME_SHADE_COUNT, yinYangAdjacentSameShadeCountConstraint],
+	[
+		TOOLS.TWO_CONTIGUOUS_REGIONS_ROW_COLUMN_OPPOSITE_SET_COUNT,
+		twoConstiguousRegionsRowColumnOppositeSetCountConstraint
+	],
+	[TOOLS.SEEN_REGION_BORDERS_COUNT, seenRegionBordersCountConstraint],
+	[TOOLS.NURIMISAKI_UNSHADED_ENDPOINTS, nurimisakiUnshadedEndpointsConstraint]
 ]);
 
 export function singleCellConstraints(

@@ -2,7 +2,7 @@ import type { EdgeToolI } from '../Puzzle/Constraints/EdgeConstraints';
 import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { cellsToVarsName, cellToVarName } from './solver_utils';
+import { cellsToVarsName, cellsToYinYangVarsName, cellToVarName } from './solver_utils';
 
 function getEdgeVars(grid: Grid, constraint: EdgeToolI) {
 	const cells_coords = constraint.cells;
@@ -93,6 +93,19 @@ function xyDifferencesConstraint(grid: Grid, constraint: EdgeToolI) {
 	return constraint_str;
 }
 
+function yinYangKropkiConstraint(grid: Grid, constraint: EdgeToolI) {
+	const cells_coords = constraint.cells;
+	const cells = cells_coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+	const [var1, var2] = cellsToVarsName(cells);
+	const yin_yang_vars = cellsToYinYangVarsName(cells);
+	const [yin_yang1, yin_yang2] = yin_yang_vars;
+
+	const constraint_str = `constraint yin_yang_kropki_p(${var1}, ${var2}, ${yin_yang1}, ${yin_yang2});\n`;
+	return constraint_str;
+}
+
 type ConstraintF = (grid: Grid, constraint: EdgeToolI) => string;
 
 const tool_map = new Map<string, ConstraintF>([
@@ -102,7 +115,8 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.EDGE_SUM, edgeSumConstraint],
 	[TOOLS.EDGE_MODULO, edgeModuloConstraint],
 	[TOOLS.EDGE_FACTOR, edgeFactorConstraint],
-	[TOOLS.XY_DIFFERENCES, xyDifferencesConstraint]
+	[TOOLS.XY_DIFFERENCES, xyDifferencesConstraint],
+	[TOOLS.YIN_YANG_KROPKI, yinYangKropkiConstraint]
 ]);
 
 export function edgeConstraints(

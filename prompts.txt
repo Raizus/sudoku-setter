@@ -1,31 +1,25 @@
-Going back to the connected_regions predicate, the constraints that you have written are not sufficient to garantee that all 0's form just ONE connected region (same for 0's). This part of the model:
-    forall(r in rows, c in cols)(
-            % For 0s
-            reachable0[r,c] = 
-                (is_start0[r,c] \/ 
-                (grid[r,c] = 0 /\ 
-                    exists(dr in -1..1, dc in -1..1 where abs(dr) + abs(dc) = 1)(
-                        r + dr in rows /\ c + dc in cols /\ 
-                        reachable0[r+dr,c+dc]
-                    ))
-                )
-        )
+In minizinc, I have the following predicate
+    predicate yin_yang_kropki_p(var int: cell1, var int: cell2, var int: yin_yang1, var int: yin_yang2) =
+        yin_yang1 == yin_yang2 /\\ (
+            % unshaded pair -> ratio
+            yin_yang1 == 0 /\ ratio_p(cell1, cell2, 2) \\/
+            % shaded pair -> consecutive
+            yin_yang1 == 1 -> consecutive_p(cell1, cell2)
+        );
 
-will only ensure that every zero has at least one neighbour.
+However the constraint 
+    yin_yang1 == 0 -> ratio_p(cell1, cell2, 2)
+is not being applied at all. How can I fix it
 
-predicate connected(array [$$E] of $$N: from,
-                    array [$$E] of $$N: to,
-                    array [$$N] of var bool: ns,
-                    array [$$E] of var bool: es)
 
-Constrains the subgraph ns and es of a given undirected graph to be connected.
+In minizinc, create a function var int: count_different(array[int] of var int: arr, var int: x) which returns the number of element in arr not equal to 'x'
 
-Parameters:
+Can you finish this predicate in minizinc, below the comment?
+predicate unknown_regions_p(array[int, int] of var int: grid) =
+    forall (reg_i in 0..8) (
+        connected_regions(grid, reg_i) /\
+        % each region has exactly 9 cells
+        count(array1d(grid), reg_i) = 9
+    );
 
-    from: is the leaving node for each edge
-
-    to: is the entering node for each edge
-
-    ns: is a Boolean for each node whether it is in the subgraph
-
-    es: is a Boolean for each edge whether it is in the subgraph
+Write a function var int: count_transitions_f(array[int] of var: int) and returns the number of times arr[i] != arr[i+1]. If the array is empty or has length 1 it should return 0.

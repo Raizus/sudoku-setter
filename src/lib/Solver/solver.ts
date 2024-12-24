@@ -1,22 +1,8 @@
 import type { PuzzleI } from '../Puzzle/Puzzle';
 import { globalConstraints, sudokuConstraints } from './global_constraints';
 import { localConstraints } from './local_constraints';
-import { yinYangConstraint } from './other_constraints';
+import { nurimisakiConstraint, twoContiguousRegionsConstraint, unknownRegionsConstraint, yinYangConstraint } from './other_constraints';
 import { cellToVarName, defineFunctionsPredicates } from './solver_utils';
-
-function createCellVars(puzzle: PuzzleI) {
-	const grid = puzzle.grid;
-	let out_str = '';
-	const min_v = 1;
-	const max_v = 9;
-
-	for (const cell of grid.getAllCells()) {
-		const var_name = cellToVarName(cell);
-		const var_str = `var ${min_v}..${max_v}: ${var_name};\n`;
-		out_str = out_str += var_str;
-	}
-	return out_str;
-}
 
 function givenConstraints(puzzle: PuzzleI) {
 	const grid = puzzle.grid;
@@ -34,14 +20,26 @@ function givenConstraints(puzzle: PuzzleI) {
 }
 
 export function createMinizincModel(puzzle: PuzzleI) {
+	const grid = puzzle.grid;
+	const [nrows, ncols] = [grid.nRows, grid.nCols];
+
 	let out_str = '';
 	out_str += 'include "globals.mzn";\n';
 	out_str += 'include "alldifferent.mzn";\n\n';
-	out_str += createCellVars(puzzle);
 	out_str += defineFunctionsPredicates();
-    out_str += givenConstraints(puzzle);
-    out_str += sudokuConstraints(puzzle);
-    out_str += yinYangConstraint(puzzle);
+
+	out_str += `set of int: ROW_IDXS = 0..${nrows - 1};\n`;
+	out_str += `set of int: COL_IDXS = 0..${ncols - 1};\n`;
+	out_str += `set of int: ALLOWED_DIGITS = 1..9;\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var ALLOWED_DIGITS: board;\n`;
+
+	out_str += givenConstraints(puzzle);
+	out_str += sudokuConstraints(puzzle);
+
+	out_str += yinYangConstraint(puzzle);
+	out_str += twoContiguousRegionsConstraint(puzzle);
+	out_str += unknownRegionsConstraint(puzzle);
+	out_str += nurimisakiConstraint(puzzle);
 	out_str += localConstraints(puzzle);
 	out_str += globalConstraints(puzzle);
 

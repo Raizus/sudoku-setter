@@ -135,6 +135,7 @@ export class LocalConstraintsDict extends Map<TOOLID, Record<string, ConstraintT
 		for (const [key, constraint_list_data] of Object.entries(data)) {
 			const tool = toolKeyFromString(key);
 			if (tool === undefined) continue;
+			if (!Object.keys(squareCellElementHandlers).includes(tool)) continue;
 
 			const constraint_list_data2 = constraint_list_data as Record<string, unknown>[];
 			for (const constraint_data of constraint_list_data2) {

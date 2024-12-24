@@ -531,3 +531,172 @@ export const countingCirclesInfo: SquareCellElementInfo = {
 		categories: singleCellShapeDefaultCategories
 	}
 };
+
+export const yinYangMinesweeperInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.YIN_YANG_MINESWEEPER,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'red' },
+		r: { editable: false, value: 0.25 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			"Circles act as 'minesweeper' clues. Cells containing a circle are always unshaded, and their value is the number of shaded cells in the surrounding 3x3 area (i.e. the up to eight cells that touch the circle either orthogonally or diagonally).",
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const yinYangSeenUnshadedCellsInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.YIN_YANG_SEEN_UNSHADED_CELLS,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'black' },
+		r: { editable: false, value: 0.35 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			'Black circles represent unshaded cells. A digit on a circle is equal to the number of consecutive unshaded cells (including itself) the circle sees in its row and column.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const yinYangSeenShadedCellsInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.YIN_YANG_SEEN_SHADED_CELLS,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'yellow' },
+		r: { editable: false, value: 0.35 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			'Yellow circles represent shaded cells. A digit on a circle is equal to the number of consecutive shaded cells (including itself) the circle sees in its row and column.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const yinYangAdjacentSameShadeCountInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.YIN_YANG_ADJACENT_SAME_SHADE_COUNT,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.SQUARE,
+		strokeWidth: { editable: false, value: 0.04 },
+		angle: { editable: false, value: 45 },
+		stroke: { editable: false, value: 'yellow' },
+		r: { editable: false, value: 0.25 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			"Numbers in cells with yellow diamonds indicate how many of that cell's (up to four) orthogonal neighbours share the same shading as the cell.",
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const twoContiguousRegionsRowColumnOppositeSetCountInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.TWO_CONTIGUOUS_REGIONS_ROW_COLUMN_OPPOSITE_SET_COUNT,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'black' },
+		r: { editable: false, value: 0.35 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			'Digits in a circled cell indicate the number of cells in the corresponding row and column combined that are in the other set.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const seenRegionBordersCountInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.SEEN_REGION_BORDERS_COUNT,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'black' },
+		r: { editable: false, value: 0.35 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			'A digit in a circle indicates the number of borders between regions it sees in its row and column. Note that the edge of the grid does not count toward this total.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const nurimisakiUnshadedEndpointInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.NURIMISAKI_UNSHADED_ENDPOINTS,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'black' },
+		r: { editable: false, value: 0.35 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			"Circles mark an instance of a cell which is unshaded and orthogonally adjacent to exactly one other unshaded cell (i.e. the circles mark 'endpoints' of the unshaded area). The digit in a circle indicates how many cells are in the straight line of unshaded cells coming out of the cell with the circle, including itself.",
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};

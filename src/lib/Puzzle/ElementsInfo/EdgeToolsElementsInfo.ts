@@ -326,3 +326,29 @@ export const xyDifferencesInfo: SquareCellElementInfo = {
 		categories: typableEdgeDefaultCategories
 	}
 };
+
+export const yinYangKropkiInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getEdgeToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.YIN_YANG_KROPKI,
+	order: RENDER_ORDER.EDGE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		r: { editable: false, value: EDGE_R_1 },
+		strokeWidth: { editable: false, value: 0, lb: 0, ub: 1, step: 0.025 },
+		stroke: { editable: false, value: 'none' },
+		fill: { editable: false, value: 'lightblue' },
+		opacity: { editable: false, value: 0.2 },
+		fontColor: { editable: false, value: 'white' }
+	},
+
+	meta: {
+		description:
+			'Cells separated by a a light blue transparent dot indicate that the two connected cells have the same Yin Yang shading. If a grey dot is between two unshaded cells their digits are in a 1:2 ratio; if a grey dot is between two shaded cells, their digits are consecutive.',
+		tags: [],
+		categories: typableEdgeDefaultCategories
+	}
+};

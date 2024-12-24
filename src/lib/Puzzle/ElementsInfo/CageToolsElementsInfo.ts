@@ -235,3 +235,25 @@ export const yinYangAntithesisKillerCageInfo: SquareCellElementInfo = {
 		categories: typableCageDefaultCategories
 	}
 };
+
+export const yinYangBreakevenKillerCageInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getCageToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultCageValueUpdater(oldValue, key, validateCageValue),
+			defaultValue: '',
+			allowDiagonallyAdjacent: true
+		});
+	},
+
+	toolId: TOOLS.YIN_YANG_BREAKEVEN_KILLER_CAGE,
+	order: RENDER_ORDER.CAGE_TOOLS,
+
+	meta: {
+		description:
+			'Digits in a cage cannot repeat and must sum to the small clue in the top left corner of the cage. In cages, all shaded cells must contain even digits, and all unshaded cells must contain odd digits.',
+		usage: typableCageUsage(),
+		tags: [],
+		categories: typableCageDefaultCategories
+	}
+};

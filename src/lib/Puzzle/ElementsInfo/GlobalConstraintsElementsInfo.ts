@@ -1,5 +1,5 @@
-import type { AbstractElementInfo } from "../ElementInfo";
-import { TOOLS, TOOL_CATEGORIES } from "../Tools";
+import type { AbstractElementInfo } from '../ElementInfo';
+import { TOOLS, TOOL_CATEGORIES } from '../Tools';
 
 const diagonalConstraintsDefaultCategories = [
 	TOOL_CATEGORIES.GLOBAL_CONSTRAINT,
@@ -12,7 +12,7 @@ export const sudokuRulesDoNotApplyInfo: AbstractElementInfo = {
 	order: 0,
 
 	meta: {
-		description: "Sudoku rules do not apply.",
+		description: 'Sudoku rules do not apply.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
 	}
@@ -240,6 +240,29 @@ export const allIndexingRowGivenInfo: AbstractElementInfo = {
 	meta: {
 		description:
 			'Any number X in a blue cell appearing in the Yth row of a column indicates the row X where the number Y appears in that column. All possible indexing column cells in the given columns are given.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
+
+export const allYinYangKropkiGivenInfo: AbstractElementInfo = {
+	toolId: TOOLS.ALL_YIN_YANG_KROPKI_GIVEN,
+	order: 0,
+
+	meta: {
+		description:
+			'Cells separated by a a light blue transparent dot indicate that the two connected cells have the same Yin Yang shading. If a grey dot is between two unshaded cells their digits are in a 1:2 ratio; if a grey dot is between two shaded cells, their digits are consecutive. All such dots are given.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
+
+export const NurimisakiPathGermanWhispersInfo: AbstractElementInfo = {
+	toolId: TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS,
+	order: 0,
+
+	meta: {
+		description: 'Cells Along Nurimisaki Path Have A Difference Of At Least 5.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
 	}

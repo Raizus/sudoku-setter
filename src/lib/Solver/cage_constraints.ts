@@ -2,7 +2,7 @@ import type { CageToolI } from '../Puzzle/Constraints/CageConstraints';
 import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { cellsToVarsName, allDifferentConstraint } from './solver_utils';
+import { cellsToVarsName, allDifferentConstraint, cellsToYinYangVarsName } from './solver_utils';
 
 function getCageVars(grid: Grid, constraint: CageToolI) {
 	const cells_coords = constraint.cells;
@@ -61,14 +61,34 @@ function yinYangAntithesisKillerCageConstraint(grid: Grid, constraint: CageToolI
 		.filter((cell) => !!cell);
 	const vars = cellsToVarsName(cells);
 	const vars_str = `[${vars.join(',')}]`;
-	const yin_yang_vars = cells.map(cell => `yin_yang[${cell.r},${cell.c}]`)
+
+	const yin_yang_vars = cellsToYinYangVarsName(cells)
+	const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
+
+	const value = constraint.value;
+	if (value) {
+		const val = parseInt(value);
+		const constraint_str = `constraint yin_yang_antithesis_killer_cage_p(${vars_str}, ${yin_yang_vars_str}, ${val});\n`;
+		return constraint_str;
+	}
+	return '';
+}
+
+function yinYangBreakevenKillerCageConstraint(grid: Grid, constraint: CageToolI) {
+	// Digits in cages cannot repeat and must sum to the small clue in the top left corner of the cage. However, shaded cells are treated as negative. In other words, the cage total is the sum of unshaded cells minus the sum of shaded cells.
+	const cells_coords = constraint.cells;
+	const cells = cells_coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+	const vars = cellsToVarsName(cells);
+	const vars_str = `[${vars.join(',')}]`;
+	const yin_yang_vars = cellsToYinYangVarsName(cells);
 	const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
 	const value = constraint.value;
 	if (value) {
 		const val = parseInt(value);
-		let out_str: string = '';
-		out_str += `constraint yin_yang_antithesis_killer_cage_p(${vars_str}, ${yin_yang_vars_str}, ${val});\n`;
-		return out_str;
+		const constraint_str = `constraint yin_yang_breakeven_killer_cage_p(${vars_str}, ${yin_yang_vars_str}, ${val});\n`;
+		return constraint_str;
 	}
 	return '';
 }
@@ -80,7 +100,8 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.SUM_CAGE, sumCageConstraint],
 	[TOOLS.DIVISIBLE_KILLER_CAGE, divisibleKillerCageConstraint],
 	[TOOLS.SPOTLIGHT_CAGE, spotlightCageConstraint],
-	[TOOLS.YIN_YANG_ANTITHESIS_KILLER_CAGE, yinYangAntithesisKillerCageConstraint]
+	[TOOLS.YIN_YANG_ANTITHESIS_KILLER_CAGE, yinYangAntithesisKillerCageConstraint],
+	[TOOLS.YIN_YANG_BREAKEVEN_KILLER_CAGE, yinYangBreakevenKillerCageConstraint]
 ]);
 
 export function cageConstraints(

@@ -1,6 +1,5 @@
 // export type ToolId<TTool extends string> = { [key in TTool]: string };
 
-
 export enum CELL_INPUT_TOOLS {
 	GIVEN = 'Given Digit',
 	DIGIT = 'Digit',
@@ -9,7 +8,7 @@ export enum CELL_INPUT_TOOLS {
 	HIGHLIGHTS = 'Highlights',
 	REGIONS = 'Regions',
 	OUTSIDE = 'Outside',
-	FOG = 'Fog',
+	FOG = 'Fog'
 }
 
 export enum SIMPLE_GLOBAL_CONSTRAINTS {
@@ -28,7 +27,9 @@ export enum SIMPLE_GLOBAL_CONSTRAINTS {
 
 	GLOBAL_ENTROPY = 'Global Entropy',
 	GLOBAL_INDEXING_COLUMN = 'Global Indexing Column',
-	GLOBAL_INDEXING_ROW = 'Global Indexing Row'
+	GLOBAL_INDEXING_ROW = 'Global Indexing Row',
+
+	NURIMISAKI_PATH_GERMAN_WHISPERS = 'Nurimisaki Path German Whispers'
 }
 
 export enum NEGATIVE_CONSTRAINTS {
@@ -40,7 +41,8 @@ export enum NEGATIVE_CONSTRAINTS {
 	ALL_RADARS_GIVEN = 'All Radars Given',
 	ALL_XY_DIFFERENCES_GIVEN = 'All XY Differences Given',
 	ALL_INDEXING_COLUMN_GIVEN = 'All Indexing Column Given',
-	ALL_INDEXING_ROW_GIVEN = 'All Indexing Row Given'
+	ALL_INDEXING_ROW_GIVEN = 'All Indexing Row Given',
+	ALL_YIN_YANG_KROPKI_GIVEN = 'All Yin Yang Kropki Given'
 }
 
 export enum VALUE_MODIFIER_CONSTRAINTS {
@@ -54,7 +56,10 @@ export enum VALUE_MODIFIER_CONSTRAINTS {
 }
 
 export enum UNDETERMINED_REGIONS_CONSTRAINTS {
+	UNKNOWN_REGIONS = 'Unknown Regions',
 	YIN_YANG = 'Yin Yang',
+	NURIMISAKI = 'Nurimisaki',
+	TWO_CONTIGUOUS_REGIONS = 'Two Contiguous Regions'
 }
 
 export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
@@ -80,7 +85,14 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	ADJACENT_CELLS_IN_DIFFERENT_DIRECTIONS_HAVE_OPPOSITE_PARITY = 'Adjacent Cells In Different Directions Have Opposite Parity',
 	SNOWBALL = 'Snowball',
 	SANDWICH_ROW_COL_COUNT = 'Sandwich Row Column Count',
-	COUNTING_CIRCLES = 'Counting Circles'
+	COUNTING_CIRCLES = 'Counting Circles',
+	YIN_YANG_MINESWEEPER = 'Yin Yang Minesweeper',
+	YIN_YANG_SEEN_UNSHADED_CELLS = 'Yin Yang Seen Unshaded Cells',
+	YIN_YANG_SEEN_SHADED_CELLS = 'Yin Yang Seen Shaded Cells',
+	YIN_YANG_ADJACENT_SAME_SHADE_COUNT = 'Yin Yang Adjacent Same Shade Count',
+	TWO_CONTIGUOUS_REGIONS_ROW_COLUMN_OPPOSITE_SET_COUNT = 'Two Contiguous Regions Row Column Opposite Set Count',
+	SEEN_REGION_BORDERS_COUNT = 'Seen Region Borders Count',
+	NURIMISAKI_UNSHADED_ENDPOINTS = 'Nurimisaki Unshaded Endpoints'
 }
 
 export enum EDGE_CONSTRAINTS {
@@ -92,7 +104,8 @@ export enum EDGE_CONSTRAINTS {
 	EDGE_PRODUCT = 'Edge Product',
 	EDGE_MODULO = 'Edge Modulo',
 	EDGE_FACTOR = 'Edge Factor',
-	XY_DIFFERENCES = 'XY Differences'
+	XY_DIFFERENCES = 'XY Differences',
+	YIN_YANG_KROPKI = 'Yin Yang Kropki'
 }
 
 export enum CORNER_CONSTRAINTS {
@@ -167,7 +180,8 @@ export enum CAGE_CONSTRAINTS {
 	SPOTLIGHT_CAGE = 'Spotlight Cage',
 	PUTTERIA_CAGE = 'Putteria Cage',
 	AQUARIUM_CAGE = 'Aquarium Cage',
-	YIN_YANG_ANTITHESIS_KILLER_CAGE = 'Yin Yang Antithesis Killer Cage'
+	YIN_YANG_ANTITHESIS_KILLER_CAGE = 'Yin Yang Antithesis Killer Cage',
+	YIN_YANG_BREAKEVEN_KILLER_CAGE = 'Yin Yang Breakeven Killer Cage'
 }
 
 export enum CLONE_CONSTRAINTS {
@@ -185,7 +199,8 @@ export enum OUTSIDE_EDGE_CONSTRAINTS {
 	SKYSCRAPERS = 'Skyscrapers',
 	X_INDEX = 'X-Index',
 	RISING_STREAK = 'Rising Streak',
-	ROW_OR_COLUMN_RANK = 'Row Or Column Rank'
+	ROW_OR_COLUMN_RANK = 'Row Or Column Rank',
+	OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED = 'Outside Edge Yin Yang Sum Of Shaded'
 }
 
 export enum OUTSIDE_CORNER_CONSTRAINTS {
@@ -268,7 +283,6 @@ export type TOOLID =
 	| OUTSIDE_CORNER_CONSTRAINTS
 	| COSMETIC_TOOLS
 	| OTHER_TOOLS;
-
 
 export enum TOOL_CATEGORIES {
 	CELL_INPUT_TOOL = 'Cell Input Tool',
@@ -414,13 +428,12 @@ export const GLOBAL_CONSTRAINT_CATEGORIES = [
 	TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT
 ];
 
-
 export function toolKeyFromString(str: string): TOOLID | undefined {
 	for (const val of Object.values(TOOLS)) {
 		if (val === str) return val;
 	}
 	// throw new Error(`No matching TOOLS for string: ${str}`);
-	return undefined
+	return undefined;
 }
 
 // type Enum = { [s: string]: string };

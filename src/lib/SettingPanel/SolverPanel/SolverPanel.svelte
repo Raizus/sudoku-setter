@@ -32,43 +32,68 @@
 
 	function setSolutionValues(json: JsonT) {
 		if (json === undefined) return;
-		const cell_var_regex = /^R(\d+)C(\d+)$/;
+		const board: number[][] | undefined = json['board'];
+		if (board === undefined) return;
+
 		const cells: Cell[] = [];
 		const values: number[] = [];
-		for (const [var_name, value] of Object.entries(json)) {
-			const match = var_name.match(cell_var_regex);
-			if (!match) continue;
-			if (typeof value !== 'number') continue;
-			const [r, c] = [parseInt(match[1]), parseInt(match[2])];
-			const cell = grid.getCell(r, c);
-			if (!cell || cell.given) continue;
-			cells.push(cell);
-			values.push(value);
+		for (let r=0; r<board.length; r++) {
+			const row = board[r];
+			for (let c=0; c<row.length; c++) { 
+				const cell = grid.getCell(r, c);
+				if (!cell || cell.given) continue;
+				const value = row[c];
+				cells.push(cell);
+				values.push(value);
+			} 
 		}
-
 		const action = restoreCellsValueAction(cells, values);
 		executeUpdateCellsAction(action);
 	}
 
-	function setHighlights(json: JsonT) {
+	function setBinaryHighlights(json: JsonT) {
 		if (json === undefined) return;
-		const yin_yang: number[][] | undefined = json['yin_yang'];
-		if (yin_yang === undefined) return;
+		const grid_vars_names = ['yin_yang', 'two_contiguous_regions', 'nurimisaki'];
+		for (const name of grid_vars_names) {
+			const binary_grid: number[][] | undefined = json[name];
+			if (binary_grid === undefined) continue;
+
+			const cells: Cell[] = [];
+			const values: number[][] = [];
+			for (let i=0; i<binary_grid.length; i++) {
+				const row = binary_grid[i];
+				for (let j=0; j<row.length; j++) {
+					const cell = grid.getCell(i, j);
+					if (!cell) continue;
+					cells.push(cell);
+					const val = row[j];
+					if (val === 0) values.push([3]);
+					else values.push([1]);
+				}
+			}
+			const action = restoreCellsHighlightsAction(cells, values);
+			executeUpdateCellsAction(action);
+			return;
+		}
+	}
+
+	function setUnknownRegionsHighlights(json: JsonT) {
+		if (json === undefined) return;
+		const unknown_regions: number[][] | undefined = json['unknown_regions'];
+		if (unknown_regions === undefined) return;
 
 		const cells: Cell[] = [];
 		const values: number[][] = [];
-		for (let i=0; i<yin_yang.length; i++) {
-			const row = yin_yang[i];
+		for (let i=0; i<unknown_regions.length; i++) {
+			const row = unknown_regions[i];
 			for (let j=0; j<row.length; j++) {
 				const cell = grid.getCell(i, j);
 				if (!cell) continue;
 				cells.push(cell);
 				const val = row[j];
-				if (val === 0) values.push([1]);
-				else values.push([0]);
+				values.push([val+1]);
 			}
 		}
-
 		const action = restoreCellsHighlightsAction(cells, values);
 		executeUpdateCellsAction(action);
 	}
@@ -95,7 +120,8 @@
 			const json = solution.output.json;
 			// console.log(json);
 			setSolutionValues(json);
-			setHighlights(json);
+			setBinaryHighlights(json);
+			setUnknownRegionsHighlights(json);
 			if (solution.type === 'solution' && sol_count !== null) sol_count += 1;
 		});
 

@@ -5,7 +5,7 @@ import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { cellsToVarsName, allDifferentConstraint, cellToVarName, addHeader, getDirectionsVars } from './solver_utils';
+import { cellsToVarsName, allDifferentConstraint, cellToVarName, addHeader, getDirectionsVars, cellToYinYangVarName } from './solver_utils';
 
 function positiveDiagonalConstraint(grid: Grid): string {
 	const diag_cells = grid.getPositiveDiagonal();
@@ -273,6 +273,33 @@ function allXYDifferencesGivenConstraint(puzzle: PuzzleI): string {
 	return out_str;
 }
 
+function allYinYangKropkiGivenConstraint(puzzle: PuzzleI): string {
+	const grid = puzzle.grid;
+	const local_constraints = puzzle.localConstraints;
+	const constraints = local_constraints.get(TOOLS.YIN_YANG_KROPKI);
+
+	const cells_pairs: Set<Cell>[] = getEdgeConstraintCellPairs(grid, constraints);
+
+	let out_str: string = '';
+	for (const [cell1, cell2] of adjCellPairGen(grid)) {
+		// check if cell pair is not in xv pairs
+		const match = cells_pairs.find((pair) => pair.has(cell1) && pair.has(cell2));
+		if (match) continue;
+
+		const var1 = cellToVarName(cell1);
+		const var2 = cellToVarName(cell2);
+
+		const yin_yang1 = cellToYinYangVarName(cell1);
+		const yin_yang2 = cellToYinYangVarName(cell2);
+
+		const constraint_str = `constraint not yin_yang_kropki_p(${var1}, ${var2}, ${yin_yang1}, ${yin_yang2});\n`;
+		out_str += constraint_str;
+	}
+
+	out_str = addHeader(out_str, `${TOOLS.ALL_YIN_YANG_KROPKI_GIVEN}`);
+	return out_str;
+}
+
 function getSingleCellConstraintsCells(
 	grid: Grid,
 	constraints: Record<string, ConstraintType> | undefined
@@ -334,6 +361,23 @@ function allRadarsGivenConstraint(puzzle: PuzzleI): string {
 	out_str = addHeader(out_str, `${TOOLS.ALL_RADARS_GIVEN}`);
 	return out_str;
 }
+
+function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleI) {
+	const grid = puzzle.grid;
+	let out_str: string = '\n% Nurimisaki Path German Whispers\n';
+	for (const [cell1, cell2] of adjCellPairGen(grid)) {
+		const var1 = cellToVarName(cell1);
+		const var2 = cellToVarName(cell2);
+
+		const nurimisaki1 = `nurimisaki[${cell1.r},${cell1.c}]`;
+		const nurimisaki2 = `nurimisaki[${cell2.r},${cell2.c}]`;
+
+		const constraint_str = `constraint (${nurimisaki1} == 0 /\\ ${nurimisaki2} == 0) -> abs(${var1} - ${var2}) >= 5;\n`;
+		out_str += constraint_str;
+	}
+	return out_str;
+}
+
 
 export function sudokuConstraints(puzzle: PuzzleI) {
 	const gconstraints = puzzle.globalConstraints;
@@ -427,11 +471,17 @@ export function globalConstraints(puzzle: PuzzleI): string {
 		} else if (toolId === TOOLS.ALL_XY_DIFFERENCES_GIVEN) {
 			const constraint_str = allXYDifferencesGivenConstraint(puzzle);
 			out_str += constraint_str;
+		} else if (toolId === TOOLS.ALL_YIN_YANG_KROPKI_GIVEN) {
+			const constraint_str = allYinYangKropkiGivenConstraint(puzzle);
+			out_str += constraint_str;
 		} else if (toolId === TOOLS.ALL_INDEXING_COLUMN_GIVEN) {
 			const constraint_str = allIndexingColumnGivenConstraint(puzzle);
 			out_str += constraint_str;
 		} else if (toolId === TOOLS.ALL_RADARS_GIVEN) {
 			const constraint_str = allRadarsGivenConstraint(puzzle);
+			out_str += constraint_str;
+		} else if (toolId === TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS) {
+			const constraint_str = nurimisakiPathGermanWhispersConstraint(puzzle);
 			out_str += constraint_str;
 		} 
 	}
