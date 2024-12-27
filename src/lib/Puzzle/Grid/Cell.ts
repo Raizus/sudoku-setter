@@ -134,9 +134,7 @@ export class Cell implements CellI {
 			cellRecord.value = this.value;
 		}
 
-		if (this.region !== null) {
-			cellRecord.region = this.region;
-		}
+		cellRecord.region = this.region;
 
 		if (this.fog) {
 			cellRecord.fog = this.fog;

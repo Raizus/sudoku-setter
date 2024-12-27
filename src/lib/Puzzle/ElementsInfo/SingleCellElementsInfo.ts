@@ -8,6 +8,7 @@ import { RENDER_ORDER } from '../RenderOrder';
 import { SHAPE_TYPES } from '../Shape/Shape';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { getSingleCellToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/SingleCellToolInputHandler';
+import { getSingleCellMultiArrowToolInputHandler } from '$input/ToolInputHandlers/SingleCellMultiArrowToolInputHandler';
 
 const singleCellShapeDefaultCategories = [
 	TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
@@ -698,5 +699,32 @@ export const nurimisakiUnshadedEndpointInfo: SquareCellElementInfo = {
 			"Circles mark an instance of a cell which is unshaded and orthogonally adjacent to exactly one other unshaded cell (i.e. the circles mark 'endpoints' of the unshaded area). The digit in a circle indicates how many cells are in the straight line of unshaded cells coming out of the cell with the circle, including itself.",
 		tags: [],
 		categories: singleCellShapeDefaultCategories
+	}
+};
+
+
+export const countCellsNotInTheSameRegionArrowsInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CELL_ARROW,
+		strokeWidth: { editable: true, value: 0.04, lb: 0.01, ub: 0.2, step: 0.01 },
+		stroke: { editable: true, value: 'black' }
+	},
+
+	meta: {
+		description:
+			'A cell with an arrow (or arrows) indicates how many cells in the indicated directions combined that do not belong to the same region as that cell.',
+		tags: [],
+		categories: [
+			TOOL_CATEGORIES.SINGLE_CELL_MULTIARROW_TOOL,
+			TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
+			TOOL_CATEGORIES.LOCAL_CONSTRAINT
+		]
 	}
 };

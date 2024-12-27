@@ -57,6 +57,7 @@ import {
 	allDifferencesGivenInfo,
 	allIndexingColumnGivenInfo,
 	allIndexingRowGivenInfo,
+	allNurimisakiUnshadedEndpointsGivenInfo,
 	allRadarsGivenInfo,
 	allRatiosGivenInfo,
 	allVGivenInfo,
@@ -67,6 +68,7 @@ import {
 	antikingInfo,
 	antiknightInfo,
 	disjointGroupsInfo,
+	globalIndexingColumnInfo,
 	negativeAntidiagonalInfo,
 	negativeDiagonalInfo,
 	nonconsecutiveInfo,
@@ -143,6 +145,7 @@ import {
 } from './OutsideEdgeElementsInfo';
 import {
 	adjacentCellsInDifferentDirectionsHaveOpositeParityInfo,
+	countCellsNotInTheSameRegionArrowsInfo,
 	countingCirclesInfo,
 	countSameParityNeighborCellsInfo,
 	diagonallyAdjacentSumInfo,
@@ -205,6 +208,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.DISJOINT_GROUPS]: disjointGroupsInfo,
 	[TOOLS.NONCONSECUTIVE]: nonconsecutiveInfo,
 	[TOOLS.NONRATIO]: nonratioInfo,
+	[TOOLS.GLOBAL_INDEXING_COLUMN]: globalIndexingColumnInfo,
 
 	[TOOLS.NEGATIVE_DIAGONAL]: negativeDiagonalInfo,
 	[TOOLS.POSITIVE_DIAGONAL]: positiveDiagonalInfo,
@@ -225,6 +229,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.ALL_INDEXING_COLUMN_GIVEN]: allIndexingColumnGivenInfo,
 	[TOOLS.ALL_INDEXING_ROW_GIVEN]: allIndexingRowGivenInfo,
 	[TOOLS.ALL_YIN_YANG_KROPKI_GIVEN]: allYinYangKropkiGivenInfo,
+	[TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN]: allNurimisakiUnshadedEndpointsGivenInfo,
 
 	[TOOLS.VAMPIRE_AND_PREY]: vampireAndPreyInfo,
 	[TOOLS.MARKED_CELLS]: markedCellsInfo,
@@ -274,6 +279,9 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 		twoContiguousRegionsRowColumnOppositeSetCountInfo,
 	[TOOLS.SEEN_REGION_BORDERS_COUNT]: seenRegionBordersCountInfo,
 	[TOOLS.NURIMISAKI_UNSHADED_ENDPOINTS]: nurimisakiUnshadedEndpointInfo,
+
+	// Single Cell Multi Arrow Constraint
+	[TOOLS.COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS]: countCellsNotInTheSameRegionArrowsInfo,
 
 	// Edge Constraints
 	[TOOLS.DIFFERENCE]: differenceInfo,

@@ -169,6 +169,19 @@ function nonratioConstraint(puzzle: PuzzleI) {
 	return out_str;
 }
 
+function globalIndexingColumnConstraint(grid: Grid): string {
+	let out_str = '\n% Global Indexing Column\n';
+	for (const cell of grid.getAllCells()) {
+		const row_cells = grid.getRow(cell.r);
+		const vars = cellsToVarsName(row_cells);
+		const vars_str = `[${vars.join(',')}]`;
+		const col = cell.c + 1;
+		const constraint_str = `constraint indexing_column_p(${vars_str}, ${col});\n`;
+		out_str += constraint_str;
+	}
+	return out_str;
+}
+
 function allXVGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
 	const local_constraints = puzzle.localConstraints;
@@ -362,6 +375,31 @@ function allRadarsGivenConstraint(puzzle: PuzzleI): string {
 	return out_str;
 }
 
+function allNurimisakiUnshadedEndpointsGivenConstraint(puzzle: PuzzleI): string {
+	const grid = puzzle.grid;
+	const local_constraints = puzzle.localConstraints;
+	const constraints = local_constraints.get(TOOLS.NURIMISAKI_UNSHADED_ENDPOINTS);
+
+	const cells: Set<Cell> = getSingleCellConstraintsCells(grid, constraints);
+
+	let out_str: string = '';
+	for (const cell of grid.getAllCells()) {
+		const match = cells.has(cell);
+		if (match) continue;
+
+		const cell_nurimisaki = `nurimisaki[${cell.r},${cell.c}]`;
+		const adj_cells = grid.getOrthogonallyAdjacentCells(cell);
+		const adj_nurimisaki_vars =
+			'[' + adj_cells.map((cell2) => `nurimisaki[${cell2.r},${cell2.c}]`).join(', ') + ']';
+		
+		const constraint_str = `constraint not nurimisaki_unshaded_endpoint_p(${adj_nurimisaki_vars}, ${cell_nurimisaki});\n`;
+		out_str += constraint_str;
+	}
+
+	out_str = addHeader(out_str, `${TOOLS.ALL_INDEXING_COLUMN_GIVEN}`);
+	return out_str;
+}
+
 function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleI) {
 	const grid = puzzle.grid;
 	let out_str: string = '\n% Nurimisaki Path German Whispers\n';
@@ -409,13 +447,16 @@ export function sudokuConstraints(puzzle: PuzzleI) {
 	}
 
 	// region constraints (digits do not repeat on regions)
-	out_str += '\n% region constraints (digits do not repeat on regions)\n';
-	const regions = grid.getUsedRegions();
-	for (const region of regions) {
-		const region_cells = grid.getRegion(region);
-		const region_vars = cellsToVarsName(region_cells);
-		const constraint = allDifferentConstraint(region_vars);
-		out_str += constraint;
+	const unknown_regions = gconstraints.get(TOOLS.UNKNOWN_REGIONS);
+	if (!unknown_regions) {
+		out_str += '\n% region constraints (digits do not repeat on regions)\n';
+		const regions = grid.getUsedRegions();
+		for (const region of regions) {
+			const region_cells = grid.getRegion(region);
+			const region_vars = cellsToVarsName(region_cells);
+			const constraint = allDifferentConstraint(region_vars);
+			out_str += constraint;
+		}
 	}
 
 	return out_str;
@@ -461,6 +502,9 @@ export function globalConstraints(puzzle: PuzzleI): string {
 		} else if (toolId === TOOLS.NONRATIO) {
 			const constraint_str = nonratioConstraint(puzzle);
 			out_str += constraint_str;
+		} else if (toolId === TOOLS.GLOBAL_INDEXING_COLUMN) {
+			const constraint_str = globalIndexingColumnConstraint(puzzle.grid);
+			out_str += constraint_str;
 		} else if (
 			toolId === TOOLS.ALL_V_GIVEN ||
 			toolId === TOOLS.ALL_X_GIVEN ||
@@ -482,6 +526,9 @@ export function globalConstraints(puzzle: PuzzleI): string {
 			out_str += constraint_str;
 		} else if (toolId === TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS) {
 			const constraint_str = nurimisakiPathGermanWhispersConstraint(puzzle);
+			out_str += constraint_str;
+		} else if (toolId === TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN) {
+			const constraint_str = allNurimisakiUnshadedEndpointsGivenConstraint(puzzle);
 			out_str += constraint_str;
 		} 
 	}

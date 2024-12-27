@@ -34,6 +34,6 @@
 
 <style>
 	.line-markers {
-		opacity: 0.6;
+		opacity: 0.9;
 	}
 </style>

@@ -171,6 +171,7 @@ export function resetPuzzle() {
 	cellsStore.update(() => {
 		return grid.getAllCells();
 	});
+	updatePenTool(resetAction());
 }
 
 export function resetUserState() {

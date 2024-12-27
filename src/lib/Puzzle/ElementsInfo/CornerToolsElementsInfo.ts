@@ -120,3 +120,36 @@ export const cornerEvenCountInfo: SquareCellElementInfo = {
 		]
 	}
 };
+
+export const cornerCellsBelongToExacltyThreeRegionsInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getCornerToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultCornerValueUpdater(oldValue, key, validateCornerValue),
+			defaultValue: ''
+		});
+	},
+
+	toolId: TOOLS.CORNER_CELLS_BELONG_TO_EXACTLY_THREE_REGIONS,
+	order: RENDER_ORDER.CORNER_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		r: { editable: false, value: 0.25 },
+		strokeWidth: { editable: false, value: 0.023 },
+		stroke: { editable: false, value: 'black' },
+		fill: { editable: false, value: 'var(--grid-background-color)' }
+	},
+
+	meta: {
+		description:
+			'Cells separated by a transparent blue dot marked with an X have a fixed sum of X.',
+		tags: [],
+		categories: [
+			TOOL_CATEGORIES.CORNER_CONSTRAINT,
+			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
+			TOOL_CATEGORIES.TYPABLE_TOOL,
+			TOOL_CATEGORIES.CORNER_TOOL
+		]
+	}
+};

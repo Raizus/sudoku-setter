@@ -1,10 +1,12 @@
 import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
-import type { CellToolI } from '../Puzzle/Constraints/SingleCellConstraints';
+import type { CellMultiArrowToolI, CellToolI } from '../Puzzle/Constraints/SingleCellConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
+	cellsToUnknownRegionsVarsName,
 	cellsToVarsName,
 	cellsToYinYangVarsName,
+	cellToUnknownRegionsVarName,
 	cellToVarName,
 	cellToYinYangVarName,
 	getDirectionCells,
@@ -393,6 +395,7 @@ function nurimisakiUnshadedEndpointsConstraint(grid: Grid, constraint: CellToolI
 	const adj_cells = grid.getOrthogonallyAdjacentCells(cell);
 	const adj_nurimisaki_vars =
 		'[' + adj_cells.map((cell2) => `nurimisaki[${cell2.r},${cell2.c}]`).join(', ') + ']';
+	let out_str = `constraint nurimisaki_unshaded_endpoint_p(${adj_nurimisaki_vars}, ${cell_nurimisaki});\n`;
 
 	const dirCells = getDirectionCells(grid, cell);
 	const nurimisaki_vars: string[] = [];
@@ -401,10 +404,29 @@ function nurimisakiUnshadedEndpointsConstraint(grid: Grid, constraint: CellToolI
 			'[' + cells.map((cell2) => `nurimisaki[${cell2.r}, ${cell2.c}]`).join(', ') + ']';
 		nurimisaki_vars.push(_nurimisaki_vars);
 	}
-	let out_str = `constraint nurimisaki_unshaded_endpoint_p(${adj_nurimisaki_vars}, ${cell_nurimisaki});\n`;
 	out_str += `constraint nurimisaki_count_uninterrupted_unshaded_p(${cell_var}, ${cell_nurimisaki}, ${nurimisaki_vars[0]}, ${nurimisaki_vars[1]}, ${nurimisaki_vars[2]}, ${nurimisaki_vars[3]});\n`;
 
 	return out_str;
+}
+
+function countCellsNotInTheSameRegionConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToVarName(cell);
+	const region_var = cellToUnknownRegionsVarName(cell);
+
+	const directions = constraint.directions;
+	const vars_list: string[] = [];
+	for (const direction of directions) {
+		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
+		const vars = cellsToUnknownRegionsVarsName(cells);
+		vars_list.push('[' + vars.join(',') + ']');
+	}
+
+	const aux = vars_list.map((vars) => `count_different(${vars}, ${region_var})`).join(' + ');
+	const constraint_str = `constraint ${aux} == ${cell_var};\n`;
+	return constraint_str;
 }
 
 type ConstraintF = (grid: Grid, constraint: CellToolI) => string;
@@ -467,6 +489,14 @@ export function singleCellConstraints(
 		const constl = Object.values(constraints) as CellToolI[];
 		const constraint_str = countingCirclesConstraint(grid, constl);
 		out_str += constraint_str;
+	} else if (toolId === TOOLS.COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS) {
+		for (const constraint of Object.values(constraints)) {
+			const constraint_str = countCellsNotInTheSameRegionConstraint(
+				grid,
+				constraint as CellMultiArrowToolI
+			);
+			out_str += constraint_str;
+		}
 	}
 	return out_str;
 }

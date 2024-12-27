@@ -23,6 +23,7 @@
 				const obj = JSON.parse(result);
 
 				const newPuzzle = puzzleFromJson(obj);
+				console.log(newPuzzle);
 				setPuzzle(newPuzzle);
 				resetUserState();
 			}

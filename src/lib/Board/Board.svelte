@@ -117,6 +117,8 @@
 	<EdgeToolsRender />
 	<CornerToolsRender />
 
+	<PenToolRender />
+	
 	<g class="cell-values-layer">
 		{#each $cellsStore as cell}
 			<CellValuesRender {cell} />
@@ -125,5 +127,4 @@
 	<SolutionRender />
 
 	<ConflictsRender />
-	<PenToolRender />
 </svg>

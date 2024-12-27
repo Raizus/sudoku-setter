@@ -42,7 +42,8 @@ export enum NEGATIVE_CONSTRAINTS {
 	ALL_XY_DIFFERENCES_GIVEN = 'All XY Differences Given',
 	ALL_INDEXING_COLUMN_GIVEN = 'All Indexing Column Given',
 	ALL_INDEXING_ROW_GIVEN = 'All Indexing Row Given',
-	ALL_YIN_YANG_KROPKI_GIVEN = 'All Yin Yang Kropki Given'
+	ALL_YIN_YANG_KROPKI_GIVEN = 'All Yin Yang Kropki Given',
+	ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN = 'All Nurimisaki Unshaded Endpoints Given'
 }
 
 export enum VALUE_MODIFIER_CONSTRAINTS {
@@ -95,6 +96,10 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	NURIMISAKI_UNSHADED_ENDPOINTS = 'Nurimisaki Unshaded Endpoints'
 }
 
+export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
+	COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS = 'Count Cells Not In The Same Region Arrows'
+}
+
 export enum EDGE_CONSTRAINTS {
 	RATIO = 'Ratio',
 	DIFFERENCE = 'Difference',
@@ -111,7 +116,9 @@ export enum EDGE_CONSTRAINTS {
 export enum CORNER_CONSTRAINTS {
 	CORNER_SUM = 'Corner Sum',
 	CORNER_SUM_OF_THREE_EQUALS_THE_OTHER = 'Corner Sum of Three Equals The Other',
-	CORNER_EVEN_COUNT = 'Corner Even Count'
+	CORNER_EVEN_COUNT = 'Corner Even Count',
+	CORNER_CELLS_BELONG_TO_EXACTLY_THREE_REGIONS = 'Corner Cells Belong To Exactly Three Regions',
+	CORNER_CELLS_BELONG_TO_SAME_REGION = 'Corner Cells Belong To Same Region'
 }
 
 export enum LINE_CONSTRAINTS {
@@ -200,7 +207,8 @@ export enum OUTSIDE_EDGE_CONSTRAINTS {
 	X_INDEX = 'X-Index',
 	RISING_STREAK = 'Rising Streak',
 	ROW_OR_COLUMN_RANK = 'Row Or Column Rank',
-	OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED = 'Outside Edge Yin Yang Sum Of Shaded'
+	OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED = 'Outside Edge Yin Yang Sum Of Shaded',
+	X_SUM_REGION_BORDERS = 'X-Sum Region Borders'
 }
 
 export enum OUTSIDE_CORNER_CONSTRAINTS {
@@ -242,6 +250,7 @@ export const GLOBAL_CONSTRAINTS = {
 
 export const LOCAL_CONSTRAINTS = {
 	...SIMPLE_SINGLE_CELL_CONSTRAINTS,
+	...SINGLE_CELL_MULTIARROW_CONSTRAINTS,
 	...EDGE_CONSTRAINTS,
 	...CORNER_CONSTRAINTS,
 
@@ -273,6 +282,7 @@ export type TOOLID =
 	| VALUE_MODIFIER_CONSTRAINTS
 	| UNDETERMINED_REGIONS_CONSTRAINTS
 	| SIMPLE_SINGLE_CELL_CONSTRAINTS
+	| SINGLE_CELL_MULTIARROW_CONSTRAINTS
 	| EDGE_CONSTRAINTS
 	| CORNER_CONSTRAINTS
 	| LINE_CONSTRAINTS
@@ -341,13 +351,18 @@ export function isSingleCellArrowTool(toolId: TOOLID): boolean {
 }
 
 export function isSingleCellMultiArrowTool(toolId: TOOLID): boolean {
-	return toolId === TOOLS.COSMETIC_CELL_MULTI_ARROW;
+	const enumValues = Object.values(SINGLE_CELL_MULTIARROW_CONSTRAINTS) as string[];
+	return (
+		enumValues.includes(toolId) ||
+		toolId === TOOLS.COSMETIC_CELL_MULTI_ARROW
+	);
 }
 
 export function isSingleCellTool(toolId: TOOLID): boolean {
 	const enumValues = Object.values(SIMPLE_SINGLE_CELL_CONSTRAINTS) as string[];
 	return (
 		enumValues.includes(toolId) ||
+		isSingleCellMultiArrowTool(toolId) ||
 		toolId === TOOLS.COSMETIC_CELL_SHAPE ||
 		toolId === TOOLS.COSMETIC_CELL_ARROW ||
 		toolId === TOOLS.COSMETIC_CELL_MULTI_ARROW

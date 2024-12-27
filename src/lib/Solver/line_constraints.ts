@@ -252,6 +252,20 @@ function regionSumLineConstraint(grid: Grid, c_id: string, constraint: LineToolI
 	return out_str;
 }
 
+function entropicLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const vars = getLineVars(grid, constraint);
+	const vars_str = `[${vars.join(',')}]`;
+	const constraint_str: string = `constraint entropic_line_p(${vars_str}, {1,2,3}, {4,5,6}, {7,8,9});\n`;
+	return constraint_str;
+}
+
+function entropicOrModularLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const vars = getLineVars(grid, constraint);
+	const vars_str = `[${vars.join(',')}]`;
+	const constraint_str: string = `constraint entropic_line_p(${vars_str}, {1,2,3}, {4,5,6}, {7,8,9}) \\/ modular_line_p(${vars_str}, 3);\n`;
+	return constraint_str;
+}
+
 type ConstraintF = (grid: Grid, c_id: string, constraint: LineToolI) => string;
 
 const tool_map = new Map<string, ConstraintF>([
@@ -286,7 +300,9 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.SPLIT_PEAS, splitPeasConstraint],
 	[TOOLS.PARITY_COUNT_LINE, parityCountLineConstraint],
 	[TOOLS.PRODUCT_OF_ENDS_EQUALS_SUM_OF_LINE, productOfEndsEqualsSumOfLineConstraint],
-	[TOOLS.REGION_SUM_LINE, regionSumLineConstraint]
+	[TOOLS.REGION_SUM_LINE, regionSumLineConstraint],
+	[TOOLS.ENTROPIC_LINE, entropicLineConstraint],
+	[TOOLS.ENTROPIC_OR_MODULAR_LINE, entropicOrModularLineConstraint]
 ]);
 
 export function lineConstraints(

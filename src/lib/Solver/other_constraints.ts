@@ -77,11 +77,38 @@ export function unknownRegionsConstraint(puzzle: PuzzleI) {
 		return '';
 	}
 
+	const n_regions = Math.max(grid.nCols, grid.nRows);
+
 	let out_str: string = '';
 	out_str += `\n% Unknown Regions\n`;
-	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..8: unknown_regions;\n`;
-	out_str += `constraint unknown_sudoku_regions_p(unknown_regions);\n`;
-    out_str += `constraint no_repeats_in_unknown_regions_p(board, unknown_regions, ALLOWED_DIGITS);\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${n_regions-1}: unknown_regions;\n`;
+	out_str += `constraint unknown_sudoku_regions_p(unknown_regions, ${n_regions});\n`;
+    out_str += `constraint no_repeats_in_unknown_regions_p(board, unknown_regions, ALLOWED_DIGITS, ${n_regions});\n`;
+    
+	return out_str;
+}
+
+
+export function doublersConstraint(puzzle: PuzzleI) {
+	const grid = puzzle.grid;
+	const gconstraints = puzzle.globalConstraints;
+	const constraint = gconstraints.get(TOOLS.DOUBLERS);
+
+	if (!constraint) return '';
+	const all_cells = grid.getAllCells();
+
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn('Doublers not implemented when there are cells outisde the grid.');
+		return '';
+	}
+
+	const n_regions = Math.max(grid.nCols, grid.nRows);
+
+	let out_str: string = '';
+	out_str += `\n% Doublers\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: doublers_grid;\n`;
+	// one doubler per column, row, region
+	
     
 	return out_str;
 }

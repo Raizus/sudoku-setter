@@ -1,25 +1,3 @@
-In minizinc, I have the following predicate
-    predicate yin_yang_kropki_p(var int: cell1, var int: cell2, var int: yin_yang1, var int: yin_yang2) =
-        yin_yang1 == yin_yang2 /\\ (
-            % unshaded pair -> ratio
-            yin_yang1 == 0 /\ ratio_p(cell1, cell2, 2) \\/
-            % shaded pair -> consecutive
-            yin_yang1 == 1 -> consecutive_p(cell1, cell2)
-        );
-
-However the constraint 
-    yin_yang1 == 0 -> ratio_p(cell1, cell2, 2)
-is not being applied at all. How can I fix it
-
-
-In minizinc, create a function var int: count_different(array[int] of var int: arr, var int: x) which returns the number of element in arr not equal to 'x'
-
-Can you finish this predicate in minizinc, below the comment?
-predicate unknown_regions_p(array[int, int] of var int: grid) =
-    forall (reg_i in 0..8) (
-        connected_regions(grid, reg_i) /\
-        % each region has exactly 9 cells
-        count(array1d(grid), reg_i) = 9
-    );
-
-Write a function var int: count_transitions_f(array[int] of var: int) and returns the number of times arr[i] != arr[i+1]. If the array is empty or has length 1 it should return 0.
+Create a predicate entropic_line_p(array[int] of var int: arr, set of int: group1, set of int: group2, set of int: group3) that enforces the following constraint:
+    - for every set of three sequential elements of the array, it must contain one element in each of the groups.
+    - Also make sure to enforce the constraint that, elements of the array with index with the same remainder mod 3, belong to the same group. This constraint is redundant but helpful for the solver

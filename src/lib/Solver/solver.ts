@@ -28,9 +28,10 @@ export function createMinizincModel(puzzle: PuzzleI) {
 	out_str += 'include "alldifferent.mzn";\n\n';
 	out_str += defineFunctionsPredicates();
 
+	const max_val = Math.max(nrows, ncols);
 	out_str += `set of int: ROW_IDXS = 0..${nrows - 1};\n`;
 	out_str += `set of int: COL_IDXS = 0..${ncols - 1};\n`;
-	out_str += `set of int: ALLOWED_DIGITS = 1..9;\n`;
+	out_str += `set of int: ALLOWED_DIGITS = 1..${max_val};\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var ALLOWED_DIGITS: board;\n`;
 
 	out_str += givenConstraints(puzzle);

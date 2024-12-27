@@ -140,6 +140,18 @@ export const oddEvenParityMirrorAlongPositiveDiagonalInfo: AbstractElementInfo =
 	}
 };
 
+export const globalIndexingColumnInfo: AbstractElementInfo = {
+	toolId: TOOLS.GLOBAL_INDEXING_COLUMN,
+	order: 0,
+
+	meta: {
+		description:
+			'Any number X appearing in the Yth column of a row indicates the column X where the number Y appears in that row.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	}
+};
+
 /* --------------------------------------------------------------------------------------------------- */
 
 export const allRatiosGivenInfo: AbstractElementInfo = {
@@ -263,6 +275,17 @@ export const NurimisakiPathGermanWhispersInfo: AbstractElementInfo = {
 
 	meta: {
 		description: 'Cells Along Nurimisaki Path Have A Difference Of At Least 5.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
+
+export const allNurimisakiUnshadedEndpointsGivenInfo: AbstractElementInfo = {
+	toolId: TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN,
+	order: 0,
+
+	meta: {
+		description: "Circles mark every instance of a cell which is unshaded and orthogonally adjacent to exactly one other unshaded cell (i.e. the circles are the only 'endpoints' of the unshaded area).",
 		tags: [],
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
 	}
