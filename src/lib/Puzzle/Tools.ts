@@ -29,7 +29,10 @@ export enum SIMPLE_GLOBAL_CONSTRAINTS {
 	GLOBAL_INDEXING_COLUMN = 'Global Indexing Column',
 	GLOBAL_INDEXING_ROW = 'Global Indexing Row',
 
-	NURIMISAKI_PATH_GERMAN_WHISPERS = 'Nurimisaki Path German Whispers'
+	ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED = 'All Odd Digits Are Orthogonally Connected',
+
+	NURIMISAKI_PATH_GERMAN_WHISPERS = 'Nurimisaki Path German Whispers',
+	YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE = 'Yin Yang Region Sum Lines Must Cross Colors At Least Once'
 }
 
 export enum NEGATIVE_CONSTRAINTS {
@@ -60,7 +63,8 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	UNKNOWN_REGIONS = 'Unknown Regions',
 	YIN_YANG = 'Yin Yang',
 	NURIMISAKI = 'Nurimisaki',
-	TWO_CONTIGUOUS_REGIONS = 'Two Contiguous Regions'
+	TWO_CONTIGUOUS_REGIONS = 'Two Contiguous Regions',
+	SASHIGANE = 'Sashigane'
 }
 
 export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
@@ -87,13 +91,21 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	SNOWBALL = 'Snowball',
 	SANDWICH_ROW_COL_COUNT = 'Sandwich Row Column Count',
 	COUNTING_CIRCLES = 'Counting Circles',
+
 	YIN_YANG_MINESWEEPER = 'Yin Yang Minesweeper',
 	YIN_YANG_SEEN_UNSHADED_CELLS = 'Yin Yang Seen Unshaded Cells',
 	YIN_YANG_SEEN_SHADED_CELLS = 'Yin Yang Seen Shaded Cells',
+	YIN_YANG_SEEN_SAME_SHADE_CELLS = 'Yin Yang Seen Same Shade Cells',
 	YIN_YANG_ADJACENT_SAME_SHADE_COUNT = 'Yin Yang Adjacent Same Shade Count',
 	TWO_CONTIGUOUS_REGIONS_ROW_COLUMN_OPPOSITE_SET_COUNT = 'Two Contiguous Regions Row Column Opposite Set Count',
 	SEEN_REGION_BORDERS_COUNT = 'Seen Region Borders Count',
-	NURIMISAKI_UNSHADED_ENDPOINTS = 'Nurimisaki Unshaded Endpoints'
+	NURIMISAKI_UNSHADED_ENDPOINTS = 'Nurimisaki Unshaded Endpoints',
+	SASHIGANE_BEND_REGION_COUNT = 'Sashigane Bend Region Count',
+	SASHIGANE_REGION_SUM = 'Sashigane Region Sum'
+}
+
+export enum SINGLE_CELL_ARROW_CONSTRAINTS {
+	SASHIGANE_ARROW_POINTS_TO_BEND = 'Sashigane Arrow Points To Bend'
 }
 
 export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
@@ -114,6 +126,7 @@ export enum EDGE_CONSTRAINTS {
 }
 
 export enum CORNER_CONSTRAINTS {
+	QUADRUPLE = 'Quadruple',
 	CORNER_SUM = 'Corner Sum',
 	CORNER_SUM_OF_THREE_EQUALS_THE_OTHER = 'Corner Sum of Three Equals The Other',
 	CORNER_EVEN_COUNT = 'Corner Even Count',
@@ -164,13 +177,24 @@ export enum LINE_CONSTRAINTS {
 	REPEATED_DIGITS_LINE = 'Repeated Digits Line',
 	N_REPEATED_DIGITS_LINE = 'N-Repeated Digits Line',
 
+	// yin yang lines
+	YIN_YANG_REGION_SUM_LINE = 'Yin Yang Region Sum Line',
+	YIN_YANG_SHADED_WHISPERS_LINE = 'Yin Yang Shaded Whispers Line',
+	YIN_YANG_UNSHADED_ENTROPIC_LINE = 'Yin Yang Unshaded Entropic Line',
+	YIN_YANG_UNSHADED_MODULAR_LINE = 'Yin Yang Unshaded Modular Line',
+
+	// double ended lines
 	BETWEEN_LINE = 'Between Line',
 	LOCKOUT_LINE = 'Lockout Line',
 	TIGHTROPE_LINE = 'Tightrope Line',
 	PARITY_COUNT_LINE = 'Parity Count Line',
 	DOUBLE_ARROW_LINE = 'Double Arrow Line',
 	PRODUCT_OF_ENDS_EQUALS_SUM_OF_LINE = 'Product Of Ends Equals Sum Of Line',
-	SPLIT_PEAS = 'Split Peas'
+	SPLIT_PEAS = 'Split Peas',
+
+	DOUBLERS_THERMOMETER = 'Doublers Thermometer',
+	DOUBLERS_BETWEEN_LINE = 'Doublers Between Line',
+	DOUBLERS_DOUBLE_ARROW_LINE = 'Doublers Double Arrow Line'
 }
 
 export enum ARROW_CONSTRAINTS {
@@ -188,7 +212,10 @@ export enum CAGE_CONSTRAINTS {
 	PUTTERIA_CAGE = 'Putteria Cage',
 	AQUARIUM_CAGE = 'Aquarium Cage',
 	YIN_YANG_ANTITHESIS_KILLER_CAGE = 'Yin Yang Antithesis Killer Cage',
-	YIN_YANG_BREAKEVEN_KILLER_CAGE = 'Yin Yang Breakeven Killer Cage'
+	YIN_YANG_BREAKEVEN_KILLER_CAGE = 'Yin Yang Breakeven Killer Cage',
+
+	DOUBLERS_KILLER_CAGE = 'Doublers Killer Cage',
+	NEGATORS_KILLER_CAGE = 'Negators Killer Cage'
 }
 
 export enum CLONE_CONSTRAINTS {
@@ -215,7 +242,9 @@ export enum OUTSIDE_CORNER_CONSTRAINTS {
 	LITTLE_KILLER_SUM = 'Little Killer Sum',
 	LITTLE_KILLER_LOOK_AND_SAY = 'Little Killer Look And Say',
 	LITTLE_KILLER_REGION_SUM_PRODUCT = 'Little Killer Region Sum Product',
-	X_OMIT_LITTLE_KILLER_SUM = 'X-Omit Little Killer Sum'
+	X_OMIT_LITTLE_KILLER_SUM = 'X-Omit Little Killer Sum',
+
+	NEGATORS_LITTLE_KILLER_SUM = 'Negators Little Killer Sum'
 }
 
 export enum COSMETIC_TOOLS {
@@ -250,6 +279,7 @@ export const GLOBAL_CONSTRAINTS = {
 
 export const LOCAL_CONSTRAINTS = {
 	...SIMPLE_SINGLE_CELL_CONSTRAINTS,
+	...SINGLE_CELL_ARROW_CONSTRAINTS,
 	...SINGLE_CELL_MULTIARROW_CONSTRAINTS,
 	...EDGE_CONSTRAINTS,
 	...CORNER_CONSTRAINTS,
@@ -282,6 +312,7 @@ export type TOOLID =
 	| VALUE_MODIFIER_CONSTRAINTS
 	| UNDETERMINED_REGIONS_CONSTRAINTS
 	| SIMPLE_SINGLE_CELL_CONSTRAINTS
+	| SINGLE_CELL_ARROW_CONSTRAINTS
 	| SINGLE_CELL_MULTIARROW_CONSTRAINTS
 	| EDGE_CONSTRAINTS
 	| CORNER_CONSTRAINTS
@@ -347,21 +378,20 @@ export function isLocalConstraint(toolId: TOOLID): boolean {
 }
 
 export function isSingleCellArrowTool(toolId: TOOLID): boolean {
-	return toolId === TOOLS.COSMETIC_CELL_ARROW;
+	const enumValues = Object.values(SINGLE_CELL_ARROW_CONSTRAINTS) as string[];
+	return enumValues.includes(toolId) || toolId === TOOLS.COSMETIC_CELL_ARROW;
 }
 
 export function isSingleCellMultiArrowTool(toolId: TOOLID): boolean {
 	const enumValues = Object.values(SINGLE_CELL_MULTIARROW_CONSTRAINTS) as string[];
-	return (
-		enumValues.includes(toolId) ||
-		toolId === TOOLS.COSMETIC_CELL_MULTI_ARROW
-	);
+	return enumValues.includes(toolId) || toolId === TOOLS.COSMETIC_CELL_MULTI_ARROW;
 }
 
 export function isSingleCellTool(toolId: TOOLID): boolean {
 	const enumValues = Object.values(SIMPLE_SINGLE_CELL_CONSTRAINTS) as string[];
 	return (
 		enumValues.includes(toolId) ||
+		isSingleCellArrowTool(toolId) ||
 		isSingleCellMultiArrowTool(toolId) ||
 		toolId === TOOLS.COSMETIC_CELL_SHAPE ||
 		toolId === TOOLS.COSMETIC_CELL_ARROW ||

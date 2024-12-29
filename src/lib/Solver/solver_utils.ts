@@ -30,6 +30,38 @@ export function cellsToUnknownRegionsVarsName(cells: Cell[]): string[] {
 	return cells.map((cell) => cellToUnknownRegionsVarName(cell));
 }
 
+export function cellToDoublersVarName(cell: Cell): string {
+	return `doublers_grid[${cell.r},${cell.c}]`;
+}
+
+export function cellsToDoublersVarsName(cells: Cell[]): string[] {
+	return cells.map((cell) => cellToDoublersVarName(cell));
+}
+
+export function cellToNegatorsVarName(cell: Cell): string {
+	return `negators_grid[${cell.r},${cell.c}]`;
+}
+
+export function cellsToNegatorsVarsName(cells: Cell[]): string[] {
+	return cells.map((cell) => cellToNegatorsVarName(cell));
+}
+
+export function cellToValueVarName(cell: Cell): string {
+	return `values_grid[${cell.r},${cell.c}]`;
+}
+
+export function cellsToValueVarsName(cells: Cell[]): string[] {
+	return cells.map((cell) => cellToValueVarName(cell));
+}
+
+export function cellToSashiganeVarName(cell: Cell): string {
+	return `sashigane[${cell.r},${cell.c}]`;
+}
+
+export function cellsToSashiganeVarsName(cells: Cell[]): string[] {
+	return cells.map((cell) => cellToSashiganeVarName(cell));
+}
+
 export function allDifferentConstraint(vars: string[]): string {
 	const vars_str = vars.join(',');
 	const constraint = `constraint alldifferent([${vars_str}]);\n`;
@@ -164,7 +196,19 @@ function var int: count_transitions_f(array[int] of var int: arr) =
         sum(i in min(index_set(arr))..max(index_set(arr))-1)(
             bool2int(arr[i] != arr[i+1])
         )
-    endif;\n\n`;
+    endif;
+
+function var int: conditional_sum_f(
+    array[int] of var int: arr,
+    array[int] of var int: labels,
+    var int: label) =
+    let {
+        constraint assert(
+            index_set(arr) = index_set(labels),
+            "Arrays must have same index set"
+        )
+    } in
+    sum(i in index_set(arr) where labels[i] == label)(arr[i]);\n\n`;
 
 	const more_helper_f = `function array[int] of int: grid_to_graph_from_edges(array[int,int] of var int: grid) = 
     let {
@@ -295,7 +339,40 @@ predicate maximum_p(array[int] of var int: arr, var int: max_val) =
     forall(i in index_set(arr))(arr[i] < max_val);
 
 predicate minimum_p(array[int] of var int: arr, var int: min_val) =
-    forall(i in index_set(arr))(arr[i] > min_val);\n\n`;
+    forall(i in index_set(arr))(arr[i] > min_val);
+
+predicate unknown_regions_region_sum_line_p(array[int] of var int: arr, array[int] of var int: labels) =
+    % Ensure arrays have same size
+    index_set(arr) = index_set(labels) /\\
+    let {
+        % Find start indices of each segment
+        array[index_set(arr)] of var bool: is_start = [
+            i = min(index_set(arr)) \\/ 
+            labels[i] != labels[i-1]
+            | i in index_set(arr)
+        ],
+        % Find end indices of each segment
+        array[index_set(arr)] of var bool: is_end = [
+            i = max(index_set(arr)) \\/ 
+            labels[i] != labels[i+1]
+            | i in index_set(arr)
+        ],
+        var int: sum_var;
+    } in
+    % All segments must sum to the same value
+    forall(i in index_set(arr) where is_start[i])(
+        sum(k in i..min([l | l in index_set(arr) where is_end[l] /\\ l >= i]))(arr[k]) =
+        sum_var
+    );
+
+predicate one_of_each_digit_p(
+    array[int, int] of var int: grid, 
+    array[int, int] of var bool: labels, 
+    set of int: digits
+) =
+    forall(val in digits) (
+        conditional_count_f(array1d(grid), array1d(labels), val, true) == 1
+    );\n\n`;
 
 	const single_cell_constraints = `predicate odd_p(var int: x) =
     x mod 2 = 1;
@@ -452,7 +529,15 @@ predicate edge_factor_p(var int: a, var int: b) =
     } in 
     larger mod smaller == 0;\n\n`;
 
-	const corner_constraints = `predicate corner_sum_p(array[int] of var int: arr, var int: val) =
+	const corner_constraints = `predicate quadruple_p(
+    array[int] of var int: arr,
+    array[int] of var int: values
+) =
+    forall(i in index_set(values)) (
+        count(arr, values[i]) == count(values, values[i])
+    );
+    
+predicate corner_sum_p(array[int] of var int: arr, var int: val) =
 	sum(arr) == val;
 	
 predicate corner_sum_of_three_equals_the_other_p(array[int] of var int: arr) =
@@ -658,7 +743,12 @@ predicate n_consecutive_renban_line_p(array[int] of var int: arr, int: n) =
         } in renban(slice)
     );
     
-predicate entropic_line_p(array[int] of var int: arr, set of int: group1, set of int: group2, set of int: group3) =
+predicate entropic_line_p(
+    array[int] of var int: arr,
+    set of int: group1,
+    set of int: group2,
+    set of int: group3
+) =
     % Every sequence of 3 must contain one from each group
     forall(i in min(index_set(arr))..max(index_set(arr))-2)(
         exists(j in 0..2)(arr[i+j] in group1) /\\
@@ -672,7 +762,16 @@ predicate entropic_line_p(array[int] of var int: arr, set of int: group1, set of
         ((arr[i] in group1 <-> arr[j] in group1) /\\
          (arr[i] in group2 <-> arr[j] in group2) /\\
          (arr[i] in group3 <-> arr[j] in group3))
-    );\n\n`;
+    );
+    
+predicate entropic_or_modular_line_p(
+    array[int] of var int: arr,
+    set of int: group1,
+    set of int: group2,
+    set of int: group3,
+    int: val
+) =
+    entropic_line_p(arr, group1, group2, group3) \\/ modular_line_p(arr, val);\n\n`;
 
 	const double_end_line_constraints = `
 predicate between_line_p(array[int] of var int: arr) =
@@ -991,6 +1090,17 @@ predicate yin_yang_seen_shaded_p(
     yin_yang_var == 1
 );
 
+predicate yin_yang_seen_same_shade_p(
+	var int: cell_var,
+    var int: yin_yang_var,
+	array[int] of var int: arr1, 
+	array[int] of var int: arr2, 
+	array[int] of var int: arr3, 
+	array[int] of var int: arr4,
+) = (
+    yin_yang_seen_sum_f(arr1, arr2, arr3, arr4, yin_yang_var) + 1 == cell_var
+);
+
 predicate yin_yang_adjacent_same_shade_count_p(
 	var int: cell_var,
     var int: yin_yang_var,
@@ -1013,7 +1123,64 @@ predicate yin_yang_kropki_p(var int: cell1, var int: cell2, var int: yin_yang1, 
         % shaded pair -> consecutive
         (yin_yang1 == 1 /\\ consecutive_p(cell1, cell2))
     )
-);\n\n`;
+);
+
+predicate yin_yang_shaded_whispers_line_p(array[int] of var int: arr, array[int] of var 0..1: labels, var int: x) =
+    % Ensure arrays have same size
+    index_set(arr) = index_set(labels)
+    /\\
+    % For adjacent elements labeled with 1, enforce minimum difference
+    forall(i in min(index_set(arr))..max(index_set(arr))-1)(
+        (labels[i] = 1 /\\ labels[i+1] = 1) ->
+        abs(arr[i] - arr[i+1]) >= x
+    );
+    
+predicate yin_yang_unshaded_entropic_line_p(
+    array[int] of var int: arr,
+    array[int] of var 0..1: labels
+) =
+    % Ensure arrays have same size
+    index_set(arr) = index_set(labels)
+    /\\
+    % For three consecutive unshaded elements, enforce entropic constraint
+    forall(i in min(index_set(arr))..max(index_set(arr))-2)(
+        (labels[i] = 0 /\\ labels[i+1] = 0 /\\ labels[i+2] = 0) ->
+        entropic_line_p([arr[i], arr[i+1], arr[i+2]], {1,2,3}, {4,5,6}, {7,8,9})
+    )
+    /\\
+    % For two consecutive unshaded elements, they must be from different groups
+    forall(i in min(index_set(arr))..max(index_set(arr))-1)(
+        (labels[i] = 0 /\\ labels[i+1] = 0) ->
+        (
+            not (arr[i] in {1,2,3} /\\ arr[i+1] in {1,2,3}) /\\
+            not (arr[i] in {4,5,6} /\\ arr[i+1] in {4,5,6}) /\\
+            not (arr[i] in {7,8,9} /\\ arr[i+1] in {7,8,9})
+        )
+    );
+    
+predicate yin_yang_unshaded_modular_line_p(
+    array[int] of var int: arr,
+    array[int] of var 0..1: labels,
+    int: val
+) =
+    % Ensure arrays have same size
+    index_set(arr) = index_set(labels)
+    /\\
+    % For three consecutive unshaded elements, enforce modular constraint
+    forall(i in min(index_set(arr))..max(index_set(arr))-2)(
+        (labels[i] = 0 /\\ labels[i+1] = 0 /\\ labels[i+2] = 0) ->
+        modular_line_p([arr[i], arr[i+1], arr[i+2]], val)
+    )
+    /\\
+    % For two consecutive unshaded elements, they must be from different groups
+    forall(i in min(index_set(arr))..max(index_set(arr))-1)(
+        (labels[i] = 0 /\\ labels[i+1] = 0) -> arr[i] mod val != arr[i+1] mod val
+    );
+
+predicate yin_yang_region_sum_line_p(
+    array[int] of var int: arr,
+    array[int] of var 0..1: labels) =
+    unknown_regions_region_sum_line_p(arr, labels);\n\n`;
 
 	const two_contiguous_regions = `predicate two_contiguous_regions_p(array[int, int] of var 0..1: grid) =
 	connected_region(grid, 0) /\\
@@ -1027,7 +1194,7 @@ predicate two_contiguous_regions_row_col_opposite_set_count_p(
 ) =
     count_different(row_vars, region_var) + count_different(col_vars, region_var) == cell_var;\n\n`;
 
-    const unknown_sudoku_regions_p = `function var int: first_idx(array[int] of var int: arr, var int: x) =
+	const unknown_sudoku_regions_p = `function var int: first_idx(array[int] of var int: arr, var int: x) =
     if length(arr) = 0 then
         -1
     else
@@ -1100,7 +1267,236 @@ predicate nurimisaki_count_uninterrupted_unshaded_p(
 ) = let {
     var int: count_cell = if nurimisaki_var == 0 then 1 else 0 endif
 } in count_uninterrupted(arr1, 0) + count_uninterrupted(arr2, 0) + count_uninterrupted(arr3, 0) + count_uninterrupted(arr4, 0) + count_cell == cell_var;\n\n`;
+
+	const odd_even_grid = `predicate odd_even_grid_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var 0..1: labels
+) =
+    assert(index_set_1of2(grid) = index_set_1of2(labels) /\\
+       index_set_2of2(grid) = index_set_2of2(labels),
+       "Grid and labels must have same dimensions") /\\
+    forall(i in index_set_1of2(grid)) (
+        forall(j in index_set_2of2(grid)) (
+            if grid[i, j] mod 2 == 0 then labels[i,j] == 0 else labels[i,j] == 1 endif
+        )
+    );\n\n`;
+
+	const value_modifier = `function array[int,int] of var int: doublers_value_grid_f(
+    array[int,int] of var int: grid,
+    array[int,int] of var bool: labels
+) =  let {
+    constraint assert(index_set_1of2(grid) = index_set_1of2(labels) /\\
+       index_set_2of2(grid) = index_set_2of2(labels),
+       "Grid and labels must have same dimensions")
+} in
+    array2d(index_set_1of2(grid), index_set_2of2(grid),
+        [if labels[i,j] then 2*grid[i,j] else grid[i,j] endif
+         | i in index_set_1of2(grid), j in index_set_2of2(grid)]);
+
+function array[int,int] of var int: negators_value_grid_f(
+    array[int,int] of var int: grid,
+    array[int,int] of var bool: labels
+) =  let {
+    constraint assert(index_set_1of2(grid) = index_set_1of2(labels) /\\
+       index_set_2of2(grid) = index_set_2of2(labels),
+       "Grid and labels must have same dimensions")
+} in
+    array2d(index_set_1of2(grid), index_set_2of2(grid),
+        [if labels[i,j] then -1*grid[i,j] else grid[i,j] endif
+         | i in index_set_1of2(grid), j in index_set_2of2(grid)]);
+
+predicate doublers_killer_cage_p(
+    array[int] of var int: cells_vars,
+    array[int] of var int: value_vars,
+    var int: val
+) =
+    alldifferent(cells_vars) /\\ sum(value_vars) == val;
     
+predicate negators_killer_cage_p(
+    array[int] of var int: cells_vars,
+    array[int] of var int: value_vars,
+    var int: val
+) =
+    alldifferent(cells_vars) /\\ sum(value_vars) == val;\n\n`;
+
+	const sashigane = `% Helper function to count orthogonally adjacent cells with same value
+function var int: count_same_adjacent(
+    array[int, int] of var int: grid, 
+    int: r, 
+    int: c
+) = let {
+    set of int: rows = index_set_1of2(grid),
+    set of int: cols = index_set_2of2(grid),
+} in sum([
+        if r-1 in rows then grid[r-1,c] = grid[r,c] else false endif,
+        if r+1 in rows then grid[r+1,c] = grid[r,c] else false endif,
+        if c-1 in cols then grid[r,c-1] = grid[r,c] else false endif,
+        if c+1 in cols then grid[r,c+1] = grid[r,c] else false endif
+    ]);
+
+% Helper function to count vertically adjacent cells with same value
+function var int: count_vertical_adjacent_same(
+    array[int, int] of var int: grid, 
+    int: r, 
+    int: c
+) = let {
+    set of int: rows = index_set_1of2(grid),
+} in sum([
+        if r-1 in rows then grid[r-1,c] = grid[r,c] else false endif,
+        if r+1 in rows then grid[r+1,c] = grid[r,c] else false endif
+    ]);
+
+% Helper function to count horizontally adjacent cells with same value
+function var int: count_horizontal_adjacent_same(
+    array[int, int] of var int: grid, 
+    int: r, 
+    int: c
+) = let {
+    set of int: cols = index_set_2of2(grid),
+} in sum([
+        if c-1 in cols then grid[r,c-1] = grid[r,c] else false endif,
+        if c+1 in cols then grid[r,c+1] = grid[r,c] else false endif
+    ]);
+
+% Helper function to check if cell has exactly one adjacent in both directions
+function var bool: is_sashigane_bend(
+    array[int, int] of var int: grid, 
+    int: r, 
+    int: c
+) =
+    count_vertical_adjacent_same(grid, r,c) = 1 /\\ count_horizontal_adjacent_same(grid, r, c) = 1;
+
+% Calculate flattened index for a position
+function int: flat_index(int: r, int: c, set of int: rows, set of int: cols) =
+    (r - min(rows)) * card(cols) + (c - min(cols)) + 1;
+
+predicate sashigane_bend_bools_p(
+    array[int, int] of var int: regions, 
+    array[int, int] of var bool: bends
+) =
+    assert(index_set_1of2(regions) = index_set_1of2(bends) /\\
+       index_set_2of2(regions) = index_set_2of2(bends),
+       "regions and bends must have same dimensions") /\\
+    forall(i in index_set_1of2(regions)) (
+        forall(j in index_set_2of2(regions)) (
+            is_sashigane_bend(regions, i, j) <-> bends[i, j] == true
+        )
+    );  
+
+predicate sashigane_adjacency_p(array[int, int] of var int: regions) = 
+    let {
+        set of int: ROWS = index_set_1of2(regions);
+        set of int: COLS = index_set_2of2(regions);
+    } in
+    % Constraint 1: Each element has 1-2 orthogonally adjacent same values
+    forall(r in ROWS, c in COLS)(
+        let {
+            var int: adj_count = count_same_adjacent(regions, r, c)
+        } in
+        adj_count >= 1 /\\ adj_count <= 2
+    ) /\\
+    forall(r in ROWS, c in COLS)(
+        not is_sashigane_bend(regions, r,c) -> (count_horizontal_adjacent_same(regions, r, c) == 0 \\/ count_vertical_adjacent_same(regions, r, c) == 0)
+    ) /\\
+    forall(r in ROWS, c in COLS)(
+        is_sashigane_bend(regions, r,c) -> regions[r,c] = flat_index(r, c, ROWS, COLS)
+    );
+
+predicate sashigane_links_to_bends_aux_p(
+    array[int] of var int: sashigane_vars,
+    array[int] of var bool: sashigane_bend_vars,
+) = let {
+    constraint assert(index_set(sashigane_vars) = index_set(sashigane_bend_vars),
+        "Arrays must have same index set"),
+    int: min_i = min(index_set(sashigane_vars)),
+    array[int] of var bool: bools = [ 
+        forall(j in index_set(sashigane_vars) where j<=i)(
+            sashigane_vars[j] == sashigane_vars[min_i]
+        ) /\\ sashigane_bend_vars[i] == true
+        | i in index_set(sashigane_vars)];
+} in exists(i in index_set(bools))(bools[i]);
+
+
+predicate sashigane_links_to_bends(
+    array[int, int] of var int: regions,
+    array[int, int] of var bool: bends
+) =
+    assert(index_set_1of2(regions) = index_set_1of2(bends) /\\
+       index_set_2of2(regions) = index_set_2of2(bends),
+       "regions and bends must have same dimensions") /\\
+    forall(i in index_set_1of2(regions)) (
+        forall(j in index_set_2of2(regions)) (
+            not bends[i,j] -> 
+                let {
+                    % Up direction arrays (decreasing range)
+                    array[int] of var int: up_regions = 
+                        [regions[k,j] | k in reverse(min(index_set_1of2(regions))..i)];
+                    array[int] of var bool: up_bends = 
+                        [bends[k,j] | k in reverse(min(index_set_1of2(regions))..i)];
+                    
+                    % Down direction arrays
+                    array[int] of var int: down_regions = 
+                        [regions[k,j] | k in i..max(index_set_1of2(regions))];
+                    array[int] of var bool: down_bends = 
+                        [bends[k,j] | k in i..max(index_set_1of2(regions))];
+                    
+                    % Left direction arrays (decreasing range)
+                    array[int] of var int: left_regions = 
+                        [regions[i,k] | k in reverse(min(index_set_2of2(regions))..j)];
+                    array[int] of var bool: left_bends = 
+                        [bends[i,k] | k in reverse(min(index_set_2of2(regions))..j)];
+                    
+                    % Right direction arrays
+                    array[int] of var int: right_regions = 
+                        [regions[i,k] | k in j..max(index_set_2of2(regions))];
+                    array[int] of var bool: right_bends = 
+                        [bends[i,k] | k in j..max(index_set_2of2(regions))];
+                } in
+                % Exactly one direction should satisfy the auxiliary predicate
+                bool2int(sashigane_links_to_bends_aux_p(up_regions, up_bends)) +
+                bool2int(sashigane_links_to_bends_aux_p(down_regions, down_bends)) +
+                bool2int(sashigane_links_to_bends_aux_p(left_regions, left_bends)) +
+                bool2int(sashigane_links_to_bends_aux_p(right_regions, right_bends)) = 1
+        )
+    );
+
+
+predicate sashigane_no_repeats_in_each_region_p(
+    array[int, int] of var int: cells_grid, 
+    array[int, int] of var int: regions,
+    set of int: allowed_vals
+) = let {
+    set of int: ROWS = index_set_1of2(regions);
+    set of int: COLS = index_set_2of2(regions);
+} in forall(r in ROWS, c in COLS)(
+        is_sashigane_bend(regions, r,c) -> forall(val in allowed_vals) (
+            conditional_count_f(array1d(cells_grid), array1d(regions), val, regions[r,c]) <= 1
+        )
+    );
+
+predicate sashigane_bend_region_count_p(
+    var int: cell_var,
+    var int: region_var,
+    array[int, int] of var int: regions
+) = count(array1d(regions), region_var) == cell_var;
+
+
+predicate sashigane_arrow_points_to_bend_p(
+    var int: cell_var,
+    var int: sashigane_var,
+    array[int] of var int: sashigane_vars,
+    array[int] of var bool: bend_vars,
+) = 
+    cell_var >= min(index_set(sashigane_vars)) /\\ 
+    cell_var <= max(index_set(sashigane_vars)) /\\
+    forall(i in index_set(sashigane_vars) where i<=cell_var) (
+        sashigane_vars[i] = sashigane_var
+    ) /\\
+    forall(i in index_set(bend_vars) where i<cell_var) (
+        bend_vars[i] = false
+    ) /\\
+    element(cell_var, bend_vars, true);\n\n`;
+
 	out_str +=
 		helper_f +
 		more_helper_f +
@@ -1118,7 +1514,10 @@ predicate nurimisaki_count_uninterrupted_unshaded_p(
 		yin_yang +
 		two_contiguous_regions +
 		unknown_sudoku_regions_p +
-		nurimisaki;
+		nurimisaki +
+		odd_even_grid +
+		value_modifier +
+		sashigane;
 
 	return out_str;
 }
@@ -1133,8 +1532,12 @@ export function getDirectionCells(grid: Grid, cell: Cell) {
 	return cells2;
 }
 
-export function getDirectionsVars(grid: Grid, cell: Cell, directions: DIRECTION[] | undefined = undefined) {
-    if (!directions) directions = [DIRECTION.N, DIRECTION.S, DIRECTION.W, DIRECTION.E];
+export function getDirectionsVars(
+	grid: Grid,
+	cell: Cell,
+	directions: DIRECTION[] | undefined = undefined
+) {
+	if (!directions) directions = [DIRECTION.N, DIRECTION.S, DIRECTION.W, DIRECTION.E];
 	const vars_arr: string[] = [];
 	for (const direction of directions) {
 		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);

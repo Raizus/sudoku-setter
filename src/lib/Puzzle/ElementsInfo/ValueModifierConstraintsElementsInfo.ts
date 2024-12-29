@@ -131,3 +131,15 @@ export const twoContiguousRegionsInfo: AbstractElementInfo = {
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
+
+export const sashiganeRegionsInfo: AbstractElementInfo = {
+	toolId: TOOLS.SASHIGANE,
+	order: 0,
+
+	meta: {
+		description:
+			'Divide the grid into 1-cell wide L-shaped regions. Digits may not repeat in a region.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};

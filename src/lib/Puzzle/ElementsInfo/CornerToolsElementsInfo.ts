@@ -28,6 +28,46 @@ export function defaultCornerValueUpdater(
 	return defaultValueUpdater(oldValue, key, validatorFunc);
 }
 
+function quadrupleValueUpdater(oldValue: string | undefined, key: string): string | undefined {
+	function quadrupleValidator(value: string): boolean {
+		return true;
+	}
+
+	return defaultValueUpdater(oldValue, key, quadrupleValidator);
+}
+
+export const quadrupleInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getCornerToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				quadrupleValueUpdater(oldValue, key),
+			defaultValue: ''
+		});
+	},
+
+	toolId: TOOLS.QUADRUPLE,
+	order: RENDER_ORDER.CORNER_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		r: { editable: false, value: 0.25 },
+		strokeWidth: { editable: false, value: 0.023 },
+		stroke: { editable: false, value: 'black' },
+		fill: { editable: false, value: 'var(--grid-background-color)' }
+	},
+
+	meta: {
+		description: 'Digits in a circle appear at least once in the four surrounding cells.',
+		tags: [],
+		categories: [
+			TOOL_CATEGORIES.CORNER_CONSTRAINT,
+			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
+			TOOL_CATEGORIES.TYPABLE_TOOL,
+			TOOL_CATEGORIES.CORNER_TOOL
+		]
+	}
+};
+
 export const cornerSumInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getCornerToolInputHandler(svgRef, grid, tool, {

@@ -10,15 +10,18 @@
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { gridCoordsAverage } from '$lib/utils/SquareCellGridCoords';
 	import { Vector2D } from '$lib/utils/Vector2D';
+	import { TOOLS } from '$src/lib/Puzzle/Tools';
+	import QuadrupleTextRender from './QuadrupleTextRender.svelte';
 
 	export let cornerTool: CornerToolI;
 
 	const coords = cornerTool.cells;
-	const defaultShape = getDefaultShape(cornerTool.toolId, squareCellElementHandlers) ?? defaultCornerCircleShape;
+	const defaultShape =
+		getDefaultShape(cornerTool.toolId, squareCellElementHandlers) ?? defaultCornerCircleShape;
 	$: shape = cornerTool.shape ?? defaultShape;
 
 	$: type = shape?.type ?? SHAPE_TYPES.CIRCLE;
-	const center = new Vector2D(coords[coords.length-1].c, coords[coords.length-1].r);
+	const center = new Vector2D(coords[coords.length - 1].c, coords[coords.length - 1].r);
 
 	$: fontSize = shape?.fontSize ?? 0.2;
 	$: fontColor = shape?.fontColor ?? 'black';
@@ -46,15 +49,19 @@
 		{:else}
 			<CircleRender x={center.x} y={center.y} {shape} />
 		{/if}
-		<text
-			x={center.x}
-			y={center.y}
-			text-anchor="middle"
-			dominant-baseline="central"
-			font-size={fontSize}
-			fill={fontColor}
-		>
-			{getText(cornerTool, type)}
-		</text>
+		{#if cornerTool.toolId === TOOLS.QUADRUPLE}
+			<QuadrupleTextRender {cornerTool} />
+		{:else}
+			<text
+				x={center.x}
+				y={center.y}
+				text-anchor="middle"
+				dominant-baseline="central"
+				font-size={fontSize}
+				fill={fontColor}
+			>
+				{getText(cornerTool, type)}
+			</text>
+		{/if}
 	</g>
 {/if}

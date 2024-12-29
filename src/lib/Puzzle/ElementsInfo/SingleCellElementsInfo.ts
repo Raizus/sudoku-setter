@@ -9,6 +9,7 @@ import { SHAPE_TYPES } from '../Shape/Shape';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { getSingleCellToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/SingleCellToolInputHandler';
 import { getSingleCellMultiArrowToolInputHandler } from '$input/ToolInputHandlers/SingleCellMultiArrowToolInputHandler';
+import { getSingleCellArrowToolInputHandler } from '$input/ToolInputHandlers/SingleCellArrowToolInputHandler';
 
 const singleCellShapeDefaultCategories = [
 	TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
@@ -605,6 +606,30 @@ export const yinYangSeenShadedCellsInfo: SquareCellElementInfo = {
 	}
 };
 
+export const yinYangSeenSameShadeCellsInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.YIN_YANG_SEEN_SAME_SHADE_CELLS,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.SQUARE,
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'black' },
+		r: { editable: false, value: 0.35 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			'A digit on a black square is equal to the number of consecutive shaded cells (including itself) the circle sees in its row and column, where cells of the other color block vision.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
 export const yinYangAdjacentSameShadeCountInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getSingleCellToolInputHandler(svgRef, grid, tool);
@@ -702,7 +727,6 @@ export const nurimisakiUnshadedEndpointInfo: SquareCellElementInfo = {
 	}
 };
 
-
 export const countCellsNotInTheSameRegionArrowsInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
@@ -726,5 +750,81 @@ export const countCellsNotInTheSameRegionArrowsInfo: SquareCellElementInfo = {
 			TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
 			TOOL_CATEGORIES.LOCAL_CONSTRAINT
 		]
+	}
+};
+
+export const sashiganeBendRegionCountInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.SASHIGANE_BEND_REGION_COUNT,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'gray' },
+		r: { editable: false, value: 0.35 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			'A circle in a cell means that cell is the bend in a region, and also the number in that cell is how many cells are in that region (this rule does not apply to regions without a circle).',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const sashiganeArrowPointsToBendInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellArrowToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CELL_ARROW,
+		strokeWidth: { editable: false, value: 0.05 },
+		stroke: { editable: true, value: 'gray' }
+	},
+
+	meta: {
+		description: '',
+		tags: [],
+		categories: [
+			TOOL_CATEGORIES.SINGLE_CELL_ARROW_TOOL,
+			TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
+			TOOL_CATEGORIES.LOCAL_CONSTRAINT
+		]
+	}
+};
+
+export const sashiganeRegionSumInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
+			defaultValue: ''
+		});
+	},
+
+	toolId: TOOLS.SASHIGANE_REGION_SUM,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CAGE,
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'black' },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			"A small clue in the top left corner of a cell gives the sum of the cells in that cell's region. Corner clues do not need to be in the top left cell of a region.",
+		tags: [],
+		categories: singleCellShapeDefaultCategories
 	}
 };

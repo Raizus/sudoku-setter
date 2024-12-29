@@ -2,7 +2,7 @@ import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { OutsideDirectionToolI } from '../Puzzle/Constraints/OutsideDirectionConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { cellsToVarsName, cellsToYinYangVarsName } from './solver_utils';
+import { cellsToValueVarsName, cellsToVarsName, cellsToYinYangVarsName } from './solver_utils';
 
 function getOutsideDirectionConstraintVars(grid: Grid, constraint: OutsideDirectionToolI) {
 	const cell_coord = constraint.cell;
@@ -169,6 +169,27 @@ function outsideEdgeYinYangAdjacentSumOfShadedConstraint(
 	return '';
 }
 
+function negatorsLittleKillerSumConstraint(
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	const cell_coord = constraint.cell;
+	const direction = constraint.direction;
+
+	const cells = grid.getCellsInDirection(cell_coord.r, cell_coord.c, direction);
+	const values_vars = cellsToValueVarsName(cells);
+	const values_vars_str = `[${values_vars.join(', ')}]`;
+
+	const value = constraint.value;
+	if (value) {
+		const val = parseInt(value);
+		const constraint_str: string = `constraint little_killer_sum_p(${values_vars_str}, ${val});\n`;
+		return constraint_str;
+	}
+	return '';
+}
+
 type ConstraintF = (grid: Grid, c_id: string, constraint: OutsideDirectionToolI) => string;
 
 const tool_map = new Map<string, ConstraintF>([
@@ -185,7 +206,8 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED, outsideEdgeYinYangAdjacentSumOfShadedConstraint],
 	// outside corner
 	[TOOLS.LITTLE_KILLER_SUM, littleKillerSumConstraint],
-	[TOOLS.X_OMIT_LITTLE_KILLER_SUM, xOmitlittleKillerSumConstraint]
+	[TOOLS.X_OMIT_LITTLE_KILLER_SUM, xOmitlittleKillerSumConstraint],
+	[TOOLS.NEGATORS_LITTLE_KILLER_SUM, negatorsLittleKillerSumConstraint]
 ]);
 
 export function outsideDirectionConstraints(

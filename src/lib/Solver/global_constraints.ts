@@ -1,11 +1,20 @@
 import type { EdgeToolI } from '../Puzzle/Constraints/EdgeConstraints';
+import type { LineToolI } from '../Puzzle/Constraints/LineConstraints';
 import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { CellToolI } from '../Puzzle/Constraints/SingleCellConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { cellsToVarsName, allDifferentConstraint, cellToVarName, addHeader, getDirectionsVars, cellToYinYangVarName } from './solver_utils';
+import {
+	cellsToVarsName,
+	allDifferentConstraint,
+	cellToVarName,
+	addHeader,
+	getDirectionsVars,
+	cellToYinYangVarName,
+	cellsToYinYangVarsName
+} from './solver_utils';
 
 function positiveDiagonalConstraint(grid: Grid): string {
 	const diag_cells = grid.getPositiveDiagonal();
@@ -179,6 +188,16 @@ function globalIndexingColumnConstraint(grid: Grid): string {
 		const constraint_str = `constraint indexing_column_p(${vars_str}, ${col});\n`;
 		out_str += constraint_str;
 	}
+	return out_str;
+}
+
+function allOddDigitsOrthogonallyConnected(puzzle: PuzzleI): string {
+	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: even_odd_grid;\n`;
+	out_str += `constraint odd_even_grid_p(board, even_odd_grid);\n`;
+	out_str += `constraint connected_region(even_odd_grid, 1);\n`;
+
+	out_str = addHeader(out_str, `${TOOLS.ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED}`);
 	return out_str;
 }
 
@@ -391,7 +410,7 @@ function allNurimisakiUnshadedEndpointsGivenConstraint(puzzle: PuzzleI): string 
 		const adj_cells = grid.getOrthogonallyAdjacentCells(cell);
 		const adj_nurimisaki_vars =
 			'[' + adj_cells.map((cell2) => `nurimisaki[${cell2.r},${cell2.c}]`).join(', ') + ']';
-		
+
 		const constraint_str = `constraint not nurimisaki_unshaded_endpoint_p(${adj_nurimisaki_vars}, ${cell_nurimisaki});\n`;
 		out_str += constraint_str;
 	}
@@ -400,7 +419,7 @@ function allNurimisakiUnshadedEndpointsGivenConstraint(puzzle: PuzzleI): string 
 	return out_str;
 }
 
-function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleI) {
+function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleI): string {
 	const grid = puzzle.grid;
 	let out_str: string = '\n% Nurimisaki Path German Whispers\n';
 	for (const [cell1, cell2] of adjCellPairGen(grid)) {
@@ -416,6 +435,24 @@ function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleI) {
 	return out_str;
 }
 
+function yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(puzzle: PuzzleI): string {
+	const grid = puzzle.grid;
+	const local_constraints = puzzle.localConstraints;
+	const constraints = local_constraints.get(TOOLS.YIN_YANG_REGION_SUM_LINE);
+	if (!constraints) return '';
+
+	let out_str: string = `\n% ${TOOLS.YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE}\n`;
+	for (const constraint of Object.values(constraints)) {
+		const cells_coords = (constraint as LineToolI).cells;
+		const cells = cells_coords
+			.map((coord) => grid.getCell(coord.r, coord.c))
+			.filter((cell) => !!cell);
+		const yin_yang_vars = cellsToYinYangVarsName(cells);
+		const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
+		out_str += `constraint count_unique_values(${yin_yang_vars_str}) >= 2;\n`;
+	}
+	return out_str;
+}
 
 export function sudokuConstraints(puzzle: PuzzleI) {
 	const gconstraints = puzzle.globalConstraints;
@@ -530,7 +567,13 @@ export function globalConstraints(puzzle: PuzzleI): string {
 		} else if (toolId === TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN) {
 			const constraint_str = allNurimisakiUnshadedEndpointsGivenConstraint(puzzle);
 			out_str += constraint_str;
-		} 
+		} else if (toolId === TOOLS.YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE) {
+			const constraint_str = yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(puzzle);
+			out_str += constraint_str;
+		} else if (toolId === TOOLS.ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED) {
+			const constraint_str = allOddDigitsOrthogonallyConnected(puzzle);
+			out_str += constraint_str;
+		}
 	}
 
 	return out_str;

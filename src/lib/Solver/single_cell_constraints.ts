@@ -1,11 +1,14 @@
 import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
-import type { CellMultiArrowToolI, CellToolI } from '../Puzzle/Constraints/SingleCellConstraints';
+import type { CellArrowToolI, CellMultiArrowToolI, CellToolI } from '../Puzzle/Constraints/SingleCellConstraints';
+import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
+	cellsToSashiganeVarsName,
 	cellsToUnknownRegionsVarsName,
 	cellsToVarsName,
 	cellsToYinYangVarsName,
+	cellToSashiganeVarName,
 	cellToUnknownRegionsVarName,
 	cellToVarName,
 	cellToYinYangVarName,
@@ -330,6 +333,11 @@ function yinYangSeenShadedConstraint(grid: Grid, constraint: CellToolI) {
 	return constraint_str;
 }
 
+function yinYangSeenSameShadeConstraint(grid: Grid, constraint: CellToolI) {
+	const constraint_str = yinYangSeenCountConstraint(grid, constraint, 'yin_yang_seen_same_shade_p');
+	return constraint_str;
+}
+
 function yinYangAdjacentSameShadeCountConstraint(grid: Grid, constraint: CellToolI) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
@@ -429,6 +437,60 @@ function countCellsNotInTheSameRegionConstraint(grid: Grid, constraint: CellMult
 	return constraint_str;
 }
 
+function sashiganeBendRegionCountConstraint(grid: Grid, constraint: CellToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const cell_var = cellToVarName(cell);
+	const sashigane_var = cellToSashiganeVarName(cell);
+	const sashigane_bend_var = `sashigane_bends[${cell.r},${cell.c}]`;
+
+	let out_str = `constraint sashigane_bend_region_count_p(${cell_var}, ${sashigane_var}, sashigane);\n`;
+	out_str += `constraint ${sashigane_bend_var} = true;\n`;
+	return out_str;
+}
+
+function sashiganeRegionSumConstraint(grid: Grid, constraint: CellToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const sashigane_var = cellToSashiganeVarName(cell);
+	const value = constraint.value;
+	if (!value) return '';
+	const val = parseInt(value);
+
+	const constraint_str = `constraint conditional_sum_f(array1d(board), array1d(sashigane), ${sashigane_var}) == ${val};\n`;
+	return constraint_str;
+}
+
+function sashiganeArrowPointsToBendConstraint(grid: Grid, constraint: CellArrowToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const direction = constraint.direction;
+	let cells: Cell[] = grid.getCellsInDirection(cell.r, cell.c, direction);
+	cells = [cell, ...cells];
+
+	const sashigane_vars = cellsToSashiganeVarsName(cells);
+	const sashigane_vars_str = '[' + sashigane_vars.join(',') + ']'
+
+	const sashigane_bend_vars = cells.map((cell2) => `sashigane_bends[${cell2.r},${cell2.c}]`);
+	const sashigane_bend_vars_str = '[' + sashigane_bend_vars.join(',') + ']';
+
+	const cell_var = cellToVarName(cell);
+	const sashigane_var = cellToSashiganeVarName(cell);
+
+	let out_str = `constraint sashigane_arrow_points_to_bend_p(${cell_var}, ${sashigane_var}, ${sashigane_vars_str}, ${sashigane_bend_vars_str});\n`;
+	out_str += `constraint count_same_adjacent(sashigane, ${cell.r}, ${cell.c}) == 1;\n`;
+	return out_str;
+}
+
+
+
+
 type ConstraintF = (grid: Grid, constraint: CellToolI) => string;
 
 const tool_map = new Map<string, ConstraintF>([
@@ -456,13 +518,16 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.YIN_YANG_MINESWEEPER, yinYangMinesweeperConstraint],
 	[TOOLS.YIN_YANG_SEEN_UNSHADED_CELLS, yinYangSeenUnshadedConstraint],
 	[TOOLS.YIN_YANG_SEEN_SHADED_CELLS, yinYangSeenShadedConstraint],
+	[TOOLS.YIN_YANG_SEEN_SAME_SHADE_CELLS, yinYangSeenSameShadeConstraint],
 	[TOOLS.YIN_YANG_ADJACENT_SAME_SHADE_COUNT, yinYangAdjacentSameShadeCountConstraint],
 	[
 		TOOLS.TWO_CONTIGUOUS_REGIONS_ROW_COLUMN_OPPOSITE_SET_COUNT,
 		twoConstiguousRegionsRowColumnOppositeSetCountConstraint
 	],
 	[TOOLS.SEEN_REGION_BORDERS_COUNT, seenRegionBordersCountConstraint],
-	[TOOLS.NURIMISAKI_UNSHADED_ENDPOINTS, nurimisakiUnshadedEndpointsConstraint]
+	[TOOLS.NURIMISAKI_UNSHADED_ENDPOINTS, nurimisakiUnshadedEndpointsConstraint],
+	[TOOLS.SASHIGANE_BEND_REGION_COUNT, sashiganeBendRegionCountConstraint],
+	[TOOLS.SASHIGANE_REGION_SUM, sashiganeRegionSumConstraint]
 ]);
 
 export function singleCellConstraints(
@@ -494,6 +559,14 @@ export function singleCellConstraints(
 			const constraint_str = countCellsNotInTheSameRegionConstraint(
 				grid,
 				constraint as CellMultiArrowToolI
+			);
+			out_str += constraint_str;
+		}
+	} else if (toolId === TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND) {
+		for (const constraint of Object.values(constraints)) {
+			const constraint_str = sashiganeArrowPointsToBendConstraint(
+				grid,
+				constraint as CellArrowToolI
 			);
 			out_str += constraint_str;
 		}

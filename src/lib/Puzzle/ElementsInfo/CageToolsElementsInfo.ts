@@ -257,3 +257,47 @@ export const yinYangBreakevenKillerCageInfo: SquareCellElementInfo = {
 		categories: typableCageDefaultCategories
 	}
 };
+
+export const doublersKillerCageInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getCageToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultCageValueUpdater(oldValue, key, validateCageValue),
+			defaultValue: '',
+			allowDiagonallyAdjacent: true
+		});
+	},
+
+	toolId: TOOLS.DOUBLERS_KILLER_CAGE,
+	order: RENDER_ORDER.CAGE_TOOLS,
+
+	meta: {
+		description:
+			'A digit in a doubler cell counts for twice its value for the purposes of all cage sums. Digits may not repeat in cages, though values might. (eg a cage may not contain a doubled 2 and a regular 2 but may contain a doubled 2 and a regular 4). The values in the cage must sum to the given total in the top left (if one exists).',
+		usage: typableCageUsage(),
+		tags: [],
+		categories: typableCageDefaultCategories
+	}
+};
+
+export const negatorsKillerCageInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getCageToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultCageValueUpdater(oldValue, key, validateCageValue),
+			defaultValue: '',
+			allowDiagonallyAdjacent: true
+		});
+	},
+
+	toolId: TOOLS.NEGATORS_KILLER_CAGE,
+	order: RENDER_ORDER.CAGE_TOOLS,
+
+	meta: {
+		description:
+			'A digit in a negator cell counts for -1*value for the purposes of all cage sums. Digits may not repeat in cages, though values might. Digits in cages do not include repeat digits, and must sum to the given total in the top left (if one exists). A digit in a negator cell must be subtracted rather than added to achieve the given cage total.',
+		usage: typableCageUsage(),
+		tags: [],
+		categories: typableCageDefaultCategories
+	}
+};

@@ -152,6 +152,17 @@ export const globalIndexingColumnInfo: AbstractElementInfo = {
 	}
 };
 
+export const allOddDigitsAreOrthogonallyConnectedInfo: AbstractElementInfo = {
+	toolId: TOOLS.ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED,
+	order: 0,
+
+	meta: {
+		description: 'All odd numbers must form an othogonally connected region at the end.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	}
+};
+
 /* --------------------------------------------------------------------------------------------------- */
 
 export const allRatiosGivenInfo: AbstractElementInfo = {
@@ -269,7 +280,7 @@ export const allYinYangKropkiGivenInfo: AbstractElementInfo = {
 	}
 };
 
-export const NurimisakiPathGermanWhispersInfo: AbstractElementInfo = {
+export const nurimisakiPathGermanWhispersInfo: AbstractElementInfo = {
 	toolId: TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS,
 	order: 0,
 
@@ -285,7 +296,20 @@ export const allNurimisakiUnshadedEndpointsGivenInfo: AbstractElementInfo = {
 	order: 0,
 
 	meta: {
-		description: "Circles mark every instance of a cell which is unshaded and orthogonally adjacent to exactly one other unshaded cell (i.e. the circles are the only 'endpoints' of the unshaded area).",
+		description:
+			"Circles mark every instance of a cell which is unshaded and orthogonally adjacent to exactly one other unshaded cell (i.e. the circles are the only 'endpoints' of the unshaded area).",
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
+
+export const yinYangRegionSumLinesMustCrossColorsAtLeastOnceInfo: AbstractElementInfo = {
+	toolId: TOOLS.YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE,
+	order: 0,
+
+	meta: {
+		description:
+			'Blue lines must have an equal sum N within each colour they pass through. If a blue line passes through a colour multiple times, each individual pass sums to N. All lines must cross colours at least once.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
 	}

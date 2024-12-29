@@ -1,10 +1,14 @@
-import { defaultValidateValueOnInput, defaultValueUpdater, type ValueValidatorOptions } from "$src/lib/InputHandlers/InputHandler";
-import { CornerOrEdge } from "$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler";
-import { getOutsideDirectionToolInputHandler } from "$src/lib/InputHandlers/ToolInputHandlers/OutsideDirectionInputHandler";
-import type { SquareCellElementInfo } from "../ElementInfo";
-import { RENDER_ORDER } from "../RenderOrder";
-import { outsideCornerUsage } from "../ToolUsage";
-import { TOOL_CATEGORIES, TOOLS } from "../Tools";
+import {
+	defaultValidateValueOnInput,
+	defaultValueUpdater,
+	type ValueValidatorOptions
+} from '$src/lib/InputHandlers/InputHandler';
+import { CornerOrEdge } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
+import { getOutsideDirectionToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/OutsideDirectionInputHandler';
+import type { SquareCellElementInfo } from '../ElementInfo';
+import { RENDER_ORDER } from '../RenderOrder';
+import { outsideCornerUsage } from '../ToolUsage';
+import { TOOL_CATEGORIES, TOOLS } from '../Tools';
 
 const outsideCornerDefaultCategories = [
 	TOOL_CATEGORIES.OUTSIDE_CORNER_CONSTRAINT,
@@ -121,3 +125,24 @@ export const littleKillerRegionSumProductInfo: SquareCellElementInfo = {
 	}
 };
 
+export const negatorsLittleKillerSumInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
+			defaultValue: '',
+			cornerOrEdge: CornerOrEdge.CORNER
+		});
+	},
+
+	toolId: TOOLS.NEGATORS_LITTLE_KILLER_SUM,
+	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
+	meta: {
+		description:
+			'Digits along indicated diagonals must add to the indicated total. Repeats are permitted along such diagonals. A digit in a negator cell must be subtracted rather than added to achieve the given diagonal total.',
+		usage: outsideCornerUsage(),
+		tags: [],
+		categories: outsideCornerDefaultCategories
+	}
+};

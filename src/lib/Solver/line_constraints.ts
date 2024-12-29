@@ -3,19 +3,25 @@ import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { cellsToVarsName } from './solver_utils';
+import { cellsToValueVarsName, cellsToVarsName, cellsToYinYangVarsName } from './solver_utils';
 
-function getLineVars(grid: Grid, constraint: LineToolI) {
+function getLineVars(grid: Grid, constraint: LineToolI, use_set: boolean = false) {
 	const cells_coords = constraint.cells;
-	const cells = cells_coords
-		.map((coord) => grid.getCell(coord.r, coord.c))
-		.filter((cell) => !!cell);
+	let cells = cells_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell);
+	if (use_set) {
+		cells = [...new Set(cells)];
+	}
 	const vars = cellsToVarsName(cells);
 	return vars;
 }
 
-function simpleLineConstraint(grid: Grid, constraint: LineToolI, predicate: string) {
-	const vars = getLineVars(grid, constraint);
+function simpleLineConstraint(
+	grid: Grid,
+	constraint: LineToolI,
+	predicate: string,
+	use_set: boolean = false
+) {
+	const vars = getLineVars(grid, constraint, use_set);
 	const vars_str = `[${vars.join(',')}]`;
 	const constraint_str: string = `constraint ${predicate}(${vars_str});\n`;
 	return constraint_str;
@@ -40,22 +46,22 @@ function valuedLineConstraint(
 }
 
 function renbanConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
-	const constraint_str = simpleLineConstraint(grid, constraint, 'renban');
+	const constraint_str = simpleLineConstraint(grid, constraint, 'renban', true);
 	return constraint_str;
 }
 
 function doubleRenbanConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
-	const constraint_str = simpleLineConstraint(grid, constraint, 'double_renban_p');
+	const constraint_str = simpleLineConstraint(grid, constraint, 'double_renban_p', true);
 	return constraint_str;
 }
 
 function renrenbanbanConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
-	const constraint_str = simpleLineConstraint(grid, constraint, 'renrenbanban_p');
+	const constraint_str = simpleLineConstraint(grid, constraint, 'renrenbanban_p', true);
 	return constraint_str;
 }
 
 function knabnerConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
-	const constraint_str = simpleLineConstraint(grid, constraint, 'knabner_p');
+	const constraint_str = simpleLineConstraint(grid, constraint, 'knabner_p', true);
 	return constraint_str;
 }
 
@@ -129,7 +135,7 @@ function nConsecutiveRenbanLineConstraint(grid: Grid, c_id: string, constraint: 
 }
 
 function uniqueValuesLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
-	const constraint_str = simpleLineConstraint(grid, constraint, 'alldifferent');
+	const constraint_str = simpleLineConstraint(grid, constraint, 'alldifferent', true);
 	return constraint_str;
 }
 
@@ -262,7 +268,107 @@ function entropicLineConstraint(grid: Grid, c_id: string, constraint: LineToolI)
 function entropicOrModularLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	const vars = getLineVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
-	const constraint_str: string = `constraint entropic_line_p(${vars_str}, {1,2,3}, {4,5,6}, {7,8,9}) \\/ modular_line_p(${vars_str}, 3);\n`;
+	const constraint_str: string = `constraint entropic_or_modular_line_p(${vars_str}, {1,2,3}, {4,5,6}, {7,8,9}, 3);\n`;
+	return constraint_str;
+}
+
+function yinYangShadedWhispersLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const cells_coords = constraint.cells;
+	const cells = cells_coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+	const vars = cellsToVarsName(cells);
+	const vars_str = `[${vars.join(',')}]`;
+	const yin_yang_vars = cellsToYinYangVarsName(cells);
+	const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
+
+	let value = constraint.value;
+	if (!value) value = '5';
+	const val = parseInt(value);
+
+	const constraint_str: string = `constraint yin_yang_shaded_whispers_line_p(${vars_str}, ${yin_yang_vars_str}, ${val});\n`;
+	return constraint_str;
+}
+
+function yinYangUnshadedModularLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const cells_coords = constraint.cells;
+	const cells = cells_coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+	const vars = cellsToVarsName(cells);
+	const vars_str = `[${vars.join(',')}]`;
+	const yin_yang_vars = cellsToYinYangVarsName(cells);
+	const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
+
+	let value = constraint.value;
+	if (!value) value = '3';
+	const val = parseInt(value);
+
+	const constraint_str: string = `constraint yin_yang_unshaded_modular_line_p(${vars_str}, ${yin_yang_vars_str}, ${val});\n`;
+	return constraint_str;
+}
+
+function yinYangUnshadedEntropicLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const cells_coords = constraint.cells;
+	const cells = cells_coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+	const vars = cellsToVarsName(cells);
+	const vars_str = `[${vars.join(',')}]`;
+	const yin_yang_vars = cellsToYinYangVarsName(cells);
+	const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
+
+	const constraint_str: string = `constraint yin_yang_unshaded_entropic_line_p(${vars_str}, ${yin_yang_vars_str});\n`;
+	return constraint_str;
+}
+
+function yinYangRegionSumLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const cells_coords = constraint.cells;
+	const cells = cells_coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+
+	const vars = cellsToVarsName(cells);
+	const vars_str = `[${vars.join(',')}]`;
+	const yin_yang_vars = cellsToYinYangVarsName(cells);
+	const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
+
+	// check if line is circuler and reassign the cells
+	// const l = cells.length;
+	// if (l > 1 && cells[0] === cells[l - 1]) {
+	// 	const constraint_str: string = `constraint yin_yang_circular_region_sum_line_p(${vars_str}, ${yin_yang_vars_str});\n`;
+	// 	return constraint_str;
+	// }
+
+	const constraint_str: string = `constraint yin_yang_region_sum_line_p(${vars_str}, ${yin_yang_vars_str});\n`;
+	return constraint_str;
+}
+
+function simpleMultipliersLineConstraint(grid: Grid, constraint: LineToolI, predicate: string) {
+	const cells_coords = constraint.cells;
+	const cells = cells_coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+
+	const values_vars = cellsToValueVarsName(cells);
+	const values_vars_str = `[${values_vars.join(', ')}]`;
+
+	const constraint_str: string = `constraint ${predicate}(${values_vars_str});\n`;
+	return constraint_str;
+}
+
+function doublersBetweenLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = simpleMultipliersLineConstraint(grid, constraint, 'between_line_p');
+	return constraint_str;
+}
+
+function doublersDoubleArrowLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = simpleMultipliersLineConstraint(grid, constraint, 'double_arrow_p');
+	return constraint_str;
+}
+
+function doublersThermometerConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = simpleMultipliersLineConstraint(grid, constraint, 'strictly_increasing');
 	return constraint_str;
 }
 
@@ -294,15 +400,27 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.UNIMODULAR_LINE, unimodularLineConstraint],
 	[TOOLS.MODULAR_LINE, modularLineConstraint],
 	[TOOLS.MODULAR_OR_UNIMODULAR_LINE, modularOrUnimodularLineConstraint],
+	[TOOLS.REGION_SUM_LINE, regionSumLineConstraint],
+	[TOOLS.ENTROPIC_LINE, entropicLineConstraint],
+	[TOOLS.ENTROPIC_OR_MODULAR_LINE, entropicOrModularLineConstraint],
+
+	// double ended lines
 	[TOOLS.BETWEEN_LINE, betweenLineConstraint],
 	[TOOLS.TIGHTROPE_LINE, tightropeLineConstraint],
 	[TOOLS.DOUBLE_ARROW_LINE, doubleArrowConstraint],
 	[TOOLS.SPLIT_PEAS, splitPeasConstraint],
 	[TOOLS.PARITY_COUNT_LINE, parityCountLineConstraint],
 	[TOOLS.PRODUCT_OF_ENDS_EQUALS_SUM_OF_LINE, productOfEndsEqualsSumOfLineConstraint],
-	[TOOLS.REGION_SUM_LINE, regionSumLineConstraint],
-	[TOOLS.ENTROPIC_LINE, entropicLineConstraint],
-	[TOOLS.ENTROPIC_OR_MODULAR_LINE, entropicOrModularLineConstraint]
+
+	[TOOLS.DOUBLERS_THERMOMETER, doublersThermometerConstraint],
+	[TOOLS.DOUBLERS_BETWEEN_LINE, doublersBetweenLineConstraint],
+	[TOOLS.DOUBLERS_DOUBLE_ARROW_LINE, doublersDoubleArrowLineConstraint],
+
+	// yin_yang_lines
+	[TOOLS.YIN_YANG_SHADED_WHISPERS_LINE, yinYangShadedWhispersLineConstraint],
+	[TOOLS.YIN_YANG_UNSHADED_ENTROPIC_LINE, yinYangUnshadedEntropicLineConstraint],
+	[TOOLS.YIN_YANG_UNSHADED_MODULAR_LINE, yinYangUnshadedModularLineConstraint],
+	[TOOLS.YIN_YANG_REGION_SUM_LINE, yinYangRegionSumLineConstraint]
 ]);
 
 export function lineConstraints(

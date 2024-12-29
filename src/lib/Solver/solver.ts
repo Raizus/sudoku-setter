@@ -1,7 +1,7 @@
 import type { PuzzleI } from '../Puzzle/Puzzle';
 import { globalConstraints, sudokuConstraints } from './global_constraints';
 import { localConstraints } from './local_constraints';
-import { nurimisakiConstraint, twoContiguousRegionsConstraint, unknownRegionsConstraint, yinYangConstraint } from './other_constraints';
+import { doublersConstraint, negatorsConstraint, nurimisakiConstraint, sashiganeConstraint, twoContiguousRegionsConstraint, unknownRegionsConstraint, yinYangConstraint } from './other_constraints';
 import { cellToVarName, defineFunctionsPredicates } from './solver_utils';
 
 function givenConstraints(puzzle: PuzzleI) {
@@ -37,10 +37,14 @@ export function createMinizincModel(puzzle: PuzzleI) {
 	out_str += givenConstraints(puzzle);
 	out_str += sudokuConstraints(puzzle);
 
+	out_str += doublersConstraint(puzzle);
+	out_str += negatorsConstraint(puzzle);
 	out_str += yinYangConstraint(puzzle);
+	out_str += sashiganeConstraint(puzzle);
 	out_str += twoContiguousRegionsConstraint(puzzle);
 	out_str += unknownRegionsConstraint(puzzle);
 	out_str += nurimisakiConstraint(puzzle);
+
 	out_str += localConstraints(puzzle);
 	out_str += globalConstraints(puzzle);
 

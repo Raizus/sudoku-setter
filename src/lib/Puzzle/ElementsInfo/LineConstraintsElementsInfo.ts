@@ -375,7 +375,7 @@ export const regionSumLineInfo: SquareCellElementInfo = {
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
-		strokeWidth: { editable: true, value: 0.1 },
+		strokeWidth: { editable: true, value: 0.15 },
 		stroke: { editable: true, value: 'var(--constraint-color-light-blue)' },
 		linePathOptions: {
 			shortenHead: { editable: false, value: 0.15 },
@@ -764,7 +764,7 @@ export const indexingRowIsXLineInfo: SquareCellElementInfo = {
 
 export const repeatedDigitsLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
 	},
 
 	toolId: TOOLS.REPEATED_DIGITS_LINE,
@@ -793,7 +793,7 @@ export const repeatedDigitsLineInfo: SquareCellElementInfo = {
 
 export const superfuzzyArrowInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
 	},
 
 	toolId: TOOLS.SUPERFUZZY_ARROW,
@@ -1029,6 +1029,130 @@ export const adjacentMultiplesLineInfo: SquareCellElementInfo = {
 
 /* ----------------------------------------------------------------------------- */
 
+export const yinYangShadedWhispersLineInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: true,
+			defaultValue: '5'
+		});
+	},
+
+	toolId: TOOLS.YIN_YANG_SHADED_WHISPERS_LINE,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		strokeWidth: { editable: true, value: 0.15 },
+		stroke: { editable: true, value: 'var(--constraint-color-green)' },
+		linePathOptions: {
+			shortenHead: { editable: false, value: 0.15 },
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.15 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		description:
+			'Within shaded yin yang areas, adjacent digits along a green line must differ by at least x (default x = 5).',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
+export const yinYangUnshadedEntropicLineInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
+	},
+
+	toolId: TOOLS.YIN_YANG_UNSHADED_ENTROPIC_LINE,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		strokeWidth: { editable: true, value: 0.15 },
+		stroke: { editable: true, value: 'var(--constraint-color-orange)' },
+		linePathOptions: {
+			shortenHead: { editable: false, value: 0.15 },
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.15 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		description:
+			'Within unshaded yin yang areas, any string or 3 or fewer digits along an orange line must be from a different set ({1,2,3}, {4,5,6}, {7,8,9}).',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
+export const yinYangUnshadedModularLineInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: true,
+			defaultValue: '3'
+		});
+	},
+
+	toolId: TOOLS.YIN_YANG_UNSHADED_MODULAR_LINE,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		strokeWidth: { editable: true, value: 0.15 },
+		stroke: { editable: true, value: 'var(--constraint-color-dark-blue)' },
+		linePathOptions: {
+			shortenHead: { editable: false, value: 0.15 },
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.15 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		description:
+			'Within unshaded yin yang areas, every set of N or less sequential digits contains one number from every possible remainder set, from 0 to N-1 (default N = 3). For example, on modular lines of mod 3, every set of 3 sequential cells contains one digit from {1,4,7} (remainder 1), one from {2,5,8} (remainder 2) and one from {3,6,9} (remainder 0).',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
+export const yinYangRegionSumLineInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
+	},
+
+	toolId: TOOLS.YIN_YANG_REGION_SUM_LINE,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		strokeWidth: { editable: true, value: 0.15 },
+		stroke: { editable: true, value: 'var(--constraint-color-blue)' },
+		linePathOptions: {
+			shortenHead: { editable: false, value: 0.15 },
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.15 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		description:
+			'Blue lines must have an equal sum N within each colour they pass through. If a blue line passes through a colour multiple times, each individual pass sums to N.',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
+/* ----------------------------------------------------------------------------- */
+
 export const betweenLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
@@ -1217,6 +1341,92 @@ export const splitPeasLineInfo: SquareCellElementInfo = {
 	meta: {
 		description:
 			'The sum of the digits on a line strictly between two circles is equal to a concatenation of the two values in the circles, in some order. For instance, 3_346_1 could be a valid split pea line, as 3+4+6=13, which is 1 concatenated with 3.',
+		usage: lineUsage(),
+		tags: [],
+		categories: doubleEndedLineDefaultCategories
+	}
+};
+
+
+export const doublersThermometerInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
+	},
+
+	toolId: TOOLS.DOUBLERS_THERMOMETER,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.THERMO,
+		strokeWidth: { editable: false, value: 0.15 },
+		r: { editable: false, value: 0.25 },
+		opacity: { editable: false, value: 0.9 },
+		stroke: { editable: false, value: 'var(--constraint-color-gray)' },
+		fill: { editable: false, value: 'var(--constraint-color-gray)' },
+		linePathOptions: {
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.15 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		description:
+			'Values along a thermometer must increase from the bulb end. If a thermometer cell is a doubler it counts as twice its value for purposes of the thermometer.',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
+export const doublersBetweenLineInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
+	},
+
+	toolId: TOOLS.DOUBLERS_BETWEEN_LINE,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
+		r: { editable: false, value: 0.35 },
+		strokeWidth: { editable: true, value: 0.04 },
+		stroke: { editable: true, value: 'var(--constraint-color-green)' },
+		linePathOptions: {
+			bezierRounding: { editable: false, value: 0.15 }
+		}
+	},
+
+	meta: {
+		description:
+			"Digits on a 'between line', which may include repeats, must be strictly between the values in the circles on the ends of that line. For the purposes of the between lines, digits on doublers count as double their value.",
+		usage: lineUsage(),
+		tags: [],
+		categories: doubleEndedLineDefaultCategories
+	}
+};
+
+export const doublersDoubleArrowLineInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
+	},
+
+	toolId: TOOLS.DOUBLERS_DOUBLE_ARROW_LINE,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
+		r: { editable: false, value: 0.35 },
+		strokeWidth: { editable: true, value: 0.04 },
+		stroke: { editable: true, value: 'var(--constraint-color-green)' },
+		linePathOptions: {
+			bezierRounding: { editable: false, value: 0.15 }
+		}
+	},
+
+	meta: {
+		description:
+			'The sum of the values on the line must equal the sum of the values in its end circles. Values may repeat if allowed by other rules. For the purposes of the double arrow lines, digits on doublers count as double their value.',
 		usage: lineUsage(),
 		tags: [],
 		categories: doubleEndedLineDefaultCategories

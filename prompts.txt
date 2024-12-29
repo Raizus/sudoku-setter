@@ -1,3 +1,2 @@
-Create a predicate entropic_line_p(array[int] of var int: arr, set of int: group1, set of int: group2, set of int: group3) that enforces the following constraint:
-    - for every set of three sequential elements of the array, it must contain one element in each of the groups.
-    - Also make sure to enforce the constraint that, elements of the array with index with the same remainder mod 3, belong to the same group. This constraint is redundant but helpful for the solver
+Can you create a typescript function solve_coloring(grid: number[][]): number[][] which receives a grid of integers, where adjacent elements in the grid with the same value are considered part of the same region, and return a new grid with elements from using only values 1,4,7,9, representing some solution of the graph coloring problem for the input grid.
+

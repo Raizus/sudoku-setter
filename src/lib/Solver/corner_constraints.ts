@@ -45,6 +45,22 @@ function valuedCornerConstraint(
 	return '';
 }
 
+function quadrupleConstraint(grid: Grid, constraint: CornerToolI) {
+	const vars = getCornerVars(grid, constraint);
+	const vars_str = `[${vars.join(',')}]`;
+
+	const value = constraint.value;
+	if (!value) return '';
+
+	if (value) {
+		const values = value.replace(' ', '').split(',');
+		const values_str = '[' + values.join(', ') + ']'
+		const constraint_str = `constraint quadruple_p(${vars_str}, ${values_str});\n`;
+		return constraint_str;
+	}
+	return '';
+}
+
 function cornerSumConstraint(grid: Grid, constraint: CornerToolI) {
 	const constraint_str = valuedCornerConstraint(grid, constraint, 'corner_sum_p');
 	return constraint_str;
@@ -67,6 +83,7 @@ function cornerSumOfThreeEqualsTheOtherConstraint(grid: Grid, constraint: Corner
 type ConstraintF = (grid: Grid, constraint: CornerToolI) => string;
 
 const tool_map = new Map<string, ConstraintF>([
+	[TOOLS.QUADRUPLE, quadrupleConstraint],
 	[TOOLS.CORNER_SUM, cornerSumConstraint],
 	[TOOLS.CORNER_EVEN_COUNT, cornerEvenCountConstraint],
 	[TOOLS.CORNER_SUM_OF_THREE_EQUALS_THE_OTHER, cornerSumOfThreeEqualsTheOtherConstraint]

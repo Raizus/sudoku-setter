@@ -17,9 +17,10 @@
 	let solver: null | MiniZinc.SolveProgress = null;
 	$: solverLabel = 'Solve';
 
-	const max_sols = 100;
+	let max_sols = 100;
+	let max_sols_str = '100';
 	let sol_count: number | null = null;
-	let status: string = '';
+	let status: string = 'IDLE';
 
 	function getSolText(sol_count: number | null): string {
 		if (sol_count === null) return '?';
@@ -28,6 +29,13 @@
 
 	function clickCb() {
 		showModal = true;
+	}
+
+	function updateMaxSols(value: string) {
+		const parsed = parseInt(value);
+		if (typeof parsed === 'number' && parsed >= 1) {
+			max_sols = parsed
+		}
 	}
 
 	async function solveModel() {
@@ -52,6 +60,7 @@
 
 		solver.on('solution', (solution) => {
 			const json = solution.output.json;
+			// console.log(json);
 			setBoardOnSolution(json, grid);
 			if (solution.type === 'solution' && sol_count !== null) sol_count += 1;
 		});
@@ -86,7 +95,16 @@
 		<SolverModal bind:showModal />
 		<button class="entry-panel-button" on:click={solveCb}> {solverLabel} </button>
 		<span class="text-field">{`Max. Solutions: ${max_sols}`}</span>
-		<!-- <input type="number" min={1} max={20} step={1} value={max_sols}/> -->
+		<div class="input-container">
+			<input
+				type="number"
+				min={1}
+				max={200}
+				step={1}
+				bind:value={max_sols_str}
+				on:input={() => updateMaxSols(max_sols_str)}
+			/>
+		</div>
 		<span class="text-field">{`Solution Count: ${getSolText(sol_count)}`}</span>
 		<span class="text-field">{`Status: ${status}`}</span>
 	</svelte:fragment>
@@ -115,12 +133,20 @@
 		margin-bottom: 0.4rem;
 	}
 
-	// input {
-	// 	background-color: var(--input-background-color);
-	// 	color: var(--text-primary-color);
-	// 	border: 0;
-	// 	border-radius: 0 4px 4px 0;
-	// 	outline: none;
-	// 	padding: 1px;
-	// }
+	.input-container {
+		display: flex;
+		flex-direction: column;
+		padding-left: 1rem;
+		padding-right: 1rem;
+	}
+
+	input {
+		padding-inline-start: 0.5rem;
+		background-color: var(--input-background-color);
+		color: var(--text-primary-color);
+		border: 0;
+		border-radius: 0 4px 4px 0;
+		outline: none;
+		padding: 1px;
+	}
 </style>

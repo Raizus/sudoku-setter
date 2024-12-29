@@ -3,7 +3,9 @@ import { TOOLS } from '../Tools';
 import { arrowInfo, averageArrowInfo } from './ArrowToolsElementsInfo';
 import {
 	divisibleKillerCageInfo,
+	doublersKillerCageInfo,
 	killerCageInfo,
+	negatorsKillerCageInfo,
 	parityBalanceCageInfo,
 	putteriaCageInfo,
 	spotlightCageInfo,
@@ -26,7 +28,8 @@ import { cloneRegionInfo } from './CloneToolsElementsInfo';
 import {
 	cornerEvenCountInfo,
 	cornerSumInfo,
-	cornerSumOfThreeEqualsTheOtherInfo
+	cornerSumOfThreeEqualsTheOtherInfo,
+	quadrupleInfo
 } from './CornerToolsElementsInfo';
 import {
 	cosmeticArrowInfo,
@@ -58,6 +61,7 @@ import {
 	allIndexingColumnGivenInfo,
 	allIndexingRowGivenInfo,
 	allNurimisakiUnshadedEndpointsGivenInfo,
+	allOddDigitsAreOrthogonallyConnectedInfo,
 	allRadarsGivenInfo,
 	allRatiosGivenInfo,
 	allVGivenInfo,
@@ -73,12 +77,13 @@ import {
 	negativeDiagonalInfo,
 	nonconsecutiveInfo,
 	nonratioInfo,
-	NurimisakiPathGermanWhispersInfo,
+	nurimisakiPathGermanWhispersInfo,
 	oddEvenParityMirrorAlongNegativeDiagonalInfo,
 	oddEvenParityMirrorAlongPositiveDiagonalInfo,
 	positiveAntidiagonalInfo,
 	positiveDiagonalInfo,
-	sudokuRulesDoNotApplyInfo
+	sudokuRulesDoNotApplyInfo,
+	yinYangRegionSumLinesMustCrossColorsAtLeastOnceInfo
 } from './GlobalConstraintsElementsInfo';
 import {
 	adjacentCellSumIsPrimeLineInfo,
@@ -88,6 +93,9 @@ import {
 	betweenLineInfo,
 	doubleArrowLineInfo,
 	doubleRenbanLineInfo,
+	doublersBetweenLineInfo,
+	doublersDoubleArrowLineInfo,
+	doublersThermometerInfo,
 	entropicLineInfo,
 	entropicOrModularLineInfo,
 	highLowOscilatorLineInfo,
@@ -121,12 +129,17 @@ import {
 	unimodularLineInfo,
 	uniqueValuesLineInfo,
 	whispersLineInfo,
-	xvLineInfo
+	xvLineInfo,
+	yinYangRegionSumLineInfo,
+	yinYangShadedWhispersLineInfo,
+	yinYangUnshadedEntropicLineInfo,
+	yinYangUnshadedModularLineInfo
 } from './LineConstraintsElementsInfo';
 import {
 	littleKillerLookAndSayInfo,
 	littleKillerRegionSumProductInfo,
 	littleKillerSumInfo,
+	negatorsLittleKillerSumInfo,
 	xOmitLittleKillerSumInfo
 } from './OutsideCornerToolsElementsInfo';
 import {
@@ -167,25 +180,25 @@ import {
 	primeCellInfo,
 	radarInfo,
 	sandwichRowColCountInfo,
+	sashiganeArrowPointsToBendInfo,
+	sashiganeBendRegionCountInfo,
+	sashiganeRegionSumInfo,
 	seenRegionBordersCountInfo,
 	twoContiguousRegionsRowColumnOppositeSetCountInfo,
 	watchtowerInfo,
 	yinYangAdjacentSameShadeCountInfo,
 	yinYangMinesweeperInfo,
+	yinYangSeenSameShadeCellsInfo,
 	yinYangSeenShadedCellsInfo,
 	yinYangSeenUnshadedCellsInfo
 } from './SingleCellElementsInfo';
 import {
-	coldCellsInfo,
-	decrementFountainInfo,
 	doublersInfo,
-	hotCellsInfo,
-	markedCellsInfo,
 	negatorsInfo,
 	nurimisakiInfo,
+	sashiganeRegionsInfo,
 	twoContiguousRegionsInfo,
 	unknownRegionsInfo,
-	vampireAndPreyInfo,
 	yinYangInfo
 } from './ValueModifierConstraintsElementsInfo';
 
@@ -209,6 +222,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.NONCONSECUTIVE]: nonconsecutiveInfo,
 	[TOOLS.NONRATIO]: nonratioInfo,
 	[TOOLS.GLOBAL_INDEXING_COLUMN]: globalIndexingColumnInfo,
+	[TOOLS.ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED]: allOddDigitsAreOrthogonallyConnectedInfo,
 
 	[TOOLS.NEGATIVE_DIAGONAL]: negativeDiagonalInfo,
 	[TOOLS.POSITIVE_DIAGONAL]: positiveDiagonalInfo,
@@ -229,23 +243,27 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.ALL_INDEXING_COLUMN_GIVEN]: allIndexingColumnGivenInfo,
 	[TOOLS.ALL_INDEXING_ROW_GIVEN]: allIndexingRowGivenInfo,
 	[TOOLS.ALL_YIN_YANG_KROPKI_GIVEN]: allYinYangKropkiGivenInfo,
-	[TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN]: allNurimisakiUnshadedEndpointsGivenInfo,
 
-	[TOOLS.VAMPIRE_AND_PREY]: vampireAndPreyInfo,
-	[TOOLS.MARKED_CELLS]: markedCellsInfo,
+	[TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN]: allNurimisakiUnshadedEndpointsGivenInfo,
+	[TOOLS.YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE]:
+		yinYangRegionSumLinesMustCrossColorsAtLeastOnceInfo,
+
 	[TOOLS.DOUBLERS]: doublersInfo,
 	[TOOLS.NEGATORS]: negatorsInfo,
-	[TOOLS.HOT_CELLS]: hotCellsInfo,
-	[TOOLS.COLD_CELLS]: coldCellsInfo,
-	[TOOLS.DECREMENT_FOUNTAIN]: decrementFountainInfo,
+	// [TOOLS.VAMPIRE_AND_PREY]: vampireAndPreyInfo,
+	// [TOOLS.MARKED_CELLS]: markedCellsInfo,
+	// [TOOLS.HOT_CELLS]: hotCellsInfo,
+	// [TOOLS.COLD_CELLS]: coldCellsInfo,
+	// [TOOLS.DECREMENT_FOUNTAIN]: decrementFountainInfo,
 
 	// Undetermined Regions Constraints
 	[TOOLS.UNKNOWN_REGIONS]: unknownRegionsInfo,
 	[TOOLS.YIN_YANG]: yinYangInfo,
 	[TOOLS.NURIMISAKI]: nurimisakiInfo,
 	[TOOLS.TWO_CONTIGUOUS_REGIONS]: twoContiguousRegionsInfo,
+	[TOOLS.SASHIGANE]: sashiganeRegionsInfo,
 
-	[TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS]: NurimisakiPathGermanWhispersInfo,
+	[TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS]: nurimisakiPathGermanWhispersInfo,
 
 	// Single Cell Constraints
 	[TOOLS.ODD]: oddInfo,
@@ -271,14 +289,21 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 		adjacentCellsInDifferentDirectionsHaveOpositeParityInfo,
 	[TOOLS.SANDWICH_ROW_COL_COUNT]: sandwichRowColCountInfo,
 	[TOOLS.COUNTING_CIRCLES]: countingCirclesInfo,
+
 	[TOOLS.YIN_YANG_MINESWEEPER]: yinYangMinesweeperInfo,
 	[TOOLS.YIN_YANG_SEEN_UNSHADED_CELLS]: yinYangSeenUnshadedCellsInfo,
 	[TOOLS.YIN_YANG_SEEN_SHADED_CELLS]: yinYangSeenShadedCellsInfo,
+	[TOOLS.YIN_YANG_SEEN_SAME_SHADE_CELLS]: yinYangSeenSameShadeCellsInfo,
 	[TOOLS.YIN_YANG_ADJACENT_SAME_SHADE_COUNT]: yinYangAdjacentSameShadeCountInfo,
 	[TOOLS.TWO_CONTIGUOUS_REGIONS_ROW_COLUMN_OPPOSITE_SET_COUNT]:
 		twoContiguousRegionsRowColumnOppositeSetCountInfo,
 	[TOOLS.SEEN_REGION_BORDERS_COUNT]: seenRegionBordersCountInfo,
 	[TOOLS.NURIMISAKI_UNSHADED_ENDPOINTS]: nurimisakiUnshadedEndpointInfo,
+	[TOOLS.SASHIGANE_BEND_REGION_COUNT]: sashiganeBendRegionCountInfo,
+	[TOOLS.SASHIGANE_REGION_SUM]: sashiganeRegionSumInfo,
+
+	// Single Cell Arrow Constraint
+	[TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND]: sashiganeArrowPointsToBendInfo,
 
 	// Single Cell Multi Arrow Constraint
 	[TOOLS.COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS]: countCellsNotInTheSameRegionArrowsInfo,
@@ -296,6 +321,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.YIN_YANG_KROPKI]: yinYangKropkiInfo,
 
 	// Corner Constraints
+	[TOOLS.QUADRUPLE]: quadrupleInfo,
 	[TOOLS.CORNER_SUM]: cornerSumInfo,
 	[TOOLS.CORNER_SUM_OF_THREE_EQUALS_THE_OTHER]: cornerSumOfThreeEqualsTheOtherInfo,
 	[TOOLS.CORNER_EVEN_COUNT]: cornerEvenCountInfo,
@@ -344,6 +370,12 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.INDEXING_COLUMN_IS_X_LINE]: indexingColumnIsXLineInfo,
 	[TOOLS.INDEXING_ROW_IS_X_LINE]: indexingRowIsXLineInfo,
 
+	// Yin Yang Lines
+	[TOOLS.YIN_YANG_SHADED_WHISPERS_LINE]: yinYangShadedWhispersLineInfo,
+	[TOOLS.YIN_YANG_UNSHADED_ENTROPIC_LINE]: yinYangUnshadedEntropicLineInfo,
+	[TOOLS.YIN_YANG_UNSHADED_MODULAR_LINE]: yinYangUnshadedModularLineInfo,
+	[TOOLS.YIN_YANG_REGION_SUM_LINE]: yinYangRegionSumLineInfo,
+
 	// Line with Circle ends Constraints
 	[TOOLS.BETWEEN_LINE]: betweenLineInfo,
 	[TOOLS.LOCKOUT_LINE]: lockoutLineInfo,
@@ -352,6 +384,10 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.DOUBLE_ARROW_LINE]: doubleArrowLineInfo,
 	[TOOLS.PRODUCT_OF_ENDS_EQUALS_SUM_OF_LINE]: productOfEndsEqualsSumOfLineInfo,
 	[TOOLS.SPLIT_PEAS]: splitPeasLineInfo,
+
+	[TOOLS.DOUBLERS_THERMOMETER]: doublersThermometerInfo,
+	[TOOLS.DOUBLERS_BETWEEN_LINE]: doublersBetweenLineInfo,
+	[TOOLS.DOUBLERS_DOUBLE_ARROW_LINE]: doublersDoubleArrowLineInfo,
 
 	// Arrow constraints
 	[TOOLS.ARROW]: arrowInfo,
@@ -366,6 +402,9 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.PUTTERIA_CAGE]: putteriaCageInfo,
 	[TOOLS.YIN_YANG_ANTITHESIS_KILLER_CAGE]: yinYangAntithesisKillerCageInfo,
 	[TOOLS.YIN_YANG_BREAKEVEN_KILLER_CAGE]: yinYangBreakevenKillerCageInfo,
+
+	[TOOLS.DOUBLERS_KILLER_CAGE]: doublersKillerCageInfo,
+	[TOOLS.NEGATORS_KILLER_CAGE]: negatorsKillerCageInfo,
 
 	// Clone Constraints
 	[TOOLS.CLONE_REGION]: cloneRegionInfo,
@@ -389,6 +428,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.LITTLE_KILLER_LOOK_AND_SAY]: littleKillerLookAndSayInfo,
 	[TOOLS.LITTLE_KILLER_REGION_SUM_PRODUCT]: littleKillerRegionSumProductInfo,
 	[TOOLS.X_OMIT_LITTLE_KILLER_SUM]: xOmitLittleKillerSumInfo,
+
+	[TOOLS.NEGATORS_LITTLE_KILLER_SUM]: negatorsLittleKillerSumInfo,
 
 	// Cosmetic Tools
 	[TOOLS.COSMETIC_CELL_SHAPE]: cosmeticCellShapeInfo,
