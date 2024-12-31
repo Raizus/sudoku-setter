@@ -8,6 +8,7 @@ import { SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
 import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { RENDER_ORDER } from '../RenderOrder';
+import { cornerUsage, quadrupleUsage } from '../ToolUsage';
 
 export function validateCornerValue(value: string, maxLength = 3): boolean {
 	const options: ValueValidatorOptions = {
@@ -59,6 +60,7 @@ export const quadrupleInfo: SquareCellElementInfo = {
 	meta: {
 		description: 'Digits in a circle appear at least once in the four surrounding cells.',
 		tags: [],
+		usage: quadrupleUsage(),
 		categories: [
 			TOOL_CATEGORIES.CORNER_CONSTRAINT,
 			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
@@ -92,6 +94,7 @@ export const cornerSumInfo: SquareCellElementInfo = {
 		description:
 			'Cells separated by a transparent blue dot marked with an X have a fixed sum of X.',
 		tags: [],
+		usage: cornerUsage(),
 		categories: [
 			TOOL_CATEGORIES.CORNER_CONSTRAINT,
 			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
@@ -121,6 +124,7 @@ export const cornerSumOfThreeEqualsTheOtherInfo: SquareCellElementInfo = {
 		description:
 			'For each set of four cells that share a corner with a circle, the sum of three of the cells must equal the fourth cell.',
 		tags: [],
+		usage: cornerUsage(),
 		categories: [
 			TOOL_CATEGORIES.CORNER_CONSTRAINT,
 			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
@@ -153,6 +157,7 @@ export const cornerEvenCountInfo: SquareCellElementInfo = {
 		description:
 			'Numbers in circles show the amount of even numbers in the surrounding four cells.',
 		tags: [],
+		usage: cornerUsage(),
 		categories: [
 			TOOL_CATEGORIES.CORNER_CONSTRAINT,
 			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
@@ -185,6 +190,7 @@ export const cornerCellsBelongToExacltyThreeRegionsInfo: SquareCellElementInfo =
 		description:
 			'Cells separated by a transparent blue dot marked with an X have a fixed sum of X.',
 		tags: [],
+		usage: cornerUsage(),
 		categories: [
 			TOOL_CATEGORIES.CORNER_CONSTRAINT,
 			TOOL_CATEGORIES.LOCAL_CONSTRAINT,

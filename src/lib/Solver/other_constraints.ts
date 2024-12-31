@@ -115,6 +115,28 @@ export function sashiganeConstraint(puzzle: PuzzleI) {
 	return out_str;
 }
 
+export function cellCenterLoopNoTouchingConstraint(puzzle: PuzzleI) {
+	const grid = puzzle.grid;
+	const gconstraints = puzzle.globalConstraints;
+	const tool = TOOLS.CELL_CENTER_LOOP_NO_TOUCHING;
+	const constraint = gconstraints.get(tool);
+
+	if (!constraint) return '';
+	const all_cells = grid.getAllCells();
+
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outisde the grid.`);
+		return '';
+	}
+
+	let out_str: string = '';
+	out_str += `\n% ${tool}\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: cell_center_loop;\n`;
+	out_str += `constraint cell_center_loop_p(cell_center_loop);\n`;
+
+	return out_str;
+}
+
 function onePerRowColumnRegion(puzzle: PuzzleI, vars_func: (cells: Cell[]) => string[]) {
 	const grid = puzzle.grid;
 	const gconstraints = puzzle.globalConstraints;

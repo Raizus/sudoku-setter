@@ -349,7 +349,7 @@ export const cosmeticOutsideDirectionInfo: SquareCellElementInfo = {
 			valueUpdater: (oldValue: string | undefined, key: string) =>
 				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
 			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.BOTH
+			cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
 		});
 	},
 

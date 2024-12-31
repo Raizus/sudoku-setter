@@ -11,6 +11,7 @@ import { lineConstraints } from './line_constraints';
 import { outsideDirectionConstraints } from './outside_direction_constraints';
 import { singleCellConstraints } from './single_cell_constraints';
 import { addHeader } from './solver_utils';
+import { valuedGlobalConstraints } from './valued_global_constraints';
 
 type ConstraintsF = (
 	grid: Grid,
@@ -26,7 +27,8 @@ const functions_list: ConstraintsF[] = [
 	arrowConstraints,
 	cageConstraints,
 	outsideDirectionConstraints,
-	cloneConstraints
+	cloneConstraints,
+	valuedGlobalConstraints
 ];
 
 export function localConstraints(puzzle: PuzzleI): string {

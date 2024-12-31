@@ -9,6 +9,12 @@ import { RENDER_ORDER } from '../RenderOrder';
 import { getEdgeToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/EdgeToolInputHandler';
 import type { SquareCellElementInfo } from '../ElementInfo';
 
+const edgeDefaultCategories = [
+	TOOL_CATEGORIES.EDGE_CONSTRAINT,
+	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
+	TOOL_CATEGORIES.EDGE_TOOL
+];
+
 const typableEdgeDefaultCategories = [
 	TOOL_CATEGORIES.EDGE_CONSTRAINT,
 	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
@@ -327,6 +333,30 @@ export const xyDifferencesInfo: SquareCellElementInfo = {
 	}
 };
 
+export const yinYangWhiteKropkiInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getEdgeToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.YIN_YANG_WHITE_KROPKI,
+	order: RENDER_ORDER.EDGE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		r: { editable: false, value: EDGE_R_1 },
+		strokeWidth: { editable: false, value: EDGE_STROKE_WIDTH_1, lb: 0, ub: 1, step: 0.025 },
+		stroke: { editable: false, value: 'black' },
+		fill: { editable: false, value: 'var(--grid-background-color)' }
+	},
+
+	meta: {
+		description:
+			'Cells separated by a dot indicate that the two connected cells have the same Yin Yang shading and their digits are consecutive.',
+		tags: [],
+		categories: typableEdgeDefaultCategories
+	}
+};
+
 export const yinYangKropkiInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getEdgeToolInputHandler(svgRef, grid, tool);
@@ -350,5 +380,28 @@ export const yinYangKropkiInfo: SquareCellElementInfo = {
 			'Cells separated by a a light blue transparent dot indicate that the two connected cells have the same Yin Yang shading. If a grey dot is between two unshaded cells their digits are in a 1:2 ratio; if a grey dot is between two shaded cells, their digits are consecutive.',
 		tags: [],
 		categories: typableEdgeDefaultCategories
+	}
+};
+
+export const unknownRegionBorderInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getEdgeToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.UNKNOWN_REGION_BORDER,
+	order: RENDER_ORDER.EDGE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.BORDER_LINE,
+		strokeWidth: { editable: false, value: 0.1, lb: 0, ub: 1, step: 0.025 },
+		stroke: { editable: false, value: 'black' },
+		opacity: { editable: false, value: 0.9 }
+	},
+
+	meta: {
+		description:
+			'A line in the border between cells indicates a region border.',
+		tags: [],
+		categories: edgeDefaultCategories
 	}
 };

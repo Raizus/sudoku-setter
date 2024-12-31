@@ -27,7 +27,7 @@ export const thermometerInfo: SquareCellElementInfo = {
 	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
-		type: SHAPE_TYPES.THERMO,
+		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
 		strokeWidth: { editable: false, value: 0.15 },
 		r: { editable: false, value: 0.25 },
 		opacity: { editable: false, value: 0.9 },
@@ -48,6 +48,36 @@ export const thermometerInfo: SquareCellElementInfo = {
 	}
 };
 
+export const slowThermometerInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
+	},
+
+	toolId: TOOLS.SLOW_THERMOMETER,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
+		strokeWidth: { editable: false, value: 0.15 },
+		r: { editable: false, value: 0.25 },
+		opacity: { editable: false, value: 0.9 },
+		stroke: { editable: false, value: 'var(--constraint-color-gray)' },
+		fill: { editable: false, value: 'var(--constraint-color-light-blue)' },
+		linePathOptions: {
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.15 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		description: 'Numbers along a slow thermometer must not decrease from the bulb to the tip(s).',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
 export const rowCyclethermometerInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
@@ -57,7 +87,7 @@ export const rowCyclethermometerInfo: SquareCellElementInfo = {
 	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
-		type: SHAPE_TYPES.THERMO,
+		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
 		strokeWidth: { editable: false, value: 0.15 },
 		r: { editable: false, value: 0.25 },
 		opacity: { editable: false, value: 1 },
@@ -337,6 +367,38 @@ export const renbanOrWhispersLineInfo: SquareCellElementInfo = {
 	meta: {
 		description:
 			'An orange line is either a renban line or a whispers line. On renban lines, cells form a set of non-repeating consecutive digits (which can be in any order). On a whispers line, adjacent numbers along the line must have a difference of at least X (default X = 5).',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
+export const indexLineInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
+	},
+
+	toolId: TOOLS.INDEX_LINE,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.THERMO_WITH_POLYGON,
+		strokeWidth: { editable: false, value: 0.1 },
+		n: { editable: false, value: 4 },
+		r: { editable: false, value: 0.3 },
+		opacity: { editable: false, value: 0.9 },
+		stroke: { editable: false, value: 'var(--constraint-color-gray)' },
+		fill: { editable: false, value: 'var(--constraint-color-gray)' },
+		linePathOptions: {
+			shortenTail: { editable: false, value: 0.1 },
+			bezierRounding: { editable: false, value: 0.1 },
+			closeLoops: { editable: false, value: false }
+		}
+	},
+
+	meta: {
+		description:
+			'On an index line, the digit in the Nth cell along the line (starting from the diamond) indicates the position along the line where the digit N appears. Eg: 3214 would be a valid line with 3 as the diamond; the 1st digit, 3, indicates that the 3rd cell contains a 1, the 2nd cell a 2, and so on.',
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
@@ -850,10 +912,10 @@ export const xvLineInfo: SquareCellElementInfo = {
 
 export const rowSumLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
 	},
 
-	toolId: TOOLS.ROW_SUM_LIME,
+	toolId: TOOLS.ROW_SUM_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
@@ -1027,6 +1089,64 @@ export const adjacentMultiplesLineInfo: SquareCellElementInfo = {
 	}
 };
 
+export const adjacentDifferencesCountLineInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
+	},
+
+	toolId: TOOLS.ADJACENT_DIFFERENCES_COUNT_LINE,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		strokeWidth: { editable: true, value: 0.1 },
+		stroke: { editable: true, value: 'var(--constraint-color-gold)' },
+		linePathOptions: {
+			shortenHead: { editable: false, value: 0.15 },
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.05 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		description:
+			'The differences between two adjacent digits on a colored line indicates exactly how many pairs of adjacent digits along that line have that exact difference.',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
+export const lookandSayLineInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
+	},
+
+	toolId: TOOLS.LOOK_AND_SAY_LINE,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		strokeWidth: { editable: true, value: 0.1 },
+		stroke: { editable: true, value: 'var(--constraint-color-gray)' },
+		linePathOptions: {
+			shortenHead: { editable: false, value: 0.15 },
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.05 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		description:
+			'Both digits (which can be equal) on the endpoints of a line form a look-and-say clue. For example, if the digits on the endpoints are 5 and 3, then there have to be exactly five 3s AND three 5s on this line.',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
 /* ----------------------------------------------------------------------------- */
 
 export const yinYangShadedWhispersLineInfo: SquareCellElementInfo = {
@@ -1145,6 +1265,38 @@ export const yinYangRegionSumLineInfo: SquareCellElementInfo = {
 	meta: {
 		description:
 			'Blue lines must have an equal sum N within each colour they pass through. If a blue line passes through a colour multiple times, each individual pass sums to N.',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
+export const yinYangIndexingLineColoringInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
+	},
+
+	toolId: TOOLS.YIN_YANG_INDEXING_LINE_COLORING,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.THERMO_WITH_POLYGON,
+		strokeWidth: { editable: false, value: 0.1 },
+		n: { editable: false, value: 4 },
+		r: { editable: false, value: 0.3 },
+		opacity: { editable: false, value: 0.9 },
+		stroke: { editable: false, value: 'var(--constraint-color-gray)' },
+		fill: { editable: false, value: 'var(--constraint-color-gray)' },
+		linePathOptions: {
+			shortenTail: { editable: false, value: 0.1 },
+			bezierRounding: { editable: false, value: 0.1 },
+			closeLoops: { editable: false, value: false }
+		}
+	},
+
+	meta: {
+		description:
+			'All cells that reference their own position on a indexing line (the digit N is in position N) should be dark. Cells that are not self referencing should be light. For example for the line 3214 with 3 as the diamond, the 2 and 4 would be dark and the 1 and 3 would be light.',
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
@@ -1357,7 +1509,7 @@ export const doublersThermometerInfo: SquareCellElementInfo = {
 	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
-		type: SHAPE_TYPES.THERMO,
+		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
 		strokeWidth: { editable: false, value: 0.15 },
 		r: { editable: false, value: 0.25 },
 		opacity: { editable: false, value: 0.9 },

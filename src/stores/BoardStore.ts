@@ -34,6 +34,7 @@ export const gameModeStore = writable<GAME_MODE>(GAME_MODE.SETTING);
 export const selectOnStore = writable<boolean>(false);
 export const toolStore = writable<TOOLID>(TOOLS.DIGIT);
 export const previousToolStore = writable<TOOLID | null>(TOOLS.DIGIT);
+export const validDigitsStore = writable<number[] | undefined>(undefined);
 export const gridStore = writable<Grid>(new Grid(9, 9));
 export const cellsStore = writable<Cell[]>(
 	(() => {
@@ -147,9 +148,12 @@ export function createNewPuzzle(nRows: number, nCols: number) {
 	const grid = new Grid(nRows, nCols);
 
 	gridStore.update(() => grid);
+	validDigitsStore.update(() => undefined);
 	localConstraintsStore.update(() => new LocalConstraintsDict());
 	globalConstraintsStore.update(() => new GlobalConstraintsDict());
-	puzzleMetaStore.update(() => {return {}});
+	puzzleMetaStore.update(() => {
+		return {};
+	});
 	updateSolution(undefined);
 	cellsStore.update(() => grid.getAllCells());
 }
@@ -158,6 +162,7 @@ export function setPuzzle(puzzle: PuzzleI) {
 	gridStore.update(() => puzzle.grid);
 	puzzleMetaStore.update(() => puzzle.puzzleMeta);
 	updateSolution(puzzle.solution);
+	validDigitsStore.update(() => puzzle.valid_digits);
 	localConstraintsStore.update(() => puzzle.localConstraints);
 	globalConstraintsStore.update(() => puzzle.globalConstraints);
 
@@ -198,18 +203,27 @@ export const showFogStore = derived(
 );
 
 export const puzzleStore = derived(
-	[gridStore, puzzleMetaStore, globalConstraintsStore, localConstraintsStore, solutionStore],
+	[
+		gridStore,
+		puzzleMetaStore,
+		globalConstraintsStore,
+		localConstraintsStore,
+		solutionStore,
+		validDigitsStore
+	],
 	([
 		$gridStore,
 		$puzzleMetaStore,
 		$globalConstraintsStore,
 		$localConstraintsStore,
-		$solutionStore
+		$solutionStore,
+		$validDigitsStore
 	]) => {
 		const puzzle: PuzzleI = {
 			grid: $gridStore,
 			solution: $solutionStore,
 			puzzleMeta: $puzzleMetaStore,
+			valid_digits: $validDigitsStore,
 			globalConstraints: $globalConstraintsStore,
 			localConstraints: $localConstraintsStore
 		};

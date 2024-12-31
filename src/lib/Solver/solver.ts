@@ -1,7 +1,7 @@
 import type { PuzzleI } from '../Puzzle/Puzzle';
 import { globalConstraints, sudokuConstraints } from './global_constraints';
 import { localConstraints } from './local_constraints';
-import { doublersConstraint, negatorsConstraint, nurimisakiConstraint, sashiganeConstraint, twoContiguousRegionsConstraint, unknownRegionsConstraint, yinYangConstraint } from './other_constraints';
+import { cellCenterLoopNoTouchingConstraint, doublersConstraint, negatorsConstraint, nurimisakiConstraint, sashiganeConstraint, twoContiguousRegionsConstraint, unknownRegionsConstraint, yinYangConstraint } from './other_constraints';
 import { cellToVarName, defineFunctionsPredicates } from './solver_utils';
 
 function givenConstraints(puzzle: PuzzleI) {
@@ -29,9 +29,15 @@ export function createMinizincModel(puzzle: PuzzleI) {
 	out_str += defineFunctionsPredicates();
 
 	const max_val = Math.max(nrows, ncols);
+	let allowed_digits_str = `1..${max_val}`;
+	const valid_digits = puzzle.valid_digits;
+	if (valid_digits) {
+		allowed_digits_str = '{' + valid_digits.join(',') + '}';
+	}
+
 	out_str += `set of int: ROW_IDXS = 0..${nrows - 1};\n`;
 	out_str += `set of int: COL_IDXS = 0..${ncols - 1};\n`;
-	out_str += `set of int: ALLOWED_DIGITS = 1..${max_val};\n`;
+	out_str += `set of int: ALLOWED_DIGITS = ${allowed_digits_str};\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var ALLOWED_DIGITS: board;\n`;
 
 	out_str += givenConstraints(puzzle);
@@ -44,6 +50,7 @@ export function createMinizincModel(puzzle: PuzzleI) {
 	out_str += twoContiguousRegionsConstraint(puzzle);
 	out_str += unknownRegionsConstraint(puzzle);
 	out_str += nurimisakiConstraint(puzzle);
+	out_str += cellCenterLoopNoTouchingConstraint(puzzle);
 
 	out_str += localConstraints(puzzle);
 	out_str += globalConstraints(puzzle);

@@ -79,6 +79,11 @@ function thermoConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	return constraint_str;
 }
 
+function slowThermoConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = simpleLineConstraint(grid, constraint, 'increasing');
+	return constraint_str;
+}
+
 function palindromeConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	const constraint_str = simpleLineConstraint(grid, constraint, 'palindrome');
 	return constraint_str;
@@ -116,6 +121,20 @@ function maximumAdjacentDifferenceLineConstraint(grid: Grid, c_id: string, const
 
 function adjacentMultiplesLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	const constraint_str = simpleLineConstraint(grid, constraint, 'adjacent_multiples_line_p');
+	return constraint_str;
+}
+
+function indexLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = simpleLineConstraint(grid, constraint, 'index_line_p');
+	return constraint_str;
+}
+
+function adjacentDifferencesCountLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = simpleLineConstraint(
+		grid,
+		constraint,
+		'adjacent_differences_count_line_p'
+	);
 	return constraint_str;
 }
 
@@ -182,6 +201,45 @@ function oddEvenOscillatorLineConstraint(grid: Grid, c_id: string, constraint: L
 function highLowOscillatorLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	const constraint_str = valuedLineConstraint(grid, constraint, 'high_low_oscillator_line_p', '5');
 	return constraint_str;
+}
+
+function lookAndSayLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = simpleLineConstraint(grid, constraint, 'look_and_say_line_p', true);
+	return constraint_str;
+}
+
+function rowSumLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const cells_coords = constraint.cells;
+	const cells = cells_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell);
+
+	function split_by_row(_cells: Cell[]) {
+		const groups: Cell[][] = [];
+		let prev_row: number | null = null;
+		for (const cell of _cells) {
+			if (cell.r != prev_row) {
+				groups.push([cell]);
+				prev_row = cell.r;
+			} else {
+				groups[groups.length - 1].push(cell);
+			}
+		}
+		return groups;
+	}
+	
+	const groups = split_by_row(cells);
+	if (groups.length < 2) return '';
+	const first_group = groups[0];
+	const vars1 = cellsToVarsName(first_group);
+	const vars1_str = `[${vars1.join(',')}]`;
+	
+	let out_str = '';
+	for (let i = 1; i < groups.length; i++) {
+		const group = groups[i];
+		const vars = cellsToVarsName(group);
+		const vars_str = `[${vars.join(',')}]`;
+		out_str += `constraint sum(${vars_str}) == sum(${vars1_str});\n`;
+	}
+	return out_str;
 }
 
 function betweenLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
@@ -322,7 +380,7 @@ function yinYangUnshadedEntropicLineConstraint(grid: Grid, c_id: string, constra
 	return constraint_str;
 }
 
-function yinYangRegionSumLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+function yinYangIndexingLineColoringConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	const cells_coords = constraint.cells;
 	const cells = cells_coords
 		.map((coord) => grid.getCell(coord.r, coord.c))
@@ -333,12 +391,20 @@ function yinYangRegionSumLineConstraint(grid: Grid, c_id: string, constraint: Li
 	const yin_yang_vars = cellsToYinYangVarsName(cells);
 	const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
 
-	// check if line is circuler and reassign the cells
-	// const l = cells.length;
-	// if (l > 1 && cells[0] === cells[l - 1]) {
-	// 	const constraint_str: string = `constraint yin_yang_circular_region_sum_line_p(${vars_str}, ${yin_yang_vars_str});\n`;
-	// 	return constraint_str;
-	// }
+	const constraint_str: string = `constraint yin_yang_indexing_line_coloring_p(${vars_str}, ${yin_yang_vars_str});\n`;
+	return constraint_str;
+}
+
+function yinYangRegionSumLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const cells_coords = constraint.cells;
+	const cells = cells_coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+
+	const vars = cellsToVarsName(cells);
+	const vars_str = `[${vars.join(',')}]`;
+	const yin_yang_vars = cellsToYinYangVarsName(cells);
+	const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
 
 	const constraint_str: string = `constraint yin_yang_region_sum_line_p(${vars_str}, ${yin_yang_vars_str});\n`;
 	return constraint_str;
@@ -376,6 +442,7 @@ type ConstraintF = (grid: Grid, c_id: string, constraint: LineToolI) => string;
 
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.THERMOMETER, thermoConstraint],
+	[TOOLS.SLOW_THERMOMETER, slowThermoConstraint],
 	[TOOLS.RENBAN_LINE, renbanConstraint],
 	[TOOLS.DOUBLE_RENBAN_LINE, doubleRenbanConstraint],
 	[TOOLS.RENRENBANBAN_LINE, renrenbanbanConstraint],
@@ -391,6 +458,11 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.MAXIMUM_ADJACENT_DIFFERENCE_LINE, maximumAdjacentDifferenceLineConstraint],
 	[TOOLS.SAME_PARITY_LINE, sameParityLineConstraint],
 	[TOOLS.ADJACENT_MULTIPLES_LINE, adjacentMultiplesLineConstraint],
+	[TOOLS.ADJACENT_DIFFERENCES_COUNT_LINE, adjacentDifferencesCountLineConstraint],
+	[TOOLS.LOOK_AND_SAY_LINE, lookAndSayLineConstraint],
+	[TOOLS.ROW_SUM_LINE, rowSumLineConstraint],
+	[TOOLS.INDEX_LINE, indexLineConstraint],
+
 	[TOOLS.SUPERFUZZY_ARROW, superfuzzyArrowConstraint],
 	[TOOLS.ARITHMETIC_SEQUENCE_LINE, arithmeticSequenceLineConstraint],
 	[TOOLS.ODD_EVEN_OSCILLATOR_LINE, oddEvenOscillatorLineConstraint],
@@ -420,7 +492,8 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.YIN_YANG_SHADED_WHISPERS_LINE, yinYangShadedWhispersLineConstraint],
 	[TOOLS.YIN_YANG_UNSHADED_ENTROPIC_LINE, yinYangUnshadedEntropicLineConstraint],
 	[TOOLS.YIN_YANG_UNSHADED_MODULAR_LINE, yinYangUnshadedModularLineConstraint],
-	[TOOLS.YIN_YANG_REGION_SUM_LINE, yinYangRegionSumLineConstraint]
+	[TOOLS.YIN_YANG_REGION_SUM_LINE, yinYangRegionSumLineConstraint],
+	[TOOLS.YIN_YANG_INDEXING_LINE_COLORING, yinYangIndexingLineColoringConstraint]
 ]);
 
 export function lineConstraints(

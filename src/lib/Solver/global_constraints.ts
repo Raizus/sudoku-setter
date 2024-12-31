@@ -16,7 +16,8 @@ import {
 	cellsToYinYangVarsName
 } from './solver_utils';
 
-function positiveDiagonalConstraint(grid: Grid): string {
+function positiveDiagonalConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	const grid = puzzle.grid;
 	const diag_cells = grid.getPositiveDiagonal();
 	const diag_vars = cellsToVarsName(diag_cells);
 	let constraint = allDifferentConstraint(diag_vars);
@@ -24,7 +25,8 @@ function positiveDiagonalConstraint(grid: Grid): string {
 	return constraint;
 }
 
-function negativeDiagonalConstraint(grid: Grid): string {
+function negativeDiagonalConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	const grid = puzzle.grid;
 	const diag_cells = grid.getNegativeDiagonal();
 	const diag_vars = cellsToVarsName(diag_cells);
 	let constraint = allDifferentConstraint(diag_vars);
@@ -32,25 +34,28 @@ function negativeDiagonalConstraint(grid: Grid): string {
 	return constraint;
 }
 
-function positiveAntidiagonalConstraint(grid: Grid): string {
+function positiveAntidiagonalConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	const grid = puzzle.grid;
 	const diag_cells = grid.getPositiveDiagonal();
 	const diag_vars = cellsToVarsName(diag_cells);
 	const vars_str = '[' + diag_vars.join(',') + ']';
-	let out_str = '\n% Positive Antidiagonal Constraint\n';
+	let out_str: string = `\n% ${toolId}\n`;
 	out_str += `constraint count_unique_values(${vars_str}) == 3;\n`;
 	return out_str;
 }
 
-function negativeAntidiagonalConstraint(grid: Grid): string {
+function negativeAntidiagonalConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	const grid = puzzle.grid;
 	const diag_cells = grid.getNegativeDiagonal();
 	const diag_vars = cellsToVarsName(diag_cells);
 	const vars_str = '[' + diag_vars.join(',') + ']';
-	let out_str = '\n% Negative Antidiagonal Constraint\n';
+	let out_str: string = `\n% ${toolId}\n`;
 	out_str += `constraint count_unique_values(${vars_str}) == 3;\n`;
 	return out_str;
 }
 
-function oddEvenMirrorPositiveDiagonalConstraint(grid: Grid): string {
+function oddEvenMirrorPositiveDiagonalConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	const grid = puzzle.grid;
 	const [n_rows, n_cols] = [grid.nRows, grid.nCols];
 
 	if (n_rows !== n_cols) return '';
@@ -75,7 +80,8 @@ function oddEvenMirrorPositiveDiagonalConstraint(grid: Grid): string {
 	return out_str;
 }
 
-function oddEvenMirrorNegativeDiagonalConstraint(grid: Grid): string {
+function oddEvenMirrorNegativeDiagonalConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	const grid = puzzle.grid;
 	const [n_rows, n_cols] = [grid.nRows, grid.nCols];
 
 	if (n_rows !== n_cols) return '';
@@ -100,8 +106,10 @@ function oddEvenMirrorNegativeDiagonalConstraint(grid: Grid): string {
 	return out_str;
 }
 
-function disjointGroupsConstraint(grid: Grid): string {
-	let out_str = '\n% Disjoint Groups\n';
+function disjointGroupsConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	const grid = puzzle.grid;
+
+	let out_str: string = `\n% ${toolId}\n`;
 	const num_regions = [...grid.getUsedRegions()].length;
 	for (let group_idx = 0; group_idx < num_regions; group_idx++) {
 		const disjoint_group = grid.getDisjointGroup(group_idx);
@@ -113,8 +121,10 @@ function disjointGroupsConstraint(grid: Grid): string {
 	return out_str;
 }
 
-function antikingConstraint(grid: Grid): string {
-	let out_str = '\n% Antiking\n';
+function antikingConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	const grid = puzzle.grid;
+	
+	let out_str: string = `\n% ${toolId}\n`;
 	for (const cell of grid.getAllCells()) {
 		const kings_move_cells = grid.getNeighboorCells(cell);
 		const filtered = kings_move_cells.filter((cell2) => cell2.r + cell2.c >= cell.r + cell.c);
@@ -127,8 +137,10 @@ function antikingConstraint(grid: Grid): string {
 	return out_str;
 }
 
-function antiknightConstraint(grid: Grid): string {
-	let out_str = '\n% Antiknight\n';
+function antiknightConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	const grid = puzzle.grid;
+
+	let out_str: string = `\n% ${toolId}\n`;
 	for (const cell of grid.getAllCells()) {
 		const knight_move_cells = grid.getCellsByKnightMove(cell);
 		const filtered = knight_move_cells.filter((cell2) => cell2.r >= cell.r || cell2.c >= cell.c);
@@ -141,7 +153,7 @@ function antiknightConstraint(grid: Grid): string {
 	return out_str;
 }
 
-function* adjCellPairGen(grid: Grid) {
+function* adjCellPairGen(grid: Grid) {	
 	for (const cell of grid.getAllCells()) {
 		const adj_cells = grid
 			.getOrthogonallyAdjacentCells(cell)
@@ -152,9 +164,9 @@ function* adjCellPairGen(grid: Grid) {
 	}
 }
 
-function nonconsecutiveConstraint(puzzle: PuzzleI) {
+function nonconsecutiveConstraint(puzzle: PuzzleI, toolId: TOOLID) {
 	const grid = puzzle.grid;
-	let out_str: string = '\n% Nonconsecutive\n';
+	let out_str: string = `\n% ${toolId}\n`;
 	for (const [cell1, cell2] of adjCellPairGen(grid)) {
 		const var1 = cellToVarName(cell1);
 		const var2 = cellToVarName(cell2);
@@ -165,9 +177,9 @@ function nonconsecutiveConstraint(puzzle: PuzzleI) {
 	return out_str;
 }
 
-function nonratioConstraint(puzzle: PuzzleI) {
+function nonratioConstraint(puzzle: PuzzleI, toolId: TOOLID) {
 	const grid = puzzle.grid;
-	let out_str: string = '\n% Nonconsecutive';
+	let out_str: string = `\n% ${toolId}\n`;
 	for (const [cell1, cell2] of adjCellPairGen(grid)) {
 		const var1 = cellToVarName(cell1);
 		const var2 = cellToVarName(cell2);
@@ -178,8 +190,10 @@ function nonratioConstraint(puzzle: PuzzleI) {
 	return out_str;
 }
 
-function globalIndexingColumnConstraint(grid: Grid): string {
-	let out_str = '\n% Global Indexing Column\n';
+function globalIndexingColumnConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	const grid = puzzle.grid;
+	
+	let out_str = `\n% ${toolId}\n`;
 	for (const cell of grid.getAllCells()) {
 		const row_cells = grid.getRow(cell.r);
 		const vars = cellsToVarsName(row_cells);
@@ -191,13 +205,19 @@ function globalIndexingColumnConstraint(grid: Grid): string {
 	return out_str;
 }
 
-function allOddDigitsOrthogonallyConnected(puzzle: PuzzleI): string {
+function adjacentLoopCellsAreMultiplesConstraint(puzzle: PuzzleI, toolId: TOOLID): string {	
+	let out_str = `\n% ${toolId}\n`;
+	out_str += `constraint adjacent_loop_cells_are_multiples_p(board, cell_center_loop);\n`;
+	return out_str;
+}
+
+function allOddDigitsOrthogonallyConnected(puzzle: PuzzleI, toolId: TOOLID): string {
 	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: even_odd_grid;\n`;
 	out_str += `constraint odd_even_grid_p(board, even_odd_grid);\n`;
 	out_str += `constraint connected_region(even_odd_grid, 1);\n`;
 
-	out_str = addHeader(out_str, `${TOOLS.ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED}`);
+	out_str = addHeader(out_str, `${toolId}`);
 	return out_str;
 }
 
@@ -249,6 +269,8 @@ function allXVGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 			out_str += constraint_str;
 		}
 	}
+
+	out_str = addHeader(out_str, `${toolId}`);
 	return out_str;
 }
 
@@ -269,7 +291,7 @@ function getEdgeConstraintCellPairs(
 	return edgec_pairs;
 }
 
-function allXYDifferencesGivenConstraint(puzzle: PuzzleI): string {
+function allXYDifferencesGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
 	const local_constraints = puzzle.localConstraints;
 	const xy_diff_constraints = local_constraints.get(TOOLS.XY_DIFFERENCES);
@@ -301,11 +323,45 @@ function allXYDifferencesGivenConstraint(puzzle: PuzzleI): string {
 		out_str += constraint_str;
 	}
 
-	out_str = addHeader(out_str, `${TOOLS.ALL_XY_DIFFERENCES_GIVEN}`);
+	out_str = addHeader(out_str, `${toolId}`);
 	return out_str;
 }
 
-function allYinYangKropkiGivenConstraint(puzzle: PuzzleI): string {
+function allDifferencesGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	const grid = puzzle.grid;
+	const local_constraints = puzzle.localConstraints;
+	const constraints = local_constraints.get(TOOLS.DIFFERENCE);
+
+	const cell_pairs: Set<Cell>[] = getEdgeConstraintCellPairs(grid, constraints);
+	let used_vals: string[] = [];
+	if (constraints) {
+		used_vals = Object.values(constraints)
+			.map((constraint) => constraint.value)
+			.map(val => !val ? '1' : val);
+	}
+	const values = [...new Set(used_vals)];
+	
+	let out_str: string = '';
+	for (const [cell1, cell2] of adjCellPairGen(grid)) {
+		// check if cell pair is not in xv pairs
+		const match = cell_pairs.find((pair) => pair.has(cell1) && pair.has(cell2));
+		if (match) continue;
+
+		const var1 = cellToVarName(cell1);
+		const var2 = cellToVarName(cell2);
+		for (const value of values) {
+			console.log(value);
+			const val = parseInt(value);
+			const constraint_str = `constraint abs(${var1} - ${var2}) != ${val};\n`;
+			out_str += constraint_str;
+		}
+	}
+
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
+function allYinYangKropkiGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
 	const local_constraints = puzzle.localConstraints;
 	const constraints = local_constraints.get(TOOLS.YIN_YANG_KROPKI);
@@ -328,7 +384,7 @@ function allYinYangKropkiGivenConstraint(puzzle: PuzzleI): string {
 		out_str += constraint_str;
 	}
 
-	out_str = addHeader(out_str, `${TOOLS.ALL_YIN_YANG_KROPKI_GIVEN}`);
+	out_str = addHeader(out_str, `${toolId}`);
 	return out_str;
 }
 
@@ -348,7 +404,7 @@ function getSingleCellConstraintsCells(
 	return cells;
 }
 
-function allIndexingColumnGivenConstraint(puzzle: PuzzleI): string {
+function allIndexingColumnGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
 	const local_constraints = puzzle.localConstraints;
 	const constraints = local_constraints.get(TOOLS.INDEXING_COLUMN);
@@ -368,11 +424,11 @@ function allIndexingColumnGivenConstraint(puzzle: PuzzleI): string {
 		out_str += constraint_str;
 	}
 
-	out_str = addHeader(out_str, `${TOOLS.ALL_INDEXING_COLUMN_GIVEN}`);
+	out_str = addHeader(out_str, `${toolId}`);
 	return out_str;
 }
 
-function allRadarsGivenConstraint(puzzle: PuzzleI): string {
+function allRadarsGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
 	const local_constraints = puzzle.localConstraints;
 	const constraints = local_constraints.get(TOOLS.RADAR);
@@ -390,11 +446,11 @@ function allRadarsGivenConstraint(puzzle: PuzzleI): string {
 		out_str += constraint_str;
 	}
 
-	out_str = addHeader(out_str, `${TOOLS.ALL_RADARS_GIVEN}`);
+	out_str = addHeader(out_str, `${toolId}`);
 	return out_str;
 }
 
-function allNurimisakiUnshadedEndpointsGivenConstraint(puzzle: PuzzleI): string {
+function allNurimisakiUnshadedEndpointsGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
 	const local_constraints = puzzle.localConstraints;
 	const constraints = local_constraints.get(TOOLS.NURIMISAKI_UNSHADED_ENDPOINTS);
@@ -415,13 +471,13 @@ function allNurimisakiUnshadedEndpointsGivenConstraint(puzzle: PuzzleI): string 
 		out_str += constraint_str;
 	}
 
-	out_str = addHeader(out_str, `${TOOLS.ALL_INDEXING_COLUMN_GIVEN}`);
+	out_str = addHeader(out_str, `${toolId}`);
 	return out_str;
 }
 
-function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleI): string {
+function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
-	let out_str: string = '\n% Nurimisaki Path German Whispers\n';
+	let out_str: string = `\n% ${toolId}\n`;
 	for (const [cell1, cell2] of adjCellPairGen(grid)) {
 		const var1 = cellToVarName(cell1);
 		const var2 = cellToVarName(cell2);
@@ -435,13 +491,13 @@ function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleI): string {
 	return out_str;
 }
 
-function yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(puzzle: PuzzleI): string {
+function yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
 	const local_constraints = puzzle.localConstraints;
 	const constraints = local_constraints.get(TOOLS.YIN_YANG_REGION_SUM_LINE);
 	if (!constraints) return '';
 
-	let out_str: string = `\n% ${TOOLS.YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE}\n`;
+	let out_str: string = `\n% ${toolId}\n`;
 	for (const constraint of Object.values(constraints)) {
 		const cells_coords = (constraint as LineToolI).cells;
 		const cells = cells_coords
@@ -499,81 +555,52 @@ export function sudokuConstraints(puzzle: PuzzleI) {
 	return out_str;
 }
 
+type ConstraintF = (puzzle: PuzzleI, tool: TOOLID) => string;
+
+const tool_map = new Map<string, ConstraintF>([
+	[TOOLS.POSITIVE_DIAGONAL, positiveDiagonalConstraint],
+	[TOOLS.NEGATIVE_DIAGONAL, negativeDiagonalConstraint],
+	[TOOLS.POSITIVE_ANTIDIAGONAL, positiveAntidiagonalConstraint],
+	[TOOLS.NEGATIVE_ANTIDIAGONAL, negativeAntidiagonalConstraint],
+	[TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_POSITIVE_DIAGONAL, oddEvenMirrorPositiveDiagonalConstraint],
+	[TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_NEGATIVE_DIAGONAL, oddEvenMirrorNegativeDiagonalConstraint],
+
+	[TOOLS.ANTIKING, antikingConstraint],
+	[TOOLS.ANTIKNIGHT, antiknightConstraint],
+	[TOOLS.DISJOINT_GROUPS, disjointGroupsConstraint],
+	[TOOLS.NONCONSECUTIVE, nonconsecutiveConstraint],
+	[TOOLS.NONRATIO, nonratioConstraint],
+
+	[TOOLS.GLOBAL_INDEXING_COLUMN, globalIndexingColumnConstraint],
+	[TOOLS.ALL_V_GIVEN, allXVGivenConstraint],
+	[TOOLS.ALL_X_GIVEN, allXVGivenConstraint],
+	[TOOLS.ALL_XV_GIVEN, allXVGivenConstraint],
+	[TOOLS.ALL_DIFFERENCES_GIVEN, allDifferencesGivenConstraint],
+	[TOOLS.ALL_XY_DIFFERENCES_GIVEN, allXYDifferencesGivenConstraint],
+	[TOOLS.ALL_YIN_YANG_KROPKI_GIVEN, allYinYangKropkiGivenConstraint],
+	[TOOLS.ALL_INDEXING_COLUMN_GIVEN, allIndexingColumnGivenConstraint],
+	[TOOLS.ALL_RADARS_GIVEN, allRadarsGivenConstraint],
+	[TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN, allNurimisakiUnshadedEndpointsGivenConstraint],
+	[TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS, nurimisakiPathGermanWhispersConstraint],
+	[
+		TOOLS.YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE,
+		yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint
+	],
+	[TOOLS.ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED, allOddDigitsOrthogonallyConnected],
+	[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES, adjacentLoopCellsAreMultiplesConstraint]
+]);
+
 export function globalConstraints(puzzle: PuzzleI): string {
 	let out_str = '';
 
 	const gconstraints = puzzle.globalConstraints;
 	for (const [toolId, value] of gconstraints.entries()) {
 		if (!value) continue;
+		const constraintF = tool_map.get(toolId);
+		if (!constraintF) continue;
 
-		if (toolId === TOOLS.POSITIVE_DIAGONAL) {
-			const constraint_str = positiveDiagonalConstraint(puzzle.grid);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.NEGATIVE_DIAGONAL) {
-			const constraint_str = negativeDiagonalConstraint(puzzle.grid);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.POSITIVE_ANTIDIAGONAL) {
-			const constraint_str = positiveAntidiagonalConstraint(puzzle.grid);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.NEGATIVE_ANTIDIAGONAL) {
-			const constraint_str = negativeAntidiagonalConstraint(puzzle.grid);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_POSITIVE_DIAGONAL) {
-			const constraint_str = oddEvenMirrorPositiveDiagonalConstraint(puzzle.grid);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_NEGATIVE_DIAGONAL) {
-			const constraint_str = oddEvenMirrorNegativeDiagonalConstraint(puzzle.grid);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.ANTIKING) {
-			const constraint_str = antikingConstraint(puzzle.grid);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.ANTIKNIGHT) {
-			const constraint_str = antiknightConstraint(puzzle.grid);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.DISJOINT_GROUPS) {
-			const constraint_str = disjointGroupsConstraint(puzzle.grid);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.NONCONSECUTIVE) {
-			const constraint_str = nonconsecutiveConstraint(puzzle);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.NONRATIO) {
-			const constraint_str = nonratioConstraint(puzzle);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.GLOBAL_INDEXING_COLUMN) {
-			const constraint_str = globalIndexingColumnConstraint(puzzle.grid);
-			out_str += constraint_str;
-		} else if (
-			toolId === TOOLS.ALL_V_GIVEN ||
-			toolId === TOOLS.ALL_X_GIVEN ||
-			toolId === TOOLS.ALL_XV_GIVEN
-		) {
-			const constraint_str = allXVGivenConstraint(puzzle, toolId);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.ALL_XY_DIFFERENCES_GIVEN) {
-			const constraint_str = allXYDifferencesGivenConstraint(puzzle);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.ALL_YIN_YANG_KROPKI_GIVEN) {
-			const constraint_str = allYinYangKropkiGivenConstraint(puzzle);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.ALL_INDEXING_COLUMN_GIVEN) {
-			const constraint_str = allIndexingColumnGivenConstraint(puzzle);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.ALL_RADARS_GIVEN) {
-			const constraint_str = allRadarsGivenConstraint(puzzle);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS) {
-			const constraint_str = nurimisakiPathGermanWhispersConstraint(puzzle);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN) {
-			const constraint_str = allNurimisakiUnshadedEndpointsGivenConstraint(puzzle);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE) {
-			const constraint_str = yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(puzzle);
-			out_str += constraint_str;
-		} else if (toolId === TOOLS.ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED) {
-			const constraint_str = allOddDigitsOrthogonallyConnected(puzzle);
-			out_str += constraint_str;
-		}
+		const constraint_str = constraintF(puzzle, toolId);
+		out_str += constraint_str;
 	}
 
 	return out_str;

@@ -1,4 +1,4 @@
-import { isArrowTool, isCageTool, isCloneTool, isCornerTool, isEdgeTool, isLineTool, isOutsideDirectionTool, isSingleCellTool, TOOLS, type TOOLID } from "$lib/Puzzle/Tools";
+import { isArrowTool, isCageTool, isCenterEdgeCornerTool, isCloneTool, isCornerTool, isEdgeTool, isLineTool, isOutsideDirectionTool, isSingleCellTool, TOOLS, type TOOLID } from "$lib/Puzzle/Tools";
 import { derived } from "svelte/store";
 import { localConstraintsStore } from './BoardStore';
 import type { LineToolI } from "$lib/Puzzle/Constraints/LineConstraints";
@@ -9,6 +9,7 @@ import type { ArrowToolI } from "$lib/Puzzle/Constraints/ArrowConstraints";
 import type { SingleCellTool } from "$lib/Puzzle/Constraints/SingleCellConstraints";
 import type { EdgeToolI } from "$lib/Puzzle/Constraints/EdgeConstraints";
 import type { OutsideDirectionToolI } from "$lib/Puzzle/Constraints/OutsideDirectionConstraints";
+import type { CenterCornerOrEdgeToolI } from "$src/lib/Puzzle/Constraints/CenterCornerOrEdgeConstraints";
 
 type SingleCellElement = {
 	toolId: TOOLID;
@@ -60,6 +61,23 @@ export const edgeToolsStore = derived(localConstraintsStore, ($localConstraintsS
 		edgeElements.push({
 			toolId,
 			element: element as Record<string, EdgeToolI>
+		});
+	}
+	return edgeElements;
+});
+
+export const centerCornerOrEdgeToolsStore = derived(localConstraintsStore, ($localConstraintsStore) => {
+	type EdgeElement = {
+		toolId: TOOLID;
+		element: Record<string, CenterCornerOrEdgeToolI>;
+	};
+	const edgeElements: EdgeElement[] = [];
+
+	for (const [toolId, element] of $localConstraintsStore.entries()) {
+		if (!isCenterEdgeCornerTool(toolId)) continue;
+		edgeElements.push({
+			toolId,
+			element: element as Record<string, CenterCornerOrEdgeToolI>
 		});
 	}
 	return edgeElements;

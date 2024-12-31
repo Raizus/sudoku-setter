@@ -11,6 +11,7 @@
 </script>
 
 <PanelHeader {title} bind:isOpen>
+	<!-- svelte-ignore a11y_consider_explicit_label -->
 	<button slot="add-button" class="add-button" title="Add Constraint" on:click|stopPropagation={() => onOpenCallback()}>
 		<svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 96 960 960"
 			><path

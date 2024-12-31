@@ -314,3 +314,14 @@ export const yinYangRegionSumLinesMustCrossColorsAtLeastOnceInfo: AbstractElemen
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
 	}
 };
+
+export const adjacentCellsAlongLoopAreMultiplesInfo: AbstractElementInfo = {
+	toolId: TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES,
+	order: 0,
+
+	meta: {
+		description: 'For each pair of adjacent cells along the loop, the larger digit is an integer multiple of the smaller digit.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};

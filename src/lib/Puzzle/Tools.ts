@@ -32,7 +32,8 @@ export enum SIMPLE_GLOBAL_CONSTRAINTS {
 	ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED = 'All Odd Digits Are Orthogonally Connected',
 
 	NURIMISAKI_PATH_GERMAN_WHISPERS = 'Nurimisaki Path German Whispers',
-	YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE = 'Yin Yang Region Sum Lines Must Cross Colors At Least Once'
+	YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE = 'Yin Yang Region Sum Lines Must Cross Colors At Least Once',
+	ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES = 'Adjacent Cells Along Loop Are Multiples'
 }
 
 export enum NEGATIVE_CONSTRAINTS {
@@ -64,7 +65,8 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	YIN_YANG = 'Yin Yang',
 	NURIMISAKI = 'Nurimisaki',
 	TWO_CONTIGUOUS_REGIONS = 'Two Contiguous Regions',
-	SASHIGANE = 'Sashigane'
+	SASHIGANE = 'Sashigane',
+	CELL_CENTER_LOOP_NO_TOUCHING = 'Cell Center Loop No Touching'
 }
 
 export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
@@ -92,13 +94,19 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	SANDWICH_ROW_COL_COUNT = 'Sandwich Row Column Count',
 	COUNTING_CIRCLES = 'Counting Circles',
 
+	CELL_ON_THE_LOOP = 'Cell On The Loop',
+	CELL_NOT_ON_THE_LOOP = 'Cell Not On The Loop',
+	COUNT_LOOP_NEIGHBOUR_CELLS = 'Count Loop Neighbour Cells',
+
 	YIN_YANG_MINESWEEPER = 'Yin Yang Minesweeper',
 	YIN_YANG_SEEN_UNSHADED_CELLS = 'Yin Yang Seen Unshaded Cells',
 	YIN_YANG_SEEN_SHADED_CELLS = 'Yin Yang Seen Shaded Cells',
 	YIN_YANG_SEEN_SAME_SHADE_CELLS = 'Yin Yang Seen Same Shade Cells',
 	YIN_YANG_ADJACENT_SAME_SHADE_COUNT = 'Yin Yang Adjacent Same Shade Count',
+
 	TWO_CONTIGUOUS_REGIONS_ROW_COLUMN_OPPOSITE_SET_COUNT = 'Two Contiguous Regions Row Column Opposite Set Count',
 	SEEN_REGION_BORDERS_COUNT = 'Seen Region Borders Count',
+
 	NURIMISAKI_UNSHADED_ENDPOINTS = 'Nurimisaki Unshaded Endpoints',
 	SASHIGANE_BEND_REGION_COUNT = 'Sashigane Bend Region Count',
 	SASHIGANE_REGION_SUM = 'Sashigane Region Sum'
@@ -122,7 +130,10 @@ export enum EDGE_CONSTRAINTS {
 	EDGE_MODULO = 'Edge Modulo',
 	EDGE_FACTOR = 'Edge Factor',
 	XY_DIFFERENCES = 'XY Differences',
-	YIN_YANG_KROPKI = 'Yin Yang Kropki'
+	YIN_YANG_KROPKI = 'Yin Yang Kropki',
+	YIN_YANG_WHITE_KROPKI = 'Yin Yang White Kropki',
+
+	UNKNOWN_REGION_BORDER = 'Unknown Region Border'
 }
 
 export enum CORNER_CONSTRAINTS {
@@ -136,6 +147,7 @@ export enum CORNER_CONSTRAINTS {
 
 export enum LINE_CONSTRAINTS {
 	THERMOMETER = 'Thermometer',
+	SLOW_THERMOMETER = 'Slow Thermometer',
 	ROW_CYCLE_THERMOMETER = 'Row Cycle Thermometer',
 
 	PALINDROME = 'Palindrome',
@@ -149,18 +161,22 @@ export enum LINE_CONSTRAINTS {
 	KNABNER_LINE = 'Knabner Line',
 	RENBAN_OR_WHISPERS_LINE = 'Renban Or Whispers Line',
 
+	INDEX_LINE = 'Index Line',
 	UNIQUE_VALUES_LINE = 'Unique Values Line',
 	REGION_SUM_LINE = 'Region Sum Line',
 	ARITHMETIC_SEQUENCE_LINE = 'Arithmetic Sequence Line',
 	SUM_LINE = 'Sum Line',
 	XV_LINE = 'XV Line',
-	ROW_SUM_LIME = 'Row Sum Line',
+	ROW_SUM_LINE = 'Row Sum Line',
 	AT_LEAST_X_LINE = 'At Least X Line',
 	SUPERFUZZY_ARROW = 'Superfuzzy Arrow',
 	N_CONSECUTIVE_FUZZY_SUM_LINE = 'N-Consecutive Sum Line',
 	ADJACENT_CELL_SUM_IS_PRIME_LINE = 'Adjacent Cell Sum Is Prime Line',
 	PRODUCT_LINE = 'Product Line',
 	ADJACENT_MULTIPLES_LINE = 'Adjacent Multiples Line',
+	ADJACENT_DIFFERENCES_COUNT_LINE = 'Adjacent Differences Count Line',
+
+	LOOK_AND_SAY_LINE = 'Look And Say Line',
 
 	SAME_PARITY_LINE = 'Same Parity Line',
 	MODULAR_LINE = 'Modular Line',
@@ -178,6 +194,7 @@ export enum LINE_CONSTRAINTS {
 	N_REPEATED_DIGITS_LINE = 'N-Repeated Digits Line',
 
 	// yin yang lines
+	YIN_YANG_INDEXING_LINE_COLORING = 'Yin Yang Indexing Line Coloring',
 	YIN_YANG_REGION_SUM_LINE = 'Yin Yang Region Sum Line',
 	YIN_YANG_SHADED_WHISPERS_LINE = 'Yin Yang Shaded Whispers Line',
 	YIN_YANG_UNSHADED_ENTROPIC_LINE = 'Yin Yang Unshaded Entropic Line',
@@ -204,8 +221,10 @@ export enum ARROW_CONSTRAINTS {
 
 export enum CAGE_CONSTRAINTS {
 	KILLER_CAGE = 'Killer Cage',
+	INVERTED_KILLER_CAGE = 'Inverted Killer Cage',
 	SUM_CAGE = 'Sum Cage',
 	KILLER_CAGE_LOOK_AND_SAY = 'Killer Cage Look And Say',
+	SUM_CAGE_LOOK_AND_SAY = 'Sum Cage Look And Say',
 	PARITY_BALANCE_CAGE = 'Parity Balance Cage',
 	DIVISIBLE_KILLER_CAGE = 'Divisible Killer Cage',
 	SPOTLIGHT_CAGE = 'Spotlight Cage',
@@ -245,6 +264,14 @@ export enum OUTSIDE_CORNER_CONSTRAINTS {
 	X_OMIT_LITTLE_KILLER_SUM = 'X-Omit Little Killer Sum',
 
 	NEGATORS_LITTLE_KILLER_SUM = 'Negators Little Killer Sum'
+}
+
+export enum CENTER_EDGE_CORNER_CONSTRAINTS {
+	ROTATIONALLY_SYMMETRIC_GALAXY_CENTER = 'Rotationally Symmetric Galaxy Center'
+}
+
+export enum VALUED_GLOBAL_CONSTRAINTS {
+	FORBIDDEN_ORTHOGONALLY_ADJACENT_SUM = 'Forbidden Orthogonally Adjacent Sum'
 }
 
 export enum COSMETIC_TOOLS {
@@ -290,7 +317,9 @@ export const LOCAL_CONSTRAINTS = {
 	...CAGE_CONSTRAINTS,
 	...CLONE_CONSTRAINTS,
 	...OUTSIDE_EDGE_CONSTRAINTS,
-	...OUTSIDE_CORNER_CONSTRAINTS
+	...OUTSIDE_CORNER_CONSTRAINTS,
+	...CENTER_EDGE_CORNER_CONSTRAINTS,
+	...VALUED_GLOBAL_CONSTRAINTS
 };
 
 export const TOOLS = {
@@ -322,6 +351,8 @@ export type TOOLID =
 	| CLONE_CONSTRAINTS
 	| OUTSIDE_EDGE_CONSTRAINTS
 	| OUTSIDE_CORNER_CONSTRAINTS
+	| CENTER_EDGE_CORNER_CONSTRAINTS
+	| VALUED_GLOBAL_CONSTRAINTS
 	| COSMETIC_TOOLS
 	| OTHER_TOOLS;
 
@@ -352,6 +383,9 @@ export enum TOOL_CATEGORIES {
 
 	CAGE_CONSTRAINT = 'Cage Constraint',
 	CLONE_CONSTRAINT = 'Clone Constraint',
+
+	CENTER_CORNER_EDGE_CONSTRAINT = 'Center, Corner or Edge Constraint',
+	VALUED_GLOBAL_CONSTRAINT = 'Valued Global Constraint',
 
 	COSMETIC_TOOL = 'Cosmetic Tool',
 	TYPABLE_TOOL = 'Typable Tool',
@@ -429,6 +463,11 @@ export function isCageTool(toolId: TOOLID): boolean {
 	return enumValues.includes(toolId) || toolId === TOOLS.COSMETIC_CAGE;
 }
 
+export function isCenterEdgeCornerTool(toolId: TOOLID): boolean {
+	const enumValues = Object.values(CENTER_EDGE_CORNER_CONSTRAINTS) as string[];
+	return enumValues.includes(toolId);
+}
+
 export function isCloneTool(toolId: TOOLID): boolean {
 	const enumValues = Object.values(CLONE_CONSTRAINTS) as string[];
 	return enumValues.includes(toolId);
@@ -442,6 +481,11 @@ export function isOutsideDirectionTool(toolId: TOOLID): boolean {
 		enumValues2.includes(toolId) ||
 		toolId === TOOLS.COSMETIC_OUTSIDE_DIRECTION
 	);
+}
+
+export function isValuedGlobalConstraint(toolId: TOOLID): boolean {
+	const enumValues = Object.values(VALUED_GLOBAL_CONSTRAINTS) as string[];
+	return enumValues.includes(toolId);
 }
 
 export function isCosmeticTool(toolId: TOOLID): boolean {
@@ -463,7 +507,8 @@ export const LOCAL_CONSTRAINTS_CATEGORIES = [
 	TOOL_CATEGORIES.CAGE_CONSTRAINT,
 	TOOL_CATEGORIES.CLONE_CONSTRAINT,
 	TOOL_CATEGORIES.OUTSIDE_EDGE_CONSTRAINT,
-	TOOL_CATEGORIES.OUTSIDE_CORNER_CONSTRAINT
+	TOOL_CATEGORIES.OUTSIDE_CORNER_CONSTRAINT,
+	TOOL_CATEGORIES.CENTER_CORNER_EDGE_CONSTRAINT
 ];
 
 export const GLOBAL_CONSTRAINT_CATEGORIES = [

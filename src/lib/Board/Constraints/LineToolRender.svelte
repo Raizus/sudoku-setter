@@ -25,7 +25,9 @@
 		<LineWithCircleEndsToolRender {linePoints} {shape}/>
 	{:else if type === SHAPE_TYPES.LINE_WITH_POLYGON_ENDS}
 		<LineWithPolygonEndsRender {linePoints} {shape}/>
-	{:else if type === SHAPE_TYPES.THERMO}
+	{:else if type === SHAPE_TYPES.THERMO_WITH_CIRCLE}
+		<ThermoRender {linePoints} {shape}/>
+	{:else if type === SHAPE_TYPES.THERMO_WITH_POLYGON}
 		<ThermoRender {linePoints} {shape}/>
 	{:else}
 		<LineRender {linePoints} {shape} />

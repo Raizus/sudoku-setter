@@ -1,7 +1,7 @@
 import type { InputHandler, ValueToolInputOptions } from '../InputHandler';
 import {
-	currentConstraintStore,
-	updateLocalConstraint
+    currentConstraintStore,
+    updateLocalConstraint
 } from '$stores/BoardStore';
 import { localConstraintsStore } from '$stores/BoardStore';
 import { removeLocalConstraint } from '$stores/LocalConstraintsStore';
@@ -12,56 +12,55 @@ import type { TOOLID } from '$lib/Puzzle/Tools';
 import { keyboardInputDefaultValidator } from '$src/lib/InputHandlers/KeyboardEventUtils';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import {
-	CellEdgeCornerPointerHandler,
-	CornerOrEdge,
-	type CellEdgeCornerEvent
+    CellEdgeCornerPointerHandler,
+    CornerOrEdge,
+    type CellEdgeCornerEvent
 } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
 import type { GridShape } from '$lib/Types/types';
 import {
-	updateConstraintValue,
-	findOutsideDirectionConstraint
+    updateConstraintValue,
+    findCenterCornerOrEdgeConstraint
 } from '$lib/Puzzle/Constraints/LocalConstraints';
-import { gridCoordsNextInDirection, idxToDirection, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
-import { outsideDirectionConstraint, type OutsideDirectionToolI } from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
+import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
+import { centerCornerOrEdgeConstraint, type CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/Constraints/CenterCornerOrEdgeConstraints';
 
-export interface OutsideDirectionToolInputOptions extends ValueToolInputOptions {
-	cornerOrEdge: CornerOrEdge;
+export interface CenterCornerOrEdgeToolInputOptions extends ValueToolInputOptions {
+    targets: CornerOrEdge;
 }
 
-export function getOutsideDirectionToolInputHandler(
+export function getCenterCornerOrEdgeToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
 	tool: TOOLID,
-	options?: OutsideDirectionToolInputOptions
+	options?: CenterCornerOrEdgeToolInputOptions
 ): InputHandler {
-	console.log('getOutsideEdgeToolInputHandler');
-	
-	const cornerOrEdge = options?.cornerOrEdge ?? CornerOrEdge.CORNER_OR_EDGE;
-	const pointerHandler = new CellEdgeCornerPointerHandler(cornerOrEdge);
+	console.log('getCenterCornerOrEdgeToolInputHandler');
+
+	const targets = options?.targets ?? CornerOrEdge.CLOSEST;
+    const pointerHandler = new CellEdgeCornerPointerHandler(targets);
+    
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
-	let currentConstraint: OutsideDirectionToolI | null = null;
+	let currentConstraint: CenterCornerOrEdgeToolI | null = null;
 	let id: string | null = null;
 
 	function handle(event: CellEdgeCornerEvent) {
 		const localConstraints = get(localConstraintsStore);
-		const cell = event.cell;
-		const direction_idx = event.direction;
-		const direction = idxToDirection(direction_idx)
+        const cell = event.cell;
+        const coords = event.closest;
+        
+        console.log(event);
 
 		const onGrid = isCellOnGrid(cell, gridShape);
-		if (onGrid) return;
-		const neighbour = gridCoordsNextInDirection(cell, direction);
-		const neighbourOnGrid = isCellOnGrid(neighbour, gridShape);
-		if (!neighbourOnGrid) return;
+		if (!onGrid) return;
 
-		const match = findOutsideDirectionConstraint(localConstraints, tool, cell, direction);
+		const match = findCenterCornerOrEdgeConstraint(localConstraints, tool, coords);
 		if (match) {
 			removeLocalConstraint(tool, match);
 			return;
 		}
 
-		currentConstraint = outsideDirectionConstraint(tool, cell, direction, '');
+		currentConstraint = centerCornerOrEdgeConstraint(tool, coords, '');
 		id = uniqueId();
 		addLocalConstraint(id, currentConstraint);
 	}
@@ -70,7 +69,7 @@ export function getOutsideDirectionToolInputHandler(
 		const currentConstraint = get(currentConstraintStore);
 		if (!currentConstraint) return;
 
-		let constraint = currentConstraint.constraint as OutsideDirectionToolI;
+		let constraint = currentConstraint.constraint as CenterCornerOrEdgeToolI;
 		const id = currentConstraint.id;
 
 		if (constraint.value === undefined) return;

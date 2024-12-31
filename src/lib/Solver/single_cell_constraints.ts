@@ -4,10 +4,12 @@ import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
+	cellsToCellCenterLoopVarsName,
 	cellsToSashiganeVarsName,
 	cellsToUnknownRegionsVarsName,
 	cellsToVarsName,
 	cellsToYinYangVarsName,
+	cellToCellCenterLoopVarName,
 	cellToSashiganeVarName,
 	cellToUnknownRegionsVarName,
 	cellToVarName,
@@ -488,7 +490,42 @@ function sashiganeArrowPointsToBendConstraint(grid: Grid, constraint: CellArrowT
 	return out_str;
 }
 
+function cellOnLoopConstraint(grid: Grid, constraint: CellToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
 
+	const cell_center_loop_var = cellToCellCenterLoopVarName(cell);
+
+	const constraint_str = `constraint ${cell_center_loop_var} == 1;\n`;
+	return constraint_str;
+}
+
+function cellNotOnLoopConstraint(grid: Grid, constraint: CellToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const cell_center_loop_var = cellToCellCenterLoopVarName(cell);
+
+	const constraint_str = `constraint ${cell_center_loop_var} == 0;\n`;
+	return constraint_str;
+}
+
+function countLoopNeighbourCellsConstraint(grid: Grid, constraint: CellToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const cell_var = cellToVarName(cell);
+	const neighbour_cells = grid.getNeighboorCells(cell);
+	const cells = [cell, ...neighbour_cells];
+	const cell_center_loop_vars = cellsToCellCenterLoopVarsName(cells);
+	const cell_center_loop_vars_str = '[' + cell_center_loop_vars.join(',') + ']'
+
+	const constraint_str = `constraint sum(${cell_center_loop_vars_str}) == ${cell_var};\n`;
+	return constraint_str;
+}
 
 
 type ConstraintF = (grid: Grid, constraint: CellToolI) => string;
@@ -527,7 +564,11 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.SEEN_REGION_BORDERS_COUNT, seenRegionBordersCountConstraint],
 	[TOOLS.NURIMISAKI_UNSHADED_ENDPOINTS, nurimisakiUnshadedEndpointsConstraint],
 	[TOOLS.SASHIGANE_BEND_REGION_COUNT, sashiganeBendRegionCountConstraint],
-	[TOOLS.SASHIGANE_REGION_SUM, sashiganeRegionSumConstraint]
+	[TOOLS.SASHIGANE_REGION_SUM, sashiganeRegionSumConstraint],
+
+	[TOOLS.CELL_ON_THE_LOOP, cellOnLoopConstraint],
+	[TOOLS.CELL_NOT_ON_THE_LOOP, cellNotOnLoopConstraint],
+	[TOOLS.COUNT_LOOP_NEIGHBOUR_CELLS, countLoopNeighbourCellsConstraint]
 ]);
 
 export function singleCellConstraints(

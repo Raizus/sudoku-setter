@@ -12,6 +12,7 @@ import {
 	isSingleCellArrowTool,
 	isSingleCellMultiArrowTool,
 	isToolOfType,
+	isValuedGlobalConstraint,
 	toolKeyFromString,
 	type TOOLID
 } from '../Tools';
@@ -39,6 +40,8 @@ import { getShapeDiff } from '../Shape/Shape';
 import { getDefaultShape } from '../ElementHandlersUtils';
 import { squareCellElementHandlers } from '../ElementsInfo/SquareCellElementHandlers';
 import { parseShape } from '../utils';
+import type { CenterCornerOrEdgeToolI } from './CenterCornerOrEdgeConstraints';
+import { valuedGlobalConstraintFromJson, type ValuedGlobalToolI } from './ValuedGlobalConstraints';
 
 export type ConstraintType =
 	| CellToolI
@@ -49,7 +52,10 @@ export type ConstraintType =
 	| ArrowToolI
 	| CageToolI
 	| CloneToolI
-	| OutsideDirectionToolI;
+	| OutsideDirectionToolI
+	| CenterCornerOrEdgeToolI
+	| ValuedGlobalToolI;
+
 
 export function updateConstraintValue<T extends ConstraintType>(constraint: T, value: string): T {
 	return { ...constraint, value } as T;
@@ -158,6 +164,8 @@ export class LocalConstraintsDict extends Map<TOOLID, Record<string, ConstraintT
 					constraint = cageConstraintFromJson(tool, constraint_data);
 				} else if (isOutsideDirectionTool(tool)) {
 					constraint = outsideDirectionConstraintFromJson(tool, constraint_data);
+				} else if (isValuedGlobalConstraint(tool)) {
+					constraint = valuedGlobalConstraintFromJson(tool, constraint_data);
 				}
 
 				if (constraint !== null) {
@@ -315,6 +323,23 @@ export function findOutsideDirectionConstraint(
 
 		const id = entry[0];
 		if (areCoordsEqual(cell, constraint.cell) && direction === constraint.direction) return id;
+	}
+	return null;
+}
+
+export function findCenterCornerOrEdgeConstraint(
+	localConstraints: LocalConstraintsDict,
+	toolId: TOOLID,
+	cell: GridCoordI
+) {
+	const elements = localConstraints.get(toolId);
+	if (!elements) return null;
+
+	for (const entry of Object.entries(elements)) {
+		const constraint = entry[1] as CenterCornerOrEdgeToolI;
+
+		const id = entry[0];
+		if (areCoordsEqual(cell, constraint.cell)) return id;
 	}
 	return null;
 }

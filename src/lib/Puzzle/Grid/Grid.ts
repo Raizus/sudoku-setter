@@ -254,12 +254,14 @@ export class Grid implements GridI {
 	toJSON() {
 		const gridRecord: CellRecord[][] = [];
 
+		const g_size = this.nCols === this.nRows ? this.nRows : null;
+
 		for (let i = 0; i < this.nRows; i++) {
 			const row: CellRecord[] = [];
 			for (let j = 0; j < this.nCols; j++) {
 				const cell = this.getCell(i, j);
 				if (!cell) continue;
-				const cellRecord = cell?.toJson();
+				const cellRecord = cell?.toJson(g_size);
 				row.push(cellRecord);
 			}
 			gridRecord.push(row);

@@ -12,8 +12,10 @@ function coordsToVarsStr(grid: Grid, coords: GridCoordI[]) {
 }
 
 function cloneRegionConstraint(grid: Grid, constraint: CloneToolI) {
-    const vars1_str = coordsToVarsStr(grid, constraint.cells);
-    const vars2_str = coordsToVarsStr(grid, constraint.cells2);
+	const vars1 = coordsToVarsStr(grid, constraint.cells);
+	const vars1_str = '[' + vars1.join(',') + ']';
+    const vars2 = coordsToVarsStr(grid, constraint.cells2);
+	const vars2_str = '[' + vars2.join(',') + ']';
 
 	const constraint_str = `constraint clone_region_p(${vars1_str}, ${vars2_str});\n`;
 	return constraint_str;

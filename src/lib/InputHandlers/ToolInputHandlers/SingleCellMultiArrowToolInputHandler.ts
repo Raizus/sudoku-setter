@@ -32,7 +32,7 @@ export function getSingleCellMultiArrowToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
 	tool: TOOLID,
-	cornerOrEdge = CornerOrEdge.BOTH
+	cornerOrEdge = CornerOrEdge.CORNER_OR_EDGE
 ): InputHandler {
 	console.log('getSingleCellMultiArrowToolInputHandler');
 	const pointerHandler = new CellEdgeCornerPointerHandler(cornerOrEdge);

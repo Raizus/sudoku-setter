@@ -29,6 +29,7 @@
 	import FogDefs from './FogDefs.svelte';
 	import FogCover from './FogCover.svelte';
 	import SolutionRender from './SolutionRender.svelte';
+	import CenterCornerOrEdgeToolsRender from './Constraints/CenterCornerOrEdgeToolsRender.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 	export let isPreview: boolean = false;
@@ -116,6 +117,7 @@
 
 	<EdgeToolsRender />
 	<CornerToolsRender />
+	<CenterCornerOrEdgeToolsRender />
 
 	<PenToolRender />
 	

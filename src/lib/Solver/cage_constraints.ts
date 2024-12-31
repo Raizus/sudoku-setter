@@ -13,6 +13,14 @@ function getCageVars(grid: Grid, constraint: CageToolI) {
     return vars;
 }
 
+function simpleCageConstraint(grid: Grid, constraint: CageToolI, predicate: string) {
+	const vars = getCageVars(grid, constraint);
+	const vars_str = `[${vars.join(',')}]`;
+
+	const constraint_str: string = `constraint ${predicate}(${vars_str});\n`;
+	return constraint_str;
+}
+
 function valuedCageConstraint(grid: Grid, constraint: CageToolI, predicate: string) {
 	const vars = getCageVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
@@ -38,8 +46,26 @@ function killerCageConstraint(grid: Grid, constraint: CageToolI) {
 	return constraint_str;
 }
 
+function invertedKillerCageConstraint(grid: Grid, constraint: CageToolI) {
+	const vars = getCageVars(grid, constraint);
+	const vars_str = `[${vars.join(',')}]`;
+	const value = constraint.value;
+	if (value) {
+		const val = parseInt(value);
+		const constraint_str = `constraint inverted_killer_cage_p(${vars_str}, ${val});\n`;
+		return constraint_str;
+	}
+	const constraint_str = allDifferentConstraint(vars);
+	return constraint_str;
+}
+
 function sumCageConstraint(grid: Grid, constraint: CageToolI) {
 	const constraint_str = valuedCageConstraint(grid, constraint, 'sum_cage_p');
+	return constraint_str;
+}
+
+function sumCageLookAndSayConstraint(grid: Grid, constraint: CageToolI) {
+	const constraint_str = simpleCageConstraint(grid, constraint, 'sum_cage_look_and_say_p');
 	return constraint_str;
 }
 
@@ -137,7 +163,9 @@ type ConstraintF = (grid: Grid, constraint: CageToolI) => string;
 
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.KILLER_CAGE, killerCageConstraint],
+	[TOOLS.INVERTED_KILLER_CAGE, invertedKillerCageConstraint],
 	[TOOLS.SUM_CAGE, sumCageConstraint],
+	[TOOLS.SUM_CAGE_LOOK_AND_SAY, sumCageLookAndSayConstraint],
 	[TOOLS.DIVISIBLE_KILLER_CAGE, divisibleKillerCageConstraint],
 	[TOOLS.SPOTLIGHT_CAGE, spotlightCageConstraint],
 	[TOOLS.YIN_YANG_ANTITHESIS_KILLER_CAGE, yinYangAntithesisKillerCageConstraint],

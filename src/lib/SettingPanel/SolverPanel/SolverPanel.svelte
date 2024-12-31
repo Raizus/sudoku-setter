@@ -6,8 +6,8 @@
 	import * as MiniZinc from 'minizinc';
 	import SolverModal from './SolverModal.svelte';
 	import { setBoardOnSolution } from './helpers';
-
-	type JsonT = { [variable: string]: any } | undefined;
+	import { readable } from 'svelte/store';
+	import { createStopwatch } from '$stores/timer';
 
 	let isOpen = false;
 	$: puzzle = $puzzleStore;
@@ -17,14 +17,31 @@
 	let solver: null | MiniZinc.SolveProgress = null;
 	$: solverLabel = 'Solve';
 
+	let startTime = Date.now();
+	let endTime: number | null = null;
 	let max_sols = 100;
 	let max_sols_str = '100';
 	let sol_count: number | null = null;
 	let status: string = 'IDLE';
 
+	const timer = createStopwatch();
+	$: ellapsed = $timer;
+
 	function getSolText(sol_count: number | null): string {
-		if (sol_count === null) return '?';
+		if (sol_count === null) return '';
 		return String(sol_count);
+	}
+
+	function formatTimeStr(milliseconds: number): string {
+		const minutes = Math.floor(milliseconds / 60000);
+		const seconds = Math.floor((milliseconds % 60000) / 1000);
+		const millis = Math.floor((milliseconds % 1000) / 100);
+
+		// Format seconds to have two digits
+		const formattedSeconds = seconds.toString().padStart(2, '0');
+
+		// Return the formatted string
+		return `${minutes}:${formattedSeconds}.${millis}`;
 	}
 
 	function clickCb() {
@@ -34,7 +51,7 @@
 	function updateMaxSols(value: string) {
 		const parsed = parseInt(value);
 		if (typeof parsed === 'number' && parsed >= 1) {
-			max_sols = parsed
+			max_sols = parsed;
 		}
 	}
 
@@ -46,10 +63,13 @@
 		const model = new MiniZinc.Model();
 
 		resetPuzzle();
-
 		// Define a simple MiniZinc model
+		console.log(puzzle);
 		const modelstr = createMinizincModel(puzzle);
 		model.addFile('test.mzn', modelstr);
+
+		timer.reset();
+		timer.start();
 
 		solver = model.solve({
 			options: {
@@ -60,7 +80,7 @@
 
 		solver.on('solution', (solution) => {
 			const json = solution.output.json;
-			// console.log(json);
+			// console.log(json)
 			setBoardOnSolution(json, grid);
 			if (solution.type === 'solution' && sol_count !== null) sol_count += 1;
 		});
@@ -68,13 +88,16 @@
 		solver.then((result) => {
 			status = result.status;
 			solverLabel = 'Solve';
+			timer.stop();
 		});
 	}
 
 	function solveCb() {
 		if (solver === null || !solver.isRunning()) solveModel();
-		else if (solver !== null) {
+		else if (solver !== null && solver.isRunning()) {
+			status = 'IDLE';
 			solverLabel = 'Solve';
+			timer.stop();
 			solver.cancel();
 		}
 	}
@@ -106,6 +129,7 @@
 			/>
 		</div>
 		<span class="text-field">{`Solution Count: ${getSolText(sol_count)}`}</span>
+		<span class="text-field">{`Elapsed Time: ${formatTimeStr(ellapsed)}`}</span>
 		<span class="text-field">{`Status: ${status}`}</span>
 	</svelte:fragment>
 </Panel>

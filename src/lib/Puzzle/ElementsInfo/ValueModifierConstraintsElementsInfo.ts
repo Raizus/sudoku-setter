@@ -143,3 +143,15 @@ export const sashiganeRegionsInfo: AbstractElementInfo = {
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
+
+export const cellCenterLoopNoTouchingInfo: AbstractElementInfo = {
+	toolId: TOOLS.CELL_CENTER_LOOP_NO_TOUCHING,
+	order: 0,
+
+	meta: {
+		description:
+			'Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself, even diagonally.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};

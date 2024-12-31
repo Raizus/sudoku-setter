@@ -9,6 +9,7 @@ export type Solution = undefined | Array<Array<null | number>>;
 export interface PuzzleI {
 	grid: Grid;
 	solution: Solution;
+	valid_digits: number[] | undefined;
 	puzzleMeta: PuzzleMetaI;
 	localConstraints: LocalConstraintsDict;
 	globalConstraints: GlobalConstraintsDict;
@@ -48,7 +49,7 @@ export function puzzleFromJson(puzzleJson: Record<string, unknown>) {
 	const nCols = puzzleJson['nRows'] as number;
 
 	const puzzleMeta = puzzleJson['puzzleInfo'] as PuzzleMetaI;
-
+	const valid_digits = puzzleJson['valid_digits'] as number[] | undefined;
 	const grid_data = puzzleJson['grid'] as CellRecord[][];
 	const grid = Grid.fromJSON(nRows, nCols, grid_data);
 	const solution = puzzleJson['solution'] as Solution;
@@ -64,6 +65,7 @@ export function puzzleFromJson(puzzleJson: Record<string, unknown>) {
 		puzzleMeta: puzzleMeta,
 		solution: solution,
 		grid: grid,
+		valid_digits: valid_digits,
 		localConstraints: local_constraints,
 		globalConstraints: global_constraints
 	};

@@ -62,6 +62,14 @@ export function cellsToSashiganeVarsName(cells: Cell[]): string[] {
 	return cells.map((cell) => cellToSashiganeVarName(cell));
 }
 
+export function cellToCellCenterLoopVarName(cell: Cell): string {
+	return `cell_center_loop[${cell.r},${cell.c}]`;
+}
+
+export function cellsToCellCenterLoopVarsName(cells: Cell[]): string[] {
+	return cells.map((cell) => cellToCellCenterLoopVarName(cell));
+}
+
 export function allDifferentConstraint(vars: string[]): string {
 	const vars_str = vars.join(',');
 	const constraint = `constraint alldifferent([${vars_str}]);\n`;
@@ -372,7 +380,14 @@ predicate one_of_each_digit_p(
 ) =
     forall(val in digits) (
         conditional_count_f(array1d(grid), array1d(labels), val, true) == 1
-    );\n\n`;
+    );
+
+predicate multiples_p(var int: a, var int: b) =
+    % (a mod b = 0 \\/ b mod a = 0)
+    let {
+      var int: larger = max([a,b]),
+      var int: smaller = min([a,b])
+    } in larger mod smaller == 0;\n\n`;
 
 	const single_cell_constraints = `predicate odd_p(var int: x) =
     x mod 2 = 1;
@@ -523,11 +538,7 @@ predicate edge_modulo_p(var int: a, var int: b, var int: rem) =
     larger mod smaller == rem;
 
 predicate edge_factor_p(var int: a, var int: b) =
-    let {
-      var int: larger = max([a,b]),
-      var int: smaller = min([a,b])
-    } in 
-    larger mod smaller == 0;\n\n`;
+    multiples_p(a, b);\n\n`;
 
 	const corner_constraints = `predicate quadruple_p(
     array[int] of var int: arr,
@@ -588,10 +599,19 @@ predicate at_least_x_line_p(array[int] of var int: arr, var int: x) =
 
 predicate adjacent_multiples_line_p(array[int] of var int: arr) =
     forall(i in index_set(arr) where i < max(index_set(arr))) (
-        let {
-            int: next_index = i + 1
-        } in
-        (arr[i] mod arr[next_index] = 0 \\/ arr[next_index] mod arr[i] = 0)
+        multiples_p(arr[i], arr[i + 1])
+    );
+
+predicate adjacent_differences_count_line_p(array[int] of var int: arr) =
+    let {
+        array[int] of var int: differences = [abs(arr[i] - arr[i+1]) | i in index_set(arr) where i < max(index_set(arr))];
+    } in forall(i in index_set(differences))(
+        count(differences, differences[i]) == differences[i]
+    );
+
+predicate index_line_p(array[int] of var int: arr) = 
+    forall(i in index_set(arr)) (
+        element(arr[i], arr, i)
     );
 
 predicate same_parity_line_p(array[int] of var int: arr) =
@@ -771,7 +791,14 @@ predicate entropic_or_modular_line_p(
     set of int: group3,
     int: val
 ) =
-    entropic_line_p(arr, group1, group2, group3) \\/ modular_line_p(arr, val);\n\n`;
+    entropic_line_p(arr, group1, group2, group3) \\/ modular_line_p(arr, val);
+    
+predicate look_and_say_line_p(array[int] of var int: arr) =
+    length(arr) >= 2 /\\
+    let {
+        var int: first = arr[min(index_set(arr))];
+        var int: last = arr[max(index_set(arr))]
+    } in count(arr, first) == last /\\ count(arr, last) == first;\n\n`;
 
 	const double_end_line_constraints = `
 predicate between_line_p(array[int] of var int: arr) =
@@ -855,8 +882,23 @@ predicate lockout_line_p(array[int] of var int: arr, var int: x) =
     alldifferent(arr) /\\
     sum(arr) == val;
 
+predicate inverted_killer_cage_p(array[int] of var int: arr, var int: val) =
+    let {
+        var int: max_val = max(arr);
+        array[int] of var int: arr2 = 
+            [if arr[i] == max_val then -max_val else arr[i] endif 
+            | i in index_set(arr)]
+    } in alldifferent(arr) /\\ sum(arr2) == val;
+
 predicate sum_cage_p(array[int] of var int: arr, var int: val) =
     sum(arr) == val;
+
+predicate sum_cage_look_and_say_p(array[int] of var int: arr) = 
+    let {
+        var int: sum_var = sum(arr);
+        var int: units_digit = sum_var mod 10;
+        var int: tens_digit = sum_var div 10;
+    } in count(arr, units_digit) == tens_digit;
 
 predicate parity_balance_cage_p(array[int] of var int: arr) =
     let {
@@ -971,6 +1013,16 @@ predicate x_omit_little_killer_sum_p(array[int] of var int: arr, var int: val) =
 	const clone_constraints = `predicate clone_region_p(array[int] of var int: arr1, array[int] of var int: arr2) =
     length(index_set(arr1)) = length(index_set(arr2)) /\\
     forall(i in index_set(arr1))(arr1[i] = arr2[i]);\n\n`;
+
+	const valued_global_constraints = `predicate forbidden_adjacent_sum_p(
+    array[int, int] of var int: grid,
+    var int: val
+) = forall(i in index_set_1of2(grid), j in index_set_2of2(grid))(
+        % Right neighbor
+        (j < max(index_set_2of2(grid)) -> grid[i,j] + grid[i,j+1] != val) /\\
+        % Down neighbor
+        (i < max(index_set_1of2(grid)) -> grid[i,j] + grid[i+1,j] != val)
+    );\n\n`;
 
 	const yin_yang = `predicate yin_yang_two_by_two_p(array[int, int] of var 0..1: grid) =
     % For each possible 2x2 square in the grid
@@ -1114,7 +1166,10 @@ predicate outside_edge_yin_yang_sum_of_shaded_p(
 ) =  
     index_set(cells) = index_set(yin_yang_vars) /\\
     sum(i in index_set(cells) where yin_yang_vars[i] == 1)(cells[i]) == val;
-    
+
+predicate yin_yang_white_kropki_p(var int: cell1, var int: cell2, var int: yin_yang1, var int: yin_yang2) =
+    yin_yang1 == yin_yang2 /\\ consecutive_p(cell1, cell2);    
+
 predicate yin_yang_kropki_p(var int: cell1, var int: cell2, var int: yin_yang1, var int: yin_yang2) =
 (
     yin_yang1 == yin_yang2 /\\ (
@@ -1124,6 +1179,18 @@ predicate yin_yang_kropki_p(var int: cell1, var int: cell2, var int: yin_yang1, 
         (yin_yang1 == 1 /\\ consecutive_p(cell1, cell2))
     )
 );
+
+predicate yin_yang_indexing_line_coloring_p(array[int] of var int: arr, array[int] of var 0..1: labels) =
+    % Ensure arrays have same size
+    assert(
+        index_set(arr) = index_set(labels),
+        "Arrays must have same index set"
+    )
+    /\\
+    % Elements that reference themselves should be dark
+    forall(i in index_set(arr))(
+        arr[i] == i <-> labels[i] == 0
+    );
 
 predicate yin_yang_shaded_whispers_line_p(array[int] of var int: arr, array[int] of var 0..1: labels, var int: x) =
     % Ensure arrays have same size
@@ -1489,13 +1556,69 @@ predicate sashigane_arrow_points_to_bend_p(
 ) = 
     cell_var >= min(index_set(sashigane_vars)) /\\ 
     cell_var <= max(index_set(sashigane_vars)) /\\
+    % cells that belong to the same sashigane region
     forall(i in index_set(sashigane_vars) where i<=cell_var) (
         sashigane_vars[i] = sashigane_var
     ) /\\
+    % cells that do not belong to the same sashigane region
+    forall(i in index_set(sashigane_vars) where i>cell_var) (
+        sashigane_vars[i] != sashigane_var
+    ) /\\
+    % cells closer than cell_var are not bends
     forall(i in index_set(bend_vars) where i<cell_var) (
         bend_vars[i] = false
     ) /\\
+    % cell at distance of cell_var is a bend
     element(cell_var, bend_vars, true);\n\n`;
+
+	const cell_center_loop = `predicate cell_center_loop_no_diagonal_touching_p(array[int, int] of var 0..1: grid) =
+    forall(r in index_set_1of2(grid) where r < max(index_set_1of2(grid)),
+           c in index_set_2of2(grid) where c < max(index_set_2of2(grid)))(
+		% no crossing 1's and 0's because it implies the grid is not connected
+        % [1, 0]    or  [0, 1]
+        % [0, 1]        [1, 0]
+        (grid[r,c] == 1 /\\ grid[r+1, c+1] == 1 -> grid[r+1,c] == 1 \\/ grid[r, c+1] ==1)
+    );
+
+% draw a 1-cell wide loop of orthogonally connected cells which does not branch or touch itself, even diagonally
+predicate cell_center_loop_p(array[int, int] of var 0..1: grid) =
+    connected_region(grid, 1) /\\
+    % no diagonal touching
+    cell_center_loop_no_diagonal_touching_p(grid) /\\
+    forall(i in index_set_1of2(grid), j in index_set_2of2(grid))(
+        if grid[i,j] = 1 then
+            % If cell is on the loop then then there are exactly two edges attached to it
+            % Count orthogonally adjacent 1s (must be exactly 2)
+            (sum([
+                if i-1 in index_set_1of2(grid) then grid[i-1,j] else 0 endif +  % Up
+                if i+1 in index_set_1of2(grid) then grid[i+1,j] else 0 endif +  % Down
+                if j-1 in index_set_2of2(grid) then grid[i,j-1] else 0 endif +  % Left
+                if j+1 in index_set_2of2(grid) then grid[i,j+1] else 0 endif    % Right
+            ]) = 2)
+        else
+            true
+        endif
+    );
+
+predicate adjacent_loop_cells_are_multiples_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var 0..1: labels
+) =
+    assert(index_set_1of2(grid) = index_set_1of2(labels) /\\
+       index_set_2of2(grid) = index_set_2of2(labels),
+       "grid and labels must have same dimensions") /\\
+    forall(i in index_set_1of2(grid), j in index_set_2of2(grid))(
+        % Right neighbor
+        (j < max(index_set_2of2(grid)) ->
+            (labels[i,j] = 1 /\\ labels[i,j+1] = 1 ->
+                multiples_p(grid[i,j], grid[i,j+1]))
+        ) /\\
+        % Down neighbor
+        (i < max(index_set_1of2(grid)) ->
+            (labels[i,j] = 1 /\\ labels[i+1,j] = 1 ->
+                multiples_p(grid[i,j], grid[i+1,j]))
+        )
+    );\n\n`;
 
 	out_str +=
 		helper_f +
@@ -1511,13 +1634,15 @@ predicate sashigane_arrow_points_to_bend_p(
 		outside_edge_constraints +
 		outside_corner_constraints +
 		clone_constraints +
+		valued_global_constraints +
 		yin_yang +
 		two_contiguous_regions +
 		unknown_sudoku_regions_p +
 		nurimisaki +
 		odd_even_grid +
 		value_modifier +
-		sashigane;
+		sashigane +
+		cell_center_loop;
 
 	return out_str;
 }

@@ -32,15 +32,19 @@ export const arrowUsage = () =>
 
 export const outsideDirectionUsage = () =>
 	`    Click outside the grid or on an outside cell near a cell edge or corner to add or remove an outside direction constraint.
-    Type to enter a total into the selected cage (or the most recently edited).`;
+    Type to enter a total into the selected constraint (or the most recently edited).`;
 
 export const outsideEdgeUsage = () =>
 	`    Click outside the grid or on an outside cell near a cell edge to add or remove an outside direction constraint.
-    Type to enter a total into the selected cage (or the most recently edited).`;
+    Type to enter a total into the selected constraint (or the most recently edited).`;
 
 export const outsideCornerUsage = () =>
 	`    Click outside the grid or on an outside cell near a cell edge to add or remove an outside direction constraint.
-    Type to enter a total into the selected cage (or the most recently edited).`;
+    Type to enter a total into the selected constraint (or the most recently edited).`;
+
+export const centerCornerOrEdgeUsage = () =>
+	`    Click in the center, corner or edge of a cell to add or remove a center, corner or edge constraint.
+    Type to enter a total into the selected constraint (or the most recently edited).`;
 
 export const lineUsage = () =>
 	`    Click and drag to draw a line.
@@ -60,6 +64,17 @@ export const edgeUsage = () =>
 	`    Click on a cell edge to draw a cell edge constraint.
     Click on an existing cell edge constraint to remove it.
     Type to enter a total into the selected constraint (the most recently edited).`;
+
+export const cornerUsage = () =>
+	`    Click on a cell corner to draw a cell corner constraint.
+    Click on an existing cell corner constraint to remove it.
+    Type to enter a total into the selected constraint (the most recently edited).`;
+
+export const quadrupleUsage = () =>
+	`    Click on a cell corner to draw a cell corner constraint.
+    Click on an existing cell corner constraint to remove it.
+    Type to enter a total into the selected constraint (the most recently edited).
+    Separate different values using commas (,).`;
 
 export const xvUsage = () =>
 	`    Click on a cell edge to draw a cell edge constraint.

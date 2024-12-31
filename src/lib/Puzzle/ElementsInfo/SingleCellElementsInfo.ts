@@ -828,3 +828,72 @@ export const sashiganeRegionSumInfo: SquareCellElementInfo = {
 		categories: singleCellShapeDefaultCategories
 	}
 };
+
+export const cellOnTheLoopInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.CELL_ON_THE_LOOP,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.SQUARE,
+		strokeWidth: { editable: false, value: 0.02 },
+		stroke: { editable: false, value: 'black' },
+		r: { editable: false, value: 0.35 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description: 'A black square indicates the cell is on the loop.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const cellNotOnTheLoopInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.CELL_NOT_ON_THE_LOOP,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: false, value: 0.02 },
+		stroke: { editable: false, value: 'black' },
+		r: { editable: false, value: 0.35 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description: 'A black circle indicates the cell is not on the loop.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const countLoopNeighbourCellsInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.COUNT_LOOP_NEIGHBOUR_CELLS,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: false, value: 0.02 },
+		stroke: { editable: false, value: 'orange' },
+		r: { editable: false, value: 0.35 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description: 'An orange circle indicates how many cells up to 8 surrounding cells plus itself (9 maximum) are on the loop.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};

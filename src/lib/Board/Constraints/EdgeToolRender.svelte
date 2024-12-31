@@ -1,33 +1,31 @@
 <script lang="ts">
 	import { TOOLS } from '$lib/Puzzle/Tools';
-	import {
-		SHAPE_TYPES,
-		defaultEdgeCircleShape
-	} from '$lib/Puzzle/Shape/Shape';
+	import { SHAPE_TYPES, defaultEdgeCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import type { EdgeToolI } from '$lib/Puzzle/Constraints/EdgeConstraints';
 	import CircleRender from '$lib/Components/SvgRender/CircleRender.svelte';
-	import EllipseRender from '$lib/Components/SvgRender/EllipseRender.svelte';
-	import SquareRender from '$lib/Components/SvgRender/SquareRender.svelte';
-	import RectangleRender from '$lib/Components/SvgRender/RectangleRender.svelte';
-	import PolygonRender from '$lib/Components/SvgRender/PolygonRender.svelte';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
-	import { cellToCellCenterVector, cellsToVector2DPoints } from '$lib/utils/SquareCellGridRenderUtils';
+	import {
+		cellToCellCenterVector,
+		cellsToVector2DPoints
+	} from '$lib/utils/SquareCellGridRenderUtils';
 	import { vectorAverage } from '$lib/utils/Vector2D';
-	
+	import BorderLineRender from './BorderLineRender.svelte';
+	import RenderShape from '$components/SvgRender/RenderShape.svelte';
 
 	export let edgeTool: EdgeToolI;
 
 	const coords = edgeTool.cells;
-	const defaultShape = getDefaultShape(edgeTool.toolId, squareCellElementHandlers) ?? defaultEdgeCircleShape;
+	const defaultShape =
+		getDefaultShape(edgeTool.toolId, squareCellElementHandlers) ?? defaultEdgeCircleShape;
 	$: shape = edgeTool.shape ?? defaultShape;
 
 	$: center = vectorAverage(cellsToVector2DPoints(coords));
-	
+
 	// maybe adjust fontSize to shape size?
 	$: type = shape?.type || SHAPE_TYPES.CIRCLE;
 	$: fontSize = shape?.fontSize ?? 0.2;
-	$: fontColor = shape?.fontColor ?? "black";
+	$: fontColor = shape?.fontColor ?? 'black';
 
 	function getText(tool: EdgeToolI, type: SHAPE_TYPES): string {
 		if (type === SHAPE_TYPES.TEXT_ONLY) {
@@ -36,7 +34,7 @@
 		return tool.value ?? '';
 	}
 
-	function getTextAngle(): number{
+	function getTextAngle(): number {
 		if (edgeTool.toolId !== TOOLS.EDGE_INEQUALITY) return 0;
 
 		const p1 = cellToCellCenterVector(coords[0]);
@@ -51,19 +49,13 @@
 {#if coords.length === 2}
 	<g class="edge-tool">
 		{#if edgeTool.toolId === TOOLS.EDGE_INEQUALITY}
-			<CircleRender x={center.x} y={center.y} {shape} />			
-		{:else if type === SHAPE_TYPES.CIRCLE || type === SHAPE_TYPES.TEXT_ONLY}
 			<CircleRender x={center.x} y={center.y} {shape} />
-		{:else if type === SHAPE_TYPES.ELLIPSE}
-			<EllipseRender cx={center.x} cy={center.y} {shape} />
-		{:else if type === SHAPE_TYPES.SQUARE}
-			<SquareRender cx={center.x} cy={center.y} {shape} />
-		{:else if type === SHAPE_TYPES.RECTANGLE}
-			<RectangleRender cx={center.x} cy={center.y} {shape} />
-		{:else if type === SHAPE_TYPES.POLYGON}
-			<PolygonRender cx={center.x} cy={center.y} {shape} />
+		{:else if type === SHAPE_TYPES.TEXT_ONLY}
+			<CircleRender x={center.x} y={center.y} {shape} />
+		{:else if type === SHAPE_TYPES.BORDER_LINE}
+			<BorderLineRender {coords} {shape} />
 		{:else}
-			<CircleRender x={center.x} y={center.y} {shape} />
+			<RenderShape cx={center.x} cy={center.y} {shape}/>
 		{/if}
 		<text
 			x={center.x}

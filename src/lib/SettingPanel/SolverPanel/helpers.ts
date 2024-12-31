@@ -201,10 +201,13 @@ function setBinaryHighlights(json: JsonT, grid: Grid) {
 
 function setOtherHighlights(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
-	const grid_vars_names = ['doublers_grid', 'negators_grid'];
+	const grid_vars_names = ['doublers_grid', 'negators_grid', 'cell_center_loop'];
+
 	for (const name of grid_vars_names) {
 		const binary_grid = json[name] as boolean[][] | undefined;
 		if (binary_grid === undefined) continue;
+
+		console.log(name);
 
 		const cells: Cell[] = [];
 		const values: number[][] = [];
@@ -214,7 +217,7 @@ function setOtherHighlights(json: JsonT, grid: Grid) {
 				const cell = grid.getCell(i, j);
 				if (!cell) continue;
 				cells.push(cell);
-				const val = row[j];
+				const val = Boolean(row[j]);
 				if (val === true) values.push([4]);
 				else values.push([1]);
 			}
@@ -305,6 +308,43 @@ function setUnknownRegionsBorders(json: JsonT, grid: Grid) {
 	}
 }
 
+function setOrthogonalPathOrLoopLines(json: JsonT, grid: Grid) {
+	if (json === undefined) return;
+	const grid_vars_names = ['cell_center_loop'];
+
+	for (const name of grid_vars_names) {
+		const regions_grid = json[name] as number[][] | undefined;
+		if (regions_grid === undefined) continue;
+
+		const line_markers: LineMarker[] = [];
+		for (let i = 0; i < regions_grid.length; i++) {
+			const row = regions_grid[i];
+			for (let j = 0; j < row.length; j++) {
+				const cell1 = grid.getCell(i, j);
+				if (!cell1) continue;
+
+				for (const cell2 of grid.getOrthogonallyAdjacentCells(cell1)) {
+					if (!cell2 || !(cell2.r > cell1.r || cell2.c > cell1.c)) continue;
+					const val1 = regions_grid[cell1.r][cell1.c];
+					const val2 = regions_grid[cell2.r][cell2.c];
+					if (!(val1 === 1 && val2 === 1)) continue;
+
+					const marker: LineMarker = {
+						colorId: 4,
+						p1: { r: cell1.r + 0.5, c: cell1.c + 0.5 },
+						p2: { r: cell2.r + 0.5, c: cell2.c + 0.5 }
+					};
+					line_markers.push(marker);
+				}
+			}
+		}
+
+		const action = addLineMarkersAction(line_markers);
+		updatePenTool(action);
+		return;
+	}
+}
+
 function setColoring(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
 	const sashigane_regions = json['sashigane'] as number[][] | undefined;
@@ -333,6 +373,7 @@ export function setBoardOnSolution(json: JsonT, grid: Grid) {
 	setSolutionValues(json, grid);
 	setUnknownRegionsHighlights(json, grid);
 	setUnknownRegionsBorders(json, grid);
+	setOrthogonalPathOrLoopLines(json, grid);
 	setBinaryHighlights(json, grid);
 	setOtherHighlights(json, grid);
 	setColoring(json, grid);

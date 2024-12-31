@@ -13,6 +13,18 @@ function getEdgeVars(grid: Grid, constraint: EdgeToolI) {
 	return vars;
 }
 
+function simpleEdgeConstraint(
+	grid: Grid,
+	constraint: EdgeToolI,
+	predicate: string
+) {
+	const vars = getEdgeVars(grid, constraint);
+	const [var1, var2] = vars;
+
+	const constraint_str = `constraint ${predicate}(${var1}, ${var2});\n`;
+	return constraint_str;
+}
+
 function valuedEdgeConstraint(
 	grid: Grid,
 	constraint: EdgeToolI,
@@ -65,7 +77,7 @@ function edgeModuloConstraint(grid: Grid, constraint: EdgeToolI) {
 }
 
 function edgeFactorConstraint(grid: Grid, constraint: EdgeToolI) {
-	const constraint_str = valuedEdgeConstraint(grid, constraint, 'edge_factor_p');
+	const constraint_str = simpleEdgeConstraint(grid, constraint, 'edge_factor_p');
 	return constraint_str;
 }
 
@@ -106,6 +118,19 @@ function yinYangKropkiConstraint(grid: Grid, constraint: EdgeToolI) {
 	return constraint_str;
 }
 
+function yinYangWhiteKropkiConstraint(grid: Grid, constraint: EdgeToolI) {
+	const cells_coords = constraint.cells;
+	const cells = cells_coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+	const [var1, var2] = cellsToVarsName(cells);
+	const yin_yang_vars = cellsToYinYangVarsName(cells);
+	const [yin_yang1, yin_yang2] = yin_yang_vars;
+
+	const constraint_str = `constraint yin_yang_white_kropki_p(${var1}, ${var2}, ${yin_yang1}, ${yin_yang2});\n`;
+	return constraint_str;
+}
+
 type ConstraintF = (grid: Grid, constraint: EdgeToolI) => string;
 
 const tool_map = new Map<string, ConstraintF>([
@@ -116,7 +141,8 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.EDGE_MODULO, edgeModuloConstraint],
 	[TOOLS.EDGE_FACTOR, edgeFactorConstraint],
 	[TOOLS.XY_DIFFERENCES, xyDifferencesConstraint],
-	[TOOLS.YIN_YANG_KROPKI, yinYangKropkiConstraint]
+	[TOOLS.YIN_YANG_KROPKI, yinYangKropkiConstraint],
+	[TOOLS.YIN_YANG_WHITE_KROPKI, yinYangWhiteKropkiConstraint]
 ]);
 
 export function edgeConstraints(

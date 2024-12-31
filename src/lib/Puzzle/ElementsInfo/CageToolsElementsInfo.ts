@@ -63,6 +63,28 @@ export const killerCageInfo: SquareCellElementInfo = {
 	}
 };
 
+export const invertedKillerCageInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getCageToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultCageValueUpdater(oldValue, key, validateCageValue),
+			defaultValue: '',
+			allowDiagonallyAdjacent: true
+		});
+	},
+
+	toolId: TOOLS.INVERTED_KILLER_CAGE,
+	order: RENDER_ORDER.CAGE_TOOLS,
+
+	meta: {
+		description:
+			'Numbers must not repeat in a killer cage. The numbers in the cage must sum to the given total in the top left (if one exists). The highest digit in each cage is inverted (i.e. 9 counts as -9, 8 as -8, etc).',
+		usage: typableCageUsage(),
+		tags: [],
+		categories: typableCageDefaultCategories
+	}
+};
+
 export const sumCageInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getCageToolInputHandler(svgRef, grid, tool, {
@@ -85,11 +107,29 @@ export const sumCageInfo: SquareCellElementInfo = {
 	}
 };
 
+export const sumCageLookAndSayInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getCageToolInputHandler(svgRef, grid, tool, {
+			defaultValue: '',
+			allowDiagonallyAdjacent: true
+		});
+	},
+
+	toolId: TOOLS.SUM_CAGE_LOOK_AND_SAY,
+	order: RENDER_ORDER.CAGE_TOOLS,
+
+	meta: {
+		description:
+			'Digits MAY repeat in cages if allowed by other rules. The sum of digits in each cage must be a two-digit number that acts as a valid “look-and-say clue” for that cage. Eg if the sum is 21, there must be exactly two 1s in the cage along with any combination of other digits (such that, overall, the digits in the cage sum to 21). Eg2 if the sum is 17, there must be exactly one 7 in the cage along with any combination of other digits (such that, overall, the digits in the cage sum to 17).',
+		usage: cageUsage(),
+		tags: [],
+		categories: nonTypableCageDefaultCategories
+	}
+};
+
 export const parityBalanceCageInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getCageToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCageValueUpdater(oldValue, key, validateCageValue),
 			defaultValue: '',
 			allowDiagonallyAdjacent: true
 		});

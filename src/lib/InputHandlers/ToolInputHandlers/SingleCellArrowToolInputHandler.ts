@@ -27,7 +27,7 @@ export function getSingleCellArrowToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
 	tool: TOOLID,
-	cornerOrEdge = CornerOrEdge.BOTH
+	cornerOrEdge = CornerOrEdge.CORNER_OR_EDGE
 ): InputHandler {
 	console.log('getSingleCellArrowToolInputHandler');
 	const validDirections = [

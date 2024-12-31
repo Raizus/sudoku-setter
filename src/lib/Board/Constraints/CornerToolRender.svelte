@@ -1,17 +1,13 @@
 <script lang="ts">
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
-	import CircleRender from '$lib/Components/SvgRender/CircleRender.svelte';
-	import PolygonRender from '$lib/Components/SvgRender/PolygonRender.svelte';
-	import SquareRender from '$lib/Components/SvgRender/SquareRender.svelte';
-	import EllipseRender from '$lib/Components/SvgRender/EllipseRender.svelte';
-	import RectangleRender from '$lib/Components/SvgRender/RectangleRender.svelte';
 	import type { CornerToolI } from '$lib/Puzzle/Constraints/CornerConstraints';
 	import { SHAPE_TYPES, defaultCornerCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
-	import { gridCoordsAverage } from '$lib/utils/SquareCellGridCoords';
+
 	import { Vector2D } from '$lib/utils/Vector2D';
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 	import QuadrupleTextRender from './QuadrupleTextRender.svelte';
+	import RenderShape from '$components/SvgRender/RenderShape.svelte';
 
 	export let cornerTool: CornerToolI;
 
@@ -36,19 +32,8 @@
 
 {#if coords.length === 4}
 	<g class="corner-tool">
-		{#if type === SHAPE_TYPES.CIRCLE}
-			<CircleRender x={center.x} y={center.y} {shape} />
-		{:else if type === SHAPE_TYPES.ELLIPSE}
-			<EllipseRender cx={center.x} cy={center.y} {shape} />
-		{:else if type === SHAPE_TYPES.SQUARE}
-			<SquareRender cx={center.x} cy={center.y} {shape} />
-		{:else if type === SHAPE_TYPES.RECTANGLE}
-			<RectangleRender cx={center.x} cy={center.y} {shape} />
-		{:else if type === SHAPE_TYPES.POLYGON}
-			<PolygonRender cx={center.x} cy={center.y} {shape} />
-		{:else}
-			<CircleRender x={center.x} y={center.y} {shape} />
-		{/if}
+		<RenderShape cx={center.x} cy={center.y} {shape} />
+		<!-- render text -->
 		{#if cornerTool.toolId === TOOLS.QUADRUPLE}
 			<QuadrupleTextRender {cornerTool} />
 		{:else}

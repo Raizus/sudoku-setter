@@ -4,12 +4,14 @@ import { arrowInfo, averageArrowInfo } from './ArrowToolsElementsInfo';
 import {
 	divisibleKillerCageInfo,
 	doublersKillerCageInfo,
+	invertedKillerCageInfo,
 	killerCageInfo,
 	negatorsKillerCageInfo,
 	parityBalanceCageInfo,
 	putteriaCageInfo,
 	spotlightCageInfo,
 	sumCageInfo,
+	sumCageLookAndSayInfo,
 	yinYangAntithesisKillerCageInfo,
 	yinYangBreakevenKillerCageInfo
 } from './CageToolsElementsInfo';
@@ -24,6 +26,7 @@ import {
 	penToolInfo,
 	regionsInfo
 } from './CellInputElementsInfo';
+import { rotationallySymmetricGalaxyCenterInfo } from './CenterEdgeCornerElementsInfo';
 import { cloneRegionInfo } from './CloneToolsElementsInfo';
 import {
 	cornerEvenCountInfo,
@@ -52,11 +55,14 @@ import {
 	edgeProductInfo,
 	edgeSumInfo,
 	ratioInfo,
+	unknownRegionBorderInfo,
 	xvInfo,
 	xyDifferencesInfo,
-	yinYangKropkiInfo
+	yinYangKropkiInfo,
+	yinYangWhiteKropkiInfo
 } from './EdgeToolsElementsInfo';
 import {
+	adjacentCellsAlongLoopAreMultiplesInfo,
 	allDifferencesGivenInfo,
 	allIndexingColumnGivenInfo,
 	allIndexingRowGivenInfo,
@@ -91,6 +97,7 @@ import {
 	arithmeticSequenceLineInfo,
 	atLeastXLineInfo,
 	betweenLineInfo,
+	adjacentDifferencesCountLineInfo,
 	doubleArrowLineInfo,
 	doubleRenbanLineInfo,
 	doublersBetweenLineInfo,
@@ -133,7 +140,11 @@ import {
 	yinYangRegionSumLineInfo,
 	yinYangShadedWhispersLineInfo,
 	yinYangUnshadedEntropicLineInfo,
-	yinYangUnshadedModularLineInfo
+	yinYangUnshadedModularLineInfo,
+	lookandSayLineInfo,
+	slowThermometerInfo,
+	indexLineInfo,
+	yinYangIndexingLineColoringInfo
 } from './LineConstraintsElementsInfo';
 import {
 	littleKillerLookAndSayInfo,
@@ -158,8 +169,11 @@ import {
 } from './OutsideEdgeElementsInfo';
 import {
 	adjacentCellsInDifferentDirectionsHaveOpositeParityInfo,
+	cellNotOnTheLoopInfo,
+	cellOnTheLoopInfo,
 	countCellsNotInTheSameRegionArrowsInfo,
 	countingCirclesInfo,
+	countLoopNeighbourCellsInfo,
 	countSameParityNeighborCellsInfo,
 	diagonallyAdjacentSumInfo,
 	evenInfo,
@@ -192,7 +206,9 @@ import {
 	yinYangSeenShadedCellsInfo,
 	yinYangSeenUnshadedCellsInfo
 } from './SingleCellElementsInfo';
+import { forbiddenOrthogonallyAdjacentSumInfo } from './ValuedGlobalConstraintsElementsInfo';
 import {
+	cellCenterLoopNoTouchingInfo,
 	doublersInfo,
 	negatorsInfo,
 	nurimisakiInfo,
@@ -262,8 +278,10 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.NURIMISAKI]: nurimisakiInfo,
 	[TOOLS.TWO_CONTIGUOUS_REGIONS]: twoContiguousRegionsInfo,
 	[TOOLS.SASHIGANE]: sashiganeRegionsInfo,
+	[TOOLS.CELL_CENTER_LOOP_NO_TOUCHING]: cellCenterLoopNoTouchingInfo,
 
 	[TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS]: nurimisakiPathGermanWhispersInfo,
+	[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES]: adjacentCellsAlongLoopAreMultiplesInfo,
 
 	// Single Cell Constraints
 	[TOOLS.ODD]: oddInfo,
@@ -302,6 +320,10 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.SASHIGANE_BEND_REGION_COUNT]: sashiganeBendRegionCountInfo,
 	[TOOLS.SASHIGANE_REGION_SUM]: sashiganeRegionSumInfo,
 
+	[TOOLS.CELL_ON_THE_LOOP]: cellOnTheLoopInfo,
+	[TOOLS.CELL_NOT_ON_THE_LOOP]: cellNotOnTheLoopInfo,
+	[TOOLS.COUNT_LOOP_NEIGHBOUR_CELLS]: countLoopNeighbourCellsInfo,
+
 	// Single Cell Arrow Constraint
 	[TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND]: sashiganeArrowPointsToBendInfo,
 
@@ -318,7 +340,10 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.EDGE_MODULO]: edgeModuloInfo,
 	[TOOLS.EDGE_FACTOR]: edgeFactorInfo,
 	[TOOLS.XY_DIFFERENCES]: xyDifferencesInfo,
+	[TOOLS.YIN_YANG_WHITE_KROPKI]: yinYangWhiteKropkiInfo,
 	[TOOLS.YIN_YANG_KROPKI]: yinYangKropkiInfo,
+
+	[TOOLS.UNKNOWN_REGION_BORDER]: unknownRegionBorderInfo,
 
 	// Corner Constraints
 	[TOOLS.QUADRUPLE]: quadrupleInfo,
@@ -328,6 +353,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	// Line Constraints
 	[TOOLS.THERMOMETER]: thermometerInfo,
+	[TOOLS.SLOW_THERMOMETER]: slowThermometerInfo,
 	[TOOLS.ROW_CYCLE_THERMOMETER]: rowCyclethermometerInfo,
 
 	[TOOLS.PALINDROME]: palindromeInfo,
@@ -342,20 +368,22 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.MAXIMUM_ADJACENT_DIFFERENCE_LINE]: maximumAdjacentDifferenceLineInfo,
 	[TOOLS.RENBAN_OR_WHISPERS_LINE]: renbanOrWhispersLineInfo,
 
+	[TOOLS.INDEX_LINE]: indexLineInfo,
 	[TOOLS.UNIQUE_VALUES_LINE]: uniqueValuesLineInfo,
 	[TOOLS.REPEATED_DIGITS_LINE]: repeatedDigitsLineInfo,
 
 	[TOOLS.REGION_SUM_LINE]: regionSumLineInfo,
 	[TOOLS.SUM_LINE]: sumLineInfo,
 	[TOOLS.XV_LINE]: xvLineInfo,
-	[TOOLS.ROW_SUM_LIME]: rowSumLineInfo,
+	[TOOLS.ROW_SUM_LINE]: rowSumLineInfo,
 	[TOOLS.AT_LEAST_X_LINE]: atLeastXLineInfo,
 	[TOOLS.SUPERFUZZY_ARROW]: superfuzzyArrowInfo,
 	[TOOLS.N_CONSECUTIVE_FUZZY_SUM_LINE]: nConsecutiveFuzzySumLineInfo,
 	[TOOLS.ADJACENT_CELL_SUM_IS_PRIME_LINE]: adjacentCellSumIsPrimeLineInfo,
 	[TOOLS.PRODUCT_LINE]: productLineInfo,
 	[TOOLS.ADJACENT_MULTIPLES_LINE]: adjacentMultiplesLineInfo,
-
+	[TOOLS.ADJACENT_DIFFERENCES_COUNT_LINE]: adjacentDifferencesCountLineInfo,
+	[TOOLS.LOOK_AND_SAY_LINE]: lookandSayLineInfo,
 	[TOOLS.ARITHMETIC_SEQUENCE_LINE]: arithmeticSequenceLineInfo,
 
 	[TOOLS.SAME_PARITY_LINE]: sameParityLineLineInfo,
@@ -371,6 +399,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.INDEXING_ROW_IS_X_LINE]: indexingRowIsXLineInfo,
 
 	// Yin Yang Lines
+	[TOOLS.YIN_YANG_INDEXING_LINE_COLORING]: yinYangIndexingLineColoringInfo,
 	[TOOLS.YIN_YANG_SHADED_WHISPERS_LINE]: yinYangShadedWhispersLineInfo,
 	[TOOLS.YIN_YANG_UNSHADED_ENTROPIC_LINE]: yinYangUnshadedEntropicLineInfo,
 	[TOOLS.YIN_YANG_UNSHADED_MODULAR_LINE]: yinYangUnshadedModularLineInfo,
@@ -395,7 +424,9 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	// Cage Constraints
 	[TOOLS.KILLER_CAGE]: killerCageInfo,
+	[TOOLS.INVERTED_KILLER_CAGE]: invertedKillerCageInfo,
 	[TOOLS.SUM_CAGE]: sumCageInfo,
+	[TOOLS.SUM_CAGE_LOOK_AND_SAY]: sumCageLookAndSayInfo,
 	[TOOLS.PARITY_BALANCE_CAGE]: parityBalanceCageInfo,
 	[TOOLS.DIVISIBLE_KILLER_CAGE]: divisibleKillerCageInfo,
 	[TOOLS.SPOTLIGHT_CAGE]: spotlightCageInfo,
@@ -430,6 +461,12 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.X_OMIT_LITTLE_KILLER_SUM]: xOmitLittleKillerSumInfo,
 
 	[TOOLS.NEGATORS_LITTLE_KILLER_SUM]: negatorsLittleKillerSumInfo,
+
+	// Center, Corner or Edge Constraints
+	[TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER]: rotationallySymmetricGalaxyCenterInfo,
+
+	// Valued Global Constraints
+	[TOOLS.FORBIDDEN_ORTHOGONALLY_ADJACENT_SUM]: forbiddenOrthogonallyAdjacentSumInfo,
 
 	// Cosmetic Tools
 	[TOOLS.COSMETIC_CELL_SHAPE]: cosmeticCellShapeInfo,

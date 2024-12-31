@@ -1,5 +1,6 @@
 import type { GridCoordI } from '$lib/utils/SquareCellGridCoords';
 import { TOOLS, type TOOLID } from '../Tools';
+import { getRegionIndex } from './gridSizes';
 
 export interface CellRecord {
 	outside?: boolean;
@@ -123,7 +124,7 @@ export class Cell implements CellI {
 		}
 	}
 
-	toJson() {
+	toJson(g_size: number | null) {
 		const cellRecord: CellRecord = {};
 
 		if (this.given) {
@@ -134,7 +135,8 @@ export class Cell implements CellI {
 			cellRecord.value = this.value;
 		}
 
-		cellRecord.region = this.region;
+		if (this.region !== getRegionIndex(this.r, this.c, g_size))
+			cellRecord['region'] = this.region;
 
 		if (this.fog) {
 			cellRecord.fog = this.fog;
