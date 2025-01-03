@@ -1,0 +1,411 @@
+{
+  "puzzleInfo": {},
+  "nRows": 10,
+  "nCols": 10,
+  "grid": [
+    [
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 6,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      }
+    ],
+    [
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 3,
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      }
+    ],
+    [
+      {
+        "given": true,
+        "value": 6,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 9,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 5,
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 4,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      }
+    ],
+    [
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 3,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      }
+    ],
+    [
+      {
+        "given": true,
+        "value": 5,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 3,
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      },
+      {
+        "region": null
+      }
+    ],
+    [
+      {
+        "given": true,
+        "value": 5,
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 5,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 6,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 5,
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 2,
+        "region": null
+      }
+    ],
+    [
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      }
+    ],
+    [
+      {
+        "given": true,
+        "value": 5,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 4,
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 4,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      }
+    ],
+    [
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 4,
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 4,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      }
+    ],
+    [
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 7,
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 1,
+        "region": null
+      },
+      {
+        "given": true,
+        "value": 7,
+        "region": null
+      },
+      {
+        "region": null
+      }
+    ]
+  ],
+  "bool_constraints": {
+    "Sudoku rules do not apply": true,
+    "Fillomino": true
+  }
+}

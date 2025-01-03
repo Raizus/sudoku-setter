@@ -1,5 +1,7 @@
+import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
+import type { TOOLID } from '../Puzzle/Tools';
 import { DIRECTION } from '../utils/directions';
 
 export function cellToVarName(cell: Cell): string {
@@ -123,6 +125,14 @@ export function set_shared_var(name: string) {
 
 export function defineFunctionsPredicates() {
 	let out_str = '\n';
+
+    const tests = `test orth_adjacent_2d(
+    int: r1, int: c1, 
+    int: r2, int: c2
+) = let {
+    int: d1 = abs(r2-r1);
+    int: d2 = abs(c2-c1);
+} in d1 <= 1 /\\ d2 <= 1 /\\ d1 + d2 = 1;\n\n`;
 
 	const helper_f = `function var int: odd_count(array[int] of var int: arr) =
     sum(i in index_set(arr))(bool2int(arr[i] mod 2 = 1));
@@ -387,7 +397,19 @@ predicate multiples_p(var int: a, var int: b) =
     let {
       var int: larger = max([a,b]),
       var int: smaller = min([a,b])
-    } in larger mod smaller == 0;\n\n`;
+    } in larger mod smaller == 0;
+     
+predicate not_fully_shaded_or_unshaded_2x2_p(array[int, int] of var 0..1: shading) =
+    % For each possible 2x2 square in the grid
+    forall(r in index_set_1of2(shading) where r < max(index_set_1of2(shading)),
+           c in index_set_2of2(shading) where c < max(index_set_2of2(shading)))(
+        % Sum of the 2x2 area must be between 1 and 3 inclusive
+        % This prevents both all 0's (sum=0) and all 1's (sum=4)
+        let {
+            var int: square_sum = shading[r,c] + shading[r+1,c] + shading[r,c+1] + shading[r+1,c+1]
+        } in
+        square_sum in 1..3
+    );\n\n`;
 
 	const single_cell_constraints = `predicate odd_p(var int: x) =
     x mod 2 = 1;
@@ -625,6 +647,27 @@ predicate arithmetic_sequence_line_p(array[int] of var int: arr) =
         arr[i] - arr[i + 1] = x
     );
 
+predicate out_of_order_consecutive_line_p(
+    array[int] of var int: arr
+) =
+    let {
+        array[int] of var int: differences = [
+            arr[i] - arr[i+1] | i in index_set(arr) where i < max(index_set(arr))
+        ];
+    } in renban(arr) /\\ not all_equal(differences);
+
+predicate zipper_line_p(array[int] of var int: arr) =
+    let {
+        int: n = length(arr);
+        int: mid = (n + 1) div 2;
+    } in
+    % Assert odd length
+    assert(n mod 2 = 1, "Array must have odd length") /\\
+    % For each position before middle, sum with corresponding position after middle
+    forall(i in 1..mid-1)(
+        arr[i] + arr[n-i+1] = arr[mid]
+    );
+
 predicate odd_even_oscillator_line_p(array[int] of var int: arr) =
     forall(i in index_set(arr) where i < max(index_set(arr))) (
         (arr[i] mod 2 = 0 /\\ arr[i + 1] mod 2 = 1) \\/
@@ -714,6 +757,14 @@ predicate superfuzzy_arrow_p(array[int] of var int: arr) =
         )
     );
 
+predicate headless_arrow_p(array[int] of var int: arr) =
+    let {
+        int: min_i = min(index_set(arr));
+        int: max_i = max(index_set(arr));
+    } in
+        (arr[min_i] = sum(i in index_set(arr) where i != min_i)(arr[i])) \\/ 
+        (arr[max_i] = sum(i in index_set(arr) where i != max_i)(arr[i]));
+
 predicate double_renban_p(array[int] of var int: arr) =
     let {
         int: n = length(index_set(arr)) div 2,  % Half the length of the array
@@ -751,6 +802,9 @@ predicate knabner_p(array[int] of var int: arr) =
     forall(i in index_set(arr), j in index_set(arr) where i != j)(
         abs(arr[i] - arr[j]) != 1
     );
+
+predicate renban_or_nabner_line_p(array[int] of var int: arr) =
+    knabner_p(arr) \\/ renban(arr);
 
 predicate renban_or_whispers_p(array[int] of var int: arr, var int: val) = 
 	renban(arr) \\/ whispers(arr, val);
@@ -798,7 +852,36 @@ predicate look_and_say_line_p(array[int] of var int: arr) =
     let {
         var int: first = arr[min(index_set(arr))];
         var int: last = arr[max(index_set(arr))]
-    } in count(arr, first) == last /\\ count(arr, last) == first;\n\n`;
+    } in count(arr, first) == last /\\ count(arr, last) == first;
+
+predicate segmented_sum_line_p(array[int] of var int: arr, var int: val) =
+    let {
+        set of int: idxs = index_set(arr);
+        int: n = length(arr);
+        % split_after[i] is true if we split after position i
+        array[min(idxs)..max(idxs)-1] of var bool: split_after;
+        % segment_sum[i] is sum from position i to next split (or end)
+        array[idxs] of var int: segment_sum;
+    } in
+    % Calculate running sum for each position
+    forall(i in idxs)(
+        segment_sum[i] = 
+            if i = n then
+                arr[i]
+            else 
+                arr[i] + 
+                if split_after[i] then 
+                    0 
+                else 
+                    segment_sum[i+1]
+                endif
+            endif
+    ) /\\
+    % Each segment must sum to val
+    forall(i in 1..n)(
+        % If this is start of segment (first pos or after split), sum must be val
+        (i = 1 \\/ (i > 1 /\\ split_after[i-1])) -> segment_sum[i] = val
+    );\n\n`;
 
 	const double_end_line_constraints = `
 predicate between_line_p(array[int] of var int: arr) =
@@ -999,7 +1082,28 @@ predicate streak_lengths_p(array[int] of var int: arr, array[int] of var int: st
 predicate rising_streak_p(array[int] of var int: arr, var int: val) =
     let {
 		array[index_set(arr)] of var int: streak_lengths;
-    } in streak_lengths_p(arr, streak_lengths) /\\ max(streak_lengths) >= val;\n\n`;
+    } in streak_lengths_p(arr, streak_lengths) /\\ max(streak_lengths) >= val;
+    
+predicate outside_consecutive_sum_p(array[int] of var int: arr, var int: val) = 
+    let {
+        int: n = length(arr);
+        int: min_i = min(index_set(arr));
+        int: max_i = max(index_set(arr));
+        array[1..n] of var bool: has_consecutive = [
+            % First element - only check forward
+            if i = min_i then
+                abs(arr[min_i] - arr[min_i+1]) = 1
+            % Last element - only check backward
+            elseif i = max_i then
+                abs(arr[max_i] - arr[max_i-1]) = 1
+            % Middle elements - check both directions
+            else
+                abs(arr[i] - arr[i-1]) = 1 \\/ abs(arr[i] - arr[i+1]) = 1
+            endif
+            | i in 1..n
+        ];
+    } in
+    sum(i in 1..n where has_consecutive[i])(arr[i]) = val;\n\n`;
 
 	const outside_corner_constraints = `predicate little_killer_sum_p(array[int] of var int: arr, var int: val) =
 	sum(arr) == val;
@@ -1024,19 +1128,7 @@ predicate x_omit_little_killer_sum_p(array[int] of var int: arr, var int: val) =
         (i < max(index_set_1of2(grid)) -> grid[i,j] + grid[i+1,j] != val)
     );\n\n`;
 
-	const yin_yang = `predicate yin_yang_two_by_two_p(array[int, int] of var 0..1: grid) =
-    % For each possible 2x2 square in the grid
-    forall(r in index_set_1of2(grid) where r < max(index_set_1of2(grid)),
-           c in index_set_2of2(grid) where c < max(index_set_2of2(grid)))(
-        % Sum of the 2x2 area must be between 1 and 3 inclusive
-        % This prevents both all 0's (sum=0) and all 1's (sum=4)
-        let {
-            var int: square_sum = grid[r,c] + grid[r+1,c] + grid[r,c+1] + grid[r+1,c+1]
-        } in
-        square_sum in 1..3
-    );
-
-predicate yin_yang_no_crossings(array[int, int] of var 0..1: grid) =
+	const yin_yang = `predicate yin_yang_no_crossings(array[int, int] of var 0..1: grid) =
     % For each possible 2x2 square in the grid
     forall(r in index_set_1of2(grid) where r < max(index_set_1of2(grid)),
            c in index_set_2of2(grid) where c < max(index_set_2of2(grid)))(
@@ -1050,7 +1142,7 @@ predicate yin_yang_no_crossings(array[int, int] of var 0..1: grid) =
 predicate yin_yang_p(array[int, int] of var 0..1: grid) =
 	connected_region(grid, 0) /\\
     connected_region(grid, 1) /\\
-	yin_yang_two_by_two_p(grid) /\\
+	not_fully_shaded_or_unshaded_2x2_p(grid) /\\
 	yin_yang_no_crossings(grid);
 	
 predicate yin_yang_antithesis_killer_cage_p(
@@ -1247,7 +1339,24 @@ predicate yin_yang_unshaded_modular_line_p(
 predicate yin_yang_region_sum_line_p(
     array[int] of var int: arr,
     array[int] of var 0..1: labels) =
-    unknown_regions_region_sum_line_p(arr, labels);\n\n`;
+    unknown_regions_region_sum_line_p(arr, labels);
+
+function var int: yin_yang_sum_of_opposite_color_f(
+    var int: yin_yang_var, 
+    array[int] of var int: arr, 
+    array[int] of var 0..1: labels
+) = let {
+    constraint assert(
+        index_set(arr) = index_set(labels),
+        "Arrays must have same index set"
+    )
+} in (
+    if yin_yang_var == 1 then 
+        conditional_sum_f(arr, labels, 0)
+    else
+        conditional_sum_f(arr, labels, 1)
+    endif
+);\n\n`;
 
 	const two_contiguous_regions = `predicate two_contiguous_regions_p(array[int, int] of var 0..1: grid) =
 	connected_region(grid, 0) /\\
@@ -1319,7 +1428,7 @@ predicate unknown_regions_seen_region_border_count_p(
 
 	const nurimisaki = `predicate nurimisaki_p(array[int, int] of var int: grid) =
 	connected_region(grid, 0) /\\
-	yin_yang_two_by_two_p(grid);
+	not_fully_shaded_or_unshaded_2x2_p(grid);
 
 predicate nurimisaki_unshaded_endpoint_p(array[int] of var int: adj_cells, var int: nurimisaki_cell) = 
     count(adj_cells, 0) == 1 /\\ nurimisaki_cell == 0;
@@ -1571,33 +1680,48 @@ predicate sashigane_arrow_points_to_bend_p(
     % cell at distance of cell_var is a bend
     element(cell_var, bend_vars, true);\n\n`;
 
-	const cell_center_loop = `predicate cell_center_loop_no_diagonal_touching_p(array[int, int] of var 0..1: grid) =
-    forall(r in index_set_1of2(grid) where r < max(index_set_1of2(grid)),
-           c in index_set_2of2(grid) where c < max(index_set_2of2(grid)))(
-		% no crossing 1's and 0's because it implies the grid is not connected
+    const cell_center_loop = `predicate cell_center_loop_no_diagonal_touching_p(array[int, int] of var 0..1: grid) = let {
+        set of int: rows = index_set_1of2(grid);
+        set of int: cols = index_set_2of2(grid);
+    } in (
+        % no crossing 1's and 0's because it implies the the loop is touching diagonally
         % [1, 0]    or  [0, 1]
         % [0, 1]        [1, 0]
-        (grid[r,c] == 1 /\\ grid[r+1, c+1] == 1 -> grid[r+1,c] == 1 \\/ grid[r, c+1] ==1)
+        forall(r in rows where r < max(rows), c in cols where c < max(cols))(
+            (grid[r,c] == 1 /\\ grid[r+1, c+1] == 1 -> grid[r+1,c] == 1 \\/ grid[r, c+1] ==1)
+        ) /\\
+        forall(r in rows where r < max(rows), c in cols where c < max(cols))(
+            (grid[r,c+1] == 1 /\\ grid[r+1, c] == 1 -> grid[r,c] == 1 \\/ grid[r+1, c+1] ==1)
+        )
     );
 
 % draw a 1-cell wide loop of orthogonally connected cells which does not branch or touch itself, even diagonally
-predicate cell_center_loop_p(array[int, int] of var 0..1: grid) =
-    connected_region(grid, 1) /\\
-    % no diagonal touching
-    cell_center_loop_no_diagonal_touching_p(grid) /\\
-    forall(i in index_set_1of2(grid), j in index_set_2of2(grid))(
-        if grid[i,j] = 1 then
-            % If cell is on the loop then then there are exactly two edges attached to it
-            % Count orthogonally adjacent 1s (must be exactly 2)
-            (sum([
-                if i-1 in index_set_1of2(grid) then grid[i-1,j] else 0 endif +  % Up
-                if i+1 in index_set_1of2(grid) then grid[i+1,j] else 0 endif +  % Down
-                if j-1 in index_set_2of2(grid) then grid[i,j-1] else 0 endif +  % Left
-                if j+1 in index_set_2of2(grid) then grid[i,j+1] else 0 endif    % Right
-            ]) = 2)
+predicate cell_center_loop_p(array[int, int] of var 0..1: grid, bool: no_diag_touch) =
+    let {
+        set of int: rows = index_set_1of2(grid);
+        set of int: cols = index_set_2of2(grid);
+    } in (
+        connected_region(grid, 1) /\\
+        % no diagonal touching
+        (if no_diag_touch then
+            cell_center_loop_no_diagonal_touching_p(grid)
         else
             true
-        endif
+        endif) /\\
+        % If cell is on the loop then then there are exactly two edges attached to it
+        % Count orthogonally adjacent 1s (must be exactly 2)
+        forall(i in rows, j in cols)(
+            if grid[i,j] = 1 then
+                sum([
+                    if i-1 in rows then grid[i-1,j] else 0 endif +  % Up
+                    if i+1 in rows then grid[i+1,j] else 0 endif +  % Down
+                    if j-1 in cols then grid[i,j-1] else 0 endif +  % Left
+                    if j+1 in cols then grid[i,j+1] else 0 endif    % Right
+                    ]) = 2
+            else
+                true
+            endif
+        )
     );
 
 predicate adjacent_loop_cells_are_multiples_p(
@@ -1618,9 +1742,335 @@ predicate adjacent_loop_cells_are_multiples_p(
             (labels[i,j] = 1 /\\ labels[i+1,j] = 1 ->
                 multiples_p(grid[i,j], grid[i+1,j]))
         )
+    );
+    
+function var int: count_loop_vars_f(array[int] of var 0..1: arr) =
+    sum(i in index_set(arr))(bool2int(arr[i] != 0));
+    
+predicate modular_loop_aux_p(
+    array[int] of var int: arr, 
+    array[int] of var 0..1: labels
+) = let {
+    set of int: idxs = index_set(arr)
+} in (
+    if all_equal(labels) /\\ labels[min(idxs)] = 1 then
+        modular_line_p(arr, 3)
+    else
+        true
+    endif
+);
+
+predicate modular_loop_p(
+    array[int,int] of var int: grid, 
+    array[int,int] of var 0..1: loop
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    forall(r in rows where r < max(rows), c in cols where c < max(cols)) (
+        modular_loop_aux_p([grid[r, c], grid[r, c+1], grid[r+1, c+1]], [loop[r, c], loop[r, c+1], loop[r+1, c+1]]) /\\
+        modular_loop_aux_p([grid[r+1, c], grid[r, c], grid[r, c+1]], [loop[r+1, c], loop[r, c], loop[r, c+1]]) /\\
+        modular_loop_aux_p([grid[r, c], grid[r+1, c], grid[r+1, c+1]], [loop[r, c], loop[r+1, c], loop[r+1, c+1]]) /\\
+        modular_loop_aux_p([grid[r, c+1], grid[r+1, c+1], grid[r+1, c]], [loop[r, c+1], loop[r+1, c+1], loop[r+1, c]])
+    ) /\\
+    forall(r in rows where r < max(rows) - 1, c in cols where c < max(cols) - 1) (
+        modular_loop_aux_p([grid[r, c+1], grid[r+1, c+1], grid[r+2, c+1]], [loop[r, c+1], loop[r+1, c+1], loop[r+2, c+1]]) /\\
+        modular_loop_aux_p([grid[r+1, c], grid[r+1, c+1], grid[r+1, c+2]], [loop[r+1, c], loop[r+1, c+1], loop[r+1, c+2]])
+    )
+);\n\n`;
+
+	const fillomino = `% (r, c) is ok if it is on the board.
+test in_bounds_2d(int: r, int: c, array[int, int] of var int: grid) = 
+    r in index_set_1of2(grid) /\\ c in index_set_2of2(grid);
+
+% (r2, c2) is before (r1, c1) if it is above it or to the left.
+test is_before(int: r1, int: c1, int: r2, int: c2) =
+    ( r2 < r1 \\/ ( r2 = r1 /\\  c2 < c1 ));
+
+% (r2, c2) is after (r1, c1) if it is below it or to the right.
+test is_after(int: r1, int: c1, int: r2, int: c2) =
+    ( r2 > r1 \\/  ( r2 = r1 /\\  c2 > c1 ));
+
+function array[int, int] of var int: same_before_f(array[int, int] of var int: area) =
+    let {
+        set of int: rows = index_set_1of2(area);
+        set of int: cols = index_set_2of2(area);
+    } in (
+        array2d(rows, cols, 
+            [ sum([ bool2int(area[r2, c2] = area[r1, c1]) 
+                | r2 in rows, c2 in cols where is_before(r1, c1, r2, c2)
+            ]) | r1 in rows, c1 in cols ])
+    );
+
+predicate same_before_p(
+    array[int, int] of var int: area,
+    array[int, int] of var int: same_before
+) =
+    let {
+        set of int: rows = index_set_1of2(area);
+        set of int: cols = index_set_2of2(area);
+    } in forall (r1 in rows, c1 in cols) (
+        same_before[r1, c1] = sum([ bool2int(area[r2, c2] = area[r1, c1]) 
+            | r2 in rows, c2 in cols where is_before(r1, c1, r2, c2)])
+    );
+
+predicate fillomino_joins(
+    int: r1, int: c1, int: r2, int: c2,
+    array[int, int] of var int: grid,
+    array[int, int] of var int: when,
+    array[int, int] of var int: area) =
+    if in_bounds_2d(r2, c2, grid) then
+        when[r1, c1] = 1 + when[r2, c2] /\\ 
+        area[r1, c1] = area[r2, c2] /\\ 
+        grid[r1, c1] = grid[r2, c2]
+    else
+        false
+    endif;
+
+% restrict the floodfilling order to remove ambigous solutions
+predicate fillomino_restrict_floodfill_p(
+    array[int, int] of var int: when,
+    array[int, int] of var int: area,
+) = 
+    let {
+        set of int: rows = index_set_1of2(area);
+        set of int: cols = index_set_2of2(area);
+    } in (
+        forall (r in rows, c in cols where when[r,c] > 1)(
+            % when when[r, c] != 1, it is equal to the minimum adjacent element in the same region + 1
+            when[r, c] = min([when[r+i, c+j] 
+                | i in -1..1, j in -1..1 
+                    where (
+                        in_bounds_2d(r+i, c+j, when) /\\ 
+                        orth_adjacent_2d(r,c,r+i,c+j) /\\
+                        area[r,c] == area[r+i, c+j]
+                    )
+                ]) + 1
+        )
+    );
+
+predicate fillomino_p(
+    array[int, int] of var int: grid, 
+    array[int, int] of var int: area
+) =
+    let {
+        % 0-indexing arrays!!!! 
+        set of int: rows = index_set_1of2(grid);
+        set of int: cols = index_set_2of2(grid);
+        int: n_rows = length(rows);
+        int: n_cols = length(cols);
+        int: g_size = n_rows * n_cols;
+        set of int: ids = 1..g_size;
+        set of int: time = 1..g_size;
+        array[rows, cols] of var time: when;
+        array[rows, cols] of var int: same_before;
+        array[ids] of var 0..g_size: size;
+    } in (
+        % Optimisation: fix unambiguous "roots" at time 1, the id of the
+        % area will be the 'index' of the first element of that area
+        same_before_p(area, same_before) /\\
+        forall (r in rows, c in cols where grid[r, c] != 0) (
+            if same_before[r,c] = 0 then
+                when[r,c] = 1 /\\ area[r, c] = (r) * n_cols + c + 1
+            else
+                true
+            endif
+        ) /\\
+        % Each cell contains the number corresponding to the size of its area.
+        forall (r in rows, c in cols) (
+            grid[r, c] = size[area[r, c]]
+        ) /\\
+        % small optimization to reduce search space
+        forall(r in rows, c in cols) (
+            forall(r2 in rows, c2 in cols) (
+                abs(r2-r) + abs(c2-c) >= grid[r,c] -> area[r,c] != area[r2, c2]
+            )
+        ) /\\
+        % Each area's size is the number of cells in that area.
+        forall (id in ids) (
+            size[id] = sum (r in rows, c in cols) (bool2int(area[r, c] = id))
+        ) /\\
+        % Neighbouring areas must have different sizes. (horizontally adjacent)
+        forall (r in rows, c in cols where c > 0) (
+            let { var ids: id1 = area[r, c - 1], var ids: id2 = area[r, c] } in
+            (id1 != id2) = (size[id1] != size[id2])
+        ) /\\
+        % Neighbouring areas must have different sizes. (vertically adjacent)
+        forall (r in rows, c in cols where r > 0) (
+            let { var ids: id1 = area[r-1, c], var ids: id2 = area[r, c] } in
+            (id1 != id2) = (size[id1] != size[id2])
+        ) /\\
+        % Optimisation: the "when" label is actually the distance of a cell in an
+        % area from the area "root".  This distance cannot be larger than the size
+        % of the area.
+        forall (r in rows, c in cols) (
+            when[r, c] <= size[area[r, c]]
+        ) /\\
+        % Each cell is either the "root" of an area or is an extension of a
+        % neighbouring cell.
+        forall (r in rows, c in cols) (
+            ( when[r, c] = 1 /\\ area[r, c] = (r) * n_cols + c + 1 ) \\/  
+            ( when[r, c] > 1 /\\ 
+                ( fillomino_joins(r, c, r - 1, c, grid, when, area) \\/ 
+                  fillomino_joins(r, c, r + 1, c, grid, when, area) \\/
+                  fillomino_joins(r, c, r, c - 1, grid, when, area) \\/ 
+                  fillomino_joins(r, c, r, c + 1, grid, when, area)
+                )
+            )
+        ) /\\
+        % restricts the floodfilling growth, 
+        % by minimizing the distance of each node in the branching tree (each region) to the root
+        % this removes solution with the same regions, but with different floodfilling (when array)
+        fillomino_restrict_floodfill_p(when, area)
+        % /\\ conditional_sum_f(array1d(grid), array1d(same_before), 0) = g_size
     );\n\n`;
 
-	out_str +=
+    const cave = `% test if element is on the edge of the grid
+test on_edge_2d(int: r, int: c, array[int, int] of var int: grid) = 
+    let {
+        int: min_r = min(index_set_1of2(grid));
+        int: max_r = max(index_set_1of2(grid));
+        int: min_c = min(index_set_2of2(grid));
+        int: max_c = max(index_set_2of2(grid));
+    } in r = min_r \\/ r = max_r \\/ c = min_c \\/ c = max_c;
+
+predicate cave_joins(
+    int: r1, int: c1, int: r2, int: c2,
+    array[int, int] of var int: when,
+    array[int, int] of var int: regions) =
+    if in_bounds_2d(r2, c2, regions) then
+        when[r1, c1] = 1 + when[r2, c2] /\\ 
+        regions[r1, c1] = regions[r2, c2]
+    else
+        false
+    endif;
+
+
+predicate cave_p(
+    array[int, int] of var 0..1: shading, 
+    array[int, int] of var int: regions
+) =  let {
+        set of int: rows = index_set_1of2(shading);
+        set of int: cols = index_set_2of2(shading);
+        int: n_rows = length(rows);
+        int: n_cols = length(cols);
+        int: g_size = n_rows * n_cols;
+        array [rows, cols] of var 0..g_size: same_before;
+        array[rows, cols] of var 0..g_size: when;
+    } in
+    % unshaded cells (0 = cave), representing the cave must be all orthogonally connected
+    connected_region(shading, 0) /\\
+    sum(r in rows, c in cols)(bool2int(shading[r,c] = 0)) > 1 /\\
+    % label cave region with 0
+    forall(r in rows, c in cols) (
+        shading[r,c] = 0 <-> regions[r, c] = 0
+    ) /\\
+    forall(r in rows, c in cols) (
+        shading[r,c] = 1 <-> regions[r, c] != 0
+    ) /\\
+    % all shaded cells are orthogonally connected by other shaded cells to an edge of the grid
+    % adjacent shaded cells must belong to the same region (horiz adjacent)
+    forall (r in rows, c in cols where c > 0) (
+        let { 
+            var int: id1 = regions[r, c - 1], 
+            var int: id2 = regions[r, c] 
+        } in (shading[r,c] = 1 /\\ shading[r, c - 1] = 1) -> id1 = id2
+    ) /\\
+    % adjacent shaded cells must belong to the same region (vertical adjacent)
+    forall (r in rows, c in cols where r > 0) (
+        let { var int: id1 = regions[r - 1, c], var int: id2 = regions[r, c] } in
+        (shading[r,c] = 1 /\\ shading[r - 1, c] = 1) -> id1 = id2
+    ) /\\
+    % for each region not equal to 0, there must be at least one cell that is on the edge of the grid
+    forall(r in rows, c in cols where regions[r,c] != 0)(
+        exists(r2 in rows, c2 in cols)(regions[r2,c2] = regions[r,c] /\\ on_edge_2d(r2, c2, regions))
+    ) /\\
+    % we need to remove ambiguity from the region numbering 
+    % use the numbering each region by the id of the first element of that region
+    same_before_p(regions, same_before) /\\
+    forall (r in rows, c in cols) (
+        if same_before[r,c] = 0 /\\ regions[r, c] != 0 then
+            % 0-indexing arrays!!!!
+            when[r,c] = 1 /\\ regions[r, c] = (r) * n_cols + c + 1
+        else
+            true
+        endif
+    ) /\\
+    forall (r in rows, c in cols) (
+        regions[r, c] = 0 -> when[r,c] = 0
+    ) /\\
+    forall (r in rows, c in cols) (
+        regions[r, c] != 0 -> when[r,c] >= 1
+    ) /\\
+    % floodfilling
+    % Each cell is either the "root" of an area or is an extension of a
+    % neighbouring cell.
+    forall (r in rows, c in cols) (
+        ( when[r, c] = 0 ) \\/
+        ( when[r, c] = 1 /\\ regions[r, c] = (r) * n_cols + c + 1 ) \\/  
+        ( when[r, c] > 1 /\\  
+            ( cave_joins(r, c, r - 1, c, when, regions) \\/ 
+              cave_joins(r, c, r + 1, c, when, regions) \\/
+              cave_joins(r, c, r, c - 1, when, regions) \\/ 
+              cave_joins(r, c, r, c + 1, when, regions)
+            )
+        )
+    ) /\\
+    fillomino_restrict_floodfill_p(when, regions);
+
+
+predicate twilight_cave_fillomino_region_shading(
+    array[int, int] of var 0..1: shading,
+    array[int, int] of var int: regions,
+) = let {
+    set of int: rows = index_set_1of2(shading);
+    set of int: cols = index_set_2of2(shading);
+} in (
+    forall (r in rows, c in cols where c > 0) (
+        (regions[r, c] == regions[r, c - 1]) -> (shading[r, c] == shading[r, c - 1])
+    ) /\\
+    forall (r in rows, c in cols where r > 0) (
+        (regions[r, c] == regions[r - 1, c]) -> (shading[r, c] == shading[r - 1, c])
+    )
+);
+
+predicate twilight_cave_fillomino_shaded_clue(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions, % these are the cave regions
+    var int: target_region,
+    var int: val
+) = sum(r in index_set_1of2(grid), 
+        c in index_set_1of2(grid)
+        where regions[r, c] == target_region
+        )(grid[r,c]) == val;
+
+predicate twilight_cave_fillomino_unshaded_clue(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions, % these are the fillomino regions
+    var int: target_region, % the target fillomino region
+    var int: val
+) = sum(r in index_set_1of2(grid), 
+        c in index_set_1of2(grid)
+        where regions[r, c] == target_region
+        )(grid[r,c]) == val;
+
+predicate cave_cells_are_odd_p(
+    array[int,int] of var int: grid, 
+    array[int,int] of var 0..1: shading
+) = forall(r in index_set_1of2(grid), c in index_set_1of2(grid)) (
+    shading[r,c] = 0 <-> grid[r,c] mod 2 = 1
+);
+
+
+predicate cave_walls_are_even_p(
+    array[int,int] of var int: grid, 
+    array[int,int] of var 0..1: shading
+) = forall(r in index_set_1of2(grid), c in index_set_1of2(grid)) (
+    shading[r,c] = 1 <-> grid[r,c] mod 2 = 0
+);\n\n`;
+
+    out_str +=
+        tests +
 		helper_f +
 		more_helper_f +
 		helper_p +
@@ -1642,7 +2092,9 @@ predicate adjacent_loop_cells_are_multiples_p(
 		odd_even_grid +
 		value_modifier +
 		sashigane +
-		cell_center_loop;
+		cell_center_loop +
+		fillomino +
+		cave;
 
 	return out_str;
 }
@@ -1670,4 +2122,23 @@ export function getDirectionsVars(
 		vars_arr.push(vars);
 	}
 	return vars_arr;
+}
+
+type ConstraintF<T extends ConstraintType> = (grid: Grid, constraint: T) => string;
+
+export function constraintsBuilder<T extends ConstraintType>(
+	grid: Grid,
+	toolId: TOOLID,
+	constraints: Record<string, ConstraintType>,
+	constraints_func_map: Map<string, ConstraintF<T>>
+) {
+	let out_str = '';
+	const constraintF = constraints_func_map.get(toolId);
+	if (constraintF) {
+		for (const constraint of Object.values(constraints)) {
+			const constraint_str = constraintF(grid, constraint as T);
+			out_str += constraint_str;
+		}
+	}
+	return out_str;
 }

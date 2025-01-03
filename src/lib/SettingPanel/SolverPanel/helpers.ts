@@ -1,7 +1,7 @@
 import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
 import type { Grid } from '$src/lib/Puzzle/Grid/Grid';
 import type { LineMarker } from '$src/lib/Puzzle/PenTool';
-import { addLineMarkersAction } from '$src/lib/reducers/PenToolReducer';
+import { addLineMarkersAction, resetAction } from '$src/lib/reducers/PenToolReducer';
 import {
 	restoreCellsHighlightsAction,
 	restoreCellsValueAction
@@ -10,37 +10,6 @@ import { executeUpdateCellsAction } from '$stores/CellsStore';
 import { updatePenTool } from '$stores/PenToolStore';
 
 type JsonT = { [variable: string]: unknown } | undefined;
-
-function create_coloring_model(grid: number[][]) {
-	let out_str = '';
-	const nrows = grid.length;
-	const ncols = grid[0].length;
-	out_str += `set of int: ROW_IDXS = 0..${nrows - 1};\n`;
-	out_str += `set of int: COL_IDXS = 0..${ncols - 1};\n`;
-	out_str += `array[ROW_IDXS, COL_IDXS] of var {1,4,7,9}: colors_grid;\n`;
-
-	for (let i = 0; i < nrows; i++) {
-		const row = grid[i];
-		for (let j = 0; j < row.length - 1; j++) {
-			const cell = row[j];
-			const right = row[j + 1];
-			if (cell === right) {
-				out_str += `constraint colors_grid[${i},${j}] == colors_grid[${i},${j + 1}];\n`;
-			} else {
-				out_str += `constraint colors_grid[${i},${j}] != colors_grid[${i},${j + 1}];\n`;
-			}
-			if (i >= nrows - 1) continue;
-			const down = grid[i + 1][j];
-			if (cell === down) {
-				out_str += `constraint colors_grid[${i},${j}] == colors_grid[${i + 1},${j}];\n`;
-			} else {
-				out_str += `constraint colors_grid[${i},${j}] != colors_grid[${i + 1},${j}];\n`;
-			}
-		}
-	}
-	out_str += '\nsolve satisfy;\n';
-	return out_str;
-}
 
 type Point = [number, number];
 type Region = Point[];
@@ -175,7 +144,13 @@ function setSolutionValues(json: JsonT, grid: Grid) {
 
 function setBinaryHighlights(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
-	const grid_vars_names = ['yin_yang', 'two_contiguous_regions', 'nurimisaki', 'even_odd_grid'];
+	const grid_vars_names = [
+		'yin_yang',
+		'two_contiguous_regions',
+		'nurimisaki',
+		'even_odd_grid',
+		'cave_shading'
+	];
 	for (const name of grid_vars_names) {
 		const binary_grid = json[name] as number[][] | undefined;
 		if (binary_grid === undefined) continue;
@@ -207,8 +182,6 @@ function setOtherHighlights(json: JsonT, grid: Grid) {
 		const binary_grid = json[name] as boolean[][] | undefined;
 		if (binary_grid === undefined) continue;
 
-		console.log(name);
-
 		const cells: Cell[] = [];
 		const values: number[][] = [];
 		for (let i = 0; i < binary_grid.length; i++) {
@@ -231,6 +204,7 @@ function setOtherHighlights(json: JsonT, grid: Grid) {
 function setUnknownRegionsHighlights(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
 	const unknown_regions = json['unknown_regions'] as number[][] | undefined;
+
 	if (unknown_regions === undefined) return;
 
 	const cells: Cell[] = [];
@@ -251,13 +225,11 @@ function setUnknownRegionsHighlights(json: JsonT, grid: Grid) {
 
 function setUnknownRegionsBorders(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
-	const grid_vars_names = ['unknown_regions', 'sashigane'];
+	const grid_vars_names = ['unknown_regions', 'sashigane', 'fillomino_area'];
 
 	for (const name of grid_vars_names) {
 		const regions_grid = json[name] as number[][] | undefined;
 		if (regions_grid === undefined) continue;
-
-		if (name === 'sashigane') create_coloring_model(regions_grid);
 
 		const [n_rows, n_cols] = [grid.nRows, grid.nCols];
 
@@ -347,34 +319,40 @@ function setOrthogonalPathOrLoopLines(json: JsonT, grid: Grid) {
 
 function setColoring(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
-	const sashigane_regions = json['sashigane'] as number[][] | undefined;
-	if (sashigane_regions === undefined) return;
+	const grid_vars_names = ['sashigane', 'cave_regions', 'fillomino_area'];
 
-	const coloring_grid = solve_coloring(sashigane_regions);
-	if (!coloring_grid) return;
+	for (const name of grid_vars_names) {
+		const regions_grid = json[name] as number[][] | undefined;
+		if (regions_grid === undefined) continue;
 
-	const cells: Cell[] = [];
-	const values: number[][] = [];
-	for (let i = 0; i < coloring_grid.length; i++) {
-		const row = coloring_grid[i];
-		for (let j = 0; j < row.length; j++) {
-			const cell = grid.getCell(i, j);
-			if (!cell) continue;
-			cells.push(cell);
-			const val = row[j];
-			values.push([val]);
+		const coloring_grid = solve_coloring(regions_grid);
+		if (!coloring_grid) return;
+
+		const cells: Cell[] = [];
+		const values: number[][] = [];
+		for (let i = 0; i < coloring_grid.length; i++) {
+			const row = coloring_grid[i];
+			for (let j = 0; j < row.length; j++) {
+				const cell = grid.getCell(i, j);
+				if (!cell) continue;
+				cells.push(cell);
+				const val = row[j];
+				values.push([val]);
+			}
 		}
+		const action = restoreCellsHighlightsAction(cells, values);
+		executeUpdateCellsAction(action);
+		return;
 	}
-	const action = restoreCellsHighlightsAction(cells, values);
-	executeUpdateCellsAction(action);
 }
 
 export function setBoardOnSolution(json: JsonT, grid: Grid) {
+	updatePenTool(resetAction());
 	setSolutionValues(json, grid);
 	setUnknownRegionsHighlights(json, grid);
 	setUnknownRegionsBorders(json, grid);
 	setOrthogonalPathOrLoopLines(json, grid);
-	setBinaryHighlights(json, grid);
 	setOtherHighlights(json, grid);
 	setColoring(json, grid);
+	setBinaryHighlights(json, grid);
 }

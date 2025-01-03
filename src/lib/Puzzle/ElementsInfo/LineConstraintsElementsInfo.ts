@@ -249,12 +249,12 @@ export const nConsecutiveRenbanLineInfo: SquareCellElementInfo = {
 	}
 };
 
-export const knabnerLineInfo: SquareCellElementInfo = {
+export const nabnerLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
 	},
 
-	toolId: TOOLS.KNABNER_LINE,
+	toolId: TOOLS.NABNER_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
@@ -367,6 +367,67 @@ export const renbanOrWhispersLineInfo: SquareCellElementInfo = {
 	meta: {
 		description:
 			'An orange line is either a renban line or a whispers line. On renban lines, cells form a set of non-repeating consecutive digits (which can be in any order). On a whispers line, adjacent numbers along the line must have a difference of at least X (default X = 5).',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
+export const renbanOrNabnerLineInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: true,
+			defaultValue: '5'
+		});
+	},
+
+	toolId: TOOLS.RENBAN_OR_NABNER_LINE,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		strokeWidth: { editable: true, value: 0.15 },
+		stroke: { editable: true, value: 'var(--constraint-color-gray)' },
+		linePathOptions: {
+			shortenHead: { editable: false, value: 0.1 },
+			shortenTail: { editable: false, value: 0.1 },
+			bezierRounding: { editable: false, value: 0.05 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		description:
+			'A gray line is either a renban line or a nabner line. On renban lines, cells form a set of non-repeating consecutive digits (which can be in any order). On nabner lines, digits do not repeat and no two digits on the same line can be consecutive.',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
+export const outOfOrderConsecutiveLineInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
+	},
+
+	toolId: TOOLS.OUT_OF_ORDER_CONSECUTIVE_LINE,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		strokeWidth: { editable: true, value: 0.15 },
+		stroke: { editable: true, value: 'var(--constraint-color-purple)' },
+		linePathOptions: {
+			shortenHead: { editable: false, value: 0.15 },
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.15 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		description:
+			'Number along a purple line form a set of non-repeating consecutive digits, which must appear out of order (i.e. 4321 is not valid while 4312 is).',
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
@@ -882,6 +943,34 @@ export const superfuzzyArrowInfo: SquareCellElementInfo = {
 	}
 };
 
+export const headlessArrowInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
+	},
+
+	toolId: TOOLS.HEADLESS_ARROW,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		strokeWidth: { editable: true, value: 0.1 },
+		stroke: { editable: true, value: 'lime' },
+		linePathOptions: {
+			shortenHead: { editable: false, value: 0.1 },
+			shortenTail: { editable: false, value: 0.1 },
+			bezierRounding: { editable: false, value: 0.05 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		description: 'The digit on one end of each line is the sum of the other digits on that line.',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
 export const xvLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
@@ -1141,6 +1230,67 @@ export const lookandSayLineInfo: SquareCellElementInfo = {
 	meta: {
 		description:
 			'Both digits (which can be equal) on the endpoints of a line form a look-and-say clue. For example, if the digits on the endpoints are 5 and 3, then there have to be exactly five 3s AND three 5s on this line.',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
+export const ZipperLineInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
+	},
+
+	toolId: TOOLS.ZIPPER_LINE,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		strokeWidth: { editable: true, value: 0.06 },
+		stroke: { editable: true, value: 'var(--constraint-color-light-blue)' },
+		linePathOptions: {
+			shortenHead: { editable: false, value: 0.05 },
+			shortenTail: { editable: false, value: 0.05 },
+			bezierRounding: { editable: false, value: 0 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		description:
+			'Digits an equal distance from the centre of the light blue line must sum to the digit in the centre of that light blue line.',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
+export const segmentedSumLineInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: false,
+			defaultValue: ''
+		});
+	},
+
+	toolId: TOOLS.SEGMENTED_SUM_LINE,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		strokeWidth: { editable: true, value: 0.06 },
+		stroke: { editable: true, value: 'var(--constraint-color-light-gray)' },
+		linePathOptions: {
+			shortenHead: { editable: false, value: 0.05 },
+			shortenTail: { editable: false, value: 0.05 },
+			bezierRounding: { editable: false, value: 0 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		description:
+			'Each thick grey line can be divided into one or more non-overlapping segments. Each segment contains digits that sum to 10. Eg 513173 is a valid fill for a length 6 line, because it can be broken into 5131 and 73, each of which sum to 10.',
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories

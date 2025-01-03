@@ -299,3 +299,25 @@ export const outsideEdgeYinYangSumOfShadedInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	}
 };
+
+export const outsideConsecutiveSumInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
+			defaultValue: '',
+			cornerOrEdge: CornerOrEdge.BOTH
+		});
+	},
+
+	toolId: TOOLS.OUTSIDE_CONSECUTIVE_SUM,
+	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
+	meta: {
+		description:
+			'A clue outside the grid indicates the total of any digits in its row or column that neighbour at least one consecutive digit within that row or column. For example, if a column, reading downwards, contains the digits 128396547, the clue at the top of the column would be 18; the sum of 1, 2, 4, 5, and 6, which are the only digits which neighbour a consecutive digit within that sequence.',
+		usage: outsideEdgeUsage(),
+		tags: [],
+		categories: outsideEdgeDefaultCategories
+	}
+};

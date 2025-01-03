@@ -753,6 +753,58 @@ export const countCellsNotInTheSameRegionArrowsInfo: SquareCellElementInfo = {
 	}
 };
 
+export const yinYangSumOfCellsOfOppositeColorInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CELL_ARROW,
+		strokeWidth: { editable: true, value: 0.03, lb: 0.01, ub: 0.2, step: 0.01 },
+		stroke: { editable: true, value: 'black' }
+	},
+
+	meta: {
+		description:
+			'An arrow in a cell indicates that the digit in that cell equals the sum of the contents of all cells of the opposite colour in the direction of the arrow. If a cell contains multiple arrows, each arrow is summed separately.',
+		tags: [],
+		categories: [
+			TOOL_CATEGORIES.SINGLE_CELL_MULTIARROW_TOOL,
+			TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
+			TOOL_CATEGORIES.LOCAL_CONSTRAINT
+		]
+	}
+};
+
+export const loopCellCountArrowsInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.LOOP_CELL_COUNT_ARROWS,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CELL_ARROW,
+		strokeWidth: { editable: true, value: 0.03, lb: 0.01, ub: 0.2, step: 0.01 },
+		stroke: { editable: true, value: 'black' }
+	},
+
+	meta: {
+		description:
+			'Numbers on cells with arrows refer to the total amount of loop cells seen in the indicated direction(s).',
+		tags: [],
+		categories: [
+			TOOL_CATEGORIES.SINGLE_CELL_MULTIARROW_TOOL,
+			TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
+			TOOL_CATEGORIES.LOCAL_CONSTRAINT
+		]
+	}
+};
+
 export const sashiganeBendRegionCountInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getSingleCellToolInputHandler(svgRef, grid, tool);
@@ -892,7 +944,35 @@ export const countLoopNeighbourCellsInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description: 'An orange circle indicates how many cells up to 8 surrounding cells plus itself (9 maximum) are on the loop.',
+		description:
+			'An orange circle indicates how many cells up to 8 surrounding cells plus itself (9 maximum) are on the loop.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const twilightCaveFillominoClueInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
+			defaultValue: ''
+		});
+	},
+
+	toolId: TOOLS.TWILIGHT_CAVE_FILLOMINO_CLUE,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CAGE,
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'black' },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			'If a clued cell is unshaded, the clue indicates the sum of numbers seen orthogonally from that cell; region borders block vision. If a clued cell is shaded, the clue indicates the total sum of numbers in its group of orthogonally connected shaded cells (which could include more than one region).',
 		tags: [],
 		categories: singleCellShapeDefaultCategories
 	}

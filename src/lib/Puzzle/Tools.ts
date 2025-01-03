@@ -13,6 +13,7 @@ export enum CELL_INPUT_TOOLS {
 
 export enum SIMPLE_GLOBAL_CONSTRAINTS {
 	SUDOKU_RULES_DO_NOT_APPLY = 'Sudoku rules do not apply',
+	FILLOMINO = 'Fillomino',
 	ANTIKNIGHT = 'Antiknight',
 	ANTIKING = 'Antiking',
 	DISJOINT_GROUPS = 'Disjoint Groups',
@@ -33,7 +34,10 @@ export enum SIMPLE_GLOBAL_CONSTRAINTS {
 
 	NURIMISAKI_PATH_GERMAN_WHISPERS = 'Nurimisaki Path German Whispers',
 	YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE = 'Yin Yang Region Sum Lines Must Cross Colors At Least Once',
-	ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES = 'Adjacent Cells Along Loop Are Multiples'
+	ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES = 'Adjacent Cells Along Loop Are Multiples',
+	CAVE_CELLS_ARE_ODD = 'Cave Cells Are Odd',
+	CAVE_WALLS_ARE_EVEN = 'Cave Walls Are Even',
+	CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED = 'Cave 2x2 Not Fully Shaded or Unshaded'
 }
 
 export enum NEGATIVE_CONSTRAINTS {
@@ -66,7 +70,10 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	NURIMISAKI = 'Nurimisaki',
 	TWO_CONTIGUOUS_REGIONS = 'Two Contiguous Regions',
 	SASHIGANE = 'Sashigane',
-	CELL_CENTER_LOOP_NO_TOUCHING = 'Cell Center Loop No Touching'
+	CELL_CENTER_LOOP_NO_TOUCHING = 'Cell Center Loop No Touching',
+	MODULAR_LOOP = 'Modular Loop',
+	CAVE = 'Cave',
+	TWILIGHT_CAVE_FILLOMINO_REGION_SHADING = 'Twilight Cave Fillomino Region Shading'
 }
 
 export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
@@ -109,7 +116,9 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 
 	NURIMISAKI_UNSHADED_ENDPOINTS = 'Nurimisaki Unshaded Endpoints',
 	SASHIGANE_BEND_REGION_COUNT = 'Sashigane Bend Region Count',
-	SASHIGANE_REGION_SUM = 'Sashigane Region Sum'
+	SASHIGANE_REGION_SUM = 'Sashigane Region Sum',
+
+	TWILIGHT_CAVE_FILLOMINO_CLUE = "Twilight Cave Fillomino Clue"
 }
 
 export enum SINGLE_CELL_ARROW_CONSTRAINTS {
@@ -117,7 +126,9 @@ export enum SINGLE_CELL_ARROW_CONSTRAINTS {
 }
 
 export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
-	COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS = 'Count Cells Not In The Same Region Arrows'
+	COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS = 'Count Cells Not In The Same Region Arrows',
+	YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR = 'Yin Yang Sum Of Cells Of Opposite Color',
+	LOOP_CELL_COUNT_ARROWS = 'Loop Cell Count Arrows'
 }
 
 export enum EDGE_CONSTRAINTS {
@@ -158,8 +169,10 @@ export enum LINE_CONSTRAINTS {
 	DOUBLE_RENBAN_LINE = 'Double Renban Line',
 	RENRENBANBAN_LINE = 'Renrenbanban Line',
 	N_CONSECUTIVE_RENBAN_LINE = 'N-Consecutive Renban Line',
-	KNABNER_LINE = 'Knabner Line',
+	NABNER_LINE = 'Nabner Line',
 	RENBAN_OR_WHISPERS_LINE = 'Renban Or Whispers Line',
+	RENBAN_OR_NABNER_LINE = 'Renban Or Nabner Line',
+	OUT_OF_ORDER_CONSECUTIVE_LINE = 'Out Of Order Consecutive Line',
 
 	INDEX_LINE = 'Index Line',
 	UNIQUE_VALUES_LINE = 'Unique Values Line',
@@ -169,12 +182,15 @@ export enum LINE_CONSTRAINTS {
 	XV_LINE = 'XV Line',
 	ROW_SUM_LINE = 'Row Sum Line',
 	AT_LEAST_X_LINE = 'At Least X Line',
+	HEADLESS_ARROW = 'Headless Arrow',
 	SUPERFUZZY_ARROW = 'Superfuzzy Arrow',
 	N_CONSECUTIVE_FUZZY_SUM_LINE = 'N-Consecutive Sum Line',
 	ADJACENT_CELL_SUM_IS_PRIME_LINE = 'Adjacent Cell Sum Is Prime Line',
 	PRODUCT_LINE = 'Product Line',
 	ADJACENT_MULTIPLES_LINE = 'Adjacent Multiples Line',
 	ADJACENT_DIFFERENCES_COUNT_LINE = 'Adjacent Differences Count Line',
+	ZIPPER_LINE = 'Zipper Line',
+	SEGMENTED_SUM_LINE = 'Segmented Sum Line',
 
 	LOOK_AND_SAY_LINE = 'Look And Say Line',
 
@@ -216,7 +232,8 @@ export enum LINE_CONSTRAINTS {
 
 export enum ARROW_CONSTRAINTS {
 	ARROW = 'Arrow',
-	AVERAGE_ARROW = 'Average Arrow'
+	AVERAGE_ARROW = 'Average Arrow',
+	SQUARE_ROOT_ARROW = 'Square Root Arrow'
 }
 
 export enum CAGE_CONSTRAINTS {
@@ -254,7 +271,8 @@ export enum OUTSIDE_EDGE_CONSTRAINTS {
 	RISING_STREAK = 'Rising Streak',
 	ROW_OR_COLUMN_RANK = 'Row Or Column Rank',
 	OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED = 'Outside Edge Yin Yang Sum Of Shaded',
-	X_SUM_REGION_BORDERS = 'X-Sum Region Borders'
+	X_SUM_REGION_BORDERS = 'X-Sum Region Borders',
+	OUTSIDE_CONSECUTIVE_SUM = 'Outside Consecutive Sum'
 }
 
 export enum OUTSIDE_CORNER_CONSTRAINTS {

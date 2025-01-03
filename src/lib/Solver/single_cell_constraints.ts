@@ -1,17 +1,15 @@
 import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
-import type { CellArrowToolI, CellMultiArrowToolI, CellToolI } from '../Puzzle/Constraints/SingleCellConstraints';
+import type { CellArrowToolI, CellToolI } from '../Puzzle/Constraints/SingleCellConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
 	cellsToCellCenterLoopVarsName,
 	cellsToSashiganeVarsName,
-	cellsToUnknownRegionsVarsName,
 	cellsToVarsName,
 	cellsToYinYangVarsName,
 	cellToCellCenterLoopVarName,
 	cellToSashiganeVarName,
-	cellToUnknownRegionsVarName,
 	cellToVarName,
 	cellToYinYangVarName,
 	getDirectionCells,
@@ -281,7 +279,9 @@ function countingCirclesConstraint(grid: Grid, constraints: CellToolI[]) {
 		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
 	);
 	const vars = cellsToVarsName([...cells]);
-	const vars_str = `[${vars.join(',')}]`;
+	const vars_str = `${vars.join(',\n\t')}`;
+
+	out_str += `array[int] of var int: counting_circles = [\n\t${vars_str}\n];\n`
 
 	for (const constraint of constraints) {
 		const coord = constraint.cell;
@@ -289,9 +289,10 @@ function countingCirclesConstraint(grid: Grid, constraints: CellToolI[]) {
 		if (!cell) continue;
 		const cell_var = cellToVarName(cell);
 
-		const constraint_str = `constraint count(${vars_str}, ${cell_var}) == ${cell_var};\n`;
+		const constraint_str = `constraint count(counting_circles, ${cell_var}) == ${cell_var};\n`;
 		out_str += constraint_str;
 	}
+	out_str += '\n';
 	return out_str;
 }
 
@@ -419,26 +420,6 @@ function nurimisakiUnshadedEndpointsConstraint(grid: Grid, constraint: CellToolI
 	return out_str;
 }
 
-function countCellsNotInTheSameRegionConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
-	const coords = constraint.cell;
-	const cell = grid.getCell(coords.r, coords.c);
-	if (!cell) return '';
-	const cell_var = cellToVarName(cell);
-	const region_var = cellToUnknownRegionsVarName(cell);
-
-	const directions = constraint.directions;
-	const vars_list: string[] = [];
-	for (const direction of directions) {
-		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
-		const vars = cellsToUnknownRegionsVarsName(cells);
-		vars_list.push('[' + vars.join(',') + ']');
-	}
-
-	const aux = vars_list.map((vars) => `count_different(${vars}, ${region_var})`).join(' + ');
-	const constraint_str = `constraint ${aux} == ${cell_var};\n`;
-	return constraint_str;
-}
-
 function sashiganeBendRegionCountConstraint(grid: Grid, constraint: CellToolI) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
@@ -529,6 +510,7 @@ function countLoopNeighbourCellsConstraint(grid: Grid, constraint: CellToolI) {
 
 
 type ConstraintF = (grid: Grid, constraint: CellToolI) => string;
+type ConstraintF2 = (grid: Grid, constraint: CellToolI[]) => string;
 
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.ODD, oddConstraint],
@@ -552,23 +534,32 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.INDEXING_COLUMN, indexingColumnConstraint],
 	[TOOLS.INDEXING_ROW, indexingRowConstraint],
 	[TOOLS.SANDWICH_ROW_COL_COUNT, sandwichRowColCountConstraint],
+
 	[TOOLS.YIN_YANG_MINESWEEPER, yinYangMinesweeperConstraint],
 	[TOOLS.YIN_YANG_SEEN_UNSHADED_CELLS, yinYangSeenUnshadedConstraint],
 	[TOOLS.YIN_YANG_SEEN_SHADED_CELLS, yinYangSeenShadedConstraint],
 	[TOOLS.YIN_YANG_SEEN_SAME_SHADE_CELLS, yinYangSeenSameShadeConstraint],
 	[TOOLS.YIN_YANG_ADJACENT_SAME_SHADE_COUNT, yinYangAdjacentSameShadeCountConstraint],
+
 	[
 		TOOLS.TWO_CONTIGUOUS_REGIONS_ROW_COLUMN_OPPOSITE_SET_COUNT,
 		twoConstiguousRegionsRowColumnOppositeSetCountConstraint
 	],
 	[TOOLS.SEEN_REGION_BORDERS_COUNT, seenRegionBordersCountConstraint],
 	[TOOLS.NURIMISAKI_UNSHADED_ENDPOINTS, nurimisakiUnshadedEndpointsConstraint],
+
 	[TOOLS.SASHIGANE_BEND_REGION_COUNT, sashiganeBendRegionCountConstraint],
 	[TOOLS.SASHIGANE_REGION_SUM, sashiganeRegionSumConstraint],
 
 	[TOOLS.CELL_ON_THE_LOOP, cellOnLoopConstraint],
 	[TOOLS.CELL_NOT_ON_THE_LOOP, cellNotOnLoopConstraint],
 	[TOOLS.COUNT_LOOP_NEIGHBOUR_CELLS, countLoopNeighbourCellsConstraint]
+]);
+
+const tool_map_2 = new Map<string, ConstraintF2>([
+	[TOOLS.MAXIMUM, maximumConstraint],
+	[TOOLS.MINIMUM, minimumConstraint],
+	[TOOLS.COUNTING_CIRCLES, countingCirclesConstraint]
 ]);
 
 export function singleCellConstraints(
@@ -578,31 +569,16 @@ export function singleCellConstraints(
 ) {
 	let out_str = '';
 	const constraintF = tool_map.get(toolId);
+	const constraintF2 = tool_map_2.get(toolId);
 	if (constraintF) {
 		for (const constraint of Object.values(constraints)) {
 			const constraint_str = constraintF(grid, constraint as CellToolI);
 			out_str += constraint_str;
 		}
-	} else if (toolId === TOOLS.MAXIMUM) {
+	} else if (constraintF2) {
 		const constl = Object.values(constraints) as CellToolI[];
-		const constraint_str = maximumConstraint(grid, constl);
+		const constraint_str = constraintF2(grid, constl);
 		out_str += constraint_str;
-	} else if (toolId === TOOLS.MINIMUM) {
-		const constl = Object.values(constraints) as CellToolI[];
-		const constraint_str = minimumConstraint(grid, constl);
-		out_str += constraint_str;
-	} else if (toolId === TOOLS.COUNTING_CIRCLES) {
-		const constl = Object.values(constraints) as CellToolI[];
-		const constraint_str = countingCirclesConstraint(grid, constl);
-		out_str += constraint_str;
-	} else if (toolId === TOOLS.COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS) {
-		for (const constraint of Object.values(constraints)) {
-			const constraint_str = countCellsNotInTheSameRegionConstraint(
-				grid,
-				constraint as CellMultiArrowToolI
-			);
-			out_str += constraint_str;
-		}
 	} else if (toolId === TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND) {
 		for (const constraint of Object.values(constraints)) {
 			const constraint_str = sashiganeArrowPointsToBendConstraint(

@@ -80,9 +80,9 @@
 
 		solver.on('solution', (solution) => {
 			const json = solution.output.json;
-			// console.log(json)
-			setBoardOnSolution(json, grid);
 			if (solution.type === 'solution' && sol_count !== null) sol_count += 1;
+			// console.log(json);
+			setBoardOnSolution(json, grid);
 		});
 
 		solver.then((result) => {

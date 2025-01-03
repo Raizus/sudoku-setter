@@ -3,7 +3,7 @@ import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import type { GridCoordI } from '../utils/SquareCellGridCoords';
-import { cellsToVarsName } from './solver_utils';
+import { cellsToVarsName, constraintsBuilder } from './solver_utils';
 
 type ConstraintF = (grid: Grid, constraint: ArrowToolI) => string;
 
@@ -67,13 +67,6 @@ export function arrowConstraints(
 	toolId: TOOLID,
 	constraints: Record<string, ConstraintType>
 ) {
-	let out_str = '';
-	const constraintF = tool_map.get(toolId);
-	if (constraintF) {
-		for (const constraint of Object.values(constraints)) {
-			const constraint_str = constraintF(grid, constraint as ArrowToolI);
-			out_str += constraint_str;
-		}
-	}
+	const out_str = constraintsBuilder(grid, toolId, constraints, tool_map);
 	return out_str;
 }

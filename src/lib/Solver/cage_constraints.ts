@@ -2,7 +2,7 @@ import type { CageToolI } from '../Puzzle/Constraints/CageConstraints';
 import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { cellsToVarsName, allDifferentConstraint, cellsToYinYangVarsName, cellsToValueVarsName } from './solver_utils';
+import { cellsToVarsName, allDifferentConstraint, cellsToYinYangVarsName, cellsToValueVarsName, constraintsBuilder } from './solver_utils';
 
 function getCageVars(grid: Grid, constraint: CageToolI) {
 	const cells_coords = constraint.cells;
@@ -61,6 +61,11 @@ function invertedKillerCageConstraint(grid: Grid, constraint: CageToolI) {
 
 function sumCageConstraint(grid: Grid, constraint: CageToolI) {
 	const constraint_str = valuedCageConstraint(grid, constraint, 'sum_cage_p');
+	return constraint_str;
+}
+
+function parityBalanceCageConstraint(grid: Grid, constraint: CageToolI) {
+	const constraint_str = simpleCageConstraint(grid, constraint, 'parity_balance_cage_p');
 	return constraint_str;
 }
 
@@ -165,6 +170,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.KILLER_CAGE, killerCageConstraint],
 	[TOOLS.INVERTED_KILLER_CAGE, invertedKillerCageConstraint],
 	[TOOLS.SUM_CAGE, sumCageConstraint],
+	[TOOLS.PARITY_BALANCE_CAGE, parityBalanceCageConstraint],
 	[TOOLS.SUM_CAGE_LOOK_AND_SAY, sumCageLookAndSayConstraint],
 	[TOOLS.DIVISIBLE_KILLER_CAGE, divisibleKillerCageConstraint],
 	[TOOLS.SPOTLIGHT_CAGE, spotlightCageConstraint],
@@ -180,14 +186,6 @@ export function cageConstraints(
 	toolId: TOOLID,
 	constraints: Record<string, ConstraintType>
 ) {
-	let out_str = '';
-	const constraintF = tool_map.get(toolId);
-	if (constraintF) {
-		for (const constraint of Object.values(constraints)) {
-			const constraint_str = constraintF(grid, constraint as CageToolI);
-			out_str += constraint_str;
-		}
-	}
-
+	const out_str = constraintsBuilder(grid, toolId, constraints, tool_map);
 	return out_str;
 }

@@ -1,7 +1,8 @@
 import type { PuzzleI } from '../Puzzle/Puzzle';
+import { TOOLS } from '../Puzzle/Tools';
 import { globalConstraints, sudokuConstraints } from './global_constraints';
 import { localConstraints } from './local_constraints';
-import { cellCenterLoopNoTouchingConstraint, doublersConstraint, negatorsConstraint, nurimisakiConstraint, sashiganeConstraint, twoContiguousRegionsConstraint, unknownRegionsConstraint, yinYangConstraint } from './other_constraints';
+import { undeterminedRegionsConstraints } from './undetermined_regions_constraints';
 import { cellToVarName, defineFunctionsPredicates } from './solver_utils';
 
 function givenConstraints(puzzle: PuzzleI) {
@@ -22,6 +23,8 @@ function givenConstraints(puzzle: PuzzleI) {
 export function createMinizincModel(puzzle: PuzzleI) {
 	const grid = puzzle.grid;
 	const [nrows, ncols] = [grid.nRows, grid.nCols];
+	const fillomino = !!puzzle.globalConstraints.get(TOOLS.FILLOMINO);
+	const grid_size = nrows * ncols;
 
 	let out_str = '';
 	out_str += 'include "globals.mzn";\n';
@@ -31,6 +34,9 @@ export function createMinizincModel(puzzle: PuzzleI) {
 	const max_val = Math.max(nrows, ncols);
 	let allowed_digits_str = `1..${max_val}`;
 	const valid_digits = puzzle.valid_digits;
+	if (fillomino) {
+		allowed_digits_str = `1..${grid_size}`;
+	}
 	if (valid_digits) {
 		allowed_digits_str = '{' + valid_digits.join(',') + '}';
 	}
@@ -43,15 +49,7 @@ export function createMinizincModel(puzzle: PuzzleI) {
 	out_str += givenConstraints(puzzle);
 	out_str += sudokuConstraints(puzzle);
 
-	out_str += doublersConstraint(puzzle);
-	out_str += negatorsConstraint(puzzle);
-	out_str += yinYangConstraint(puzzle);
-	out_str += sashiganeConstraint(puzzle);
-	out_str += twoContiguousRegionsConstraint(puzzle);
-	out_str += unknownRegionsConstraint(puzzle);
-	out_str += nurimisakiConstraint(puzzle);
-	out_str += cellCenterLoopNoTouchingConstraint(puzzle);
-
+	out_str += undeterminedRegionsConstraints(puzzle);
 	out_str += localConstraints(puzzle);
 	out_str += globalConstraints(puzzle);
 

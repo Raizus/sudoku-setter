@@ -155,3 +155,38 @@ export const cellCenterLoopNoTouchingInfo: AbstractElementInfo = {
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
+
+export const modularLoopInfo: AbstractElementInfo = {
+	toolId: TOOLS.MODULAR_LOOP,
+	order: 0,
+
+	meta: {
+		description:
+			'Draw an orthogonal loop through the grid. The loop must not touch itself orthogonally; however, it can touch diagonally. Along the loop, any three consecutive cells must contain numbers congruent to 0 mod 3, 1 mod 3, and 2 mod 3. (In other words, one of the numbers is from the set {3, 6, 9, 12, …}, one is from {1, 4, 7, 10, …}, and one from {2, 5, 8, 11, …}.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const caveInfo: AbstractElementInfo = {
+	toolId: TOOLS.CAVE,
+	order: 0,
+
+	meta: {
+		description:
+			'Shade some cells in the grid such that all unshaded cells are orthogonally connected, and all shaded cells are orthogonally connected by other shaded cells to an edge of the grid.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const twilightCaveFillominoRegionShadingInfo: AbstractElementInfo = {
+	toolId: TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING,
+	order: 0,
+
+	meta: {
+		description: 'Each fillomino region must either be entirely shaded or entirely unshaded, according to cave shading.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};

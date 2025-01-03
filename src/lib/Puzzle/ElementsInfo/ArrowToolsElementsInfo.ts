@@ -67,3 +67,34 @@ export const averageArrowInfo: SquareCellElementInfo = {
 		]
 	}
 };
+
+export const squareRootArrowInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getArrowToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.SQUARE_ROOT_ARROW,
+	order: RENDER_ORDER.ARROW_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		r: { editable: false, value: 0.35 },
+		strokeWidth: { editable: true, value: 0.05 },
+		stroke: { editable: true, value: 'var(--constraint-color-gray)' },
+		linePathOptions: {
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.25 }
+		}
+	},
+
+	meta: {
+		description: 'The digits along an arrow must sum to the square of the number in the connecting diamond.',
+		usage: arrowUsage(),
+		tags: [],
+		categories: [
+			TOOL_CATEGORIES.ARROW_CONSTRAINT,
+			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
+			TOOL_CATEGORIES.ARROW_TOOL
+		]
+	}
+};

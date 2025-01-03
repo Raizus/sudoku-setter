@@ -1,1 +1,17 @@
-Normal sudoku rules apply. Digits MAY repeat in cages if allowed by other rules. The sum of digits in each cage must be a two-digit number that acts as a valid “look-and-say clue” for that cage. Eg if the sum is 21, there must be exactly two 1s in the cage along with any combination of other digits (such that, overall, the digits in the cage sum to 21). Eg2 if the sum is 17, there must be exactly one 7 in the cage along with any combination of other digits (such that, overall, the digits in the cage sum to 17).
+- Normal Sudoku rules apply.
+
+- Zipper Lines: Digits an equal distance from the centre of the purple line must sum to the digit in the centre of that purple line.
+
+- Consecutive Sums: A clue outside the grid indicates the total of any digits in its row or column that neighbour at least one consecutive digit within that row or column. For example, if a column, reading downwards, contains the digits 128396547, the clue at the top of the column would be 18; the sum of 1, 2, 4, 5, and 6, which are the only digits which neighbour a consecutive digit within that sequence.
+
+Create a predicate zipper_line_p(array[int] of var int: arr) which enforces the following constraint:
+    - asserts that the array has odd length;
+    - Elements an equal distance from the centre of the array must sum to the element in the center of the array.
+
+Create a predicate outside_consecutive_sum_p(array[int] of var int: arr, var int: val) which enforces the following constraint:
+    - The sum of all elements in the array which have an adjacent element consecutive with it (i.e. if abs(arr[i]-arr[i-1]) = 1 OR abs(arr[i]-arr[i+1]) = 1, then arr[i] counts towards the sum) is equal to val.
+
+Each thick grey line can be divided into one or more non-overlapping segments. Each segment contains digits that sum to 10. Eg 513173 is a valid fill for a length 6 line, because it can be broken into 5131 and 73, each of which sum to 10. 
+
+Create a predicate segmented_sum_line_p(array[int] of var int: arr, var int: val) which enforces the following constraint:
+    - the array can be divided into one or more non-overlapping segments, such that each segment sums to val.

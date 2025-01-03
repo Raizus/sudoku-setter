@@ -510,6 +510,35 @@ function yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(puzzle: Puzzl
 	return out_str;
 }
 
+function twilightCaveFillominoRegionsShading(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint twilight_cave_fillomino_region_shading(cave_shading, fillomino_area);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
+function caveCellsAreOddConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint cave_cells_are_odd_p(board, cave_shading);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
+function caveWallsAreEvenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint cave_walls_are_even_p(board, cave_shading);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
+function cave2x2NotFullyShadedOrUnshadedConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint not_fully_shaded_or_unshaded_2x2_p(cave_shading);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
+
 export function sudokuConstraints(puzzle: PuzzleI) {
 	const gconstraints = puzzle.globalConstraints;
 	if (gconstraints.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY)) {
@@ -587,7 +616,11 @@ const tool_map = new Map<string, ConstraintF>([
 		yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint
 	],
 	[TOOLS.ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED, allOddDigitsOrthogonallyConnected],
-	[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES, adjacentLoopCellsAreMultiplesConstraint]
+	[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES, adjacentLoopCellsAreMultiplesConstraint],
+	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING, twilightCaveFillominoRegionsShading],
+	[TOOLS.CAVE_CELLS_ARE_ODD, caveCellsAreOddConstraint],
+	[TOOLS.CAVE_WALLS_ARE_EVEN, caveWallsAreEvenConstraint],
+	[TOOLS.CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED, cave2x2NotFullyShadedOrUnshadedConstraint]
 ]);
 
 export function globalConstraints(puzzle: PuzzleI): string {
@@ -600,6 +633,7 @@ export function globalConstraints(puzzle: PuzzleI): string {
 		if (!constraintF) continue;
 
 		const constraint_str = constraintF(puzzle, toolId);
+		
 		out_str += constraint_str;
 	}
 

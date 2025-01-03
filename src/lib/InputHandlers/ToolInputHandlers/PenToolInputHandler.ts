@@ -21,12 +21,12 @@ import {
 	removeEdgeMarkerAction,
 	removeLineMarkersAction
 } from '$lib/reducers/PenToolReducer';
-import { areCoordsOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { addCommand } from '$stores/HistoryStore';
 import { getPenToolCommand, penColorStore } from '$stores/PenToolStore';
 import { updatePenTool } from '$stores/PenToolStore';
 import { penToolStore } from '$stores/PenToolStore';
 import { get } from 'svelte/store';
+import { areCoordsOnGrid } from '$src/lib/utils/SquareCellGridCoords';
 
 export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): InputHandler {
 	console.log('getPenToolInputHandler');
@@ -37,12 +37,12 @@ export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): Input
 		const coord = event.coords;
 		const colorId = get(penColorStore);
 
-		const onGrid = areCoordsOnGrid(coord, gridShape);
-		if (!onGrid) return;
-
 		const penTool = get(penToolStore);
 
 		if (event.type === 'cell center') {
+			const onGrid = areCoordsOnGrid(coord, gridShape);
+			if (!onGrid) return;
+			
 			// create PenTapAction
 			const oldMarker = penTool.getCellMarker(coord);
 			if (!oldMarker) {
@@ -98,13 +98,13 @@ export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): Input
 		const coord = event.coords;
 		const colorId = get(penColorStore);
 
-		const onGrid = areCoordsOnGrid(coord, gridShape);
-		if (!onGrid) return;
+		// const onGrid = areCoordsOnGrid(coord, gridShape);
+		// if (!onGrid) return;
 
 		if (event.type === 'cell center' || event.type === 'corner') {
 			const lineMarker: LineMarker = {
 				p1: event.prevCoords,
-				p2: event.coords,
+				p2: coord,
 				colorId
 			};
 			// create PenDragAction

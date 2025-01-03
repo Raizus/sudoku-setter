@@ -60,8 +60,22 @@ function renrenbanbanConstraint(grid: Grid, c_id: string, constraint: LineToolI)
 	return constraint_str;
 }
 
-function knabnerConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+function nabnerConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	const constraint_str = simpleLineConstraint(grid, constraint, 'knabner_p', true);
+	return constraint_str;
+}
+
+function renbanOrNabnerConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = simpleLineConstraint(grid, constraint, 'renban_or_nabner_line_p', true);
+	return constraint_str;
+}
+
+function outOfOrderConsecutiveLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = simpleLineConstraint(
+		grid,
+		constraint,
+		'out_of_order_consecutive_line_p'
+	);
 	return constraint_str;
 }
 
@@ -129,6 +143,16 @@ function indexLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	return constraint_str;
 }
 
+function zipperLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = simpleLineConstraint(grid, constraint, 'zipper_line_p');
+	return constraint_str;
+}
+
+function segmentedSumLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = valuedLineConstraint(grid, constraint, 'segmented_sum_line_p');
+	return constraint_str;
+}
+
 function adjacentDifferencesCountLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	const constraint_str = simpleLineConstraint(
 		grid,
@@ -165,6 +189,11 @@ function repeatedDigitsLineConstraint(grid: Grid, c_id: string, constraint: Line
 
 function superfuzzyArrowConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	const constraint_str = simpleLineConstraint(grid, constraint, 'superfuzzy_arrow_p');
+	return constraint_str;
+}
+
+function headlessArrowConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = simpleLineConstraint(grid, constraint, 'headless_arrow_p');
 	return constraint_str;
 }
 
@@ -366,47 +395,45 @@ function yinYangUnshadedModularLineConstraint(grid: Grid, c_id: string, constrai
 	return constraint_str;
 }
 
-function yinYangUnshadedEntropicLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+function yinYangSimpleLineConstraint(grid: Grid, constraint: LineToolI, predicate: string) {	
 	const cells_coords = constraint.cells;
 	const cells = cells_coords
 		.map((coord) => grid.getCell(coord.r, coord.c))
 		.filter((cell) => !!cell);
+
 	const vars = cellsToVarsName(cells);
 	const vars_str = `[${vars.join(',')}]`;
 	const yin_yang_vars = cellsToYinYangVarsName(cells);
 	const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
 
-	const constraint_str: string = `constraint yin_yang_unshaded_entropic_line_p(${vars_str}, ${yin_yang_vars_str});\n`;
+	const constraint_str: string = `constraint ${predicate}(${vars_str}, ${yin_yang_vars_str});\n`;
+	return constraint_str;	
+}
+
+function yinYangUnshadedEntropicLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = yinYangSimpleLineConstraint(
+		grid,
+		constraint,
+		'yin_yang_unshaded_entropic_line_p'
+	);
 	return constraint_str;
 }
 
 function yinYangIndexingLineColoringConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
-	const cells_coords = constraint.cells;
-	const cells = cells_coords
-		.map((coord) => grid.getCell(coord.r, coord.c))
-		.filter((cell) => !!cell);
-
-	const vars = cellsToVarsName(cells);
-	const vars_str = `[${vars.join(',')}]`;
-	const yin_yang_vars = cellsToYinYangVarsName(cells);
-	const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
-
-	const constraint_str: string = `constraint yin_yang_indexing_line_coloring_p(${vars_str}, ${yin_yang_vars_str});\n`;
+	const constraint_str = yinYangSimpleLineConstraint(
+		grid,
+		constraint,
+		'yin_yang_indexing_line_coloring_p'
+	);
 	return constraint_str;
 }
 
 function yinYangRegionSumLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
-	const cells_coords = constraint.cells;
-	const cells = cells_coords
-		.map((coord) => grid.getCell(coord.r, coord.c))
-		.filter((cell) => !!cell);
-
-	const vars = cellsToVarsName(cells);
-	const vars_str = `[${vars.join(',')}]`;
-	const yin_yang_vars = cellsToYinYangVarsName(cells);
-	const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
-
-	const constraint_str: string = `constraint yin_yang_region_sum_line_p(${vars_str}, ${yin_yang_vars_str});\n`;
+	const constraint_str = yinYangSimpleLineConstraint(
+		grid,
+		constraint,
+		'yin_yang_region_sum_line_p'
+	);
 	return constraint_str;
 }
 
@@ -446,9 +473,11 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.RENBAN_LINE, renbanConstraint],
 	[TOOLS.DOUBLE_RENBAN_LINE, doubleRenbanConstraint],
 	[TOOLS.RENRENBANBAN_LINE, renrenbanbanConstraint],
-	[TOOLS.KNABNER_LINE, knabnerConstraint],
+	[TOOLS.NABNER_LINE, nabnerConstraint],
 	[TOOLS.WHISPERS_LINE, whispersConstraint],
 	[TOOLS.RENBAN_OR_WHISPERS_LINE, renbanOrWhispersLineConstraint],
+	[TOOLS.RENBAN_OR_NABNER_LINE, renbanOrNabnerConstraint],
+	[TOOLS.OUT_OF_ORDER_CONSECUTIVE_LINE, outOfOrderConsecutiveLineConstraint],
 	[TOOLS.N_CONSECUTIVE_RENBAN_LINE, nConsecutiveRenbanLineConstraint],
 	[TOOLS.PALINDROME, palindromeConstraint],
 	[TOOLS.SUM_LINE, sumLineConstraint],
@@ -462,8 +491,11 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.LOOK_AND_SAY_LINE, lookAndSayLineConstraint],
 	[TOOLS.ROW_SUM_LINE, rowSumLineConstraint],
 	[TOOLS.INDEX_LINE, indexLineConstraint],
+	[TOOLS.ZIPPER_LINE, zipperLineConstraint],
+	[TOOLS.SEGMENTED_SUM_LINE, segmentedSumLineConstraint],
 
 	[TOOLS.SUPERFUZZY_ARROW, superfuzzyArrowConstraint],
+	[TOOLS.HEADLESS_ARROW, headlessArrowConstraint],
 	[TOOLS.ARITHMETIC_SEQUENCE_LINE, arithmeticSequenceLineConstraint],
 	[TOOLS.ODD_EVEN_OSCILLATOR_LINE, oddEvenOscillatorLineConstraint],
 	[TOOLS.HIGH_LOW_OSCILLATOR_LINE, highLowOscillatorLineConstraint],

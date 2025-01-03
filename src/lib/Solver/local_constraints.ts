@@ -10,6 +10,7 @@ import { edgeConstraints } from './edge_constraints';
 import { lineConstraints } from './line_constraints';
 import { outsideDirectionConstraints } from './outside_direction_constraints';
 import { singleCellConstraints } from './single_cell_constraints';
+import { singleCellMultiArrowConstraints } from './single_cell_multi_arrow_constraints';
 import { addHeader } from './solver_utils';
 import { valuedGlobalConstraints } from './valued_global_constraints';
 
@@ -21,6 +22,7 @@ type ConstraintsF = (
 
 const functions_list: ConstraintsF[] = [
 	singleCellConstraints,
+	singleCellMultiArrowConstraints,
 	edgeConstraints,
 	cornerConstraints,
 	lineConstraints,

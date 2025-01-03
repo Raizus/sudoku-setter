@@ -18,6 +18,18 @@ export const sudokuRulesDoNotApplyInfo: AbstractElementInfo = {
 	}
 };
 
+export const fillominoInfo: AbstractElementInfo = {
+	toolId: TOOLS.FILLOMINO,
+	order: 0,
+
+	meta: {
+		description:
+			'Fillomino rules apply. Divide the grid into orthogonally connected regions such that no two regions of the same size share an edge, and enter a number into each cell equal to the size of its region.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	}
+};
+
 export const antiknightInfo: AbstractElementInfo = {
 	toolId: TOOLS.ANTIKNIGHT,
 	order: 0,
@@ -320,7 +332,42 @@ export const adjacentCellsAlongLoopAreMultiplesInfo: AbstractElementInfo = {
 	order: 0,
 
 	meta: {
-		description: 'For each pair of adjacent cells along the loop, the larger digit is an integer multiple of the smaller digit.',
+		description:
+			'For each pair of adjacent cells along the loop, the larger digit is an integer multiple of the smaller digit.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
+
+export const caveCellsAreOddInfo: AbstractElementInfo = {
+	toolId: TOOLS.CAVE_CELLS_ARE_ODD,
+	order: 0,
+
+	meta: {
+		description: 'Cave cells must contain odd digits.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
+
+export const caveWallsAreEvenInfo: AbstractElementInfo = {
+	toolId: TOOLS.CAVE_WALLS_ARE_EVEN,
+	order: 0,
+
+	meta: {
+		description: 'Cave walls must contain even digits.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
+
+export const cave2x2NotFullyShadedOrUnshadedInfo: AbstractElementInfo = {
+	toolId: TOOLS.CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED,
+	order: 0,
+
+	meta: {
+		description:
+			'No 2x2 cave region may be completely filled with cave cells or completely filled with wall cells.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
 	}

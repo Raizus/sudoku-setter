@@ -127,6 +127,11 @@ function risingStreakConstraint(grid: Grid, c_id: string, constraint: OutsideDir
 	return constraint_str;
 }
 
+function outsideConsecutiveSumConstraint(grid: Grid, c_id: string, constraint: OutsideDirectionToolI) {
+	const constraint_str = simpleOutsideDirectionConstraint(grid, constraint, 'outside_consecutive_sum_p');
+	return constraint_str;
+}
+
 function littleKillerSumConstraint(grid: Grid, c_id: string, constraint: OutsideDirectionToolI) {
 	const constraint_str = simpleOutsideDirectionConstraint(grid, constraint, 'little_killer_sum_p');
 	return constraint_str;
@@ -203,6 +208,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.X_INDEX, xIndexConstraint],
 	[TOOLS.BATTLEFIELD, battlefieldConstraint],
 	[TOOLS.RISING_STREAK, risingStreakConstraint],
+	[TOOLS.OUTSIDE_CONSECUTIVE_SUM, outsideConsecutiveSumConstraint],
 	[TOOLS.OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED, outsideEdgeYinYangAdjacentSumOfShadedConstraint],
 	// outside corner
 	[TOOLS.LITTLE_KILLER_SUM, littleKillerSumConstraint],

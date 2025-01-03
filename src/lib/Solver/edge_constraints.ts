@@ -2,7 +2,12 @@ import type { EdgeToolI } from '../Puzzle/Constraints/EdgeConstraints';
 import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { cellsToVarsName, cellsToYinYangVarsName, cellToVarName } from './solver_utils';
+import {
+	cellsToVarsName,
+	cellsToYinYangVarsName,
+	cellToVarName,
+	constraintsBuilder
+} from './solver_utils';
 
 function getEdgeVars(grid: Grid, constraint: EdgeToolI) {
 	const cells_coords = constraint.cells;
@@ -13,11 +18,7 @@ function getEdgeVars(grid: Grid, constraint: EdgeToolI) {
 	return vars;
 }
 
-function simpleEdgeConstraint(
-	grid: Grid,
-	constraint: EdgeToolI,
-	predicate: string
-) {
+function simpleEdgeConstraint(grid: Grid, constraint: EdgeToolI, predicate: string) {
 	const vars = getEdgeVars(grid, constraint);
 	const [var1, var2] = vars;
 
@@ -34,10 +35,10 @@ function valuedEdgeConstraint(
 	const vars = getEdgeVars(grid, constraint);
 	const [var1, var2] = vars;
 
-    let value = constraint.value;
-    if (!value) value = default_value;
+	let value = constraint.value;
+	if (!value) value = default_value;
 
-    if (value) {
+	if (value) {
 		const val = parseInt(value);
 		const constraint_str = `constraint ${predicate}(${var1}, ${var2}, ${val});\n`;
 		return constraint_str;
@@ -150,13 +151,6 @@ export function edgeConstraints(
 	toolId: TOOLID,
 	constraints: Record<string, ConstraintType>
 ) {
-	let out_str = '';
-	const constraintF = tool_map.get(toolId);
-	if (constraintF) {
-		for (const constraint of Object.values(constraints)) {
-			const constraint_str = constraintF(grid, constraint as EdgeToolI);
-			out_str += constraint_str;
-		}
-	}
+	const out_str = constraintsBuilder(grid, toolId, constraints, tool_map);
 	return out_str;
 }

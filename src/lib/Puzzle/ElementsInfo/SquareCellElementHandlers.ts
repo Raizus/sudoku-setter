@@ -77,7 +77,11 @@ import {
 	allYinYangKropkiGivenInfo,
 	antikingInfo,
 	antiknightInfo,
+	cave2x2NotFullyShadedOrUnshadedInfo,
+	caveCellsAreOddInfo,
+	caveWallsAreEvenInfo,
 	disjointGroupsInfo,
+	fillominoInfo,
 	globalIndexingColumnInfo,
 	negativeAntidiagonalInfo,
 	negativeDiagonalInfo,
@@ -108,7 +112,7 @@ import {
 	highLowOscilatorLineInfo,
 	indexingColumnIsXLineInfo,
 	indexingRowIsXLineInfo,
-	knabnerLineInfo,
+	nabnerLineInfo as nabnerLineInfo,
 	lockoutLineInfo,
 	maximumAdjacentDifferenceLineInfo,
 	modularLineInfo,
@@ -144,7 +148,12 @@ import {
 	lookandSayLineInfo,
 	slowThermometerInfo,
 	indexLineInfo,
-	yinYangIndexingLineColoringInfo
+	yinYangIndexingLineColoringInfo,
+	renbanOrNabnerLineInfo,
+	headlessArrowInfo,
+	outOfOrderConsecutiveLineInfo,
+	ZipperLineInfo,
+	segmentedSumLineInfo
 } from './LineConstraintsElementsInfo';
 import {
 	littleKillerLookAndSayInfo,
@@ -156,6 +165,7 @@ import {
 import {
 	battlefieldInfo,
 	brokenXSumInfo,
+	outsideConsecutiveSumInfo,
 	outsideEdgeYinYangSumOfShadedInfo,
 	risingStreakInfo,
 	rowOrColumnRankInfo,
@@ -183,6 +193,7 @@ import {
 	highDigitInfo,
 	indexingColumnInfo,
 	indexingRowInfo,
+	loopCellCountArrowsInfo,
 	lowDigitInfo,
 	maximumInfo,
 	minimumInfo,
@@ -198,21 +209,26 @@ import {
 	sashiganeBendRegionCountInfo,
 	sashiganeRegionSumInfo,
 	seenRegionBordersCountInfo,
+	twilightCaveFillominoClueInfo,
 	twoContiguousRegionsRowColumnOppositeSetCountInfo,
 	watchtowerInfo,
 	yinYangAdjacentSameShadeCountInfo,
 	yinYangMinesweeperInfo,
 	yinYangSeenSameShadeCellsInfo,
 	yinYangSeenShadedCellsInfo,
-	yinYangSeenUnshadedCellsInfo
+	yinYangSeenUnshadedCellsInfo,
+	yinYangSumOfCellsOfOppositeColorInfo
 } from './SingleCellElementsInfo';
 import { forbiddenOrthogonallyAdjacentSumInfo } from './ValuedGlobalConstraintsElementsInfo';
 import {
+	caveInfo,
 	cellCenterLoopNoTouchingInfo,
 	doublersInfo,
+	modularLoopInfo,
 	negatorsInfo,
 	nurimisakiInfo,
 	sashiganeRegionsInfo,
+	twilightCaveFillominoRegionShadingInfo,
 	twoContiguousRegionsInfo,
 	unknownRegionsInfo,
 	yinYangInfo
@@ -232,6 +248,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	//Global Constraints
 	[TOOLS.SUDOKU_RULES_DO_NOT_APPLY]: sudokuRulesDoNotApplyInfo,
+	[TOOLS.FILLOMINO]: fillominoInfo,
 	[TOOLS.ANTIKNIGHT]: antiknightInfo,
 	[TOOLS.ANTIKING]: antikingInfo,
 	[TOOLS.DISJOINT_GROUPS]: disjointGroupsInfo,
@@ -263,6 +280,9 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN]: allNurimisakiUnshadedEndpointsGivenInfo,
 	[TOOLS.YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE]:
 		yinYangRegionSumLinesMustCrossColorsAtLeastOnceInfo,
+	[TOOLS.CAVE_CELLS_ARE_ODD]: caveCellsAreOddInfo,
+	[TOOLS.CAVE_WALLS_ARE_EVEN]: caveWallsAreEvenInfo,
+	[TOOLS.CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED]: cave2x2NotFullyShadedOrUnshadedInfo,
 
 	[TOOLS.DOUBLERS]: doublersInfo,
 	[TOOLS.NEGATORS]: negatorsInfo,
@@ -279,6 +299,9 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.TWO_CONTIGUOUS_REGIONS]: twoContiguousRegionsInfo,
 	[TOOLS.SASHIGANE]: sashiganeRegionsInfo,
 	[TOOLS.CELL_CENTER_LOOP_NO_TOUCHING]: cellCenterLoopNoTouchingInfo,
+	[TOOLS.MODULAR_LOOP]: modularLoopInfo,
+	[TOOLS.CAVE]: caveInfo,
+	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING]: twilightCaveFillominoRegionShadingInfo,
 
 	[TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS]: nurimisakiPathGermanWhispersInfo,
 	[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES]: adjacentCellsAlongLoopAreMultiplesInfo,
@@ -324,11 +347,15 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.CELL_NOT_ON_THE_LOOP]: cellNotOnTheLoopInfo,
 	[TOOLS.COUNT_LOOP_NEIGHBOUR_CELLS]: countLoopNeighbourCellsInfo,
 
+	[TOOLS.TWILIGHT_CAVE_FILLOMINO_CLUE]: twilightCaveFillominoClueInfo,
+
 	// Single Cell Arrow Constraint
 	[TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND]: sashiganeArrowPointsToBendInfo,
 
 	// Single Cell Multi Arrow Constraint
 	[TOOLS.COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS]: countCellsNotInTheSameRegionArrowsInfo,
+	[TOOLS.YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR]: yinYangSumOfCellsOfOppositeColorInfo,
+	[TOOLS.LOOP_CELL_COUNT_ARROWS]: loopCellCountArrowsInfo,
 
 	// Edge Constraints
 	[TOOLS.DIFFERENCE]: differenceInfo,
@@ -362,11 +389,13 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.DOUBLE_RENBAN_LINE]: doubleRenbanLineInfo,
 	[TOOLS.RENRENBANBAN_LINE]: renrenbanbanLineInfo,
 	[TOOLS.N_CONSECUTIVE_RENBAN_LINE]: nConsecutiveRenbanLineInfo,
-	[TOOLS.KNABNER_LINE]: knabnerLineInfo,
+	[TOOLS.NABNER_LINE]: nabnerLineInfo,
 
 	[TOOLS.WHISPERS_LINE]: whispersLineInfo,
 	[TOOLS.MAXIMUM_ADJACENT_DIFFERENCE_LINE]: maximumAdjacentDifferenceLineInfo,
 	[TOOLS.RENBAN_OR_WHISPERS_LINE]: renbanOrWhispersLineInfo,
+	[TOOLS.RENBAN_OR_NABNER_LINE]: renbanOrNabnerLineInfo,
+	[TOOLS.OUT_OF_ORDER_CONSECUTIVE_LINE]: outOfOrderConsecutiveLineInfo,
 
 	[TOOLS.INDEX_LINE]: indexLineInfo,
 	[TOOLS.UNIQUE_VALUES_LINE]: uniqueValuesLineInfo,
@@ -378,6 +407,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.ROW_SUM_LINE]: rowSumLineInfo,
 	[TOOLS.AT_LEAST_X_LINE]: atLeastXLineInfo,
 	[TOOLS.SUPERFUZZY_ARROW]: superfuzzyArrowInfo,
+	[TOOLS.HEADLESS_ARROW]: headlessArrowInfo,
 	[TOOLS.N_CONSECUTIVE_FUZZY_SUM_LINE]: nConsecutiveFuzzySumLineInfo,
 	[TOOLS.ADJACENT_CELL_SUM_IS_PRIME_LINE]: adjacentCellSumIsPrimeLineInfo,
 	[TOOLS.PRODUCT_LINE]: productLineInfo,
@@ -385,6 +415,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.ADJACENT_DIFFERENCES_COUNT_LINE]: adjacentDifferencesCountLineInfo,
 	[TOOLS.LOOK_AND_SAY_LINE]: lookandSayLineInfo,
 	[TOOLS.ARITHMETIC_SEQUENCE_LINE]: arithmeticSequenceLineInfo,
+	[TOOLS.ZIPPER_LINE]: ZipperLineInfo,
+	[TOOLS.SEGMENTED_SUM_LINE]: segmentedSumLineInfo,
 
 	[TOOLS.SAME_PARITY_LINE]: sameParityLineLineInfo,
 	[TOOLS.MODULAR_LINE]: modularLineInfo,
@@ -453,6 +485,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.RISING_STREAK]: risingStreakInfo,
 	[TOOLS.ROW_OR_COLUMN_RANK]: rowOrColumnRankInfo,
 	[TOOLS.OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED]: outsideEdgeYinYangSumOfShadedInfo,
+	[TOOLS.OUTSIDE_CONSECUTIVE_SUM]: outsideConsecutiveSumInfo,
 
 	// Outside Corner Constraints
 	[TOOLS.LITTLE_KILLER_SUM]: littleKillerSumInfo,

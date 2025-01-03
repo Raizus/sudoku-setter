@@ -4,7 +4,6 @@ import { counter } from '$lib/utils/functionUtils';
 import type { GlobalConstraintsDict } from './Constraints/GlobalConstraints';
 import { TOOLS } from './Tools';
 
-
 function findCellsWithRepeatedValues(cells: Cell[]): Cell[] {
 	const result: Cell[] = [];
 	const values = cells.map((cell) => cell.value).filter((val) => val !== null);
@@ -33,7 +32,7 @@ export function rowConflicts(grid: Grid) {
 
 export function colConflicts(grid: Grid) {
 	const cells: Cell[] = [];
-    
+
 	for (let c = 0; c < grid.nCols; c++) {
 		const col = grid.getCol(c);
 		cells.push(...findCellsWithRepeatedValues(col));
@@ -59,10 +58,10 @@ export function knightsMoveConflicts(grid: Grid) {
 	const filled_cells = grid.getFilledCells();
 	for (const cell of filled_cells) {
 		const seen = grid.getCellsByKnightMove(cell);
-		const conflict = seen.filter(cell2 => cell2.value === cell.value);
+		const conflict = seen.filter((cell2) => cell2.value === cell.value);
 		if (conflict.length) {
-			cells.push(cell)
-			cells.push(...conflict)
+			cells.push(cell);
+			cells.push(...conflict);
 		}
 	}
 
@@ -90,13 +89,10 @@ export function nonconsecutiveConflicts(grid: Grid) {
 
 	const filled_cells = grid.getFilledCells();
 	for (const cell of filled_cells) {
-		const seen = grid.getOrthogonallyAdjacentCells(cell)
-			.filter(cell2 => cell2.value !== null);
+		const seen = grid.getOrthogonallyAdjacentCells(cell).filter((cell2) => cell2.value !== null);
 		const conflict = seen.filter(
 			(cell2) =>
-				cell2.value !== null
-				&& cell.value !== null
-				&& (Math.abs(cell.value - cell2.value) === 1)
+				cell2.value !== null && cell.value !== null && Math.abs(cell.value - cell2.value) === 1
 		);
 		if (conflict.length) {
 			cells.push(cell);
@@ -110,7 +106,7 @@ export function nonconsecutiveConflicts(grid: Grid) {
 export function disjointGroupsConflicts(grid: Grid) {
 	const cells: Cell[] = [];
 
-	const num_regions = [...grid.getUsedRegions()].length
+	const num_regions = [...grid.getUsedRegions()].length;
 	for (let group_idx = 0; group_idx < num_regions; group_idx++) {
 		const disjoint_group = grid.getDisjointGroup(group_idx);
 		const conflicts = findCellsWithRepeatedValues(disjoint_group);
@@ -122,14 +118,21 @@ export function disjointGroupsConflicts(grid: Grid) {
 	return new Set(cells);
 }
 
-export function globalConstraintsConflicts(
-	grid: Grid,
-	global_constraints: GlobalConstraintsDict
-) {
+export function globalConstraintsConflicts(grid: Grid, global_constraints: GlobalConstraintsDict) {
 	let conflicts: Set<Cell> = new Set();
 
+	const sudoku = !global_constraints.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY);
+	if (sudoku) {
+		const aux = new Set<Cell>([
+			...rowConflicts(grid),
+			...colConflicts(grid),
+			...regionConflicts(grid)
+		]);
+		conflicts = conflicts.union(aux);
+	}
+
 	if (global_constraints.get(TOOLS.ANTIKNIGHT)) {
-		conflicts = conflicts.union(knightsMoveConflicts(grid))
+		conflicts = conflicts.union(knightsMoveConflicts(grid));
 	}
 	if (global_constraints.get(TOOLS.ANTIKING)) {
 		conflicts = conflicts.union(kingsMoveConflicts(grid));
@@ -146,10 +149,7 @@ export function globalConstraintsConflicts(
 
 export function findConflicts(grid: Grid, global_constraints: GlobalConstraintsDict) {
 	const conflicts = new Set<Cell>([
-		...rowConflicts(grid),
-		...colConflicts(grid),
-		...regionConflicts(grid),
-		...globalConstraintsConflicts(grid, global_constraints),
+		...globalConstraintsConflicts(grid, global_constraints)
 	]);
 
 	const cells = [...conflicts];
