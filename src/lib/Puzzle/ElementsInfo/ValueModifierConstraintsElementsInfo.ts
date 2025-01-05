@@ -85,108 +85,14 @@ export const decrementFountainInfo: AbstractElementInfo = {
 	}
 };
 
-export const unknownRegionsInfo: AbstractElementInfo = {
-	toolId: TOOLS.UNKNOWN_REGIONS,
+export const nexusInfo: AbstractElementInfo = {
+	toolId: TOOLS.NEXUS,
 	order: 0,
 
 	meta: {
 		description:
-			'The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.',
+			'One cell within the grid, to be deduced, is a “multiplier nexus” cell. The value “n” within this “nexus” cell indicates that there are: exactly “n” 1s which have a taxicab distance of 1 away from the nexus; exactly “n” 2s which have a taxicab distance of 2 away from the nexus; exactly “n” 3s which have a taxicab distance of 3 away from the nexus; and so on... up to and including 9. A taxicab distance is the shortest distance between two cells, moving only horizontally and vertically.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
-export const yinYangInfo: AbstractElementInfo = {
-	toolId: TOOLS.YIN_YANG,
-	order: 0,
-
-	meta: {
-		description:
-			'Shade some cells in the grid such that all shaded cells are orthogonally connected and all unshaded cells are orthogonally connected, and no 2x2 area is fully shaded or fully unshaded.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
-export const nurimisakiInfo: AbstractElementInfo = {
-	toolId: TOOLS.NURIMISAKI,
-	order: 0,
-
-	meta: {
-		description:
-			'Shade some cells so that the remaining unshaded cells form one orthogonally connected area. No 2x2 region may be entirely shaded or unshaded.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
-export const twoContiguousRegionsInfo: AbstractElementInfo = {
-	toolId: TOOLS.TWO_CONTIGUOUS_REGIONS,
-	order: 0,
-
-	meta: {
-		description: 'Divide the grid into two sets of contiguous cells.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
-export const sashiganeRegionsInfo: AbstractElementInfo = {
-	toolId: TOOLS.SASHIGANE,
-	order: 0,
-
-	meta: {
-		description:
-			'Divide the grid into 1-cell wide L-shaped regions. Digits may not repeat in a region.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
-export const cellCenterLoopNoTouchingInfo: AbstractElementInfo = {
-	toolId: TOOLS.CELL_CENTER_LOOP_NO_TOUCHING,
-	order: 0,
-
-	meta: {
-		description:
-			'Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself, even diagonally.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
-export const modularLoopInfo: AbstractElementInfo = {
-	toolId: TOOLS.MODULAR_LOOP,
-	order: 0,
-
-	meta: {
-		description:
-			'Draw an orthogonal loop through the grid. The loop must not touch itself orthogonally; however, it can touch diagonally. Along the loop, any three consecutive cells must contain numbers congruent to 0 mod 3, 1 mod 3, and 2 mod 3. (In other words, one of the numbers is from the set {3, 6, 9, 12, …}, one is from {1, 4, 7, 10, …}, and one from {2, 5, 8, 11, …}.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
-export const caveInfo: AbstractElementInfo = {
-	toolId: TOOLS.CAVE,
-	order: 0,
-
-	meta: {
-		description:
-			'Shade some cells in the grid such that all unshaded cells are orthogonally connected, and all shaded cells are orthogonally connected by other shaded cells to an edge of the grid.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
-export const twilightCaveFillominoRegionShadingInfo: AbstractElementInfo = {
-	toolId: TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING,
-	order: 0,
-
-	meta: {
-		description: 'Each fillomino region must either be entirely shaded or entirely unshaded, according to cave shading.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.VALUE_MODIFIER_CONSTRAINT]
 	}
 };

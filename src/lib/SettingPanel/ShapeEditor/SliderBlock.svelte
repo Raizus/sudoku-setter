@@ -22,7 +22,3 @@
         {onInputCb}
     />
 </PropertyBlock>
-
-<style>
-
-</style>

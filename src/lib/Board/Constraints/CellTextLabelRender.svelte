@@ -18,7 +18,7 @@
 		const top = ['TL', 'TR'].includes(_position);
 		const left = ['TL', 'BL'].includes(_position);
 
-		const x = left ? cellTL.x + 0.03: cellTL.x + 1;
+		const x = left ? cellTL.x + 0.05: cellTL.x + 1;
 		const y = top ? cellTL.y : cellTL.y + 1;
 
 		const textPos = new Vector2D(x, y);
@@ -45,7 +45,7 @@
 		rectRef.setAttribute('height', String(bbox.height * 0.8));
 	});
 
-	$: textPos = anchorPos;
+	$: textPos = getTextPos(anchorPos, position);
 </script>
 
 {#if value.length}

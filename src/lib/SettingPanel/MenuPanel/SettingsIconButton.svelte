@@ -14,6 +14,3 @@
     <Settings/>
 </MenuButton>
 <SettingsModal bind:showModal />
-
-<style>
-</style>

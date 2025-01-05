@@ -11,10 +11,11 @@ import { lineConstraints } from './line_constraints';
 import { outsideDirectionConstraints } from './outside_direction_constraints';
 import { singleCellConstraints } from './single_cell_constraints';
 import { singleCellMultiArrowConstraints } from './single_cell_multi_arrow_constraints';
-import { addHeader } from './solver_utils';
+import { addHeader, PuzzleModel } from './solver_utils';
 import { valuedGlobalConstraints } from './valued_global_constraints';
 
 type ConstraintsF = (
+	model: PuzzleModel,
 	grid: Grid,
 	toolId: TOOLID,
 	constraints: Record<string, ConstraintType>
@@ -33,14 +34,14 @@ const functions_list: ConstraintsF[] = [
 	valuedGlobalConstraints
 ];
 
-export function localConstraints(puzzle: PuzzleI): string {
+export function localConstraints(puzzle: PuzzleI, model: PuzzleModel): string {
 	let out_str = '';
 	const lconstraints = puzzle.localConstraints;
 	const grid = puzzle.grid;
 
 	for (const [toolId, c_record] of lconstraints.entries()) {
 		for (const constraintF of functions_list) {
-			let constraint_str: string = constraintF(grid, toolId, c_record);
+			let constraint_str: string = constraintF(model, grid, toolId, c_record);
 			constraint_str = addHeader(constraint_str, `${toolId}`);
 			out_str += constraint_str;
 		}

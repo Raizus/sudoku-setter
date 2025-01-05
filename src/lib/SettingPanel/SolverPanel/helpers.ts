@@ -176,7 +176,7 @@ function setBinaryHighlights(json: JsonT, grid: Grid) {
 
 function setOtherHighlights(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
-	const grid_vars_names = ['doublers_grid', 'negators_grid', 'cell_center_loop'];
+	const grid_vars_names = ['doublers_grid', 'negators_grid', 'cell_center_loop', 'nexus'];
 
 	for (const name of grid_vars_names) {
 		const binary_grid = json[name] as boolean[][] | undefined;

@@ -193,7 +193,7 @@ export const countSameParityNeighborCellsInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.CIRCLE,
 		strokeWidth: { editable: false, value: 0.04 },
 		stroke: { editable: false, value: 'blue' },
-		r: { editable: false, value: 0.25 },
+		r: { editable: false, value: 0.3 },
 		fill: { editable: false, value: 'none' }
 	},
 
@@ -805,6 +805,32 @@ export const loopCellCountArrowsInfo: SquareCellElementInfo = {
 	}
 };
 
+export const yinYangCountUniqueFillominoSameShadingInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CELL_ARROW,
+		strokeWidth: { editable: true, value: 0.03, lb: 0.01, ub: 0.2, step: 0.01 },
+		stroke: { editable: true, value: 'black' }
+	},
+
+	meta: {
+		description:
+			'Numbers on cells with an arrow indicate the number of polyominoes of the SAME shading/parity seen in the direction of the arrow. Arrows do not count their own cell, but may count their polyomino if a cell within its polyomino is visible in the direction of the arrow.',
+		tags: [],
+		categories: [
+			TOOL_CATEGORIES.SINGLE_CELL_MULTIARROW_TOOL,
+			TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
+			TOOL_CATEGORIES.LOCAL_CONSTRAINT
+		]
+	}
+};
+
 export const sashiganeBendRegionCountInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getSingleCellToolInputHandler(svgRef, grid, tool);
@@ -973,6 +999,30 @@ export const twilightCaveFillominoClueInfo: SquareCellElementInfo = {
 	meta: {
 		description:
 			'If a clued cell is unshaded, the clue indicates the sum of numbers seen orthogonally from that cell; region borders block vision. If a clued cell is shaded, the clue indicates the total sum of numbers in its group of orthogonally connected shaded cells (which could include more than one region).',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const caveClueInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.CAVE_CLUE,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: false, value: 0.04 },
+		r: {editable: false, value: 0.35},
+		stroke: { editable: false, value: 'var(--constraint-color-light-blue' },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			'Light blue circled cells are cave clues. Cave clues must be a part of the cave, with each number indicating the total count of cells connected vertically and horizontally to the numbered cell including the cell itself.',
 		tags: [],
 		categories: singleCellShapeDefaultCategories
 	}

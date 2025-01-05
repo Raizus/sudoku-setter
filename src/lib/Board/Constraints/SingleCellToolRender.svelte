@@ -26,7 +26,7 @@
 	$: value = singleCellTool.value;
 </script>
 
-<g class="single-cell-tool">
+<g class="single-cell-tool" id={`constraint-${id}`}>
 	{#if singleCellTool.toolId === TOOLS.MINIMUM}
 		<MinMaxRender {coord} minOrMax={'min'} />
 	{:else if singleCellTool.toolId === TOOLS.MAXIMUM}

@@ -3,7 +3,7 @@ import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import type { GridCoordI } from '../utils/SquareCellGridCoords';
-import { cellsToVarsName, constraintsBuilder } from './solver_utils';
+import { cellsToVarsName, constraintsBuilder, PuzzleModel } from './solver_utils';
 
 function coordsToVarsStr(grid: Grid, coords: GridCoordI[]) {
 	const cells = coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell);
@@ -26,6 +26,7 @@ type ConstraintF = (grid: Grid, constraint: CloneToolI) => string;
 const tool_map = new Map<string, ConstraintF>([[TOOLS.CLONE_REGION, cloneRegionConstraint]]);
 
 export function cloneConstraints(
+	model: PuzzleModel,
 	grid: Grid,
 	toolId: TOOLID,
 	constraints: Record<string, ConstraintType>

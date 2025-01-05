@@ -2,7 +2,13 @@ import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { OutsideDirectionToolI } from '../Puzzle/Constraints/OutsideDirectionConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { cellsToValueVarsName, cellsToVarsName, cellsToYinYangVarsName } from './solver_utils';
+import {
+	cellsToValueVarsName,
+	cellsToVarsName,
+	cellsToYinYangVarsName,
+	PuzzleModel
+} from './solver_utils';
+import type { ParseOptions } from './value_parsing';
 
 function getOutsideDirectionConstraintVars(grid: Grid, constraint: OutsideDirectionToolI) {
 	const cell_coord = constraint.cell;
@@ -14,22 +20,44 @@ function getOutsideDirectionConstraintVars(grid: Grid, constraint: OutsideDirect
 }
 
 function simpleOutsideDirectionConstraint(
+	model: PuzzleModel,
 	grid: Grid,
 	constraint: OutsideDirectionToolI,
 	predicate: string
 ) {
+	const cell_coord = constraint.cell;
+	const cell = grid.getCell(cell_coord.r, cell_coord.c);
+
 	const vars = getOutsideDirectionConstraintVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
 	const value = constraint.value;
-	if (value) {
-		const val = parseInt(value);
-		const constraint_str: string = `constraint ${predicate}(${vars_str}, ${val});\n`;
-		return constraint_str;
+	const parse_opts: ParseOptions = {
+		allow_var: true,
+		allow_interval: true,
+		allow_int_list: false
+	};
+
+	let default_name = '';
+	if (!cell || cell.outside) {
+		default_name = `R${cell_coord.r}C${cell_coord.c}`;
+		default_name = default_name.replace('-', 'm');
 	}
-	return '';
+
+	const result = model.getOrSetSharedVar(value, default_name, parse_opts);
+	if (!result) return '';
+
+	const var_name = result[1];
+	let out_str: string = result[0];
+	out_str += `constraint ${predicate}(${vars_str}, ${var_name});\n`;
+	return out_str;
 }
 
-function sandwichSumConstraint(grid: Grid, c_id: string, constraint: OutsideDirectionToolI) {
+function sandwichSumConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
 	const vars = getOutsideDirectionConstraintVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
 	const value = constraint.value;
@@ -41,7 +69,12 @@ function sandwichSumConstraint(grid: Grid, c_id: string, constraint: OutsideDire
 	return '';
 }
 
-function xIndexConstraint(grid: Grid, c_id: string, constraint: OutsideDirectionToolI) {
+function xIndexConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
 	const vars = getOutsideDirectionConstraintVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
 	const first_var = vars[0];
@@ -54,7 +87,12 @@ function xIndexConstraint(grid: Grid, c_id: string, constraint: OutsideDirection
 	return '';
 }
 
-function xSumConstraint(grid: Grid, c_id: string, constraint: OutsideDirectionToolI) {
+function xSumConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
 	const vars = getOutsideDirectionConstraintVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
 	const first_var = vars[0];
@@ -67,7 +105,12 @@ function xSumConstraint(grid: Grid, c_id: string, constraint: OutsideDirectionTo
 	return '';
 }
 
-function shortsightedXSumConstraint(grid: Grid, c_id: string, constraint: OutsideDirectionToolI) {
+function shortsightedXSumConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
 	const vars = getOutsideDirectionConstraintVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
 	const first_var = vars[0];
@@ -80,7 +123,12 @@ function shortsightedXSumConstraint(grid: Grid, c_id: string, constraint: Outsid
 	return '';
 }
 
-function brokenXSumConstraint(grid: Grid, c_id: string, constraint: OutsideDirectionToolI) {
+function brokenXSumConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
 	const vars = getOutsideDirectionConstraintVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
 	const first_var = vars[0];
@@ -93,7 +141,12 @@ function brokenXSumConstraint(grid: Grid, c_id: string, constraint: OutsideDirec
 	return '';
 }
 
-function shiftedXSumConstraint(grid: Grid, c_id: string, constraint: OutsideDirectionToolI) {
+function shiftedXSumConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
 	const vars = getOutsideDirectionConstraintVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
 	const first_var = vars[0];
@@ -107,42 +160,109 @@ function shiftedXSumConstraint(grid: Grid, c_id: string, constraint: OutsideDire
 	return '';
 }
 
-function skyscrapersConstraint(grid: Grid, c_id: string, constraint: OutsideDirectionToolI) {
-	const constraint_str = simpleOutsideDirectionConstraint(grid, constraint, 'skyscrapers_p');
+function skyscrapersConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	const constraint_str = simpleOutsideDirectionConstraint(model, grid, constraint, 'skyscrapers_p');
 	return constraint_str;
 }
 
-function xSumSkyscrapersConstraint(grid: Grid, c_id: string, constraint: OutsideDirectionToolI) {
-	const constraint_str = simpleOutsideDirectionConstraint(grid, constraint, 'x_sum_skyscrapers_p');
-	return constraint_str;
-}
-
-function battlefieldConstraint(grid: Grid, c_id: string, constraint: OutsideDirectionToolI) {
-	const constraint_str = simpleOutsideDirectionConstraint(grid, constraint, 'battlefield_p');
-	return constraint_str;
-}
-
-function risingStreakConstraint(grid: Grid, c_id: string, constraint: OutsideDirectionToolI) {
-	const constraint_str = simpleOutsideDirectionConstraint(grid, constraint, 'rising_streak_p');
-	return constraint_str;
-}
-
-function outsideConsecutiveSumConstraint(grid: Grid, c_id: string, constraint: OutsideDirectionToolI) {
-	const constraint_str = simpleOutsideDirectionConstraint(grid, constraint, 'outside_consecutive_sum_p');
-	return constraint_str;
-}
-
-function littleKillerSumConstraint(grid: Grid, c_id: string, constraint: OutsideDirectionToolI) {
-	const constraint_str = simpleOutsideDirectionConstraint(grid, constraint, 'little_killer_sum_p');
-	return constraint_str;
-}
-
-function xOmitlittleKillerSumConstraint(
+function xSumSkyscrapersConstraint(
+	model: PuzzleModel,
 	grid: Grid,
 	c_id: string,
 	constraint: OutsideDirectionToolI
 ) {
 	const constraint_str = simpleOutsideDirectionConstraint(
+		model,
+		grid,
+		constraint,
+		'x_sum_skyscrapers_p'
+	);
+	return constraint_str;
+}
+
+function battlefieldConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	const constraint_str = simpleOutsideDirectionConstraint(model, grid, constraint, 'battlefield_p');
+	return constraint_str;
+}
+
+function risingStreakConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	const constraint_str = simpleOutsideDirectionConstraint(
+		model,
+		grid,
+		constraint,
+		'rising_streak_p'
+	);
+	return constraint_str;
+}
+
+function outsideConsecutiveSumConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	const constraint_str = simpleOutsideDirectionConstraint(
+		model,
+		grid,
+		constraint,
+		'outside_consecutive_sum_p'
+	);
+	return constraint_str;
+}
+
+function littleKillerSumConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	const constraint_str = simpleOutsideDirectionConstraint(
+		model,
+		grid,
+		constraint,
+		'little_killer_sum_p'
+	);
+	return constraint_str;
+}
+
+function littleKillerProductConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	const constraint_str = simpleOutsideDirectionConstraint(
+		model,
+		grid,
+		constraint,
+		'little_killer_product_p'
+	);
+	return constraint_str;
+}
+
+function xOmitlittleKillerSumConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	const constraint_str = simpleOutsideDirectionConstraint(
+		model,
 		grid,
 		constraint,
 		'x_omit_little_killer_sum_p'
@@ -151,6 +271,7 @@ function xOmitlittleKillerSumConstraint(
 }
 
 function outsideEdgeYinYangAdjacentSumOfShadedConstraint(
+	model: PuzzleModel,
 	grid: Grid,
 	c_id: string,
 	constraint: OutsideDirectionToolI
@@ -175,6 +296,7 @@ function outsideEdgeYinYangAdjacentSumOfShadedConstraint(
 }
 
 function negatorsLittleKillerSumConstraint(
+	model: PuzzleModel,
 	grid: Grid,
 	c_id: string,
 	constraint: OutsideDirectionToolI
@@ -195,7 +317,12 @@ function negatorsLittleKillerSumConstraint(
 	return '';
 }
 
-type ConstraintF = (grid: Grid, c_id: string, constraint: OutsideDirectionToolI) => string;
+type ConstraintF = (
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) => string;
 
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.SANDWICH_SUM, sandwichSumConstraint],
@@ -212,11 +339,13 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED, outsideEdgeYinYangAdjacentSumOfShadedConstraint],
 	// outside corner
 	[TOOLS.LITTLE_KILLER_SUM, littleKillerSumConstraint],
+	[TOOLS.LITTLE_KILLER_PRODUCT, littleKillerProductConstraint],
 	[TOOLS.X_OMIT_LITTLE_KILLER_SUM, xOmitlittleKillerSumConstraint],
 	[TOOLS.NEGATORS_LITTLE_KILLER_SUM, negatorsLittleKillerSumConstraint]
 ]);
 
 export function outsideDirectionConstraints(
+	model: PuzzleModel,
 	grid: Grid,
 	toolId: TOOLID,
 	constraints: Record<string, ConstraintType>
@@ -225,7 +354,7 @@ export function outsideDirectionConstraints(
 	const constraintF = tool_map.get(toolId);
 	if (constraintF) {
 		for (const [c_id, constraint] of Object.entries(constraints)) {
-			const constraint_str = constraintF(grid, c_id, constraint as OutsideDirectionToolI);
+			const constraint_str = constraintF(model, grid, c_id, constraint as OutsideDirectionToolI);
 			out_str += constraint_str;
 		}
 	}

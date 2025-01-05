@@ -37,7 +37,7 @@ export function defaultValidateValueOnInput(
 
 	if (value.length > maxLength) return false;
 
-	const ineqPattern = allowInequalities ? /[<>]?/ : RegExp('');
+	const ineqPattern = allowInequalities ? /(?:<|>|>=|<=)?/ : RegExp('');
 	const negPattern = allowNegatives ? /-?/ : RegExp('');
 	const varPattern = /[a-zA-Z]*?/;
 	const numberPattern = /[0-9]*/;

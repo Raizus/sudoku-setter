@@ -1258,7 +1258,7 @@ export const ZipperLineInfo: SquareCellElementInfo = {
 
 	meta: {
 		description:
-			'Digits an equal distance from the centre of the light blue line must sum to the digit in the centre of that light blue line.',
+			'Digits an equal distance from the center of the light blue line must sum to the digit in the center of that light blue line.',
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
@@ -1268,7 +1268,7 @@ export const ZipperLineInfo: SquareCellElementInfo = {
 export const segmentedSumLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: false,
+			allowSelfIntersection: true,
 			defaultValue: ''
 		});
 	},

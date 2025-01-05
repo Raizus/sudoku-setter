@@ -15,6 +15,3 @@
 {#each categories as category}
 	<SearchResultsCategory {category} {searchResults} {addTool}/>
 {/each}
-
-<style>
-</style>

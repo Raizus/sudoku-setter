@@ -8,7 +8,7 @@
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <label class="switch" class:disabled={disabled}>
 	<input type="checkbox" class="toggle" checked={value} {disabled} on:change={onClickCb} />
-	<span class="slider round" />
+	<span class="slider round"></span>
 </label>
 
 <style lang="scss">

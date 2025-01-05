@@ -6,6 +6,7 @@ import {
 import { getCageToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/CageToolInputHandler';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { RENDER_ORDER } from '../RenderOrder';
+import { SHAPE_TYPES } from '../Shape/Shape';
 import { cageUsage, typableCageUsage } from '../ToolUsage';
 import { TOOL_CATEGORIES, TOOLS } from '../Tools';
 
@@ -57,6 +58,37 @@ export const killerCageInfo: SquareCellElementInfo = {
 	meta: {
 		description:
 			'Numbers must not repeat in a killer cage. The numbers in the cage must sum to the given total in the top left (if one exists).',
+		usage: typableCageUsage(),
+		tags: [],
+		categories: typableCageDefaultCategories
+	}
+};
+
+export const uniqueDigitsCageInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getCageToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultCageValueUpdater(oldValue, key, validateCageValue),
+			defaultValue: '',
+			allowDiagonallyAdjacent: true
+		});
+	},
+
+	toolId: TOOLS.UNIQUE_DIGITS_CAGE,
+	order: RENDER_ORDER.CAGE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.CAGE,
+		strokeWidth: { editable: false, value: 0.1 },
+		stroke: { editable: false, value: 'black' },
+		fill: { editable: false, value: 'none' },
+		strokeDasharray: { editable: false, value: 0 },
+		inset: { editable: false, value: 0 }
+	},
+
+	meta: {
+		description:
+			'A bold cage has exactly x unique digits, i.e. the set of elements of the cage has size x. Digits may repeat in a cage.',
 		usage: typableCageUsage(),
 		tags: [],
 		categories: typableCageDefaultCategories
@@ -226,6 +258,36 @@ export const killerCageLookAndSayInfo: SquareCellElementInfo = {
 	meta: {
 		description:
 			"On a cage, given clues should be read as a 'look-and-say' numbers. Each number says which digits are in the respective cage. Eg if a cage clue is 1221, this means there is one 2 and two 1s in the cage.",
+		usage: typableCageUsage(),
+		tags: [],
+		categories: typableCageDefaultCategories
+	}
+};
+
+export const multisetCageInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getCageToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultCageValueUpdater(oldValue, key, validateCageValue),
+			defaultValue: '',
+			allowDiagonallyAdjacent: true
+		});
+	},
+
+	toolId: TOOLS.MULTISET_CAGE,
+	order: RENDER_ORDER.CAGE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.CAGE,
+		strokeWidth: { editable: false, value: 0.02 },
+		stroke: { editable: false, value: 'var(--constraint-color-light-blue)' },
+		fill: { editable: false, value: 'rgba(46, 203, 255, 0.1)' },
+		strokeDasharray: { editable: false, value: 0.08 },
+		inset: { editable: false, value: 0.07 }
+	},
+
+	meta: {
+		description: 'Light blue cages with the same label have the same group of digits.',
 		usage: typableCageUsage(),
 		tags: [],
 		categories: typableCageDefaultCategories

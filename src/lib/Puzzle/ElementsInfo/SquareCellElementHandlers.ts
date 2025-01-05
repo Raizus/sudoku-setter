@@ -9,9 +9,11 @@ import {
 	negatorsKillerCageInfo,
 	parityBalanceCageInfo,
 	putteriaCageInfo,
+	multisetCageInfo,
 	spotlightCageInfo,
 	sumCageInfo,
 	sumCageLookAndSayInfo,
+	uniqueDigitsCageInfo,
 	yinYangAntithesisKillerCageInfo,
 	yinYangBreakevenKillerCageInfo
 } from './CageToolsElementsInfo';
@@ -75,14 +77,13 @@ import {
 	allXVGivenInfo,
 	allXYDifferencesGivenInfo,
 	allYinYangKropkiGivenInfo,
+	antiGiraffeInfo,
 	antikingInfo,
 	antiknightInfo,
-	cave2x2NotFullyShadedOrUnshadedInfo,
-	caveCellsAreOddInfo,
-	caveWallsAreEvenInfo,
 	disjointGroupsInfo,
 	fillominoInfo,
 	globalIndexingColumnInfo,
+	hexedSudokuInfo,
 	negativeAntidiagonalInfo,
 	negativeDiagonalInfo,
 	nonconsecutiveInfo,
@@ -93,8 +94,12 @@ import {
 	positiveAntidiagonalInfo,
 	positiveDiagonalInfo,
 	sudokuRulesDoNotApplyInfo,
+	tangoInfo,
 	yinYangRegionSumLinesMustCrossColorsAtLeastOnceInfo
 } from './GlobalConstraintsElementsInfo';
+import { caveCellsAreOddInfo, oneDigitDoesNotAppearInTheCaveInfo, yinYangFillominoParityInfo } from './UndeterminedRegionsElementsInfo';
+import { caveWallsAreEvenInfo } from './UndeterminedRegionsElementsInfo';
+import { cave2x2NotFullyShadedOrUnshadedInfo } from './UndeterminedRegionsElementsInfo';
 import {
 	adjacentCellSumIsPrimeLineInfo,
 	adjacentMultiplesLineInfo,
@@ -157,6 +162,7 @@ import {
 } from './LineConstraintsElementsInfo';
 import {
 	littleKillerLookAndSayInfo,
+	littleKillerProductInfo,
 	littleKillerRegionSumProductInfo,
 	littleKillerSumInfo,
 	negatorsLittleKillerSumInfo,
@@ -179,6 +185,7 @@ import {
 } from './OutsideEdgeElementsInfo';
 import {
 	adjacentCellsInDifferentDirectionsHaveOpositeParityInfo,
+	caveClueInfo,
 	cellNotOnTheLoopInfo,
 	cellOnTheLoopInfo,
 	countCellsNotInTheSameRegionArrowsInfo,
@@ -213,26 +220,27 @@ import {
 	twoContiguousRegionsRowColumnOppositeSetCountInfo,
 	watchtowerInfo,
 	yinYangAdjacentSameShadeCountInfo,
+	yinYangCountUniqueFillominoSameShadingInfo,
 	yinYangMinesweeperInfo,
 	yinYangSeenSameShadeCellsInfo,
 	yinYangSeenShadedCellsInfo,
 	yinYangSeenUnshadedCellsInfo,
 	yinYangSumOfCellsOfOppositeColorInfo
 } from './SingleCellElementsInfo';
-import { forbiddenOrthogonallyAdjacentSumInfo } from './ValuedGlobalConstraintsElementsInfo';
+import { forbiddenOrthogonallyAdjacentSumInfo, minimumDiagonallyAdjacentDifferenceInfo } from './ValuedGlobalConstraintsElementsInfo';
 import {
-	caveInfo,
-	cellCenterLoopNoTouchingInfo,
 	doublersInfo,
-	modularLoopInfo,
 	negatorsInfo,
-	nurimisakiInfo,
-	sashiganeRegionsInfo,
-	twilightCaveFillominoRegionShadingInfo,
-	twoContiguousRegionsInfo,
-	unknownRegionsInfo,
-	yinYangInfo
-} from './ValueModifierConstraintsElementsInfo';
+	nexusInfo} from './ValueModifierConstraintsElementsInfo';
+import { twilightCaveFillominoRegionShadingInfo } from './UndeterminedRegionsElementsInfo';
+import { caveInfo } from './UndeterminedRegionsElementsInfo';
+import { modularLoopInfo } from './UndeterminedRegionsElementsInfo';
+import { cellCenterLoopNoTouchingInfo } from './UndeterminedRegionsElementsInfo';
+import { sashiganeRegionsInfo } from './UndeterminedRegionsElementsInfo';
+import { twoContiguousRegionsInfo } from './UndeterminedRegionsElementsInfo';
+import { nurimisakiInfo } from './UndeterminedRegionsElementsInfo';
+import { yinYangInfo } from './UndeterminedRegionsElementsInfo';
+import { unknownRegionsInfo } from './UndeterminedRegionsElementsInfo';
 
 export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = {
 	// Cell input elements
@@ -248,10 +256,13 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	//Global Constraints
 	[TOOLS.SUDOKU_RULES_DO_NOT_APPLY]: sudokuRulesDoNotApplyInfo,
+	[TOOLS.HEXED_SUDOKU]: hexedSudokuInfo,
 	[TOOLS.FILLOMINO]: fillominoInfo,
 	[TOOLS.ANTIKNIGHT]: antiknightInfo,
 	[TOOLS.ANTIKING]: antikingInfo,
+	[TOOLS.ANTI_GIRAFFE]: antiGiraffeInfo,
 	[TOOLS.DISJOINT_GROUPS]: disjointGroupsInfo,
+	[TOOLS.TANGO]: tangoInfo,
 	[TOOLS.NONCONSECUTIVE]: nonconsecutiveInfo,
 	[TOOLS.NONRATIO]: nonratioInfo,
 	[TOOLS.GLOBAL_INDEXING_COLUMN]: globalIndexingColumnInfo,
@@ -283,9 +294,11 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.CAVE_CELLS_ARE_ODD]: caveCellsAreOddInfo,
 	[TOOLS.CAVE_WALLS_ARE_EVEN]: caveWallsAreEvenInfo,
 	[TOOLS.CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED]: cave2x2NotFullyShadedOrUnshadedInfo,
+	[TOOLS.ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE]: oneDigitDoesNotAppearInTheCaveInfo,
 
 	[TOOLS.DOUBLERS]: doublersInfo,
 	[TOOLS.NEGATORS]: negatorsInfo,
+	[TOOLS.NEXUS]: nexusInfo,
 	// [TOOLS.VAMPIRE_AND_PREY]: vampireAndPreyInfo,
 	// [TOOLS.MARKED_CELLS]: markedCellsInfo,
 	// [TOOLS.HOT_CELLS]: hotCellsInfo,
@@ -347,7 +360,9 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.CELL_NOT_ON_THE_LOOP]: cellNotOnTheLoopInfo,
 	[TOOLS.COUNT_LOOP_NEIGHBOUR_CELLS]: countLoopNeighbourCellsInfo,
 
+	[TOOLS.CAVE_CLUE]: caveClueInfo,
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_CLUE]: twilightCaveFillominoClueInfo,
+	[TOOLS.YIN_YANG_FILLOMINO_PARITY]: yinYangFillominoParityInfo,
 
 	// Single Cell Arrow Constraint
 	[TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND]: sashiganeArrowPointsToBendInfo,
@@ -356,6 +371,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS]: countCellsNotInTheSameRegionArrowsInfo,
 	[TOOLS.YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR]: yinYangSumOfCellsOfOppositeColorInfo,
 	[TOOLS.LOOP_CELL_COUNT_ARROWS]: loopCellCountArrowsInfo,
+	[TOOLS.YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS]: yinYangCountUniqueFillominoSameShadingInfo,
 
 	// Edge Constraints
 	[TOOLS.DIFFERENCE]: differenceInfo,
@@ -456,6 +472,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	// Cage Constraints
 	[TOOLS.KILLER_CAGE]: killerCageInfo,
+	[TOOLS.UNIQUE_DIGITS_CAGE]: uniqueDigitsCageInfo,
 	[TOOLS.INVERTED_KILLER_CAGE]: invertedKillerCageInfo,
 	[TOOLS.SUM_CAGE]: sumCageInfo,
 	[TOOLS.SUM_CAGE_LOOK_AND_SAY]: sumCageLookAndSayInfo,
@@ -463,6 +480,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.DIVISIBLE_KILLER_CAGE]: divisibleKillerCageInfo,
 	[TOOLS.SPOTLIGHT_CAGE]: spotlightCageInfo,
 	[TOOLS.PUTTERIA_CAGE]: putteriaCageInfo,
+	[TOOLS.MULTISET_CAGE]: multisetCageInfo,
 	[TOOLS.YIN_YANG_ANTITHESIS_KILLER_CAGE]: yinYangAntithesisKillerCageInfo,
 	[TOOLS.YIN_YANG_BREAKEVEN_KILLER_CAGE]: yinYangBreakevenKillerCageInfo,
 
@@ -489,6 +507,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	// Outside Corner Constraints
 	[TOOLS.LITTLE_KILLER_SUM]: littleKillerSumInfo,
+	[TOOLS.LITTLE_KILLER_PRODUCT]: littleKillerProductInfo,
 	[TOOLS.LITTLE_KILLER_LOOK_AND_SAY]: littleKillerLookAndSayInfo,
 	[TOOLS.LITTLE_KILLER_REGION_SUM_PRODUCT]: littleKillerRegionSumProductInfo,
 	[TOOLS.X_OMIT_LITTLE_KILLER_SUM]: xOmitLittleKillerSumInfo,
@@ -500,6 +519,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	// Valued Global Constraints
 	[TOOLS.FORBIDDEN_ORTHOGONALLY_ADJACENT_SUM]: forbiddenOrthogonallyAdjacentSumInfo,
+	[TOOLS.MINIMUM_DIAGONALLY_ADJACENT_DIFFERENCE]: minimumDiagonallyAdjacentDifferenceInfo,
 
 	// Cosmetic Tools
 	[TOOLS.COSMETIC_CELL_SHAPE]: cosmeticCellShapeInfo,

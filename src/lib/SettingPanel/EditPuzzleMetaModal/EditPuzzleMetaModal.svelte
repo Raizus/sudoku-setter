@@ -112,7 +112,7 @@
 		<ModalSectionHeader title="Ruleset">
 			<button class="generate-button" on:click={autoGenCb}>Auto-Generate</button>
 		</ModalSectionHeader>
-		<textarea class="input-ruleset" placeholder="Ruleset" rows={8} bind:value={rulesetStr} />
+		<textarea class="input-ruleset" placeholder="Ruleset" rows={8} bind:value={rulesetStr}></textarea>
 		<ModalSectionHeader title="CTC Link" />
 		<input class="input-ctc-link" type="text" placeholder="CTC Link" bind:value={ctcUrlStr} />
 		<ModalSectionHeader title="CTC Youtube Link" />

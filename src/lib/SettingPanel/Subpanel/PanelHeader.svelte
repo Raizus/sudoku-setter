@@ -3,7 +3,18 @@
 	export let title: string;
 </script>
 
-<button class="panel-header" on:click={() => (isOpen = !isOpen)}>
+<div
+	role="button"
+	tabindex={0}
+	class="panel-header"
+	on:click={() => (isOpen = !isOpen)}
+	aria-keyshortcuts="Space Enter"
+	on:keydown={(e) => {
+		if (e.key !== "Enter" && e.key !== " ") return;
+		e.preventDefault();
+		e.currentTarget.click();
+	}}
+>
 	<div class="add-button-container">
 		<slot name="add-button" />
 	</div>
@@ -16,7 +27,7 @@
 	<div class="panel-header-right">
 		<span class="collapse-icon" class:open={isOpen}>&#10095</span>
 	</div>
-</button>
+</div>
 
 <style>
 	.panel-header {
@@ -35,7 +46,7 @@
 			outline: transparent;
 			box-shadow: var(--focus-shadow);
 		}
-	
+
 		&:hover {
 			background-color: var(--panel-radio-background-hover);
 		}

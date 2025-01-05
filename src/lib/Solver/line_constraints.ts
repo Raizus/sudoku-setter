@@ -3,7 +3,7 @@ import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { cellsToValueVarsName, cellsToVarsName, cellsToYinYangVarsName } from './solver_utils';
+import { cellsToValueVarsName, cellsToVarsName, cellsToYinYangVarsName, PuzzleModel } from './solver_utils';
 
 function getLineVars(grid: Grid, constraint: LineToolI, use_set: boolean = false) {
 	const cells_coords = constraint.cells;
@@ -149,7 +149,23 @@ function zipperLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 }
 
 function segmentedSumLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
-	const constraint_str = valuedLineConstraint(grid, constraint, 'segmented_sum_line_p');
+	const cells_coords = constraint.cells;
+	let cells = cells_coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+	let circular = false;
+	if (cells.length > 2 && cells[0] === cells[cells.length - 1]) {
+		cells = cells.slice(0, -1);
+		circular = true;
+	}
+	const vars = cellsToVarsName(cells);
+	const vars_str = `[${vars.join(',')}]`;
+
+	const value = constraint.value;
+	if (!value) return '';
+
+	const val = parseInt(value);
+	const constraint_str: string = `constraint segmented_sum_line_p(${vars_str}, ${val}, ${circular});\n`;
 	return constraint_str;
 }
 
@@ -529,6 +545,7 @@ const tool_map = new Map<string, ConstraintF>([
 ]);
 
 export function lineConstraints(
+	model: PuzzleModel,
 	grid: Grid,
 	toolId: TOOLID,
 	constraints: Record<string, ConstraintType>

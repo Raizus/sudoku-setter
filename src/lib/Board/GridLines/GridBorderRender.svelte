@@ -3,7 +3,7 @@
 
     export let gridShape: GridShape;
     
-    const strokeWidth = 0.08;
+    const strokeWidth = 0.06;
 </script>
 
 <g class="grid-border">

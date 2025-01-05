@@ -14,6 +14,3 @@
     <Save/>
 </MenuButton>
 <SavePuzzleModal bind:showModal />
-
-<style>
-</style>

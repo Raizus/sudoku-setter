@@ -59,6 +59,28 @@ export const littleKillerSumInfo: SquareCellElementInfo = {
 	}
 };
 
+export const littleKillerProductInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
+			defaultValue: '',
+			cornerOrEdge: CornerOrEdge.CORNER
+		});
+	},
+
+	toolId: TOOLS.LITTLE_KILLER_PRODUCT,
+	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
+	meta: {
+		description:
+			'A clue with an arrow outside the grid shows the product of the numbers along the indicated diagonal.',
+		usage: outsideCornerUsage(),
+		tags: [],
+		categories: outsideCornerDefaultCategories
+	}
+};
+
 export const littleKillerLookAndSayInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {

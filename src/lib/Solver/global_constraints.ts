@@ -153,6 +153,20 @@ function antiknightConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	return out_str;
 }
 
+function antiGiraffeConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint anti_giraffe_p(board);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
+function tangoConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint tango_p(board);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
 function* adjCellPairGen(grid: Grid) {	
 	for (const cell of grid.getAllCells()) {
 		const adj_cells = grid
@@ -331,8 +345,15 @@ function allDifferencesGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string 
 	const grid = puzzle.grid;
 	const local_constraints = puzzle.localConstraints;
 	const constraints = local_constraints.get(TOOLS.DIFFERENCE);
+	const ratio_constraints = local_constraints.get(TOOLS.RATIO);
 
-	const cell_pairs: Set<Cell>[] = getEdgeConstraintCellPairs(grid, constraints);
+	let cell_pairs: Set<Cell>[] = getEdgeConstraintCellPairs(grid, constraints);
+	// extend the pairs with ratios
+	cell_pairs = [
+		...cell_pairs,
+		...getEdgeConstraintCellPairs(grid, ratio_constraints)
+	];
+
 	let used_vals: string[] = [];
 	if (constraints) {
 		used_vals = Object.values(constraints)
@@ -350,9 +371,43 @@ function allDifferencesGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string 
 		const var1 = cellToVarName(cell1);
 		const var2 = cellToVarName(cell2);
 		for (const value of values) {
-			console.log(value);
 			const val = parseInt(value);
 			const constraint_str = `constraint abs(${var1} - ${var2}) != ${val};\n`;
+			out_str += constraint_str;
+		}
+	}
+
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
+function allRatiosGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	const grid = puzzle.grid;
+	const local_constraints = puzzle.localConstraints;
+	const constraints = local_constraints.get(TOOLS.RATIO);
+	const differences_constraints = local_constraints.get(TOOLS.DIFFERENCE);
+
+	let cell_pairs: Set<Cell>[] = getEdgeConstraintCellPairs(grid, constraints);
+	// extend the pairs with ratios
+	cell_pairs = [...cell_pairs, ...getEdgeConstraintCellPairs(grid, differences_constraints)];
+	let used_vals: string[] = [];
+	if (constraints) {
+		used_vals = Object.values(constraints)
+			.map((constraint) => constraint.value)
+			.map((val) => (!val ? '2' : val));
+	}
+	const values = [...new Set(used_vals)];
+
+	let out_str: string = '';
+	for (const [cell1, cell2] of adjCellPairGen(grid)) {
+		const match = cell_pairs.find((pair) => pair.has(cell1) && pair.has(cell2));
+		if (match) continue;
+
+		const var1 = cellToVarName(cell1);
+		const var2 = cellToVarName(cell2);
+		for (const value of values) {
+			const val = parseInt(value);
+			const constraint_str = `constraint not ratio_p(${var1}, ${var2}, ${val});\n`;
 			out_str += constraint_str;
 		}
 	}
@@ -517,6 +572,13 @@ function twilightCaveFillominoRegionsShading(puzzle: PuzzleI, toolId: TOOLID): s
 	return out_str;
 }
 
+function yinYangFillominoParityConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint yin_yang_fillomino_parity_p(board, yin_yang);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
 function caveCellsAreOddConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	let out_str: string = '';
 	out_str += `constraint cave_cells_are_odd_p(board, cave_shading);\n`;
@@ -534,6 +596,13 @@ function caveWallsAreEvenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 function cave2x2NotFullyShadedOrUnshadedConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	let out_str: string = '';
 	out_str += `constraint not_fully_shaded_or_unshaded_2x2_p(cave_shading);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
+function oneDigitDoesNotAppearInTheCaveConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint one_digit_does_not_appear_in_cave_p(board, cave_shading, ALLOWED_DIGITS);\n`;
 	out_str = addHeader(out_str, `${toolId}`);
 	return out_str;
 }
@@ -584,6 +653,17 @@ export function sudokuConstraints(puzzle: PuzzleI) {
 	return out_str;
 }
 
+export function hexedSudokuConstraint(puzzle: PuzzleI) {
+	const tool = TOOLS.HEXED_SUDOKU;
+	const gconstraints = puzzle.globalConstraints;
+	const constraint = gconstraints.get(tool);
+	if (!constraint) return '';
+
+	let out_str = `\n% ${tool}\n`
+	out_str += `constraint hexed_sudoku_p(board, ALLOWED_DIGITS);\n`;
+	return out_str;
+}
+
 type ConstraintF = (puzzle: PuzzleI, tool: TOOLID) => string;
 
 const tool_map = new Map<string, ConstraintF>([
@@ -596,7 +676,9 @@ const tool_map = new Map<string, ConstraintF>([
 
 	[TOOLS.ANTIKING, antikingConstraint],
 	[TOOLS.ANTIKNIGHT, antiknightConstraint],
+	[TOOLS.ANTI_GIRAFFE, antiGiraffeConstraint],
 	[TOOLS.DISJOINT_GROUPS, disjointGroupsConstraint],
+	[TOOLS.TANGO, tangoConstraint],
 	[TOOLS.NONCONSECUTIVE, nonconsecutiveConstraint],
 	[TOOLS.NONRATIO, nonratioConstraint],
 
@@ -605,6 +687,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.ALL_X_GIVEN, allXVGivenConstraint],
 	[TOOLS.ALL_XV_GIVEN, allXVGivenConstraint],
 	[TOOLS.ALL_DIFFERENCES_GIVEN, allDifferencesGivenConstraint],
+	[TOOLS.ALL_RATIOS_GIVEN, allRatiosGivenConstraint],
 	[TOOLS.ALL_XY_DIFFERENCES_GIVEN, allXYDifferencesGivenConstraint],
 	[TOOLS.ALL_YIN_YANG_KROPKI_GIVEN, allYinYangKropkiGivenConstraint],
 	[TOOLS.ALL_INDEXING_COLUMN_GIVEN, allIndexingColumnGivenConstraint],
@@ -620,7 +703,9 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING, twilightCaveFillominoRegionsShading],
 	[TOOLS.CAVE_CELLS_ARE_ODD, caveCellsAreOddConstraint],
 	[TOOLS.CAVE_WALLS_ARE_EVEN, caveWallsAreEvenConstraint],
-	[TOOLS.CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED, cave2x2NotFullyShadedOrUnshadedConstraint]
+	[TOOLS.CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED, cave2x2NotFullyShadedOrUnshadedConstraint],
+	[TOOLS.ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE, oneDigitDoesNotAppearInTheCaveConstraint],
+	[TOOLS.YIN_YANG_FILLOMINO_PARITY, yinYangFillominoParityConstraint]
 ]);
 
 export function globalConstraints(puzzle: PuzzleI): string {

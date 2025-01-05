@@ -2,7 +2,7 @@
 	export let isOpen = true;
 </script>
 
-<div class="collapsible-wrapper" class:closed={!isOpen}>
+<div class="collapsible-wrapper" class:closed={!isOpen} aria-expanded={isOpen}>
 	<slot />
 </div>
 

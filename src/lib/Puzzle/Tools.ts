@@ -13,10 +13,13 @@ export enum CELL_INPUT_TOOLS {
 
 export enum SIMPLE_GLOBAL_CONSTRAINTS {
 	SUDOKU_RULES_DO_NOT_APPLY = 'Sudoku rules do not apply',
+	HEXED_SUDOKU = 'Hexed Sudoku',
 	FILLOMINO = 'Fillomino',
 	ANTIKNIGHT = 'Antiknight',
 	ANTIKING = 'Antiking',
+	ANTI_GIRAFFE = 'Anti-Giraffe',
 	DISJOINT_GROUPS = 'Disjoint Groups',
+	TANGO = 'Tango',
 	NONCONSECUTIVE = 'Nonconsecutive',
 	NONRATIO = 'Nonratio',
 	POSITIVE_DIAGONAL = 'Positive Diagonal',
@@ -34,10 +37,7 @@ export enum SIMPLE_GLOBAL_CONSTRAINTS {
 
 	NURIMISAKI_PATH_GERMAN_WHISPERS = 'Nurimisaki Path German Whispers',
 	YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE = 'Yin Yang Region Sum Lines Must Cross Colors At Least Once',
-	ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES = 'Adjacent Cells Along Loop Are Multiples',
-	CAVE_CELLS_ARE_ODD = 'Cave Cells Are Odd',
-	CAVE_WALLS_ARE_EVEN = 'Cave Walls Are Even',
-	CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED = 'Cave 2x2 Not Fully Shaded or Unshaded'
+	ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES = 'Adjacent Cells Along Loop Are Multiples'
 }
 
 export enum NEGATIVE_CONSTRAINTS {
@@ -61,7 +61,8 @@ export enum VALUE_MODIFIER_CONSTRAINTS {
 	NEGATORS = 'Negators',
 	HOT_CELLS = 'Hot Cells',
 	COLD_CELLS = 'Cold Cells',
-	DECREMENT_FOUNTAIN = 'Decrement Fountain'
+	DECREMENT_FOUNTAIN = 'Decrement Fountain',
+	NEXUS = 'Nexus',
 }
 
 export enum UNDETERMINED_REGIONS_CONSTRAINTS {
@@ -73,7 +74,12 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	CELL_CENTER_LOOP_NO_TOUCHING = 'Cell Center Loop No Touching',
 	MODULAR_LOOP = 'Modular Loop',
 	CAVE = 'Cave',
-	TWILIGHT_CAVE_FILLOMINO_REGION_SHADING = 'Twilight Cave Fillomino Region Shading'
+	CAVE_CELLS_ARE_ODD = 'Cave Cells Are Odd',
+	CAVE_WALLS_ARE_EVEN = 'Cave Walls Are Even',
+	CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED = 'Cave 2x2 Not Fully Shaded or Unshaded',
+	ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE = 'One Digit Does Not Appear In The Cave',
+	TWILIGHT_CAVE_FILLOMINO_REGION_SHADING = 'Twilight Cave Fillomino Region Shading',
+	YIN_YANG_FILLOMINO_PARITY = 'Yin Yang Fillomino Parity'
 }
 
 export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
@@ -118,7 +124,8 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	SASHIGANE_BEND_REGION_COUNT = 'Sashigane Bend Region Count',
 	SASHIGANE_REGION_SUM = 'Sashigane Region Sum',
 
-	TWILIGHT_CAVE_FILLOMINO_CLUE = "Twilight Cave Fillomino Clue"
+	TWILIGHT_CAVE_FILLOMINO_CLUE = "Twilight Cave Fillomino Clue",
+	CAVE_CLUE = "Cave Clue"
 }
 
 export enum SINGLE_CELL_ARROW_CONSTRAINTS {
@@ -128,7 +135,8 @@ export enum SINGLE_CELL_ARROW_CONSTRAINTS {
 export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
 	COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS = 'Count Cells Not In The Same Region Arrows',
 	YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR = 'Yin Yang Sum Of Cells Of Opposite Color',
-	LOOP_CELL_COUNT_ARROWS = 'Loop Cell Count Arrows'
+	LOOP_CELL_COUNT_ARROWS = 'Loop Cell Count Arrows',
+	YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS = 'Yin Yang Count Unique Fillomino Same Shading Arrows'
 }
 
 export enum EDGE_CONSTRAINTS {
@@ -238,6 +246,7 @@ export enum ARROW_CONSTRAINTS {
 
 export enum CAGE_CONSTRAINTS {
 	KILLER_CAGE = 'Killer Cage',
+	UNIQUE_DIGITS_CAGE = 'Unique Digits Cage',
 	INVERTED_KILLER_CAGE = 'Inverted Killer Cage',
 	SUM_CAGE = 'Sum Cage',
 	KILLER_CAGE_LOOK_AND_SAY = 'Killer Cage Look And Say',
@@ -247,6 +256,7 @@ export enum CAGE_CONSTRAINTS {
 	SPOTLIGHT_CAGE = 'Spotlight Cage',
 	PUTTERIA_CAGE = 'Putteria Cage',
 	AQUARIUM_CAGE = 'Aquarium Cage',
+	MULTISET_CAGE = 'Set Cage',
 	YIN_YANG_ANTITHESIS_KILLER_CAGE = 'Yin Yang Antithesis Killer Cage',
 	YIN_YANG_BREAKEVEN_KILLER_CAGE = 'Yin Yang Breakeven Killer Cage',
 
@@ -277,6 +287,7 @@ export enum OUTSIDE_EDGE_CONSTRAINTS {
 
 export enum OUTSIDE_CORNER_CONSTRAINTS {
 	LITTLE_KILLER_SUM = 'Little Killer Sum',
+	LITTLE_KILLER_PRODUCT = 'Little Killer Product',
 	LITTLE_KILLER_LOOK_AND_SAY = 'Little Killer Look And Say',
 	LITTLE_KILLER_REGION_SUM_PRODUCT = 'Little Killer Region Sum Product',
 	X_OMIT_LITTLE_KILLER_SUM = 'X-Omit Little Killer Sum',
@@ -289,7 +300,8 @@ export enum CENTER_EDGE_CORNER_CONSTRAINTS {
 }
 
 export enum VALUED_GLOBAL_CONSTRAINTS {
-	FORBIDDEN_ORTHOGONALLY_ADJACENT_SUM = 'Forbidden Orthogonally Adjacent Sum'
+	FORBIDDEN_ORTHOGONALLY_ADJACENT_SUM = 'Forbidden Orthogonally Adjacent Sum',
+	MINIMUM_DIAGONALLY_ADJACENT_DIFFERENCE = 'Minimum Diagonally Adjacent Difference'
 }
 
 export enum COSMETIC_TOOLS {

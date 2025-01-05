@@ -18,6 +18,18 @@ export const sudokuRulesDoNotApplyInfo: AbstractElementInfo = {
 	}
 };
 
+export const hexedSudokuInfo: AbstractElementInfo = {
+	toolId: TOOLS.HEXED_SUDOKU,
+	order: 0,
+
+	meta: {
+		description:
+			'Fill every row, column, and box with an identical set of 9 unique numbers, selected from the numbers 1-15 (Alternatively, in hexadecimal, 1-F).',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	}
+};
+
 export const fillominoInfo: AbstractElementInfo = {
 	toolId: TOOLS.FILLOMINO,
 	order: 0,
@@ -41,6 +53,18 @@ export const antiknightInfo: AbstractElementInfo = {
 	}
 };
 
+export const antiGiraffeInfo: AbstractElementInfo = {
+	toolId: TOOLS.ANTI_GIRAFFE,
+	order: 0,
+
+	meta: {
+		description:
+			'Cells (1,4) apart cannot contain the same digit. (eg the digit in r1c5 cannot appear in r2c1/r2c9/r5c4/r5c6.)',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	}
+};
+
 export const antikingInfo: AbstractElementInfo = {
 	toolId: TOOLS.ANTIKING,
 	order: 0,
@@ -59,6 +83,18 @@ export const disjointGroupsInfo: AbstractElementInfo = {
 	meta: {
 		description:
 			'Cells that appear in the same position relative to their default regions must not contain the same number.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	}
+};
+
+export const tangoInfo: AbstractElementInfo = {
+	toolId: TOOLS.TANGO,
+	order: 0,
+
+	meta: {
+		description:
+			'No adjacent run of three cells may be all odd or all even, horizontally or vertically.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
 	}
@@ -334,40 +370,6 @@ export const adjacentCellsAlongLoopAreMultiplesInfo: AbstractElementInfo = {
 	meta: {
 		description:
 			'For each pair of adjacent cells along the loop, the larger digit is an integer multiple of the smaller digit.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
-	}
-};
-
-export const caveCellsAreOddInfo: AbstractElementInfo = {
-	toolId: TOOLS.CAVE_CELLS_ARE_ODD,
-	order: 0,
-
-	meta: {
-		description: 'Cave cells must contain odd digits.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
-	}
-};
-
-export const caveWallsAreEvenInfo: AbstractElementInfo = {
-	toolId: TOOLS.CAVE_WALLS_ARE_EVEN,
-	order: 0,
-
-	meta: {
-		description: 'Cave walls must contain even digits.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
-	}
-};
-
-export const cave2x2NotFullyShadedOrUnshadedInfo: AbstractElementInfo = {
-	toolId: TOOLS.CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED,
-	order: 0,
-
-	meta: {
-		description:
-			'No 2x2 cave region may be completely filled with cave cells or completely filled with wall cells.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
 	}

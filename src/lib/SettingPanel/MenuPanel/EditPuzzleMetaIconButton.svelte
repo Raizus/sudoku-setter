@@ -14,6 +14,3 @@
     <EditMeta/>
 </MenuButton>
 <EditPuzzleMetaModal bind:showModal />
-
-<style>
-</style>

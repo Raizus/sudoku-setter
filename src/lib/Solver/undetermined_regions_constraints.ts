@@ -244,6 +244,22 @@ export function caveConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
+export function nexusConstraint(puzzle: PuzzleI, tool: TOOLID) {
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: nexus_grid;\n`;
+	out_str += `\nconstraint nexus_p(board, nexus_grid, ALLOWED_DIGITS);\n`;
+
+	return out_str;
+}
+
 
 type ConstraintF = (puzzle: PuzzleI, tool: TOOLID) => string;
 
@@ -259,7 +275,8 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.MODULAR_LOOP, modularLoopConstraint],
 
 	[TOOLS.DOUBLERS, doublersConstraint],
-	[TOOLS.NEGATORS, negatorsConstraint]
+	[TOOLS.NEGATORS, negatorsConstraint],
+	[TOOLS.NEXUS, nexusConstraint]
 ]);
 
 export function undeterminedRegionsConstraints(puzzle: PuzzleI): string {

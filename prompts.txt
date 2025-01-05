@@ -1,17 +1,69 @@
-- Normal Sudoku rules apply.
+I have modified it to 
 
-- Zipper Lines: Digits an equal distance from the centre of the purple line must sum to the digit in the centre of that purple line.
+predicate segmented_sum_line_p(array[int] of var int: arr, var int: val, bool: circular) =
+    let {
+        set of int: idxs = index_set(arr);
+        int: n = length(arr);
+        int: min_i = max(idxs);
+        int: max_i = max(idxs);
+        % split_after[i] is true if we split after position i
+        array[idxs] of var bool: split_after;
+        % segment_sum[i] is sum from position i to next split (or end)
+        array[idxs] of var int: segment_sum;
+        % For circular case: is_start[i] indicates if position i starts a segment
+        array[idxs] of var bool: is_start;
+        % = [(i = min_i /\ split_after[max_i]) \/ (i > min_i /\ split_after[i-1]) | i in idxs];
+    } in (
+        forall(i in idxs)(
+            is_start[i] = (i = min_i /\ split_after[max_i]) \/ (i > min_i /\ split_after[i-1])
+        ) /\
+        % Each segment must sum to val
+        forall(i in idxs)(
+            is_start[i] -> segment_sum[i] = val
+        ) /\
+        % Circular case
+        if circular then
+            % Calculate running sum for each position
+            forall(i in idxs)(
+                segment_sum[i] = 
+                    arr[i] + 
+                    if split_after[i] then 
+                        0
+                    else
+                        if i = max_i then
+                            segment_sum[min_i]
+                        else
+                            segment_sum[(i+1)]
+                        endif
+                    endif
+            ) /\
+            % Ensure at least one split exists (to prevent single wrapped segment)
+            sum(i in idxs)(bool2int(split_after[i])) >= 1
+        else
+            % Non-circular case
+            split_after[max_i] = 1 /\
+            forall(i in idxs)(
+                segment_sum[i] = 
+                    if i = max_i then
+                        arr[i]
+                    else 
+                        arr[i] + 
+                        if split_after[i] then 
+                            0 
+                        else 
+                            segment_sum[i+1]
+                        endif
+                    endif
+            )
+        endif
+    );
 
-- Consecutive Sums: A clue outside the grid indicates the total of any digits in its row or column that neighbour at least one consecutive digit within that row or column. For example, if a column, reading downwards, contains the digits 128396547, the clue at the top of the column would be 18; the sum of 1, 2, 4, 5, and 6, which are the only digits which neighbour a consecutive digit within that sequence.
+It works fine when circular is false, but when it's true, the solver seems to get stuck in some infinite loop. This happens even if I set the variables to their correct value in my constraints.
 
-Create a predicate zipper_line_p(array[int] of var int: arr) which enforces the following constraint:
-    - asserts that the array has odd length;
-    - Elements an equal distance from the centre of the array must sum to the element in the center of the array.
+Fillomino: Divide the grid into polyominoes and fill each cell with a number equal to the size of its polyomino. Polyominoes of the same size may not share an edge.
 
-Create a predicate outside_consecutive_sum_p(array[int] of var int: arr, var int: val) which enforces the following constraint:
-    - The sum of all elements in the array which have an adjacent element consecutive with it (i.e. if abs(arr[i]-arr[i-1]) = 1 OR abs(arr[i]-arr[i+1]) = 1, then arr[i] counts towards the sum) is equal to val.
+Yin-Yang: Shade some cells such that all shaded cells are orthogonally connected and all unshaded cells are orthogonally connected. No 2x2 area may be fully shaded or unshaded.
 
-Each thick grey line can be divided into one or more non-overlapping segments. Each segment contains digits that sum to 10. Eg 513173 is a valid fill for a length 6 line, because it can be broken into 5131 and 73, each of which sum to 10. 
+Parity: All odd polyominoes are shaded, while all even polyominoes are unshaded
 
-Create a predicate segmented_sum_line_p(array[int] of var int: arr, var int: val) which enforces the following constraint:
-    - the array can be divided into one or more non-overlapping segments, such that each segment sums to val.
+“Yang” Arrows: Numbers on cells with an arrow indicate the number of polyominoes of the SAME shading/parity seen in the direction of the arrow. Arrows do not count their own cell, but may count their polyomino if a cell within its polyomino is visible in the direction of the arrow.

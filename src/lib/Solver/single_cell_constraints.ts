@@ -4,16 +4,19 @@ import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
+	cellsToCaveShadingVarsName,
 	cellsToCellCenterLoopVarsName,
 	cellsToSashiganeVarsName,
 	cellsToVarsName,
 	cellsToYinYangVarsName,
+	cellToCaveShadingVarName,
 	cellToCellCenterLoopVarName,
 	cellToSashiganeVarName,
 	cellToVarName,
 	cellToYinYangVarName,
 	getDirectionCells,
-	getDirectionsVars
+	getDirectionsVars,
+	PuzzleModel
 } from './solver_utils';
 
 function simpleSingleCellConstraint(grid: Grid, constraint: CellToolI, predicate: string) {
@@ -508,6 +511,24 @@ function countLoopNeighbourCellsConstraint(grid: Grid, constraint: CellToolI) {
 	return constraint_str;
 }
 
+function caveCluesConstraint(grid: Grid, constraint: CellToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToVarName(cell);
+	const cave_var = cellToCaveShadingVarName(cell);
+
+	const dirCells = getDirectionCells(grid, cell);
+	const cave_vars: string[] = [];
+	for (const cells of dirCells) {
+		const _cave_vars = '[' + cellsToCaveShadingVarsName(cells).join(', ') + ']';
+		cave_vars.push(_cave_vars);
+	}
+
+	const constraint_str = `constraint cave_clue_p(${cell_var}, ${cave_var}, ${cave_vars[0]}, ${cave_vars[1]}, ${cave_vars[2]}, ${cave_vars[3]});\n`;
+	return constraint_str;
+}
+
 
 type ConstraintF = (grid: Grid, constraint: CellToolI) => string;
 type ConstraintF2 = (grid: Grid, constraint: CellToolI[]) => string;
@@ -553,7 +574,8 @@ const tool_map = new Map<string, ConstraintF>([
 
 	[TOOLS.CELL_ON_THE_LOOP, cellOnLoopConstraint],
 	[TOOLS.CELL_NOT_ON_THE_LOOP, cellNotOnLoopConstraint],
-	[TOOLS.COUNT_LOOP_NEIGHBOUR_CELLS, countLoopNeighbourCellsConstraint]
+	[TOOLS.COUNT_LOOP_NEIGHBOUR_CELLS, countLoopNeighbourCellsConstraint],
+	[TOOLS.CAVE_CLUE, caveCluesConstraint]
 ]);
 
 const tool_map_2 = new Map<string, ConstraintF2>([
@@ -563,6 +585,7 @@ const tool_map_2 = new Map<string, ConstraintF2>([
 ]);
 
 export function singleCellConstraints(
+	model: PuzzleModel,
 	grid: Grid,
 	toolId: TOOLID,
 	constraints: Record<string, ConstraintType>

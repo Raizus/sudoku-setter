@@ -3,6 +3,29 @@ import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import type { TOOLID } from '../Puzzle/Tools';
 import { DIRECTION } from '../utils/directions';
+import { type ParseOptions, default_parse_opts, parseValue } from './value_parsing';
+
+export enum VAR_2D_NAMES {
+	BOARD = 'board',
+	YIN_YANG = 'yin_yang',
+	UNKNOWN_REGIONS = 'unknown_regions',
+	DOUBLERS = 'doublers_grid',
+	NEGATORS = 'negators_grid',
+	VALUES_GRID = 'values_grid',
+	SASHIGANE = 'sashigane',
+	CELL_CENTER_LOOP = 'cell_center_loop',
+	CAVE_SHADING = 'cave_shading',
+	FILLOMINO_REGIONS = 'fillomino_area'
+}
+
+export function cellToGridVarName(cell: Cell, name: VAR_2D_NAMES): string {
+	return `${name}[${cell.r},${cell.c}]`;
+}
+
+export function cellsToGridVarsName(cells: Cell[], name: VAR_2D_NAMES): string[] {
+	const vars = cells.map((cell) => cellToGridVarName(cell, name));
+	return vars;
+}
 
 export function cellToVarName(cell: Cell): string {
 	const [r, c] = [cell.r, cell.c];
@@ -72,6 +95,22 @@ export function cellsToCellCenterLoopVarsName(cells: Cell[]): string[] {
 	return cells.map((cell) => cellToCellCenterLoopVarName(cell));
 }
 
+export function cellToCaveShadingVarName(cell: Cell): string {
+	return `cave_shading[${cell.r},${cell.c}]`;
+}
+
+export function cellsToCaveShadingVarsName(cells: Cell[]): string[] {
+	return cells.map((cell) => cellToCaveShadingVarName(cell));
+}
+
+export function cellToFillominoRegionVarName(cell: Cell): string {
+	return `fillomino_area[${cell.r},${cell.c}]`;
+}
+
+export function cellsToFillominoRegionVarsName(cells: Cell[]): string[] {
+	return cells.map((cell) => cellToFillominoRegionVarName(cell));
+}
+
 export function allDifferentConstraint(vars: string[]): string {
 	const vars_str = vars.join(',');
 	const constraint = `constraint alldifferent([${vars_str}]);\n`;
@@ -85,44 +124,6 @@ export function addHeader(block: string, header: string) {
 	return block;
 }
 
-interface IntervalI {
-	lower_bound?: [val: number, closed: boolean];
-	upper_bound?: [val: number, closed: boolean];
-}
-
-interface ParseOptions {
-	allow_var: boolean;
-	allow_int_list: boolean;
-	allow_interval: boolean;
-}
-
-export function parseVariable(value: string): string | null {
-	const regex = /^([a-zA-Z][a-zA-Z0-9]*)$/;
-	const result = value.match(regex);
-	if (!result) return null;
-	return result[0];
-}
-
-export function parseValue(value: string, parse_opts: ParseOptions) {
-	const parsedInt = parseInt(value);
-	if (typeof parsedInt === 'number') {
-		return parsedInt;
-	}
-
-	// match variable
-	const parsedVar = parseVariable(value);
-	if (parse_opts.allow_var && parsedVar) return parsedVar;
-
-	return null;
-}
-
-export function set_shared_var(name: string) {
-	const declaration = `var int: ${name};\n`;
-	// TODO: if var is interval set the corresponding constraints
-	// TODO: if vars is a list of possible values set the corresponding constraints
-	return declaration;
-}
-
 export function defineFunctionsPredicates() {
 	let out_str = '\n';
 
@@ -134,7 +135,10 @@ export function defineFunctionsPredicates() {
     int: d2 = abs(c2-c1);
 } in d1 <= 1 /\\ d2 <= 1 /\\ d1 + d2 = 1;\n\n`;
 
-	const helper_f = `function var int: odd_count(array[int] of var int: arr) =
+    const helper_f = `function array[1..4] of tuple(int, int): orth_adjacent_idxs(int: r, int: c) =
+    [(r-1,c),(r+1,c),(r,c-1),(r,c+1)];
+    
+function var int: odd_count(array[int] of var int: arr) =
     sum(i in index_set(arr))(bool2int(arr[i] mod 2 = 1));
 
 function var int: even_count(array[int] of var int: arr) =
@@ -226,7 +230,18 @@ function var int: conditional_sum_f(
             "Arrays must have same index set"
         )
     } in
-    sum(i in index_set(arr) where labels[i] == label)(arr[i]);\n\n`;
+    sum(i in index_set(arr) where labels[i] == label)(arr[i]);
+
+function array[int] of var $$T: rotate_right_f(array[int] of var $$T: arr, int: x) =
+    let {
+        set of int: idxs = index_set(arr);
+        int: n = length(arr);
+        % Normalize x to be within array bounds
+        int: shift = x mod n;
+    } in
+    array1d(idxs, [
+        arr[1 + ((i - 1 - shift + n) mod n)] | i in idxs
+    ]);\n\n`;
 
 	const more_helper_f = `function array[int] of int: grid_to_graph_from_edges(array[int,int] of var int: grid) = 
     let {
@@ -660,13 +675,20 @@ predicate zipper_line_p(array[int] of var int: arr) =
     let {
         int: n = length(arr);
         int: mid = (n + 1) div 2;
+        % For even length arrays, this variable will hold the sum value
+        var int: target_sum = if n mod 2 = 1 then arr[mid] else arr[mid] + arr[mid+1] endif;
     } in
-    % Assert odd length
-    assert(n mod 2 = 1, "Array must have odd length") /\\
-    % For each position before middle, sum with corresponding position after middle
-    forall(i in 1..mid-1)(
-        arr[i] + arr[n-i+1] = arr[mid]
-    );
+    if n mod 2 = 1 then
+        % Odd length case - sum to middle element
+        forall(i in 1..mid-1)(
+            arr[i] + arr[n-i+1] = arr[mid]
+        )
+    else
+        % Even length case - all pairs sum to same value
+        forall(i in 1..n div 2)(
+            arr[i] + arr[n-i+1] = target_sum
+        )
+    endif;
 
 predicate odd_even_oscillator_line_p(array[int] of var int: arr) =
     forall(i in index_set(arr) where i < max(index_set(arr))) (
@@ -854,7 +876,7 @@ predicate look_and_say_line_p(array[int] of var int: arr) =
         var int: last = arr[max(index_set(arr))]
     } in count(arr, first) == last /\\ count(arr, last) == first;
 
-predicate segmented_sum_line_p(array[int] of var int: arr, var int: val) =
+predicate segmented_sum_line_not_circular_p(array[int] of var int: arr, var int: val) =
     let {
         set of int: idxs = index_set(arr);
         int: n = length(arr);
@@ -881,7 +903,30 @@ predicate segmented_sum_line_p(array[int] of var int: arr, var int: val) =
     forall(i in 1..n)(
         % If this is start of segment (first pos or after split), sum must be val
         (i = 1 \\/ (i > 1 /\\ split_after[i-1])) -> segment_sum[i] = val
-    );\n\n`;
+    );
+
+predicate segmented_sum_line_circular_p(
+    array[int] of var int: arr, 
+    var int: val
+    ) =
+    let {
+        set of int: idxs = index_set(arr);
+        int: min_i = max(idxs);
+        int: max_i = max(idxs);
+    } in (
+        exists(i in 0..max_i-1)(
+            let {
+                array[int] of var int: new_arr = rotate_right_f(arr, i)
+            } in segmented_sum_line_not_circular_p(new_arr, val)
+        )
+    );
+
+predicate segmented_sum_line_p(array[int] of var int: arr, var int: val, bool: circular) =
+    if circular then
+        segmented_sum_line_circular_p(arr, val)
+    else
+        segmented_sum_line_not_circular_p(arr, val)
+    endif;\n\n`;
 
 	const double_end_line_constraints = `
 predicate between_line_p(array[int] of var int: arr) =
@@ -994,7 +1039,16 @@ predicate divisible_killer_cage_p(array[int] of var int: arr, var int: val) =
     sum(arr) mod val == 0;
 
 predicate spotlight_cage_p(array[int] of var int: arr, var int: val) =
-    alldifferent(arr) /\\ member(arr, val);\n\n`;
+    alldifferent(arr) /\\ member(arr, val);
+
+predicate unique_values_cage_p(array[int] of var int: arr, var int: val, set of int: allowed) =
+    let {
+        array[index_set(allowed)] of var bool: used_vals = [
+          exists(i in index_set(arr))(
+            arr[i] = v
+          )
+        | v in allowed]
+    } in sum(used_vals) = val;\n\n`;
 
 	const outside_edge_constraints = `function var int: sandwich_sum(array[int] of var int: arr, int: a, int: b) =
     sum(i in index_set(arr)) (arr[i] * bool2int(sandwich_bools(arr, a, b)[i]));
@@ -1107,6 +1161,9 @@ predicate outside_consecutive_sum_p(array[int] of var int: arr, var int: val) =
 
 	const outside_corner_constraints = `predicate little_killer_sum_p(array[int] of var int: arr, var int: val) =
 	sum(arr) == val;
+
+predicate little_killer_product_p(array[int] of var int: arr, var int: val) =
+	product(arr) == val;
 	
 predicate x_omit_little_killer_sum_p(array[int] of var int: arr, var int: val) =
 	let {
@@ -1126,6 +1183,19 @@ predicate x_omit_little_killer_sum_p(array[int] of var int: arr, var int: val) =
         (j < max(index_set_2of2(grid)) -> grid[i,j] + grid[i,j+1] != val) /\\
         % Down neighbor
         (i < max(index_set_1of2(grid)) -> grid[i,j] + grid[i+1,j] != val)
+    );
+
+predicate minimum_diagonally_adjacent_difference(array[int, int] of var int: grid, var int: val) =
+    let {
+        set of int: rows = index_set_1of2(grid);
+        set of int: cols = index_set_2of2(grid);
+    } in
+    % Check all diagonal pairs
+    forall(r in rows where r < max(rows), c in cols where c < max(cols))(
+        % Bottom-right diagonal
+        abs(grid[r,c] - grid[r+1,c+1]) >= val /\\
+        % Bottom-left diagonal (if not in first column)
+        (c > min(cols) -> abs(grid[r,c] - grid[r+1,c-1]) >= val)
     );\n\n`;
 
 	const yin_yang = `predicate yin_yang_no_crossings(array[int, int] of var 0..1: grid) =
@@ -1356,7 +1426,23 @@ function var int: yin_yang_sum_of_opposite_color_f(
     else
         conditional_sum_f(arr, labels, 1)
     endif
-);\n\n`;
+);
+
+function var int: yin_yang_count_unique_fillominoes_same_shading_f(
+    var 0..1: yin_yang_var,
+    array[int] of var 0..1: shading,
+    array[int] of var int: regions % fillomino regions
+) = let {
+    set of int: idxs = index_set(shading);
+    array[idxs] of var bool: count_bools = [
+        % same shading
+        shading[i] == yin_yang_var /\\
+        % must be the first of that region to be seen to count
+        not exists(j in idxs where j<i) (
+            regions[j] == regions[i]
+        )
+    | i in idxs];
+} in sum(count_bools);\n\n`;
 
 	const two_contiguous_regions = `predicate two_contiguous_regions_p(array[int, int] of var 0..1: grid) =
 	connected_region(grid, 0) /\\
@@ -1886,6 +1972,11 @@ predicate fillomino_p(
                 abs(r2-r) + abs(c2-c) >= grid[r,c] -> area[r,c] != area[r2, c2]
             )
         ) /\\
+        forall(r in rows, c in cols) (
+            forall(r2 in rows, c2 in cols) (
+                abs(r2-r) + abs(c2-c) >= grid[r,c] -> area[r, c] != (r2) * n_cols + c2 + 1
+            )
+        ) /\\
         % Each area's size is the number of cells in that area.
         forall (id in ids) (
             size[id] = sum (r in rows, c in cols) (bool2int(area[r, c] = id))
@@ -1922,8 +2013,19 @@ predicate fillomino_p(
         % by minimizing the distance of each node in the branching tree (each region) to the root
         % this removes solution with the same regions, but with different floodfilling (when array)
         fillomino_restrict_floodfill_p(when, area)
-        % /\\ conditional_sum_f(array1d(grid), array1d(same_before), 0) = g_size
-    );\n\n`;
+    );
+    
+predicate yin_yang_fillomino_parity_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: shading % yin yang shading
+) = (
+    forall(r in index_set_1of2(grid), c in index_set_2of2(grid))(
+        grid[r,c] mod 2 = 0 <-> shading[r,c] = 0
+    ) /\\
+    forall(r in index_set_1of2(grid), c in index_set_2of2(grid))(
+        grid[r,c] mod 2 = 1 <-> shading[r,c] = 1
+    )
+);\n\n`;
 
     const cave = `% test if element is on the edge of the grid
 test on_edge_2d(int: r, int: c, array[int, int] of var int: grid) = 
@@ -2067,7 +2169,121 @@ predicate cave_walls_are_even_p(
     array[int,int] of var 0..1: shading
 ) = forall(r in index_set_1of2(grid), c in index_set_1of2(grid)) (
     shading[r,c] = 1 <-> grid[r,c] mod 2 = 0
-);\n\n`;
+);
+
+function var int: cave_clue_f(
+	array[int] of var 0..1: shading1, 
+	array[int] of var 0..1: shading2, 
+	array[int] of var 0..1: shading3, 
+	array[int] of var 0..1: shading4,
+    var 0..1: cell_shading
+) = (
+    count_uninterrupted(shading1, cell_shading) + count_uninterrupted(shading2, cell_shading) + count_uninterrupted(shading3, cell_shading) + count_uninterrupted(shading4, cell_shading)
+);
+
+predicate cave_clue_p(
+    var int: cell_var,
+    var 0..1: cell_shading,
+	array[int] of var 0..1: shading1, 
+	array[int] of var 0..1: shading2, 
+	array[int] of var 0..1: shading3, 
+	array[int] of var 0..1: shading4
+) = let {
+    var int: count_cell = if cell_shading == 0 then 1 else 0 endif;
+} in (
+    cell_shading = 0 /\\
+    cave_clue_f(shading1, shading2, shading3, shading4, cell_shading) + count_cell == cell_var
+);
+
+predicate one_digit_does_not_appear_in_cave_p(
+    array[int, int] of var int: grid, 
+    array[int, int] of var int: shading,
+    set of int: allowed
+) = 
+    let {
+        array[index_set(allowed)] of var bool: in_cave = [
+            not exists(r in index_set_1of2(grid), c in index_set_2of2(grid))(
+                shading[r,c] == 0 /\\ grid[r,c] = allowed[i]
+            )
+        | i in index_set(allowed)];
+    } in sum(in_cave) == 1;\n\n`;
+    
+    const global_constraints = `predicate anti_giraffe_p(array[int, int] of var int: grid) =
+    let {
+        set of int: rows = index_set_1of2(grid);
+        set of int: cols = index_set_2of2(grid);
+    } in
+    % Check all possible giraffe moves from each cell
+    forall(r in rows, c in cols)(
+        (in_bounds_2d(r-1, c-4, grid) -> grid[r,c] != grid[r-1,c-4]) /\\
+        (in_bounds_2d(r-1, c+4, grid) -> grid[r,c] != grid[r-1,c+4]) /\\
+        (in_bounds_2d(r+1, c-4, grid) -> grid[r,c] != grid[r+1,c-4]) /\\
+        (in_bounds_2d(r+1, c+4, grid) -> grid[r,c] != grid[r+1,c+4]) /\\
+        (in_bounds_2d(r-4, c-1, grid) -> grid[r,c] != grid[r-4,c-1]) /\\
+        (in_bounds_2d(r-4, c+1, grid) -> grid[r,c] != grid[r-4,c+1]) /\\
+        (in_bounds_2d(r+4, c-1, grid) -> grid[r,c] != grid[r+4,c-1]) /\\
+        (in_bounds_2d(r+4, c+1, grid) -> grid[r,c] != grid[r+4,c+1])
+    );
+
+predicate hexed_sudoku_p(array[int, int] of var int: grid, set of int: allowed) =
+    let {
+        array[index_set(allowed)] of var bool: used_vals = [
+          exists(r in index_set_1of2(grid), c in index_set_2of2(grid))(
+            grid[r,c] = allowed[i]
+          )
+        | i in index_set(allowed)]
+    } in sum(used_vals) = 9;
+
+predicate nexus_p(
+    array[int, int] of var int: grid, 
+    array[int, int] of var bool: labels,
+    set of int: values
+) = let {
+    % Get index sets
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    var int: label_row;
+    var int: label_col;
+} in (
+    count(array1d(labels), true) = 1 /\\
+    forall(r in rows, c in cols)(
+        (labels[r,c] -> label_row = r /\\ label_col = c)
+    ) /\\
+    forall(v in values)(
+        sum(r in rows, c in cols where abs(r - label_row) + abs(c - label_col) = v)(
+            bool2int(grid[r,c] = v)
+        ) = grid[label_row, label_col]
+    )
+);
+
+predicate tango_p(array[int, int] of var int: grid) =
+    let {
+        set of int: rows = index_set_1of2(grid);
+        set of int: cols = index_set_2of2(grid);
+    } in (
+        % No three consecutive cells horizontally can be all odd or all even
+        forall(r in rows, c in min(cols)..max(cols)-2)(
+            % Not all odd
+            not (grid[r,c] mod 2 = 1 /\\ 
+                 grid[r,c+1] mod 2 = 1 /\\ 
+                 grid[r,c+2] mod 2 = 1) /\\
+            % Not all even
+            not (grid[r,c] mod 2 = 0 /\\ 
+                 grid[r,c+1] mod 2 = 0 /\\ 
+                 grid[r,c+2] mod 2 = 0)
+        ) /\\
+        % No three consecutive cells vertically can be all odd or all even
+        forall(r in min(rows)..max(rows)-2, c in cols)(
+            % Not all odd
+            not (grid[r,c] mod 2 = 1 /\\ 
+                 grid[r+1,c] mod 2 = 1 /\\ 
+                 grid[r+2,c] mod 2 = 1) /\\
+            % Not all even
+            not (grid[r,c] mod 2 = 0 /\\ 
+                 grid[r+1,c] mod 2 = 0 /\\ 
+                 grid[r+2,c] mod 2 = 0)
+        )
+    );\n\n`;
 
     out_str +=
         tests +
@@ -2094,7 +2310,7 @@ predicate cave_walls_are_even_p(
 		sashigane +
 		cell_center_loop +
 		fillomino +
-		cave;
+		cave + global_constraints;
 
 	return out_str;
 }
@@ -2141,4 +2357,82 @@ export function constraintsBuilder<T extends ConstraintType>(
 		}
 	}
 	return out_str;
+}export interface ModelI {
+	model_str: string; // string with minizinc model
+	used_vars: Set<string>; // keep track of shared vars
 }
+export class PuzzleModel implements ModelI {
+	model_str: string = '';
+	used_vars: Set<string> = new Set();
+
+	add(str: string) {
+		this.model_str += str;
+	}
+
+	hasVariable(name: string): boolean {
+		return this.used_vars.has(name);
+	}
+
+	addVariable(name: string) {
+		this.used_vars.add(name);
+	}
+
+	getOrSetSharedVar(
+		value: string,
+		default_name: string,
+		parse_opts: ParseOptions = default_parse_opts
+	): [model_str: string, var_name: string] | null {
+		const parsed_value = parseValue(value, parse_opts);
+		if (!parsed_value) return null;
+
+		if (parsed_value.type === 'number') {
+			const value = parsed_value.parsed;
+			return ['', String(value)];
+		}
+
+		let model_str = '';
+		if (parsed_value.type === 'variable') {
+			const var_name = parsed_value.parsed;
+
+			const exists = this.hasVariable(var_name);
+			if (!exists) {
+				model_str += `var int: ${var_name};\n`;
+				this.addVariable(var_name);
+			}
+
+			return [model_str, var_name];
+		}
+        if (!default_name) return null;
+
+		const exists = this.hasVariable(default_name);
+		if (!exists) {
+			model_str += `var int: ${default_name};\n`;
+			this.addVariable(default_name);
+		}
+
+		if (parsed_value.type === 'interval') {
+			const interval = parsed_value.parsed;
+			// if variable does not exist we need to declare it
+			if (interval.lower_bound) {
+				const val = interval.lower_bound[0];
+				const op = interval.lower_bound[1];
+				model_str += `constraint ${default_name} ${op} ${val};\n`;
+			}
+			if (interval.upper_bound) {
+				const val = interval.upper_bound[0];
+				const op = interval.upper_bound[1];
+				model_str += `constraint ${default_name} ${op} ${val};\n`;
+			}
+		}
+
+		if (parsed_value.type === 'number_list') {
+			const values = parsed_value.parsed;
+			// if variable does not exist we need to declare it
+			const values_str = '{' + values.join(',') + '}';
+			model_str += `constraint member(${values_str}, ${default_name});\n`;
+		}
+
+		return [model_str, default_name];
+	}
+}
+

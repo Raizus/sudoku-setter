@@ -117,3 +117,27 @@ textarea {
 
 	--grid-background-color: white;
 }
+
+.App {
+	--entry-panel-button-size: 2.5rem;
+	--entry-panel-button-gap: 8px;
+
+	--constraint-color-light-gray: lightgray;
+	--constraint-color-gray: gray;
+	--constraint-color-dark-gray: rgb(100, 100, 100);
+	--constraint-color-purple: rgb(100, 0, 128);
+	--constraint-color-green: green;
+	--constraint-color-orange: orange;
+	--constraint-color-light-blue: #2ecbff;
+	--constraint-color-blue: rgb(105, 105, 255);
+	--constraint-color-dark-blue: rgb(50, 50, 255);
+	--constraint-color-yellow: yellow;
+	--constraint-color-red: red;
+	--constraint-color-gold: gold;
+	--constraint-color-pink: pink;
+
+	--cell-digit-outline: white;
+	--cell-digit-color: rgb(29, 106, 229);
+	--cell-region-value-color: rgb(142, 142, 142);
+	--cell-given-color: black;
+}

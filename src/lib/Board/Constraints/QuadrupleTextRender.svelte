@@ -24,23 +24,52 @@
 	$: fontSize = shape?.fontSize ?? 0.2;
 	$: fontColor = shape?.fontColor ?? 'black';
 
-	$: values = get_values(value);
+	$: values = value ? value?.split(',') : [];
 </script>
 
 {#if value}
 	<g class="quadruple-text" data-count={values.length}>
-		<text
-			x={center.x}
-			y={center.y}
-			text-anchor="middle"
-			dominant-baseline="central"
-			font-size={fontSize}
-			fill={fontColor}
-		>
-			{value}
-		</text>
+		{#if values.length <= 2}
+			<text
+				x={center.x}
+				y={center.y}
+				text-anchor="middle"
+				dominant-baseline="central"
+				font-size={fontSize}
+				fill={fontColor}
+			>
+				{values.join(' ')}
+			</text>
+		{:else}
+			<text
+				x={center.x}
+				y={center.y}
+				dy={-fontSize / 2}
+				text-anchor="middle"
+				dominant-baseline="central"
+				font-size={fontSize}
+				fill={fontColor}
+			>
+				{values.slice(0, 2).join(' ')}
+			</text>
+			<text
+				x={center.x}
+				y={center.y}
+				dy={fontSize / 2}
+				text-anchor="middle"
+				dominant-baseline="central"
+				font-size={fontSize}
+				fill={fontColor}
+			>
+				{values.slice(2).join(' ')}
+			</text>
+		{/if}
 	</g>
 {/if}
 
 <style lang="scss">
+	text {
+		text-anchor: 'middle';
+		dominant-baseline: 'central';
+	}
 </style>
