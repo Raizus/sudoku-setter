@@ -225,6 +225,12 @@ function adjacentLoopCellsAreMultiplesConstraint(puzzle: PuzzleI, toolId: TOOLID
 	return out_str;
 }
 
+function adjacentLoopCellsAreGermanWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str = `\n% ${toolId}\n`;
+	out_str += `constraint adjacent_loop_cells_are_german_whispers_p(board, cell_center_loop);\n`;
+	return out_str;
+}
+
 function allOddDigitsOrthogonallyConnected(puzzle: PuzzleI, toolId: TOOLID): string {
 	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: even_odd_grid;\n`;
@@ -700,6 +706,7 @@ const tool_map = new Map<string, ConstraintF>([
 	],
 	[TOOLS.ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED, allOddDigitsOrthogonallyConnected],
 	[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES, adjacentLoopCellsAreMultiplesConstraint],
+	[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS, adjacentLoopCellsAreGermanWhispersConstraint],
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING, twilightCaveFillominoRegionsShading],
 	[TOOLS.CAVE_CELLS_ARE_ODD, caveCellsAreOddConstraint],
 	[TOOLS.CAVE_WALLS_ARE_EVEN, caveWallsAreEvenConstraint],

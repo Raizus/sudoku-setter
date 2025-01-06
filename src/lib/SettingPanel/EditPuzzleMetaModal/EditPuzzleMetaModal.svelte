@@ -73,7 +73,7 @@
 				const elementInfo = elementHandlers[tool_id];
 				const name = elementInfo.menu?.name ?? elementInfo.toolId;
 				const constraint_desc = elementInfo.meta?.description;
-				description += ` - **${name}**: ${constraint_desc}\n`;
+				description += `**${name}**: ${constraint_desc}\n\n`;
 			}
 		}
 
@@ -85,7 +85,7 @@
 				const elementInfo = elementHandlers[tool_id];
 				const name = elementInfo.menu?.name ?? elementInfo.toolId;
 				const constraint_desc = elementInfo.meta?.description;
-				description += ` - **${name}**: ${constraint_desc}\n`;
+				description += `**${name}**: ${constraint_desc}\n\n`;
 			}
 		}
 

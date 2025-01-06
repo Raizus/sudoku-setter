@@ -127,7 +127,7 @@ export function addHeader(block: string, header: string) {
 export function defineFunctionsPredicates() {
 	let out_str = '\n';
 
-    const tests = `test orth_adjacent_2d(
+	const tests = `test orth_adjacent_2d(
     int: r1, int: c1, 
     int: r2, int: c2
 ) = let {
@@ -135,7 +135,7 @@ export function defineFunctionsPredicates() {
     int: d2 = abs(c2-c1);
 } in d1 <= 1 /\\ d2 <= 1 /\\ d1 + d2 = 1;\n\n`;
 
-    const helper_f = `function array[1..4] of tuple(int, int): orth_adjacent_idxs(int: r, int: c) =
+	const helper_f = `function array[1..4] of tuple(int, int): orth_adjacent_idxs(int: r, int: c) =
     [(r-1,c),(r+1,c),(r,c-1),(r,c+1)];
     
 function var int: odd_count(array[int] of var int: arr) =
@@ -172,19 +172,19 @@ function array[int] of var bool: sandwich_bools(array[int] of var int: arr, int:
 function var int: sandwich_bools_sum(array[int] of var bool: arr) =
     sum(i in index_set(arr))(bool2int(arr[i]));
     
-predicate count_uninterrupted_counts_p(array[int] of var int: arr, array[int] of var 0..1: counts, var int: x) = 
+predicate count_uninterrupted_counts_p(array[int] of var $$T: arr, array[int] of var bool: counts, var $$T: x) = 
     forall(i in index_set(arr)) (
-        if arr[i] != x \\/ (i > min(index_set(arr)) /\\ counts[i-1] == 0) then
-          counts[i] = 0
+        if arr[i] != x \\/ (i > min(index_set(arr)) /\\ not counts[i-1]) then
+          counts[i] = false
         else 
-          counts[i] = 1
+          counts[i] = true
         endif
     );
 
 function var int: count_uninterrupted(array[int] of var int: arr, var int: x) =
     let {
         % Get array bounds
-        array[index_set(arr)] of var 0..1: counts,
+        array[index_set(arr)] of var bool: counts,
         constraint count_uninterrupted_counts_p(arr, counts, x)
     } in (
         if length(arr) == 0 then
@@ -222,8 +222,8 @@ function var int: count_transitions_f(array[int] of var int: arr) =
 
 function var int: conditional_sum_f(
     array[int] of var int: arr,
-    array[int] of var int: labels,
-    var int: label) =
+    array[int] of var $$T: labels,
+    var $$T: label) =
     let {
         constraint assert(
             index_set(arr) = index_set(labels),
@@ -831,13 +831,28 @@ predicate renban_or_nabner_line_p(array[int] of var int: arr) =
 predicate renban_or_whispers_p(array[int] of var int: arr, var int: val) = 
 	renban(arr) \\/ whispers(arr, val);
 
-predicate n_consecutive_renban_line_p(array[int] of var int: arr, int: n) =
+predicate n_consecutive_renban_line_p(array[int] of var int: arr, int: n, bool: circular) =
     % Ensure that each slice of size n satisfies the renban constraint
-    forall(start in index_set(arr) where start + n - 1 <= max(index_set(arr))) (
+    if circular then
         let {
-            array[start..start + n - 1] of var int: slice = arr[start..start + n - 1]
-        } in renban(slice)
-    );
+            int: min_i = min(index_set(arr));
+            int: max_i = max(index_set(arr));
+            int: idx2 = min([max_i, min_i+n-1]);
+            array[int] of var int: new_arr = arr ++ arr[min_i..idx2];
+        } in ( 
+            forall(start in index_set(new_arr) where start + n - 1 <= max(index_set(new_arr))) (
+                let {
+                    array[start..start + n - 1] of var int: slice = new_arr[start..start + n - 1]
+                } in renban(slice)
+            )
+        )
+    else
+        forall(start in index_set(arr) where start + n - 1 <= max(index_set(arr))) (
+            let {
+                array[start..start + n - 1] of var int: slice = arr[start..start + n - 1]
+            } in renban(slice)
+        )
+    endif;
     
 predicate entropic_line_p(
     array[int] of var int: arr,
@@ -1096,7 +1111,8 @@ function var int: x_sum_skyscrapers_count(array[int] of var int: arr) =
     let {
         var int: x = skyscrapers_count(arr)  % Compute the number of visible skyscrapers
     } in
-    x_sum(arr, x);  % Sum the first x elements
+    % Sum the first x elements
+    x_sum(arr, x);
 
 predicate x_sum_skyscrapers_p(array[int] of var int: arr, var int: val) =
 		x_sum_skyscrapers_count(arr) == val;
@@ -1766,105 +1782,6 @@ predicate sashigane_arrow_points_to_bend_p(
     % cell at distance of cell_var is a bend
     element(cell_var, bend_vars, true);\n\n`;
 
-    const cell_center_loop = `predicate cell_center_loop_no_diagonal_touching_p(array[int, int] of var 0..1: grid) = let {
-        set of int: rows = index_set_1of2(grid);
-        set of int: cols = index_set_2of2(grid);
-    } in (
-        % no crossing 1's and 0's because it implies the the loop is touching diagonally
-        % [1, 0]    or  [0, 1]
-        % [0, 1]        [1, 0]
-        forall(r in rows where r < max(rows), c in cols where c < max(cols))(
-            (grid[r,c] == 1 /\\ grid[r+1, c+1] == 1 -> grid[r+1,c] == 1 \\/ grid[r, c+1] ==1)
-        ) /\\
-        forall(r in rows where r < max(rows), c in cols where c < max(cols))(
-            (grid[r,c+1] == 1 /\\ grid[r+1, c] == 1 -> grid[r,c] == 1 \\/ grid[r+1, c+1] ==1)
-        )
-    );
-
-% draw a 1-cell wide loop of orthogonally connected cells which does not branch or touch itself, even diagonally
-predicate cell_center_loop_p(array[int, int] of var 0..1: grid, bool: no_diag_touch) =
-    let {
-        set of int: rows = index_set_1of2(grid);
-        set of int: cols = index_set_2of2(grid);
-    } in (
-        connected_region(grid, 1) /\\
-        % no diagonal touching
-        (if no_diag_touch then
-            cell_center_loop_no_diagonal_touching_p(grid)
-        else
-            true
-        endif) /\\
-        % If cell is on the loop then then there are exactly two edges attached to it
-        % Count orthogonally adjacent 1s (must be exactly 2)
-        forall(i in rows, j in cols)(
-            if grid[i,j] = 1 then
-                sum([
-                    if i-1 in rows then grid[i-1,j] else 0 endif +  % Up
-                    if i+1 in rows then grid[i+1,j] else 0 endif +  % Down
-                    if j-1 in cols then grid[i,j-1] else 0 endif +  % Left
-                    if j+1 in cols then grid[i,j+1] else 0 endif    % Right
-                    ]) = 2
-            else
-                true
-            endif
-        )
-    );
-
-predicate adjacent_loop_cells_are_multiples_p(
-    array[int, int] of var int: grid,
-    array[int, int] of var 0..1: labels
-) =
-    assert(index_set_1of2(grid) = index_set_1of2(labels) /\\
-       index_set_2of2(grid) = index_set_2of2(labels),
-       "grid and labels must have same dimensions") /\\
-    forall(i in index_set_1of2(grid), j in index_set_2of2(grid))(
-        % Right neighbor
-        (j < max(index_set_2of2(grid)) ->
-            (labels[i,j] = 1 /\\ labels[i,j+1] = 1 ->
-                multiples_p(grid[i,j], grid[i,j+1]))
-        ) /\\
-        % Down neighbor
-        (i < max(index_set_1of2(grid)) ->
-            (labels[i,j] = 1 /\\ labels[i+1,j] = 1 ->
-                multiples_p(grid[i,j], grid[i+1,j]))
-        )
-    );
-    
-function var int: count_loop_vars_f(array[int] of var 0..1: arr) =
-    sum(i in index_set(arr))(bool2int(arr[i] != 0));
-    
-predicate modular_loop_aux_p(
-    array[int] of var int: arr, 
-    array[int] of var 0..1: labels
-) = let {
-    set of int: idxs = index_set(arr)
-} in (
-    if all_equal(labels) /\\ labels[min(idxs)] = 1 then
-        modular_line_p(arr, 3)
-    else
-        true
-    endif
-);
-
-predicate modular_loop_p(
-    array[int,int] of var int: grid, 
-    array[int,int] of var 0..1: loop
-) = let {
-    set of int: rows = index_set_1of2(grid);
-    set of int: cols = index_set_2of2(grid);
-} in (
-    forall(r in rows where r < max(rows), c in cols where c < max(cols)) (
-        modular_loop_aux_p([grid[r, c], grid[r, c+1], grid[r+1, c+1]], [loop[r, c], loop[r, c+1], loop[r+1, c+1]]) /\\
-        modular_loop_aux_p([grid[r+1, c], grid[r, c], grid[r, c+1]], [loop[r+1, c], loop[r, c], loop[r, c+1]]) /\\
-        modular_loop_aux_p([grid[r, c], grid[r+1, c], grid[r+1, c+1]], [loop[r, c], loop[r+1, c], loop[r+1, c+1]]) /\\
-        modular_loop_aux_p([grid[r, c+1], grid[r+1, c+1], grid[r+1, c]], [loop[r, c+1], loop[r+1, c+1], loop[r+1, c]])
-    ) /\\
-    forall(r in rows where r < max(rows) - 1, c in cols where c < max(cols) - 1) (
-        modular_loop_aux_p([grid[r, c+1], grid[r+1, c+1], grid[r+2, c+1]], [loop[r, c+1], loop[r+1, c+1], loop[r+2, c+1]]) /\\
-        modular_loop_aux_p([grid[r+1, c], grid[r+1, c+1], grid[r+1, c+2]], [loop[r+1, c], loop[r+1, c+1], loop[r+1, c+2]])
-    )
-);\n\n`;
-
 	const fillomino = `% (r, c) is ok if it is on the board.
 test in_bounds_2d(int: r, int: c, array[int, int] of var int: grid) = 
     r in index_set_1of2(grid) /\\ c in index_set_2of2(grid);
@@ -2027,7 +1944,7 @@ predicate yin_yang_fillomino_parity_p(
     )
 );\n\n`;
 
-    const cave = `% test if element is on the edge of the grid
+	const cave = `% test if element is on the edge of the grid
 test on_edge_2d(int: r, int: c, array[int, int] of var int: grid) = 
     let {
         int: min_r = min(index_set_1of2(grid));
@@ -2207,8 +2124,267 @@ predicate one_digit_does_not_appear_in_cave_p(
             )
         | i in index_set(allowed)];
     } in sum(in_cave) == 1;\n\n`;
+
+	const cell_center_loop = `predicate cell_center_loop_no_diagonal_touching_p(array[int, int] of var 0..1: grid) = let {
+        set of int: rows = index_set_1of2(grid);
+        set of int: cols = index_set_2of2(grid);
+    } in (
+        % no crossing 1's and 0's because it implies the the loop is touching diagonally
+        % [1, 0]    or  [0, 1]
+        % [0, 1]        [1, 0]
+        forall(r in rows where r < max(rows), c in cols where c < max(cols))(
+            (grid[r,c] == 1 /\\ grid[r+1, c+1] == 1 -> grid[r+1,c] == 1 \\/ grid[r, c+1] ==1)
+        ) /\\
+        forall(r in rows where r < max(rows), c in cols where c < max(cols))(
+            (grid[r,c+1] == 1 /\\ grid[r+1, c] == 1 -> grid[r,c] == 1 \\/ grid[r+1, c+1] ==1)
+        )
+    );
+
+% draw a 1-cell wide loop of orthogonally connected cells which does not branch or touch itself, even diagonally
+predicate cell_center_loop_p(array[int, int] of var 0..1: grid, bool: no_diag_touch) =
+    let {
+        set of int: rows = index_set_1of2(grid);
+        set of int: cols = index_set_2of2(grid);
+    } in (
+        connected_region(grid, 1) /\\
+        % no diagonal touching
+        (if no_diag_touch then
+            cell_center_loop_no_diagonal_touching_p(grid)
+        else
+            true
+        endif) /\\
+        % If cell is on the loop then then there are exactly two edges attached to it
+        % Count orthogonally adjacent 1s (must be exactly 2)
+        forall(i in rows, j in cols)(
+            if grid[i,j] = 1 then
+                sum([
+                    if i-1 in rows then grid[i-1,j] else 0 endif +  % Up
+                    if i+1 in rows then grid[i+1,j] else 0 endif +  % Down
+                    if j-1 in cols then grid[i,j-1] else 0 endif +  % Left
+                    if j+1 in cols then grid[i,j+1] else 0 endif    % Right
+                    ]) = 2
+            else
+                true
+            endif
+        )
+    );
+
+predicate cell_center_loop_regions_p(
+    array[int, int] of var 0..1: shading, % loop / non-loop cells
+    array[int, int] of var int: regions
+) =  let {
+        set of int: rows = index_set_1of2(shading);
+        set of int: cols = index_set_2of2(shading);
+        int: n_rows = length(rows);
+        int: n_cols = length(cols);
+        int: g_size = n_rows * n_cols;
+        array [rows, cols] of var 0..g_size: same_before;
+        array[rows, cols] of var 0..g_size: when;
+    } in
+    % shaded cells (1 = loop) correspond to region 0
+    forall(r in rows, c in cols) (
+        shading[r,c] = 1 <-> regions[r, c] = 0
+    ) /\\
+    forall(r in rows, c in cols) (
+        shading[r,c] = 0 <-> regions[r, c] != 0
+    ) /\\
+    % adjacent unshaded cells must belong to the same region (horiz adjacent)
+    forall (r in rows, c in cols where c > 0) (
+        let { 
+            var int: id1 = regions[r, c - 1], 
+            var int: id2 = regions[r, c] 
+        } in (shading[r,c] = 0 /\\ shading[r, c - 1] = 0) -> id1 = id2
+    ) /\\
+    % adjacent shaded cells must belong to the same region (vertical adjacent)
+    forall (r in rows, c in cols where r > 0) (
+        let { var int: id1 = regions[r - 1, c], var int: id2 = regions[r, c] } in
+        (shading[r,c] = 0 /\\ shading[r - 1, c] = 0) -> id1 = id2
+    ) /\\
+    % we need to remove ambiguity from the region numbering 
+    % use the numbering each region by the id of the first element of that region
+    same_before_p(regions, same_before) /\\
+    forall (r in rows, c in cols) (
+        if same_before[r,c] = 0 /\\ regions[r, c] != 0 then
+            when[r,c] = 1 /\\ regions[r, c] = (r) * n_cols + c + 1
+        else
+            true
+        endif
+    ) /\\
+    forall (r in rows, c in cols) (
+        regions[r, c] = 0 -> when[r,c] = 0
+    ) /\\
+    forall (r in rows, c in cols) (
+        regions[r, c] != 0 -> when[r,c] >= 1
+    ) /\\
+    % floodfilling
+    % Each cell is either the "root" of an area or is an extension of a
+    % neighbouring cell.
+    forall (r in rows, c in cols) (
+        ( when[r, c] = 0 ) \\/
+        ( when[r, c] = 1 /\\ regions[r, c] = (r) * n_cols + c + 1 ) \\/
+        ( when[r, c] > 1 /\\
+            ( cave_joins(r, c, r - 1, c, when, regions) \\/
+              cave_joins(r, c, r + 1, c, when, regions) \\/
+              cave_joins(r, c, r, c - 1, when, regions) \\/ 
+              cave_joins(r, c, r, c + 1, when, regions)
+            )
+        )
+    ) /\\
+    fillomino_restrict_floodfill_p(when, regions);
+
+predicate not_loop_sized_regions_p(
+    array[int, int] of var int: grid, 
+    array[int, int] of var int: regions, 
+    set of int: allowed
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n = length(allowed);
+    int: n_rows = length(rows);
+    int: n_cols = length(cols);
+    int: g_size = n_rows * n_cols;
+    set of int: ids = 0..g_size;
+    array[ids] of var 0..g_size: sizes;
+} in (
+    % Each area's size is the number of cells in that area.
+    forall (id in ids) (
+        sizes[id] = sum (r in rows, c in cols) (regions[r, c] = id)
+    ) /\\
+    % for all non loop cells
+    forall(r in rows, c in cols where regions[r,c] != 0) (
+        let {
+            var int: id = regions[r, c];
+            var int: size = sizes[id];
+            int: min_v = min(allowed);
+        } in (
+            (id == 0) \\/
+            % each non loop region must have size of at most n,
+            % and contain the digits between min_v and size
+            (size <= n /\\ grid[r, c] >= min_v /\\ grid[r, c] <= size /\\
+                % values in the same region must be different
+                forall(r2 in rows, c2 in cols where regions[r2,c2] = id /\\ (r2 != r \\/ c2 != c))(
+                    grid[r2,c2] != grid[r,c]
+                )
+            )
+        )
+    )
+);
+
+predicate adjacent_loop_cells_are_multiples_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var 0..1: labels
+) =
+    assert(index_set_1of2(grid) = index_set_1of2(labels) /\\
+       index_set_2of2(grid) = index_set_2of2(labels),
+       "grid and labels must have same dimensions") /\\
+    forall(i in index_set_1of2(grid), j in index_set_2of2(grid))(
+        % Right neighbor
+        (j < max(index_set_2of2(grid)) ->
+            (labels[i,j] = 1 /\\ labels[i,j+1] = 1 ->
+                multiples_p(grid[i,j], grid[i,j+1]))
+        ) /\\
+        % Down neighbor
+        (i < max(index_set_1of2(grid)) ->
+            (labels[i,j] = 1 /\\ labels[i+1,j] = 1 ->
+                multiples_p(grid[i,j], grid[i+1,j]))
+        )
+    );
+
+predicate adjacent_loop_cells_are_german_whispers_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var 0..1: labels
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    assert(rows = index_set_1of2(labels) /\\ cols = index_set_2of2(labels),
+       "grid and labels must have same dimensions") /\\
+    forall(i in rows, j in cols)(
+        % Right neighbor
+        (j < max(cols) /\\ labels[i,j] = 1 /\\ labels[i,j+1] = 1 ->
+                abs(grid[i,j] - grid[i,j+1]) >= 5
+        ) /\\
+        % Down neighbor
+        (i < max(rows) /\\ labels[i,j] = 1 /\\ labels[i+1,j] = 1 ->
+                abs(grid[i,j] - grid[i+1,j]) >= 5
+        )
+    )
+);
     
-    const global_constraints = `predicate anti_giraffe_p(array[int, int] of var int: grid) =
+function var int: count_loop_vars_f(array[int] of var 0..1: arr) =
+    sum(i in index_set(arr))(bool2int(arr[i] != 0));
+    
+predicate modular_loop_aux_p(
+    array[int] of var int: arr, 
+    array[int] of var 0..1: labels
+) = let {
+    set of int: idxs = index_set(arr)
+} in (
+    if all_equal(labels) /\\ labels[min(idxs)] = 1 then
+        modular_line_p(arr, 3)
+    else
+        true
+    endif
+);
+
+predicate modular_loop_p(
+    array[int,int] of var int: grid, 
+    array[int,int] of var 0..1: loop
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    forall(r in rows where r < max(rows), c in cols where c < max(cols)) (
+        modular_loop_aux_p([grid[r, c], grid[r, c+1], grid[r+1, c+1]], [loop[r, c], loop[r, c+1], loop[r+1, c+1]]) /\\
+        modular_loop_aux_p([grid[r+1, c], grid[r, c], grid[r, c+1]], [loop[r+1, c], loop[r, c], loop[r, c+1]]) /\\
+        modular_loop_aux_p([grid[r, c], grid[r+1, c], grid[r+1, c+1]], [loop[r, c], loop[r+1, c], loop[r+1, c+1]]) /\\
+        modular_loop_aux_p([grid[r, c+1], grid[r+1, c+1], grid[r+1, c]], [loop[r, c+1], loop[r+1, c+1], loop[r+1, c]])
+    ) /\\
+    forall(r in rows where r < max(rows) - 1, c in cols where c < max(cols) - 1) (
+        modular_loop_aux_p([grid[r, c+1], grid[r+1, c+1], grid[r+2, c+1]], [loop[r, c+1], loop[r+1, c+1], loop[r+2, c+1]]) /\\
+        modular_loop_aux_p([grid[r+1, c], grid[r+1, c+1], grid[r+1, c+2]], [loop[r+1, c], loop[r+1, c+1], loop[r+1, c+2]])
+    )
+);
+
+predicate thermo_sightline_loop_arrow_p(
+    array[int] of var int: arr, 
+    array[int] of var 0..1: labels, 
+    var int: cell_var
+) = let {
+        % Get array bounds
+        set of int: idxs = index_set(arr);
+        int: min_i = min(idxs);
+        array[index_set(arr)] of var bool: counts;
+        constraint count_uninterrupted_counts_p(labels, counts, 1);
+    } in (
+        % cell value is the number of seen loop cells
+        cell_var == sum(counts) /\\
+        % digits increase along loop cells seen by arrow, starting at by the cell_var
+        (counts[min_i] /\\ cell_var < arr[min_i]) /\\
+        forall(i in idxs where i < max(idxs))(
+            counts[i] /\\ counts[i+1] -> arr[i] < arr[i+1]
+        )
+);
+
+predicate loopwhiches_p(
+    array[int] of var int: arr, 
+    array[int] of var 0..1: labels, 
+    var int: val
+) = let {
+    set of int: idxs = index_set(arr);
+    array[idxs] of var bool: sandwiched = [
+        exists(j in idxs where j<i)(
+            labels[j] == 1
+        ) /\\
+        exists(k in idxs where k>i)(
+            labels[k] == 1
+        )
+    | i in idxs]
+} in (
+    conditional_sum_f(arr, sandwiched, true) == val
+);\n\n`;
+
+	const global_constraints = `predicate anti_giraffe_p(array[int, int] of var int: grid) =
     let {
         set of int: rows = index_set_1of2(grid);
         set of int: cols = index_set_2of2(grid);
@@ -2285,8 +2461,63 @@ predicate tango_p(array[int, int] of var int: grid) =
         )
     );\n\n`;
 
-    out_str +=
-        tests +
+	const galaxies = `predicate every_cell_is_in_a_galaxy_p(
+    array[int, int] of int: regions
+) = forall(r in index_set_1of2(regions), c in index_set_2of2(regions))(
+    regions[r,c] != 0
+);
+
+predicate no_2x2_belongs_to_one_galaxy_p(
+    array[int, int] of int: regions
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+} in forall(r in rows where r < max(rows), c in cols where c < max(cols))(
+      let {
+          var bool: all_eq = all_equal([regions[r,c], regions[r,c+1], regions[r+1,c], regions[r+1,c+1]]);
+      } in (regions[r,c] = 0 /\\ all_eq) \\/ not all_eq
+);
+
+predicate two_symmetric_galaxies_p(
+    array[int, int] of int: regions
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+    int: min_r = min(rows);
+    int: max_r = max(rows);
+    int: min_c = min(cols);
+    int: max_c = max(cols);
+} in (
+    forall(r in rows, c in cols)(
+        (regions[r, c] = 1 \\/ regions[r, c] = 2) /\\
+        regions[r, c] = regions[max_r-r+min_r, max_c-c+min_c] % rotationally symmetric
+    ) /\\
+    connected_region(regions, 1) /\\ 
+    connected_region(regions, 2)
+);
+
+predicate one_galaxy_is_german_whispers(
+    array[int, int] of int: grid,
+    array[int, int] of int: regions
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+    var 1..2: target;
+} in (
+    forall(r in rows, c in cols where c < max(cols))(
+         regions[r,c] = target /\\
+         regions[r,c] == regions[r,c+1] /\\ 
+         abs(grid[r,c] - grid[r,c+1]) <= 5
+    ) /\\
+    forall(r in rows, c in cols where r < max(rows))(
+         regions[r,c] = target /\\
+         regions[r,c] == regions[r+1,c] /\\ 
+         abs(grid[r,c] - grid[r+1,c]) <= 5
+    )
+);`;
+
+	out_str +=
+		tests +
 		helper_f +
 		more_helper_f +
 		helper_p +
@@ -2310,7 +2541,9 @@ predicate tango_p(array[int, int] of var int: grid) =
 		sashigane +
 		cell_center_loop +
 		fillomino +
-		cave + global_constraints;
+		cave +
+		galaxies +
+		global_constraints;
 
 	return out_str;
 }
@@ -2357,10 +2590,13 @@ export function constraintsBuilder<T extends ConstraintType>(
 		}
 	}
 	return out_str;
-}export interface ModelI {
+}
+
+export interface ModelI {
 	model_str: string; // string with minizinc model
 	used_vars: Set<string>; // keep track of shared vars
 }
+
 export class PuzzleModel implements ModelI {
 	model_str: string = '';
 	used_vars: Set<string> = new Set();
@@ -2402,7 +2638,7 @@ export class PuzzleModel implements ModelI {
 
 			return [model_str, var_name];
 		}
-        if (!default_name) return null;
+		if (!default_name) return null;
 
 		const exists = this.hasVariable(default_name);
 		if (!exists) {
@@ -2436,3 +2672,150 @@ export class PuzzleModel implements ModelI {
 	}
 }
 
+function _pruneMinizincModel(model: string): string {
+	// Split the model into lines for processing
+	const lines = model.split('\n');
+
+	// Store function and predicate definitions with their content
+	const definitions: {
+		[key: string]: {
+			startLine: number;
+			endLine: number;
+			name: string;
+			content: string[];
+		};
+	} = {};
+
+	// Regular expressions for matching
+	const functionStartRegex = /^function(?:\s+[\w[\].$(),]+)+\s*:\s*(\w+)\s*\(/;
+	const predicateStartRegex = /^predicate\s+(\w+)\s*\(/;
+	const testStartRegex = /^test\s+(\w+)\s*\(/;
+
+	// First pass: identify all function and predicate definitions
+	let currentDef: { name: string; startLine: number; content: string[] } | null = null;
+	let bracketCount = 0;
+	let curlyBracketCount = 0;
+
+	for (let i = 0; i < lines.length; i++) {
+		const line = lines[i].trim();
+
+		// Check for function/predicate start
+		const funcMatch = line.match(functionStartRegex);
+		const predMatch = line.match(predicateStartRegex);
+		const testMatch = line.match(testStartRegex);
+
+		if (funcMatch || predMatch || testMatch) {
+			const name = (funcMatch || predMatch || testMatch)![1];
+			currentDef = {
+				name,
+				startLine: i,
+				content: [lines[i]]
+			};
+
+			// Count opening brackets/parentheses in the first line
+			bracketCount = (line.match(/\(/g) || []).length - (line.match(/\)/g) || []).length;
+			curlyBracketCount = (line.match(/\{/g) || []).length - (line.match(/\}/g) || []).length;
+			continue;
+		}
+
+		// Add content to current definition if we're inside one
+		if (currentDef) {
+			currentDef.content.push(lines[i]);
+
+			// Update bracket count
+			bracketCount += (line.match(/\(/g) || []).length - (line.match(/\)/g) || []).length;
+			curlyBracketCount += (line.match(/\{/g) || []).length - (line.match(/\}/g) || []).length;
+			// Check if this is the end of the definition
+			// A function/predicate ends when:
+			// 1. All brackets are closed (bracketCount === 0)
+			// 2. The line ends with a semicolon
+			// 3. We're not inside a local variable declaration (no 'let' or 'var' on this line)
+			if (bracketCount === 0 && curlyBracketCount === 0 && line.endsWith(';')) {
+				definitions[currentDef.name] = {
+					startLine: currentDef.startLine,
+					endLine: i,
+					name: currentDef.name,
+					content: currentDef.content
+				};
+
+				// check previous line(s) for comments and add them to the range
+				let start_line = currentDef.startLine;
+				while (start_line > 0 && lines[start_line - 1].trim().startsWith('%')) {
+					start_line -= 1;
+				}
+				definitions[currentDef.name].startLine = start_line;
+
+				currentDef = null;
+			}
+		}
+	}
+
+	// Second pass: find all function/predicate usage in the model
+	const usedDefinitions = new Set<string>();
+
+	// Helper function to find all function/predicate calls in a line
+	function findCalls(line: string): string[] {
+		const calls: string[] = [];
+		for (const defName of Object.keys(definitions)) {
+			// Look for the function/predicate name followed by an opening parenthesis
+			// Make sure we're not inside a function/predicate declaration
+			if (!line.includes('function') && !line.includes('predicate') && !line.includes('test')) {
+				const regex = new RegExp(`\\b${defName}\\s*\\(`, 'g');
+				if (regex.test(line)) {
+					calls.push(defName);
+				}
+			}
+		}
+		return calls;
+	}
+
+	// Process all lines to find function/predicate usage
+	for (const line of lines) {
+		const calls = findCalls(line);
+		calls.forEach((call) => usedDefinitions.add(call));
+	}
+
+	// Create the pruned model by removing unused definitions
+	const unusedRanges = Object.values(definitions)
+		.filter((def) => !usedDefinitions.has(def.name))
+		.map((def) => ({ start: def.startLine, end: def.endLine }));
+
+	// Sort ranges in reverse order to remove from bottom to top
+	unusedRanges.sort((a, b) => b.start - a.start);
+
+	// Create new array of lines with unused definitions removed
+	const prunedLines = [...lines];
+	for (const range of unusedRanges) {
+		prunedLines.splice(range.start, range.end - range.start + 1);
+	}
+
+	// Remove any resulting double blank lines
+	const finalLines: string[] = [];
+	let lastLineWasBlank = false;
+
+	for (const line of prunedLines) {
+		if (line.trim() === '') {
+			if (!lastLineWasBlank) {
+				finalLines.push(line);
+				lastLineWasBlank = true;
+			}
+		} else {
+			finalLines.push(line);
+			lastLineWasBlank = false;
+		}
+	}
+
+	return finalLines.join('\n');
+}
+
+export function pruneMinizincModel(model: string): string {
+	let current = model;
+	let size = current.length;
+
+	while (true) {
+		current = _pruneMinizincModel(current);
+		if (current.length == size) break;
+		size = current.length;
+	}
+	return current;
+}

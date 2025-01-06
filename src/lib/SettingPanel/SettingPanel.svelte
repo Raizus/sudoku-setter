@@ -27,7 +27,6 @@
 		flex-direction: column;
 		height: 100vh;
 		align-items: flex-start;
-		/* flex-grow: 1; */
 	}
 
 	.setting-panel {

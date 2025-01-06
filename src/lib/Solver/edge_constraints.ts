@@ -30,7 +30,7 @@ function simpleEdgeConstraint(grid: Grid, constraint: EdgeToolI, predicate: stri
 function getParsingResult(model: PuzzleModel, value: string, c_id: string) {
 	const parse_opts: ParseOptions = {
 		allow_var: true,
-		allow_interval: false,
+		allow_interval: true,
 		allow_int_list: false
 	};
 	const default_name = `edge_var_${c_id}`;
@@ -49,7 +49,7 @@ function valuedEdgeConstraint(
 	const vars = getEdgeVars(grid, constraint);
 	const [var1, var2] = vars;
 
-	const value = constraint.value ?? default_value;
+	const value = constraint.value?.length ? constraint.value : default_value;
 	const result = getParsingResult(model, value, c_id);
 	if (!result) return '';
 

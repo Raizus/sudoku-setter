@@ -141,7 +141,7 @@ export const renbanLineInfo: SquareCellElementInfo = {
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
-		strokeWidth: { editable: true, value: 0.15 },
+		strokeWidth: { editable: true, value: 0.10 },
 		stroke: { editable: true, value: 'var(--constraint-color-purple)' },
 		linePathOptions: {
 			shortenHead: { editable: false, value: 0.15 },
@@ -303,6 +303,37 @@ export const whispersLineInfo: SquareCellElementInfo = {
 
 	meta: {
 		description: 'Adjacent numbers along a green line must have a difference of at least 5 (or X).',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
+export const dutchWhispersInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: true,
+			defaultValue: '4'
+		});
+	},
+
+	toolId: TOOLS.DUTCH_WHISPERS,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		strokeWidth: { editable: true, value: 0.15 },
+		stroke: { editable: true, value: 'var(--constraint-color-orange)' },
+		linePathOptions: {
+			shortenHead: { editable: false, value: 0.15 },
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.15 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		description: 'Adjacent numbers along an orange line must have a difference of at least 4.',
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
@@ -610,7 +641,7 @@ export const sameParityLineLineInfo: SquareCellElementInfo = {
 export const modularLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: false,
+			allowSelfIntersection: true,
 			defaultValue: '3'
 		});
 	},

@@ -18,8 +18,8 @@
 		const top = ['TL', 'TR'].includes(_position);
 		const left = ['TL', 'BL'].includes(_position);
 
-		const x = left ? cellTL.x + 0.05: cellTL.x + 1;
-		const y = top ? cellTL.y : cellTL.y + 1;
+		const x = left ? cellTL.x + 0.05: cellTL.x;
+		const y = top ? cellTL.y : cellTL.y;
 
 		const textPos = new Vector2D(x, y);
 		return textPos;

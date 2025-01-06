@@ -870,7 +870,33 @@ export const sashiganeArrowPointsToBendInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description: '',
+		description:
+			'An arrow in a cell means that cell is an end of a region, the arrow points to the bend, and also the value in the cell counts the number of cells in that leg of the region, including the bend cell (this rule does not apply to end-cells without arrows).',
+		tags: [],
+		categories: [
+			TOOL_CATEGORIES.SINGLE_CELL_ARROW_TOOL,
+			TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
+			TOOL_CATEGORIES.LOCAL_CONSTRAINT
+		]
+	}
+};
+
+export const thermoSightlineLoopArrowInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellArrowToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.THERMO_SIGHTLINE_LOOP_ARROW,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CELL_ARROW,
+		strokeWidth: { editable: false, value: 0.05 },
+		stroke: { editable: true, value: 'gray' }
+	},
+
+	meta: {
+		description: "Each cell with an arrow (called an 'arrow cell') lies on the loop. The digit in an arrow cell is the number of visible loop cells in the indicated direction, where non-loop cells obstruct vision. (The arrow cell is not included in this count). Additionally, digits increase along loop cells seen by an arrow, starting with the digit in the arrow cell.",
 		tags: [],
 		categories: [
 			TOOL_CATEGORIES.SINGLE_CELL_ARROW_TOOL,

@@ -2,7 +2,7 @@
 	import Modal from '$lib/Components/Modal/Modal.svelte';
 	import { joinStrList } from '$lib/utils/functionUtils';
 	import { puzzleMetaStore } from '$stores/BoardStore';
-	// import SvelteMarkdown from 'svelte-markdown';
+	import Markdown from '@magidoc/plugin-svelte-marked';
 
 	export let showModal = false;
 	$: meta = $puzzleMetaStore;
@@ -23,8 +23,8 @@
 		<h3 class="title">{meta?.title || 'Puzzle'}</h3>
 		<h3 class="authors">by {getAuthorsStr(meta.authors)}</h3>
 		<div class="rules">
-			<!-- <SvelteMarkdown source={getRulesetStr(meta.ruleset)} /> -->
-			{getRulesetStr(meta.ruleset)}
+			<Markdown source={getRulesetStr(meta.ruleset)}/>
+			<!-- {getRulesetStr(meta.ruleset)} -->
 		</div>
 		{#if meta?.ctcUrl?.length}
 			<br />
@@ -67,8 +67,8 @@
 	}
 
 	.rules {
-		text-align: justify;
-		text-indent: 20px;
+		/* text-align: justify; */
+		/* text-indent: 20px; */
 		white-space: pre-line;
 	}
 </style>

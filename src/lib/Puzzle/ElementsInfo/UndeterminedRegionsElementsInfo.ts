@@ -72,6 +72,53 @@ export const cellCenterLoopNoTouchingInfo: AbstractElementInfo = {
 	}
 };
 
+export const cellCenterCanTouchDiagonallyInfo: AbstractElementInfo = {
+	toolId: TOOLS.CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY,
+	order: 0,
+
+	meta: {
+		description:
+			'Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself orthogonally, but can touch itself diagonally.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const adjacentCellsAlongLoopAreMultiplesInfo: AbstractElementInfo = {
+	toolId: TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES,
+	order: 0,
+
+	meta: {
+		description:
+			'For each pair of adjacent cells along the loop, the larger digit is an integer multiple of the smaller digit.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const adjacentCellsAlongLoopAreGermanWhispersInfo: AbstractElementInfo = {
+	toolId: TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS,
+	order: 0,
+
+	meta: {
+		description: 'Adjacent cells along a loop differ by 5 or more.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const notLoopSizedRegionsInfo: AbstractElementInfo = {
+	toolId: TOOLS.NOT_LOOP_SIZED_REGIONS,
+	order: 0,
+
+	meta: {
+		description:
+			'Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself orthogonally, but can touch itself diagonally.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
 export const modularLoopInfo: AbstractElementInfo = {
 	toolId: TOOLS.MODULAR_LOOP,
 	order: 0,
@@ -163,3 +210,4 @@ export const yinYangFillominoParityInfo: AbstractElementInfo = {
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
+

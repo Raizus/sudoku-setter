@@ -3,6 +3,7 @@ import type { OutsideDirectionToolI } from '../Puzzle/Constraints/OutsideDirecti
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
+	cellsToCellCenterLoopVarsName,
 	cellsToValueVarsName,
 	cellsToVarsName,
 	cellsToYinYangVarsName,
@@ -61,9 +62,10 @@ function sandwichSumConstraint(
 	const vars = getOutsideDirectionConstraintVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
 	const value = constraint.value;
+	const max_v = Math.min(grid.nCols, grid.nRows);
 	if (value) {
 		const val = parseInt(value);
-		const constraint_str: string = `constraint sandwich_sum_p(${vars_str}, ${val}, 1, 9);\n`;
+		const constraint_str: string = `constraint sandwich_sum_p(${vars_str}, ${val}, 1, ${max_v});\n`;
 		return constraint_str;
 	}
 	return '';
@@ -225,6 +227,31 @@ function outsideConsecutiveSumConstraint(
 	return constraint_str;
 }
 
+function loopwhichesConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	const cell_coord = constraint.cell;
+	const direction = constraint.direction;
+
+	const cells = grid.getCellsInDirection(cell_coord.r, cell_coord.c, direction);
+	const vars = cellsToVarsName(cells);
+	const vars_str = `[${vars.join(',')}]`;
+
+	const loop_vars = cellsToCellCenterLoopVarsName(cells);
+	const loop_vars_str = `[${loop_vars.join(', ')}]`;
+
+	const value = constraint.value;
+	if (value) {
+		const val = parseInt(value);
+		const constraint_str = `constraint loopwhiches_p(${vars_str}, ${loop_vars_str}, ${val});\n`;
+		return constraint_str;
+	}
+	return '';
+}
+
 function littleKillerSumConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -337,6 +364,8 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.RISING_STREAK, risingStreakConstraint],
 	[TOOLS.OUTSIDE_CONSECUTIVE_SUM, outsideConsecutiveSumConstraint],
 	[TOOLS.OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED, outsideEdgeYinYangAdjacentSumOfShadedConstraint],
+	[TOOLS.LOOPWICHES, loopwhichesConstraint],
+
 	// outside corner
 	[TOOLS.LITTLE_KILLER_SUM, littleKillerSumConstraint],
 	[TOOLS.LITTLE_KILLER_PRODUCT, littleKillerProductConstraint],

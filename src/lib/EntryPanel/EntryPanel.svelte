@@ -5,7 +5,7 @@
 	import { puzzleMetaStore, svgRefStore, toolStore } from '$stores/BoardStore';
 	import ExtraControlsPad from './ExtraControls/ExtraControlsPad.svelte';
 	import { joinStrList } from '../utils/functionUtils';
-	// import SvelteMarkdown from 'svelte-markdown';
+	import Markdown from '@magidoc/plugin-svelte-marked'
 
 	function onClickCb(): void {
 		$svgRefStore.focus();
@@ -32,8 +32,9 @@
 			<div class="authors">by {authors}</div>
 		</div>
 		<div class="puzzle-rules">
+			<Markdown source={getRulesetStr($puzzleMetaStore.ruleset)}/>
 			<!-- <SvelteMarkdown source={getRulesetStr($puzzleMetaStore.ruleset)} /> -->
-			{getRulesetStr($puzzleMetaStore.ruleset)}
+			<!-- {getRulesetStr($puzzleMetaStore.ruleset)} -->
 		</div>
 	</div>
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -59,6 +60,9 @@
 	.entry-panel-wrapper {
 		margin: 5px;
 		max-width: 20%;
+		height: 100vh;
+		display: flex;
+  		flex-direction: column;
 	}
 
 	.entry-subpanel1 {
@@ -66,7 +70,6 @@
 		flex-direction: row;
 		gap: $panel-gap;
 		user-select: none;
-		flex-grow: 1;
 	}
 
 	.entry-panel {
@@ -75,7 +78,6 @@
 		gap: $panel-gap;
 		user-select: none;
 		font-size: 1.5rem;
-		flex-grow: 1;
 	}
 
 	.entry-panel {
@@ -136,6 +138,9 @@
 		margin-top: 0.5rem;
 		margin-bottom: 0.5rem;
 		border-radius: 10px;
+		max-height: 40%;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.puzzle-header {
@@ -152,6 +157,5 @@
 		padding: 0.5rem;
 		border-radius: 5px;
 		overflow-y: scroll;
-		max-height: 40%;
 	}
 </style>

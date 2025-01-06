@@ -1,69 +1,7 @@
-I have modified it to 
+Normal Sudoku rules apply.
 
-predicate segmented_sum_line_p(array[int] of var int: arr, var int: val, bool: circular) =
-    let {
-        set of int: idxs = index_set(arr);
-        int: n = length(arr);
-        int: min_i = max(idxs);
-        int: max_i = max(idxs);
-        % split_after[i] is true if we split after position i
-        array[idxs] of var bool: split_after;
-        % segment_sum[i] is sum from position i to next split (or end)
-        array[idxs] of var int: segment_sum;
-        % For circular case: is_start[i] indicates if position i starts a segment
-        array[idxs] of var bool: is_start;
-        % = [(i = min_i /\ split_after[max_i]) \/ (i > min_i /\ split_after[i-1]) | i in idxs];
-    } in (
-        forall(i in idxs)(
-            is_start[i] = (i = min_i /\ split_after[max_i]) \/ (i > min_i /\ split_after[i-1])
-        ) /\
-        % Each segment must sum to val
-        forall(i in idxs)(
-            is_start[i] -> segment_sum[i] = val
-        ) /\
-        % Circular case
-        if circular then
-            % Calculate running sum for each position
-            forall(i in idxs)(
-                segment_sum[i] = 
-                    arr[i] + 
-                    if split_after[i] then 
-                        0
-                    else
-                        if i = max_i then
-                            segment_sum[min_i]
-                        else
-                            segment_sum[(i+1)]
-                        endif
-                    endif
-            ) /\
-            % Ensure at least one split exists (to prevent single wrapped segment)
-            sum(i in idxs)(bool2int(split_after[i])) >= 1
-        else
-            % Non-circular case
-            split_after[max_i] = 1 /\
-            forall(i in idxs)(
-                segment_sum[i] = 
-                    if i = max_i then
-                        arr[i]
-                    else 
-                        arr[i] + 
-                        if split_after[i] then 
-                            0 
-                        else 
-                            segment_sum[i+1]
-                        endif
-                    endif
-            )
-        endif
-    );
+Draw a one-cell-wide loop of orthogonally connected cells. The loop may not touch itself, not even diagonally.
 
-It works fine when circular is false, but when it's true, the solver seems to get stuck in some infinite loop. This happens even if I set the variables to their correct value in my constraints.
+The loop acts as a German Whisper line, all adjacent digits along the line must have a difference of at least 5.
 
-Fillomino: Divide the grid into polyominoes and fill each cell with a number equal to the size of its polyomino. Polyominoes of the same size may not share an edge.
-
-Yin-Yang: Shade some cells such that all shaded cells are orthogonally connected and all unshaded cells are orthogonally connected. No 2x2 area may be fully shaded or unshaded.
-
-Parity: All odd polyominoes are shaded, while all even polyominoes are unshaded
-
-“Yang” Arrows: Numbers on cells with an arrow indicate the number of polyominoes of the SAME shading/parity seen in the direction of the arrow. Arrows do not count their own cell, but may count their polyomino if a cell within its polyomino is visible in the direction of the arrow.
+Clues outside the grid are Loopwiches. Loopwiches indicate the sum of the digts between the first and last loop cell in their row or column. (Both loop and nonloop cells between the 2 crust cells are summed)

@@ -3,7 +3,7 @@ import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import { addHeader, cellsToDoublersVarsName, cellsToNegatorsVarsName } from './solver_utils';
 
-export function yinYangConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function yinYangConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -19,7 +19,7 @@ export function yinYangConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-export function nurimisakiConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function nurimisakiConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -35,7 +35,7 @@ export function nurimisakiConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-export function twoContiguousRegionsConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function twoContiguousRegionsConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -52,7 +52,7 @@ export function twoContiguousRegionsConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-export function unknownRegionsConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function unknownRegionsConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -71,7 +71,7 @@ export function unknownRegionsConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-export function sashiganeConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function sashiganeConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -91,7 +91,7 @@ export function sashiganeConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-export function cellCenterLoopNoTouchingConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function cellCenterLoopNoTouchingConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -107,7 +107,40 @@ export function cellCenterLoopNoTouchingConstraint(puzzle: PuzzleI, tool: TOOLID
 	return out_str;
 }
 
-export function modularLoopConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function cellCenterLoopCanTouchDiagonallyConstraint(puzzle: PuzzleI, tool: TOOLID) {
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: cell_center_loop;\n`;
+	out_str += `constraint cell_center_loop_p(cell_center_loop, false);\n`;
+
+	return out_str;
+}
+
+function notLoopSizedRegionsConstraint(puzzle: PuzzleI, tool: TOOLID) {
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var int: loop_regions;\n`;
+	out_str += `constraint cell_center_loop_regions_p(cell_center_loop, loop_regions);\n`;
+	out_str += `constraint not_loop_sized_regions_p(board, loop_regions, ALLOWED_DIGITS);\n`;	
+
+	return out_str;
+}
+
+function modularLoopConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -164,7 +197,7 @@ function onePerRowColumnRegion(puzzle: PuzzleI, vars_func: (cells: Cell[]) => st
 	return out_str;
 }
 
-export function doublersConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function doublersConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -184,7 +217,7 @@ export function doublersConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-export function negatorsConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function negatorsConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -207,7 +240,7 @@ export function negatorsConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-export function fillominoConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function fillominoConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -224,7 +257,7 @@ export function fillominoConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-export function caveConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function caveConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -244,7 +277,7 @@ export function caveConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-export function nexusConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function nexusConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -272,6 +305,8 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.UNKNOWN_REGIONS, unknownRegionsConstraint],
 	[TOOLS.SASHIGANE, sashiganeConstraint],
 	[TOOLS.CELL_CENTER_LOOP_NO_TOUCHING, cellCenterLoopNoTouchingConstraint],
+	[TOOLS.CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY, cellCenterLoopCanTouchDiagonallyConstraint],
+	[TOOLS.NOT_LOOP_SIZED_REGIONS, notLoopSizedRegionsConstraint],
 	[TOOLS.MODULAR_LOOP, modularLoopConstraint],
 
 	[TOOLS.DOUBLERS, doublersConstraint],

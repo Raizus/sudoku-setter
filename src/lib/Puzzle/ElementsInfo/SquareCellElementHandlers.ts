@@ -64,7 +64,6 @@ import {
 	yinYangWhiteKropkiInfo
 } from './EdgeToolsElementsInfo';
 import {
-	adjacentCellsAlongLoopAreMultiplesInfo,
 	allDifferencesGivenInfo,
 	allIndexingColumnGivenInfo,
 	allIndexingRowGivenInfo,
@@ -97,7 +96,8 @@ import {
 	tangoInfo,
 	yinYangRegionSumLinesMustCrossColorsAtLeastOnceInfo
 } from './GlobalConstraintsElementsInfo';
-import { caveCellsAreOddInfo, oneDigitDoesNotAppearInTheCaveInfo, yinYangFillominoParityInfo } from './UndeterminedRegionsElementsInfo';
+import { adjacentCellsAlongLoopAreGermanWhispersInfo, adjacentCellsAlongLoopAreMultiplesInfo } from './UndeterminedRegionsElementsInfo';
+import { caveCellsAreOddInfo, cellCenterCanTouchDiagonallyInfo, notLoopSizedRegionsInfo, oneDigitDoesNotAppearInTheCaveInfo, yinYangFillominoParityInfo } from './UndeterminedRegionsElementsInfo';
 import { caveWallsAreEvenInfo } from './UndeterminedRegionsElementsInfo';
 import { cave2x2NotFullyShadedOrUnshadedInfo } from './UndeterminedRegionsElementsInfo';
 import {
@@ -158,7 +158,8 @@ import {
 	headlessArrowInfo,
 	outOfOrderConsecutiveLineInfo,
 	ZipperLineInfo,
-	segmentedSumLineInfo
+	segmentedSumLineInfo,
+	dutchWhispersInfo
 } from './LineConstraintsElementsInfo';
 import {
 	littleKillerLookAndSayInfo,
@@ -171,6 +172,7 @@ import {
 import {
 	battlefieldInfo,
 	brokenXSumInfo,
+	loopwhichesInfo,
 	outsideConsecutiveSumInfo,
 	outsideEdgeYinYangSumOfShadedInfo,
 	risingStreakInfo,
@@ -216,6 +218,7 @@ import {
 	sashiganeBendRegionCountInfo,
 	sashiganeRegionSumInfo,
 	seenRegionBordersCountInfo,
+	thermoSightlineLoopArrowInfo,
 	twilightCaveFillominoClueInfo,
 	twoContiguousRegionsRowColumnOppositeSetCountInfo,
 	watchtowerInfo,
@@ -312,12 +315,16 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.TWO_CONTIGUOUS_REGIONS]: twoContiguousRegionsInfo,
 	[TOOLS.SASHIGANE]: sashiganeRegionsInfo,
 	[TOOLS.CELL_CENTER_LOOP_NO_TOUCHING]: cellCenterLoopNoTouchingInfo,
+	[TOOLS.CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY]: cellCenterCanTouchDiagonallyInfo,
+	[TOOLS.NOT_LOOP_SIZED_REGIONS]: notLoopSizedRegionsInfo,
 	[TOOLS.MODULAR_LOOP]: modularLoopInfo,
 	[TOOLS.CAVE]: caveInfo,
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING]: twilightCaveFillominoRegionShadingInfo,
 
 	[TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS]: nurimisakiPathGermanWhispersInfo,
 	[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES]: adjacentCellsAlongLoopAreMultiplesInfo,
+	[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS]:
+		adjacentCellsAlongLoopAreGermanWhispersInfo,
 
 	// Single Cell Constraints
 	[TOOLS.ODD]: oddInfo,
@@ -366,12 +373,14 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	// Single Cell Arrow Constraint
 	[TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND]: sashiganeArrowPointsToBendInfo,
+	[TOOLS.THERMO_SIGHTLINE_LOOP_ARROW]: thermoSightlineLoopArrowInfo,
 
 	// Single Cell Multi Arrow Constraint
 	[TOOLS.COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS]: countCellsNotInTheSameRegionArrowsInfo,
 	[TOOLS.YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR]: yinYangSumOfCellsOfOppositeColorInfo,
 	[TOOLS.LOOP_CELL_COUNT_ARROWS]: loopCellCountArrowsInfo,
-	[TOOLS.YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS]: yinYangCountUniqueFillominoSameShadingInfo,
+	[TOOLS.YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS]:
+		yinYangCountUniqueFillominoSameShadingInfo,
 
 	// Edge Constraints
 	[TOOLS.DIFFERENCE]: differenceInfo,
@@ -408,6 +417,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.NABNER_LINE]: nabnerLineInfo,
 
 	[TOOLS.WHISPERS_LINE]: whispersLineInfo,
+	[TOOLS.DUTCH_WHISPERS]: dutchWhispersInfo,
 	[TOOLS.MAXIMUM_ADJACENT_DIFFERENCE_LINE]: maximumAdjacentDifferenceLineInfo,
 	[TOOLS.RENBAN_OR_WHISPERS_LINE]: renbanOrWhispersLineInfo,
 	[TOOLS.RENBAN_OR_NABNER_LINE]: renbanOrNabnerLineInfo,
@@ -504,6 +514,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.ROW_OR_COLUMN_RANK]: rowOrColumnRankInfo,
 	[TOOLS.OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED]: outsideEdgeYinYangSumOfShadedInfo,
 	[TOOLS.OUTSIDE_CONSECUTIVE_SUM]: outsideConsecutiveSumInfo,
+	[TOOLS.LOOPWICHES]: loopwhichesInfo,
 
 	// Outside Corner Constraints
 	[TOOLS.LITTLE_KILLER_SUM]: littleKillerSumInfo,

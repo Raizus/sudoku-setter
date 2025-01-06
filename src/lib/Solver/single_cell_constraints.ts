@@ -284,7 +284,7 @@ function countingCirclesConstraint(grid: Grid, constraints: CellToolI[]) {
 	const vars = cellsToVarsName([...cells]);
 	const vars_str = `${vars.join(',\n\t')}`;
 
-	out_str += `array[int] of var int: counting_circles = [\n\t${vars_str}\n];\n`
+	out_str += `array[int] of var int: counting_circles = [\n\t${vars_str}\n];\n`;
 
 	for (const constraint of constraints) {
 		const coord = constraint.cell;
@@ -461,7 +461,7 @@ function sashiganeArrowPointsToBendConstraint(grid: Grid, constraint: CellArrowT
 	cells = [cell, ...cells];
 
 	const sashigane_vars = cellsToSashiganeVarsName(cells);
-	const sashigane_vars_str = '[' + sashigane_vars.join(',') + ']'
+	const sashigane_vars_str = '[' + sashigane_vars.join(',') + ']';
 
 	const sashigane_bend_vars = cells.map((cell2) => `sashigane_bends[${cell2.r},${cell2.c}]`);
 	const sashigane_bend_vars_str = '[' + sashigane_bend_vars.join(',') + ']';
@@ -472,6 +472,25 @@ function sashiganeArrowPointsToBendConstraint(grid: Grid, constraint: CellArrowT
 	let out_str = `constraint sashigane_arrow_points_to_bend_p(${cell_var}, ${sashigane_var}, ${sashigane_vars_str}, ${sashigane_bend_vars_str});\n`;
 	out_str += `constraint count_same_adjacent(sashigane, ${cell.r}, ${cell.c}) == 1;\n`;
 	return out_str;
+}
+
+function thermoSightlineLoopArrowConstraint(grid: Grid, constraint: CellArrowToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const direction = constraint.direction;
+	const cells: Cell[] = grid.getCellsInDirection(cell.r, cell.c, direction);
+
+	const cells_vars = cellsToVarsName(cells);
+	const cells_vars_str = '[' + cells_vars.join(',') + ']';
+	const loop_vars = cellsToCellCenterLoopVarsName(cells);
+	const loop_vars_str = '[' + loop_vars.join(',') + ']';
+
+	const cell_var = cellToVarName(cell);
+
+	const constraint_str = `constraint thermo_sightline_loop_arrow_p(${cells_vars_str}, ${loop_vars_str}, ${cell_var});\n`;
+	return constraint_str;
 }
 
 function cellOnLoopConstraint(grid: Grid, constraint: CellToolI) {
@@ -505,7 +524,7 @@ function countLoopNeighbourCellsConstraint(grid: Grid, constraint: CellToolI) {
 	const neighbour_cells = grid.getNeighboorCells(cell);
 	const cells = [cell, ...neighbour_cells];
 	const cell_center_loop_vars = cellsToCellCenterLoopVarsName(cells);
-	const cell_center_loop_vars_str = '[' + cell_center_loop_vars.join(',') + ']'
+	const cell_center_loop_vars_str = '[' + cell_center_loop_vars.join(',') + ']';
 
 	const constraint_str = `constraint sum(${cell_center_loop_vars_str}) == ${cell_var};\n`;
 	return constraint_str;
@@ -529,9 +548,9 @@ function caveCluesConstraint(grid: Grid, constraint: CellToolI) {
 	return constraint_str;
 }
 
-
 type ConstraintF = (grid: Grid, constraint: CellToolI) => string;
 type ConstraintF2 = (grid: Grid, constraint: CellToolI[]) => string;
+type ConstraintF3 = (grid: Grid, constraint: CellArrowToolI) => string;
 
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.ODD, oddConstraint],
@@ -584,6 +603,11 @@ const tool_map_2 = new Map<string, ConstraintF2>([
 	[TOOLS.COUNTING_CIRCLES, countingCirclesConstraint]
 ]);
 
+const cell_arrow_tool_map = new Map<string, ConstraintF3>([
+	[TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND, sashiganeArrowPointsToBendConstraint],
+	[TOOLS.THERMO_SIGHTLINE_LOOP_ARROW, thermoSightlineLoopArrowConstraint]
+]);
+
 export function singleCellConstraints(
 	model: PuzzleModel,
 	grid: Grid,
@@ -593,6 +617,7 @@ export function singleCellConstraints(
 	let out_str = '';
 	const constraintF = tool_map.get(toolId);
 	const constraintF2 = tool_map_2.get(toolId);
+	const constraintF3 = cell_arrow_tool_map.get(toolId);
 	if (constraintF) {
 		for (const constraint of Object.values(constraints)) {
 			const constraint_str = constraintF(grid, constraint as CellToolI);
@@ -602,12 +627,9 @@ export function singleCellConstraints(
 		const constl = Object.values(constraints) as CellToolI[];
 		const constraint_str = constraintF2(grid, constl);
 		out_str += constraint_str;
-	} else if (toolId === TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND) {
+	} else if (constraintF3) {
 		for (const constraint of Object.values(constraints)) {
-			const constraint_str = sashiganeArrowPointsToBendConstraint(
-				grid,
-				constraint as CellArrowToolI
-			);
+			const constraint_str = constraintF3(grid, constraint as CellArrowToolI);
 			out_str += constraint_str;
 		}
 	}

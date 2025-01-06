@@ -70,7 +70,7 @@ export function counter<T>(iterable: Array<T>) {
 }
 
 export function getPuzzleFilename(puzzleMeta: PuzzleMetaI): string {
-	const title = puzzleMeta.title ? puzzleMeta.title : 'hexdoku';
+	const title = puzzleMeta.title ? puzzleMeta.title : 'sudoku';
 	const authors = puzzleMeta.authors ? puzzleMeta.authors : ['Anonymous'];
 	const authorsStr = authors.join('_');
 	let fileName = `${title}_by_${authorsStr}`;

@@ -321,3 +321,25 @@ export const outsideConsecutiveSumInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	}
 };
+
+export const loopwhichesInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
+			defaultValue: '',
+			cornerOrEdge: CornerOrEdge.BOTH
+		});
+	},
+
+	toolId: TOOLS.LOOPWICHES,
+	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
+	meta: {
+		description:
+			'Clues outside the grid are Loopwiches. Loopwiches indicate the sum of the digits between the first and last loop cell in their row or column. (Both loop and nonloop cells between the 2 crust cells are summed).',
+		usage: outsideEdgeUsage(),
+		tags: [],
+		categories: outsideEdgeDefaultCategories
+	}
+};

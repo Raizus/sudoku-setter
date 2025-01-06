@@ -88,6 +88,13 @@ function whispersConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	return constraint_str;
 }
 
+function dutchwhispersConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const vars = getLineVars(grid, constraint);
+	const vars_str = `[${vars.join(',')}]`;
+	const constraint_str: string = `constraint whispers(${vars_str}, 4);\n`;
+	return constraint_str;
+}
+
 function thermoConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	const constraint_str = simpleLineConstraint(grid, constraint, 'strictly_increasing');
 	return constraint_str;
@@ -169,6 +176,28 @@ function segmentedSumLineConstraint(grid: Grid, c_id: string, constraint: LineTo
 	return constraint_str;
 }
 
+function nConsecutiveRenbanLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const cells_coords = constraint.cells;
+	let cells = cells_coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+	let circular = false;
+	if (cells.length > 2 && cells[0] === cells[cells.length - 1]) {
+		cells = cells.slice(0, -1);
+		circular = true;
+	}
+
+	const vars = cellsToVarsName(cells);
+	const vars_str = `[${vars.join(',')}]`;
+
+	const value = constraint.value;
+	if (!value) return '';
+
+	const val = parseInt(value);
+	const constraint_str: string = `constraint n_consecutive_renban_line_p(${vars_str}, ${val}, ${circular});\n`;
+	return constraint_str;
+}
+
 function adjacentDifferencesCountLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	const constraint_str = simpleLineConstraint(
 		grid,
@@ -185,11 +214,6 @@ function sameParityLineConstraint(grid: Grid, c_id: string, constraint: LineTool
 
 function renbanOrWhispersLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	const constraint_str = valuedLineConstraint(grid, constraint, 'renban_or_whispers_p', '5');
-	return constraint_str;
-}
-
-function nConsecutiveRenbanLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
-	const constraint_str = valuedLineConstraint(grid, constraint, 'n_consecutive_renban_line_p', '5');
 	return constraint_str;
 }
 
@@ -491,6 +515,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.RENRENBANBAN_LINE, renrenbanbanConstraint],
 	[TOOLS.NABNER_LINE, nabnerConstraint],
 	[TOOLS.WHISPERS_LINE, whispersConstraint],
+	[TOOLS.DUTCH_WHISPERS, dutchwhispersConstraint],
 	[TOOLS.RENBAN_OR_WHISPERS_LINE, renbanOrWhispersLineConstraint],
 	[TOOLS.RENBAN_OR_NABNER_LINE, renbanOrNabnerConstraint],
 	[TOOLS.OUT_OF_ORDER_CONSECUTIVE_LINE, outOfOrderConsecutiveLineConstraint],

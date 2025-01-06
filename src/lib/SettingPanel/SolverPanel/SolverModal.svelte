@@ -4,6 +4,7 @@
 	import { createMinizincModel } from '$src/lib/Solver/solver';
 	import { puzzleMetaStore, puzzleStore } from '$stores/BoardStore';
 	import { getPuzzleFilename } from '$src/lib/utils/functionUtils';
+	import { pruneMinizincModel } from '$src/lib/Solver/solver_utils';
 	export let showModal = false;
 
     function getModelStr() {
@@ -15,6 +16,12 @@
     function copyCb() {
         const modelStr = getModelStr();
         navigator.clipboard.writeText(modelStr);
+    };
+
+	function copyPrunedCb() {
+        const modelStr = getModelStr();
+		const pruned = pruneMinizincModel(modelStr);
+        navigator.clipboard.writeText(pruned);
     };
 
     function downloadCb() {
@@ -35,6 +42,7 @@
 <Modal bind:showModal title="Minizinc File">
 	<div class="new-puzzle-content">
 		<button class="modal-button" on:click={copyCb}>Copy to clipboard</button>
+		<button class="modal-button" on:click={copyPrunedCb}>Copy pruned version to clipboard</button>
 		<button class="modal-button" on:click={downloadCb}>Download Minizinc File</button>
 	</div>
 </Modal>

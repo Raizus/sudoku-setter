@@ -1,8 +1,8 @@
 
 export interface ParseOptions {
-	allow_var: boolean;
-	allow_int_list: boolean;
-	allow_interval: boolean;
+	allow_var?: boolean;
+	allow_int_list?: boolean;
+	allow_interval?: boolean;
 }
 
 export const default_parse_opts: ParseOptions = {

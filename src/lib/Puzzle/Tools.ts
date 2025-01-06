@@ -37,7 +37,8 @@ export enum SIMPLE_GLOBAL_CONSTRAINTS {
 
 	NURIMISAKI_PATH_GERMAN_WHISPERS = 'Nurimisaki Path German Whispers',
 	YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE = 'Yin Yang Region Sum Lines Must Cross Colors At Least Once',
-	ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES = 'Adjacent Cells Along Loop Are Multiples'
+	ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES = 'Adjacent Cells Along Loop Are Multiples',
+	ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS = 'Adjacent Cells Along Loop Are German Whispers'
 }
 
 export enum NEGATIVE_CONSTRAINTS {
@@ -72,6 +73,8 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	TWO_CONTIGUOUS_REGIONS = 'Two Contiguous Regions',
 	SASHIGANE = 'Sashigane',
 	CELL_CENTER_LOOP_NO_TOUCHING = 'Cell Center Loop No Touching',
+	CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY = 'Cell Center Loop Can Touch Diagonally',
+	NOT_LOOP_SIZED_REGIONS = 'Not Loop Sized Regions',
 	MODULAR_LOOP = 'Modular Loop',
 	CAVE = 'Cave',
 	CAVE_CELLS_ARE_ODD = 'Cave Cells Are Odd',
@@ -129,7 +132,8 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 }
 
 export enum SINGLE_CELL_ARROW_CONSTRAINTS {
-	SASHIGANE_ARROW_POINTS_TO_BEND = 'Sashigane Arrow Points To Bend'
+	SASHIGANE_ARROW_POINTS_TO_BEND = 'Sashigane Arrow Points To Bend',
+	THERMO_SIGHTLINE_LOOP_ARROW = 'Thermo Sightline Loop Arrow',
 }
 
 export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
@@ -171,6 +175,7 @@ export enum LINE_CONSTRAINTS {
 
 	PALINDROME = 'Palindrome',
 	WHISPERS_LINE = 'Whispers Line',
+	DUTCH_WHISPERS = 'Dutch Whispers',
 	MAXIMUM_ADJACENT_DIFFERENCE_LINE = 'Maximum Adjacent Difference Line',
 
 	RENBAN_LINE = 'Renban Line',
@@ -282,7 +287,8 @@ export enum OUTSIDE_EDGE_CONSTRAINTS {
 	ROW_OR_COLUMN_RANK = 'Row Or Column Rank',
 	OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED = 'Outside Edge Yin Yang Sum Of Shaded',
 	X_SUM_REGION_BORDERS = 'X-Sum Region Borders',
-	OUTSIDE_CONSECUTIVE_SUM = 'Outside Consecutive Sum'
+	OUTSIDE_CONSECUTIVE_SUM = 'Outside Consecutive Sum',
+	LOOPWICHES = 'Loopwhiches'
 }
 
 export enum OUTSIDE_CORNER_CONSTRAINTS {
