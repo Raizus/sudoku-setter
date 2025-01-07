@@ -5,9 +5,10 @@ import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
 	cellsToVarsName,
 	allDifferentConstraint,
-	cellsToYinYangVarsName,
 	cellsToValueVarsName,
-	PuzzleModel
+	PuzzleModel,
+	cellsToGridVarsStr,
+	VAR_2D_NAMES
 } from './solver_utils';
 import type { ParseOptions } from './value_parsing';
 
@@ -186,8 +187,7 @@ function yinYangValuedCageConstraint(
 	const vars = cellsToVarsName(cells);
 	const vars_str = `[${vars.join(',')}]`;
 
-	const yin_yang_vars = cellsToYinYangVarsName(cells);
-	const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
+	const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
 
 	const value = constraint.value;
 	if (value) {

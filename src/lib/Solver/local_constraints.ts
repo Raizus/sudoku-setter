@@ -9,6 +9,7 @@ import { cornerConstraints } from './corner_constraints';
 import { edgeConstraints } from './edge_constraints';
 import { lineConstraints } from './line_constraints';
 import { outsideDirectionConstraints } from './outside_direction_constraints';
+import { singleCellArrowConstraints } from './single_cell_arrow_constraints';
 import { singleCellConstraints } from './single_cell_constraints';
 import { singleCellMultiArrowConstraints } from './single_cell_multi_arrow_constraints';
 import { addHeader, PuzzleModel } from './solver_utils';
@@ -23,6 +24,7 @@ type ConstraintsF = (
 
 const functions_list: ConstraintsF[] = [
 	singleCellConstraints,
+	singleCellArrowConstraints,
 	singleCellMultiArrowConstraints,
 	edgeConstraints,
 	cornerConstraints,

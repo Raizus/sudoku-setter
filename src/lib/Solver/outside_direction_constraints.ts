@@ -3,11 +3,11 @@ import type { OutsideDirectionToolI } from '../Puzzle/Constraints/OutsideDirecti
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
-	cellsToCellCenterLoopVarsName,
+	cellsToGridVarsStr,
 	cellsToValueVarsName,
 	cellsToVarsName,
-	cellsToYinYangVarsName,
-	PuzzleModel
+	PuzzleModel,
+	VAR_2D_NAMES
 } from './solver_utils';
 import type { ParseOptions } from './value_parsing';
 
@@ -240,8 +240,7 @@ function loopwhichesConstraint(
 	const vars = cellsToVarsName(cells);
 	const vars_str = `[${vars.join(',')}]`;
 
-	const loop_vars = cellsToCellCenterLoopVarsName(cells);
-	const loop_vars_str = `[${loop_vars.join(', ')}]`;
+	const loop_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.CELL_CENTER_LOOP);
 
 	const value = constraint.value;
 	if (value) {
@@ -309,9 +308,7 @@ function outsideEdgeYinYangAdjacentSumOfShadedConstraint(
 	const cells = grid.getCellsInDirection(cell_coord.r, cell_coord.c, direction);
 	const vars = cellsToVarsName(cells);
 	const vars_str = `[${vars.join(',')}]`;
-
-	const yin_yang_vars = cellsToYinYangVarsName(cells);
-	const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
+	const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
 
 	const value = constraint.value;
 	if (value) {

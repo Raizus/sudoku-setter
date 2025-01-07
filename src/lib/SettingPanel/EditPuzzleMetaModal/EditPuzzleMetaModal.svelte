@@ -21,7 +21,7 @@
 	$: if (!showModal) {
 		const authors = $puzzleMetaStore.authors;
 		titleStr = $puzzleMetaStore.title ?? '';
-		authorsStr = authors ? joinStrList(authors, ' & ') : '';
+		authorsStr = authors ? joinStrList(authors, '; ', '; ') : '';
 		rulesetStr = $puzzleMetaStore.ruleset ?? '';
 		ctcYoutubeUrlStr = $puzzleMetaStore.ctcYoutubeUrl ?? '';
 		ctcUrlStr = $puzzleMetaStore.ctcUrl ?? '';
@@ -89,7 +89,7 @@
 			}
 		}
 
-		return description;
+		return description.trim();
 	}
 
 	function autoGenCb() {

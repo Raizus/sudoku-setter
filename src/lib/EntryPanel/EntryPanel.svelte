@@ -58,7 +58,6 @@
 	$panel-gap: 10px;
 
 	.entry-panel-wrapper {
-		margin: 5px;
 		max-width: 20%;
 		height: 100vh;
 		display: flex;

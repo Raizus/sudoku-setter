@@ -1,7 +1,11 @@
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { addHeader, cellsToDoublersVarsName, cellsToNegatorsVarsName } from './solver_utils';
+import {
+	addHeader,
+	cellsToGridVarsStr,
+	VAR_2D_NAMES
+} from './solver_utils';
 
 function yinYangConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	const grid = puzzle.grid;
@@ -135,7 +139,7 @@ function notLoopSizedRegionsConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: loop_regions;\n`;
 	out_str += `constraint cell_center_loop_regions_p(cell_center_loop, loop_regions);\n`;
-	out_str += `constraint not_loop_sized_regions_p(board, loop_regions, ALLOWED_DIGITS);\n`;	
+	out_str += `constraint not_loop_sized_regions_p(board, loop_regions, ALLOWED_DIGITS);\n`;
 
 	return out_str;
 }
@@ -157,7 +161,7 @@ function modularLoopConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function onePerRowColumnRegion(puzzle: PuzzleI, vars_func: (cells: Cell[]) => string[]) {
+function onePerRowColumnRegion(puzzle: PuzzleI, vars_func: (cells: Cell[]) => string) {
 	const grid = puzzle.grid;
 
 	let out_str: string = '';
@@ -165,8 +169,7 @@ function onePerRowColumnRegion(puzzle: PuzzleI, vars_func: (cells: Cell[]) => st
 	const nrows = grid.nRows;
 	for (let i = 0; i < nrows; i++) {
 		const row_cells = grid.getRow(i);
-		const vars = vars_func(row_cells);
-		const vars_str = '[' + vars.join(',') + ']';
+		const vars_str = vars_func(row_cells);
 		out_str += `constraint count_eq(${vars_str}, true, 1);\n`;
 	}
 
@@ -175,8 +178,7 @@ function onePerRowColumnRegion(puzzle: PuzzleI, vars_func: (cells: Cell[]) => st
 	const ncols = grid.nCols;
 	for (let i = 0; i < ncols; i++) {
 		const col_cells = grid.getCol(i);
-		const vars = vars_func(col_cells);
-		const vars_str = '[' + vars.join(',') + ']';
+		const vars_str = vars_func(col_cells);
 		out_str += `constraint count_eq(${vars_str}, true, 1);\n`;
 	}
 
@@ -188,8 +190,7 @@ function onePerRowColumnRegion(puzzle: PuzzleI, vars_func: (cells: Cell[]) => st
 		const regions = grid.getUsedRegions();
 		for (const region of regions) {
 			const region_cells = grid.getRegion(region);
-			const vars = vars_func(region_cells);
-			const vars_str = '[' + vars.join(',') + ']';
+			const vars_str = vars_func(region_cells);
 			out_str += `constraint count_eq(${vars_str}, true, 1);\n`;
 		}
 	}
@@ -208,7 +209,9 @@ function doublersConstraint(puzzle: PuzzleI, tool: TOOLID) {
 
 	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: doublers_grid;\n`;
-	out_str += onePerRowColumnRegion(puzzle, cellsToDoublersVarsName);
+	out_str += onePerRowColumnRegion(puzzle, (cells: Cell[]) =>
+		cellsToGridVarsStr(cells, VAR_2D_NAMES.DOUBLERS)
+	);
 	// only one of each digit
 	out_str += `\nconstraint one_of_each_digit_p(board, doublers_grid, ALLOWED_DIGITS);\n`;
 	// values grid
@@ -231,7 +234,9 @@ function negatorsConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: ${grid_name};\n`;
 
-	out_str += onePerRowColumnRegion(puzzle, cellsToNegatorsVarsName);
+	out_str += onePerRowColumnRegion(puzzle, (cells: Cell[]) =>
+		cellsToGridVarsStr(cells, VAR_2D_NAMES.NEGATORS)
+	);
 	// only one of each digit
 	out_str += `\nconstraint one_of_each_digit_p(board, ${grid_name}, ALLOWED_DIGITS);\n`;
 	// values grid
@@ -277,6 +282,22 @@ function caveConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
+function galaxiesConstraint(puzzle: PuzzleI, tool: TOOLID) {
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name1 = 'galaxy_regions';
+
+	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name1};\n`;
+	return out_str;
+}
+
 function nexusConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	const grid = puzzle.grid;
 
@@ -293,12 +314,30 @@ function nexusConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
+function goldilocksConstraint(puzzle: PuzzleI, tool: TOOLID) {
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..2: goldilocks_regions;\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var int: values_grid;\n`;
+	out_str += `constraint goldilocks_zone_p(goldilocks_regions);\n`;
+	out_str += `constraint goldilocks_values_p(board, values_grid, goldilocks_regions);\n`;
+
+	return out_str;
+}
 
 type ConstraintF = (puzzle: PuzzleI, tool: TOOLID) => string;
 
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.FILLOMINO, fillominoConstraint],
 	[TOOLS.CAVE, caveConstraint],
+	[TOOLS.GALAXIES, galaxiesConstraint],
 	[TOOLS.YIN_YANG, yinYangConstraint],
 	[TOOLS.NURIMISAKI, nurimisakiConstraint],
 	[TOOLS.TWO_CONTIGUOUS_REGIONS, twoContiguousRegionsConstraint],
@@ -311,6 +350,7 @@ const tool_map = new Map<string, ConstraintF>([
 
 	[TOOLS.DOUBLERS, doublersConstraint],
 	[TOOLS.NEGATORS, negatorsConstraint],
+	[TOOLS.GOLDILOCKS_ZONE, goldilocksConstraint],
 	[TOOLS.NEXUS, nexusConstraint]
 ]);
 

@@ -60,6 +60,18 @@ export const sashiganeRegionsInfo: AbstractElementInfo = {
 	}
 };
 
+export const goldilocksZoneInfo: AbstractElementInfo = {
+	toolId: TOOLS.GOLDILOCKS_ZONE,
+	order: 0,
+
+	meta: {
+		description:
+			"Divide the grid into 3 zones. Each zone consists of a single group of orthogonally connected cells. No 2x2 area may be entirely within one zone. The first zone is 'too hot'. Any cell in the hot zone has a value one greater than its digit. The second zone is 'too cold'. Any cell in the cold zone has a value one less than its digit. The third zone is 'just right'; this is the Goldilocks Zone. In this zone, a cell's value equals its digit, like normal.",
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
 export const cellCenterLoopNoTouchingInfo: AbstractElementInfo = {
 	toolId: TOOLS.CELL_CENTER_LOOP_NO_TOUCHING,
 	order: 0,
@@ -113,7 +125,7 @@ export const notLoopSizedRegionsInfo: AbstractElementInfo = {
 
 	meta: {
 		description:
-			'Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself orthogonally, but can touch itself diagonally.',
+			'Non-loop cells form several orthogonally connected groups. Such a group of size N contains exactly the digits from 1 to N.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
@@ -211,3 +223,60 @@ export const yinYangFillominoParityInfo: AbstractElementInfo = {
 	}
 };
 
+export const galaxiesInfo: AbstractElementInfo = {
+	toolId: TOOLS.GALAXIES,
+	order: 0,
+
+	meta: {
+		description:
+			'Each galaxy must consist of a region of orthogonally connected cells, and must have 180 degree rotational symmetry.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const everyCellBelongsToAGalaxyInfo: AbstractElementInfo = {
+	toolId: TOOLS.EVERY_CELL_BELONGS_TO_A_GALAXY,
+	order: 0,
+
+	meta: {
+		description: 'Every cell in the grid belongs to a galaxy.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const galaxy2x2DoesNotBelongToOneGalaxyInfo: AbstractElementInfo = {
+	toolId: TOOLS.GALAXY_2X2_DOES_NOT_BELONG_TO_ONE_GALAXY,
+	order: 0,
+
+	meta: {
+		description: 'No 2x2 area may belong entirely to one galaxy.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const twoSymmetricGalaxiesInfo: AbstractElementInfo = {
+	toolId: TOOLS.TWO_SYMMETRIC_GALAXIES,
+	order: 0,
+
+	meta: {
+		description:
+			"Divide the grid into two galaxies. Each galaxy must consist of a region of orthogonally connected cells, and must have 180 degree rotational symmetry. (The central point around which a galaxy is symmetrical doesn't need to actually belong to that galaxy.)",
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const oneGalaxyIsAGermanWhispersInfo: AbstractElementInfo = {
+	toolId: TOOLS.ONE_GALAXY_IS_A_GERMAN_WHISPERS,
+	order: 0,
+
+	meta: {
+		description:
+			'One of the two galaxies behaves like a German whisper; orthogonally adjacent cells in this galaxy must have a difference of at least 5.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};

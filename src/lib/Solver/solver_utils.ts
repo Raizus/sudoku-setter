@@ -13,9 +13,13 @@ export enum VAR_2D_NAMES {
 	NEGATORS = 'negators_grid',
 	VALUES_GRID = 'values_grid',
 	SASHIGANE = 'sashigane',
+	SASHIGANE_BENDS = 'sashigane_bends',
 	CELL_CENTER_LOOP = 'cell_center_loop',
 	CAVE_SHADING = 'cave_shading',
-	FILLOMINO_REGIONS = 'fillomino_area'
+	CAVE_REGIONS = 'cave_regions',
+	FILLOMINO_REGIONS = 'fillomino_area',
+	GALAXY_REGIONS = 'galaxy_regions',
+	GOLDILOCKS_REGIONS = 'goldilocks_regions'
 }
 
 export function cellToGridVarName(cell: Cell, name: VAR_2D_NAMES): string {
@@ -25,6 +29,11 @@ export function cellToGridVarName(cell: Cell, name: VAR_2D_NAMES): string {
 export function cellsToGridVarsName(cells: Cell[], name: VAR_2D_NAMES): string[] {
 	const vars = cells.map((cell) => cellToGridVarName(cell, name));
 	return vars;
+}
+
+export function cellsToGridVarsStr(cells: Cell[], name: VAR_2D_NAMES): string {
+	const out = '[' + cellsToGridVarsName(cells, name).join(',') + ']';
+	return out;
 }
 
 export function cellToVarName(cell: Cell): string {
@@ -39,76 +48,12 @@ export function cellsToVarsName(cells: Cell[]): string[] {
 	return vars;
 }
 
-export function cellToYinYangVarName(cell: Cell): string {
-	return `yin_yang[${cell.r},${cell.c}]`;
-}
-
-export function cellsToYinYangVarsName(cells: Cell[]): string[] {
-	return cells.map((cell) => cellToYinYangVarName(cell));
-}
-
-export function cellToUnknownRegionsVarName(cell: Cell): string {
-	return `unknown_regions[${cell.r},${cell.c}]`;
-}
-
-export function cellsToUnknownRegionsVarsName(cells: Cell[]): string[] {
-	return cells.map((cell) => cellToUnknownRegionsVarName(cell));
-}
-
-export function cellToDoublersVarName(cell: Cell): string {
-	return `doublers_grid[${cell.r},${cell.c}]`;
-}
-
-export function cellsToDoublersVarsName(cells: Cell[]): string[] {
-	return cells.map((cell) => cellToDoublersVarName(cell));
-}
-
-export function cellToNegatorsVarName(cell: Cell): string {
-	return `negators_grid[${cell.r},${cell.c}]`;
-}
-
-export function cellsToNegatorsVarsName(cells: Cell[]): string[] {
-	return cells.map((cell) => cellToNegatorsVarName(cell));
-}
-
 export function cellToValueVarName(cell: Cell): string {
 	return `values_grid[${cell.r},${cell.c}]`;
 }
 
 export function cellsToValueVarsName(cells: Cell[]): string[] {
 	return cells.map((cell) => cellToValueVarName(cell));
-}
-
-export function cellToSashiganeVarName(cell: Cell): string {
-	return `sashigane[${cell.r},${cell.c}]`;
-}
-
-export function cellsToSashiganeVarsName(cells: Cell[]): string[] {
-	return cells.map((cell) => cellToSashiganeVarName(cell));
-}
-
-export function cellToCellCenterLoopVarName(cell: Cell): string {
-	return `cell_center_loop[${cell.r},${cell.c}]`;
-}
-
-export function cellsToCellCenterLoopVarsName(cells: Cell[]): string[] {
-	return cells.map((cell) => cellToCellCenterLoopVarName(cell));
-}
-
-export function cellToCaveShadingVarName(cell: Cell): string {
-	return `cave_shading[${cell.r},${cell.c}]`;
-}
-
-export function cellsToCaveShadingVarsName(cells: Cell[]): string[] {
-	return cells.map((cell) => cellToCaveShadingVarName(cell));
-}
-
-export function cellToFillominoRegionVarName(cell: Cell): string {
-	return `fillomino_area[${cell.r},${cell.c}]`;
-}
-
-export function cellsToFillominoRegionVarsName(cells: Cell[]): string[] {
-	return cells.map((cell) => cellToFillominoRegionVarName(cell));
 }
 
 export function allDifferentConstraint(vars: string[]): string {
@@ -133,7 +78,19 @@ export function defineFunctionsPredicates() {
 ) = let {
     int: d1 = abs(r2-r1);
     int: d2 = abs(c2-c1);
-} in d1 <= 1 /\\ d2 <= 1 /\\ d1 + d2 = 1;\n\n`;
+} in d1 <= 1 /\\ d2 <= 1 /\\ d1 + d2 = 1;
+ 
+% (r, c) is in bounds if it is on the board.
+test in_bounds_2d(int: r, int: c, array[int, int] of var int: grid) = 
+    r in index_set_1of2(grid) /\\ c in index_set_2of2(grid);
+
+% (r2, c2) is before (r1, c1) if it is above it or to the left.
+test is_before(int: r1, int: c1, int: r2, int: c2) =
+    ( r2 < r1 \\/ ( r2 = r1 /\\  c2 < c1 ));
+
+% (r2, c2) is after (r1, c1) if it is below it or to the right.
+test is_after(int: r1, int: c1, int: r2, int: c2) =
+    ( r2 > r1 \\/  ( r2 = r1 /\\  c2 > c1 ));\n\n`;
 
 	const helper_f = `function array[1..4] of tuple(int, int): orth_adjacent_idxs(int: r, int: c) =
     [(r-1,c),(r+1,c),(r,c-1),(r,c+1)];
@@ -241,7 +198,27 @@ function array[int] of var $$T: rotate_right_f(array[int] of var $$T: arr, int: 
     } in
     array1d(idxs, [
         arr[1 + ((i - 1 - shift + n) mod n)] | i in idxs
-    ]);\n\n`;
+    ]);
+    
+% adjacent cells belonging to the same region with given 'label' are whispers
+predicate region_whispers_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions,
+    var int: label,
+    var int: val
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+} in (
+    forall(r in rows, c in cols where c < max(cols))(
+        regions[r,c] == regions[r,c+1] /\\ regions[r,c] = label ->
+        abs(grid[r,c] - grid[r,c+1]) >= val
+    ) /\\
+    forall(r in rows, c in cols where r < max(rows))(
+        regions[r,c] == regions[r+1,c] /\\ regions[r,c] = label ->
+        abs(grid[r,c] - grid[r+1,c]) >= val
+    )
+);\n\n`;
 
 	const more_helper_f = `function array[int] of int: grid_to_graph_from_edges(array[int,int] of var int: grid) = 
     let {
@@ -554,6 +531,26 @@ predicate radar_p(
 	var int: dist4 = radar_distance_f(arr4, x),
 	var int: min_dist = min_non_negative([dist1, dist2, dist3, dist4])
 } in min_dist == val;\n\n`;
+
+	const single_cell_multiarrow_constraints = `predicate cold_arrows_p(
+    array[int] of var int: arr, 
+    var int: cell_var
+) = let {
+    int: n = length(arr)
+} in (
+    cell_var <= n /\\
+    arr[cell_var] < cell_var
+);
+
+predicate hot_arrows_p(
+    array[int] of var int: arr, 
+    var int: cell_var
+) = let {
+    int: n = length(arr)
+} in (
+    cell_var <= n /\\
+    arr[cell_var] > cell_var
+);`;
 
 	const edge_constraints = `predicate consecutive_p(var int: a, var int: b) =
 	abs(a - b) = 1;
@@ -1501,13 +1498,20 @@ predicate unknown_regions_ordering_p(array[int, int] of var int: regions, int: n
         strictly_increasing(regions_idxs)
     );
     
-predicate unknown_sudoku_regions_p(array[int, int] of var int: grid, int: n_regions) =
+predicate unknown_sudoku_regions_p(
+    array[int, int] of var int: regions,
+    int: n_regions
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+} in (
     forall (reg_i in 0..(n_regions-1)) (
-        connected_region(grid, reg_i) /\\
+        connected_region(regions, reg_i) /\\
         % each region has exactly n_regions cells
-        count(array1d(grid), reg_i) = n_regions /\\
-        unknown_regions_ordering_p(grid, n_regions)
-    );
+        count(array1d(regions), reg_i) = n_regions /\\
+        unknown_regions_ordering_p(regions, n_regions)
+    )
+);
     
 predicate no_repeats_in_unknown_regions_p(
     array[int, int] of var int: grid, 
@@ -1782,19 +1786,7 @@ predicate sashigane_arrow_points_to_bend_p(
     % cell at distance of cell_var is a bend
     element(cell_var, bend_vars, true);\n\n`;
 
-	const fillomino = `% (r, c) is ok if it is on the board.
-test in_bounds_2d(int: r, int: c, array[int, int] of var int: grid) = 
-    r in index_set_1of2(grid) /\\ c in index_set_2of2(grid);
-
-% (r2, c2) is before (r1, c1) if it is above it or to the left.
-test is_before(int: r1, int: c1, int: r2, int: c2) =
-    ( r2 < r1 \\/ ( r2 = r1 /\\  c2 < c1 ));
-
-% (r2, c2) is after (r1, c1) if it is below it or to the right.
-test is_after(int: r1, int: c1, int: r2, int: c2) =
-    ( r2 > r1 \\/  ( r2 = r1 /\\  c2 > c1 ));
-
-function array[int, int] of var int: same_before_f(array[int, int] of var int: area) =
+	const fillomino = `function array[int, int] of var int: same_before_f(array[int, int] of var int: area) =
     let {
         set of int: rows = index_set_1of2(area);
         set of int: cols = index_set_2of2(area);
@@ -2299,16 +2291,7 @@ predicate adjacent_loop_cells_are_german_whispers_p(
 } in (
     assert(rows = index_set_1of2(labels) /\\ cols = index_set_2of2(labels),
        "grid and labels must have same dimensions") /\\
-    forall(i in rows, j in cols)(
-        % Right neighbor
-        (j < max(cols) /\\ labels[i,j] = 1 /\\ labels[i,j+1] = 1 ->
-                abs(grid[i,j] - grid[i,j+1]) >= 5
-        ) /\\
-        % Down neighbor
-        (i < max(rows) /\\ labels[i,j] = 1 /\\ labels[i+1,j] = 1 ->
-                abs(grid[i,j] - grid[i+1,j]) >= 5
-        )
-    )
+    region_whispers_p(grid, labels, 1, 5)
 );
     
 function var int: count_loop_vars_f(array[int] of var 0..1: arr) =
@@ -2462,13 +2445,13 @@ predicate tango_p(array[int, int] of var int: grid) =
     );\n\n`;
 
 	const galaxies = `predicate every_cell_is_in_a_galaxy_p(
-    array[int, int] of int: regions
+    array[int, int] of var int: regions
 ) = forall(r in index_set_1of2(regions), c in index_set_2of2(regions))(
     regions[r,c] != 0
 );
 
 predicate no_2x2_belongs_to_one_galaxy_p(
-    array[int, int] of int: regions
+    array[int, int] of var int: regions
 ) = let {
     set of int: rows = index_set_1of2(regions);
     set of int: cols = index_set_2of2(regions);
@@ -2479,7 +2462,7 @@ predicate no_2x2_belongs_to_one_galaxy_p(
 );
 
 predicate two_symmetric_galaxies_p(
-    array[int, int] of int: regions
+    array[int, int] of var int: regions
 ) = let {
     set of int: rows = index_set_1of2(regions);
     set of int: cols = index_set_2of2(regions);
@@ -2493,28 +2476,63 @@ predicate two_symmetric_galaxies_p(
         regions[r, c] = regions[max_r-r+min_r, max_c-c+min_c] % rotationally symmetric
     ) /\\
     connected_region(regions, 1) /\\ 
-    connected_region(regions, 2)
+    connected_region(regions, 2) /\\
+    regions[min_r, min_c] = 1 % fix galaxy numbering
 );
 
 predicate one_galaxy_is_german_whispers(
-    array[int, int] of int: grid,
-    array[int, int] of int: regions
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions
 ) = let {
     set of int: rows = index_set_1of2(regions);
     set of int: cols = index_set_2of2(regions);
     var 1..2: target;
 } in (
-    forall(r in rows, c in cols where c < max(cols))(
-         regions[r,c] = target /\\
-         regions[r,c] == regions[r,c+1] /\\ 
-         abs(grid[r,c] - grid[r,c+1]) <= 5
-    ) /\\
-    forall(r in rows, c in cols where r < max(rows))(
-         regions[r,c] = target /\\
-         regions[r,c] == regions[r+1,c] /\\ 
-         abs(grid[r,c] - grid[r+1,c]) <= 5
+    region_whispers_p(grid, regions, target, 5)
+);\n\n`;
+
+	const goldilocks = `predicate goldilocks_zone_p(
+    array[int, int] of var 0..2: regions
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+} in (
+	connected_region(regions, 0) /\\
+    connected_region(regions, 1) /\\
+    connected_region(regions, 2) /\\
+    forall(r in rows where r < max(rows), c in cols where c < max(cols))(
+        not all_equal([regions[r,c], regions[r,c+1], regions[r+1,c], regions[r+1,c+1]])
     )
-);`;
+);
+
+predicate goldilocks_values_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: values,
+    array[int, int] of var 0..2: regions
+) = let {
+    set of int: rows = index_set_1of2(values);
+    set of int: cols = index_set_2of2(values);
+} in (
+    forall(r in rows, c in cols)(
+        % just right zone
+        (regions[r,c] == 0 /\\ values[r,c] = grid[r,c]) \\/
+        % hot zone
+        (regions[r,c] == 1 /\\ values[r,c] = grid[r,c] + 1) \\/
+        % cold zone
+        (regions[r,c] == 2 /\\ values[r,c] = grid[r,c] - 1)
+    )
+);
+
+predicate goldilocks_zone_region_sum_p(
+    array[int] of var int: arr,
+    array[int] of var int: regions
+) = let {
+    int: min_i = min(index_set(regions));
+    int: max_i = max(index_set(regions));
+} in (
+    unknown_regions_region_sum_line_p(arr, regions) /\\
+    regions[min_i] != regions[max_i]
+);\n\n`;
 
 	out_str +=
 		tests +
@@ -2522,6 +2540,7 @@ predicate one_galaxy_is_german_whispers(
 		more_helper_f +
 		helper_p +
 		single_cell_constraints +
+		single_cell_multiarrow_constraints +
 		edge_constraints +
 		corner_constraints +
 		line_constraints +
@@ -2543,6 +2562,7 @@ predicate one_galaxy_is_german_whispers(
 		fillomino +
 		cave +
 		galaxies +
+		goldilocks +
 		global_constraints;
 
 	return out_str;

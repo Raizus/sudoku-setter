@@ -8,7 +8,6 @@ import { RENDER_ORDER } from '../RenderOrder';
 import { SHAPE_TYPES } from '../Shape/Shape';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { getSingleCellToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/SingleCellToolInputHandler';
-import { getSingleCellMultiArrowToolInputHandler } from '$input/ToolInputHandlers/SingleCellMultiArrowToolInputHandler';
 import { getSingleCellArrowToolInputHandler } from '$input/ToolInputHandlers/SingleCellArrowToolInputHandler';
 
 const singleCellShapeDefaultCategories = [
@@ -727,110 +726,6 @@ export const nurimisakiUnshadedEndpointInfo: SquareCellElementInfo = {
 	}
 };
 
-export const countCellsNotInTheSameRegionArrowsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
-	},
-
-	toolId: TOOLS.COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
-
-	shape: {
-		type: SHAPE_TYPES.CELL_ARROW,
-		strokeWidth: { editable: true, value: 0.04, lb: 0.01, ub: 0.2, step: 0.01 },
-		stroke: { editable: true, value: 'black' }
-	},
-
-	meta: {
-		description:
-			'A cell with an arrow (or arrows) indicates how many cells in the indicated directions combined that do not belong to the same region as that cell.',
-		tags: [],
-		categories: [
-			TOOL_CATEGORIES.SINGLE_CELL_MULTIARROW_TOOL,
-			TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT
-		]
-	}
-};
-
-export const yinYangSumOfCellsOfOppositeColorInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
-	},
-
-	toolId: TOOLS.YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
-
-	shape: {
-		type: SHAPE_TYPES.CELL_ARROW,
-		strokeWidth: { editable: true, value: 0.03, lb: 0.01, ub: 0.2, step: 0.01 },
-		stroke: { editable: true, value: 'black' }
-	},
-
-	meta: {
-		description:
-			'An arrow in a cell indicates that the digit in that cell equals the sum of the contents of all cells of the opposite colour in the direction of the arrow. If a cell contains multiple arrows, each arrow is summed separately.',
-		tags: [],
-		categories: [
-			TOOL_CATEGORIES.SINGLE_CELL_MULTIARROW_TOOL,
-			TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT
-		]
-	}
-};
-
-export const loopCellCountArrowsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
-	},
-
-	toolId: TOOLS.LOOP_CELL_COUNT_ARROWS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
-
-	shape: {
-		type: SHAPE_TYPES.CELL_ARROW,
-		strokeWidth: { editable: true, value: 0.03, lb: 0.01, ub: 0.2, step: 0.01 },
-		stroke: { editable: true, value: 'black' }
-	},
-
-	meta: {
-		description:
-			'Numbers on cells with arrows refer to the total amount of loop cells seen in the indicated direction(s).',
-		tags: [],
-		categories: [
-			TOOL_CATEGORIES.SINGLE_CELL_MULTIARROW_TOOL,
-			TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT
-		]
-	}
-};
-
-export const yinYangCountUniqueFillominoSameShadingInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
-	},
-
-	toolId: TOOLS.YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
-
-	shape: {
-		type: SHAPE_TYPES.CELL_ARROW,
-		strokeWidth: { editable: true, value: 0.03, lb: 0.01, ub: 0.2, step: 0.01 },
-		stroke: { editable: true, value: 'black' }
-	},
-
-	meta: {
-		description:
-			'Numbers on cells with an arrow indicate the number of polyominoes of the SAME shading/parity seen in the direction of the arrow. Arrows do not count their own cell, but may count their polyomino if a cell within its polyomino is visible in the direction of the arrow.',
-		tags: [],
-		categories: [
-			TOOL_CATEGORIES.SINGLE_CELL_MULTIARROW_TOOL,
-			TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT
-		]
-	}
-};
-
 export const sashiganeBendRegionCountInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getSingleCellToolInputHandler(svgRef, grid, tool);
@@ -896,7 +791,8 @@ export const thermoSightlineLoopArrowInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description: "Each cell with an arrow (called an 'arrow cell') lies on the loop. The digit in an arrow cell is the number of visible loop cells in the indicated direction, where non-loop cells obstruct vision. (The arrow cell is not included in this count). Additionally, digits increase along loop cells seen by an arrow, starting with the digit in the arrow cell.",
+		description:
+			"Each cell with an arrow (called an 'arrow cell') lies on the loop. The digit in an arrow cell is the number of visible loop cells in the indicated direction, where non-loop cells obstruct vision. (The arrow cell is not included in this count). Additionally, digits increase along loop cells seen by an arrow, starting with the digit in the arrow cell.",
 		tags: [],
 		categories: [
 			TOOL_CATEGORIES.SINGLE_CELL_ARROW_TOOL,
@@ -1041,7 +937,7 @@ export const caveClueInfo: SquareCellElementInfo = {
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
 		strokeWidth: { editable: false, value: 0.04 },
-		r: {editable: false, value: 0.35},
+		r: { editable: false, value: 0.35 },
 		stroke: { editable: false, value: 'var(--constraint-color-light-blue' },
 		fill: { editable: false, value: 'none' }
 	},
@@ -1049,6 +945,38 @@ export const caveClueInfo: SquareCellElementInfo = {
 	meta: {
 		description:
 			'Light blue circled cells are cave clues. Cave clues must be a part of the cave, with each number indicating the total count of cells connected vertically and horizontally to the numbered cell including the cell itself.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const unknownRegionsChessSumsInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
+			defaultValue: ''
+		});
+	},
+
+	toolId: TOOLS.UNKNOWN_REGIONS_CHESS_SUMS,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CAGE,
+		strokeWidth: { editable: false, value: 0 },
+		stroke: { editable: false, value: 'none' },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description: `A cell with a number in its top-left corner is a Chess Sums cell. The number in the top-left corner indicates the amount of Chess Sums satisfied by the digit in that cell. A digit in a Chess Sums cell gives one or more of the following:
+ - The sum of all digits that share its region and are a king's move away
+ - The sum of all digits that share its region and are a knight's move away
+ - The sum of all digits that share its region and are a bishop's move away
+Clarifications:
+ - Bishops can “see” past cells from other regions—cells from other regions do not block a bishop's vision.
+ - Each Chess Sum is calculated separately. For example, a cell with a “2” clue that contains a 7 can see 4 and 3 by king's move, and can see 5 and 2 by knight's move—the king's move digits and the knight's move digits each sum to 7 separately.`,
 		tags: [],
 		categories: singleCellShapeDefaultCategories
 	}

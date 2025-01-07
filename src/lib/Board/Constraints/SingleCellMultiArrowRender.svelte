@@ -26,13 +26,15 @@
 	$: strokeWidth = shape.strokeWidth ?? 0.08;
 	$: stroke = shape.stroke ?? 'black';
 
+	const arrow_l = 0.2;
+
 	function getLine(_cell: GridCoordI, _direction: DIRECTION) {
 		const delta = directionToCoords(_direction)
-		const vec = (new Vector2D(delta.c, delta.r)).normalise()
+		const vec = (new Vector2D(delta.c, delta.r))
 		const cellCenter = cellToCellCenterVector(_cell);
 
-		const p1 = cellCenter.add(vec.scale(0.1));
 		const p2 = cellCenter.add(vec.scale(0.4));
+		const p1 = p2.subtract(vec.normalise().scale(arrow_l));
 		const line = [p1, p2];
 		return line;
 	}

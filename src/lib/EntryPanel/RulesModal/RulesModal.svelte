@@ -66,9 +66,8 @@
 		font-weight: italic;
 	}
 
-	.rules {
-		/* text-align: justify; */
-		/* text-indent: 20px; */
-		white-space: pre-line;
-	}
+	/* .rules {
+		text-align: justify;
+		text-indent: 20px;
+	} */
 </style>

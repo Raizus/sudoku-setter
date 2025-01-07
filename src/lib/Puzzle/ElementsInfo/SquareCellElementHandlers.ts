@@ -96,7 +96,7 @@ import {
 	tangoInfo,
 	yinYangRegionSumLinesMustCrossColorsAtLeastOnceInfo
 } from './GlobalConstraintsElementsInfo';
-import { adjacentCellsAlongLoopAreGermanWhispersInfo, adjacentCellsAlongLoopAreMultiplesInfo } from './UndeterminedRegionsElementsInfo';
+import { adjacentCellsAlongLoopAreGermanWhispersInfo, adjacentCellsAlongLoopAreMultiplesInfo, everyCellBelongsToAGalaxyInfo, galaxiesInfo, galaxy2x2DoesNotBelongToOneGalaxyInfo, goldilocksZoneInfo, oneGalaxyIsAGermanWhispersInfo, twoSymmetricGalaxiesInfo } from './UndeterminedRegionsElementsInfo';
 import { caveCellsAreOddInfo, cellCenterCanTouchDiagonallyInfo, notLoopSizedRegionsInfo, oneDigitDoesNotAppearInTheCaveInfo, yinYangFillominoParityInfo } from './UndeterminedRegionsElementsInfo';
 import { caveWallsAreEvenInfo } from './UndeterminedRegionsElementsInfo';
 import { cave2x2NotFullyShadedOrUnshadedInfo } from './UndeterminedRegionsElementsInfo';
@@ -159,7 +159,8 @@ import {
 	outOfOrderConsecutiveLineInfo,
 	ZipperLineInfo,
 	segmentedSumLineInfo,
-	dutchWhispersInfo
+	dutchWhispersInfo,
+	goldilocksZoneRegionSumLineInfo
 } from './LineConstraintsElementsInfo';
 import {
 	littleKillerLookAndSayInfo,
@@ -190,7 +191,6 @@ import {
 	caveClueInfo,
 	cellNotOnTheLoopInfo,
 	cellOnTheLoopInfo,
-	countCellsNotInTheSameRegionArrowsInfo,
 	countingCirclesInfo,
 	countLoopNeighbourCellsInfo,
 	countSameParityNeighborCellsInfo,
@@ -202,7 +202,6 @@ import {
 	highDigitInfo,
 	indexingColumnInfo,
 	indexingRowInfo,
-	loopCellCountArrowsInfo,
 	lowDigitInfo,
 	maximumInfo,
 	minimumInfo,
@@ -221,15 +220,18 @@ import {
 	thermoSightlineLoopArrowInfo,
 	twilightCaveFillominoClueInfo,
 	twoContiguousRegionsRowColumnOppositeSetCountInfo,
+	unknownRegionsChessSumsInfo,
 	watchtowerInfo,
 	yinYangAdjacentSameShadeCountInfo,
-	yinYangCountUniqueFillominoSameShadingInfo,
 	yinYangMinesweeperInfo,
 	yinYangSeenSameShadeCellsInfo,
 	yinYangSeenShadedCellsInfo,
-	yinYangSeenUnshadedCellsInfo,
-	yinYangSumOfCellsOfOppositeColorInfo
-} from './SingleCellElementsInfo';
+	yinYangSeenUnshadedCellsInfo} from './SingleCellElementsInfo';
+import { coldArrowsInfo, countCellsNotInTheSameRegionArrowsInfo, hotArrowsInfo } from './SingleCellMultiArrowElementsInfo';
+import { yinYangSumOfCellsOfOppositeColorInfo } from './SingleCellMultiArrowElementsInfo';
+import { loopCellCountArrowsInfo } from './SingleCellMultiArrowElementsInfo';
+import { yinYangCountUniqueFillominoSameShadingInfo } from './SingleCellMultiArrowElementsInfo';
+import { sameGalaxyUnobstructedCountArrowsInfo } from './SingleCellMultiArrowElementsInfo';
 import { forbiddenOrthogonallyAdjacentSumInfo, minimumDiagonallyAdjacentDifferenceInfo } from './ValuedGlobalConstraintsElementsInfo';
 import {
 	doublersInfo,
@@ -314,6 +316,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.NURIMISAKI]: nurimisakiInfo,
 	[TOOLS.TWO_CONTIGUOUS_REGIONS]: twoContiguousRegionsInfo,
 	[TOOLS.SASHIGANE]: sashiganeRegionsInfo,
+	[TOOLS.GOLDILOCKS_ZONE]: goldilocksZoneInfo,
 	[TOOLS.CELL_CENTER_LOOP_NO_TOUCHING]: cellCenterLoopNoTouchingInfo,
 	[TOOLS.CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY]: cellCenterCanTouchDiagonallyInfo,
 	[TOOLS.NOT_LOOP_SIZED_REGIONS]: notLoopSizedRegionsInfo,
@@ -325,6 +328,12 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES]: adjacentCellsAlongLoopAreMultiplesInfo,
 	[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS]:
 		adjacentCellsAlongLoopAreGermanWhispersInfo,
+
+	[TOOLS.GALAXIES]: galaxiesInfo,
+	[TOOLS.TWO_SYMMETRIC_GALAXIES]: twoSymmetricGalaxiesInfo,
+	[TOOLS.EVERY_CELL_BELONGS_TO_A_GALAXY]: everyCellBelongsToAGalaxyInfo,
+	[TOOLS.GALAXY_2X2_DOES_NOT_BELONG_TO_ONE_GALAXY]: galaxy2x2DoesNotBelongToOneGalaxyInfo,
+	[TOOLS.ONE_GALAXY_IS_A_GERMAN_WHISPERS]: oneGalaxyIsAGermanWhispersInfo,
 
 	// Single Cell Constraints
 	[TOOLS.ODD]: oddInfo,
@@ -371,16 +380,21 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_CLUE]: twilightCaveFillominoClueInfo,
 	[TOOLS.YIN_YANG_FILLOMINO_PARITY]: yinYangFillominoParityInfo,
 
+	[TOOLS.UNKNOWN_REGIONS_CHESS_SUMS]: unknownRegionsChessSumsInfo,
+
 	// Single Cell Arrow Constraint
 	[TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND]: sashiganeArrowPointsToBendInfo,
 	[TOOLS.THERMO_SIGHTLINE_LOOP_ARROW]: thermoSightlineLoopArrowInfo,
 
 	// Single Cell Multi Arrow Constraint
+	[TOOLS.HOT_ARROWS]: hotArrowsInfo,
+	[TOOLS.COLD_ARROWS]: coldArrowsInfo,
 	[TOOLS.COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS]: countCellsNotInTheSameRegionArrowsInfo,
 	[TOOLS.YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR]: yinYangSumOfCellsOfOppositeColorInfo,
 	[TOOLS.LOOP_CELL_COUNT_ARROWS]: loopCellCountArrowsInfo,
 	[TOOLS.YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS]:
 		yinYangCountUniqueFillominoSameShadingInfo,
+	[TOOLS.SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS]: sameGalaxyUnobstructedCountArrowsInfo,
 
 	// Edge Constraints
 	[TOOLS.DIFFERENCE]: differenceInfo,
@@ -462,6 +476,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.YIN_YANG_UNSHADED_ENTROPIC_LINE]: yinYangUnshadedEntropicLineInfo,
 	[TOOLS.YIN_YANG_UNSHADED_MODULAR_LINE]: yinYangUnshadedModularLineInfo,
 	[TOOLS.YIN_YANG_REGION_SUM_LINE]: yinYangRegionSumLineInfo,
+
+	[TOOLS.GOLDILOCKS_ZONE_REGION_SUM]: goldilocksZoneRegionSumLineInfo,
 
 	// Line with Circle ends Constraints
 	[TOOLS.BETWEEN_LINE]: betweenLineInfo,

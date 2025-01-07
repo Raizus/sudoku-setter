@@ -3,7 +3,7 @@ import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { cellsToValueVarsName, cellsToVarsName, cellsToYinYangVarsName, PuzzleModel } from './solver_utils';
+import { cellsToGridVarsStr, cellsToValueVarsName, cellsToVarsName, PuzzleModel, VAR_2D_NAMES } from './solver_utils';
 
 function getLineVars(grid: Grid, constraint: LineToolI, use_set: boolean = false) {
 	const cells_coords = constraint.cells;
@@ -406,8 +406,8 @@ function yinYangShadedWhispersLineConstraint(grid: Grid, c_id: string, constrain
 		.filter((cell) => !!cell);
 	const vars = cellsToVarsName(cells);
 	const vars_str = `[${vars.join(',')}]`;
-	const yin_yang_vars = cellsToYinYangVarsName(cells);
-	const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
+
+	const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
 
 	let value = constraint.value;
 	if (!value) value = '5';
@@ -424,8 +424,7 @@ function yinYangUnshadedModularLineConstraint(grid: Grid, c_id: string, constrai
 		.filter((cell) => !!cell);
 	const vars = cellsToVarsName(cells);
 	const vars_str = `[${vars.join(',')}]`;
-	const yin_yang_vars = cellsToYinYangVarsName(cells);
-	const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
+	const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
 
 	let value = constraint.value;
 	if (!value) value = '3';
@@ -443,8 +442,7 @@ function yinYangSimpleLineConstraint(grid: Grid, constraint: LineToolI, predicat
 
 	const vars = cellsToVarsName(cells);
 	const vars_str = `[${vars.join(',')}]`;
-	const yin_yang_vars = cellsToYinYangVarsName(cells);
-	const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
+	const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
 
 	const constraint_str: string = `constraint ${predicate}(${vars_str}, ${yin_yang_vars_str});\n`;
 	return constraint_str;	
@@ -474,6 +472,19 @@ function yinYangRegionSumLineConstraint(grid: Grid, c_id: string, constraint: Li
 		constraint,
 		'yin_yang_region_sum_line_p'
 	);
+	return constraint_str;
+}
+
+function goldilocksZoneRegionSumLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const cells_coords = constraint.cells;
+	const cells = cells_coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+
+	const values_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.VALUES_GRID);	
+	const region_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.GOLDILOCKS_REGIONS);
+
+	const constraint_str: string = `constraint goldilocks_zone_region_sum_p(${values_vars_str}, ${region_vars_str});\n`;
 	return constraint_str;
 }
 
@@ -566,7 +577,9 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.YIN_YANG_UNSHADED_ENTROPIC_LINE, yinYangUnshadedEntropicLineConstraint],
 	[TOOLS.YIN_YANG_UNSHADED_MODULAR_LINE, yinYangUnshadedModularLineConstraint],
 	[TOOLS.YIN_YANG_REGION_SUM_LINE, yinYangRegionSumLineConstraint],
-	[TOOLS.YIN_YANG_INDEXING_LINE_COLORING, yinYangIndexingLineColoringConstraint]
+	[TOOLS.YIN_YANG_INDEXING_LINE_COLORING, yinYangIndexingLineColoringConstraint],
+
+	[TOOLS.GOLDILOCKS_ZONE_REGION_SUM, goldilocksZoneRegionSumLineConstraint]
 ]);
 
 export function lineConstraints(

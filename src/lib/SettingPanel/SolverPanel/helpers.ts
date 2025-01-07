@@ -14,6 +14,29 @@ type JsonT = { [variable: string]: unknown } | undefined;
 type Point = [number, number];
 type Region = Point[];
 
+function grid_coloring(
+	solution_grid: (number | boolean)[][],
+	grid: Grid,
+	color_map: Map<number, number>
+) {
+	const cells: Cell[] = [];
+	const values: number[][] = [];
+	for (let i = 0; i < solution_grid.length; i++) {
+		const row = solution_grid[i];
+		for (let j = 0; j < row.length; j++) {
+			const cell = grid.getCell(i, j);
+			if (!cell) continue;
+			cells.push(cell);
+
+			const val = Number(row[j]);
+			const color = color_map.get(val) ?? 1;
+			values.push([color]);
+		}
+	}
+	const action = restoreCellsHighlightsAction(cells, values);
+	executeUpdateCellsAction(action);
+}
+
 function solve_coloring(grid: number[][]): number[][] {
 	if (grid.length === 0 || grid[0].length === 0) return [];
 
@@ -151,25 +174,16 @@ function setBinaryHighlights(json: JsonT, grid: Grid) {
 		'even_odd_grid',
 		'cave_shading'
 	];
+	const color_map: Map<number, number> = new Map([
+		[0, 3],
+		[1, 1]
+	]);
+
 	for (const name of grid_vars_names) {
 		const binary_grid = json[name] as number[][] | undefined;
 		if (binary_grid === undefined) continue;
 
-		const cells: Cell[] = [];
-		const values: number[][] = [];
-		for (let i = 0; i < binary_grid.length; i++) {
-			const row = binary_grid[i];
-			for (let j = 0; j < row.length; j++) {
-				const cell = grid.getCell(i, j);
-				if (!cell) continue;
-				cells.push(cell);
-				const val = row[j];
-				if (val === 0) values.push([3]);
-				else values.push([1]);
-			}
-		}
-		const action = restoreCellsHighlightsAction(cells, values);
-		executeUpdateCellsAction(action);
+		grid_coloring(binary_grid, grid, color_map);
 		return;
 	}
 }
@@ -177,26 +191,16 @@ function setBinaryHighlights(json: JsonT, grid: Grid) {
 function setOtherHighlights(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
 	const grid_vars_names = ['doublers_grid', 'negators_grid', 'cell_center_loop', 'nexus'];
+	const color_map: Map<number, number> = new Map([
+		[1, 4],
+		[0, 1]
+	]);
 
 	for (const name of grid_vars_names) {
-		const binary_grid = json[name] as boolean[][] | undefined;
+		const binary_grid = json[name] as (boolean | number)[][] | undefined;
 		if (binary_grid === undefined) continue;
-
-		const cells: Cell[] = [];
-		const values: number[][] = [];
-		for (let i = 0; i < binary_grid.length; i++) {
-			const row = binary_grid[i];
-			for (let j = 0; j < row.length; j++) {
-				const cell = grid.getCell(i, j);
-				if (!cell) continue;
-				cells.push(cell);
-				const val = Boolean(row[j]);
-				if (val === true) values.push([4]);
-				else values.push([1]);
-			}
-		}
-		const action = restoreCellsHighlightsAction(cells, values);
-		executeUpdateCellsAction(action);
+	
+		grid_coloring(binary_grid, grid, color_map);
 		return;
 	}
 }
@@ -221,6 +225,20 @@ function setUnknownRegionsHighlights(json: JsonT, grid: Grid) {
 	}
 	const action = restoreCellsHighlightsAction(cells, values);
 	executeUpdateCellsAction(action);
+}
+
+function setGoldilocksRegionsHighlights(json: JsonT, grid: Grid) {
+	if (json === undefined) return;
+	const regions = json['goldilocks_regions'] as number[][] | undefined;
+	if (regions === undefined) return;
+
+	const color_map: Map<number, number> = new Map([
+		[0, 4],
+		[1, 7],
+		[2, 9]
+	]);
+
+	grid_coloring(regions, grid, color_map);
 }
 
 function setUnknownRegionsBorders(json: JsonT, grid: Grid) {
@@ -319,7 +337,12 @@ function setOrthogonalPathOrLoopLines(json: JsonT, grid: Grid) {
 
 function setColoring(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
-	const grid_vars_names = ['sashigane', 'cave_regions', 'fillomino_area'];
+	const grid_vars_names = [
+		'sashigane',
+		'cave_regions',
+		'fillomino_area',
+		'galaxy_regions'
+	];
 
 	for (const name of grid_vars_names) {
 		const regions_grid = json[name] as number[][] | undefined;
@@ -351,6 +374,7 @@ export function setBoardOnSolution(json: JsonT, grid: Grid) {
 	setSolutionValues(json, grid);
 	setUnknownRegionsHighlights(json, grid);
 	setUnknownRegionsBorders(json, grid);
+	setGoldilocksRegionsHighlights(json, grid);
 	setOrthogonalPathOrLoopLines(json, grid);
 	setOtherHighlights(json, grid);
 	setColoring(json, grid);

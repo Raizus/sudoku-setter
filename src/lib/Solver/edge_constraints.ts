@@ -3,10 +3,11 @@ import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
+	cellsToGridVarsName,
 	cellsToVarsName,
-	cellsToYinYangVarsName,
 	cellToVarName,
-	PuzzleModel
+	PuzzleModel,
+	VAR_2D_NAMES
 } from './solver_utils';
 import type { ParseOptions } from './value_parsing';
 
@@ -125,7 +126,7 @@ function yinYangKropkiConstraint(model: PuzzleModel, grid: Grid, c_id: string,  
 		.map((coord) => grid.getCell(coord.r, coord.c))
 		.filter((cell) => !!cell);
 	const [var1, var2] = cellsToVarsName(cells);
-	const yin_yang_vars = cellsToYinYangVarsName(cells);
+	const yin_yang_vars = cellsToGridVarsName(cells, VAR_2D_NAMES.YIN_YANG);
 	const [yin_yang1, yin_yang2] = yin_yang_vars;
 
 	const constraint_str = `constraint yin_yang_kropki_p(${var1}, ${var2}, ${yin_yang1}, ${yin_yang2});\n`;
@@ -138,7 +139,7 @@ function yinYangWhiteKropkiConstraint(model: PuzzleModel, grid: Grid, c_id: stri
 		.map((coord) => grid.getCell(coord.r, coord.c))
 		.filter((cell) => !!cell);
 	const [var1, var2] = cellsToVarsName(cells);
-	const yin_yang_vars = cellsToYinYangVarsName(cells);
+	const yin_yang_vars = cellsToGridVarsName(cells, VAR_2D_NAMES.YIN_YANG);
 	const [yin_yang1, yin_yang2] = yin_yang_vars;
 
 	const constraint_str = `constraint yin_yang_white_kropki_p(${var1}, ${var2}, ${yin_yang1}, ${yin_yang2});\n`;

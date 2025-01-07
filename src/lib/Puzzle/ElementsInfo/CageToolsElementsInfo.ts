@@ -55,6 +55,15 @@ export const killerCageInfo: SquareCellElementInfo = {
 	toolId: TOOLS.KILLER_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
 
+	shape: {
+		type: SHAPE_TYPES.CAGE,
+		strokeWidth: { editable: true, value: 0.03, lb: 0, ub: 0.5, step: 0.01 },
+		stroke: { editable: true, value: 'black' },
+		fill: { editable: true, value: 'none' },
+		strokeDasharray: { editable: true, value: 0.08 },
+		inset: { editable: true, value: 0.06, lb: 0, ub: 0.5, step: 0.01 }
+	},
+
 	meta: {
 		description:
 			'Numbers must not repeat in a killer cage. The numbers in the cage must sum to the given total in the top left (if one exists).',

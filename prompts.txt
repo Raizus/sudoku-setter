@@ -1,7 +1,24 @@
-Normal Sudoku rules apply.
+Normal sudoku rules apply
 
-Draw a one-cell-wide loop of orthogonally connected cells. The loop may not touch itself, not even diagonally.
+Divide the grid into 3 zones. Each zone consists of a single group of orthogonally connected cells. No 2x2 area may be entirely within one zone.
 
-The loop acts as a German Whisper line, all adjacent digits along the line must have a difference of at least 5.
+The first zone is 'too hot'. Any cell in the hot zone has a value one greater than its digit.
 
-Clues outside the grid are Loopwiches. Loopwiches indicate the sum of the digts between the first and last loop cell in their row or column. (Both loop and nonloop cells between the 2 crust cells are summed)
+The second zone is 'too cold'. Any cell in the cold zone has a value one less than its digit.
+
+The third zone is 'just right'; this is the Goldilocks Zone. In this zone, a cell's value equals its digit, like normal.
+
+The 9 objects (bowls, chairs and beds) all contain different digits, but each object of the same type has the same value.
+
+Chaos Construction: Divide the grid into regions, each consisting of nine orthogonally-connected cells. Every row, column, and region must contain the digits 1 to 9 once each.
+
+Renbans: Digits along a pink line form a non-repeating consecutive set, but may be written in any order.
+
+Chess Sums: A cell with a number in its top-left corner is a Chess Sums cell. The number in the top-left corner indicates the amount of Chess Sums satisfied by the digit in that cell. A digit in a Chess Sums cell gives one or more of the following:
+• The sum of all digits that share its region and are a king’s move away
+• The sum of all digits that share its region and are a knight’s move away
+• The sum of all digits that share its region and are a bishop’s move away
+
+Clarifications:
+• Bishops can “see” past cells from other regions—cells from other regions do not block a bishop’s vision.
+• Each Chess Sum is calculated separately. For example, a cell with a “2” clue that contains a 7 can see 4 and 3 by king’s move, and can see 5 and 2 by knight’s move—the king’s move digits and the knight’s move digits each sum to 7 separately.

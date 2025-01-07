@@ -72,17 +72,27 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	NURIMISAKI = 'Nurimisaki',
 	TWO_CONTIGUOUS_REGIONS = 'Two Contiguous Regions',
 	SASHIGANE = 'Sashigane',
+	GOLDILOCKS_ZONE = 'Goldilocks Zone',
+
 	CELL_CENTER_LOOP_NO_TOUCHING = 'Cell Center Loop No Touching',
 	CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY = 'Cell Center Loop Can Touch Diagonally',
 	NOT_LOOP_SIZED_REGIONS = 'Not Loop Sized Regions',
 	MODULAR_LOOP = 'Modular Loop',
+
 	CAVE = 'Cave',
 	CAVE_CELLS_ARE_ODD = 'Cave Cells Are Odd',
 	CAVE_WALLS_ARE_EVEN = 'Cave Walls Are Even',
 	CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED = 'Cave 2x2 Not Fully Shaded or Unshaded',
 	ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE = 'One Digit Does Not Appear In The Cave',
+
 	TWILIGHT_CAVE_FILLOMINO_REGION_SHADING = 'Twilight Cave Fillomino Region Shading',
-	YIN_YANG_FILLOMINO_PARITY = 'Yin Yang Fillomino Parity'
+	YIN_YANG_FILLOMINO_PARITY = 'Yin Yang Fillomino Parity',
+
+	GALAXIES = 'Galaxies',
+	TWO_SYMMETRIC_GALAXIES = 'Two Symmetric Galaxies',
+	EVERY_CELL_BELONGS_TO_A_GALAXY = 'Every Cell Belongs To A Galaxy',
+	GALAXY_2X2_DOES_NOT_BELONG_TO_ONE_GALAXY = 'Galaxy 2x2 Does Not Belong To One Galaxy',
+	ONE_GALAXY_IS_A_GERMAN_WHISPERS = 'One Galaxy Is A German Whispers',
 }
 
 export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
@@ -127,8 +137,9 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	SASHIGANE_BEND_REGION_COUNT = 'Sashigane Bend Region Count',
 	SASHIGANE_REGION_SUM = 'Sashigane Region Sum',
 
-	TWILIGHT_CAVE_FILLOMINO_CLUE = "Twilight Cave Fillomino Clue",
-	CAVE_CLUE = "Cave Clue"
+	TWILIGHT_CAVE_FILLOMINO_CLUE = 'Twilight Cave Fillomino Clue',
+	CAVE_CLUE = 'Cave Clue',
+	UNKNOWN_REGIONS_CHESS_SUMS = 'Unknown Regions Chess Sums'
 }
 
 export enum SINGLE_CELL_ARROW_CONSTRAINTS {
@@ -137,10 +148,13 @@ export enum SINGLE_CELL_ARROW_CONSTRAINTS {
 }
 
 export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
+	COLD_ARROWS = 'Cold Arrows',
+	HOT_ARROWS = 'Hot Arrows',
 	COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS = 'Count Cells Not In The Same Region Arrows',
 	YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR = 'Yin Yang Sum Of Cells Of Opposite Color',
 	LOOP_CELL_COUNT_ARROWS = 'Loop Cell Count Arrows',
-	YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS = 'Yin Yang Count Unique Fillomino Same Shading Arrows'
+	YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS = 'Yin Yang Count Unique Fillomino Same Shading Arrows',
+	SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS = 'Same Galaxy Unobstructed Count Arrows'
 }
 
 export enum EDGE_CONSTRAINTS {
@@ -228,6 +242,9 @@ export enum LINE_CONSTRAINTS {
 	YIN_YANG_SHADED_WHISPERS_LINE = 'Yin Yang Shaded Whispers Line',
 	YIN_YANG_UNSHADED_ENTROPIC_LINE = 'Yin Yang Unshaded Entropic Line',
 	YIN_YANG_UNSHADED_MODULAR_LINE = 'Yin Yang Unshaded Modular Line',
+
+	// goldilocks
+	GOLDILOCKS_ZONE_REGION_SUM = 'Goldilocks Zone Region Sum',
 
 	// double ended lines
 	BETWEEN_LINE = 'Between Line',

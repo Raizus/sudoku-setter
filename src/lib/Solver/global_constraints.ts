@@ -12,8 +12,9 @@ import {
 	cellToVarName,
 	addHeader,
 	getDirectionsVars,
-	cellToYinYangVarName,
-	cellsToYinYangVarsName
+	cellsToGridVarsStr,
+	VAR_2D_NAMES,
+	cellToGridVarName
 } from './solver_utils';
 
 function positiveDiagonalConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
@@ -438,8 +439,8 @@ function allYinYangKropkiGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): strin
 		const var1 = cellToVarName(cell1);
 		const var2 = cellToVarName(cell2);
 
-		const yin_yang1 = cellToYinYangVarName(cell1);
-		const yin_yang2 = cellToYinYangVarName(cell2);
+		const yin_yang1 = cellToGridVarName(cell1, VAR_2D_NAMES.YIN_YANG);
+		const yin_yang2 = cellToGridVarName(cell2, VAR_2D_NAMES.YIN_YANG);
 
 		const constraint_str = `constraint not yin_yang_kropki_p(${var1}, ${var2}, ${yin_yang1}, ${yin_yang2});\n`;
 		out_str += constraint_str;
@@ -564,8 +565,7 @@ function yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(puzzle: Puzzl
 		const cells = cells_coords
 			.map((coord) => grid.getCell(coord.r, coord.c))
 			.filter((cell) => !!cell);
-		const yin_yang_vars = cellsToYinYangVarsName(cells);
-		const yin_yang_vars_str = `[${yin_yang_vars.join(', ')}]`;
+		const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
 		out_str += `constraint count_unique_values(${yin_yang_vars_str}) >= 2;\n`;
 	}
 	return out_str;
@@ -613,6 +613,33 @@ function oneDigitDoesNotAppearInTheCaveConstraint(puzzle: PuzzleI, toolId: TOOLI
 	return out_str;
 }
 
+function everyCellBelongsToAGalaxyConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint every_cell_is_in_a_galaxy_p(galaxy_regions);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
+function galaxy2x2DoesNotBelongToOneGalaxyConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint no_2x2_belongs_to_one_galaxy_p(galaxy_regions);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
+function twoSymmetricGalaxiesConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint two_symmetric_galaxies_p(galaxy_regions);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
+function oneGalaxyIsAGermanWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint one_galaxy_is_german_whispers(board, galaxy_regions);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
 
 export function sudokuConstraints(puzzle: PuzzleI) {
 	const gconstraints = puzzle.globalConstraints;
@@ -670,6 +697,7 @@ export function hexedSudokuConstraint(puzzle: PuzzleI) {
 	return out_str;
 }
 
+
 type ConstraintF = (puzzle: PuzzleI, tool: TOOLID) => string;
 
 const tool_map = new Map<string, ConstraintF>([
@@ -706,13 +734,21 @@ const tool_map = new Map<string, ConstraintF>([
 	],
 	[TOOLS.ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED, allOddDigitsOrthogonallyConnected],
 	[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES, adjacentLoopCellsAreMultiplesConstraint],
-	[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS, adjacentLoopCellsAreGermanWhispersConstraint],
+	[
+		TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS,
+		adjacentLoopCellsAreGermanWhispersConstraint
+	],
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING, twilightCaveFillominoRegionsShading],
 	[TOOLS.CAVE_CELLS_ARE_ODD, caveCellsAreOddConstraint],
 	[TOOLS.CAVE_WALLS_ARE_EVEN, caveWallsAreEvenConstraint],
 	[TOOLS.CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED, cave2x2NotFullyShadedOrUnshadedConstraint],
 	[TOOLS.ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE, oneDigitDoesNotAppearInTheCaveConstraint],
-	[TOOLS.YIN_YANG_FILLOMINO_PARITY, yinYangFillominoParityConstraint]
+	[TOOLS.YIN_YANG_FILLOMINO_PARITY, yinYangFillominoParityConstraint],
+
+	[TOOLS.TWO_SYMMETRIC_GALAXIES, twoSymmetricGalaxiesConstraint],
+	[TOOLS.EVERY_CELL_BELONGS_TO_A_GALAXY, everyCellBelongsToAGalaxyConstraint],
+	[TOOLS.GALAXY_2X2_DOES_NOT_BELONG_TO_ONE_GALAXY, galaxy2x2DoesNotBelongToOneGalaxyConstraint],
+	[TOOLS.ONE_GALAXY_IS_A_GERMAN_WHISPERS, oneGalaxyIsAGermanWhispersConstraint]
 ]);
 
 export function globalConstraints(puzzle: PuzzleI): string {

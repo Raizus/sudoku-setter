@@ -97,16 +97,17 @@
 	{/if}
 
 	<SingleCellToolsRender />
-
+	
+	<CageToolsRender />
+	<LineToolsRender />
+	
+	<CloneToolsRender />
+	
 	<GridLinesRender />
 	<DiagonalsRender />
 	<GridRegionsRender />
-
-	<LineToolsRender />
+	
 	<ArrowToolsRender {boundingBox} />
-
-	<CloneToolsRender />
-	<CageToolsRender />
 
 	<OutsideDirectionToolsRender />
 
