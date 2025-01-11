@@ -80,13 +80,23 @@ function cornerSumOfThreeEqualsTheOtherConstraint(grid: Grid, constraint: Corner
 	return constraint_str;
 }
 
+function productSquareConstraint(grid: Grid, constraint: CornerToolI) {
+	const constraint_str = simpleCornerConstraint(
+		grid,
+		constraint,
+		'product_square_p'
+	);
+	return constraint_str;
+}
+
 type ConstraintF = (grid: Grid, constraint: CornerToolI) => string;
 
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.QUADRUPLE, quadrupleConstraint],
 	[TOOLS.CORNER_SUM, cornerSumConstraint],
 	[TOOLS.CORNER_EVEN_COUNT, cornerEvenCountConstraint],
-	[TOOLS.CORNER_SUM_OF_THREE_EQUALS_THE_OTHER, cornerSumOfThreeEqualsTheOtherConstraint]
+	[TOOLS.CORNER_SUM_OF_THREE_EQUALS_THE_OTHER, cornerSumOfThreeEqualsTheOtherConstraint],
+	[TOOLS.PRODUCT_SQUARE, productSquareConstraint]
 ]);
 
 export function cornerConstraints(

@@ -1,5 +1,6 @@
 import type { CageToolI } from '../Puzzle/Constraints/CageConstraints';
 import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
+import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
@@ -29,7 +30,7 @@ function simpleCageConstraint(grid: Grid, constraint: CageToolI, predicate: stri
 	return constraint_str;
 }
 
-function getParsingResult(model: PuzzleModel, value: string, c_id: string) {
+export function getParsingResult(model: PuzzleModel, value: string, c_id: string) {
 	const parse_opts: ParseOptions = {
 		allow_var: true,
 		allow_interval: true,
@@ -171,6 +172,43 @@ function uniqueDigitsCageConstraint(
 		return constraint_str;
 	}
 	return '';
+}
+
+function vaultedCageConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CageToolI
+) {
+	const vars = getCageVars(grid, constraint);
+	const vars_str = `[${vars.join(',')}]`;
+	const value = constraint.value;
+
+	let out_str = '';
+	const result = getParsingResult(model, value, c_id);
+	if (result) {
+		const var_name = result[1];
+		out_str += result[0];
+		out_str += `constraint sum(${vars_str}) == ${var_name};\n`;
+	}
+
+	const cells_coords = constraint.cells;
+	const cage_cells = cells_coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+
+	const cage_neighbours: Cell[] = [];
+	for (const cell of cage_cells) {
+		const neighbours = grid.getOrthogonallyAdjacentCells(cell);
+		neighbours.forEach((cell2) => {
+			if (!cage_cells.includes(cell2) && !cage_neighbours.includes(cell2))
+				cage_neighbours.push(cell2);
+		});
+	}
+	const cage_neighbour_vars = cellsToGridVarsStr(cage_neighbours, VAR_2D_NAMES.BOARD);
+	out_str += `constraint vaulted_cage_p(${vars_str}, ${cage_neighbour_vars});\n`;
+
+	return out_str;
 }
 
 function yinYangValuedCageConstraint(
@@ -323,6 +361,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.DIVISIBLE_KILLER_CAGE, divisibleKillerCageConstraint],
 	[TOOLS.SPOTLIGHT_CAGE, spotlightCageConstraint],
 	[TOOLS.UNIQUE_DIGITS_CAGE, uniqueDigitsCageConstraint],
+	[TOOLS.VAULTED_CAGE, vaultedCageConstraint],
 	[TOOLS.YIN_YANG_ANTITHESIS_KILLER_CAGE, yinYangAntithesisKillerCageConstraint],
 	[TOOLS.YIN_YANG_BREAKEVEN_KILLER_CAGE, yinYangBreakevenKillerCageConstraint],
 

@@ -4,6 +4,7 @@ import type { PuzzleI } from '../Puzzle/Puzzle';
 import type { TOOLID } from '../Puzzle/Tools';
 import { arrowConstraints } from './arrow_constraints';
 import { cageConstraints } from './cage_constraints';
+import { centerCornerOrEdgeConstraints } from './center_corner_edge_constraints';
 import { cloneConstraints } from './clone_constraints';
 import { cornerConstraints } from './corner_constraints';
 import { edgeConstraints } from './edge_constraints';
@@ -23,6 +24,7 @@ type ConstraintsF = (
 ) => string;
 
 const functions_list: ConstraintsF[] = [
+	centerCornerOrEdgeConstraints,
 	singleCellConstraints,
 	singleCellArrowConstraints,
 	singleCellMultiArrowConstraints,

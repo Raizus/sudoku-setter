@@ -3,7 +3,8 @@ import { TOOLS } from '../Puzzle/Tools';
 import { globalConstraints, hexedSudokuConstraint, sudokuConstraints } from './global_constraints';
 import { localConstraints } from './local_constraints';
 import { undeterminedRegionsConstraints } from './undetermined_regions_constraints';
-import { cellToVarName, defineFunctionsPredicates, PuzzleModel } from './solver_utils';
+import { cellToVarName, PuzzleModel } from './solver_utils';
+import { defineFunctionsPredicates } from './solver_mzn_defs';
 import { range } from 'lodash';
 
 function givenConstraints(puzzle: PuzzleI) {

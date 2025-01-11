@@ -15,5 +15,10 @@
 
 <CageRender {cells} {shape} />
 {#if value && value.length}
-	<CellTextLabelRender {value} anchorPos={cellTLCorner} position="TL" />
+	<CellTextLabelRender
+		{value}
+		x={cellTLCorner.x}
+		y={cellTLCorner.y}
+		position="TL"
+	/>
 {/if}

@@ -25,6 +25,18 @@ export const yinYangInfo: AbstractElementInfo = {
 	}
 };
 
+export const yinYangNeighbourGreaterThanOneWithinRegionShadedInfo: AbstractElementInfo = {
+	toolId: TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED,
+	order: 0,
+
+	meta: {
+		description:
+			'In the completed grid, cells containing numbers exactly one greater than an immediate neighbour (diagonal or orthogonal) within their box are shaded (and otherwise unshaded).',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
 export const nurimisakiInfo: AbstractElementInfo = {
 	toolId: TOOLS.NURIMISAKI,
 	order: 0,
@@ -276,6 +288,30 @@ export const oneGalaxyIsAGermanWhispersInfo: AbstractElementInfo = {
 	meta: {
 		description:
 			'One of the two galaxies behaves like a German whisper; orthogonally adjacent cells in this galaxy must have a difference of at least 5.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const pentominoTillingInfo: AbstractElementInfo = {
+	toolId: TOOLS.PENTOMINO_TILLING,
+	order: 0,
+
+	meta: {
+		description:
+			'Divide the grid into pentominoes, such that no two pentominoes of the same shape (including rotations and reflections) touch orthogonally.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const tillingNoEmptyCellsInfo: AbstractElementInfo = {
+	toolId: TOOLS.TILLING_NO_EMPTY_CELLS,
+	order: 0,
+
+	meta: {
+		description:
+			'Every cell in the grid belongs to a tile.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}

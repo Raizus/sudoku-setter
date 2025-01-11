@@ -533,6 +533,31 @@ export const countingCirclesInfo: SquareCellElementInfo = {
 	}
 };
 
+export const uniqueCellsInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.UNIQUE_CELLS,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.POLYGON,
+		n: { editable: false, value: 6 },
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'lightsalmon' },
+		r: { editable: false, value: 0.4 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			'Digits do not repeat on cells with hexagons on them.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
 export const yinYangMinesweeperInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getSingleCellToolInputHandler(svgRef, grid, tool);
@@ -950,7 +975,7 @@ export const caveClueInfo: SquareCellElementInfo = {
 	}
 };
 
-export const unknownRegionsChessSumsInfo: SquareCellElementInfo = {
+export const chaosConstructionChessSumsInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined, {
 			valueUpdater: (oldValue: string | undefined, key: string) =>
@@ -959,7 +984,7 @@ export const unknownRegionsChessSumsInfo: SquareCellElementInfo = {
 		});
 	},
 
-	toolId: TOOLS.UNKNOWN_REGIONS_CHESS_SUMS,
+	toolId: TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
@@ -977,6 +1002,34 @@ export const unknownRegionsChessSumsInfo: SquareCellElementInfo = {
 Clarifications:
  - Bishops can “see” past cells from other regions—cells from other regions do not block a bishop's vision.
  - Each Chess Sum is calculated separately. For example, a cell with a “2” clue that contains a 7 can see 4 and 3 by king's move, and can see 5 and 2 by knight's move—the king's move digits and the knight's move digits each sum to 7 separately.`,
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const chaosConstructionArrowKnotsInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
+			defaultValue: ''
+		});
+	},
+
+	toolId: TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: false, value: 0.02 },
+		r: { editable: false, value: 0.4 },
+		stroke: { editable: false, value: 'black' },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description: `From each circle, draw some arrows that travel in a straight line either horizontally only or vertically only. The number in the bottom right corner of a circle cell indicates the number of arrows that must be drawn from that circle. Digits along an arrow must sum to the digit in the attached circle.
+		Additionally, all cells along arrows must be part of the same region as the circle they originate from. If an arrow doesn't reach the edge of the grid, the cell directly after the tip must be in a different region than the arrow.`,
 		tags: [],
 		categories: singleCellShapeDefaultCategories
 	}

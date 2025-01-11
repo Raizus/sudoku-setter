@@ -1,11 +1,12 @@
 import type { EdgeToolI } from '../Puzzle/Constraints/EdgeConstraints';
 import type { LineToolI } from '../Puzzle/Constraints/LineConstraints';
 import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
-import type { CellToolI } from '../Puzzle/Constraints/SingleCellConstraints';
+import type { CellMultiArrowToolI, CellToolI } from '../Puzzle/Constraints/SingleCellConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
+import { DIRECTION } from '../utils/directions';
 import {
 	cellsToVarsName,
 	allDifferentConstraint,
@@ -124,7 +125,7 @@ function disjointGroupsConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 
 function antikingConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
-	
+
 	let out_str: string = `\n% ${toolId}\n`;
 	for (const cell of grid.getAllCells()) {
 		const kings_move_cells = grid.getNeighboorCells(cell);
@@ -168,7 +169,7 @@ function tangoConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	return out_str;
 }
 
-function* adjCellPairGen(grid: Grid) {	
+function* adjCellPairGen(grid: Grid) {
 	for (const cell of grid.getAllCells()) {
 		const adj_cells = grid
 			.getOrthogonallyAdjacentCells(cell)
@@ -207,7 +208,7 @@ function nonratioConstraint(puzzle: PuzzleI, toolId: TOOLID) {
 
 function globalIndexingColumnConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
-	
+
 	let out_str = `\n% ${toolId}\n`;
 	for (const cell of grid.getAllCells()) {
 		const row_cells = grid.getRow(cell.r);
@@ -220,7 +221,7 @@ function globalIndexingColumnConstraint(puzzle: PuzzleI, toolId: TOOLID): string
 	return out_str;
 }
 
-function adjacentLoopCellsAreMultiplesConstraint(puzzle: PuzzleI, toolId: TOOLID): string {	
+function adjacentLoopCellsAreMultiplesConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	let out_str = `\n% ${toolId}\n`;
 	out_str += `constraint adjacent_loop_cells_are_multiples_p(board, cell_center_loop);\n`;
 	return out_str;
@@ -356,19 +357,16 @@ function allDifferencesGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string 
 
 	let cell_pairs: Set<Cell>[] = getEdgeConstraintCellPairs(grid, constraints);
 	// extend the pairs with ratios
-	cell_pairs = [
-		...cell_pairs,
-		...getEdgeConstraintCellPairs(grid, ratio_constraints)
-	];
+	cell_pairs = [...cell_pairs, ...getEdgeConstraintCellPairs(grid, ratio_constraints)];
 
 	let used_vals: string[] = [];
 	if (constraints) {
 		used_vals = Object.values(constraints)
 			.map((constraint) => constraint.value)
-			.map(val => !val ? '1' : val);
+			.map((val) => (!val ? '1' : val));
 	}
 	const values = [...new Set(used_vals)];
-	
+
 	let out_str: string = '';
 	for (const [cell1, cell2] of adjCellPairGen(grid)) {
 		// check if cell pair is not in xv pairs
@@ -444,6 +442,40 @@ function allYinYangKropkiGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): strin
 
 		const constraint_str = `constraint not yin_yang_kropki_p(${var1}, ${var2}, ${yin_yang1}, ${yin_yang2});\n`;
 		out_str += constraint_str;
+	}
+
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
+function allYinYangCountShadedCellsGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	const grid = puzzle.grid;
+	const local_constraints = puzzle.localConstraints;
+	const constraints_record = local_constraints.get(TOOLS.YIN_YANG_COUNT_SHADED_CELLS);
+	const constraints: CellMultiArrowToolI[] = constraints_record
+		? (Object.values(constraints_record) as CellMultiArrowToolI[])
+		: [];
+
+	function find_constraint_match(constraints: CellMultiArrowToolI[], cell: Cell) {
+		return constraints.find(
+			(constraint) => constraint.cell.r === cell.r && constraint.cell.c === cell.c
+		);
+	}
+
+	let out_str: string = '';
+	for (const cell of grid.getAllCells()) {
+		// check if cell pair is not in xv pairs
+		const match = find_constraint_match(constraints, cell);
+		const used_dirs = match ? match.directions : [];
+
+		const cell_var = cellToVarName(cell);
+		const directions: DIRECTION[] = [DIRECTION.E, DIRECTION.N, DIRECTION.S, DIRECTION.W];
+		for (const direction of directions) {
+			if (used_dirs.includes(direction)) continue;
+			const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
+			const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
+			out_str += `constraint count(${yin_yang_vars_str}, 1) != ${cell_var};\n`;
+		}
 	}
 
 	out_str = addHeader(out_str, `${toolId}`);
@@ -553,7 +585,10 @@ function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID)
 	return out_str;
 }
 
-function yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+function yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(
+	puzzle: PuzzleI,
+	toolId: TOOLID
+): string {
 	const grid = puzzle.grid;
 	const local_constraints = puzzle.localConstraints;
 	const constraints = local_constraints.get(TOOLS.YIN_YANG_REGION_SUM_LINE);
@@ -641,6 +676,25 @@ function oneGalaxyIsAGermanWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID): 
 	return out_str;
 }
 
+function yinYangNeighbourGreaterThanOneWithinRegionShadedConstraint(
+	puzzle: PuzzleI,
+	toolId: TOOLID
+): string {
+	let out_str: string = '';
+	const grid = puzzle.grid;
+	for (const cell of grid.getAllCells()) {
+		const neighbours = grid
+			.getNeighboorCells(cell)
+			.filter((_cell) => cell.region !== null && _cell.region === cell.region);
+		const cell_var = cellToGridVarName(cell, VAR_2D_NAMES.BOARD);
+		const shading_var = cellToGridVarName(cell, VAR_2D_NAMES.YIN_YANG);
+		const cells_vars = cellsToGridVarsStr(neighbours, VAR_2D_NAMES.BOARD);
+		out_str += `constraint yin_yang_neighbour_greater_than_one_within_region_shaded(${cell_var}, ${shading_var}, ${cells_vars});\n`;
+	}
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
 export function sudokuConstraints(puzzle: PuzzleI) {
 	const gconstraints = puzzle.globalConstraints;
 	if (gconstraints.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY)) {
@@ -692,11 +746,10 @@ export function hexedSudokuConstraint(puzzle: PuzzleI) {
 	const constraint = gconstraints.get(tool);
 	if (!constraint) return '';
 
-	let out_str = `\n% ${tool}\n`
+	let out_str = `\n% ${tool}\n`;
 	out_str += `constraint hexed_sudoku_p(board, ALLOWED_DIGITS);\n`;
 	return out_str;
 }
-
 
 type ConstraintF = (puzzle: PuzzleI, tool: TOOLID) => string;
 
@@ -724,6 +777,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.ALL_RATIOS_GIVEN, allRatiosGivenConstraint],
 	[TOOLS.ALL_XY_DIFFERENCES_GIVEN, allXYDifferencesGivenConstraint],
 	[TOOLS.ALL_YIN_YANG_KROPKI_GIVEN, allYinYangKropkiGivenConstraint],
+	[TOOLS.ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN, allYinYangCountShadedCellsGivenConstraint],
 	[TOOLS.ALL_INDEXING_COLUMN_GIVEN, allIndexingColumnGivenConstraint],
 	[TOOLS.ALL_RADARS_GIVEN, allRadarsGivenConstraint],
 	[TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN, allNurimisakiUnshadedEndpointsGivenConstraint],
@@ -748,7 +802,12 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.TWO_SYMMETRIC_GALAXIES, twoSymmetricGalaxiesConstraint],
 	[TOOLS.EVERY_CELL_BELONGS_TO_A_GALAXY, everyCellBelongsToAGalaxyConstraint],
 	[TOOLS.GALAXY_2X2_DOES_NOT_BELONG_TO_ONE_GALAXY, galaxy2x2DoesNotBelongToOneGalaxyConstraint],
-	[TOOLS.ONE_GALAXY_IS_A_GERMAN_WHISPERS, oneGalaxyIsAGermanWhispersConstraint]
+	[TOOLS.ONE_GALAXY_IS_A_GERMAN_WHISPERS, oneGalaxyIsAGermanWhispersConstraint],
+
+	[
+		TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED,
+		yinYangNeighbourGreaterThanOneWithinRegionShadedConstraint
+	]
 ]);
 
 export function globalConstraints(puzzle: PuzzleI): string {
@@ -761,7 +820,7 @@ export function globalConstraints(puzzle: PuzzleI): string {
 		if (!constraintF) continue;
 
 		const constraint_str = constraintF(puzzle, toolId);
-		
+
 		out_str += constraint_str;
 	}
 

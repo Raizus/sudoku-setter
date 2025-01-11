@@ -4,6 +4,8 @@ import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
 	addHeader,
 	cellsToGridVarsStr,
+	format_2d_array,
+	PENTOMINOES,
 	VAR_2D_NAMES
 } from './solver_utils';
 
@@ -291,10 +293,18 @@ function galaxiesConstraint(puzzle: PuzzleI, tool: TOOLID) {
 		return '';
 	}
 
-	const grid_name1 = 'galaxy_regions';
+	const grid_name1 = VAR_2D_NAMES.GALAXY_REGIONS;
+	const grid_name2 = VAR_2D_NAMES.GALAXY_SIZES;
+	const max_galaxies = grid.nCols * grid.nRows;
 
 	let out_str: string = '';
-	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name1};\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${max_galaxies}: ${grid_name1};\n`;
+	out_str += `constraint galaxy_restrict_numbering_p(${grid_name1});\n`;
+	out_str += `array[0..${max_galaxies}] of var 0..${max_galaxies}: ${grid_name2};\n`;
+	out_str += `constraint galaxy_sizes_p(${grid_name1}, ${grid_name2});\n`;
+	out_str += `constraint adjacent_galaxies_not_size_leq_3_p(${grid_name1}, ${grid_name2});\n`;
+	out_str += `constraint gallaxy_connected_regions_p(${grid_name1});\n`;
+	// out_str += `constraint galaxy_180_symmetry_p(${grid_name1}, ${grid_name2});\n`;
 	return out_str;
 }
 
@@ -332,6 +342,34 @@ function goldilocksConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
+function pentominoTillingConstraint(puzzle: PuzzleI, tool: TOOLID) {
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const num_pentominoes = PENTOMINOES.size;
+
+	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${num_pentominoes}: tilling_regions;\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${num_pentominoes}: tilling_placing_grid;\n`;
+	out_str += `constraint count_different(array1d(tilling_placing_grid), 0) >= 5;\n`;
+	// out_str += `constraint tilling_region_no_empty_cells_p(tilling_regions);\n`;
+	// iterate over all pentominoes and rotations / reflections
+	for (const [pentomino_id, pentomino] of PENTOMINOES.entries()) {
+		const h = pentomino.length;
+		const w = pentomino[0].length;
+		const var_name = `pentomino_${pentomino_id}`;
+		out_str += `array[1..${h}, 1..${w}] of 0..1: ${var_name} = ${format_2d_array(pentomino)};\n`;
+		out_str += `constraint n_omino_place_p(tilling_placing_grid, tilling_regions, ${var_name}, ${pentomino_id});\n`;
+	}
+
+	return out_str;
+}
+
 type ConstraintF = (puzzle: PuzzleI, tool: TOOLID) => string;
 
 const tool_map = new Map<string, ConstraintF>([
@@ -351,7 +389,9 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.DOUBLERS, doublersConstraint],
 	[TOOLS.NEGATORS, negatorsConstraint],
 	[TOOLS.GOLDILOCKS_ZONE, goldilocksConstraint],
-	[TOOLS.NEXUS, nexusConstraint]
+	[TOOLS.NEXUS, nexusConstraint],
+
+	[TOOLS.PENTOMINO_TILLING, pentominoTillingConstraint]
 ]);
 
 export function undeterminedRegionsConstraints(puzzle: PuzzleI): string {

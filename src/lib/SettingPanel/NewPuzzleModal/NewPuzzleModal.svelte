@@ -3,10 +3,7 @@
 	import ModalButtonsContainer from '$components/Modal/ModalButtonsContainer.svelte';
 	import ModalSectionHeader from '$components/Modal/ModalSectionHeader.svelte';
 	import ValueSliderLabeled from '$components/ValueSliderLabeled.svelte';
-	import {
-		createNewPuzzle,
-		resetUserState,
-	} from '$stores/BoardStore';
+	import { createNewPuzzle, resetUserState } from '$stores/BoardStore';
 	import { range } from 'lodash';
 
 	export let showModal = false;
@@ -15,6 +12,7 @@
 	const maxLength = 20;
 	let width = 9;
 	let height = 9;
+	let inputStr = '';
 	let allowed_digits: number[] = range(1, 10);
 
 	function cancelCb() {
@@ -31,23 +29,46 @@
 		const out = allowed_digits.map((val) => String(val)).join(',');
 		return out;
 	}
+
+	function updateDigits() {
+		const max_v = Math.min(Math.max(height, width), 9);
+		allowed_digits = range(1, max_v + 1);
+	}
+
+	function inputCb(text: string) {
+		const regex = /^-?\d+(?:,-?\d+)*$/;
+		if (!regex.test(text)) return;
+
+		// Split the input by commas and convert each part to a number
+		allowed_digits = text.split(',').map(Number);
+	}
 </script>
 
 <Modal bind:showModal title="New Puzzle">
 	<div class="new-puzzle-content">
-		<ValueSliderLabeled name="Width" min={minLength} max={maxLength} step={1} bind:value={width} />
+		<ValueSliderLabeled
+			name="Width"
+			min={minLength}
+			max={maxLength}
+			step={1}
+			bind:value={width}
+			onInputCb={updateDigits}
+		/>
 		<ValueSliderLabeled
 			name="Height"
 			min={minLength}
 			max={maxLength}
 			step={1}
 			bind:value={height}
+			onInputCb={updateDigits}
 		/>
-		<ModalSectionHeader title="Allowed Digits" />
+		<ModalSectionHeader title={`Allowed Digits: ${allowed_digits_to_str(allowed_digits)}`} />
 		<input
 			class="allowed-digits"
 			type="text"
 			placeholder={allowed_digits_to_str(allowed_digits)}
+			bind:value={inputStr}
+			on:input={() => inputCb(inputStr)}
 			disabled={true}
 		/>
 		<ModalButtonsContainer>

@@ -6,7 +6,7 @@ import {
 import { getCageToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/CageToolInputHandler';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { RENDER_ORDER } from '../RenderOrder';
-import { SHAPE_TYPES } from '../Shape/Shape';
+import { SHAPE_TYPES, type EditableShapeI } from '../Shape/Shape';
 import { cageUsage, typableCageUsage } from '../ToolUsage';
 import { TOOL_CATEGORIES, TOOLS } from '../Tools';
 
@@ -42,6 +42,15 @@ export function defaultCageValueUpdater(
 	return defaultValueUpdater(oldValue, key, validatorFunc);
 }
 
+const DEFAULT_CAGE_SHAPE: EditableShapeI = {
+	type: SHAPE_TYPES.CAGE,
+	strokeWidth: { editable: true, value: 0.03, lb: 0, ub: 0.5, step: 0.01 },
+	stroke: { editable: true, value: 'black' },
+	fill: { editable: true, value: 'none' },
+	strokeDasharray: { editable: true, value: 0.08 },
+	inset: { editable: true, value: 0.06, lb: 0, ub: 0.5, step: 0.01 }
+};
+
 export const killerCageInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getCageToolInputHandler(svgRef, grid, tool, {
@@ -54,15 +63,7 @@ export const killerCageInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.KILLER_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
-
-	shape: {
-		type: SHAPE_TYPES.CAGE,
-		strokeWidth: { editable: true, value: 0.03, lb: 0, ub: 0.5, step: 0.01 },
-		stroke: { editable: true, value: 'black' },
-		fill: { editable: true, value: 'none' },
-		strokeDasharray: { editable: true, value: 0.08 },
-		inset: { editable: true, value: 0.06, lb: 0, ub: 0.5, step: 0.01 }
-	},
+	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
 		description:
@@ -116,6 +117,7 @@ export const invertedKillerCageInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.INVERTED_KILLER_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
+	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
 		description:
@@ -138,6 +140,7 @@ export const sumCageInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.SUM_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
+	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
 		description:
@@ -158,6 +161,7 @@ export const sumCageLookAndSayInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.SUM_CAGE_LOOK_AND_SAY,
 	order: RENDER_ORDER.CAGE_TOOLS,
+	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
 		description:
@@ -178,6 +182,7 @@ export const parityBalanceCageInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.PARITY_BALANCE_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
+	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
 		description:
@@ -200,6 +205,7 @@ export const divisibleKillerCageInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.DIVISIBLE_KILLER_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
+	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
 		description:
@@ -222,6 +228,7 @@ export const spotlightCageInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.SPOTLIGHT_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
+	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
 		description:
@@ -241,6 +248,7 @@ export const putteriaCageInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.PUTTERIA_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
+	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
 		description:
@@ -263,6 +271,7 @@ export const killerCageLookAndSayInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.KILLER_CAGE_LOOK_AND_SAY,
 	order: RENDER_ORDER.CAGE_TOOLS,
+	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
 		description:
@@ -297,6 +306,29 @@ export const multisetCageInfo: SquareCellElementInfo = {
 
 	meta: {
 		description: 'Light blue cages with the same label have the same group of digits.',
+		usage: typableCageUsage(),
+		tags: [],
+		categories: typableCageDefaultCategories
+	}
+};
+
+export const vaultedCageInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getCageToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultCageValueUpdater(oldValue, key, validateCageValue),
+			defaultValue: '',
+			allowDiagonallyAdjacent: true
+		});
+	},
+
+	toolId: TOOLS.VAULTED_CAGE,
+	order: RENDER_ORDER.CAGE_TOOLS,
+	shape: DEFAULT_CAGE_SHAPE,
+
+	meta: {
+		description:
+			'Cages mark “Vaults” in which digits MAY repeat, but must sum to the total, if given. Digits orthogonally adjacent to a vault may NOT be included within that vault.',
 		usage: typableCageUsage(),
 		tags: [],
 		categories: typableCageDefaultCategories

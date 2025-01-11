@@ -108,7 +108,7 @@ function countSameParityNeighbourConstraint(
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
-	
+
 	const var1 = cellToVarName(cell);
 	const neighbours = grid.getNeighboorCells(cell);
 	const vars_str = cellsToGridVarsStr(neighbours, VAR_2D_NAMES.BOARD);
@@ -351,6 +351,20 @@ function countingCirclesConstraint(grid: Grid, constraints: CellToolI[]) {
 		out_str += constraint_str;
 	}
 	out_str += '\n';
+	return out_str;
+}
+
+function uniqueCellsConstraint(grid: Grid, constraints: CellToolI[]) {
+	let out_str = '';
+	const all_coords = constraints.map((constraint) => constraint.cell);
+	const cells = new Set(
+		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
+	);
+	const vars = cellsToVarsName([...cells]);
+	const vars_str = `${vars.join(',\n\t')}`;
+
+	out_str += `array[int] of var int: unique_cells = [\n\t${vars_str}\n];\n`;
+	out_str += `constraint alldifferent(unique_cells);\n`;
 	return out_str;
 }
 
@@ -610,7 +624,7 @@ function caveCluesConstraint(model: PuzzleModel, grid: Grid, c_id: string, const
 	if (!cell) return '';
 
 	const cell_var = cellToVarName(cell);
-	const cave_var = cellToGridVarName(cell, VAR_2D_NAMES.CAVE_SHADING)
+	const cave_var = cellToGridVarName(cell, VAR_2D_NAMES.CAVE_SHADING);
 	const dirCells = getDirectionCells(grid, cell);
 	const cave_vars: string[] = [];
 	for (const cells of dirCells) {
@@ -622,7 +636,12 @@ function caveCluesConstraint(model: PuzzleModel, grid: Grid, c_id: string, const
 	return constraint_str;
 }
 
-function unknownRegionsChessSumsConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: CellToolI) {
+function chaosConstructionChessSumsConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
@@ -635,6 +654,7 @@ function unknownRegionsChessSumsConstraint(model: PuzzleModel, grid: Grid, c_id:
 	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.UNKNOWN_REGIONS);
 
 	// king sum
+	out_str += `\n% chess sum ${c_id}\n`
 	const king_cells = grid.getNeighboorCells(cell);
 	const king_vars = cellsToGridVarsStr(king_cells, VAR_2D_NAMES.BOARD);
 	const king_region_vars = cellsToGridVarsStr(king_cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
@@ -657,7 +677,7 @@ function unknownRegionsChessSumsConstraint(model: PuzzleModel, grid: Grid, c_id:
 	const bishop_cells: Cell[] = [];
 	for (const direction of directions) {
 		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
-		cells.forEach(_cell => bishop_cells.push(_cell))
+		cells.forEach((_cell) => bishop_cells.push(_cell));
 	}
 	const bishop_vars = cellsToGridVarsStr(bishop_cells, VAR_2D_NAMES.BOARD);
 	const bishop_region_vars = cellsToGridVarsStr(bishop_cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
@@ -668,6 +688,46 @@ function unknownRegionsChessSumsConstraint(model: PuzzleModel, grid: Grid, c_id:
 
 	// chess sums
 	out_str += `constraint sum([king_${c_id}, knight_${c_id}, bishop_${c_id}]) == ${val};\n`;
+
+	return out_str;
+}
+
+function chaosConstructionArrowKnotsConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const value = constraint.value;
+	if (!value) return '';
+	const val = parseInt(value);
+
+	let out_str = '';
+	const cell_var = cellToVarName(cell);
+	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const adj_cells = grid.getOrthogonallyAdjacentCells(cell);
+	const adj_region_vars = cellsToGridVarsStr(adj_cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	out_str += `\n% arrow knot ${c_id}\n`;
+	out_str += `constraint count_eq(${adj_region_vars}, ${region_var}) >= ${val};\n`;
+
+	const directions: DIRECTION[] = [DIRECTION.N, DIRECTION.S, DIRECTION.E, DIRECTION.W];
+	const arrow_vars: string[] = [];
+	for (const direction of directions) {
+		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
+		if (!cells.length) continue;
+
+		const cells_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+		const region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+		const in_arrow_var = `in_arrow_${c_id}_${direction}`;
+		const first_arrow_var = `in_arrow_${c_id}_${direction}[1]`;
+		arrow_vars.push(first_arrow_var);
+		out_str += `array[index_set(${cells_vars})] of var bool: ${in_arrow_var};\n`;
+		out_str += `constraint chaos_construction_arrow_knots_p(${cells_vars}, ${region_vars}, ${in_arrow_var}, ${cell_var}, ${region_var});\n`;
+	}
+	out_str += `constraint sum([${arrow_vars.join(',')}]) == ${val};\n`
 
 	return out_str;
 }
@@ -719,13 +779,15 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.COUNT_LOOP_NEIGHBOUR_CELLS, countLoopNeighbourCellsConstraint],
 	[TOOLS.CAVE_CLUE, caveCluesConstraint],
 
-	[TOOLS.UNKNOWN_REGIONS_CHESS_SUMS, unknownRegionsChessSumsConstraint]
+	[TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS, chaosConstructionChessSumsConstraint],
+	[TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS, chaosConstructionArrowKnotsConstraint]
 ]);
 
 const tool_map_2 = new Map<string, ConstraintF2>([
 	[TOOLS.MAXIMUM, maximumConstraint],
 	[TOOLS.MINIMUM, minimumConstraint],
-	[TOOLS.COUNTING_CIRCLES, countingCirclesConstraint]
+	[TOOLS.COUNTING_CIRCLES, countingCirclesConstraint],
+	[TOOLS.UNIQUE_CELLS, uniqueCellsConstraint]
 ]);
 
 export function singleCellConstraints(

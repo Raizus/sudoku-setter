@@ -88,6 +88,24 @@ export const yinYangSumOfCellsOfOppositeColorInfo: SquareCellElementInfo = {
 	}
 };
 
+export const yinYangCountShadedCellsInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.YIN_YANG_COUNT_SHADED_CELLS,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: defaultShape,
+
+	meta: {
+		description:
+			'Values in cells with arrows give the number of shaded cells in the indicated direction.',
+		tags: [],
+		categories: defaultCategories
+	}
+};
+
 export const countCellsNotInTheSameRegionArrowsInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);

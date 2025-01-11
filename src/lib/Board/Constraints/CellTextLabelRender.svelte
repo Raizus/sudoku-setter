@@ -5,7 +5,8 @@
     export let value = '';
 	export let fontSize = 0.2;
 
-	export let anchorPos: Vector2D;
+	export let x: number;
+	export let y: number;
 	export let position: 'TL' | 'TR' | 'BL' | 'BR' = 'TL';
 
 	export let fontColor = "var(--text-primary-color)";
@@ -14,12 +15,12 @@
 	let textRef: SVGTextElement | null = null;
 	let rectRef: SVGRectElement | null = null;
 
-	function getTextPos(cellTL: Vector2D, _position: 'TL' | 'TR' | 'BL' | 'BR'): Vector2D {
+	function getTextPos(_x: number, _y: number, _position: 'TL' | 'TR' | 'BL' | 'BR'): Vector2D {
 		const top = ['TL', 'TR'].includes(_position);
 		const left = ['TL', 'BL'].includes(_position);
 
-		const x = left ? cellTL.x + 0.05: cellTL.x;
-		const y = top ? cellTL.y : cellTL.y;
+		const x = left ? _x + 0.05: _x;
+		const y = top ? _y : _y;
 
 		const textPos = new Vector2D(x, y);
 		return textPos;
@@ -45,7 +46,7 @@
 		rectRef.setAttribute('height', String(bbox.height * 0.8));
 	});
 
-	$: textPos = getTextPos(anchorPos, position);
+	$: textPos = getTextPos(x, y, position);
 </script>
 
 {#if value.length}

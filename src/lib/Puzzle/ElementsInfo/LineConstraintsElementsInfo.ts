@@ -1328,6 +1328,37 @@ export const segmentedSumLineInfo: SquareCellElementInfo = {
 	}
 };
 
+export const thermoOrAverageArrowInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
+	},
+
+	toolId: TOOLS.THERMO_OR_AVERAGE_ARROW,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
+		strokeWidth: { editable: false, value: 0.15 },
+		r: { editable: false, value: 0.25 },
+		opacity: { editable: false, value: 0.9 },
+		stroke: { editable: false, value: 'var(--constraint-color-gray)' },
+		fill: { editable: false, value: 'var(--constraint-color-gray)' },
+		linePathOptions: {
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.15 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		description:
+			'Numbers along a thermometer must increase from the bulb end. The digits along an arrow must average to the number in the connecting circle.',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
 /* ----------------------------------------------------------------------------- */
 
 export const yinYangShadedWhispersLineInfo: SquareCellElementInfo = {

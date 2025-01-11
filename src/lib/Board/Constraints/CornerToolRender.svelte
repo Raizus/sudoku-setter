@@ -45,8 +45,16 @@
 				font-size={fontSize}
 				fill={fontColor}
 			>
+				<!-- &#215; -->
 				{getText(cornerTool, type)}
 			</text>
 		{/if}
 	</g>
 {/if}
+
+<!-- <style>
+	text {
+		stroke-width: 0.01;
+		stroke: var(--grid-background-color);
+	}
+</style> -->

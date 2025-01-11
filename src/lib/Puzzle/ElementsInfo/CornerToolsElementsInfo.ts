@@ -199,3 +199,35 @@ export const cornerCellsBelongToExacltyThreeRegionsInfo: SquareCellElementInfo =
 		]
 	}
 };
+
+export const productSquareInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getCornerToolInputHandler(svgRef, grid, tool, {
+			defaultValue: 'X'
+		});
+	},
+
+	toolId: TOOLS.PRODUCT_SQUARE,
+	order: RENDER_ORDER.CORNER_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		r: { editable: false, value: 0.1 },
+		strokeWidth: { editable: false, value: 0 },
+		stroke: { editable: false, value: 'none' },
+		fill: { editable: false, value: 'var(--grid-background-color)' },
+		fontSize: { editable: false, value: 0.34 }
+	},
+
+	meta: {
+		description:
+			'An X in the center of a 2x2 region of cells, a “product square,” indicates that the two digits in the square’s positive diagonal have the same product as the two digits in its negative diagonal. The product is not necessarily the same for different product squares. Not all product squares are necessarily indicated.',
+		tags: [],
+		usage: cornerUsage(),
+		categories: [
+			TOOL_CATEGORIES.CORNER_CONSTRAINT,
+			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
+			TOOL_CATEGORIES.CORNER_TOOL
+		]
+	}
+};

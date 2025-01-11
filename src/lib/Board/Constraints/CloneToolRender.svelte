@@ -29,7 +29,8 @@
 <CageRender cells={cloneTool.cells} {shape} />
 <CellTextLabelRender
 	value={label}
-	anchorPos={cell1TL}
+	x={cell2TL.x}
+	y={cell2TL.y}
 	position="BR"
 	fontColor={textColor}
 	{fontWeight}
@@ -37,7 +38,8 @@
 <CageRender cells={cloneTool.cells2} {shape} />
 <CellTextLabelRender
 	value={label}
-	anchorPos={cell2TL}
+	x={cell2TL.x}
+	y={cell2TL.y}
 	position="BR"
 	fontColor={textColor}
 	{fontWeight}

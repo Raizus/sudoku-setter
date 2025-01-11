@@ -28,6 +28,7 @@ function arrowConstraint(model: PuzzleModel, grid: Grid, c_id: string, constrain
 	const sum_var_name = `arrow_${c_id}`;
 	out_str += `var int: ${sum_var_name};\n`;
 
+	out_str += '% arrow pill\n';
 	if (vars.length === 1) {
 		const circ_var = vars[0];
 		out_str += `constraint ${sum_var_name} == ${circ_var};\n`;
@@ -37,6 +38,7 @@ function arrowConstraint(model: PuzzleModel, grid: Grid, c_id: string, constrain
 	} else return '';
 
 	const lines = constraint.lines;
+	out_str += '% arrow lines\n';
 	for (const line of lines) {
 		const line_vars_str = lineToVarsStr(grid, line);
 		const constraint_str = `constraint sum(${line_vars_str}) == ${sum_var_name};\n`;

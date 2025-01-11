@@ -1,7 +1,9 @@
 import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { OutsideDirectionToolI } from '../Puzzle/Constraints/OutsideDirectionConstraints';
+import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
+import type { GridCoordI } from '../utils/SquareCellGridCoords';
 import {
 	cellsToGridVarsStr,
 	cellsToValueVarsName,
@@ -20,18 +22,12 @@ function getOutsideDirectionConstraintVars(grid: Grid, constraint: OutsideDirect
 	return vars;
 }
 
-function simpleOutsideDirectionConstraint(
+export function getParsingResult(
 	model: PuzzleModel,
-	grid: Grid,
-	constraint: OutsideDirectionToolI,
-	predicate: string
+	value: string,
+	cell_coord: GridCoordI,
+	cell: Cell | undefined
 ) {
-	const cell_coord = constraint.cell;
-	const cell = grid.getCell(cell_coord.r, cell_coord.c);
-
-	const vars = getOutsideDirectionConstraintVars(grid, constraint);
-	const vars_str = `[${vars.join(',')}]`;
-	const value = constraint.value;
 	const parse_opts: ParseOptions = {
 		allow_var: true,
 		allow_interval: true,
@@ -45,6 +41,23 @@ function simpleOutsideDirectionConstraint(
 	}
 
 	const result = model.getOrSetSharedVar(value, default_name, parse_opts);
+	return result;
+}
+
+function simpleOutsideDirectionConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	constraint: OutsideDirectionToolI,
+	predicate: string
+) {
+	const cell_coord = constraint.cell;
+	const cell = grid.getCell(cell_coord.r, cell_coord.c);
+
+	const vars = getOutsideDirectionConstraintVars(grid, constraint);
+	const vars_str = `[${vars.join(',')}]`;
+	const value = constraint.value;
+
+	const result = getParsingResult(model, value, cell_coord, cell);
 	if (!result) return '';
 
 	const var_name = result[1];
@@ -59,16 +72,21 @@ function sandwichSumConstraint(
 	c_id: string,
 	constraint: OutsideDirectionToolI
 ) {
+	const cell_coord = constraint.cell;
+	const cell = grid.getCell(cell_coord.r, cell_coord.c);
+
 	const vars = getOutsideDirectionConstraintVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
 	const value = constraint.value;
 	const max_v = Math.min(grid.nCols, grid.nRows);
-	if (value) {
-		const val = parseInt(value);
-		const constraint_str: string = `constraint sandwich_sum_p(${vars_str}, ${val}, 1, ${max_v});\n`;
-		return constraint_str;
-	}
-	return '';
+
+	const result = getParsingResult(model, value, cell_coord, cell);
+	if (!result) return '';
+
+	const var_name = result[1];
+	let out_str: string = result[0];
+	out_str += `constraint sandwich_sum_p(${vars_str}, ${var_name}, 1, ${max_v});\n`;
+	return out_str;
 }
 
 function xIndexConstraint(

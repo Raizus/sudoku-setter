@@ -24,7 +24,7 @@ function countCellsNotInTheSameRegionConstraint(grid: Grid, constraint: CellMult
 	const vars_list: string[] = [];
 	for (const direction of directions) {
 		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
-		const vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS)
+		const vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
 		vars_list.push(vars);
 	}
 
@@ -46,9 +46,27 @@ function yinYangSumOfCellsOfOppositeColorConstraint(grid: Grid, constraint: Cell
 		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
 		const cells_vars = cellsToVarsName(cells);
 		const cells_vars_str = '[' + cells_vars.join(',') + ']';
-		
+
 		const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
 		out_str += `constraint yin_yang_sum_of_opposite_color_f(${yin_yang_var}, ${cells_vars_str}, ${yin_yang_vars_str}) == ${cell_var};\n`;
+	}
+
+	return out_str;
+}
+
+function yinYangCountShadedCellsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToVarName(cell);
+
+	const directions = constraint.directions;
+	let out_str: string = '';
+	for (const direction of directions) {
+		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
+
+		const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
+		out_str += `constraint count(${yin_yang_vars_str}, 1) == ${cell_var};\n`;
 	}
 
 	return out_str;
@@ -135,12 +153,12 @@ function hotArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	let out_str: string = '';
 	for (const direction of directions) {
 		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
-        const cells_vars = cellsToVarsName(cells);
+		const cells_vars = cellsToVarsName(cells);
 		const cells_vars_str = '[' + cells_vars.join(',') + ']';
 
 		out_str += `constraint hot_arrows_p(${cells_vars_str}, ${cell_var});\n`;
-    }
-    
+	}
+
 	return out_str;
 }
 
@@ -175,6 +193,7 @@ const tool_map = new Map<string, ConstraintF>([
 		TOOLS.YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS,
 		yinYangCountUniqueFillominoSameShadingConstraint
 	],
+	[TOOLS.YIN_YANG_COUNT_SHADED_CELLS, yinYangCountShadedCellsConstraint],
 	[TOOLS.SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS, sameGalaxyUnobstructedCountArrowsConstraint]
 ]);
 

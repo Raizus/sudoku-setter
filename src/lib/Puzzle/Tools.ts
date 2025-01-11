@@ -52,7 +52,8 @@ export enum NEGATIVE_CONSTRAINTS {
 	ALL_INDEXING_COLUMN_GIVEN = 'All Indexing Column Given',
 	ALL_INDEXING_ROW_GIVEN = 'All Indexing Row Given',
 	ALL_YIN_YANG_KROPKI_GIVEN = 'All Yin Yang Kropki Given',
-	ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN = 'All Nurimisaki Unshaded Endpoints Given'
+	ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN = 'All Nurimisaki Unshaded Endpoints Given',
+	ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN = "All Yin Yang Count Shaded Cells Given"
 }
 
 export enum VALUE_MODIFIER_CONSTRAINTS {
@@ -69,6 +70,7 @@ export enum VALUE_MODIFIER_CONSTRAINTS {
 export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	UNKNOWN_REGIONS = 'Unknown Regions',
 	YIN_YANG = 'Yin Yang',
+	YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED = "Yin Yang Neighbour Greater Than One Within Region Shaded",
 	NURIMISAKI = 'Nurimisaki',
 	TWO_CONTIGUOUS_REGIONS = 'Two Contiguous Regions',
 	SASHIGANE = 'Sashigane',
@@ -93,6 +95,9 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	EVERY_CELL_BELONGS_TO_A_GALAXY = 'Every Cell Belongs To A Galaxy',
 	GALAXY_2X2_DOES_NOT_BELONG_TO_ONE_GALAXY = 'Galaxy 2x2 Does Not Belong To One Galaxy',
 	ONE_GALAXY_IS_A_GERMAN_WHISPERS = 'One Galaxy Is A German Whispers',
+
+	PENTOMINO_TILLING = 'Pentomino Tilling',
+	TILLING_NO_EMPTY_CELLS = 'Tilling No Empty Cells'
 }
 
 export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
@@ -119,6 +124,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	SNOWBALL = 'Snowball',
 	SANDWICH_ROW_COL_COUNT = 'Sandwich Row Column Count',
 	COUNTING_CIRCLES = 'Counting Circles',
+	UNIQUE_CELLS = 'Unique Cells',
 
 	CELL_ON_THE_LOOP = 'Cell On The Loop',
 	CELL_NOT_ON_THE_LOOP = 'Cell Not On The Loop',
@@ -139,7 +145,8 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 
 	TWILIGHT_CAVE_FILLOMINO_CLUE = 'Twilight Cave Fillomino Clue',
 	CAVE_CLUE = 'Cave Clue',
-	UNKNOWN_REGIONS_CHESS_SUMS = 'Unknown Regions Chess Sums'
+	CHAOS_CONSTRUCTION_CHESS_SUMS = 'Chaos Construction Chess Sums',
+	CHAOS_CONSTRUCTION_ARROW_KNOTS = 'Chaos Construction Arrow Knots'
 }
 
 export enum SINGLE_CELL_ARROW_CONSTRAINTS {
@@ -151,6 +158,7 @@ export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
 	COLD_ARROWS = 'Cold Arrows',
 	HOT_ARROWS = 'Hot Arrows',
 	COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS = 'Count Cells Not In The Same Region Arrows',
+	YIN_YANG_COUNT_SHADED_CELLS = 'Yin Yang Count Shaded Cells',
 	YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR = 'Yin Yang Sum Of Cells Of Opposite Color',
 	LOOP_CELL_COUNT_ARROWS = 'Loop Cell Count Arrows',
 	YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS = 'Yin Yang Count Unique Fillomino Same Shading Arrows',
@@ -179,7 +187,8 @@ export enum CORNER_CONSTRAINTS {
 	CORNER_SUM_OF_THREE_EQUALS_THE_OTHER = 'Corner Sum of Three Equals The Other',
 	CORNER_EVEN_COUNT = 'Corner Even Count',
 	CORNER_CELLS_BELONG_TO_EXACTLY_THREE_REGIONS = 'Corner Cells Belong To Exactly Three Regions',
-	CORNER_CELLS_BELONG_TO_SAME_REGION = 'Corner Cells Belong To Same Region'
+	CORNER_CELLS_BELONG_TO_SAME_REGION = 'Corner Cells Belong To Same Region',
+	PRODUCT_SQUARE = 'Product Square'
 }
 
 export enum LINE_CONSTRAINTS {
@@ -236,6 +245,8 @@ export enum LINE_CONSTRAINTS {
 	REPEATED_DIGITS_LINE = 'Repeated Digits Line',
 	N_REPEATED_DIGITS_LINE = 'N-Repeated Digits Line',
 
+	THERMO_OR_AVERAGE_ARROW = 'Thermo Or Average Arrow',
+
 	// yin yang lines
 	YIN_YANG_INDEXING_LINE_COLORING = 'Yin Yang Indexing Line Coloring',
 	YIN_YANG_REGION_SUM_LINE = 'Yin Yang Region Sum Line',
@@ -278,7 +289,8 @@ export enum CAGE_CONSTRAINTS {
 	SPOTLIGHT_CAGE = 'Spotlight Cage',
 	PUTTERIA_CAGE = 'Putteria Cage',
 	AQUARIUM_CAGE = 'Aquarium Cage',
-	MULTISET_CAGE = 'Set Cage',
+	MULTISET_CAGE = 'Multiset Cage',
+	VAULTED_CAGE = 'Vaulted Cage',
 	YIN_YANG_ANTITHESIS_KILLER_CAGE = 'Yin Yang Antithesis Killer Cage',
 	YIN_YANG_BREAKEVEN_KILLER_CAGE = 'Yin Yang Breakeven Killer Cage',
 
@@ -319,7 +331,8 @@ export enum OUTSIDE_CORNER_CONSTRAINTS {
 }
 
 export enum CENTER_EDGE_CORNER_CONSTRAINTS {
-	ROTATIONALLY_SYMMETRIC_GALAXY_CENTER = 'Rotationally Symmetric Galaxy Center'
+	ROTATIONALLY_SYMMETRIC_GALAXY_CENTER = 'Rotationally Symmetric Galaxy Center',
+	ROTATIONALLY_SYMMETRIC_GALAXY_CENTER_SUM = 'Rotationally Symmetric Galaxy Center Sum'
 }
 
 export enum VALUED_GLOBAL_CONSTRAINTS {

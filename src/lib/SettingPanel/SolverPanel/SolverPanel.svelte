@@ -85,6 +85,13 @@
 			setBoardOnSolution(json, grid);
 		});
 
+		solver.on('error', (error) => {
+			solverLabel = 'Solve';
+			status = 'ERROR';
+			timer.stop();
+			if (solver) solver.cancel();
+		});
+
 		solver.then((result) => {
 			status = result.status;
 			solverLabel = 'Solve';

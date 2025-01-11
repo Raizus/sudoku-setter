@@ -33,11 +33,15 @@
 		<MinMaxRender {coord} minOrMax={'max'} />
 	{:else if type === SHAPE_TYPES.CAGE}
 		<ValuedCageRender cells={[coord]} {shape} value={singleCellTool.value} />
-	{:else if type === SHAPE_TYPES.TEXT_ONLY}
-		{#if value && value.length}
-			<CellTextLabelRender {value} anchorPos={cellTLCorner} position="TL" />
-		{/if}
 	{:else}
 		<RenderShape cx={center.x} cy={center.y} {shape} />
+	{/if}
+	{#if type !== SHAPE_TYPES.CAGE && value}
+		<CellTextLabelRender
+			{value}
+			x={cellTLCorner.x}
+			y={cellTLCorner.y}
+			position="TL"
+		/>
 	{/if}
 </g>

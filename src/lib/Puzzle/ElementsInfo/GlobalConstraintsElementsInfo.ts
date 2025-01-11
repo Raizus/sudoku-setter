@@ -328,6 +328,18 @@ export const allYinYangKropkiGivenInfo: AbstractElementInfo = {
 	}
 };
 
+export const allYinYangCountShadedCellsGivenInfo: AbstractElementInfo = {
+	toolId: TOOLS.ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN,
+	order: 0,
+
+	meta: {
+		description:
+			'Values in cells with arrows give the number of shaded cells in the indicated direction. All possible arrows are given',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
+
 export const nurimisakiPathGermanWhispersInfo: AbstractElementInfo = {
 	toolId: TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS,
 	order: 0,

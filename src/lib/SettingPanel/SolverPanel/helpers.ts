@@ -243,13 +243,14 @@ function setGoldilocksRegionsHighlights(json: JsonT, grid: Grid) {
 
 function setUnknownRegionsBorders(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
-	const grid_vars_names = ['unknown_regions', 'sashigane', 'fillomino_area'];
+	const grid_vars_names = ['unknown_regions', 'sashigane', 'fillomino_area', 'galaxy_regions'];
 
 	for (const name of grid_vars_names) {
 		const regions_grid = json[name] as number[][] | undefined;
 		if (regions_grid === undefined) continue;
 
 		const [n_rows, n_cols] = [grid.nRows, grid.nCols];
+		const colorId = 3;
 
 		const line_markers: LineMarker[] = [];
 		// vertical markers
@@ -265,7 +266,7 @@ function setUnknownRegionsBorders(json: JsonT, grid: Grid) {
 				if (val1 === val2) continue;
 
 				const marker: LineMarker = {
-					colorId: 3,
+					colorId,
 					p1: { r: i, c: j + 1 },
 					p2: { r: i + 1, c: j + 1 }
 				};
@@ -285,7 +286,7 @@ function setUnknownRegionsBorders(json: JsonT, grid: Grid) {
 				if (val1 === val2) continue;
 
 				const marker: LineMarker = {
-					colorId: 3,
+					colorId,
 					p1: { r: i + 1, c: j },
 					p2: { r: i + 1, c: j + 1 }
 				};
@@ -341,7 +342,8 @@ function setColoring(json: JsonT, grid: Grid) {
 		'sashigane',
 		'cave_regions',
 		'fillomino_area',
-		'galaxy_regions'
+		'galaxy_regions',
+		'tilling_regions'
 	];
 
 	for (const name of grid_vars_names) {
