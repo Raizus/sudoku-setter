@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import Game from './Game.svelte';
 	import * as MiniZinc from 'minizinc';
+	import '../global.scss';
 
 	$: theme = $darkModeStore ? 'dark' : 'light';
 
