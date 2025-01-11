@@ -74,6 +74,7 @@
 
 <svg
 	bind:this={svgRef}
+	id="board-svg"
 	class="puzzle-board"
 	xmlns="http://www.w3.org/2000/svg"
 	preserveAspectRatio="xMidYMid meet"
