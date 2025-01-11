@@ -4,16 +4,18 @@
 	import Game from './Game.svelte';
 	import * as MiniZinc from 'minizinc';
 	import '../global.scss';
+	// import { base } from '$app/paths';
 
 	$: theme = $darkModeStore ? 'dark' : 'light';
 
 	onMount(async () => {
-		const baseUrl = window.location.origin;
+		const baseUrl = window.location.href;
+		// const baseUrl = import.meta.env.BASE_URL;
 		try {
 			await MiniZinc.init({
-				workerURL: `${baseUrl}/minizinc-worker.js`,
-				wasmURL: `${baseUrl}/minizinc.wasm`,
-				dataURL: `${baseUrl}/minizinc.data`
+				workerURL: `${baseUrl}minizinc-worker.js`,
+				wasmURL: `${baseUrl}minizinc.wasm`,
+				dataURL: `${baseUrl}minizinc.data`
 			});
 		} catch (e) {
 			const error = 'Failed to initialize MiniZinc: ' + e.message;
