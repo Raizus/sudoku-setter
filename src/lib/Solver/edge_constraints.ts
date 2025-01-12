@@ -133,7 +133,7 @@ function yinYangKropkiConstraint(model: PuzzleModel, grid: Grid, c_id: string,  
 	return constraint_str;
 }
 
-function yinYangWhiteKropkiConstraint(model: PuzzleModel, grid: Grid, c_id: string,  constraint: EdgeToolI) {
+function yinYangWhiteKropkiConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: EdgeToolI) {
 	const cells_coords = constraint.cells;
 	const cells = cells_coords
 		.map((coord) => grid.getCell(coord.r, coord.c))

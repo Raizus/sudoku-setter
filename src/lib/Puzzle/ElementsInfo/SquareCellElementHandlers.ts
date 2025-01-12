@@ -29,12 +29,13 @@ import {
 	penToolInfo,
 	regionsInfo
 } from './CellInputElementsInfo';
-import { rotationallySymmetricGalaxyCenterInfo, rotationallySymmetricGalaxyCenterSumInfo } from './CenterEdgeCornerElementsInfo';
+import { rotationallySymmetricGalaxyCenterSumInfo } from './CenterEdgeCornerElementsInfo';
 import { cloneRegionInfo } from './CloneToolsElementsInfo';
 import {
 	cornerEvenCountInfo,
 	cornerSumInfo,
 	cornerSumOfThreeEqualsTheOtherInfo,
+	equalDiagonalDifferencesInfo,
 	productSquareInfo,
 	quadrupleInfo
 } from './CornerToolsElementsInfo';
@@ -122,7 +123,6 @@ import {
 import { caveWallsAreEvenInfo } from './UndeterminedRegionsElementsInfo';
 import { cave2x2NotFullyShadedOrUnshadedInfo } from './UndeterminedRegionsElementsInfo';
 import {
-	adjacentCellSumIsPrimeLineInfo,
 	adjacentMultiplesLineInfo,
 	arithmeticSequenceLineInfo,
 	atLeastXLineInfo,
@@ -181,7 +181,8 @@ import {
 	ZipperLineInfo,
 	segmentedSumLineInfo,
 	dutchWhispersInfo,
-	goldilocksZoneRegionSumLineInfo
+	goldilocksZoneRegionSumLineInfo,
+	fuzzyThermometerInfo
 } from './LineConstraintsElementsInfo';
 import {
 	littleKillerLookAndSayInfo,
@@ -198,7 +199,6 @@ import {
 	outsideConsecutiveSumInfo,
 	outsideEdgeYinYangSumOfShadedInfo,
 	risingStreakInfo,
-	rowOrColumnRankInfo,
 	sandwichSumInfo,
 	shiftedXSumInfo,
 	shortsightedXSumInfo,
@@ -232,7 +232,6 @@ import {
 	oddInfo,
 	oddMinesweeperInfo,
 	orthogonalSumInfo,
-	primeCellInfo,
 	radarInfo,
 	sandwichRowColCountInfo,
 	sashiganeArrowPointsToBendInfo,
@@ -375,7 +374,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.EVEN]: evenInfo,
 	[TOOLS.MINIMUM]: minimumInfo,
 	[TOOLS.MAXIMUM]: maximumInfo,
-	[TOOLS.PRIME_CELL]: primeCellInfo,
+	// [TOOLS.PRIME_CELL]: primeCellInfo,
 	[TOOLS.ODD_MINESWEEPER]: oddMinesweeperInfo,
 	[TOOLS.EVEN_MINESWEEPER]: evenMinesweeperInfo,
 	[TOOLS.WATCHTOWER]: watchtowerInfo,
@@ -455,9 +454,11 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.CORNER_SUM_OF_THREE_EQUALS_THE_OTHER]: cornerSumOfThreeEqualsTheOtherInfo,
 	[TOOLS.CORNER_EVEN_COUNT]: cornerEvenCountInfo,
 	[TOOLS.PRODUCT_SQUARE]: productSquareInfo,
+	[TOOLS.EQUAL_DIAGONAL_DIFFERENCES]: equalDiagonalDifferencesInfo,
 
 	// Line Constraints
 	[TOOLS.THERMOMETER]: thermometerInfo,
+	[TOOLS.FUZZY_THERMOMETER]: fuzzyThermometerInfo,
 	[TOOLS.SLOW_THERMOMETER]: slowThermometerInfo,
 	[TOOLS.ROW_CYCLE_THERMOMETER]: rowCyclethermometerInfo,
 
@@ -488,7 +489,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.SUPERFUZZY_ARROW]: superfuzzyArrowInfo,
 	[TOOLS.HEADLESS_ARROW]: headlessArrowInfo,
 	[TOOLS.N_CONSECUTIVE_FUZZY_SUM_LINE]: nConsecutiveFuzzySumLineInfo,
-	[TOOLS.ADJACENT_CELL_SUM_IS_PRIME_LINE]: adjacentCellSumIsPrimeLineInfo,
+	// [TOOLS.ADJACENT_CELL_SUM_IS_PRIME_LINE]: adjacentCellSumIsPrimeLineInfo,
 	[TOOLS.PRODUCT_LINE]: productLineInfo,
 	[TOOLS.ADJACENT_MULTIPLES_LINE]: adjacentMultiplesLineInfo,
 	[TOOLS.ADJACENT_DIFFERENCES_COUNT_LINE]: adjacentDifferencesCountLineInfo,
@@ -567,7 +568,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.SKYSCRAPERS]: skyscrapersInfo,
 	[TOOLS.X_INDEX]: xIndexInfo,
 	[TOOLS.RISING_STREAK]: risingStreakInfo,
-	[TOOLS.ROW_OR_COLUMN_RANK]: rowOrColumnRankInfo,
+	// [TOOLS.ROW_OR_COLUMN_RANK]: rowOrColumnRankInfo,
 	[TOOLS.OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED]: outsideEdgeYinYangSumOfShadedInfo,
 	[TOOLS.OUTSIDE_CONSECUTIVE_SUM]: outsideConsecutiveSumInfo,
 	[TOOLS.LOOPWICHES]: loopwhichesInfo,
@@ -582,7 +583,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.NEGATORS_LITTLE_KILLER_SUM]: negatorsLittleKillerSumInfo,
 
 	// Center, Corner or Edge Constraints
-	[TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER]: rotationallySymmetricGalaxyCenterInfo,
+	// [TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER]: rotationallySymmetricGalaxyCenterInfo,
 	[TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER_SUM]: rotationallySymmetricGalaxyCenterSumInfo,
 
 	// Valued Global Constraints

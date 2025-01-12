@@ -143,11 +143,13 @@ export class PuzzleModel implements ModelI {
 		const parsed_value = parseValue(value, parse_opts);
 		if (!parsed_value) return null;
 
+		// parse number
 		if (parsed_value.type === 'number') {
 			const value = parsed_value.parsed;
 			return ['', String(value)];
 		}
 
+		// parse variable
 		let model_str = '';
 		if (parsed_value.type === 'variable') {
 			const var_name = parsed_value.parsed;
@@ -168,6 +170,7 @@ export class PuzzleModel implements ModelI {
 			this.addVariable(default_name);
 		}
 
+		// parse interval
 		if (parsed_value.type === 'interval') {
 			const interval = parsed_value.parsed;
 			// if variable does not exist we need to declare it
@@ -183,12 +186,28 @@ export class PuzzleModel implements ModelI {
 			}
 		}
 
+		// parse number list
 		if (parsed_value.type === 'number_list') {
 			const values = parsed_value.parsed;
 			// if variable does not exist we need to declare it
 			const values_str = '{' + values.join(',') + '}';
 			model_str += `constraint member(${values_str}, ${default_name});\n`;
 		}
+
+		if (parsed_value.type === 'var_list') return null;
+		// parse number / variable list
+		// if (parsed_value.type === 'var_list') {
+		// 	const values = parsed_value.parsed;
+		// 	const values_str = '[' + values.join(',') + ']';
+		// 	for (const value in values) {
+		// 		const val = parseInt(value);
+		// 		if (Number.isNaN(val) && !this.hasVariable(value)) {
+		// 			model_str += `var int: ${value};\n`;
+		// 			this.addVariable(value);
+		// 		}
+		// 		model_str += `constraint member(${values_str}, ${default_name});\n`;
+		// 	}
+		// }
 
 		return [model_str, default_name];
 	}
@@ -435,11 +454,7 @@ export function format_2d_array(arr: number[][]): string {
 
 	const formattedRows = arr.map((row) => row.map((value) => value.toString()).join(', '));
 
-	const formattedString = formattedRows
-		.map((row) => `${row}`)
-		.join('\n |');
+	const formattedString = formattedRows.map((row) => `${row}`).join('\n |');
 
 	return `[| ${formattedString} |]`;
 }
-
-

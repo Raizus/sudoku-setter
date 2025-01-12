@@ -188,11 +188,13 @@ export enum CORNER_CONSTRAINTS {
 	CORNER_EVEN_COUNT = 'Corner Even Count',
 	CORNER_CELLS_BELONG_TO_EXACTLY_THREE_REGIONS = 'Corner Cells Belong To Exactly Three Regions',
 	CORNER_CELLS_BELONG_TO_SAME_REGION = 'Corner Cells Belong To Same Region',
-	PRODUCT_SQUARE = 'Product Square'
+	PRODUCT_SQUARE = 'Product Square',
+	EQUAL_DIAGONAL_DIFFERENCES = 'Equal Diagonal Differences'
 }
 
 export enum LINE_CONSTRAINTS {
 	THERMOMETER = 'Thermometer',
+	FUZZY_THERMOMETER = 'Fuzzy Thermometer',
 	SLOW_THERMOMETER = 'Slow Thermometer',
 	ROW_CYCLE_THERMOMETER = 'Row Cycle Thermometer',
 
@@ -220,7 +222,7 @@ export enum LINE_CONSTRAINTS {
 	AT_LEAST_X_LINE = 'At Least X Line',
 	HEADLESS_ARROW = 'Headless Arrow',
 	SUPERFUZZY_ARROW = 'Superfuzzy Arrow',
-	N_CONSECUTIVE_FUZZY_SUM_LINE = 'N-Consecutive Sum Line',
+	N_CONSECUTIVE_FUZZY_SUM_LINE = 'N-Consecutive Fuzzy Sum Line',
 	ADJACENT_CELL_SUM_IS_PRIME_LINE = 'Adjacent Cell Sum Is Prime Line',
 	PRODUCT_LINE = 'Product Line',
 	ADJACENT_MULTIPLES_LINE = 'Adjacent Multiples Line',

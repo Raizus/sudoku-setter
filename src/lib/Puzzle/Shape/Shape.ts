@@ -219,7 +219,7 @@ export const defaultCageShape: ShapeI = {
 	fill: 'none',
 	strokeDasharray: 0.08,
 	inset: 0.06,
-	connectDiag: true,
+	connectDiag: true
 } as const;
 
 export const defaultArrowShape: ShapeI = {
@@ -240,4 +240,9 @@ export const defaultCloneShape: ShapeI = {
 	stroke: 'var(--constraint-color-light-gray)',
 	fill: 'none',
 	inset: 0.07
+} as const;
+
+export const defaultOutsideShape: ShapeI = {
+	fontColor: 'var(--text-primary-color)',
+	stroke: 'var(--text-primary-color)'
 } as const;

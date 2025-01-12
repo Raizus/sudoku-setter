@@ -2,7 +2,8 @@ import type { CornerToolI } from '../Puzzle/Constraints/CornerConstraints';
 import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { cellsToVarsName, constraintsBuilder, PuzzleModel } from './solver_utils';
+import { cellsToVarsName, PuzzleModel } from './solver_utils';
+import { parseVarList } from './value_parsing';
 
 function getCornerVars(grid: Grid, constraint: CornerToolI) {
 	const cells_coords = constraint.cells;
@@ -45,33 +46,40 @@ function valuedCornerConstraint(
 	return '';
 }
 
-function quadrupleConstraint(grid: Grid, constraint: CornerToolI) {
+function quadrupleConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: CornerToolI) {
 	const vars = getCornerVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
 
 	const value = constraint.value;
 	if (!value) return '';
+	const parsed_values = parseVarList(value)
+	if (!parsed_values) return ''
 
-	if (value) {
-		const values = value.replace(' ', '').split(',');
-		const values_str = '[' + values.join(', ') + ']'
-		const constraint_str = `constraint quadruple_p(${vars_str}, ${values_str});\n`;
-		return constraint_str;
+	let out_str = '';
+	for (const parsed_var of parsed_values) {
+		const val = parseInt(parsed_var);
+		if (Number.isNaN(val) && !model.hasVariable(parsed_var)) {
+			out_str += `var int: ${parsed_var};\n`;
+			model.addVariable(parsed_var);
+		}
 	}
-	return '';
+	
+	const values_str = '[' + parsed_values.join(',') + ']';
+	out_str += `constraint quadruple_p(${vars_str}, ${values_str});\n`;
+	return out_str;
 }
 
-function cornerSumConstraint(grid: Grid, constraint: CornerToolI) {
+function cornerSumConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: CornerToolI) {
 	const constraint_str = valuedCornerConstraint(grid, constraint, 'corner_sum_p');
 	return constraint_str;
 }
 
-function cornerEvenCountConstraint(grid: Grid, constraint: CornerToolI) {
+function cornerEvenCountConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: CornerToolI) {
 	const constraint_str = valuedCornerConstraint(grid, constraint, 'corner_even_count_p');
 	return constraint_str;
 }
 
-function cornerSumOfThreeEqualsTheOtherConstraint(grid: Grid, constraint: CornerToolI) {
+function cornerSumOfThreeEqualsTheOtherConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: CornerToolI) {
 	const constraint_str = simpleCornerConstraint(
 		grid,
 		constraint,
@@ -80,23 +88,30 @@ function cornerSumOfThreeEqualsTheOtherConstraint(grid: Grid, constraint: Corner
 	return constraint_str;
 }
 
-function productSquareConstraint(grid: Grid, constraint: CornerToolI) {
-	const constraint_str = simpleCornerConstraint(
-		grid,
-		constraint,
-		'product_square_p'
-	);
+function equalDiagonalDifferencesConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: CornerToolI) {
+	const constraint_str = simpleCornerConstraint(grid, constraint, 'equal_diagonal_differences_p');
 	return constraint_str;
 }
 
-type ConstraintF = (grid: Grid, constraint: CornerToolI) => string;
+function productSquareConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: CornerToolI) {
+	const constraint_str = simpleCornerConstraint(grid, constraint, 'product_square_p');
+	return constraint_str;
+}
+
+type ConstraintF = (
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CornerToolI
+) => string;
 
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.QUADRUPLE, quadrupleConstraint],
 	[TOOLS.CORNER_SUM, cornerSumConstraint],
 	[TOOLS.CORNER_EVEN_COUNT, cornerEvenCountConstraint],
 	[TOOLS.CORNER_SUM_OF_THREE_EQUALS_THE_OTHER, cornerSumOfThreeEqualsTheOtherConstraint],
-	[TOOLS.PRODUCT_SQUARE, productSquareConstraint]
+	[TOOLS.PRODUCT_SQUARE, productSquareConstraint],
+	[TOOLS.EQUAL_DIAGONAL_DIFFERENCES, equalDiagonalDifferencesConstraint]
 ]);
 
 export function cornerConstraints(
@@ -105,6 +120,13 @@ export function cornerConstraints(
 	toolId: TOOLID,
 	constraints: Record<string, ConstraintType>
 ) {
-	const out_str = constraintsBuilder(grid, toolId, constraints, tool_map);
+	let out_str = '';
+	const constraintF = tool_map.get(toolId);
+	if (constraintF) {
+		for (const [c_id, constraint] of Object.entries(constraints)) {
+			const constraint_str = constraintF(model, grid, c_id, constraint as CornerToolI);
+			out_str += constraint_str;
+		}
+	}
 	return out_str;
 }

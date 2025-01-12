@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { cellToCellCenterVector, cellsLineToPathStr } from '$lib/utils/SquareCellGridRenderUtils';
 	import type { OutsideDirectionToolI } from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
-	import { getToolInfo } from '$lib/Puzzle/ElementHandlersUtils';
+	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
-	import { editableShapeToShape } from '$lib/Puzzle/Shape/Shape';
+	import { defaultOutsideShape } from '$lib/Puzzle/Shape/Shape';
 	import { gridCoordsNextInDirection } from '$lib/utils/SquareCellGridCoords';
 	import ArrowMarker from './ArrowMarker.svelte';
 
@@ -14,14 +14,14 @@
 	const coords2 = gridCoordsNextInDirection(coords, direction);
 	const center = cellToCellCenterVector(coords);
 
-	const elementInfo = getToolInfo(outsideEdgeTool.toolId, squareCellElementHandlers);
-	const eShape = elementInfo.shape;
-	const shape = eShape ? editableShapeToShape(eShape) : undefined;
+	const defaultShape =
+		getDefaultShape(outsideEdgeTool.toolId, squareCellElementHandlers) ?? defaultOutsideShape;
+	$: shape = outsideEdgeTool.shape ?? defaultShape;
 
 	// maybe adjust fontSize to shape size?
 	const fontSize = shape?.fontSize ?? 0.5;
-	// const fontColor = shape?.fontColor ?? 'var(--text-primary-color)';
-	const fontColor = 'white';
+	$: fontColor = shape?.fontColor ?? 'var(--text-primary-color)';
+	$: stroke = shape?.stroke ?? 'var(--text-primary-color)';
 	const arrowStrokeWidth = 0.03;
 
 	function getText(tool: OutsideDirectionToolI): string {
@@ -49,13 +49,13 @@
 		id={markerId}
 		l={0.07}
 		strokeWidth={arrowStrokeWidth}
-		stroke="var(--text-primary-color)"
+		{stroke}
 	/>
 	<path
 		d={getLinePath()}
 		stroke-width={arrowStrokeWidth}
 		fill="none"
-		stroke="var(--text-primary-color)"
+		{stroke}
 		marker-end="url(#{markerId})"
 	/>
 	<text

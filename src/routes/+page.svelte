@@ -10,7 +10,10 @@
 
 	onMount(async () => {
 		const baseUrl = window.location.href;
-		// const baseUrl = import.meta.env.BASE_URL;
+    	// If we're on the dev server, use origin, otherwise use origin + pathname
+		// const base = import.meta.env.BASE_URL;
+		// const baseUrl = base === '/' ? window.location.origin + '/' : `${window.location.origin}${base}`;
+
 		try {
 			await MiniZinc.init({
 				workerURL: `${baseUrl}minizinc-worker.js`,

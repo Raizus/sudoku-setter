@@ -369,6 +369,7 @@ export const yinYangAntithesisKillerCageInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.YIN_YANG_ANTITHESIS_KILLER_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
+	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
 		description:
@@ -391,6 +392,7 @@ export const yinYangBreakevenKillerCageInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.YIN_YANG_BREAKEVEN_KILLER_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
+	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
 		description:
@@ -413,6 +415,7 @@ export const doublersKillerCageInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.DOUBLERS_KILLER_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
+	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
 		description:
@@ -435,6 +438,7 @@ export const negatorsKillerCageInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.NEGATORS_KILLER_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
+	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
 		description:

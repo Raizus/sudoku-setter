@@ -7,6 +7,7 @@ import { CornerOrEdge } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCor
 import { getOutsideDirectionToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/OutsideDirectionInputHandler';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { RENDER_ORDER } from '../RenderOrder';
+import type { EditableShapeI } from '../Shape/Shape';
 import { outsideCornerUsage } from '../ToolUsage';
 import { TOOL_CATEGORIES, TOOLS } from '../Tools';
 
@@ -37,6 +38,11 @@ export function defaultOutsideDirectionValueUpdater(
 	return defaultValueUpdater(oldValue, key, validatorFunc);
 }
 
+const OUTSIDE_DEFAULT_SHAPE: EditableShapeI = {
+	fontColor: { editable: true, value: 'var(--text-primary-color)' },
+	stroke: { editable: true, value: 'var(--text-primary-color)' }
+};
+
 export const littleKillerSumInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
@@ -49,6 +55,7 @@ export const littleKillerSumInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.LITTLE_KILLER_SUM,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:
@@ -71,6 +78,7 @@ export const littleKillerProductInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.LITTLE_KILLER_PRODUCT,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:
@@ -93,6 +101,7 @@ export const littleKillerLookAndSayInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.LITTLE_KILLER_LOOK_AND_SAY,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:
@@ -115,6 +124,7 @@ export const xOmitLittleKillerSumInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.X_OMIT_LITTLE_KILLER_SUM,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:
@@ -137,6 +147,7 @@ export const littleKillerRegionSumProductInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.LITTLE_KILLER_REGION_SUM_PRODUCT,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:
@@ -159,6 +170,7 @@ export const negatorsLittleKillerSumInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.NEGATORS_LITTLE_KILLER_SUM,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:

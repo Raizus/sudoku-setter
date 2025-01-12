@@ -3,7 +3,13 @@ import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { cellsToGridVarsStr, cellsToValueVarsName, cellsToVarsName, PuzzleModel, VAR_2D_NAMES } from './solver_utils';
+import {
+	cellsToGridVarsStr,
+	cellsToValueVarsName,
+	cellsToVarsName,
+	PuzzleModel,
+	VAR_2D_NAMES
+} from './solver_utils';
 
 function getLineVars(grid: Grid, constraint: LineToolI, use_set: boolean = false) {
 	const cells_coords = constraint.cells;
@@ -45,6 +51,25 @@ function valuedLineConstraint(
 	return constraint_str;
 }
 
+function circularValuedLineConstraint(grid: Grid, constraint: LineToolI, predicate: string) {
+	const cells_coords = constraint.cells;
+	let cells = cells_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell);
+	let circular = false;
+	if (cells.length > 2 && cells[0] === cells[cells.length - 1]) {
+		cells = cells.slice(0, -1);
+		circular = true;
+	}
+	const vars = cellsToVarsName(cells);
+	const vars_str = `[${vars.join(',')}]`;
+
+	const value = constraint.value;
+	if (!value) return '';
+
+	const val = parseInt(value);
+	const constraint_str: string = `constraint ${predicate}(${vars_str}, ${val}, ${circular});\n`;
+	return constraint_str;
+}
+
 function renbanConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	const constraint_str = simpleLineConstraint(grid, constraint, 'renban', true);
 	return constraint_str;
@@ -71,11 +96,7 @@ function renbanOrNabnerConstraint(grid: Grid, c_id: string, constraint: LineTool
 }
 
 function outOfOrderConsecutiveLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
-	const constraint_str = simpleLineConstraint(
-		grid,
-		constraint,
-		'out_of_order_consecutive_line_p'
-	);
+	const constraint_str = simpleLineConstraint(grid, constraint, 'out_of_order_consecutive_line_p');
 	return constraint_str;
 }
 
@@ -88,7 +109,7 @@ function whispersConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	return constraint_str;
 }
 
-function dutchwhispersConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+function dutchWhispersConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	const vars = getLineVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
 	const constraint_str: string = `constraint whispers(${vars_str}, 4);\n`;
@@ -97,6 +118,11 @@ function dutchwhispersConstraint(grid: Grid, c_id: string, constraint: LineToolI
 
 function thermoConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	const constraint_str = simpleLineConstraint(grid, constraint, 'strictly_increasing');
+	return constraint_str;
+}
+
+function fuzzyThermoConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = simpleLineConstraint(grid, constraint, 'fuzzy_thermo_p');
 	return constraint_str;
 }
 
@@ -156,46 +182,49 @@ function zipperLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 }
 
 function segmentedSumLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
-	const cells_coords = constraint.cells;
-	let cells = cells_coords
-		.map((coord) => grid.getCell(coord.r, coord.c))
-		.filter((cell) => !!cell);
-	let circular = false;
-	if (cells.length > 2 && cells[0] === cells[cells.length - 1]) {
-		cells = cells.slice(0, -1);
-		circular = true;
-	}
-	const vars = cellsToVarsName(cells);
-	const vars_str = `[${vars.join(',')}]`;
-
-	const value = constraint.value;
-	if (!value) return '';
-
-	const val = parseInt(value);
-	const constraint_str: string = `constraint segmented_sum_line_p(${vars_str}, ${val}, ${circular});\n`;
+	const constraint_str = circularValuedLineConstraint(grid, constraint, 'segmented_sum_line_p');
 	return constraint_str;
 }
 
 function nConsecutiveRenbanLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = circularValuedLineConstraint(
+		grid,
+		constraint,
+		'n_consecutive_renban_line_p'
+	);
+	return constraint_str;
+}
+
+function nConsecutiveFuzzySumLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = circularValuedLineConstraint(
+		grid,
+		constraint,
+		'n_consecutive_fuzzy_sum_line_p'
+	);
+	return constraint_str;
+}
+
+function rowCycleThermoConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	const cells_coords = constraint.cells;
-	let cells = cells_coords
+	const cells = cells_coords
 		.map((coord) => grid.getCell(coord.r, coord.c))
 		.filter((cell) => !!cell);
-	let circular = false;
-	if (cells.length > 2 && cells[0] === cells[cells.length - 1]) {
-		cells = cells.slice(0, -1);
-		circular = true;
+	
+	let out_str = ''
+	const cycle_vars: string[] = [];
+	for (let i = 0; i < cells.length; i++) {
+		const cell = cells[i];
+		const row = grid.getRow(cell.r);
+		const row_vars = cellsToGridVarsStr(row, VAR_2D_NAMES.BOARD);
+		const var_name = `cycle_${c_id}_${i}`;
+		cycle_vars.push(var_name);
+		const start = cell.c + 1;
+		out_str += `var int: ${var_name} = cycle_order_f(${row_vars}, ${start});\n`;
 	}
+	const cycle_vars_str = '[' + cycle_vars.join(',') + ']';
+	out_str += `constraint strictly_increasing(${cycle_vars_str});\n`
 
-	const vars = cellsToVarsName(cells);
-	const vars_str = `[${vars.join(',')}]`;
-
-	const value = constraint.value;
-	if (!value) return '';
-
-	const val = parseInt(value);
-	const constraint_str: string = `constraint n_consecutive_renban_line_p(${vars_str}, ${val}, ${circular});\n`;
-	return constraint_str;
+	return out_str;
 }
 
 function adjacentDifferencesCountLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
@@ -279,7 +308,9 @@ function lookAndSayLineConstraint(grid: Grid, c_id: string, constraint: LineTool
 
 function rowSumLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	const cells_coords = constraint.cells;
-	const cells = cells_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell);
+	const cells = cells_coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
 
 	function split_by_row(_cells: Cell[]) {
 		const groups: Cell[][] = [];
@@ -294,13 +325,13 @@ function rowSumLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 		}
 		return groups;
 	}
-	
+
 	const groups = split_by_row(cells);
 	if (groups.length < 2) return '';
 	const first_group = groups[0];
 	const vars1 = cellsToVarsName(first_group);
 	const vars1_str = `[${vars1.join(',')}]`;
-	
+
 	let out_str = '';
 	for (let i = 1; i < groups.length; i++) {
 		const group = groups[i];
@@ -424,6 +455,7 @@ function yinYangUnshadedModularLineConstraint(grid: Grid, c_id: string, constrai
 		.filter((cell) => !!cell);
 	const vars = cellsToVarsName(cells);
 	const vars_str = `[${vars.join(',')}]`;
+
 	const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
 
 	let value = constraint.value;
@@ -434,7 +466,7 @@ function yinYangUnshadedModularLineConstraint(grid: Grid, c_id: string, constrai
 	return constraint_str;
 }
 
-function yinYangSimpleLineConstraint(grid: Grid, constraint: LineToolI, predicate: string) {	
+function yinYangSimpleLineConstraint(grid: Grid, constraint: LineToolI, predicate: string) {
 	const cells_coords = constraint.cells;
 	const cells = cells_coords
 		.map((coord) => grid.getCell(coord.r, coord.c))
@@ -445,7 +477,7 @@ function yinYangSimpleLineConstraint(grid: Grid, constraint: LineToolI, predicat
 	const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
 
 	const constraint_str: string = `constraint ${predicate}(${vars_str}, ${yin_yang_vars_str});\n`;
-	return constraint_str;	
+	return constraint_str;
 }
 
 function yinYangUnshadedEntropicLineConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
@@ -481,7 +513,7 @@ function goldilocksZoneRegionSumLineConstraint(grid: Grid, c_id: string, constra
 		.map((coord) => grid.getCell(coord.r, coord.c))
 		.filter((cell) => !!cell);
 
-	const values_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.VALUES_GRID);	
+	const values_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.VALUES_GRID);
 	const region_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.GOLDILOCKS_REGIONS);
 
 	const constraint_str: string = `constraint goldilocks_zone_region_sum_p(${values_vars_str}, ${region_vars_str});\n`;
@@ -520,13 +552,14 @@ type ConstraintF = (grid: Grid, c_id: string, constraint: LineToolI) => string;
 
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.THERMOMETER, thermoConstraint],
+	[TOOLS.FUZZY_THERMOMETER, fuzzyThermoConstraint],
 	[TOOLS.SLOW_THERMOMETER, slowThermoConstraint],
 	[TOOLS.RENBAN_LINE, renbanConstraint],
 	[TOOLS.DOUBLE_RENBAN_LINE, doubleRenbanConstraint],
 	[TOOLS.RENRENBANBAN_LINE, renrenbanbanConstraint],
 	[TOOLS.NABNER_LINE, nabnerConstraint],
 	[TOOLS.WHISPERS_LINE, whispersConstraint],
-	[TOOLS.DUTCH_WHISPERS, dutchwhispersConstraint],
+	[TOOLS.DUTCH_WHISPERS, dutchWhispersConstraint],
 	[TOOLS.RENBAN_OR_WHISPERS_LINE, renbanOrWhispersLineConstraint],
 	[TOOLS.RENBAN_OR_NABNER_LINE, renbanOrNabnerConstraint],
 	[TOOLS.OUT_OF_ORDER_CONSECUTIVE_LINE, outOfOrderConsecutiveLineConstraint],
@@ -545,6 +578,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.INDEX_LINE, indexLineConstraint],
 	[TOOLS.ZIPPER_LINE, zipperLineConstraint],
 	[TOOLS.SEGMENTED_SUM_LINE, segmentedSumLineConstraint],
+	[TOOLS.N_CONSECUTIVE_FUZZY_SUM_LINE, nConsecutiveFuzzySumLineConstraint],
 
 	[TOOLS.SUPERFUZZY_ARROW, superfuzzyArrowConstraint],
 	[TOOLS.HEADLESS_ARROW, headlessArrowConstraint],
@@ -559,6 +593,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.REGION_SUM_LINE, regionSumLineConstraint],
 	[TOOLS.ENTROPIC_LINE, entropicLineConstraint],
 	[TOOLS.ENTROPIC_OR_MODULAR_LINE, entropicOrModularLineConstraint],
+	[TOOLS.ROW_CYCLE_THERMOMETER, rowCycleThermoConstraint],
 
 	// double ended lines
 	[TOOLS.BETWEEN_LINE, betweenLineConstraint],

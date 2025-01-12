@@ -32,7 +32,6 @@
 	import CenterCornerOrEdgeToolsRender from './Constraints/CenterCornerOrEdgeToolsRender.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
-	export let isPreview: boolean = false;
 
 	$: grid = $gridStore;
 	$: gridShape = { nRows: grid.nRows, nCols: grid.nCols } as GridShape;
@@ -93,9 +92,7 @@
 		{/each}
 	</g>
 
-	{#if !isPreview}
-		<SeenCellsRender />
-	{/if}
+	<SeenCellsRender />
 
 	<SingleCellToolsRender />
 	
@@ -112,10 +109,8 @@
 
 	<OutsideDirectionToolsRender />
 
-	{#if !isPreview}
-		<SelectionRender {boundingBox} />
-		<CursorRender />
-	{/if}
+	<SelectionRender {boundingBox} />
+	<CursorRender />
 
 	<EdgeToolsRender />
 	<CornerToolsRender />

@@ -221,7 +221,38 @@ export const productSquareInfo: SquareCellElementInfo = {
 
 	meta: {
 		description:
-			'An X in the center of a 2x2 region of cells, a “product square,” indicates that the two digits in the square’s positive diagonal have the same product as the two digits in its negative diagonal. The product is not necessarily the same for different product squares. Not all product squares are necessarily indicated.',
+			"An X in the center of a 2x2 region of cells, a “product square,” indicates that the two digits in the square's positive diagonal have the same product as the two digits in its negative diagonal. The product is not necessarily the same for different product squares. Not all product squares are necessarily indicated.",
+		tags: [],
+		usage: cornerUsage(),
+		categories: [
+			TOOL_CATEGORIES.CORNER_CONSTRAINT,
+			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
+			TOOL_CATEGORIES.CORNER_TOOL
+		]
+	}
+};
+
+export const equalDiagonalDifferencesInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getCornerToolInputHandler(svgRef, grid, tool, {
+			defaultValue: ''
+		});
+	},
+
+	toolId: TOOLS.EQUAL_DIAGONAL_DIFFERENCES,
+	order: RENDER_ORDER.CORNER_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		r: { editable: false, value: 0.15 },
+		strokeWidth: { editable: false, value: 0.023 },
+		stroke: { editable: false, value: 'black' },
+		fill: { editable: false, value: 'var(--grid-background-color)' }
+	},
+
+	meta: {
+		description:
+			'A dot in the centre of a 2x2 square indicates that the two digits in its positive diagonal have the same difference as the two digits in its negative diagonal. This difference is not necessarily the same for different 2x2 squares with dots.',
 		tags: [],
 		usage: cornerUsage(),
 		categories: [

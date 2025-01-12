@@ -39,6 +39,7 @@ export function getParsingResult(
 		default_name = `R${cell_coord.r}C${cell_coord.c}`;
 		default_name = default_name.replace('-', 'm');
 	}
+	if (!value) value = default_name;
 
 	const result = model.getOrSetSharedVar(value, default_name, parse_opts);
 	return result;
@@ -95,16 +96,21 @@ function xIndexConstraint(
 	c_id: string,
 	constraint: OutsideDirectionToolI
 ) {
+	const cell_coord = constraint.cell;
+	const cell = grid.getCell(cell_coord.r, cell_coord.c);
+
 	const vars = getOutsideDirectionConstraintVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
+
 	const first_var = vars[0];
 	const value = constraint.value;
-	if (value) {
-		const val = parseInt(value);
-		const constraint_str: string = `constraint x_index_p(${vars_str}, ${first_var}, ${val});\n`;
-		return constraint_str;
-	}
-	return '';
+	const result = getParsingResult(model, value, cell_coord, cell);
+	if (!result) return '';
+
+	const var_name = result[1];
+	let out_str: string = result[0];
+	out_str += `constraint x_index_p(${vars_str}, ${first_var}, ${var_name});\n`;
+	return out_str;
 }
 
 function xSumConstraint(
@@ -113,16 +119,8 @@ function xSumConstraint(
 	c_id: string,
 	constraint: OutsideDirectionToolI
 ) {
-	const vars = getOutsideDirectionConstraintVars(grid, constraint);
-	const vars_str = `[${vars.join(',')}]`;
-	const first_var = vars[0];
-	const value = constraint.value;
-	if (value) {
-		const val = parseInt(value);
-		const constraint_str: string = `constraint x_sum_p(${vars_str}, ${first_var}, ${val});\n`;
-		return constraint_str;
-	}
-	return '';
+	const constraint_str = simpleOutsideDirectionConstraint(model, grid, constraint, 'x_sum_p');
+	return constraint_str;
 }
 
 function shortsightedXSumConstraint(
@@ -131,16 +129,13 @@ function shortsightedXSumConstraint(
 	c_id: string,
 	constraint: OutsideDirectionToolI
 ) {
-	const vars = getOutsideDirectionConstraintVars(grid, constraint);
-	const vars_str = `[${vars.join(',')}]`;
-	const first_var = vars[0];
-	const value = constraint.value;
-	if (value) {
-		const val = parseInt(value);
-		const constraint_str: string = `constraint shortsighted_x_sum_p(${vars_str}, ${first_var}, ${val});\n`;
-		return constraint_str;
-	}
-	return '';
+	const constraint_str = simpleOutsideDirectionConstraint(
+		model,
+		grid,
+		constraint,
+		'shortsighted_x_sum_p'
+	);
+	return constraint_str;
 }
 
 function brokenXSumConstraint(
@@ -149,16 +144,13 @@ function brokenXSumConstraint(
 	c_id: string,
 	constraint: OutsideDirectionToolI
 ) {
-	const vars = getOutsideDirectionConstraintVars(grid, constraint);
-	const vars_str = `[${vars.join(',')}]`;
-	const first_var = vars[0];
-	const value = constraint.value;
-	if (value) {
-		const val = parseInt(value);
-		const constraint_str: string = `constraint broken_x_sum_p(${vars_str}, ${first_var}, ${val});\n`;
-		return constraint_str;
-	}
-	return '';
+	const constraint_str = simpleOutsideDirectionConstraint(
+		model,
+		grid,
+		constraint,
+		'broken_x_sum_p'
+	);
+	return constraint_str;
 }
 
 function shiftedXSumConstraint(
@@ -167,17 +159,13 @@ function shiftedXSumConstraint(
 	c_id: string,
 	constraint: OutsideDirectionToolI
 ) {
-	const vars = getOutsideDirectionConstraintVars(grid, constraint);
-	const vars_str = `[${vars.join(',')}]`;
-	const first_var = vars[0];
-
-	const value = constraint.value;
-	if (value) {
-		const val = parseInt(value);
-		const constraint_str: string = `constraint shifted_x_sum_p(${vars_str}, ${first_var}, ${val});\n`;
-		return constraint_str;
-	}
-	return '';
+	const constraint_str = simpleOutsideDirectionConstraint(
+		model,
+		grid,
+		constraint,
+		'shifted_x_sum_p'
+	);
+	return constraint_str;
 }
 
 function skyscrapersConstraint(

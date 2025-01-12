@@ -163,13 +163,13 @@
 	<div class="save-puzzle-content">
 		<div class="save-puzzle-options">
 			<div class="column-left">
+				<button class="modal-button" on:click={downloadPuzzleJson}>Download JSON</button>
 				<button class="modal-button" on:click={() => downloadAsPNG(svgElement)}
 					>Download PNG</button
 				>
 				<button class="modal-button" on:click={() => downloadAsSVG(svgElement)}
 					>Download SVG</button
 				>
-				<button class="modal-button" on:click={downloadPuzzleJson}>Download JSON</button>
 				<!-- <button class="modal-button" on:click={copyCompressedLink}>Copy Link</button> -->
 				<!-- <button>Open With Link</button> -->
 			</div>

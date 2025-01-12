@@ -1,14 +1,15 @@
-
 export interface ParseOptions {
 	allow_var?: boolean;
 	allow_int_list?: boolean;
 	allow_interval?: boolean;
+	allow_var_list?: boolean;
 }
 
 export const default_parse_opts: ParseOptions = {
 	allow_var: true,
 	allow_int_list: false,
-	allow_interval: false
+	allow_interval: false,
+	allow_var_list: false,
 };
 
 interface IntervalI {
@@ -36,7 +37,12 @@ interface ParsedIntegerList {
 	parsed: number[];
 }
 
-type ParsedValue = ParsedInteger | ParsedVariable | ParsedInterval | ParsedIntegerList;
+interface ParsedVarList {
+	type: 'var_list';
+	parsed: string[];
+}
+
+type ParsedValue = ParsedInteger | ParsedVariable | ParsedInterval | ParsedIntegerList | ParsedVarList;
 
 function parseInterval(expression: string): IntervalI | null {
 	// Remove whitespace for clean parsing
@@ -104,6 +110,22 @@ export function parseIntegerList(input: string): null | number[] {
 	return input.split(',').map(Number);
 }
 
+export function parseVarList(input: string): null | string[] {
+	// Define the regex for a comma-separated list of integers
+	const var_regex = /[a-zA-Z][a-zA-Z0-9]*/;
+	const num_regex = /-?\d+/;
+	const var_or_num_regex = new RegExp(`(?:${num_regex.source}|${var_regex.source})`)
+	const regex = new RegExp(`^${var_or_num_regex.source}(?:,${var_or_num_regex.source}\\s*)*$`);
+
+	// Test the input against the regex
+	if (!regex.test(input)) {
+		return null;
+	}
+
+	// Split the input by commas and convert each part to a number
+	return input.split(',');
+}
+
 export function parseValue(value: string, parse_opts: ParseOptions): ParsedValue | null {
 	// match number
 	const parsed_int = parseInt(value);
@@ -128,8 +150,12 @@ export function parseValue(value: string, parse_opts: ParseOptions): ParsedValue
 	if (parse_opts.allow_interval && parsed_interval) {
 		return { type: 'interval', parsed: parsed_interval };
 	}
+	
+	// match variable list
+	const parsed_var_list = parseVarList(value);
+	if (parse_opts.allow_var_list && parsed_var_list) {
+		return { type: 'var_list', parsed: parsed_var_list };
+	}
 
 	return null;
 }
-
-

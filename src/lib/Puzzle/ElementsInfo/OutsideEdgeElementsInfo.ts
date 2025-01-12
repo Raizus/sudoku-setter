@@ -9,6 +9,7 @@ import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { RENDER_ORDER } from '../RenderOrder';
 import { outsideEdgeUsage } from '../ToolUsage';
+import type { EditableShapeI } from '../Shape/Shape';
 
 const outsideEdgeDefaultCategories = [
 	TOOL_CATEGORIES.OUTSIDE_EDGE_CONSTRAINT,
@@ -37,6 +38,11 @@ export function defaultOutsideDirectionValueUpdater(
 	return defaultValueUpdater(oldValue, key, validatorFunc);
 }
 
+const OUTSIDE_DEFAULT_SHAPE: EditableShapeI = {
+	fontColor: { editable: true, value: 'var(--text-primary-color)' },
+	stroke: { editable: true, value: 'var(--text-primary-color)' }
+};
+
 export const sandwichSumInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
@@ -49,6 +55,7 @@ export const sandwichSumInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.SANDWICH_SUM,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:
@@ -71,6 +78,7 @@ export const xSumInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.X_SUM,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:
@@ -93,6 +101,7 @@ export const shortsightedXSumInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.SHORTSIGHTED_X_SUM,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:
@@ -115,6 +124,7 @@ export const shiftedXSumInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.SHIFTED_X_SUM,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:
@@ -137,6 +147,7 @@ export const brokenXSumInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.BROKEN_X_SUM,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:
@@ -159,6 +170,7 @@ export const xSumSkyscrapersInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.X_SUM_SKYSCRAPERS,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:
@@ -181,6 +193,7 @@ export const battlefieldInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.BATTLEFIELD,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:
@@ -203,6 +216,7 @@ export const skyscrapersInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.SKYSCRAPERS,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description: 'A clue outside the grid indicates the number of skyscrapers seen from that side.',
@@ -224,6 +238,7 @@ export const xIndexInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.X_INDEX,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:
@@ -246,6 +261,7 @@ export const risingStreakInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.RISING_STREAK,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:
@@ -268,6 +284,7 @@ export const rowOrColumnRankInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.ROW_OR_COLUMN_RANK,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:
@@ -290,6 +307,7 @@ export const outsideEdgeYinYangSumOfShadedInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:
@@ -312,6 +330,7 @@ export const outsideConsecutiveSumInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.OUTSIDE_CONSECUTIVE_SUM,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:
@@ -334,6 +353,7 @@ export const loopwhichesInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.LOOPWICHES,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
 		description:

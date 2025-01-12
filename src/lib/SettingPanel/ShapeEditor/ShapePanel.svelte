@@ -189,6 +189,11 @@
 					<ColorPicker value={shape.fill} onChangeCb={(val) => updateShape('fill', val)} />
 				</PropertyBlock>
 			{/if}
+			{#if shape?.fontColor !== undefined && editableShape?.fontColor?.editable}
+				<PropertyBlock name="Font Color">
+					<ColorPicker value={shape.fontColor} onChangeCb={(val) => updateShape('fontColor', val)} />
+				</PropertyBlock>
+			{/if}
 		{/if}
 	</svelte:fragment>
 </Panel>

@@ -203,7 +203,26 @@ function array[int,int] of var int: flip_2d_vertical(array[int,int] of var int: 
         array2d(min_row..max_row, min_col..max_col,
             [arr[max_row - (i - min_row), j] | i in min_row..max_row, j in min_col..max_col]
         )
-    );\n\n`;
+    );
+    
+function var int: first_idx(array[int] of var int: arr, var int: x) =
+    if length(arr) = 0 then
+        -1
+    else
+        let {
+            % For each position, is it the first occurrence?
+            array[index_set(arr)] of var bool: is_first = [
+                arr[i] = x /\\
+                forall(j in min(index_set(arr))..i-1)(arr[j] != x)
+                | i in index_set(arr)
+            ]
+        } in
+        if exists(i in index_set(arr))(is_first[i]) then
+            min([i | i in index_set(arr) where is_first[i]])
+        else
+            -1
+        endif
+    endif;\n\n`;
 
     const more_helper_f = `function array[int] of int: grid_to_graph_from_edges(array[int,int] of var int: grid) = 
     let {
@@ -580,9 +599,16 @@ predicate corner_even_count_p(array[int] of var int: arr, var int: val) =
     
 predicate product_square_p(array[int] of var int: arr) =
     assert(length(arr) == 4, "Array must have length 4.") /\\
-    arr[1] * arr[4] = arr[2] * arr[3];\n\n`;
+    arr[1] * arr[4] = arr[2] * arr[3];
+    
+predicate equal_diagonal_differences_p(array[int] of var int: arr) =
+    assert(length(arr) == 4, "Array must have length 4.") /\\
+    abs(arr[1] - arr[4]) = abs(arr[2] - arr[3]);\n\n`;
 
-    const line_constraints = `predicate renban(array[int] of var int: arr) =
+    const line_constraints = `predicate fuzzy_thermo_p(array[int] of var int: arr) =
+    strictly_increasing(arr) \\/ strictly_decreasing(arr);
+    
+predicate renban(array[int] of var int: arr) =
     alldifferent(arr) /\\
     % Ensure the absolute difference between min and max is n-1
     max(arr) - min(arr) == card(index_set(arr)) - 1;
@@ -733,16 +759,41 @@ predicate modular_or_unimodular_line_p(array[int] of var int: arr, int: n) =
 function array[int] of var int: remainders_f(array[int] of var int: arr, var int: n) = 
     [arr[i] mod n | i in index_set(arr)];
 
-predicate n_consecutive_sum_line_p(array[int] of var int: arr, int: n) =
-    let {
-        int: start_idx = min(index_set(arr)),
-        int: end_idx = max(index_set(arr))
-    } in
-    forall(i in start_idx..end_idx - n + 1) (
-        exists(k in i..i + n - 1) (
-            arr[k] = sum(j in i..i + n - 1 where j != k)(arr[j])
+predicate _n_consecutive_fuzzy_sum_line_p(
+    array[int] of var int: arr,
+    int: n
+) = let {
+    int: start_idx = min(index_set(arr)),
+    int: end_idx = max(index_set(arr))
+} in forall(i in start_idx..end_idx - n + 1) (
+    exists(k in i..i + n - 1) (
+        arr[k] = sum(j in i..i + n - 1 where j != k)(arr[j])
+    )
+);
+
+predicate n_consecutive_fuzzy_sum_line_p(
+    array[int] of var int: arr,
+    int: n,
+    bool: circular
+) = (
+    if circular then
+        let {
+            int: min_i = min(index_set(arr));
+            int: max_i = max(index_set(arr));
+            int: idx2 = min([max_i, min_i+n-1]);
+            array[int] of var int: new_arr = arr ++ arr[min_i..idx2];
+        } in ( 
+            forall(start in index_set(new_arr) where start + n - 1 <= max(index_set(new_arr))) (
+                let {
+                    array[start..start + n - 1] of var int: slice = new_arr[start..start + n - 1]
+                } in _n_consecutive_fuzzy_sum_line_p(new_arr, n)
+            )
         )
-    );	
+    else
+        _n_consecutive_fuzzy_sum_line_p(arr, n)
+    endif
+);
+
 
 predicate superfuzzy_arrow_p(array[int] of var int: arr) =
     let {
@@ -927,7 +978,22 @@ predicate segmented_sum_line_p(array[int] of var int: arr, var int: val, bool: c
         segmented_sum_line_circular_p(arr, val)
     else
         segmented_sum_line_not_circular_p(arr, val)
-    endif;\n\n`;
+    endif;
+    
+function var int: cycle_order_f(
+    array[int] of var int: arr, 
+    var int: start
+) = let {
+    set of int: idxs = index_set(arr);
+    int: min_i = min(idxs);
+    int: max_i = max(idxs);
+    array[min_i..max_i+1] of var int: transitions;
+    constraint transitions[min_i] = arr[start];
+    constraint forall(i in idxs)(
+        transitions[i+1] = arr[transitions[i]]
+    );
+    var int: target_idx = first_idx(transitions, start)
+} in target_idx;\n\n`;
 
     const double_end_line_constraints = `
 predicate between_line_p(array[int] of var int: arr) =
@@ -1074,22 +1140,37 @@ predicate vaulted_cage_p(
 predicate sandwich_sum_p(array[int] of var int: arr, var int: val, int: a, int: b) =
     val == sandwich_sum(arr, a, b);
 
-function var int: x_sum(array[int] of var int: arr, var int: x) =
+function var int: x_sum_f(array[int] of var int: arr, var int: x) =
     let {
-        int: n = card(index_set(arr))
+        set of int: idxs = index_set(arr);
     } in
-    sum(i in index_set(arr) where i <= min(index_set(arr)) + x - 1)(arr[i]);
+    sum(i in idxs where i <= min(idxs) + x - 1)(arr[i]);
 
-predicate x_sum_p(array[int] of var int: arr, var int: x, var int: val) =
-    val == x_sum(arr, x) /\\ (0 <= x /\\ x <= card(index_set(arr)));
+predicate x_sum_p(
+    array[int] of var int: arr,
+    var int: val
+) = let {
+    int: min_i = min(index_set(arr));
+    var int: first = arr[min_i];
+} in x_sum_f(arr, first) == val;
 	
-predicate shortsighted_x_sum_p(array[int] of var int: arr, var int: x, var int: val) =
-    x_sum(arr, x) == val \\/ x_sum(arr, x-1) == val;
+predicate shortsighted_x_sum_p(
+    array[int] of var int: arr,
+    var int: val
+) = let {
+    int: min_i = min(index_set(arr));
+    var int: first = arr[min_i];
+} in x_sum_f(arr, first) == val \\/ x_sum_f(arr, first-1) == val;
 
-predicate broken_x_sum_p(array[int] of var int: arr, var int: x, var int: val) =
-    x_sum(arr, x-1) == val \\/ x_sum(arr, x+1) == val;
+predicate broken_x_sum_p(
+    array[int] of var int: arr,
+    var int: val
+) = let {
+    int: min_i = min(index_set(arr));
+    var int: first = arr[min_i];
+} in x_sum_f(arr, first-1) == val \\/ x_sum_f(arr, first+1) == val;
 
-function var int: shifted_x_sum(array[int] of var int: arr, var int: n) =
+function var int: shifted_x_sum_f(array[int] of var int: arr, var int: n) =
     let {
         int: size = card(index_set(arr)),
         int: start_index = min(index_set(arr)),
@@ -1098,9 +1179,23 @@ function var int: shifted_x_sum(array[int] of var int: arr, var int: n) =
 	    sum(i in index_set(arr) where i >= n /\\ i < n + x)(arr[i]);
 
 % sum(arr[n:n+x]), n = arr[1], x = arr[n]
-predicate shifted_x_sum_p(array[int] of var int: arr, var int: n, var int: val) =
-    (n >= 1 /\\ n <= card(index_set(arr)) /\\ n + arr[n] - 1 <= card(index_set(arr))) /\\
-    shifted_x_sum(arr, n) == val;
+predicate shifted_x_sum_p(
+    array[int] of var int: arr,
+    var int: val
+) = (
+    if length(arr) == 0 then
+        false
+    else
+        let {
+            set of int: idxs = index_set(arr);
+            int: min_i = min(idxs);
+            int: l = card(idxs);
+            var int: first = arr[min_i]
+        } in (first in idxs /\\ first + arr[first] - 1 <= l) /\\
+            shifted_x_sum_f(arr, first) == val
+    endif
+);
+
 
 function var int: skyscrapers_count(array[int] of var int: arr) =
     sum(i in index_set(arr)) (
@@ -1115,7 +1210,7 @@ function var int: x_sum_skyscrapers_count(array[int] of var int: arr) =
         var int: x = skyscrapers_count(arr)  % Compute the number of visible skyscrapers
     } in
     % Sum the first x elements
-    x_sum(arr, x);
+    x_sum_f(arr, x);
 
 predicate x_sum_skyscrapers_p(array[int] of var int: arr, var int: val) =
 		x_sum_skyscrapers_count(arr) == val;
@@ -1481,26 +1576,7 @@ predicate two_contiguous_regions_row_col_opposite_set_count_p(
 ) =
     count_different(row_vars, region_var) + count_different(col_vars, region_var) == cell_var;\n\n`;
 
-    const unknown_sudoku_regions_p = `function var int: first_idx(array[int] of var int: arr, var int: x) =
-    if length(arr) = 0 then
-        -1
-    else
-        let {
-            % For each position, is it the first occurrence?
-            array[index_set(arr)] of var bool: is_first = [
-                arr[i] = x /\\
-                forall(j in min(index_set(arr))..i-1)(arr[j] != x)
-                | i in index_set(arr)
-            ]
-        } in
-        if exists(i in index_set(arr))(is_first[i]) then
-            min([i | i in index_set(arr) where is_first[i]])
-        else
-            -1
-        endif
-    endif;
-
-function array[int] of var int: regions_idxs_f(array[int, int] of var int: regions, int: n_regions) =
+    const unknown_sudoku_regions_p = `function array[int] of var int: regions_idxs_f(array[int, int] of var int: regions, int: n_regions) =
   [first_idx(array1d(regions), reg_i) | reg_i in 0..(n_regions-1)];
 
 predicate unknown_regions_ordering_p(array[int, int] of var int: regions, int: n_regions) = 
