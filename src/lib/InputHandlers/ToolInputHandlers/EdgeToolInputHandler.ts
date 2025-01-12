@@ -29,7 +29,7 @@ export function getEdgeToolInputHandler(
 	tool: TOOLID,
 	options?: ValueToolInputOptions
 ): InputHandler {
-	console.log('getEdgeToolInputHandler');
+	// console.log('getEdgeToolInputHandler');
 	const pointerHandler = new CellEdgePointerHandler();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 

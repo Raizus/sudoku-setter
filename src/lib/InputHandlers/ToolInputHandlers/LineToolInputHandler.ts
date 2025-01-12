@@ -29,7 +29,7 @@ export function getLineToolInputHandler(
 	tool: TOOLID,
 	options?: LineInputHandlerOptions
 ): InputHandler {
-	console.log('getLineToolInputHandler');
+	// console.log('getLineToolInputHandler');
 	const pointerHandler = new CellPointerHandler();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 

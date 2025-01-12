@@ -16,13 +16,11 @@
 			[0, 1],
 			[-1, 0],
 		];
-        console.log(coord);
 		for (let idx = 0; idx < offsets.length; idx++) {
 			let offset = offsets[idx];
 
 			// check if adjacent cell is outside of the grid or is another minimum
 			const neighbour: GridCoordI = { r: coord.r + offset[1], c: coord.c + offset[0] };
-            console.log(neighbour);
 			mask[idx] = !Object.values(constraints).some(
 				(constraint) => areCoordsEqual(neighbour, constraint.cell)
 			);
@@ -49,7 +47,6 @@
 	$: x = coord.c;
 	$: y = coord.r;
     $: constraints = getConstraints($minimumConstraintsStore, $maximumConstraintsStore);
-    $: console.log(constraints)
 </script>
 
 <g class="minmax-constraint">

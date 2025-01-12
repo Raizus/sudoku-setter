@@ -22,7 +22,7 @@ export function getCornerToolInputHandler(
 	tool: TOOLID,
 	options?: ValueToolInputOptions
 ): InputHandler {
-	console.log('getCornerToolInputHandler');
+	// console.log('getCornerToolInputHandler');
 	const pointerHandler = new CellCornerPointerHandler();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 

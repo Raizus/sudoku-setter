@@ -34,7 +34,7 @@ export function getOutsideDirectionToolInputHandler(
 	tool: TOOLID,
 	options?: OutsideDirectionToolInputOptions
 ): InputHandler {
-	console.log('getOutsideEdgeToolInputHandler');
+	// console.log('getOutsideEdgeToolInputHandler');
 	
 	const cornerOrEdge = options?.cornerOrEdge ?? CornerOrEdge.CORNER_OR_EDGE;
 	const pointerHandler = new CellEdgeCornerPointerHandler(cornerOrEdge);

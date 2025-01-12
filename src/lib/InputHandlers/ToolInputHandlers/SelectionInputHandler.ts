@@ -198,7 +198,7 @@ export function getSelectionInputHandler(
 	grid: Grid,
 	tool: TOOLID
 ): InputHandler {
-	console.log('getSelectionInputHandler');
+	// console.log('getSelectionInputHandler');
 
 	const tools: TOOLID[] = [TOOLS.DIGIT, TOOLS.CORNER_PM, TOOLS.CENTER_PM, TOOLS.HIGHLIGHTS];
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };

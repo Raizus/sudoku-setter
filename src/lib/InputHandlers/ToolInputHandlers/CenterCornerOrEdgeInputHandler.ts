@@ -34,7 +34,7 @@ export function getCenterCornerOrEdgeToolInputHandler(
 	tool: TOOLID,
 	options?: CenterCornerOrEdgeToolInputOptions
 ): InputHandler {
-	console.log('getCenterCornerOrEdgeToolInputHandler');
+	// console.log('getCenterCornerOrEdgeToolInputHandler');
 
 	const targets = options?.targets ?? CornerOrEdge.CLOSEST;
     const pointerHandler = new CellEdgeCornerPointerHandler(targets);
@@ -48,8 +48,6 @@ export function getCenterCornerOrEdgeToolInputHandler(
 		const localConstraints = get(localConstraintsStore);
         const cell = event.cell;
         const coords = event.closest;
-        
-        console.log(event);
 
 		const onGrid = isCellOnGrid(cell, gridShape);
 		if (!onGrid) return;

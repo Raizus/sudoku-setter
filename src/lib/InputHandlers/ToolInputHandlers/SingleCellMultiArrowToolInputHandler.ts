@@ -34,7 +34,7 @@ export function getSingleCellMultiArrowToolInputHandler(
 	tool: TOOLID,
 	cornerOrEdge = CornerOrEdge.CORNER_OR_EDGE
 ): InputHandler {
-	console.log('getSingleCellMultiArrowToolInputHandler');
+	// console.log('getSingleCellMultiArrowToolInputHandler');
 	const pointerHandler = new CellEdgeCornerPointerHandler(cornerOrEdge);
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
@@ -51,8 +51,6 @@ export function getSingleCellMultiArrowToolInputHandler(
 	function handle(event: CellEdgeCornerEvent) {
 		const localConstraints = get(localConstraintsStore);
 		const coords = event.cell;
-
-		console.log(event);
 
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;

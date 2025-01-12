@@ -114,7 +114,6 @@ export const lineToolsStore = derived(localConstraintsStore, ($localConstraintsS
 			element: element as Record<string, LineToolI>
 		});
 	}
-	// console.log(LineElements);
 	return LineElements;
 });
 

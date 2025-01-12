@@ -37,7 +37,7 @@ export function getArrowToolInputHandler(
 	grid: Grid,
 	tool: TOOLID
 ): InputHandler {
-	console.log('getArrowToolInputHandler');
+	// console.log('getArrowToolInputHandler');
 	const pointerHandler = new CellPointerHandler();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 

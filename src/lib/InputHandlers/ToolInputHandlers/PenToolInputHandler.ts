@@ -29,7 +29,7 @@ import { get } from 'svelte/store';
 import { areCoordsOnGrid } from '$src/lib/utils/SquareCellGridCoords';
 
 export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): InputHandler {
-	console.log('getPenToolInputHandler');
+	// console.log('getPenToolInputHandler');
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 	const penToolPointerHandler = new PenToolPointerHandler();
 

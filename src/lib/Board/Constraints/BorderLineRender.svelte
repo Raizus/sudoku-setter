@@ -15,8 +15,6 @@
 	const x2 = coord1.c === coord2.c ? coord2.c + 1 : coord2.c;
 	const y1 = coord2.r;
 	const y2 = coord1.r === coord2.r ? coord2.r + 1 : coord2.r;
-
-    console.log("border line")
 </script>
 
 <line {x1} {x2} {y1} {y2} {stroke} stroke-width={strokeWidth} {opacity} />

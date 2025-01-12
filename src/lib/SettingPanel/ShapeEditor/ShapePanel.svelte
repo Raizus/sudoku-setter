@@ -40,7 +40,7 @@
 		if (!shape) return;
 		shape[key] = value;
 		updateCurrentConstraintShape(shape);
-		console.log(shape);
+		// console.log(shape);
 	}
 
 	function resetShape() {

@@ -29,7 +29,7 @@ export function getSingleCellArrowToolInputHandler(
 	tool: TOOLID,
 	cornerOrEdge = CornerOrEdge.CORNER_OR_EDGE
 ): InputHandler {
-	console.log('getSingleCellArrowToolInputHandler');
+	// console.log('getSingleCellArrowToolInputHandler');
 	const validDirections = [
 		DIRECTION.N,
 		DIRECTION.NE,
@@ -56,7 +56,6 @@ export function getSingleCellArrowToolInputHandler(
 	function handle(event: CellEdgeCornerEvent) {
 		const localConstraints = get(localConstraintsStore);
 		const coords = event.cell;
-		console.log(event);
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
 
