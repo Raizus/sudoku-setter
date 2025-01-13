@@ -38,25 +38,14 @@
 
 <style lang="scss">
 	@use 'sass:list';
-
-	$highlight-map: (
-		hsla(0, 0%, 70%, 0.7),
-		hsla(0, 0%, 45%, 0.7),
-		hsla(0, 0%, 12%, 0.7),
-		hsla(109, 70%, 45%, 0.7),
-		hsla(295, 70%, 45%, 0.7),
-		hsla(22, 70%, 45%, 0.7),
-		hsla(2, 70%, 45%, 0.7),
-		hsla(60, 70%, 45%, 0.7),
-		hsla(210, 70%, 45%, 0.7)
-	);
+	@use '$src/vars' as vars;
 
 	.highlight-wedge {
 		stroke-width: 0;
 	}
 	@for $i from 1 through 9 {
 		.color-#{$i} {
-			fill: list.nth($highlight-map, $i);
+			fill: list.nth(vars.$highlight-map, $i);
 			// fill: var(--highlight-color-#{$i})
 		}
 

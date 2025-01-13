@@ -370,6 +370,72 @@ function pentominoTillingConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
+function litsConstraint(puzzle: PuzzleI, tool: TOOLID) {
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name1 = VAR_2D_NAMES.LITS_SHADING;
+	const grid_name2 = VAR_2D_NAMES.LITS_REGIONS;
+
+	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name1};\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..4: ${grid_name2};\n`;
+	out_str += `constraint lits_shading_p(${grid_name1});\n`;
+	out_str += `constraint lits_shading_ids_p(${grid_name1}, ${grid_name2});\n`;
+	out_str += `constraint lits_region_and_ids_p(${VAR_2D_NAMES.BOARD_REGIONS}, ${grid_name2});\n`;
+	out_str += `constraint lits_tetromino_shapes_p(${grid_name2});\n`;
+
+	const regions = grid.getUsedRegions();
+	if (regions.size) out_str += `\n% Exactly 4 shaded cells per region (known regions)\n`
+	for (const region of regions) {
+		const region_cells = grid.getRegion(region);
+		const shading_vars = cellsToGridVarsStr(region_cells, VAR_2D_NAMES.LITS_SHADING);
+		const constraint = `constraint count_eq(${shading_vars}, 1, 4);\n`;
+		out_str += constraint;
+	}
+
+	return out_str;
+}
+
+function caveLitsConstraint(puzzle: PuzzleI, tool: TOOLID) {
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name1 = VAR_2D_NAMES.LITS_SHADING;
+	const grid_name2 = VAR_2D_NAMES.LITS_REGIONS;
+	const grid_name3 = VAR_2D_NAMES.CAVE_REGIONS;
+
+	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name1};\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..4: ${grid_name2};\n`;
+	out_str += `constraint lits_shading_p(${grid_name1});\n`;
+	out_str += `constraint lits_shading_ids_p(${grid_name1}, ${grid_name2});\n`;
+	out_str += `constraint lits_region_and_ids_p(${grid_name3}, ${grid_name2});\n`;
+	out_str += `constraint lits_4_per_region_p(${grid_name3}, ${grid_name1});\n`;
+	out_str += `constraint lits_tetromino_shapes_p(${grid_name2});\n`;
+
+	const regions = grid.getUsedRegions();
+	if (regions.size) out_str += `\n% Exactly 4 shaded cells per region (known regions)\n`;
+	for (const region of regions) {
+		const region_cells = grid.getRegion(region);
+		const shading_vars = cellsToGridVarsStr(region_cells, VAR_2D_NAMES.LITS_SHADING);
+		const constraint = `constraint count_eq(${shading_vars}, 1, 4);\n`;
+		out_str += constraint;
+	}
+
+	return out_str;
+}
+
 type ConstraintF = (puzzle: PuzzleI, tool: TOOLID) => string;
 
 const tool_map = new Map<string, ConstraintF>([
@@ -391,7 +457,9 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.GOLDILOCKS_ZONE, goldilocksConstraint],
 	[TOOLS.NEXUS, nexusConstraint],
 
-	[TOOLS.PENTOMINO_TILLING, pentominoTillingConstraint]
+	[TOOLS.PENTOMINO_TILLING, pentominoTillingConstraint],
+	[TOOLS.LITS, litsConstraint],
+	[TOOLS.CAVE_LITS, caveLitsConstraint]
 ]);
 
 export function undeterminedRegionsConstraints(puzzle: PuzzleI): string {

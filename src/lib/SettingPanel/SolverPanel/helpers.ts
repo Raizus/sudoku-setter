@@ -190,7 +190,13 @@ function setBinaryHighlights(json: JsonT, grid: Grid) {
 
 function setOtherHighlights(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
-	const grid_vars_names = ['doublers_grid', 'negators_grid', 'cell_center_loop', 'nexus'];
+	const grid_vars_names = [
+		'doublers_grid',
+		'negators_grid',
+		'cell_center_loop',
+		'nexus'
+		// 'lits_shading'
+	];
 	const color_map: Map<number, number> = new Map([
 		[1, 4],
 		[0, 1]
@@ -199,7 +205,7 @@ function setOtherHighlights(json: JsonT, grid: Grid) {
 	for (const name of grid_vars_names) {
 		const binary_grid = json[name] as (boolean | number)[][] | undefined;
 		if (binary_grid === undefined) continue;
-	
+
 		grid_coloring(binary_grid, grid, color_map);
 		return;
 	}
@@ -241,21 +247,45 @@ function setGoldilocksRegionsHighlights(json: JsonT, grid: Grid) {
 	grid_coloring(regions, grid, color_map);
 }
 
+function setLITSHighlights(json: JsonT, grid: Grid) {
+	if (json === undefined) return;
+	const regions = json['lits_regions'] as number[][] | undefined;
+	if (regions === undefined) return;
+
+	const color_map: Map<number, number> = new Map([
+		[0, 1],
+		[1, 4],
+		[2, 5],
+		[3, 6],
+		[4, 7],
+		[5, 9]
+	]);
+
+	grid_coloring(regions, grid, color_map);
+}
+
 function setUnknownRegionsBorders(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
-	const grid_vars_names = ['unknown_regions', 'sashigane', 'fillomino_area', 'galaxy_regions'];
+	const grid_vars_names = [
+		'unknown_regions',
+		'sashigane',
+		'fillomino_area',
+		'galaxy_regions',
+		// 'lits_regions'
+	];
 
 	for (const name of grid_vars_names) {
 		const regions_grid = json[name] as number[][] | undefined;
 		if (regions_grid === undefined) continue;
 
 		const [n_rows, n_cols] = [grid.nRows, grid.nCols];
-		const colorId = 3;
+		const colorId = 4;
 
 		const line_markers: LineMarker[] = [];
 		// vertical markers
 		for (let i = 0; i < regions_grid.length; i++) {
 			const row = regions_grid[i];
+
 			for (let j = 0; j < row.length - 1; j++) {
 				const cell1 = grid.getCell(i, j);
 				const cell2 = grid.getCell(i, j + 1);
@@ -377,6 +407,7 @@ export function setBoardOnSolution(json: JsonT, grid: Grid) {
 	setUnknownRegionsHighlights(json, grid);
 	setUnknownRegionsBorders(json, grid);
 	setGoldilocksRegionsHighlights(json, grid);
+	setLITSHighlights(json, grid);
 	setOrthogonalPathOrLoopLines(json, grid);
 	setOtherHighlights(json, grid);
 	setColoring(json, grid);

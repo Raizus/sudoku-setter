@@ -42,6 +42,18 @@ export const fillominoInfo: AbstractElementInfo = {
 	}
 };
 
+export const LITSInfo: AbstractElementInfo = {
+	toolId: TOOLS.LITS,
+	order: 0,
+
+	meta: {
+		description:
+			'Shade one tetromino in each region. (A tetromino is a shape of four orthogonally-connected cells.) No two tetrominoes of the same shape may share an edge - reflections/rotations count as the same shape. All tetrominoes must form a single orthogonally connected area. No 2x2 area of the grid can be completely shaded.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	}
+};
+
 export const antiknightInfo: AbstractElementInfo = {
 	toolId: TOOLS.ANTIKNIGHT,
 	order: 0,

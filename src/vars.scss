@@ -9,3 +9,11 @@ $highlight-map: (
 	hsla(60, 70%, 45%, 0.7),
 	hsla(210, 70%, 45%, 0.7)
 );
+
+@mixin breakpoint-mobile {
+    @media (max-width: 800px) and (max-aspect-ratio: 5/4),
+        (max-width: 600px)
+    {
+        @content;
+    }
+}

@@ -13,6 +13,7 @@ export enum CELL_INPUT_TOOLS {
 
 export enum SIMPLE_GLOBAL_CONSTRAINTS {
 	SUDOKU_RULES_DO_NOT_APPLY = 'Sudoku rules do not apply',
+	LITS = 'LITS',
 	HEXED_SUDOKU = 'Hexed Sudoku',
 	FILLOMINO = 'Fillomino',
 	ANTIKNIGHT = 'Antiknight',
@@ -70,7 +71,7 @@ export enum VALUE_MODIFIER_CONSTRAINTS {
 export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	UNKNOWN_REGIONS = 'Unknown Regions',
 	YIN_YANG = 'Yin Yang',
-	YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED = "Yin Yang Neighbour Greater Than One Within Region Shaded",
+	YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED = 'Yin Yang Neighbour Greater Than One Within Region Shaded',
 	NURIMISAKI = 'Nurimisaki',
 	TWO_CONTIGUOUS_REGIONS = 'Two Contiguous Regions',
 	SASHIGANE = 'Sashigane',
@@ -86,6 +87,7 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	CAVE_WALLS_ARE_EVEN = 'Cave Walls Are Even',
 	CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED = 'Cave 2x2 Not Fully Shaded or Unshaded',
 	ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE = 'One Digit Does Not Appear In The Cave',
+	CAVE_LITS = 'Cave LITS',
 
 	TWILIGHT_CAVE_FILLOMINO_REGION_SHADING = 'Twilight Cave Fillomino Region Shading',
 	YIN_YANG_FILLOMINO_PARITY = 'Yin Yang Fillomino Parity',
@@ -135,6 +137,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	YIN_YANG_SEEN_SHADED_CELLS = 'Yin Yang Seen Shaded Cells',
 	YIN_YANG_SEEN_SAME_SHADE_CELLS = 'Yin Yang Seen Same Shade Cells',
 	YIN_YANG_ADJACENT_SAME_SHADE_COUNT = 'Yin Yang Adjacent Same Shade Count',
+	YIN_YANG_SHADED_NEIGHBOURS_COUNT = 'Yin Yang Shaded Neighbours Count',
 
 	TWO_CONTIGUOUS_REGIONS_ROW_COLUMN_OPPOSITE_SET_COUNT = 'Two Contiguous Regions Row Column Opposite Set Count',
 	SEEN_REGION_BORDERS_COUNT = 'Seen Region Borders Count',

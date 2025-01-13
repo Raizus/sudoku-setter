@@ -27,17 +27,19 @@
 	});
 </script>
 
+<header></header>
 <main class="App" data-theme={theme}>
 	<Game />
 </main>
+<footer></footer>
 
 <style lang="scss">
 	.App {
 		display: flex;
 		flex-grow: 1;
 		flex-direction: column;
-		width: 100vw;
-		height: 100vh;
+		width: 100%;
+		height: 100%;
 
 		background-color: var(--background-color);
 		color: var(--text-primary-color);

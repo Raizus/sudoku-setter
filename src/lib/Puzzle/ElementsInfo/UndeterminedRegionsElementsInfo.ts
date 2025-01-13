@@ -224,6 +224,18 @@ export const caveCellsAreOddInfo: AbstractElementInfo = {
 	}
 };
 
+export const caveLITSInfo: AbstractElementInfo = {
+	toolId: TOOLS.CAVE_LITS,
+	order: 0,
+
+	meta: {
+		description:
+			"The cave and each wall section is a separate region for the purposes of a 'LITS puzzle'. In a LITS puzzle, solvers must place one tetromino into each region. No two tetrominoes of the same shape may share an edge - reflections/rotations count as the same shape. All tetrominoes must form a single orthogonally connected area. No 2x2 area of the grid can be completely covered in tetrominoes.",
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
 export const yinYangFillominoParityInfo: AbstractElementInfo = {
 	toolId: TOOLS.YIN_YANG_FILLOMINO_PARITY,
 	order: 0,

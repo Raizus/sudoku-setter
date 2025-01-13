@@ -96,18 +96,7 @@
 
 <style lang="scss">
 	@use 'sass:list';
-
-	$highlight-map: (
-		hsla(0, 0%, 70%, 0.7),
-		hsla(0, 0%, 45%, 0.7),
-		hsla(0, 0%, 12%, 0.7),
-		hsla(109, 70%, 45%, 0.7),
-		hsla(295, 70%, 45%, 0.7),
-		hsla(22, 70%, 45%, 0.7),
-		hsla(2, 70%, 45%, 0.7),
-		hsla(60, 70%, 45%, 0.7),
-		hsla(210, 70%, 45%, 0.7)
-	);
+	@use '$src/vars' as vars;
 
 	$button-size: var(--entry-panel-button-size);
 	$button-gap: var(--entry-panel-button-gap);
@@ -200,7 +189,7 @@
 	.number-pad.color {
 		@for $i from 1 through 9 {
 			& .number-pad-button[value='#{$i}'] {
-				background-color: list.nth($highlight-map, $i);
+				background-color: list.nth(vars.$highlight-map, $i);
 			}
 		}
 
@@ -212,7 +201,7 @@
 	.number-pad.pen {
 		@for $i from 1 through 9 {
 			& .number-pad-button[data-value='#{$i}'] .selector-color {
-				background-color: list.nth($highlight-map, $i);
+				background-color: list.nth(vars.$highlight-map, $i);
 			}
 		}
 

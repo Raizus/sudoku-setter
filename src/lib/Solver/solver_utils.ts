@@ -7,6 +7,7 @@ import { type ParseOptions, default_parse_opts, parseValue } from './value_parsi
 
 export enum VAR_2D_NAMES {
 	BOARD = 'board',
+	BOARD_REGIONS = 'board_regions',
 	YIN_YANG = 'yin_yang',
 	UNKNOWN_REGIONS = 'unknown_regions',
 	DOUBLERS = 'doublers_grid',
@@ -20,7 +21,9 @@ export enum VAR_2D_NAMES {
 	FILLOMINO_REGIONS = 'fillomino_area',
 	GALAXY_REGIONS = 'galaxy_regions',
 	GALAXY_SIZES = 'galaxy_sizes',
-	GOLDILOCKS_REGIONS = 'goldilocks_regions'
+	GOLDILOCKS_REGIONS = 'goldilocks_regions',
+	LITS_SHADING = 'lits_shading',
+	LITS_REGIONS = 'lits_regions'
 }
 
 export function cellToGridVarName(cell: Cell, name: VAR_2D_NAMES): string {

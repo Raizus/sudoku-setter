@@ -232,8 +232,6 @@ export function getSelectionInputHandler(
 
 	cellInputHandler.onDrag = (event: CellDragTapEvent): void => {
 		const onGrid = isCellOnGrid(event.cell, gridShape);
-		0;
-
 		const cell = onGrid ? event.cell : null;
 
 		const action = selectionDragAction(cell);

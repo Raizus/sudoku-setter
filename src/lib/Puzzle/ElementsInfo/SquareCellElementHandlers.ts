@@ -87,6 +87,7 @@ import {
 	fillominoInfo,
 	globalIndexingColumnInfo,
 	hexedSudokuInfo,
+	LITSInfo,
 	negativeAntidiagonalInfo,
 	negativeDiagonalInfo,
 	nonconsecutiveInfo,
@@ -103,6 +104,7 @@ import {
 import {
 	adjacentCellsAlongLoopAreGermanWhispersInfo,
 	adjacentCellsAlongLoopAreMultiplesInfo,
+	caveLITSInfo,
 	everyCellBelongsToAGalaxyInfo,
 	galaxiesInfo,
 	galaxy2x2DoesNotBelongToOneGalaxyInfo,
@@ -248,7 +250,8 @@ import {
 	yinYangSeenSameShadeCellsInfo,
 	yinYangSeenShadedCellsInfo,
 	yinYangSeenUnshadedCellsInfo,
-	uniqueCellsInfo
+	uniqueCellsInfo,
+	yinYangShadedNeighboursCountInfo
 } from './SingleCellElementsInfo';
 import {
 	coldArrowsInfo,
@@ -289,6 +292,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	//Global Constraints
 	[TOOLS.SUDOKU_RULES_DO_NOT_APPLY]: sudokuRulesDoNotApplyInfo,
+	[TOOLS.LITS]: LITSInfo,
 	[TOOLS.HEXED_SUDOKU]: hexedSudokuInfo,
 	[TOOLS.FILLOMINO]: fillominoInfo,
 	[TOOLS.ANTIKNIGHT]: antiknightInfo,
@@ -353,6 +357,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.NOT_LOOP_SIZED_REGIONS]: notLoopSizedRegionsInfo,
 	[TOOLS.MODULAR_LOOP]: modularLoopInfo,
 	[TOOLS.CAVE]: caveInfo,
+	[TOOLS.CAVE_LITS]: caveLITSInfo,
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING]: twilightCaveFillominoRegionShadingInfo,
 
 	[TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS]: nurimisakiPathGermanWhispersInfo,
@@ -400,6 +405,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.YIN_YANG_SEEN_SHADED_CELLS]: yinYangSeenShadedCellsInfo,
 	[TOOLS.YIN_YANG_SEEN_SAME_SHADE_CELLS]: yinYangSeenSameShadeCellsInfo,
 	[TOOLS.YIN_YANG_ADJACENT_SAME_SHADE_COUNT]: yinYangAdjacentSameShadeCountInfo,
+	[TOOLS.YIN_YANG_SHADED_NEIGHBOURS_COUNT]: yinYangShadedNeighboursCountInfo,
+
 	[TOOLS.TWO_CONTIGUOUS_REGIONS_ROW_COLUMN_OPPOSITE_SET_COUNT]:
 		twoContiguousRegionsRowColumnOppositeSetCountInfo,
 	[TOOLS.SEEN_REGION_BORDERS_COUNT]: seenRegionBordersCountInfo,

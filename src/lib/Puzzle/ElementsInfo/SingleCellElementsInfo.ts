@@ -679,6 +679,32 @@ export const yinYangAdjacentSameShadeCountInfo: SquareCellElementInfo = {
 	}
 };
 
+export const yinYangShadedNeighboursCountInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.YIN_YANG_SHADED_NEIGHBOURS_COUNT,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.POLYGON,
+		n: { editable: false, value: 8 },
+		strokeWidth: { editable: false, value: 0.03 },
+		angle: { editable: false, value: 22.5 },
+		stroke: { editable: false, value: 'red' },
+		r: { editable: false, value: 0.4 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			'Values in cells with ocatgons give the number of shaded cells in the (up to 8) surrounding cells.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
 export const twoContiguousRegionsRowColumnOppositeSetCountInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getSingleCellToolInputHandler(svgRef, grid, tool);

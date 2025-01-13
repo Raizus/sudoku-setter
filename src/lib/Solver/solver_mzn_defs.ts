@@ -1,8 +1,7 @@
-
 export function defineFunctionsPredicates() {
-    let out_str = '\n';
+	let out_str = '\n';
 
-    const tests = `test orth_adjacent_2d(
+	const tests = `test orth_adjacent_2d(
     int: r1, int: c1, 
     int: r2, int: c2
 ) = let {
@@ -22,7 +21,7 @@ test is_before(int: r1, int: c1, int: r2, int: c2) =
 test is_after(int: r1, int: c1, int: r2, int: c2) =
     ( r2 > r1 \\/  ( r2 = r1 /\\  c2 > c1 ));\n\n`;
 
-    const helper_f = `function array[1..4] of tuple(int, int): orth_adjacent_idxs(int: r, int: c) =
+	const helper_f = `function array[1..4] of tuple(int, int): orth_adjacent_idxs(int: r, int: c) =
     [(r-1,c),(r+1,c),(r,c-1),(r,c+1)];
     
 function var int: odd_count(array[int] of var int: arr) =
@@ -205,6 +204,34 @@ function array[int,int] of var int: flip_2d_vertical(array[int,int] of var int: 
         )
     );
     
+function array[int,int] of var int: rotate_2d_i(
+    array[int,int] of var int: arr,
+    int: i
+) = let {
+    % Get dimensions of input array
+    set of int: rows = index_set_1of2(arr);
+    set of int: cols = index_set_2of2(arr);
+    int: min_row = min(rows);
+    int: max_row = max(rows);
+    int: min_col = min(cols);
+    int: max_col = max(cols);
+    
+    % Normalize rotations to 0-3 range since 4 rotations = original array
+    int: rotations = i mod 4;
+
+    % Apply rotations based on normalized count
+    array[int,int] of var int: result = 
+        if rotations = 0 then
+            arr
+        elseif rotations = 1 then
+            rotate_2d(arr)
+        elseif rotations = 2 then
+            rotate_2d(rotate_2d(arr))
+        else  % rotations = 3
+            rotate_2d(rotate_2d(rotate_2d(arr)))
+        endif;
+} in result;
+
 function var int: first_idx(array[int] of var int: arr, var int: x) =
     if length(arr) = 0 then
         -1
@@ -224,7 +251,7 @@ function var int: first_idx(array[int] of var int: arr, var int: x) =
         endif
     endif;\n\n`;
 
-    const more_helper_f = `function array[int] of int: grid_to_graph_from_edges(array[int,int] of var int: grid) = 
+	const more_helper_f = `function array[int] of int: grid_to_graph_from_edges(array[int,int] of var int: grid) = 
     let {
         set of int: rows = index_set_1of2(grid);
         set of int: cols = index_set_2of2(grid);
@@ -330,13 +357,16 @@ predicate connected_region(array[int,int] of var int: grid, var int: x) =
         connected(from, to, ns, es)
     );\n\n`;
 
-    const helper_p = `predicate multisets_equal_p(array[int] of var int: arr1, array[int] of var int: arr2) =
+	const helper_p = `predicate multisets_equal_p(array[int] of var int: arr1, array[int] of var int: arr2) =
 	forall(i in index_set(arr1)) (
 		let {
 			var int: count1 = count(arr1, arr1[i]),
 			var int: count2 = count(arr2, arr1[i]),
 		} in count1 == count2
 	);
+
+predicate all_equal_to_p(array[int] of var int: arr, var int: val) =
+    forall(v in arr)(v = val);
 
 predicate different_from_group_p(var int: a, array[int] of var int: arr) =
     forall(i in index_set(arr))(a != arr[i]);
@@ -407,7 +437,7 @@ predicate not_fully_shaded_or_unshaded_2x2_p(array[int, int] of var 0..1: shadin
         square_sum in 1..3
     );\n\n`;
 
-    const single_cell_constraints = `predicate odd_p(var int: x) =
+	const single_cell_constraints = `predicate odd_p(var int: x) =
     x mod 2 = 1;
 
 predicate even_p(var int: x) =
@@ -536,7 +566,7 @@ predicate radar_p(
 	var int: min_dist = min_non_negative([dist1, dist2, dist3, dist4])
 } in min_dist == val;\n\n`;
 
-    const single_cell_multiarrow_constraints = `predicate cold_arrows_p(
+	const single_cell_multiarrow_constraints = `predicate cold_arrows_p(
     array[int] of var int: arr, 
     var int: cell_var
 ) = let {
@@ -556,7 +586,7 @@ predicate hot_arrows_p(
     arr[cell_var] > cell_var
 );`;
 
-    const edge_constraints = `predicate consecutive_p(var int: a, var int: b) =
+	const edge_constraints = `predicate consecutive_p(var int: a, var int: b) =
 	abs(a - b) = 1;
 
 predicate abs_difference(var int: a, var int: b, var int: d) =
@@ -578,7 +608,7 @@ predicate edge_modulo_p(var int: a, var int: b, var int: rem) =
 predicate edge_factor_p(var int: a, var int: b) =
     multiples_p(a, b);\n\n`;
 
-    const corner_constraints = `predicate quadruple_p(
+	const corner_constraints = `predicate quadruple_p(
     array[int] of var int: arr,
     array[int] of var int: values
 ) =
@@ -605,7 +635,7 @@ predicate equal_diagonal_differences_p(array[int] of var int: arr) =
     assert(length(arr) == 4, "Array must have length 4.") /\\
     abs(arr[1] - arr[4]) = abs(arr[2] - arr[3]);\n\n`;
 
-    const line_constraints = `predicate fuzzy_thermo_p(array[int] of var int: arr) =
+	const line_constraints = `predicate fuzzy_thermo_p(array[int] of var int: arr) =
     strictly_increasing(arr) \\/ strictly_decreasing(arr);
     
 predicate renban(array[int] of var int: arr) =
@@ -995,7 +1025,7 @@ function var int: cycle_order_f(
     var int: target_idx = first_idx(transitions, start)
 } in target_idx;\n\n`;
 
-    const double_end_line_constraints = `
+	const double_end_line_constraints = `
 predicate between_line_p(array[int] of var int: arr) =
     let {
         int: start_index = min(index_set(arr)), 
@@ -1070,7 +1100,7 @@ predicate lockout_line_p(array[int] of var int: arr, var int: x) =
         arr[i] < lower_bound \\/ arr[i] > upper_bound
     );\n\n`;
 
-    const arrow_constraints = `predicate average_arrow_p(array[int] of var int: arr, var int: val) =
+	const arrow_constraints = `predicate average_arrow_p(array[int] of var int: arr, var int: val) =
 	sum(arr) == val * length(arr);
     
 predicate average_arrow_or_thermometer_p(
@@ -1083,7 +1113,7 @@ predicate average_arrow_or_thermometer_p(
     strictly_increasing(arr) /\\ average_arrow_p(arr2, first)
 );\n\n`;
 
-    const cage_constraints = `predicate killer_cage(array[int] of var int: arr, var int: val) =
+	const cage_constraints = `predicate killer_cage(array[int] of var int: arr, var int: val) =
     alldifferent(arr) /\\
     sum(arr) == val;
 
@@ -1134,7 +1164,7 @@ predicate vaulted_cage_p(
     not member(cage, cell_v)
 );\n\n`;
 
-    const outside_edge_constraints = `function var int: sandwich_sum(array[int] of var int: arr, int: a, int: b) =
+	const outside_edge_constraints = `function var int: sandwich_sum(array[int] of var int: arr, int: a, int: b) =
     sum(i in index_set(arr)) (arr[i] * bool2int(sandwich_bools(arr, a, b)[i]));
 
 predicate sandwich_sum_p(array[int] of var int: arr, var int: val, int: a, int: b) =
@@ -1273,7 +1303,7 @@ predicate outside_consecutive_sum_p(array[int] of var int: arr, var int: val) =
     } in
     sum(i in 1..n where has_consecutive[i])(arr[i]) = val;\n\n`;
 
-    const outside_corner_constraints = `predicate little_killer_sum_p(array[int] of var int: arr, var int: val) =
+	const outside_corner_constraints = `predicate little_killer_sum_p(array[int] of var int: arr, var int: val) =
 	sum(arr) == val;
 
 predicate little_killer_product_p(array[int] of var int: arr, var int: val) =
@@ -1285,11 +1315,11 @@ predicate x_omit_little_killer_sum_p(array[int] of var int: arr, var int: val) =
 		var int: x = arr[min(index_set(arr))]
 	} in x >= min(index_set(arr)) /\\ x <= max(index_set(arr)) /\\ sum(i in index_set(arr) where i != x)(arr[i]) == val;\n\n`;
 
-    const clone_constraints = `predicate clone_region_p(array[int] of var int: arr1, array[int] of var int: arr2) =
+	const clone_constraints = `predicate clone_region_p(array[int] of var int: arr1, array[int] of var int: arr2) =
     length(index_set(arr1)) = length(index_set(arr2)) /\\
     forall(i in index_set(arr1))(arr1[i] = arr2[i]);\n\n`;
 
-    const valued_global_constraints = `predicate forbidden_adjacent_sum_p(
+	const valued_global_constraints = `predicate forbidden_adjacent_sum_p(
     array[int, int] of var int: grid,
     var int: val
 ) = forall(i in index_set_1of2(grid), j in index_set_2of2(grid))(
@@ -1312,7 +1342,7 @@ predicate minimum_diagonally_adjacent_difference(array[int, int] of var int: gri
         (c > min(cols) -> abs(grid[r,c] - grid[r+1,c-1]) >= val)
     );\n\n`;
 
-    const yin_yang = `predicate yin_yang_no_crossings(array[int, int] of var 0..1: grid) =
+	const yin_yang = `predicate yin_yang_no_crossings(array[int, int] of var 0..1: grid) =
     % For each possible 2x2 square in the grid
     forall(r in index_set_1of2(grid) where r < max(index_set_1of2(grid)),
            c in index_set_2of2(grid) where c < max(index_set_2of2(grid)))(
@@ -1564,7 +1594,7 @@ predicate yin_yang_neighbour_greater_than_one_within_region_shaded(
     array[int] of var int: neighbours
 ) = count(neighbours, cell_var-1) >= 1 <-> shading = 1;\n\n`;
 
-    const two_contiguous_regions = `predicate two_contiguous_regions_p(array[int, int] of var 0..1: grid) =
+	const two_contiguous_regions = `predicate two_contiguous_regions_p(array[int, int] of var 0..1: grid) =
 	connected_region(grid, 0) /\\
     connected_region(grid, 1);
 
@@ -1576,7 +1606,7 @@ predicate two_contiguous_regions_row_col_opposite_set_count_p(
 ) =
     count_different(row_vars, region_var) + count_different(col_vars, region_var) == cell_var;\n\n`;
 
-    const unknown_sudoku_regions_p = `function array[int] of var int: regions_idxs_f(array[int, int] of var int: regions, int: n_regions) =
+	const unknown_sudoku_regions_p = `function array[int] of var int: regions_idxs_f(array[int, int] of var int: regions, int: n_regions) =
   [first_idx(array1d(regions), reg_i) | reg_i in 0..(n_regions-1)];
 
 predicate unknown_regions_ordering_p(array[int, int] of var int: regions, int: n_regions) = 
@@ -1665,7 +1695,7 @@ predicate chaos_construction_arrow_knots_p(
     endif
 );\n\n`;
 
-    const nurimisaki = `predicate nurimisaki_p(array[int, int] of var int: grid) =
+	const nurimisaki = `predicate nurimisaki_p(array[int, int] of var int: grid) =
 	connected_region(grid, 0) /\\
 	not_fully_shaded_or_unshaded_2x2_p(grid);
 
@@ -1683,7 +1713,7 @@ predicate nurimisaki_count_uninterrupted_unshaded_p(
     var int: count_cell = if nurimisaki_var == 0 then 1 else 0 endif
 } in count_uninterrupted(arr1, 0) + count_uninterrupted(arr2, 0) + count_uninterrupted(arr3, 0) + count_uninterrupted(arr4, 0) + count_cell == cell_var;\n\n`;
 
-    const odd_even_grid = `predicate odd_even_grid_p(
+	const odd_even_grid = `predicate odd_even_grid_p(
     array[int, int] of var int: grid,
     array[int, int] of var 0..1: labels
 ) =
@@ -1696,7 +1726,7 @@ predicate nurimisaki_count_uninterrupted_unshaded_p(
         )
     );\n\n`;
 
-    const value_modifier = `function array[int,int] of var int: doublers_value_grid_f(
+	const value_modifier = `function array[int,int] of var int: doublers_value_grid_f(
     array[int,int] of var int: grid,
     array[int,int] of var bool: labels
 ) =  let {
@@ -1734,7 +1764,7 @@ predicate negators_killer_cage_p(
 ) =
     alldifferent(cells_vars) /\\ sum(value_vars) == val;\n\n`;
 
-    const sashigane = `% Helper function to count orthogonally adjacent cells with same value
+	const sashigane = `% Helper function to count orthogonally adjacent cells with same value
 function var int: count_same_adjacent(
     array[int, int] of var int: grid, 
     int: r, 
@@ -1919,7 +1949,7 @@ predicate sashigane_arrow_points_to_bend_p(
     % cell at distance of cell_var is a bend
     element(cell_var, bend_vars, true);\n\n`;
 
-    const fillomino = `function array[int, int] of var int: same_before_f(array[int, int] of var int: area) =
+	const fillomino = `function array[int, int] of var int: same_before_f(array[int, int] of var int: area) =
     let {
         set of int: rows = index_set_1of2(area);
         set of int: cols = index_set_2of2(area);
@@ -2083,7 +2113,7 @@ predicate yin_yang_fillomino_parity_p(
     )
 );\n\n`;
 
-    const cave = `% test if element is on the edge of the grid
+	const cave = `% test if element is on the edge of the grid
 test on_edge_2d(int: r, int: c, array[int, int] of var int: grid) = 
     let {
         int: min_r = min(index_set_1of2(grid));
@@ -2268,7 +2298,7 @@ predicate one_digit_does_not_appear_in_cave_p(
         | i in index_set(allowed)];
     } in sum(in_cave) == 1;\n\n`;
 
-    const cell_center_loop = `predicate cell_center_loop_no_diagonal_touching_p(array[int, int] of var 0..1: grid) = let {
+	const cell_center_loop = `predicate cell_center_loop_no_diagonal_touching_p(array[int, int] of var 0..1: grid) = let {
         set of int: rows = index_set_1of2(grid);
         set of int: cols = index_set_2of2(grid);
     } in (
@@ -2522,7 +2552,7 @@ predicate loopwhiches_p(
     conditional_sum_f(arr, sandwiched, true) == val
 );\n\n`;
 
-    const global_constraints = `predicate anti_giraffe_p(array[int, int] of var int: grid) =
+	const global_constraints = `predicate anti_giraffe_p(array[int, int] of var int: grid) =
     let {
         set of int: rows = index_set_1of2(grid);
         set of int: cols = index_set_2of2(grid);
@@ -2599,7 +2629,7 @@ predicate tango_p(array[int, int] of var int: grid) =
         )
     );\n\n`;
 
-    const galaxies = `predicate every_cell_is_in_a_galaxy_p(
+	const galaxies = `predicate every_cell_is_in_a_galaxy_p(
     array[int, int] of var int: regions
 ) = forall(r in index_set_1of2(regions), c in index_set_2of2(regions))(
     regions[r,c] != 0
@@ -2843,7 +2873,7 @@ predicate galaxy_180_symmetry_p(
     )
 );\n\n`;
 
-    const goldilocks = `predicate goldilocks_zone_p(
+	const goldilocks = `predicate goldilocks_zone_p(
     array[int, int] of var 0..2: regions
 ) = let {
     set of int: rows = index_set_1of2(regions);
@@ -2886,7 +2916,7 @@ predicate goldilocks_zone_region_sum_p(
     regions[min_i] != regions[max_i]
 );\n\n`;
 
-    const LITS = `predicate n_omino_same_shape_no_touching(
+	const PENTOMINO_TILLING = `predicate n_omino_same_shape_no_touching(
     array[int, int] of var int: regions,
     array[int, int] of var int: n_omino,
     int: target_n_omino,
@@ -2959,37 +2989,290 @@ predicate tilling_region_no_empty_cells_p(
     set of int: cols = index_set_2of2(regions);
 } in forall(r in rows, c in cols)(regions[r,c] != 0);\n\n`;
 
-    out_str +=
-        tests +
-        helper_f +
-        more_helper_f +
-        helper_p +
-        single_cell_constraints +
-        single_cell_multiarrow_constraints +
-        edge_constraints +
-        corner_constraints +
-        line_constraints +
-        double_end_line_constraints +
-        arrow_constraints +
-        cage_constraints +
-        outside_edge_constraints +
-        outside_corner_constraints +
-        clone_constraints +
-        valued_global_constraints +
-        yin_yang +
-        two_contiguous_regions +
-        unknown_sudoku_regions_p +
-        nurimisaki +
-        odd_even_grid +
-        value_modifier +
-        sashigane +
-        cell_center_loop +
-        fillomino +
-        cave +
-        galaxies +
-        goldilocks +
-        global_constraints +
-        LITS;
+	const LITS = `predicate not_fully_shaded_2x2_p(
+    array[int, int] of var 0..1: shading
+) = let {
+   set of int: rows = index_set_1of2(shading);
+   set of int: cols = index_set_2of2(shading);
+} in
+    % For each possible 2x2 square in the grid
+    forall(r in rows where r < max(rows),
+           c in cols where c < max(cols))(
+        % Sum of the 2x2 area must be between 1 and 3 inclusive
+        % This prevents both all 0's (sum=0) and all 1's (sum=4)
+        let {
+            var int: square_sum = shading[r,c] + shading[r+1,c] + shading[r,c+1] + shading[r+1,c+1]
+        } in
+        square_sum in 0..3
+    );
 
-    return out_str;
+predicate lits_shading_p(array[int, int] of var 0..1: shading) =
+    connected_region(shading, 1) /\\
+	not_fully_shaded_2x2_p(shading);
+
+predicate lits_shading_ids_p(
+    array[int, int] of var 0..1: shading, 
+    array[int, int] of var int: ids_grid
+) = let {
+    set of int: rows = index_set_1of2(shading);
+    set of int: cols = index_set_2of2(shading);
+} in (
+    assert(index_sets_agree(shading, ids_grid), "shading and ids_grid must have the same indexes.")
+    % shaded regions must belong to one tetromino
+    /\\ forall(r in rows, c in cols)(
+        shading[r,c] = 0 <-> ids_grid[r,c] = 0
+    )
+    /\\ forall(r in rows, c in cols)(
+        shading[r,c] = 1 <-> ids_grid[r,c] != 0
+    )
+);
+
+predicate lits_region_and_ids_p(
+    array[int, int] of var int: regions, 
+    array[int, int] of var int: ids_grid
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+} in (
+    assert(index_sets_agree(regions, ids_grid), "regions and ids_grid must have the same indexes.")
+    % Shade one tetromino in each region. 
+    % No two tetrominoes of the same shape may share an edge - reflections/rotations count as the same shape.
+    % if adjacent cells are in different regions than ids cannot be the same (unless they're both zero)
+    /\\ forall (r in rows, c in cols where c > min(cols)) (
+        let { var int: id1 = ids_grid[r,c], var int: id2 = ids_grid[r,c-1] } in (
+            regions[r,c] != regions[r,c-1] -> ((id1 = 0 /\\ id2 = 0) \\/ (id1 != id2))
+        )
+    )
+    /\\ forall (r in rows, c in cols where r > min(rows)) (
+        let { var int: id1 = ids_grid[r,c], var int: id2 = ids_grid[r-1,c] } in
+        regions[r,c] != regions[r-1,c] -> ((id1 = 0 /\\ id2 = 0) \\/ (id1 != id2))
+    )
+    % two cells in the same region cannot have different ids (except 0)
+    /\\ forall(r in rows, c in cols)(
+            forall(r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
+                let { var int: id1 = ids_grid[r,c], var int: id2 = ids_grid[r2,c2]} in 
+                    regions[r,c] == regions[r2,c2] -> id1 = 0 \\/ id2 = 0 \\/ id1 = id2
+          )
+    )
+    % non zero ids cannot be alone (must have at least one adjacent cell equal to it)
+    /\\ forall (r in rows, c in cols)(
+        ids_grid[r,c] != 0 -> count_same_adjacent(ids_grid, r, c) >= 1
+    )
+    % non zero ids cannot be in dominoes
+    /\\ forall(r in rows, c in cols where c>min(cols))(
+        let { var int: id1 = ids_grid[r,c], var int: id2 = ids_grid[r,c-1] } in (
+            (id1 != 0 /\\ id2 != 0 /\\ id1 == id2) -> 
+                count_same_adjacent(ids_grid, r, c) + count_same_adjacent(ids_grid, r, c-1) > 2
+        )
+    )
+    /\\ forall(r in rows, c in cols where r>min(rows))(
+        let { var int: id1 = ids_grid[r,c], var int: id2 = ids_grid[r-1,c] } in (
+            (id1 != 0 /\\ id2 != 0 /\\ id1 == id2) -> 
+                count_same_adjacent(ids_grid, r, c) + count_same_adjacent(ids_grid, r-1, c) > 2
+        )
+    )
+);
+
+predicate lits_4_per_region_p(
+    array[int, int] of var int: regions,
+    array[int, int] of var 0..1: shading
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+    int: n_rows = length(rows);
+    int: n_cols = length(cols);
+    int: g_size = n_rows * n_cols;
+} in (
+    forall(id1 in 0..g_size)(
+        let { 
+            var int: count_in_reg = conditional_count_f(array1d(shading), array1d(regions), 1, id1);
+            var int: reg_size = count(array1d(regions), id1);
+        } in
+            reg_size > 0 -> count_in_reg = 4
+    )
+);
+
+predicate check_tetra_p(array[int] of var int: tetra, var int: val) = 
+    if (all_equal(tetra) /\\ exists(id1 in tetra)(id1 != 0)) then 
+        all_equal_to_p(tetra, val)
+    else
+        true
+    endif;
+
+predicate lits_o_tetra_p(
+    array[int, int] of var int: ids_grid
+) = let {
+    set of int: rows = index_set_1of2(ids_grid);
+    set of int: cols = index_set_2of2(ids_grid);
+} in (
+    forall(r in rows where r < max(rows), c in cols where c < max(cols))(
+        let {
+            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r,c+1], ids_grid[r+1,c], ids_grid[r+1,c+1]];
+        } in check_tetra_p(tetra, 5)
+    )  
+);
+
+predicate lits_i_tetra_p(
+    array[int, int] of var int: ids_grid
+) = let {
+    set of int: rows = index_set_1of2(ids_grid);
+    set of int: cols = index_set_2of2(ids_grid);
+} in (
+    forall(r in rows, c in cols where c <= max(cols) - 3)(
+        let {
+            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r,c+1], ids_grid[r,c+2], ids_grid[r,c+3]];
+        } in check_tetra_p(tetra, 2)
+    ) /\\
+    forall(r in rows where r <= max(rows) - 3, c in cols)(
+        let {
+            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r+1,c], ids_grid[r+2,c], ids_grid[r+3,c]];
+        } in check_tetra_p(tetra, 2)
+    )
+);
+
+predicate lits_t_tetra_p(
+    array[int, int] of var int: ids_grid
+) = let {
+    set of int: rows = index_set_1of2(ids_grid);
+    set of int: cols = index_set_2of2(ids_grid);
+} in (
+    forall(r in rows where r <= max(cols) - 1, c in cols where c <= max(cols) - 2)(
+        let {
+            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r,c+1], ids_grid[r,c+2], ids_grid[r+1,c+1]];
+        } in check_tetra_p(tetra, 3)
+    ) /\\
+    forall(r in rows where r <= max(cols) - 1, c in cols where c <= max(cols) - 2)(
+        let {
+            array[int] of var int: tetra = [ids_grid[r,c+1], ids_grid[r+1,c], ids_grid[r+1,c+1], ids_grid[r+1,c+2]];
+        } in check_tetra_p(tetra, 3)
+    ) /\\
+    forall(r in rows where r <= max(cols) - 2, c in cols where c <= max(cols) - 1)(
+        let {
+            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r+1,c], ids_grid[r+2,c], ids_grid[r+1,c+1]];
+        } in check_tetra_p(tetra, 3)
+    ) /\\
+    forall(r in rows where r <= max(cols) - 2, c in cols where c <= max(cols) - 1)(
+        let {
+            array[int] of var int: tetra = [ids_grid[r+1,c], ids_grid[r,c+1], ids_grid[r+1,c+1], ids_grid[r+2,c+1]];
+        } in check_tetra_p(tetra, 3)
+    )
+);
+
+predicate lits_s_tetra_p(
+    array[int, int] of var int: ids_grid
+) = let {
+    set of int: rows = index_set_1of2(ids_grid);
+    set of int: cols = index_set_2of2(ids_grid);
+} in (
+    forall(r in rows where r <= max(cols) - 1, c in cols where c <= max(cols) - 2)(
+        let {
+            array[int] of var int: tetra = [ids_grid[r,c+1], ids_grid[r,c+2], ids_grid[r+1,c], ids_grid[r+1,c+1]];
+        } in check_tetra_p(tetra, 4)
+    ) /\\
+    forall(r in rows where r <= max(cols) - 1, c in cols where c <= max(cols) - 2)(
+        let {
+            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r,c+1], ids_grid[r+1,c+1], ids_grid[r+1,c+2]];
+        } in check_tetra_p(tetra, 4)
+    ) /\\
+    forall(r in rows where r <= max(cols) - 2, c in cols where c <= max(cols) - 1)(
+        let {
+            array[int] of var int: tetra = [ids_grid[r+1,c], ids_grid[r+2,c], ids_grid[r,c+1], ids_grid[r+1,c+1]];
+        } in check_tetra_p(tetra, 4)
+    ) /\\
+    forall(r in rows where r <= max(cols) - 2, c in cols where c <= max(cols) - 1)(
+        let {
+            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r+1,c], ids_grid[r+1,c+1], ids_grid[r+2,c+1]];
+        } in check_tetra_p(tetra, 4)
+    )
+);
+
+predicate lits_l_tetra_p(
+    array[int, int] of var int: ids_grid
+) = let {
+    set of int: rows = index_set_1of2(ids_grid);
+    set of int: cols = index_set_2of2(ids_grid);
+} in (
+    forall(r in rows where r <= max(cols) - 1, c in cols where c <= max(cols) - 2)(
+        let {
+            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r,c+1], ids_grid[r,c+2], ids_grid[r+1,c]];
+        } in check_tetra_p(tetra, 1)
+    ) /\\
+    forall(r in rows where r <= max(cols) - 1, c in cols where c <= max(cols) - 2)(
+        let {
+            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r,c+1], ids_grid[r,c+2], ids_grid[r+1,c+2]];
+        } in check_tetra_p(tetra, 1)
+    ) /\\
+    forall(r in rows where r <= max(cols) - 1, c in cols where c <= max(cols) - 2)(
+        let {
+            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r+1,c], ids_grid[r+1,c+1], ids_grid[r+1,c+2]];
+        } in check_tetra_p(tetra, 1)
+    ) /\\
+    forall(r in rows where r <= max(cols) - 1, c in cols where c <= max(cols) - 2)(
+        let {
+            array[int] of var int: tetra = [ids_grid[r,c+2], ids_grid[r+1,c], ids_grid[r+1,c+1], ids_grid[r+1,c+2]];
+        } in check_tetra_p(tetra, 1)
+    ) /\\
+    forall(r in rows where r <= max(cols) - 2, c in cols where c <= max(cols) - 1)(
+        let {
+            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r+1,c], ids_grid[r+2,c], ids_grid[r,c+1]];
+        } in check_tetra_p(tetra, 1)
+    ) /\\
+    forall(r in rows where r <= max(cols) - 2, c in cols where c <= max(cols) - 1)(
+        let {
+            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r+1,c], ids_grid[r+2,c], ids_grid[r+2,c+1]];
+        } in check_tetra_p(tetra, 1)
+    ) /\\
+    forall(r in rows where r <= max(cols) - 2, c in cols where c <= max(cols) - 1)(
+        let {
+            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r,c+1], ids_grid[r+1,c+1], ids_grid[r+2,c+1]];
+        } in check_tetra_p(tetra, 1)
+    ) /\\
+    forall(r in rows where r <= max(cols) - 2, c in cols where c <= max(cols) - 1)(
+        let {
+            array[int] of var int: tetra = [ids_grid[r+2,c], ids_grid[r,c+1], ids_grid[r+1,c+1], ids_grid[r+2,c+1]];
+        } in check_tetra_p(tetra, 1)
+    ) 
+);
+
+predicate lits_tetromino_shapes_p(array[int, int] of var int: ids_grid) = (
+    lits_l_tetra_p(ids_grid)
+    /\\ lits_i_tetra_p(ids_grid)
+    /\\ lits_t_tetra_p(ids_grid)
+    /\\ lits_s_tetra_p(ids_grid)
+);\n\n`;
+
+	out_str +=
+		tests +
+		helper_f +
+		more_helper_f +
+		helper_p +
+		single_cell_constraints +
+		single_cell_multiarrow_constraints +
+		edge_constraints +
+		corner_constraints +
+		line_constraints +
+		double_end_line_constraints +
+		arrow_constraints +
+		cage_constraints +
+		outside_edge_constraints +
+		outside_corner_constraints +
+		clone_constraints +
+		valued_global_constraints +
+		yin_yang +
+		two_contiguous_regions +
+		unknown_sudoku_regions_p +
+		nurimisaki +
+		odd_even_grid +
+		value_modifier +
+		sashigane +
+		cell_center_loop +
+		fillomino +
+		cave +
+		galaxies +
+		goldilocks +
+		global_constraints +
+		PENTOMINO_TILLING +
+		LITS;
+
+	return out_str;
 }
