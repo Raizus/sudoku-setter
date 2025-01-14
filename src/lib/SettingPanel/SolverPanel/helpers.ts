@@ -1,7 +1,13 @@
 import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
 import type { Grid } from '$src/lib/Puzzle/Grid/Grid';
-import type { LineMarker } from '$src/lib/Puzzle/PenTool';
-import { addLineMarkersAction, resetAction } from '$src/lib/reducers/PenToolReducer';
+import type { CellMarker, LineMarker } from '$src/lib/Puzzle/PenTool';
+import type { PuzzleI } from '$src/lib/Puzzle/Puzzle';
+import { TOOLS } from '$src/lib/Puzzle/Tools';
+import {
+	addLineMarkersAction,
+	resetAction,
+	setCellMarkersAction
+} from '$src/lib/reducers/PenToolReducer';
 import {
 	restoreCellsHighlightsAction,
 	restoreCellsValueAction
@@ -26,10 +32,12 @@ function grid_coloring(
 		for (let j = 0; j < row.length; j++) {
 			const cell = grid.getCell(i, j);
 			if (!cell) continue;
-			cells.push(cell);
-
+			
 			const val = Number(row[j]);
-			const color = color_map.get(val) ?? 1;
+			const color = color_map.get(val);
+			if (color === undefined) continue;
+
+			cells.push(cell);
 			values.push([color]);
 		}
 	}
@@ -37,6 +45,11 @@ function grid_coloring(
 	executeUpdateCellsAction(action);
 }
 
+/**
+ * Solves the graph coloring problem for the grid
+ * @param grid
+ * @returns
+ */
 function solve_coloring(grid: number[][]): number[][] {
 	if (grid.length === 0 || grid[0].length === 0) return [];
 
@@ -144,7 +157,9 @@ function solve_coloring(grid: number[][]): number[][] {
 	return result;
 }
 
-function setSolutionValues(json: JsonT, grid: Grid) {
+function setSolutionValues(json: JsonT, puzzle: PuzzleI) {
+	const grid = puzzle.grid;
+	const leave_empty_cells = puzzle.globalConstraints.get(TOOLS.LEAVE_EMPTY_CELLS_EMPTY);
 	if (json === undefined) return;
 	const board = json['board'] as number[][] | undefined;
 	if (board === undefined) return;
@@ -156,6 +171,9 @@ function setSolutionValues(json: JsonT, grid: Grid) {
 		for (let c = 0; c < row.length; c++) {
 			const cell = grid.getCell(r, c);
 			if (!cell || cell.given) continue;
+			if (leave_empty_cells && !cell.given && cell.value === null)
+				continue;
+
 			const value = row[c];
 			cells.push(cell);
 			values.push(value);
@@ -264,13 +282,27 @@ function setLITSHighlights(json: JsonT, grid: Grid) {
 	grid_coloring(regions, grid, color_map);
 }
 
+function setColoredCountingCirclesHighlights(json: JsonT, grid: Grid) {
+	if (json === undefined) return;
+	const regions = json['counting_circles_colors_board'] as number[][] | undefined;
+	if (regions === undefined) return;
+
+	const color_map: Map<number, number> = new Map([
+		[1, 7],
+		[2, 4],
+		[3, 9],
+	]);
+
+	grid_coloring(regions, grid, color_map);
+}
+
 function setUnknownRegionsBorders(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
 	const grid_vars_names = [
 		'unknown_regions',
 		'sashigane',
 		'fillomino_area',
-		'galaxy_regions',
+		'galaxy_regions'
 		// 'lits_regions'
 	];
 
@@ -279,7 +311,7 @@ function setUnknownRegionsBorders(json: JsonT, grid: Grid) {
 		if (regions_grid === undefined) continue;
 
 		const [n_rows, n_cols] = [grid.nRows, grid.nCols];
-		const colorId = 4;
+		const colorId = 3;
 
 		const line_markers: LineMarker[] = [];
 		// vertical markers
@@ -401,9 +433,47 @@ function setColoring(json: JsonT, grid: Grid) {
 	}
 }
 
-export function setBoardOnSolution(json: JsonT, grid: Grid) {
+function setStarBattlePenMarks(json: JsonT, grid: Grid) {
+	if (json === undefined) return;
+	const grid_vars_names = ['lits_white_black_star_battle'];
+
+	for (const name of grid_vars_names) {
+		const regions_grid = json[name] as number[][] | undefined;
+		if (regions_grid === undefined) continue;
+
+		const cell_markers: CellMarker[] = [];
+		for (let i = 0; i < regions_grid.length; i++) {
+			const row = regions_grid[i];
+			for (let j = 0; j < row.length; j++) {
+				const cell1 = grid.getCell(i, j);
+				if (!cell1) continue;
+
+				const val = regions_grid[cell1.r][cell1.c];
+				if (val === 0) continue;
+				const color = val === 1 ? 1 : 3;
+
+				const marker: CellMarker = {
+					colorId: color,
+					marker: 'X',
+					r: cell1.r + 0.5,
+					c: cell1.c + 0.5
+				};
+				cell_markers.push(marker);
+			}
+		}
+
+		const action = setCellMarkersAction(cell_markers);
+		updatePenTool(action);
+		return;
+	}
+}
+
+export function setBoardOnSolution(json: JsonT, puzzle: PuzzleI) {
+	const grid = puzzle.grid;
+
 	updatePenTool(resetAction());
-	setSolutionValues(json, grid);
+	setSolutionValues(json, puzzle);
+
 	setUnknownRegionsHighlights(json, grid);
 	setUnknownRegionsBorders(json, grid);
 	setGoldilocksRegionsHighlights(json, grid);
@@ -412,4 +482,6 @@ export function setBoardOnSolution(json: JsonT, grid: Grid) {
 	setOtherHighlights(json, grid);
 	setColoring(json, grid);
 	setBinaryHighlights(json, grid);
+	setStarBattlePenMarks(json, grid);
+	setColoredCountingCirclesHighlights(json, grid);
 }

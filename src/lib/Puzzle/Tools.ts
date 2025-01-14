@@ -13,6 +13,7 @@ export enum CELL_INPUT_TOOLS {
 
 export enum SIMPLE_GLOBAL_CONSTRAINTS {
 	SUDOKU_RULES_DO_NOT_APPLY = 'Sudoku rules do not apply',
+	LEAVE_EMPTY_CELLS_EMPTY = 'Leave Empty Cells Empty',
 	LITS = 'LITS',
 	HEXED_SUDOKU = 'Hexed Sudoku',
 	FILLOMINO = 'Fillomino',
@@ -99,7 +100,9 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	ONE_GALAXY_IS_A_GERMAN_WHISPERS = 'One Galaxy Is A German Whispers',
 
 	PENTOMINO_TILLING = 'Pentomino Tilling',
-	TILLING_NO_EMPTY_CELLS = 'Tilling No Empty Cells'
+	TILLING_NO_EMPTY_CELLS = 'Tilling No Empty Cells',
+
+	LITS_BLACK_WHITE_STAR_BATTLE = 'LITS Black And White Star Battle'
 }
 
 export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
@@ -126,6 +129,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	SNOWBALL = 'Snowball',
 	SANDWICH_ROW_COL_COUNT = 'Sandwich Row Column Count',
 	COUNTING_CIRCLES = 'Counting Circles',
+	COLORED_COUNTING_CIRCLES = 'Colored Counting Circles',
 	UNIQUE_CELLS = 'Unique Cells',
 
 	CELL_ON_THE_LOOP = 'Cell On The Loop',
@@ -322,7 +326,8 @@ export enum OUTSIDE_EDGE_CONSTRAINTS {
 	OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED = 'Outside Edge Yin Yang Sum Of Shaded',
 	X_SUM_REGION_BORDERS = 'X-Sum Region Borders',
 	OUTSIDE_CONSECUTIVE_SUM = 'Outside Consecutive Sum',
-	LOOPWICHES = 'Loopwhiches'
+	LOOPWICHES = 'Loopwhiches',
+	CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION = 'Chaos Construction Sum Of First Each Region'
 }
 
 export enum OUTSIDE_CORNER_CONSTRAINTS {
@@ -337,7 +342,8 @@ export enum OUTSIDE_CORNER_CONSTRAINTS {
 
 export enum CENTER_EDGE_CORNER_CONSTRAINTS {
 	ROTATIONALLY_SYMMETRIC_GALAXY_CENTER = 'Rotationally Symmetric Galaxy Center',
-	ROTATIONALLY_SYMMETRIC_GALAXY_CENTER_SUM = 'Rotationally Symmetric Galaxy Center Sum'
+	ROTATIONALLY_SYMMETRIC_GALAXY_CENTER_SUM = 'Rotationally Symmetric Galaxy Center Sum',
+	YIN_YANG_SUM_OF_ADJACENT_SHADED_EDGE_CORNER = 'Yin Yang Sum Of Adjacent Shaded Edge Or Corner'
 }
 
 export enum VALUED_GLOBAL_CONSTRAINTS {

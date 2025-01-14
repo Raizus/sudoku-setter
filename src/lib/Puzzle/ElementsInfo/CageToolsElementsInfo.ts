@@ -347,6 +347,7 @@ export const aquariumCageInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.AQUARIUM_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
+	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
 		description:

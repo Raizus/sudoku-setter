@@ -82,7 +82,7 @@
 			const json = solution.output.json;
 			if (solution.type === 'solution' && sol_count !== null) sol_count += 1;
 			// console.log(json);
-			setBoardOnSolution(json, grid);
+			setBoardOnSolution(json, puzzle);
 		});
 
 		solver.on('error', (error) => {

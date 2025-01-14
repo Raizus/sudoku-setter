@@ -363,3 +363,26 @@ export const loopwhichesInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	}
 };
+
+export const chaosConstructionSumOfFirstEachRegionInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
+			defaultValue: '',
+			cornerOrEdge: CornerOrEdge.BOTH
+		});
+	},
+
+	toolId: TOOLS.CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION,
+	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
+
+	meta: {
+		description:
+			'Stepping Stones: Clues outside the grid give the sum of the first digit seen in each successive region in that row or column. **The summed digits always appear in increasing order.**',
+		usage: outsideEdgeUsage(),
+		tags: [],
+		categories: outsideEdgeDefaultCategories
+	}
+};

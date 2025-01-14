@@ -257,6 +257,33 @@ function loopwhichesConstraint(
 	return '';
 }
 
+function chaosConstructionSumOfFirstEachRegionInfoConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	const cell_coord = constraint.cell;
+	const cell = grid.getCell(cell_coord.r, cell_coord.c);
+	const direction = constraint.direction;
+
+	const cells = grid.getCellsInDirection(cell_coord.r, cell_coord.c, direction);
+
+	const cell_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+	const region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+
+	const value = constraint.value;
+	const result = getParsingResult(model, value, cell_coord, cell);
+	if (!result) return '';
+
+	const var_name = result[1];
+	let out_str: string = result[0];
+
+	out_str += `constraint chaos_construction_sum_of_first_each_region_p(${cell_vars}, ${region_vars}, ${var_name});\n`;
+
+	return out_str;
+}
+
 function littleKillerSumConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -368,6 +395,10 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.OUTSIDE_CONSECUTIVE_SUM, outsideConsecutiveSumConstraint],
 	[TOOLS.OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED, outsideEdgeYinYangAdjacentSumOfShadedConstraint],
 	[TOOLS.LOOPWICHES, loopwhichesConstraint],
+	[
+		TOOLS.CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION,
+		chaosConstructionSumOfFirstEachRegionInfoConstraint
+	],
 
 	// outside corner
 	[TOOLS.LITTLE_KILLER_SUM, littleKillerSumConstraint],

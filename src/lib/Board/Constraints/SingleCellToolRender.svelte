@@ -9,6 +9,7 @@
 	import RenderShape from '$components/SvgRender/RenderShape.svelte';
 	import { Vector2D } from '$src/lib/utils/Vector2D';
 	import CellTextLabelRender from './CellTextLabelRender.svelte';
+	import ColoredCountingCircleRender from './ColoredCountingCircleRender.svelte';
 
 	export let singleCellTool: CellToolI;
 	export let id: string;
@@ -31,17 +32,14 @@
 		<MinMaxRender {coord} minOrMax={'min'} />
 	{:else if singleCellTool.toolId === TOOLS.MAXIMUM}
 		<MinMaxRender {coord} minOrMax={'max'} />
+	{:else if singleCellTool.toolId === TOOLS.COLORED_COUNTING_CIRCLES}
+		<ColoredCountingCircleRender x={center.x} y={center.y} {value} {shape}/>
 	{:else if type === SHAPE_TYPES.CAGE}
 		<ValuedCageRender cells={[coord]} {shape} value={singleCellTool.value} />
 	{:else}
 		<RenderShape cx={center.x} cy={center.y} {shape} />
 	{/if}
-	{#if type !== SHAPE_TYPES.CAGE && value}
-		<CellTextLabelRender
-			{value}
-			x={cellTLCorner.x}
-			y={cellTLCorner.y}
-			position="TL"
-		/>
+	{#if type !== SHAPE_TYPES.CAGE && singleCellTool.toolId !== TOOLS.COLORED_COUNTING_CIRCLES && value}
+		<CellTextLabelRender {value} x={cellTLCorner.x} y={cellTLCorner.y} position="TL" />
 	{/if}
 </g>

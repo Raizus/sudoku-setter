@@ -66,3 +66,36 @@ export const rotationallySymmetricGalaxyCenterSumInfo: SquareCellElementInfo = {
 		categories: [TOOL_CATEGORIES.LOCAL_CONSTRAINT, TOOL_CATEGORIES.CENTER_CORNER_EDGE_CONSTRAINT]
 	}
 };
+
+export const yinYangSumOfAdjacentShadedEdgeOrCornerInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getCenterCornerOrEdgeToolInputHandler(svgRef, grid, tool, {
+			targets: CornerOrEdge.CORNER_OR_EDGE,
+			valueUpdater: (oldValue: string | undefined, key: string) => {
+				return defaultValueUpdater(oldValue, key, () => {
+					return true;
+				});
+			},
+			defaultValue: ''
+		});
+	},
+
+	toolId: TOOLS.YIN_YANG_SUM_OF_ADJACENT_SHADED_EDGE_CORNER,
+	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		r: { editable: false, value: 0.15 },
+		strokeWidth: { editable: false, value: 0.02, lb: 0, ub: 1, step: 0.025 },
+		stroke: { editable: false, value: 'black' },
+		fill: { editable: false, value: 'var(--grid-background-color)' }
+	},
+
+	meta: {
+		description:
+			'Numbers in circles are the sum of the digits within shaded cells that touch the circle. Only shaded cells count toward the total.',
+		usage: centerCornerOrEdgeUsage(),
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_CONSTRAINT, TOOL_CATEGORIES.CENTER_CORNER_EDGE_CONSTRAINT]
+	}
+};

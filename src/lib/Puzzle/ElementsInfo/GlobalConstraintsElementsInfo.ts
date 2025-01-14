@@ -18,6 +18,17 @@ export const sudokuRulesDoNotApplyInfo: AbstractElementInfo = {
 	}
 };
 
+export const leaveEmptyCellsEmptyInfo: AbstractElementInfo = {
+	toolId: TOOLS.LEAVE_EMPTY_CELLS_EMPTY,
+	order: 0,
+
+	meta: {
+		description: 'This is for the solver and solution display purposes only. It will fill empty cells with all zeros when solving a puzzle, and leave those cells empty on the display.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	}
+};
+
 export const hexedSudokuInfo: AbstractElementInfo = {
 	toolId: TOOLS.HEXED_SUDOKU,
 	order: 0,

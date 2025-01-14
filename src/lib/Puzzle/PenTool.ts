@@ -59,7 +59,7 @@ export class PenTool implements PenToolI {
 
 	getEdgeMarker(coords: GridCoordI) {
 		const match = this.edgeMarkers.find((_marker) => areCoordsEqual(_marker, coords));
-		return match
+		return match;
 	}
 
 	getCellMarker(coords: GridCoordI) {
@@ -115,6 +115,10 @@ export class PenTool implements PenToolI {
 		const previous = this.cellMarkers[match];
 		this.cellMarkers[match] = marker;
 		return previous;
+	}
+
+	setCellMarkers(markers: CellMarker[]) {
+		this.cellMarkers = markers;
 	}
 
 	onEdgeClick(marker: EdgeMarker) {

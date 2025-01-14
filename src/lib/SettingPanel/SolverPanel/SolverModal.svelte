@@ -7,6 +7,15 @@
 	import { pruneMinizincModel } from '$src/lib/Solver/solver_utils';
 	export let showModal = false;
 
+	function download(content: string, fileName: string, contentType: string) {
+		var a = document.createElement('a');
+		var file = new Blob([content], { type: contentType });
+		a.href = URL.createObjectURL(file);
+		a.download = fileName;
+		a.click();
+		URL.revokeObjectURL(a.href);
+	}
+
     function getModelStr() {
         const puzzle = get(puzzleStore);
         const modelstr = createMinizincModel(puzzle);
@@ -25,17 +34,16 @@
     };
 
     function downloadCb() {
-		function download(content: string, fileName: string, contentType: string) {
-			var a = document.createElement('a');
-			var file = new Blob([content], { type: contentType });
-			a.href = URL.createObjectURL(file);
-			a.download = fileName;
-			a.click();
-			URL.revokeObjectURL(a.href);
-		}
         const fileName = getPuzzleFilename($puzzleMetaStore);
         const data = getModelStr();
         download(data, `${fileName}.mzn`, 'text/plain');
+    };
+
+	function downloadPrunedCb() {
+        const fileName = getPuzzleFilename($puzzleMetaStore);
+        const modelStr = getModelStr();
+		const pruned = pruneMinizincModel(modelStr);
+        download(pruned, `${fileName}.mzn`, 'text/plain');
     };
 </script>
 
@@ -44,6 +52,7 @@
 		<button class="modal-button" on:click={copyCb}>Copy to clipboard</button>
 		<button class="modal-button" on:click={copyPrunedCb}>Copy pruned version to clipboard</button>
 		<button class="modal-button" on:click={downloadCb}>Download Minizinc File</button>
+		<button class="modal-button" on:click={downloadPrunedCb}>Download Pruned Minizinc File</button>
 	</div>
 </Modal>
 

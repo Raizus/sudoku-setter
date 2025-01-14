@@ -8,7 +8,20 @@ export function defineFunctionsPredicates() {
     int: d1 = abs(r2-r1);
     int: d2 = abs(c2-c1);
 } in d1 <= 1 /\\ d2 <= 1 /\\ d1 + d2 = 1;
- 
+
+test diag_adjacent_2d(
+    int: r1, int: c1, 
+    int: r2, int: c2
+) = let {
+    int: d1 = abs(r2-r1);
+    int: d2 = abs(c2-c1);
+} in d1 = 1 /\\ d2 = 1;
+
+test orth_or_diag_adjacent_2d(
+    int: r1, int: c1, 
+    int: r2, int: c2
+) = orth_adjacent_2d(r1,c1,r2,c2) \\/ diag_adjacent_2d(r1,c1,r2,c2);
+
 % (r, c) is in bounds if it is on the board.
 test in_bounds_2d(int: r, int: c, array[int, int] of var int: grid) = 
     r in index_set_1of2(grid) /\\ c in index_set_2of2(grid);
@@ -23,6 +36,9 @@ test is_after(int: r1, int: c1, int: r2, int: c2) =
 
 	const helper_f = `function array[1..4] of tuple(int, int): orth_adjacent_idxs(int: r, int: c) =
     [(r-1,c),(r+1,c),(r,c-1),(r,c+1)];
+
+function array[1..8] of tuple(int, int): orth_or_diag_adjacent_idxs(int: r, int: c) =
+    [(r-1,c-1),(r-1,c),(r-1,c+1),(r,c-1),(r,c+1),(r+1,c-1),(r+1,c),(r+1,c+1)];
     
 function var int: odd_count(array[int] of var int: arr) =
     sum(i in index_set(arr))(bool2int(arr[i] mod 2 = 1));
@@ -435,6 +451,21 @@ predicate not_fully_shaded_or_unshaded_2x2_p(array[int, int] of var 0..1: shadin
             var int: square_sum = shading[r,c] + shading[r+1,c] + shading[r,c+1] + shading[r+1,c+1]
         } in
         square_sum in 1..3
+    );
+    
+predicate conditional_strictly_increasing_p(
+    array[int] of var int: arr,
+    array[int] of var $$T: labels,
+    var $$T: label
+) =
+    % Get array index set
+    let {
+        set of int: idx = index_set(arr)
+    } in
+    % Elements must be strictly increasing when their labels match the given label
+    assert(index_sets_agree(arr, labels), "arr and labels must have the same indexes")
+    /\\ forall(i,j in idx where i < j) (
+        (labels[i] = label /\\ labels[j] = label) -> arr[i] < arr[j]
     );\n\n`;
 
 	const single_cell_constraints = `predicate odd_p(var int: x) =
@@ -564,7 +595,24 @@ predicate radar_p(
 	var int: dist3 = radar_distance_f(arr3, x),
 	var int: dist4 = radar_distance_f(arr4, x),
 	var int: min_dist = min_non_negative([dist1, dist2, dist3, dist4])
-} in min_dist == val;\n\n`;
+} in min_dist == val;
+ 
+predicate colored_counting_circles_adjacent_p(
+    array[int, int] of var int: regions
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+} in (
+    forall(r in rows, c in cols)(
+        regions[r,c] != 0 -> forall(idx in orth_adjacent_idxs(r, c))(
+            if in_bounds_2d(idx.1, idx.2, regions) then
+                regions[idx.1, idx.2] != regions[r, c]
+            else 
+                true
+            endif
+        )
+    )
+);\n\n`;
 
 	const single_cell_multiarrow_constraints = `predicate cold_arrows_p(
     array[int] of var int: arr, 
@@ -1301,7 +1349,24 @@ predicate outside_consecutive_sum_p(array[int] of var int: arr, var int: val) =
             | i in 1..n
         ];
     } in
-    sum(i in 1..n where has_consecutive[i])(arr[i]) = val;\n\n`;
+    sum(i in 1..n where has_consecutive[i])(arr[i]) = val;
+    
+predicate chaos_construction_sum_of_first_each_region_p(
+    array[int] of var int: cell_vars,
+    array[int] of var int: regions,
+    var int: val
+) = let {
+    set of int: idxs = index_set(regions);
+    array[int] of var bool: first_bools = [
+        not exists(j in idxs where j<i)(
+            regions[j] = regions[i]
+        )
+    | i in idxs];
+} in (
+    assert(index_sets_agree(cell_vars, regions), "cell_vars and regions must have the same indexes")
+    /\\ conditional_sum_f(cell_vars, first_bools, true) = val
+    /\\ conditional_strictly_increasing_p(cell_vars, first_bools, true)
+);\n\n`;
 
 	const outside_corner_constraints = `predicate little_killer_sum_p(array[int] of var int: arr, var int: val) =
 	sum(arr) == val;
@@ -3241,6 +3306,54 @@ predicate lits_tetromino_shapes_p(array[int, int] of var int: ids_grid) = (
     /\\ lits_s_tetra_p(ids_grid)
 );\n\n`;
 
+	const star_battle = `predicate black_and_white_star_battle_p(
+    array[int, int] of var 0..1: star_battle_grid,
+    array[int, int] of var 0..2: white_black_grid
+) = let {
+    set of int: rows = index_set_1of2(star_battle_grid);
+    set of int: cols = index_set_2of2(star_battle_grid);
+} in (
+    assert(index_sets_agree(star_battle_grid, white_black_grid), "star_battle_grid and white_black_grid must have the same indexes.")
+    /\\ forall(r in rows, c in cols)(
+        star_battle_grid[r,c] = 0 <-> white_black_grid[r, c] = 0
+    )
+    /\\ forall(r in rows, c in cols)(
+        star_battle_grid[r,c] = 1 <-> white_black_grid[r, c] != 0
+    )
+);
+
+predicate lits_black_and_white_star_battle_p(
+    array[int, int] of var 0..1: lits_shading_grid,
+    array[int, int] of var 0..2: white_black_grid,
+) = let {
+    set of int: rows = index_set_1of2(lits_shading_grid);
+    set of int: cols = index_set_2of2(lits_shading_grid);
+} in (
+    assert(index_sets_agree(lits_shading_grid, white_black_grid), "lits_shading_grid and white_black_grid must have the same indexes.")
+    % white star
+    /\\ forall(r in rows, c in cols)(
+        white_black_grid[r,c] = 1 -> lits_shading_grid[r,c] = 0
+    )
+    % black star
+    /\\ forall(r in rows, c in cols)(
+        white_black_grid[r,c] = 2 -> lits_shading_grid[r,c] = 1
+    )
+);
+
+predicate star_battle_no_touching_p(
+    array[int, int] of var 0..1: star_battle_grid
+) = let {
+    set of int: rows = index_set_1of2(star_battle_grid);
+    set of int: cols = index_set_2of2(star_battle_grid);
+} in (
+    % if element is star, then adjacent elements cannot be 1
+    forall(r in rows, c in cols)(
+        star_battle_grid[r,c] = 1 -> forall(idx in orth_or_diag_adjacent_idxs(r, c))(
+            in_bounds_2d(idx.1, idx.2, star_battle_grid) -> star_battle_grid[idx.1, idx.2] = 0
+        )
+    )
+);\n\n`;
+
 	out_str +=
 		tests +
 		helper_f +
@@ -3272,7 +3385,8 @@ predicate lits_tetromino_shapes_p(array[int, int] of var int: ids_grid) = (
 		goldilocks +
 		global_constraints +
 		PENTOMINO_TILLING +
-		LITS;
+		LITS +
+		star_battle;
 
 	return out_str;
 }

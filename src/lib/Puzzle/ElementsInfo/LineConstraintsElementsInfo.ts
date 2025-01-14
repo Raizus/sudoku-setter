@@ -1330,7 +1330,7 @@ export const segmentedSumLineInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getLineToolInputHandler(svgRef, grid, tool, {
 			allowSelfIntersection: true,
-			defaultValue: ''
+			defaultValue: '10'
 		});
 	},
 
@@ -1351,7 +1351,7 @@ export const segmentedSumLineInfo: SquareCellElementInfo = {
 
 	meta: {
 		description:
-			'Each thick grey line can be divided into one or more non-overlapping segments. Each segment contains digits that sum to 10. Eg 513173 is a valid fill for a length 6 line, because it can be broken into 5131 and 73, each of which sum to 10.',
+			'Each thick grey line can be divided into one or more non-overlapping segments. Each segment contains digits that sum to X (default=10). Eg 513173 is a valid fill for a length 6 line, because it can be broken into 5131 and 73, each of which sum to 10.',
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories

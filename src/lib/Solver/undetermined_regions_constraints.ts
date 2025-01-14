@@ -163,37 +163,42 @@ function modularLoopConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function onePerRowColumnRegion(puzzle: PuzzleI, vars_func: (cells: Cell[]) => string) {
+function exactlyNPerRowColumnRegion(
+	puzzle: PuzzleI,
+	n: number,
+	target: boolean | number,
+	vars_func: (cells: Cell[]) => string
+) {
 	const grid = puzzle.grid;
 
 	let out_str: string = '';
-	out_str += '\n% Only 1 per row \n';
+	out_str += `% Exactly ${n} per row \n`;
 	const nrows = grid.nRows;
 	for (let i = 0; i < nrows; i++) {
 		const row_cells = grid.getRow(i);
 		const vars_str = vars_func(row_cells);
-		out_str += `constraint count_eq(${vars_str}, true, 1);\n`;
+		out_str += `constraint count_eq(${vars_str}, ${target}, ${n});\n`;
 	}
 
 	// one doubler per column
-	out_str += '\n% Only 1 per column \n';
+	out_str += `\n% Exactly ${n} per column \n`;
 	const ncols = grid.nCols;
 	for (let i = 0; i < ncols; i++) {
 		const col_cells = grid.getCol(i);
 		const vars_str = vars_func(col_cells);
-		out_str += `constraint count_eq(${vars_str}, true, 1);\n`;
+		out_str += `constraint count_eq(${vars_str}, ${target}, ${n});\n`;
 	}
 
 	// one doubler per region
 	const gconstraints = puzzle.globalConstraints;
 	const unknown_regions = gconstraints.get(TOOLS.UNKNOWN_REGIONS);
 	if (!unknown_regions) {
-		out_str += '\n% Only 1 per region \n';
+		out_str += `\n% Exactly ${n} per region \n`;
 		const regions = grid.getUsedRegions();
 		for (const region of regions) {
 			const region_cells = grid.getRegion(region);
 			const vars_str = vars_func(region_cells);
-			out_str += `constraint count_eq(${vars_str}, true, 1);\n`;
+			out_str += `constraint count_eq(${vars_str}, ${target}, ${n});\n`;
 		}
 	}
 
@@ -211,7 +216,7 @@ function doublersConstraint(puzzle: PuzzleI, tool: TOOLID) {
 
 	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: doublers_grid;\n`;
-	out_str += onePerRowColumnRegion(puzzle, (cells: Cell[]) =>
+	out_str += exactlyNPerRowColumnRegion(puzzle, 1, true, (cells: Cell[]) =>
 		cellsToGridVarsStr(cells, VAR_2D_NAMES.DOUBLERS)
 	);
 	// only one of each digit
@@ -236,7 +241,7 @@ function negatorsConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: ${grid_name};\n`;
 
-	out_str += onePerRowColumnRegion(puzzle, (cells: Cell[]) =>
+	out_str += exactlyNPerRowColumnRegion(puzzle, 1, true, (cells: Cell[]) =>
 		cellsToGridVarsStr(cells, VAR_2D_NAMES.NEGATORS)
 	);
 	// only one of each digit
@@ -383,6 +388,7 @@ function litsConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	const grid_name2 = VAR_2D_NAMES.LITS_REGIONS;
 
 	let out_str: string = '';
+
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name1};\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..4: ${grid_name2};\n`;
 	out_str += `constraint lits_shading_p(${grid_name1});\n`;
@@ -391,7 +397,7 @@ function litsConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	out_str += `constraint lits_tetromino_shapes_p(${grid_name2});\n`;
 
 	const regions = grid.getUsedRegions();
-	if (regions.size) out_str += `\n% Exactly 4 shaded cells per region (known regions)\n`
+	if (regions.size) out_str += `\n% Exactly 4 shaded cells per region (known regions)\n`;
 	for (const region of regions) {
 		const region_cells = grid.getRegion(region);
 		const shading_vars = cellsToGridVarsStr(region_cells, VAR_2D_NAMES.LITS_SHADING);
@@ -436,6 +442,49 @@ function caveLitsConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
+function litsBlackAndWhiteStarBattleConstraint(puzzle: PuzzleI, tool: TOOLID) {
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name1 = VAR_2D_NAMES.LITS_SHADING;
+	const grid_name2 = VAR_2D_NAMES.STAR_BATTLE;
+	const grid_name3 = VAR_2D_NAMES.LITS_WHITE_BLACK_STAR_BATTLE;
+
+	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name2};\n`;
+
+	// 2 stars per column, row, region
+	out_str += exactlyNPerRowColumnRegion(puzzle, 2, 1, (cells: Cell[]) =>
+		cellsToGridVarsStr(cells, VAR_2D_NAMES.STAR_BATTLE)
+	);
+
+	// no touching diagonally or orthogonally
+	out_str += `\n% Star battle stars can't touch orthogonally or diagonally\n`;
+	out_str += `constraint star_battle_no_touching_p(${grid_name2});\n`;
+
+	// white and black stars
+	out_str += `\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..2: ${grid_name3};\n`;
+	// 1 white star and 1 black star per column, row, region
+	out_str += `\n% 1 white star per row, column, region\n`;
+	out_str += exactlyNPerRowColumnRegion(puzzle, 1, 1, (cells: Cell[]) =>
+		cellsToGridVarsStr(cells, VAR_2D_NAMES.LITS_WHITE_BLACK_STAR_BATTLE)
+	);
+	out_str += `\n% 1 black star per row, column, region\n`;
+	out_str += exactlyNPerRowColumnRegion(puzzle, 1, 2, (cells: Cell[]) =>
+		cellsToGridVarsStr(cells, VAR_2D_NAMES.LITS_WHITE_BLACK_STAR_BATTLE)
+	);
+	out_str += `constraint black_and_white_star_battle_p(${grid_name2}, ${grid_name3});\n`;
+	out_str += `constraint lits_black_and_white_star_battle_p(${grid_name1}, ${grid_name3});\n`;
+
+	return out_str;
+}
+
 type ConstraintF = (puzzle: PuzzleI, tool: TOOLID) => string;
 
 const tool_map = new Map<string, ConstraintF>([
@@ -459,7 +508,9 @@ const tool_map = new Map<string, ConstraintF>([
 
 	[TOOLS.PENTOMINO_TILLING, pentominoTillingConstraint],
 	[TOOLS.LITS, litsConstraint],
-	[TOOLS.CAVE_LITS, caveLitsConstraint]
+	[TOOLS.CAVE_LITS, caveLitsConstraint],
+
+	[TOOLS.LITS_BLACK_WHITE_STAR_BATTLE, litsBlackAndWhiteStarBattleConstraint]
 ]);
 
 export function undeterminedRegionsConstraints(puzzle: PuzzleI): string {

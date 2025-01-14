@@ -322,8 +322,18 @@ export const tillingNoEmptyCellsInfo: AbstractElementInfo = {
 	order: 0,
 
 	meta: {
-		description:
-			'Every cell in the grid belongs to a tile.',
+		description: 'Every cell in the grid belongs to a tile.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const litsBlackAndWhiteStarBattleInfo: AbstractElementInfo = {
+	toolId: TOOLS.LITS_BLACK_WHITE_STAR_BATTLE,
+	order: 0,
+
+	meta: {
+		description: 'Each row, column and region must contain exactly one white star and one black star. Black stars must be located on tetrominoes, and white stars must not. Regardless of colour, stars may not touch each other - not even diagonally.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}

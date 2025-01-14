@@ -5,6 +5,7 @@ import {
 	SIMPLE_SINGLE_CELL_CONSTRAINTS,
 	isArrowTool,
 	isCageTool,
+	isCenterEdgeCornerTool,
 	isCornerTool,
 	isEdgeTool,
 	isLineTool,
@@ -40,7 +41,7 @@ import { getShapeDiff } from '../Shape/Shape';
 import { getDefaultShape } from '../ElementHandlersUtils';
 import { squareCellElementHandlers } from '../ElementsInfo/SquareCellElementHandlers';
 import { parseShape } from '../utils';
-import type { CenterCornerOrEdgeToolI } from './CenterCornerOrEdgeConstraints';
+import { centerCornerOrEdgeConstraintFromJson, type CenterCornerOrEdgeToolI } from './CenterCornerOrEdgeConstraints';
 import { valuedGlobalConstraintFromJson, type ValuedGlobalToolI } from './ValuedGlobalConstraints';
 
 export type ConstraintType =
@@ -166,6 +167,8 @@ export class LocalConstraintsDict extends Map<TOOLID, Record<string, ConstraintT
 					constraint = outsideDirectionConstraintFromJson(tool, constraint_data);
 				} else if (isValuedGlobalConstraint(tool)) {
 					constraint = valuedGlobalConstraintFromJson(tool, constraint_data);
+				} else if (isCenterEdgeCornerTool(tool)) {
+					constraint = centerCornerOrEdgeConstraintFromJson(tool, constraint_data);
 				}
 
 				if (constraint !== null) {

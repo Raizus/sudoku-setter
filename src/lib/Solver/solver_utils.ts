@@ -23,7 +23,10 @@ export enum VAR_2D_NAMES {
 	GALAXY_SIZES = 'galaxy_sizes',
 	GOLDILOCKS_REGIONS = 'goldilocks_regions',
 	LITS_SHADING = 'lits_shading',
-	LITS_REGIONS = 'lits_regions'
+	LITS_REGIONS = 'lits_regions',
+	STAR_BATTLE = 'star_battle',
+	LITS_WHITE_BLACK_STAR_BATTLE = 'lits_white_black_star_battle',
+	COUNTING_CIRCLES_COLORS = 'counting_circles_colors_board'
 }
 
 export function cellToGridVarName(cell: Cell, name: VAR_2D_NAMES): string {
@@ -460,4 +463,24 @@ export function format_2d_array(arr: number[][]): string {
 	const formattedString = formattedRows.map((row) => `${row}`).join('\n |');
 
 	return `[| ${formattedString} |]`;
+}
+
+export function set_board_regions(model: PuzzleModel, grid: Grid) {
+	// add regions array if applicable
+	const regions = [...grid.getUsedRegions()];
+	if (regions.length) {
+		const min_r = Math.min(...regions);
+		const max_r = Math.max(...regions);
+		model.add(
+			`array[ROW_IDXS, COL_IDXS] of var ${min_r - 1}..${max_r}: ${VAR_2D_NAMES.BOARD_REGIONS};\n`
+		);
+
+		for (const cell of grid.getAllCells()) {
+			const region_var = cellToGridVarName(cell, VAR_2D_NAMES.BOARD_REGIONS);
+			if (cell.region !== null)
+				model.add(`constraint ${region_var} = ${cell.region};\n`);
+			else
+				model.add(`constraint ${region_var} = ${min_r - 1};\n`);
+		}
+	}
 }

@@ -80,6 +80,20 @@ function differenceConstraint(model: PuzzleModel, grid: Grid, c_id: string,  con
 	const constraint_str = valuedEdgeConstraint(model, grid, c_id, constraint, 'abs_difference', '1');
 	return constraint_str;
 }
+function edgeInequalityConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: EdgeToolI) { 
+	const vars = getEdgeVars(grid, constraint);
+	const [var1, var2] = vars;
+	const value = constraint.value;
+
+	if (value === '<') {
+		const constraint_str = `constraint ${var1} < ${var2};\n`;
+		return constraint_str;
+	} else if (value === '>') {
+		const constraint_str = `constraint ${var1} > ${var2};\n`;
+		return constraint_str;
+	}
+	return ''
+}
 
 function edgeSumConstraint(model: PuzzleModel, grid: Grid, c_id: string,  constraint: EdgeToolI) {
 	const constraint_str = valuedEdgeConstraint(model, grid, c_id, constraint, 'edge_sum_p');
@@ -146,18 +160,37 @@ function yinYangWhiteKropkiConstraint(model: PuzzleModel, grid: Grid, c_id: stri
 	return constraint_str;
 }
 
+function unknownRegionBorderConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: EdgeToolI
+) {
+	const cells_coords = constraint.cells;
+	const cells = cells_coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+	const region_vars = cellsToGridVarsName(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const [region1, region2] = region_vars;
+
+	const constraint_str = `constraint ${region1} != ${region2};\n`;
+	return constraint_str;
+}
+
 type ConstraintF = (model: PuzzleModel, grid: Grid, c_id: string, constraint: EdgeToolI) => string;
 
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.XV, xvConstraint],
 	[TOOLS.DIFFERENCE, differenceConstraint],
 	[TOOLS.RATIO, ratioConstraint],
+	[TOOLS.EDGE_INEQUALITY, edgeInequalityConstraint],
 	[TOOLS.EDGE_SUM, edgeSumConstraint],
 	[TOOLS.EDGE_MODULO, edgeModuloConstraint],
 	[TOOLS.EDGE_FACTOR, edgeFactorConstraint],
 	[TOOLS.XY_DIFFERENCES, xyDifferencesConstraint],
 	[TOOLS.YIN_YANG_KROPKI, yinYangKropkiConstraint],
-	[TOOLS.YIN_YANG_WHITE_KROPKI, yinYangWhiteKropkiConstraint]
+	[TOOLS.YIN_YANG_WHITE_KROPKI, yinYangWhiteKropkiConstraint],
+	[TOOLS.UNKNOWN_REGION_BORDER, unknownRegionBorderConstraint]
 ]);
 
 export function edgeConstraints(

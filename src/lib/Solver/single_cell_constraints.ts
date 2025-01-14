@@ -5,6 +5,7 @@ import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import { DIRECTION } from '../utils/directions';
 import {
+	cellsToGridVarsName,
 	cellsToGridVarsStr,
 	cellsToVarsName,
 	cellToGridVarName,
@@ -354,6 +355,50 @@ function countingCirclesConstraint(grid: Grid, constraints: CellToolI[]) {
 	return out_str;
 }
 
+function coloredCountingCirclesConstraint(grid: Grid, constraints: CellToolI[]) {
+	let out_str = '';
+	const all_coords = constraints.map((constraint) => constraint.cell);
+	const cells = new Set(
+		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
+	);
+	const vars = cellsToVarsName([...cells]);
+	const vars_str = `${vars.join(',\n\t')}`;
+
+	const circle_colors_vars = cellsToGridVarsName([...cells], VAR_2D_NAMES.COUNTING_CIRCLES_COLORS);
+	const circle_colors_vars_str = `${circle_colors_vars.join(',\n\t')}`;
+
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..3: ${VAR_2D_NAMES.COUNTING_CIRCLES_COLORS};\n`;
+	out_str += `array[int] of var int: colored_counting_circles = [\n\t${vars_str}\n];\n`;
+	out_str += `array[int] of var int: counting_circles_colors = [\n\t${circle_colors_vars_str}\n];\n`;
+	out_str += `constraint colored_counting_circles_adjacent_p(${VAR_2D_NAMES.COUNTING_CIRCLES_COLORS});\n`;
+
+	out_str += `\n% cells without circles\n`;
+	for (const cell of grid.getAllCells()) {
+		if (cells.has(cell)) continue;
+		const color_var = cellToGridVarName(cell, VAR_2D_NAMES.COUNTING_CIRCLES_COLORS);
+		out_str += `constraint ${color_var} == 0;\n`;
+	}
+
+	for (const constraint of constraints) {
+		const coord = constraint.cell;
+		const cell = grid.getCell(coord.r, coord.c);
+		if (!cell) continue;
+		const cell_var = cellToVarName(cell);
+		const color_var = cellToGridVarName(cell, VAR_2D_NAMES.COUNTING_CIRCLES_COLORS);
+
+		const value = constraint.value;
+		if (value) {
+			out_str += `constraint ${color_var} == ${value};\n`;
+		} else {
+			out_str += `constraint ${color_var} != 0;\n`;
+		}
+
+		out_str += `constraint conditional_count_f(colored_counting_circles, counting_circles_colors, ${cell_var}, ${color_var}) == ${cell_var};\n`;
+	}
+	out_str += '\n';
+	return out_str;
+}
+
 function uniqueCellsConstraint(grid: Grid, constraints: CellToolI[]) {
 	let out_str = '';
 	const all_coords = constraints.map((constraint) => constraint.cell);
@@ -672,7 +717,7 @@ function chaosConstructionChessSumsConstraint(
 	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.UNKNOWN_REGIONS);
 
 	// king sum
-	out_str += `\n% chess sum ${c_id}\n`
+	out_str += `\n% chess sum ${c_id}\n`;
 	const king_cells = grid.getNeighboorCells(cell);
 	const king_vars = cellsToGridVarsStr(king_cells, VAR_2D_NAMES.BOARD);
 	const king_region_vars = cellsToGridVarsStr(king_cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
@@ -745,7 +790,7 @@ function chaosConstructionArrowKnotsConstraint(
 		out_str += `array[index_set(${cells_vars})] of var bool: ${in_arrow_var};\n`;
 		out_str += `constraint chaos_construction_arrow_knots_p(${cells_vars}, ${region_vars}, ${in_arrow_var}, ${cell_var}, ${region_var});\n`;
 	}
-	out_str += `constraint sum([${arrow_vars.join(',')}]) == ${val};\n`
+	out_str += `constraint sum([${arrow_vars.join(',')}]) == ${val};\n`;
 
 	return out_str;
 }
@@ -806,6 +851,7 @@ const tool_map_2 = new Map<string, ConstraintF2>([
 	[TOOLS.MAXIMUM, maximumConstraint],
 	[TOOLS.MINIMUM, minimumConstraint],
 	[TOOLS.COUNTING_CIRCLES, countingCirclesConstraint],
+	[TOOLS.COLORED_COUNTING_CIRCLES, coloredCountingCirclesConstraint],
 	[TOOLS.UNIQUE_CELLS, uniqueCellsConstraint]
 ]);
 

@@ -3,7 +3,7 @@ import { TOOLS } from '../Puzzle/Tools';
 import { globalConstraints, hexedSudokuConstraint, sudokuConstraints } from './global_constraints';
 import { localConstraints } from './local_constraints';
 import { undeterminedRegionsConstraints } from './undetermined_regions_constraints';
-import { cellToGridVarName, cellToVarName, PuzzleModel, VAR_2D_NAMES } from './solver_utils';
+import { cellToVarName, PuzzleModel, set_board_regions } from './solver_utils';
 import { defineFunctionsPredicates } from './solver_mzn_defs';
 import { range } from 'lodash';
 
@@ -53,19 +53,7 @@ export function createMinizincModel(puzzle: PuzzleI) {
 	model.add(`array[ROW_IDXS, COL_IDXS] of var ALLOWED_DIGITS: board;\n`);
 
 	// add regions array if applicable
-	const regions = [...grid.getUsedRegions()];
-	if (regions.length) {
-		const min_r = Math.min(...regions);
-		const max_r = Math.max(...regions);
-		model.add(`array[ROW_IDXS, COL_IDXS] of var ${min_r-1}..${max_r}: board_regions;\n`);
-		for (const cell of grid.getAllCells()) {
-			const region_var = cellToGridVarName(cell, VAR_2D_NAMES.BOARD_REGIONS);
-			if (cell.region !== null)
-				model.add(`constraint ${region_var} = ${cell.region};\n`);
-			else
-				model.add(`constraint ${region_var} = ${min_r - 1};\n`);
-		}
-	}
+	set_board_regions(model, grid);
 
 	model.add(givenConstraints(puzzle));
 	model.add(sudokuConstraints(puzzle));
@@ -74,10 +62,6 @@ export function createMinizincModel(puzzle: PuzzleI) {
 	model.add(undeterminedRegionsConstraints(puzzle));
 	model.add(localConstraints(puzzle, model));
 	model.add(globalConstraints(puzzle));
-	// let out_str = model.model_str;
-	// out_str += localConstraints(puzzle, model);
-	// out_str += globalConstraints(puzzle);
-	// out_str += '\nsolve satisfy;';
 
 	model.add('\nsolve satisfy;');
 	return model.model_str;

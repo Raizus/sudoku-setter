@@ -29,7 +29,7 @@ import {
 	penToolInfo,
 	regionsInfo
 } from './CellInputElementsInfo';
-import { rotationallySymmetricGalaxyCenterSumInfo } from './CenterEdgeCornerElementsInfo';
+import { rotationallySymmetricGalaxyCenterSumInfo, yinYangSumOfAdjacentShadedEdgeOrCornerInfo } from './CenterEdgeCornerElementsInfo';
 import { cloneRegionInfo } from './CloneToolsElementsInfo';
 import {
 	cornerEvenCountInfo,
@@ -87,6 +87,7 @@ import {
 	fillominoInfo,
 	globalIndexingColumnInfo,
 	hexedSudokuInfo,
+	leaveEmptyCellsEmptyInfo,
 	LITSInfo,
 	negativeAntidiagonalInfo,
 	negativeDiagonalInfo,
@@ -109,6 +110,7 @@ import {
 	galaxiesInfo,
 	galaxy2x2DoesNotBelongToOneGalaxyInfo,
 	goldilocksZoneInfo,
+	litsBlackAndWhiteStarBattleInfo,
 	oneGalaxyIsAGermanWhispersInfo,
 	pentominoTillingInfo,
 	tillingNoEmptyCellsInfo,
@@ -197,6 +199,7 @@ import {
 import {
 	battlefieldInfo,
 	brokenXSumInfo,
+	chaosConstructionSumOfFirstEachRegionInfo,
 	loopwhichesInfo,
 	outsideConsecutiveSumInfo,
 	outsideEdgeYinYangSumOfShadedInfo,
@@ -251,7 +254,8 @@ import {
 	yinYangSeenShadedCellsInfo,
 	yinYangSeenUnshadedCellsInfo,
 	uniqueCellsInfo,
-	yinYangShadedNeighboursCountInfo
+	yinYangShadedNeighboursCountInfo,
+	coloredCountingCirclesInfo
 } from './SingleCellElementsInfo';
 import {
 	coldArrowsInfo,
@@ -292,6 +296,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	//Global Constraints
 	[TOOLS.SUDOKU_RULES_DO_NOT_APPLY]: sudokuRulesDoNotApplyInfo,
+	[TOOLS.LEAVE_EMPTY_CELLS_EMPTY]: leaveEmptyCellsEmptyInfo,
 	[TOOLS.LITS]: LITSInfo,
 	[TOOLS.HEXED_SUDOKU]: hexedSudokuInfo,
 	[TOOLS.FILLOMINO]: fillominoInfo,
@@ -374,6 +379,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.PENTOMINO_TILLING]: pentominoTillingInfo,
 	[TOOLS.TILLING_NO_EMPTY_CELLS]: tillingNoEmptyCellsInfo,
 
+	[TOOLS.LITS_BLACK_WHITE_STAR_BATTLE]: litsBlackAndWhiteStarBattleInfo,
+
 	// Single Cell Constraints
 	[TOOLS.ODD]: oddInfo,
 	[TOOLS.EVEN]: evenInfo,
@@ -398,6 +405,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 		adjacentCellsInDifferentDirectionsHaveOpositeParityInfo,
 	[TOOLS.SANDWICH_ROW_COL_COUNT]: sandwichRowColCountInfo,
 	[TOOLS.COUNTING_CIRCLES]: countingCirclesInfo,
+	[TOOLS.COLORED_COUNTING_CIRCLES]: coloredCountingCirclesInfo,
 	[TOOLS.UNIQUE_CELLS]: uniqueCellsInfo,
 
 	[TOOLS.YIN_YANG_MINESWEEPER]: yinYangMinesweeperInfo,
@@ -579,6 +587,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED]: outsideEdgeYinYangSumOfShadedInfo,
 	[TOOLS.OUTSIDE_CONSECUTIVE_SUM]: outsideConsecutiveSumInfo,
 	[TOOLS.LOOPWICHES]: loopwhichesInfo,
+	[TOOLS.CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION]: chaosConstructionSumOfFirstEachRegionInfo,
 
 	// Outside Corner Constraints
 	[TOOLS.LITTLE_KILLER_SUM]: littleKillerSumInfo,
@@ -592,6 +601,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	// Center, Corner or Edge Constraints
 	// [TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER]: rotationallySymmetricGalaxyCenterInfo,
 	[TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER_SUM]: rotationallySymmetricGalaxyCenterSumInfo,
+	[TOOLS.YIN_YANG_SUM_OF_ADJACENT_SHADED_EDGE_CORNER]: yinYangSumOfAdjacentShadedEdgeOrCornerInfo,
 
 	// Valued Global Constraints
 	[TOOLS.FORBIDDEN_ORTHOGONALLY_ADJACENT_SUM]: forbiddenOrthogonallyAdjacentSumInfo,

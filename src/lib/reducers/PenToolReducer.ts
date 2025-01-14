@@ -2,10 +2,11 @@ import { PenTool, type CellMarker, type EdgeMarker, type LineMarker } from '$lib
 import type { GridCoordI } from '$lib/utils/SquareCellGridCoords';
 
 export enum PEN_TOOL_ACTIONS {
-	RESET = "RESET",
+	RESET = 'RESET',
 	ADD_EDGE_MARKER = 'ADD_EDGE_MARKER',
 	REMOVE_EDGE_MARKER = 'REMOVE_EDGE_MARKER',
 	ADD_CELL_MARKER = 'ADD_CELL_MARKER',
+	SET_CELL_MARKERS = 'SET_CELL_MARKERS',
 	REMOVE_CELL_MARKER = 'REMOVE_CELL_MARKER',
 	DRAG = 'DRAG',
 	ADD_LINE_MARKERS = 'ADD_LINE_MARKERS',
@@ -29,6 +30,11 @@ export type RemoveEdgeMarkerAction = {
 type AddCellMarkerAction = {
 	type: PEN_TOOL_ACTIONS.ADD_CELL_MARKER;
 	payload: CellMarker;
+};
+
+type SetCellMarkersAction = {
+	type: PEN_TOOL_ACTIONS.SET_CELL_MARKERS;
+	payload: CellMarker[];
 };
 
 type RemoveCellMarkerAction = {
@@ -56,6 +62,7 @@ export type PenToolAction =
 	| AddEdgeMarkerAction
 	| RemoveEdgeMarkerAction
 	| AddCellMarkerAction
+	| SetCellMarkersAction
 	| RemoveCellMarkerAction
 	| DragAction
 	| AddLineMarkersAction
@@ -79,6 +86,13 @@ export const addCellMarkerAction = (cellMarker: CellMarker): AddCellMarkerAction
 	return {
 		type: PEN_TOOL_ACTIONS.ADD_CELL_MARKER,
 		payload: cellMarker
+	};
+};
+
+export const setCellMarkersAction = (cellMarkers: CellMarker[]): SetCellMarkersAction => {
+	return {
+		type: PEN_TOOL_ACTIONS.SET_CELL_MARKERS,
+		payload: cellMarkers
 	};
 };
 
@@ -137,6 +151,11 @@ export function reducerPenTool(state: PenTool, action: PenToolAction): PenTool {
 			newState.addCellMarker(action.payload);
 			return newState;
 		}
+		case PEN_TOOL_ACTIONS.SET_CELL_MARKERS: {
+			const newState = state.copy();
+			newState.setCellMarkers(action.payload);
+			return newState;
+		}
 		case PEN_TOOL_ACTIONS.REMOVE_CELL_MARKER: {
 			const newState = state.copy();
 			newState.removeCellMarker(action.payload);
@@ -149,14 +168,14 @@ export function reducerPenTool(state: PenTool, action: PenToolAction): PenTool {
 		}
 		case PEN_TOOL_ACTIONS.ADD_LINE_MARKERS: {
 			const newState = state.copy();
-            newState.addToLineMarkers(action.payload);
-            newState.draftLine = [];
+			newState.addToLineMarkers(action.payload);
+			newState.draftLine = [];
 			return newState;
 		}
 		case PEN_TOOL_ACTIONS.REMOVE_LINE_MARKERS: {
 			const newState = state.copy();
-            newState.removeFromLineMarkers(action.payload);
-            newState.draftLine = [];
+			newState.removeFromLineMarkers(action.payload);
+			newState.draftLine = [];
 			return newState;
 		}
 	}
