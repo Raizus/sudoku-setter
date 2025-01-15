@@ -92,6 +92,11 @@
 			if (solver) solver.cancel();
 		});
 
+		solver.on('warning', (warning) => {
+			status = 'WARNING';
+			console.log(warning.message);
+		});
+
 		solver.then((result) => {
 			status = result.status;
 			solverLabel = 'Solve';

@@ -22,3 +22,14 @@ export const minimumDiagonallyAdjacentDifferenceInfo: AbstractElementInfo = {
 		categories: [TOOL_CATEGORIES.LOCAL_CONSTRAINT, TOOL_CATEGORIES.VALUED_GLOBAL_CONSTRAINT]
 	}
 };
+
+export const forbiddenKnightSumInfo: AbstractElementInfo = {
+	toolId: TOOLS.FORBIDDEN_KNIGHT_SUM,
+	order: 0,
+
+	meta: {
+		description: "Digits a knight's move apart cannot sum to X.",
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_CONSTRAINT, TOOL_CATEGORIES.VALUED_GLOBAL_CONSTRAINT]
+	}
+};

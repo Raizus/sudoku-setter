@@ -18,6 +18,13 @@ const doubleEndedLineDefaultCategories = [
 	TOOL_CATEGORIES.LINE_TOOL
 ];
 
+const DEFAULT_META_1 = {
+	description: '',
+	usage: lineUsage(),
+	tags: [],
+	categories: simpleLineDefaultCategories
+};
+
 export const thermometerInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
@@ -41,10 +48,40 @@ export const thermometerInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description: 'Numbers along a thermometer must increase from the bulb end.',
-		usage: lineUsage(),
-		tags: [],
-		categories: simpleLineDefaultCategories
+		...DEFAULT_META_1,
+		description: 'Numbers along a thermometer must increase from the bulb end.'
+	}
+};
+
+export const customThermometerInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: false,
+			defaultValue: '2'
+		});
+	},
+
+	toolId: TOOLS.CUSTOM_THERMOMETER,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
+		strokeWidth: { editable: false, value: 0.15 },
+		r: { editable: false, value: 0.25 },
+		opacity: { editable: false, value: 0.9 },
+		stroke: { editable: false, value: 'var(--constraint-color-gray)' },
+		fill: { editable: false, value: 'var(--constraint-color-gray)' },
+		linePathOptions: {
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.15 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		...DEFAULT_META_1,
+		description:
+			'Numbers along a thermometer must increase by at least X (default = 2) at a time. Negative values are allowed.'
 	}
 };
 
@@ -70,11 +107,9 @@ export const fuzzyThermometerInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
+		...DEFAULT_META_1,
 		description:
-			'Grey lines are thermometers. Digits along thermometers must increase from the bulb to the tip, which can be on either end and are to be deduced.',
-		usage: lineUsage(),
-		tags: [],
-		categories: simpleLineDefaultCategories
+			'Grey lines are thermometers. Digits along thermometers must increase from the bulb to the tip, which can be on either end and are to be deduced.'
 	}
 };
 
@@ -101,10 +136,8 @@ export const slowThermometerInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description: 'Numbers along a slow thermometer must not decrease from the bulb to the tip(s).',
-		usage: lineUsage(),
-		tags: [],
-		categories: simpleLineDefaultCategories
+		...DEFAULT_META_1,
+		description: 'Numbers along a slow thermometer must not decrease from the bulb to the tip(s).'
 	}
 };
 
@@ -131,11 +164,9 @@ export const rowCyclethermometerInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
+		...DEFAULT_META_1,
 		description:
-			"Within a row, let a 'cycle' be the path taken starting from digit A in column X and then looking at digit B in Column A, then digit C in Column B etc until the cycle returns to digit A again. The 'order' of a cycle is the number of unique digits contained in the cycle. eg A 5 in r9c1, a 9 in r9c5 and a 1 in r9c9 would force a cycle of order 3. The Order of the cycle increases along light blue thermometers starting from the bulb end.",
-		usage: lineUsage(),
-		tags: [],
-		categories: simpleLineDefaultCategories
+			"Within a row, let a 'cycle' be the path taken starting from digit A in column X and then looking at digit B in Column A, then digit C in Column B etc until the cycle returns to digit A again. The 'order' of a cycle is the number of unique digits contained in the cycle. eg A 5 in r9c1, a 9 in r9c5 and a 1 in r9c9 would force a cycle of order 3. The Order of the cycle increases along light blue thermometers starting from the bulb end."
 	}
 };
 
@@ -149,8 +180,8 @@ export const palindromeInfo: SquareCellElementInfo = {
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
-		stroke: { editable: false, value: 'var(--constraint-color-gray)' },
-		strokeWidth: { editable: false, value: 0.2 }
+		stroke: { editable: true, value: 'var(--constraint-color-gray)' },
+		strokeWidth: { editable: true, value: 0.2 }
 	},
 
 	meta: {
@@ -171,12 +202,12 @@ export const renbanLineInfo: SquareCellElementInfo = {
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
-		strokeWidth: { editable: true, value: 0.10 },
+		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-purple)' },
 		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
+			shortenHead: { editable: false, value: 0.1 },
+			shortenTail: { editable: false, value: 0.1 },
+			bezierRounding: { editable: false, value: 0.1 },
 			closeLoops: { editable: false, value: true }
 		}
 	},
@@ -1771,7 +1802,6 @@ export const splitPeasLineInfo: SquareCellElementInfo = {
 		categories: doubleEndedLineDefaultCategories
 	}
 };
-
 
 export const doublersThermometerInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {

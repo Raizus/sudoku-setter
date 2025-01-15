@@ -57,7 +57,7 @@
 		fill: var(--cell-digit-color);
 
 		&.conflict {
-			fill: rgb(255, 41, 41);
+			fill: var(--cell-digit-conflict-color);
 		}
 	}
 </style>

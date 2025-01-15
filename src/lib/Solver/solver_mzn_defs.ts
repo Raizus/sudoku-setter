@@ -1,5 +1,4 @@
 export function defineFunctionsPredicates() {
-	let out_str = '\n';
 
 	const tests = `test orth_adjacent_2d(
     int: r1, int: c1, 
@@ -686,6 +685,15 @@ predicate equal_diagonal_differences_p(array[int] of var int: arr) =
 	const line_constraints = `predicate fuzzy_thermo_p(array[int] of var int: arr) =
     strictly_increasing(arr) \\/ strictly_decreasing(arr);
     
+predicate custom_thermo_p(
+    array[int] of var int: arr,
+    var int: val
+) = let {
+    set of int: idxs = index_set(arr);
+} in forall(i in idxs where i>min(idxs))(
+    arr[i] - arr[i-1] >= val
+);
+
 predicate renban(array[int] of var int: arr) =
     alldifferent(arr) /\\
     % Ensure the absolute difference between min and max is n-1
@@ -1405,7 +1413,26 @@ predicate minimum_diagonally_adjacent_difference(array[int, int] of var int: gri
         abs(grid[r,c] - grid[r+1,c+1]) >= val /\\
         % Bottom-left diagonal (if not in first column)
         (c > min(cols) -> abs(grid[r,c] - grid[r+1,c-1]) >= val)
-    );\n\n`;
+    );
+    
+predicate forbidden_knight_sum_p(
+    array[int, int] of var int: grid,
+    var int: val
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in
+% Check all possible knight moves from each cell
+forall(r in rows, c in cols)(
+    (in_bounds_2d(r-1, c-2, grid) -> grid[r,c] + grid[r-1,c-2] != val) /\\
+    (in_bounds_2d(r-1, c+2, grid) -> grid[r,c] + grid[r-1,c+2] != val) /\\
+    (in_bounds_2d(r+1, c-2, grid) -> grid[r,c] + grid[r+1,c-2] != val) /\\
+    (in_bounds_2d(r+1, c+2, grid) -> grid[r,c] + grid[r+1,c+2] != val) /\\
+    (in_bounds_2d(r-2, c-1, grid) -> grid[r,c] + grid[r-2,c-1] != val) /\\
+    (in_bounds_2d(r-2, c+1, grid) -> grid[r,c] + grid[r-2,c+1] != val) /\\
+    (in_bounds_2d(r+2, c-1, grid) -> grid[r,c] + grid[r+2,c-1] != val) /\\
+    (in_bounds_2d(r+2, c+1, grid) -> grid[r,c] + grid[r+2,c+1] != val)
+);\n\n`;
 
 	const yin_yang = `predicate yin_yang_no_crossings(array[int, int] of var 0..1: grid) =
     % For each possible 2x2 square in the grid
@@ -2692,7 +2719,31 @@ predicate tango_p(array[int, int] of var int: grid) =
                  grid[r+1,c] mod 2 = 0 /\\ 
                  grid[r+2,c] mod 2 = 0)
         )
-    );\n\n`;
+    );
+    
+predicate anti_entropy_aux_p(var int: val1, var int: val2) = let {
+    set of int: group1 = {1,2,3};
+    set of int: group2 = {4,5,6};
+    set of int: group3 = {7,8,9};  
+} in (
+    ((val1 in group1) /\\ (val2 in group2 \\/ val2 in group3)) \\/
+    ((val1 in group2) /\\ (val2 in group1 \\/ val2 in group3)) \\/
+    ((val1 in group3) /\\ (val2 in group1 \\/ val2 in group2))
+);
+
+predicate anti_entropy_p(
+    array[int, int] of var int: grid
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    forall(r in rows, c in cols where r > min(rows))(
+        anti_entropy_aux_p(grid[r-1,c], grid[r, c])
+    ) /\\
+    forall(r in rows, c in cols where c > min(cols))(
+        anti_entropy_aux_p(grid[r,c-1], grid[r, c])
+    )
+);\n\n`;
 
 	const galaxies = `predicate every_cell_is_in_a_galaxy_p(
     array[int, int] of var int: regions
@@ -3354,7 +3405,7 @@ predicate star_battle_no_touching_p(
     )
 );\n\n`;
 
-	out_str +=
+	const out_str = '\n' +
 		tests +
 		helper_f +
 		more_helper_f +

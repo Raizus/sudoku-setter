@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { gridStore } from '$stores/BoardStore';
-
-	const strokeWidth = 0.01;
+	
 	$: allCells = $gridStore.getAllCells();
 </script>
 
@@ -12,9 +11,16 @@
 			y={cell.r}
 			width={1}
 			height={1}
-			stroke-width={strokeWidth}
 			fill="none"
 			stroke="black"
 		/>
 	{/each}
 </g>
+
+<style lang="scss">
+	@use '$src/vars' as vars;
+
+	rect {
+		stroke-width: vars.$grid-lines-width;
+	}
+</style>

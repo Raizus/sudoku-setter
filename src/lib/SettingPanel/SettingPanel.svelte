@@ -21,12 +21,20 @@
 	</div>
 </div>
 
-<style>
+<style lang="scss">
+	@use '$src/vars' as vars;
+
 	.setting-panel-wrapper {
 		display: flex;
 		flex-direction: column;
 		height: 100vh;
 		align-items: flex-start;
+	}
+
+	@include vars.breakpoint-mobile {
+		.setting-panel-wrapper {
+			display: none;
+		}
 	}
 
 	.setting-panel {

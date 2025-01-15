@@ -24,9 +24,19 @@ function minimumDiagonallyAdjacentDifferenceConstraint(grid: Grid, constraint: V
 	return constraint_str;
 }
 
+function forbiddenKnightSumConstraint(grid: Grid, constraint: ValuedGlobalToolI) {
+	const value = constraint.value;
+	if (!value) return '';
+
+	const val = parseInt(value);
+	const constraint_str = `constraint forbidden_knight_sum_p(board, ${val});\n`;
+	return constraint_str;
+}
+
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.FORBIDDEN_ORTHOGONALLY_ADJACENT_SUM, forbiddenAdjacentSumConstraint],
-	[TOOLS.MINIMUM_DIAGONALLY_ADJACENT_DIFFERENCE, minimumDiagonallyAdjacentDifferenceConstraint]
+	[TOOLS.MINIMUM_DIAGONALLY_ADJACENT_DIFFERENCE, minimumDiagonallyAdjacentDifferenceConstraint],
+	[TOOLS.FORBIDDEN_KNIGHT_SUM, forbiddenKnightSumConstraint]
 ]);
 
 export function valuedGlobalConstraints(

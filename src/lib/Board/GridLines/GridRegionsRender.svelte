@@ -4,7 +4,6 @@
 	import { getCagePathStr } from '$lib/utils/SquareCellGridRenderUtils';
 	import { cellsStore, gridStore } from '$stores/BoardStore';
 
-	const strokeWidth = 0.06;
 	$: allCells = $cellsStore;
 	$: usedRegions = $gridStore.getUsedRegions();
 
@@ -23,9 +22,16 @@
 			class="region-border"
 			id="region-{region}"
 			d={getCagePathStr(getCellsInRegion(allCells, region), 0, false)}
-			stroke-width={strokeWidth}
 			fill="none"
 			stroke="black"
 		/>
 	{/each}
 </g>
+
+<style lang="scss">
+	@use '$src/vars' as vars;
+
+	path {
+		stroke-width: vars.$region-lines-width;
+	}
+</style>

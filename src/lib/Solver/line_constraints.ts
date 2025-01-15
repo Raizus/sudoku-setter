@@ -131,6 +131,11 @@ function slowThermoConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	return constraint_str;
 }
 
+function customThermoConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = valuedLineConstraint(grid, constraint, 'custom_thermo_p');
+	return constraint_str;
+}
+
 function palindromeConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
 	const constraint_str = simpleLineConstraint(grid, constraint, 'palindrome');
 	return constraint_str;
@@ -554,6 +559,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.THERMOMETER, thermoConstraint],
 	[TOOLS.FUZZY_THERMOMETER, fuzzyThermoConstraint],
 	[TOOLS.SLOW_THERMOMETER, slowThermoConstraint],
+	[TOOLS.CUSTOM_THERMOMETER, customThermoConstraint],
 	[TOOLS.RENBAN_LINE, renbanConstraint],
 	[TOOLS.DOUBLE_RENBAN_LINE, doubleRenbanConstraint],
 	[TOOLS.RENRENBANBAN_LINE, renrenbanbanConstraint],

@@ -80,6 +80,7 @@ import {
 	allXYDifferencesGivenInfo,
 	allYinYangCountShadedCellsGivenInfo,
 	allYinYangKropkiGivenInfo,
+	antiEntropyInfo,
 	antiGiraffeInfo,
 	antikingInfo,
 	antiknightInfo,
@@ -186,7 +187,8 @@ import {
 	segmentedSumLineInfo,
 	dutchWhispersInfo,
 	goldilocksZoneRegionSumLineInfo,
-	fuzzyThermometerInfo
+	fuzzyThermometerInfo,
+	customThermometerInfo
 } from './LineConstraintsElementsInfo';
 import {
 	littleKillerLookAndSayInfo,
@@ -268,6 +270,7 @@ import { loopCellCountArrowsInfo } from './SingleCellMultiArrowElementsInfo';
 import { yinYangCountUniqueFillominoSameShadingInfo } from './SingleCellMultiArrowElementsInfo';
 import { sameGalaxyUnobstructedCountArrowsInfo } from './SingleCellMultiArrowElementsInfo';
 import {
+	forbiddenKnightSumInfo,
 	forbiddenOrthogonallyAdjacentSumInfo,
 	minimumDiagonallyAdjacentDifferenceInfo
 } from './ValuedGlobalConstraintsElementsInfo';
@@ -307,6 +310,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.TANGO]: tangoInfo,
 	[TOOLS.NONCONSECUTIVE]: nonconsecutiveInfo,
 	[TOOLS.NONRATIO]: nonratioInfo,
+	[TOOLS.ANTI_ENTROPY]: antiEntropyInfo,
 	[TOOLS.GLOBAL_INDEXING_COLUMN]: globalIndexingColumnInfo,
 	[TOOLS.ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED]: allOddDigitsAreOrthogonallyConnectedInfo,
 
@@ -475,6 +479,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.THERMOMETER]: thermometerInfo,
 	[TOOLS.FUZZY_THERMOMETER]: fuzzyThermometerInfo,
 	[TOOLS.SLOW_THERMOMETER]: slowThermometerInfo,
+	[TOOLS.CUSTOM_THERMOMETER]: customThermometerInfo,
 	[TOOLS.ROW_CYCLE_THERMOMETER]: rowCyclethermometerInfo,
 
 	[TOOLS.PALINDROME]: palindromeInfo,
@@ -606,6 +611,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	// Valued Global Constraints
 	[TOOLS.FORBIDDEN_ORTHOGONALLY_ADJACENT_SUM]: forbiddenOrthogonallyAdjacentSumInfo,
 	[TOOLS.MINIMUM_DIAGONALLY_ADJACENT_DIFFERENCE]: minimumDiagonallyAdjacentDifferenceInfo,
+	[TOOLS.FORBIDDEN_KNIGHT_SUM]: forbiddenKnightSumInfo,
 
 	// Cosmetic Tools
 	[TOOLS.COSMETIC_CELL_SHAPE]: cosmeticCellShapeInfo,

@@ -55,6 +55,8 @@
 </div>
 
 <style lang="scss">
+	@use '$src/vars' as vars;
+
 	$panel-gap: 10px;
 
 	.entry-panel-wrapper {
@@ -140,6 +142,12 @@
 		max-height: 40%;
 		display: flex;
 		flex-direction: column;
+	}
+
+	@include vars.breakpoint-mobile {
+		.puzzle-info {
+			display: none;
+		}
 	}
 
 	.puzzle-header {

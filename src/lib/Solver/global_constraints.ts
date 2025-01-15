@@ -169,6 +169,13 @@ function tangoConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	return out_str;
 }
 
+function antiEntropyConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint anti_entropy_p(board);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
 function* adjCellPairGen(grid: Grid) {
 	for (const cell of grid.getAllCells()) {
 		const adj_cells = grid
@@ -768,6 +775,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.TANGO, tangoConstraint],
 	[TOOLS.NONCONSECUTIVE, nonconsecutiveConstraint],
 	[TOOLS.NONRATIO, nonratioConstraint],
+	[TOOLS.ANTI_ENTROPY, antiEntropyConstraint],
 
 	[TOOLS.GLOBAL_INDEXING_COLUMN, globalIndexingColumnConstraint],
 	[TOOLS.ALL_V_GIVEN, allXVGivenConstraint],

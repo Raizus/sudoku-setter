@@ -17,3 +17,13 @@ $highlight-map: (
         @content;
     }
 }
+
+$grid-lines-width: 0.01;
+$region-lines-width: 0.06;
+$grid-border-width: 0.06;
+
+// $content-margin: 3rem;
+// $board-size-big: min(calc(70vw - 20em), calc(100vh - #{$header-height + $footer-height}));
+// $board-size-small: min(calc(100vw - #{2 * $content-margin}), 50vh);
+
+

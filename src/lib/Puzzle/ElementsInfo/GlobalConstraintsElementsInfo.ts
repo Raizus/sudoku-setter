@@ -211,6 +211,18 @@ export const oddEvenParityMirrorAlongPositiveDiagonalInfo: AbstractElementInfo =
 	}
 };
 
+export const antiEntropyInfo: AbstractElementInfo = {
+	toolId: TOOLS.ANTI_ENTROPY,
+	order: 0,
+
+	meta: {
+		description:
+			'Anti-Entropy: No pair of orthogonally adjacent cells can contain digits from the same entropic set. The entropic sets are low (1, 2, 3), middle (4, 5, 6) and high (7, 8, 9).',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	}
+};
+
 export const globalIndexingColumnInfo: AbstractElementInfo = {
 	toolId: TOOLS.GLOBAL_INDEXING_COLUMN,
 	order: 0,

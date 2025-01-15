@@ -24,6 +24,7 @@ export enum SIMPLE_GLOBAL_CONSTRAINTS {
 	TANGO = 'Tango',
 	NONCONSECUTIVE = 'Nonconsecutive',
 	NONRATIO = 'Nonratio',
+	ANTI_ENTROPY = 'Anti-Entropy',
 	POSITIVE_DIAGONAL = 'Positive Diagonal',
 	NEGATIVE_DIAGONAL = 'Negative Diagonal',
 	POSITIVE_ANTIDIAGONAL = 'Positive Antidiagonal',
@@ -82,6 +83,8 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY = 'Cell Center Loop Can Touch Diagonally',
 	NOT_LOOP_SIZED_REGIONS = 'Not Loop Sized Regions',
 	MODULAR_LOOP = 'Modular Loop',
+
+	DIRECTED_PATH = 'Directed Path',
 
 	CAVE = 'Cave',
 	CAVE_CELLS_ARE_ODD = 'Cave Cells Are Odd',
@@ -153,7 +156,10 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	TWILIGHT_CAVE_FILLOMINO_CLUE = 'Twilight Cave Fillomino Clue',
 	CAVE_CLUE = 'Cave Clue',
 	CHAOS_CONSTRUCTION_CHESS_SUMS = 'Chaos Construction Chess Sums',
-	CHAOS_CONSTRUCTION_ARROW_KNOTS = 'Chaos Construction Arrow Knots'
+	CHAOS_CONSTRUCTION_ARROW_KNOTS = 'Chaos Construction Arrow Knots',
+
+	DIRECTED_PATH_START = 'Directed Path Start',
+	DIRECTED_PATH_END = 'Directed Path End',
 }
 
 export enum SINGLE_CELL_ARROW_CONSTRAINTS {
@@ -185,7 +191,10 @@ export enum EDGE_CONSTRAINTS {
 	YIN_YANG_KROPKI = 'Yin Yang Kropki',
 	YIN_YANG_WHITE_KROPKI = 'Yin Yang White Kropki',
 
-	UNKNOWN_REGION_BORDER = 'Unknown Region Border'
+	UNKNOWN_REGION_BORDER = 'Unknown Region Border',
+
+	MAZE_WALL = 'Maze Wall',
+	ONE_WAY_DOOR = 'One Way Door'
 }
 
 export enum CORNER_CONSTRAINTS {
@@ -201,8 +210,9 @@ export enum CORNER_CONSTRAINTS {
 
 export enum LINE_CONSTRAINTS {
 	THERMOMETER = 'Thermometer',
-	FUZZY_THERMOMETER = 'Fuzzy Thermometer',
 	SLOW_THERMOMETER = 'Slow Thermometer',
+	CUSTOM_THERMOMETER = 'Custom Thermometer',
+	FUZZY_THERMOMETER = 'Fuzzy Thermometer',
 	ROW_CYCLE_THERMOMETER = 'Row Cycle Thermometer',
 
 	PALINDROME = 'Palindrome',
@@ -348,6 +358,7 @@ export enum CENTER_EDGE_CORNER_CONSTRAINTS {
 
 export enum VALUED_GLOBAL_CONSTRAINTS {
 	FORBIDDEN_ORTHOGONALLY_ADJACENT_SUM = 'Forbidden Orthogonally Adjacent Sum',
+	FORBIDDEN_KNIGHT_SUM = 'Forbidden Knight Sum',
 	MINIMUM_DIAGONALLY_ADJACENT_DIFFERENCE = 'Minimum Diagonally Adjacent Difference'
 }
 
