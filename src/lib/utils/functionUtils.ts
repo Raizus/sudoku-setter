@@ -1,4 +1,4 @@
-import type { PuzzleMetaI } from "../Puzzle/PuzzleMeta";
+import type { PuzzleMetaI } from '../Puzzle/PuzzleMeta';
 
 export function threshold(val: number, min?: number, max?: number): number {
 	if (min !== undefined) val = Math.max(val, min);
@@ -76,4 +76,21 @@ export function getPuzzleFilename(puzzleMeta: PuzzleMetaI): string {
 	let fileName = `${title}_by_${authorsStr}`;
 	fileName = fileName.replaceAll(/[\W]/g, '');
 	return fileName;
-};
+}
+
+export function areArraysEqual(arr1: number[], arr2: number[]): boolean {
+	// Check if the arrays have the same length
+	if (arr1.length !== arr2.length) {
+		return false;
+	}
+
+	// Compare each element in the arrays
+	for (let i = 0; i < arr1.length; i++) {
+		if (arr1[i] !== arr2[i]) {
+			return false;
+		}
+	}
+
+	// If all elements are equal, return true
+	return true;
+}

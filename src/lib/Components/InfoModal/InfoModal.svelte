@@ -5,14 +5,18 @@
 	import InfoShortcut from './InfoShortcut.svelte';
 
 	export let showModal = false;
-
 </script>
 
 <Modal bind:showModal title="Info">
 	<div class="info-content">
+		<InfoTable title="Setting Instructions">
+			<p>
+				{"For typeable constraints like killer cages or sandwich sums you can use variables like 'x' which will be shared between all constraints. You can also use inequalities like '>=3' or '<5'. May not work for all constraints."}
+			</p>
+		</InfoTable>
 		<InfoTable title="General">
 			<HelpShortcutRow description="Toggle Darkmode">
-				<InfoShortcut shortcut="Alt+Shift+D"/>
+				<InfoShortcut shortcut="Alt+Shift+D" />
 			</HelpShortcutRow>
 		</InfoTable>
 		<InfoTable title="Selection">

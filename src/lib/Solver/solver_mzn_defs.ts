@@ -1019,29 +1019,31 @@ predicate segmented_sum_line_not_circular_p(array[int] of var int: arr, var int:
         set of int: idxs = index_set(arr);
         int: n = length(arr);
         % split_after[i] is true if we split after position i
-        array[min(idxs)..max(idxs)-1] of var bool: split_after;
+        array[idxs] of var bool: split_after;
         % segment_sum[i] is sum from position i to next split (or end)
         array[idxs] of var int: segment_sum;
-    } in
+    } in (
+    split_after[max(idxs)] = 0 
     % Calculate running sum for each position
-    forall(i in idxs)(
+    /\\ forall(i in idxs)(
         segment_sum[i] = 
-            if i = n then
+            if i = min(idxs) then
                 arr[i]
             else 
-                arr[i] + 
-                if split_after[i] then 
+                arr[i] +
+                if split_after[i-1] then 
                     0 
                 else 
-                    segment_sum[i+1]
+                    segment_sum[i-1]
                 endif
             endif
     ) /\\
     % Each segment must sum to val
-    forall(i in 1..n)(
+    forall(i in idxs)(
         % If this is start of segment (first pos or after split), sum must be val
-        (i = 1 \\/ (i > 1 /\\ split_after[i-1])) -> segment_sum[i] = val
-    );
+        i = max(idxs) \\/ (i < max(idxs) /\\ split_after[i]) -> segment_sum[i] = val
+    )
+);
 
 predicate segmented_sum_line_circular_p(
     array[int] of var int: arr, 
@@ -1079,7 +1081,56 @@ function var int: cycle_order_f(
         transitions[i+1] = arr[transitions[i]]
     );
     var int: target_idx = first_idx(transitions, start)
-} in target_idx;\n\n`;
+} in target_idx;
+ 
+predicate segmented_sum_and_renban_line_p(
+    array[int] of var int: arr
+) = let {
+    set of int: idxs = index_set(arr);
+    int: n = length(arr);
+    % split_after[i] is true if we split after position i
+    array[idxs] of var bool: split_after;
+    array[idxs] of var 1..n: segments;
+    array[idxs] of var 0..n: segment_sizes;
+    
+    array[idxs] of var int: segment_sum;
+    var int: sum_var;
+} in (
+    split_after[max(idxs)] = 0
+    /\\ sum(i in idxs)(split_after[i]) >= 1
+    /\\ segments[min(idxs)] = 1
+    /\\ forall(i in idxs where i > min(idxs))(
+        (split_after[i-1] -> segments[i] = segments[i-1] + 1) /\\
+        (not split_after[i-1] -> segments[i] = segments[i-1])
+    )
+    % Calculate running sum for each position
+    /\\ forall(i in idxs)(
+        segment_sum[i] = 
+            if i = min(idxs) then
+                arr[i]
+            else 
+                arr[i] +
+                if split_after[i-1] then 
+                    0 
+                else 
+                    segment_sum[i-1]
+                endif
+            endif
+    )
+    % Each segment must sum to val
+    /\\ forall(i in idxs)(
+        % If this is start of segment (first pos or after split), sum must be val
+        i = max(idxs) \\/ (i < max(idxs) /\\ split_after[i]) -> segment_sum[i] = sum_var
+    )
+    % segment sizes
+    /\\ forall(i in idxs)(
+        segment_sizes[i] == sum(j in idxs)(bool2int(segments[i] == segments[j]))
+    )
+    % each segment must be a renban
+    /\\ forall(i,j in idxs where j>i)(
+        segments[i] == segments[j] -> arr[i] != arr[j] /\\ abs(arr[i] - arr[j]) <= segment_sizes[i] - 1
+    )
+);\n\n`;
 
 	const double_end_line_constraints = `
 predicate between_line_p(array[int] of var int: arr) =
@@ -2225,48 +2276,17 @@ predicate cave_joins(
         false
     endif;
 
-
-predicate cave_p(
-    array[int, int] of var 0..1: shading, 
-    array[int, int] of var int: regions
-) =  let {
-        set of int: rows = index_set_1of2(shading);
-        set of int: cols = index_set_2of2(shading);
+predicate cave_floodfill_p(
+    array[int, int] of var int: regions,
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
         int: n_rows = length(rows);
         int: n_cols = length(cols);
         int: g_size = n_rows * n_cols;
         array [rows, cols] of var 0..g_size: same_before;
         array[rows, cols] of var 0..g_size: when;
-    } in
-    % unshaded cells (0 = cave), representing the cave must be all orthogonally connected
-    connected_region(shading, 0) /\\
-    sum(r in rows, c in cols)(bool2int(shading[r,c] = 0)) > 1 /\\
-    % label cave region with 0
-    forall(r in rows, c in cols) (
-        shading[r,c] = 0 <-> regions[r, c] = 0
-    ) /\\
-    forall(r in rows, c in cols) (
-        shading[r,c] = 1 <-> regions[r, c] != 0
-    ) /\\
-    % all shaded cells are orthogonally connected by other shaded cells to an edge of the grid
-    % adjacent shaded cells must belong to the same region (horiz adjacent)
-    forall (r in rows, c in cols where c > 0) (
-        let { 
-            var int: id1 = regions[r, c - 1], 
-            var int: id2 = regions[r, c] 
-        } in (shading[r,c] = 1 /\\ shading[r, c - 1] = 1) -> id1 = id2
-    ) /\\
-    % adjacent shaded cells must belong to the same region (vertical adjacent)
-    forall (r in rows, c in cols where r > 0) (
-        let { var int: id1 = regions[r - 1, c], var int: id2 = regions[r, c] } in
-        (shading[r,c] = 1 /\\ shading[r - 1, c] = 1) -> id1 = id2
-    ) /\\
-    % for each region not equal to 0, there must be at least one cell that is on the edge of the grid
-    forall(r in rows, c in cols where regions[r,c] != 0)(
-        exists(r2 in rows, c2 in cols)(regions[r2,c2] = regions[r,c] /\\ on_edge_2d(r2, c2, regions))
-    ) /\\
-    % we need to remove ambiguity from the region numbering 
-    % use the numbering each region by the id of the first element of that region
+} in (
     same_before_p(regions, same_before) /\\
     forall (r in rows, c in cols) (
         if same_before[r,c] = 0 /\\ regions[r, c] != 0 then
@@ -2295,11 +2315,51 @@ predicate cave_p(
               cave_joins(r, c, r, c + 1, when, regions)
             )
         )
-    ) /\\
-    fillomino_restrict_floodfill_p(when, regions)    
+    )
+    /\\ fillomino_restrict_floodfill_p(when, regions)    
     % Symmetry breaking: canonical numbering of regions
     /\\ forall(r in rows, c in cols) (
         regions[r, c] <= (r * n_cols + c + 1)
+    )
+);
+
+predicate cave_p(
+    array[int, int] of var 0..1: shading, 
+    array[int, int] of var int: regions
+) =  let {
+    set of int: rows = index_set_1of2(shading);
+    set of int: cols = index_set_2of2(shading);
+} in (
+    % unshaded cells (0 = cave), representing the cave must be all orthogonally connected
+    connected_region(shading, 0) /\\
+    sum(r in rows, c in cols)(bool2int(shading[r,c] = 0)) > 1 /\\
+    % label cave region with 0
+    forall(r in rows, c in cols) (
+        shading[r,c] = 0 <-> regions[r, c] = 0
+    ) /\\
+    forall(r in rows, c in cols) (
+        shading[r,c] = 1 <-> regions[r, c] != 0
+    ) /\\
+    % all shaded cells are orthogonally connected by other shaded cells to an edge of the grid
+    % adjacent shaded cells must belong to the same region (horiz adjacent)
+    forall (r in rows, c in cols where c > min(cols)) (
+        let { 
+            var int: id1 = regions[r, c - 1], 
+            var int: id2 = regions[r, c] 
+        } in (shading[r,c] = 1 /\\ shading[r, c - 1] = 1) -> id1 = id2
+    ) /\\
+    % adjacent shaded cells must belong to the same region (vertical adjacent)
+    forall (r in rows, c in cols where r > min(rows)) (
+        let { var int: id1 = regions[r - 1, c], var int: id2 = regions[r, c] } in
+        (shading[r,c] = 1 /\\ shading[r - 1, c] = 1) -> id1 = id2
+    ) /\\
+    % for each region not equal to 0, there must be at least one cell that is on the edge of the grid
+    forall(r in rows, c in cols where regions[r,c] != 0)(
+        exists(r2 in rows, c2 in cols)(regions[r2,c2] = regions[r,c] /\\ on_edge_2d(r2, c2, regions))
+    ) /\\
+    % we need to remove ambiguity from the region numbering 
+    % use the numbering each region by the id of the first element of that region
+    cave_floodfill_p(regions)
     );
 
 
@@ -2345,7 +2405,6 @@ predicate cave_cells_are_odd_p(
     shading[r,c] = 0 <-> grid[r,c] mod 2 = 1
 );
 
-
 predicate cave_walls_are_even_p(
     array[int,int] of var int: grid, 
     array[int,int] of var 0..1: shading
@@ -2388,7 +2447,77 @@ predicate one_digit_does_not_appear_in_cave_p(
                 shading[r,c] == 0 /\\ grid[r,c] = allowed[i]
             )
         | i in index_set(allowed)];
-    } in sum(in_cave) == 1;\n\n`;
+    } in sum(in_cave) == 1;
+
+predicate renban_cave_regions_p(
+    array[int, int] of var 0..1: shading, % cave shading
+    array[int, int] of var int: regions, % sudoku regions
+    array[int, int] of var int: renban_cave_regions
+) = let {
+    set of int: rows = index_set_1of2(shading);
+    set of int: cols = index_set_2of2(shading);
+} in (
+    % walls (shading = 1) don't matter for the renban <-> label walls with 0
+    forall(r in rows, c in cols) (
+        shading[r,c] = 1 <-> renban_cave_regions[r, c] = 0
+    )
+    /\\ forall(r in rows, c in cols) (
+        shading[r,c] = 0 <-> renban_cave_regions[r, c] != 0
+    ) 
+    % adjacent cells must belong to the same renban region only if they're both cave cells and belong to the same sudoku region
+    % horizontal adjacent
+    /\\ forall (r in rows, c in cols where c > min(cols)) (
+        let { 
+            var int: cave1 = shading[r, c], 
+            var int: cave2 = shading[r, c - 1],
+            var int: region1 = regions[r, c],
+            var int: region2 = regions[r, c - 1],
+        } in 
+        ((cave1 = 0 /\\ cave2 = 0 /\\ region1 == region2) -> renban_cave_regions[r,c] = renban_cave_regions[r,c-1])
+        /\\ ((cave1 = 0 /\\ cave2 = 0 /\\ region1 != region2) -> renban_cave_regions[r,c] != renban_cave_regions[r,c-1])
+    )
+    % vertical adjacent
+    /\\ forall (r in rows, c in cols where r > min(rows)) (
+        let { 
+            var int: cave1 = shading[r - 1, c], 
+            var int: cave2 = shading[r, c],
+            var int: region1 = regions[r-1, c],
+            var int: region2 = regions[r, c],
+        } in
+        ((cave1 = 0 /\\ cave2 = 0 /\\ region1 == region2) -> renban_cave_regions[r-1,c] = renban_cave_regions[r,c])
+        /\\ ((cave1 = 0 /\\ cave2 = 0 /\\ region1 != region2) -> renban_cave_regions[r-1,c] != renban_cave_regions[r,c])
+    ) 
+    % we need to remove ambiguity from the region numbering 
+    % use the numbering each region by the id of the first element of that region
+    /\\ cave_floodfill_p(renban_cave_regions)
+);
+
+predicate renban_caves_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions, % renban cave regions
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+    int: n_rows = length(rows);
+    int: n_cols = length(cols);
+    int: g_size = n_rows * n_cols;
+    set of int: ids = 0..g_size;
+    array[ids] of var 0..g_size: sizes;
+} in (
+    % Each area's size is the number of cells in that area.
+    forall (id in ids) (
+        sizes[id] = sum (r in rows, c in cols) (regions[r, c] = id)
+    ) 
+    /\\ forall(r in rows, c in cols)(
+        forall(r2 in rows, c2 in cols where is_after(r, c, r2, c2))(
+            let {
+                var int: id1 = regions[r, c];
+                var int: id2 = regions[r2, c2];
+            } in
+            id1 != 0 /\\ id2 != 0 /\\ id1 == id2 -> abs(grid[r,c] - grid[r2, c2]) <= sizes[id1] - 1
+        )
+    )
+);\n\n`;
 
 	const cell_center_loop = `predicate cell_center_loop_no_diagonal_touching_p(array[int, int] of var 0..1: grid) = let {
         set of int: rows = index_set_1of2(grid);

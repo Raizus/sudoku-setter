@@ -92,6 +92,7 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED = 'Cave 2x2 Not Fully Shaded or Unshaded',
 	ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE = 'One Digit Does Not Appear In The Cave',
 	CAVE_LITS = 'Cave LITS',
+	RENBAN_CAVES = 'Renban Caves',
 
 	TWILIGHT_CAVE_FILLOMINO_REGION_SHADING = 'Twilight Cave Fillomino Region Shading',
 	YIN_YANG_FILLOMINO_PARITY = 'Yin Yang Fillomino Parity',
@@ -153,13 +154,16 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	SASHIGANE_BEND_REGION_COUNT = 'Sashigane Bend Region Count',
 	SASHIGANE_REGION_SUM = 'Sashigane Region Sum',
 
-	TWILIGHT_CAVE_FILLOMINO_CLUE = 'Twilight Cave Fillomino Clue',
 	CAVE_CLUE = 'Cave Clue',
+	CAVE_UNSHADED_SEEN_COUNT_INCLUDING_ITSELF = 'Cave Unshaded Seen Count Including Itself',
+	CAVE_UNSHADED_CELL = 'Cave Unshaded Cell',
+
+	TWILIGHT_CAVE_FILLOMINO_CLUE = 'Twilight Cave Fillomino Clue',
 	CHAOS_CONSTRUCTION_CHESS_SUMS = 'Chaos Construction Chess Sums',
 	CHAOS_CONSTRUCTION_ARROW_KNOTS = 'Chaos Construction Arrow Knots',
 
 	DIRECTED_PATH_START = 'Directed Path Start',
-	DIRECTED_PATH_END = 'Directed Path End',
+	DIRECTED_PATH_END = 'Directed Path End'
 }
 
 export enum SINGLE_CELL_ARROW_CONSTRAINTS {
@@ -192,6 +196,7 @@ export enum EDGE_CONSTRAINTS {
 	YIN_YANG_WHITE_KROPKI = 'Yin Yang White Kropki',
 
 	UNKNOWN_REGION_BORDER = 'Unknown Region Border',
+	EDGE_CAVE_ONE_OF_EACH = 'Edge Cave One Of Each',
 
 	MAZE_WALL = 'Maze Wall',
 	ONE_WAY_DOOR = 'One Way Door'
@@ -246,6 +251,7 @@ export enum LINE_CONSTRAINTS {
 	ADJACENT_DIFFERENCES_COUNT_LINE = 'Adjacent Differences Count Line',
 	ZIPPER_LINE = 'Zipper Line',
 	SEGMENTED_SUM_LINE = 'Segmented Sum Line',
+	SEGMENTED_SUM_AND_RENBAN_LINE = 'Segmented Sum And Renban Line',
 
 	LOOK_AND_SAY_LINE = 'Look And Say Line',
 
@@ -331,6 +337,7 @@ export enum OUTSIDE_EDGE_CONSTRAINTS {
 	BATTLEFIELD = 'Battlefield',
 	SKYSCRAPERS = 'Skyscrapers',
 	X_INDEX = 'X-Index',
+	SANDWICH_SUM_XOR_X_SUM = 'Sandwich Sum Xor X-Sum',
 	RISING_STREAK = 'Rising Streak',
 	ROW_OR_COLUMN_RANK = 'Row Or Column Rank',
 	OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED = 'Outside Edge Yin Yang Sum Of Shaded',

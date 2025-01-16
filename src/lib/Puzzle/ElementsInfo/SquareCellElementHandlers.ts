@@ -54,6 +54,7 @@ import {
 } from './CosmeticToolsElementsInfo';
 import {
 	differenceInfo,
+	edgeCaveOneOfEachInfo,
 	edgeFactorInfo,
 	edgeInequalityInfo,
 	edgeModuloInfo,
@@ -114,6 +115,7 @@ import {
 	litsBlackAndWhiteStarBattleInfo,
 	oneGalaxyIsAGermanWhispersInfo,
 	pentominoTillingInfo,
+	renbanCavesInfo,
 	tillingNoEmptyCellsInfo,
 	twoSymmetricGalaxiesInfo,
 	yinYangNeighbourGreaterThanOneWithinRegionShadedInfo
@@ -188,7 +190,8 @@ import {
 	dutchWhispersInfo,
 	goldilocksZoneRegionSumLineInfo,
 	fuzzyThermometerInfo,
-	customThermometerInfo
+	customThermometerInfo,
+	segmentedSumAndRenbanLineInfo
 } from './LineConstraintsElementsInfo';
 import {
 	littleKillerLookAndSayInfo,
@@ -207,6 +210,7 @@ import {
 	outsideEdgeYinYangSumOfShadedInfo,
 	risingStreakInfo,
 	sandwichSumInfo,
+	sandwichSumXorXSumInfo,
 	shiftedXSumInfo,
 	shortsightedXSumInfo,
 	skyscrapersInfo,
@@ -367,6 +371,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.MODULAR_LOOP]: modularLoopInfo,
 	[TOOLS.CAVE]: caveInfo,
 	[TOOLS.CAVE_LITS]: caveLITSInfo,
+	[TOOLS.RENBAN_CAVES]: renbanCavesInfo,
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING]: twilightCaveFillominoRegionShadingInfo,
 
 	[TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS]: nurimisakiPathGermanWhispersInfo,
@@ -466,6 +471,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.YIN_YANG_KROPKI]: yinYangKropkiInfo,
 
 	[TOOLS.UNKNOWN_REGION_BORDER]: unknownRegionBorderInfo,
+	[TOOLS.EDGE_CAVE_ONE_OF_EACH]: edgeCaveOneOfEachInfo,
 
 	// Corner Constraints
 	[TOOLS.QUADRUPLE]: quadrupleInfo,
@@ -517,6 +523,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.ARITHMETIC_SEQUENCE_LINE]: arithmeticSequenceLineInfo,
 	[TOOLS.ZIPPER_LINE]: ZipperLineInfo,
 	[TOOLS.SEGMENTED_SUM_LINE]: segmentedSumLineInfo,
+	[TOOLS.SEGMENTED_SUM_AND_RENBAN_LINE]: segmentedSumAndRenbanLineInfo,
 
 	[TOOLS.SAME_PARITY_LINE]: sameParityLineLineInfo,
 	[TOOLS.MODULAR_LINE]: modularLineInfo,
@@ -587,6 +594,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.BATTLEFIELD]: battlefieldInfo,
 	[TOOLS.SKYSCRAPERS]: skyscrapersInfo,
 	[TOOLS.X_INDEX]: xIndexInfo,
+	[TOOLS.SANDWICH_SUM_XOR_X_SUM]: sandwichSumXorXSumInfo,
 	[TOOLS.RISING_STREAK]: risingStreakInfo,
 	// [TOOLS.ROW_OR_COLUMN_RANK]: rowOrColumnRankInfo,
 	[TOOLS.OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED]: outsideEdgeYinYangSumOfShadedInfo,

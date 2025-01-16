@@ -79,14 +79,45 @@ function sandwichSumConstraint(
 	const vars = getOutsideDirectionConstraintVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
 	const value = constraint.value;
-	const max_v = Math.min(grid.nCols, grid.nRows);
+	const valid_digits = model.puzzle.valid_digits;
+	const min_v = Math.min(...valid_digits);
+	const max_v = Math.max(...valid_digits);
 
 	const result = getParsingResult(model, value, cell_coord, cell);
 	if (!result) return '';
 
 	const var_name = result[1];
 	let out_str: string = result[0];
-	out_str += `constraint sandwich_sum_p(${vars_str}, ${var_name}, 1, ${max_v});\n`;
+	out_str += `constraint sandwich_sum_p(${vars_str}, ${var_name}, ${min_v}, ${max_v});\n`;
+	return out_str;
+}
+
+function sandwichSumXorXSumConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	const cell_coord = constraint.cell;
+	const cell = grid.getCell(cell_coord.r, cell_coord.c);
+
+	const vars = getOutsideDirectionConstraintVars(grid, constraint);
+	const vars_str = `[${vars.join(',')}]`;
+	const value = constraint.value;
+	const valid_digits = model.puzzle.valid_digits;
+	const min_v = Math.min(...valid_digits);
+	const max_v = Math.max(...valid_digits);
+
+	const result = getParsingResult(model, value, cell_coord, cell);
+	if (!result) return '';
+
+	const var_name = result[1];
+	let out_str: string = result[0];
+	const bool_var_1 = `var_bool_${c_id}_0`;
+	const bool_var_2 = `var_bool_${c_id}_1`;
+	out_str += `var bool: ${bool_var_1} = sandwich_sum_p(${vars_str}, ${var_name}, ${min_v}, ${max_v});\n`;
+	out_str += `var bool: ${bool_var_2} = x_sum_p(${vars_str}, ${var_name});\n`;
+	out_str += `constraint 'xor'(${bool_var_1}, ${bool_var_2});\n`;
 	return out_str;
 }
 
@@ -391,6 +422,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.X_SUM_SKYSCRAPERS, xSumSkyscrapersConstraint],
 	[TOOLS.X_INDEX, xIndexConstraint],
 	[TOOLS.BATTLEFIELD, battlefieldConstraint],
+	[TOOLS.SANDWICH_SUM_XOR_X_SUM, sandwichSumXorXSumConstraint],
 	[TOOLS.RISING_STREAK, risingStreakConstraint],
 	[TOOLS.OUTSIDE_CONSECUTIVE_SUM, outsideConsecutiveSumConstraint],
 	[TOOLS.OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED, outsideEdgeYinYangAdjacentSumOfShadedConstraint],

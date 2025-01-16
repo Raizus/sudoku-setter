@@ -20,6 +20,7 @@ import { updatePenTool } from './PenToolStore';
 import { updateSelection } from './SelectionStore';
 import { settingsStore } from './SettingsStore';
 import { GAME_MODE } from '$src/lib/Types/types';
+import { range } from 'lodash';
 
 interface ConstraintAndId {
 	id: string;
@@ -34,7 +35,7 @@ export const gameModeStore = writable<GAME_MODE>(GAME_MODE.SETTING);
 export const selectOnStore = writable<boolean>(false);
 export const toolStore = writable<TOOLID>(TOOLS.DIGIT);
 export const previousToolStore = writable<TOOLID | null>(TOOLS.DIGIT);
-export const validDigitsStore = writable<number[] | undefined>(undefined);
+export const validDigitsStore = writable<number[]>(range(1, 10));
 export const gridStore = writable<Grid>(new Grid(9, 9));
 export const cellsStore = writable<Cell[]>(
 	(() => {
@@ -144,11 +145,11 @@ export function selectConstraint(id: string, toolId: TOOLID) {
 	setCurrentConstraint({ id, constraint });
 }
 
-export function createNewPuzzle(nRows: number, nCols: number) {
+export function createNewPuzzle(nRows: number, nCols: number, valid_digits: number[]) {
 	const grid = new Grid(nRows, nCols);
 
 	gridStore.update(() => grid);
-	validDigitsStore.update(() => undefined);
+	validDigitsStore.update(() => valid_digits);
 	localConstraintsStore.update(() => new LocalConstraintsDict());
 	globalConstraintsStore.update(() => new GlobalConstraintsDict());
 	puzzleMetaStore.update(() => {

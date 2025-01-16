@@ -1389,6 +1389,38 @@ export const segmentedSumLineInfo: SquareCellElementInfo = {
 	}
 };
 
+export const segmentedSumAndRenbanLineInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: false,
+			defaultValue: ''
+		});
+	},
+
+	toolId: TOOLS.SEGMENTED_SUM_AND_RENBAN_LINE,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		strokeWidth: { editable: true, value: 0.06 },
+		stroke: { editable: true, value: 'var(--constraint-color-light-gray)' },
+		linePathOptions: {
+			shortenHead: { editable: false, value: 0.05 },
+			shortenTail: { editable: false, value: 0.05 },
+			bezierRounding: { editable: false, value: 0 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		description:
+			'Divide each grey line into at least two non-overlapping segments. The digits on each segment of a line sum to the same total. (Different lines may have different totals.) Additionally each segment individually forms a set of non-repeating consecutive digits in any order.',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
 export const thermoOrAverageArrowInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });

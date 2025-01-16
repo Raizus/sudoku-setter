@@ -66,6 +66,29 @@ export const sandwichSumInfo: SquareCellElementInfo = {
 	}
 };
 
+export const sandwichSumXorXSumInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
+			defaultValue: '',
+			cornerOrEdge: CornerOrEdge.EDGE
+		});
+	},
+
+	toolId: TOOLS.SANDWICH_SUM_XOR_X_SUM,
+	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
+
+	meta: {
+		description:
+			'A clue outside the grid is either an X-Sums clue or a Sandwich clue, but not both. I.e. exactly one of the following is true: the clue gives the sum of the digits between the 1 and 9 in the indicated row or column; or the clue gives the sum of the first X digits in that row or column, starting from the digit next to the clue, which is equal to X.',
+		usage: outsideEdgeUsage(),
+		tags: [],
+		categories: outsideEdgeDefaultCategories
+	}
+};
+
 export const xSumInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {

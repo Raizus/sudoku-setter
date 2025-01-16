@@ -24,7 +24,8 @@ function givenConstraints(puzzle: PuzzleI) {
 
 export function createMinizincModel(puzzle: PuzzleI) {
 	const grid = puzzle.grid;
-	const model = new PuzzleModel();
+	let valid_digits = puzzle.valid_digits;
+	const model = new PuzzleModel(puzzle);
 
 	const [nrows, ncols] = [grid.nRows, grid.nCols];
 	const grid_size = nrows * ncols;
@@ -35,7 +36,6 @@ export function createMinizincModel(puzzle: PuzzleI) {
 	
 	const max_val = Math.max(nrows, ncols);
 	let allowed_digits_str = `1..${max_val}`;
-	let valid_digits = puzzle.valid_digits;
 	const fillomino = !!puzzle.globalConstraints.get(TOOLS.FILLOMINO);
 	if (fillomino) {
 		allowed_digits_str = `1..${grid_size}`;

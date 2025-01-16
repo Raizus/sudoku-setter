@@ -1,6 +1,7 @@
 import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
+import type { PuzzleI } from '../Puzzle/Puzzle';
 import type { TOOLID } from '../Puzzle/Tools';
 import { DIRECTION } from '../utils/directions';
 import { type ParseOptions, default_parse_opts, parseValue } from './value_parsing';
@@ -123,11 +124,17 @@ export function constraintsBuilder<T extends ConstraintType>(
 export interface ModelI {
 	model_str: string; // string with minizinc model
 	used_vars: Set<string>; // keep track of shared vars
+	puzzle: PuzzleI,
 }
 
 export class PuzzleModel implements ModelI {
 	model_str: string = '';
 	used_vars: Set<string> = new Set();
+	puzzle: PuzzleI;
+
+	constructor(puzzle: PuzzleI) {
+		this.puzzle = puzzle;
+	}
 
 	add(str: string) {
 		this.model_str += str;

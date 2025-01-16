@@ -278,13 +278,34 @@ function caveConstraint(puzzle: PuzzleI, tool: TOOLID) {
 		return '';
 	}
 
-	const grid_name1 = 'cave_shading';
-	const grid_name2 = 'cave_regions';
+	const grid_name1 = VAR_2D_NAMES.CAVE_SHADING;
+	const grid_name2 = VAR_2D_NAMES.CAVE_REGIONS;
 
 	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name1};\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name2};\n`;
 	out_str += `constraint cave_p(${grid_name1}, ${grid_name2});\n`;
+
+	return out_str;
+}
+
+function renbanCavesConstraint(puzzle: PuzzleI, tool: TOOLID) {
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name1 = VAR_2D_NAMES.CAVE_SHADING;
+	const grid_name2 = VAR_2D_NAMES.BOARD_REGIONS;
+	const grid_name3 = 'renban_cave_regions';
+
+	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name3};\n`;
+	out_str += `constraint renban_cave_regions_p(${grid_name1}, ${grid_name2}, ${grid_name3});\n`;
+	out_str += `constraint renban_caves_p(${VAR_2D_NAMES.BOARD}, ${grid_name3});\n`;
 
 	return out_str;
 }
@@ -509,8 +530,9 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.PENTOMINO_TILLING, pentominoTillingConstraint],
 	[TOOLS.LITS, litsConstraint],
 	[TOOLS.CAVE_LITS, caveLitsConstraint],
+	[TOOLS.LITS_BLACK_WHITE_STAR_BATTLE, litsBlackAndWhiteStarBattleConstraint],
 
-	[TOOLS.LITS_BLACK_WHITE_STAR_BATTLE, litsBlackAndWhiteStarBattleConstraint]
+	[TOOLS.RENBAN_CAVES, renbanCavesConstraint]
 ]);
 
 export function undeterminedRegionsConstraints(puzzle: PuzzleI): string {

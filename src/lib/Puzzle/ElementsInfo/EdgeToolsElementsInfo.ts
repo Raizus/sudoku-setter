@@ -1,5 +1,5 @@
 import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
-import { SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
+import { SHAPE_TYPES, type EditableShapeI } from '$lib/Puzzle/Shape/Shape';
 import {
 	defaultValidateValueOnInput,
 	defaultValueUpdater,
@@ -24,6 +24,14 @@ const typableEdgeDefaultCategories = [
 
 const EDGE_R_1 = 0.15;
 const EDGE_STROKE_WIDTH_1 = 0.02;
+
+const DEFAULT_EDGE_SHAPE_1: EditableShapeI = {
+	type: SHAPE_TYPES.CIRCLE,
+	r: { editable: true, value: EDGE_R_1, lb: 0, ub: 1, step: 0.01 },
+	strokeWidth: { editable: true, value: EDGE_STROKE_WIDTH_1, lb: 0, ub: 1, step: 0.025 },
+	stroke: { editable: true, value: 'black' },
+	fill: { editable: true, value: 'var(--grid-background-color)' }
+}
 
 export function validateRatioValue(value: string, maxLength = 1): boolean {
 	const options: ValueValidatorOptions = {
@@ -129,13 +137,7 @@ export const differenceInfo: SquareCellElementInfo = {
 	toolId: TOOLS.DIFFERENCE,
 	order: RENDER_ORDER.EDGE_TOOLS,
 
-	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: EDGE_R_1 },
-		strokeWidth: { editable: false, value: EDGE_STROKE_WIDTH_1, lb: 0, ub: 1, step: 0.025 },
-		stroke: { editable: false, value: 'black' },
-		fill: { editable: false, value: 'var(--grid-background-color)' }
-	},
+	shape: DEFAULT_EDGE_SHAPE_1,
 
 	meta: {
 		description:
@@ -157,10 +159,7 @@ export const edgeSumInfo: SquareCellElementInfo = {
 	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: EDGE_R_1 },
-		strokeWidth: { editable: false, value: EDGE_STROKE_WIDTH_1, lb: 0, ub: 1, step: 0.025 },
-		stroke: { editable: false, value: 'black' },
+		...DEFAULT_EDGE_SHAPE_1,
 		fill: { editable: false, value: 'rgba(96, 96, 255, 0.8)' }
 	},
 
@@ -239,10 +238,7 @@ export const edgeProductInfo: SquareCellElementInfo = {
 	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: EDGE_R_1 },
-		strokeWidth: { editable: false, value: EDGE_STROKE_WIDTH_1, lb: 0, ub: 1, step: 0.025 },
-		stroke: { editable: false, value: 'black' },
+		...DEFAULT_EDGE_SHAPE_1,
 		fill: { editable: false, value: 'rgba(253, 79, 79, 0.5)' }
 	},
 
@@ -266,10 +262,7 @@ export const edgeModuloInfo: SquareCellElementInfo = {
 	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: EDGE_R_1 },
-		strokeWidth: { editable: false, value: EDGE_STROKE_WIDTH_1, lb: 0, ub: 1, step: 0.025 },
-		stroke: { editable: false, value: 'black' },
+		...DEFAULT_EDGE_SHAPE_1,
 		fill: { editable: false, value: 'rgba(253, 175, 49, 0.5)' }
 	},
 
@@ -293,10 +286,7 @@ export const edgeFactorInfo: SquareCellElementInfo = {
 	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: EDGE_R_1 },
-		strokeWidth: { editable: false, value: EDGE_STROKE_WIDTH_1, lb: 0, ub: 1, step: 0.025 },
-		stroke: { editable: false, value: 'black' },
+		...DEFAULT_EDGE_SHAPE_1,
 		fill: { editable: false, value: 'rgba(251, 251, 40, 0.5)' }
 	},
 
@@ -341,13 +331,7 @@ export const yinYangWhiteKropkiInfo: SquareCellElementInfo = {
 	toolId: TOOLS.YIN_YANG_WHITE_KROPKI,
 	order: RENDER_ORDER.EDGE_TOOLS,
 
-	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: EDGE_R_1 },
-		strokeWidth: { editable: false, value: EDGE_STROKE_WIDTH_1, lb: 0, ub: 1, step: 0.025 },
-		stroke: { editable: false, value: 'black' },
-		fill: { editable: false, value: 'var(--grid-background-color)' }
-	},
+	shape: DEFAULT_EDGE_SHAPE_1,
 
 	meta: {
 		description:
@@ -399,8 +383,25 @@ export const unknownRegionBorderInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
+		description: 'A line in the border between cells indicates a region border.',
+		tags: [],
+		categories: edgeDefaultCategories
+	}
+};
+
+export const edgeCaveOneOfEachInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getEdgeToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.EDGE_CAVE_ONE_OF_EACH,
+	order: RENDER_ORDER.EDGE_TOOLS,
+
+	shape: DEFAULT_EDGE_SHAPE_1,
+
+	meta: {
 		description:
-			'A line in the border between cells indicates a region border.',
+			'For two cells separated by a white dot, one must be shaded and the other unshaded (one must belong to the cave and the other to the wall).',
 		tags: [],
 		categories: edgeDefaultCategories
 	}

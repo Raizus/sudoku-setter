@@ -21,7 +21,7 @@
 
 	function confirmCb() {
 		resetUserState();
-		createNewPuzzle(height, width);
+		createNewPuzzle(height, width, allowed_digits.sort());
 		showModal = false;
 	}
 
@@ -40,7 +40,7 @@
 		if (!regex.test(text)) return;
 
 		// Split the input by commas and convert each part to a number
-		allowed_digits = text.split(',').map(Number);
+		allowed_digits = text.replaceAll(' ', '').split(',').map(Number);
 	}
 </script>
 
@@ -62,14 +62,13 @@
 			bind:value={height}
 			onInputCb={updateDigits}
 		/>
-		<ModalSectionHeader title={`Allowed Digits: ${allowed_digits_to_str(allowed_digits)}`} />
+		<ModalSectionHeader title={`Allowed Digits (for the solver): ${allowed_digits_to_str(allowed_digits)}`} />
 		<input
 			class="allowed-digits"
 			type="text"
 			placeholder={allowed_digits_to_str(allowed_digits)}
 			bind:value={inputStr}
 			on:input={() => inputCb(inputStr)}
-			disabled={true}
 		/>
 		<ModalButtonsContainer>
 			<button class="modal-button" on:click={confirmCb}>Confirm</button>

@@ -236,6 +236,18 @@ export const caveLITSInfo: AbstractElementInfo = {
 	}
 };
 
+export const renbanCavesInfo: AbstractElementInfo = {
+	toolId: TOOLS.RENBAN_CAVES,
+	order: 0,
+
+	meta: {
+		description:
+			'Every set of orthogonally connected unshaded cells within a 3x3 Sudoku region acts as a Renban line: that is, those cells must contain a nonrepeating set of consecutive digits in any order. Note that a 3x3 region may have more than one such set of cells. Also note that such a set may consist of just one cell.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
 export const yinYangFillominoParityInfo: AbstractElementInfo = {
 	toolId: TOOLS.YIN_YANG_FILLOMINO_PARITY,
 	order: 0,
