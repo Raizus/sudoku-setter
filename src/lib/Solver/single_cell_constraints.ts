@@ -795,6 +795,33 @@ function chaosConstructionArrowKnotsConstraint(
 	return out_str;
 }
 
+function directedPathStartConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: CellToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const node_id = cell.r * grid.nCols + cell.c + 1;
+
+	const constraint_str = `constraint dpath_source == ${node_id};\n`;
+	return constraint_str;
+}
+
+function directedPathEndConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const node_id = cell.r * grid.nCols + cell.c + 1;
+
+	const constraint_str = `constraint dpath_target == ${node_id};\n`;
+	return constraint_str;
+}
+
 type ConstraintF = (model: PuzzleModel, grid: Grid, c_id: string, constraint: CellToolI) => string;
 type ConstraintF2 = (grid: Grid, constraint: CellToolI[]) => string;
 
@@ -844,7 +871,10 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.CAVE_CLUE, caveCluesConstraint],
 
 	[TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS, chaosConstructionChessSumsConstraint],
-	[TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS, chaosConstructionArrowKnotsConstraint]
+	[TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS, chaosConstructionArrowKnotsConstraint],
+
+	[TOOLS.DIRECTED_PATH_START, directedPathStartConstraint],
+	[TOOLS.DIRECTED_PATH_END, directedPathEndConstraint]
 ]);
 
 const tool_map_2 = new Map<string, ConstraintF2>([

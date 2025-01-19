@@ -27,7 +27,8 @@ export enum VAR_2D_NAMES {
 	LITS_REGIONS = 'lits_regions',
 	STAR_BATTLE = 'star_battle',
 	LITS_WHITE_BLACK_STAR_BATTLE = 'lits_white_black_star_battle',
-	COUNTING_CIRCLES_COLORS = 'counting_circles_colors_board'
+	COUNTING_CIRCLES_COLORS = 'counting_circles_colors_board',
+	MAZE_DIRECTED_PATH = 'maze_directed_path'
 }
 
 export function cellToGridVarName(cell: Cell, name: VAR_2D_NAMES): string {
@@ -129,11 +130,14 @@ export interface ModelI {
 
 export class PuzzleModel implements ModelI {
 	model_str: string = '';
-	used_vars: Set<string> = new Set();
+	used_vars: Set<string>;
 	puzzle: PuzzleI;
+	edge_list: [s: number, t: number][];
 
 	constructor(puzzle: PuzzleI) {
 		this.puzzle = puzzle;
+		this.edge_list = [];
+		this.used_vars = new Set();
 	}
 
 	add(str: string) {

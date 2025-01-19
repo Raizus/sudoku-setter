@@ -12,6 +12,7 @@ import {
 	restoreCellsHighlightsAction,
 	restoreCellsValueAction
 } from '$src/lib/reducers/UpdateCellsActions';
+import type { PuzzleModel } from '$src/lib/Solver/solver_utils';
 import { executeUpdateCellsAction } from '$stores/CellsStore';
 import { updatePenTool } from '$stores/PenToolStore';
 
@@ -32,7 +33,7 @@ function grid_coloring(
 		for (let j = 0; j < row.length; j++) {
 			const cell = grid.getCell(i, j);
 			if (!cell) continue;
-			
+
 			const val = Number(row[j]);
 			const color = color_map.get(val);
 			if (color === undefined) continue;
@@ -171,8 +172,7 @@ function setSolutionValues(json: JsonT, puzzle: PuzzleI) {
 		for (let c = 0; c < row.length; c++) {
 			const cell = grid.getCell(r, c);
 			if (!cell || cell.given) continue;
-			if (leave_empty_cells && !cell.given && cell.value === null)
-				continue;
+			if (leave_empty_cells && !cell.given && cell.value === null) continue;
 
 			const value = row[c];
 			cells.push(cell);
@@ -290,7 +290,7 @@ function setColoredCountingCirclesHighlights(json: JsonT, grid: Grid) {
 	const color_map: Map<number, number> = new Map([
 		[1, 7],
 		[2, 4],
-		[3, 9],
+		[3, 9]
 	]);
 
 	grid_coloring(regions, grid, color_map);
@@ -468,7 +468,38 @@ function setStarBattlePenMarks(json: JsonT, grid: Grid) {
 	}
 }
 
-export function setBoardOnSolution(json: JsonT, puzzle: PuzzleI) {
+function setDirectedPathPenMarks(json: JsonT, puzzle_model: PuzzleModel) {
+	if (json === undefined) return;
+	const dpath_es = json['dpath_es'] as boolean[] | undefined;
+	if (dpath_es === undefined) return;
+
+	const edge_list = puzzle_model.edge_list;
+	const grid = puzzle_model.puzzle.grid;
+	const line_markers: LineMarker[] = [];
+	for (let i = 0; i < dpath_es.length; i++) {
+		const edge_v = dpath_es[i];
+		if (!edge_v) continue;
+
+		// get edge
+		const edge = edge_list[i];
+		const [n1, n2] = edge;
+
+		const [r1, c1] = [Math.floor((n1 - 1) / grid.nCols), (n1 - 1) % grid.nCols];
+		const [r2, c2] = [Math.floor((n2 - 1) / grid.nCols), (n2 - 1) % grid.nCols];
+
+		const marker: LineMarker = {
+			colorId: 4,
+			p1: { r: r1 + 0.5, c: c1 + 0.5 },
+			p2: { r: r2 + 0.5, c: c2 + 0.5 }
+		};
+		line_markers.push(marker);
+	}
+	const action = addLineMarkersAction(line_markers);
+	updatePenTool(action);
+}
+
+export function setBoardOnSolution(json: JsonT, puzzle_model: PuzzleModel) {
+	const puzzle = puzzle_model.puzzle;
 	const grid = puzzle.grid;
 
 	updatePenTool(resetAction());
@@ -484,4 +515,5 @@ export function setBoardOnSolution(json: JsonT, puzzle: PuzzleI) {
 	setBinaryHighlights(json, grid);
 	setStarBattlePenMarks(json, grid);
 	setColoredCountingCirclesHighlights(json, grid);
+	setDirectedPathPenMarks(json, puzzle_model);
 }

@@ -31,7 +31,7 @@ const DEFAULT_EDGE_SHAPE_1: EditableShapeI = {
 	strokeWidth: { editable: true, value: EDGE_STROKE_WIDTH_1, lb: 0, ub: 1, step: 0.025 },
 	stroke: { editable: true, value: 'black' },
 	fill: { editable: true, value: 'var(--grid-background-color)' }
-}
+};
 
 export function validateRatioValue(value: string, maxLength = 1): boolean {
 	const options: ValueValidatorOptions = {
@@ -402,6 +402,29 @@ export const edgeCaveOneOfEachInfo: SquareCellElementInfo = {
 	meta: {
 		description:
 			'For two cells separated by a white dot, one must be shaded and the other unshaded (one must belong to the cave and the other to the wall).',
+		tags: [],
+		categories: edgeDefaultCategories
+	}
+};
+
+export const mazeWallInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getEdgeToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.MAZE_WALL,
+	order: RENDER_ORDER.EDGE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.BORDER_LINE,
+		strokeWidth: { editable: false, value: 0.15, lb: 0, ub: 1, step: 0.025 },
+		stroke: { editable: false, value: 'darkblue' },
+		opacity: { editable: false, value: 0.9 }
+	},
+
+	meta: {
+		description:
+			'Maze wall for directed paths.',
 		tags: [],
 		categories: edgeDefaultCategories
 	}

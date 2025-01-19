@@ -18,8 +18,8 @@
 
     function getModelStr() {
         const puzzle = get(puzzleStore);
-        const modelstr = createMinizincModel(puzzle);
-        return modelstr;
+        const puzzle_model = createMinizincModel(puzzle);
+        return puzzle_model.model_str;
     }
 
     function copyCb() {

@@ -60,6 +60,7 @@ import {
 	edgeModuloInfo,
 	edgeProductInfo,
 	edgeSumInfo,
+	mazeWallInfo,
 	ratioInfo,
 	unknownRegionBorderInfo,
 	xvInfo,
@@ -108,11 +109,14 @@ import {
 	adjacentCellsAlongLoopAreGermanWhispersInfo,
 	adjacentCellsAlongLoopAreMultiplesInfo,
 	caveLITSInfo,
+	directedPathAdjacentCellsSumIsPrimeInfo,
+	directedPathSumOfCellsPerRegionIsPrimeInfo,
 	everyCellBelongsToAGalaxyInfo,
 	galaxiesInfo,
 	galaxy2x2DoesNotBelongToOneGalaxyInfo,
 	goldilocksZoneInfo,
 	litsBlackAndWhiteStarBattleInfo,
+	mazeDirectedPathInfo,
 	oneGalaxyIsAGermanWhispersInfo,
 	pentominoTillingInfo,
 	renbanCavesInfo,
@@ -261,7 +265,9 @@ import {
 	yinYangSeenUnshadedCellsInfo,
 	uniqueCellsInfo,
 	yinYangShadedNeighboursCountInfo,
-	coloredCountingCirclesInfo
+	coloredCountingCirclesInfo,
+	directedPathStartInfo,
+	directedPathEndInfo
 } from './SingleCellElementsInfo';
 import {
 	coldArrowsInfo,
@@ -390,6 +396,10 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	[TOOLS.LITS_BLACK_WHITE_STAR_BATTLE]: litsBlackAndWhiteStarBattleInfo,
 
+	[TOOLS.MAZE_DIRECTED_PATH]: mazeDirectedPathInfo,
+	[TOOLS.DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME]: directedPathAdjacentCellsSumIsPrimeInfo,
+	[TOOLS.DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME]: directedPathSumOfCellsPerRegionIsPrimeInfo,
+
 	// Single Cell Constraints
 	[TOOLS.ODD]: oddInfo,
 	[TOOLS.EVEN]: evenInfo,
@@ -442,6 +452,9 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS]: chaosConstructionChessSumsInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS]: chaosConstructionArrowKnotsInfo,
 
+	[TOOLS.DIRECTED_PATH_START]: directedPathStartInfo,
+	[TOOLS.DIRECTED_PATH_END]: directedPathEndInfo,
+
 	// Single Cell Arrow Constraint
 	[TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND]: sashiganeArrowPointsToBendInfo,
 	[TOOLS.THERMO_SIGHTLINE_LOOP_ARROW]: thermoSightlineLoopArrowInfo,
@@ -472,6 +485,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	[TOOLS.UNKNOWN_REGION_BORDER]: unknownRegionBorderInfo,
 	[TOOLS.EDGE_CAVE_ONE_OF_EACH]: edgeCaveOneOfEachInfo,
+
+	[TOOLS.MAZE_WALL]: mazeWallInfo,
 
 	// Corner Constraints
 	[TOOLS.QUADRUPLE]: quadrupleInfo,

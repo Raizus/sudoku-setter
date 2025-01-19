@@ -1,3 +1,4 @@
+import type { EdgeToolI } from '../Puzzle/Constraints/EdgeConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
@@ -6,10 +7,12 @@ import {
 	cellsToGridVarsStr,
 	format_2d_array,
 	PENTOMINOES,
+	PuzzleModel,
 	VAR_2D_NAMES
 } from './solver_utils';
 
-function yinYangConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function yinYangConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -25,7 +28,8 @@ function yinYangConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function nurimisakiConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function nurimisakiConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -41,7 +45,8 @@ function nurimisakiConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function twoContiguousRegionsConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function twoContiguousRegionsConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -58,7 +63,8 @@ function twoContiguousRegionsConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function unknownRegionsConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function unknownRegionsConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -77,7 +83,8 @@ function unknownRegionsConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function sashiganeConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function sashiganeConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -97,7 +104,8 @@ function sashiganeConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function cellCenterLoopNoTouchingConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function cellCenterLoopNoTouchingConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -113,7 +121,8 @@ function cellCenterLoopNoTouchingConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function cellCenterLoopCanTouchDiagonallyConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function cellCenterLoopCanTouchDiagonallyConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -129,7 +138,8 @@ function cellCenterLoopCanTouchDiagonallyConstraint(puzzle: PuzzleI, tool: TOOLI
 	return out_str;
 }
 
-function notLoopSizedRegionsConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function notLoopSizedRegionsConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -146,7 +156,8 @@ function notLoopSizedRegionsConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function modularLoopConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function modularLoopConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -205,7 +216,8 @@ function exactlyNPerRowColumnRegion(
 	return out_str;
 }
 
-function doublersConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function doublersConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -227,7 +239,8 @@ function doublersConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function negatorsConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function negatorsConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -252,7 +265,8 @@ function negatorsConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function fillominoConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function fillominoConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -269,7 +283,8 @@ function fillominoConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function caveConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function caveConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -289,7 +304,8 @@ function caveConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function renbanCavesConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function renbanCavesConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -310,7 +326,8 @@ function renbanCavesConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function galaxiesConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function galaxiesConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -334,7 +351,8 @@ function galaxiesConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function nexusConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function nexusConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -350,7 +368,8 @@ function nexusConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function goldilocksConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function goldilocksConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -368,7 +387,8 @@ function goldilocksConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function pentominoTillingConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function pentominoTillingConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -396,7 +416,8 @@ function pentominoTillingConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function litsConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function litsConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -429,7 +450,8 @@ function litsConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function caveLitsConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function caveLitsConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -463,7 +485,8 @@ function caveLitsConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-function litsBlackAndWhiteStarBattleConstraint(puzzle: PuzzleI, tool: TOOLID) {
+function litsBlackAndWhiteStarBattleConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
 	const all_cells = grid.getAllCells();
@@ -506,7 +529,96 @@ function litsBlackAndWhiteStarBattleConstraint(puzzle: PuzzleI, tool: TOOLID) {
 	return out_str;
 }
 
-type ConstraintF = (puzzle: PuzzleI, tool: TOOLID) => string;
+function mazeDirectedPathConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	function constructEdgeList() {
+		const edge_list: [s: number, t: number][] = [];
+
+		for (const cell of grid.getAllCells()) {
+			const source = cell.r * grid.nCols + cell.c + 1;
+			const adj_cells = grid.getNeighboorCells(cell);
+			for (const cell2 of adj_cells) {
+				const target = cell2.r * grid.nCols + cell2.c + 1;
+				edge_list.push([source, target]);
+			}
+		}
+		return edge_list;
+	}
+
+	const edge_list = constructEdgeList();
+	model.edge_list = edge_list;
+	const n = grid.nRows * grid.nCols;
+	const e = edge_list.length;
+	const from_str = '[' + edge_list.map((edge) => edge[0]).join(',') + ']';
+	const to_str = '[' + edge_list.map((edge) => edge[1]).join(',') + ']';
+
+	let out_str: string = '';
+	out_str += `array[int] of int: dpath_from = ${from_str};\n`;
+	out_str += `array[int] of int: dpath_to = ${to_str};\n`;
+	out_str += `var 1..${n}: dpath_source;\n`;
+	out_str += `var 1..${n}: dpath_target;\n`;
+	out_str += `array[1..${n}] of var bool: dpath_ns;\n`;
+	out_str += `array[1..${e}] of var bool: dpath_es;\n`;
+	out_str += `constraint dpath(dpath_from, dpath_to, dpath_source, dpath_target, dpath_ns, dpath_es);\n`;
+
+	function remove_edge(n1: number, n2: number) {
+		const edge_id = edge_list.findIndex((edge) => edge[0] === n1 && edge[1] === n2);
+		if (edge_id != -1) out_str += `constraint dpath_es[${edge_id + 1}] = false;\n`;
+	}
+
+	function edge_constraints_1(_cell1: Cell, _cell2: Cell) {
+		const n1 = _cell1.r * grid.nCols + _cell1.c + 1;
+		for (let i = -1; i <= 1; i++) {
+			const n2 = (_cell2.r + i) * grid.nCols + _cell2.c + 1;
+
+			remove_edge(n1, n2);
+			remove_edge(n2, n1);
+		}
+	}
+
+	function edge_constraints_2(_cell1: Cell, _cell2: Cell) {
+		const n1 = _cell1.r * grid.nCols + _cell1.c + 1;
+		for (let j = -1; j <= 1; j++) {
+			const n2 = _cell2.r * grid.nCols + (_cell2.c + j) + 1;
+
+			remove_edge(n1, n2);
+			remove_edge(n2, n1);
+		}
+	}
+
+	const lconstraints = puzzle.localConstraints;
+	const wall_constraints = lconstraints.get(TOOLS.MAZE_WALL);
+	if (!wall_constraints) return out_str;
+	for (const constraint of Object.values(wall_constraints) as EdgeToolI[]) {
+		const cells_coords = constraint.cells;
+		const cells = cells_coords
+			.map((coord) => grid.getCell(coord.r, coord.c))
+			.filter((cell) => !!cell);
+		const [cell1, cell2] = cells;
+
+		if (cell1.r === cell2.r) {
+			// vertical border
+			edge_constraints_1(cell1, cell2);
+			edge_constraints_1(cell2, cell1);
+		} else if (cell1.c === cell2.c) {
+			// horizontal border
+			edge_constraints_2(cell1, cell2);
+			edge_constraints_2(cell2, cell1);
+		}
+	}
+
+	return out_str;
+}
+
+type ConstraintF = (model: PuzzleModel, tool: TOOLID) => string;
 
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.FILLOMINO, fillominoConstraint],
@@ -532,19 +644,21 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.CAVE_LITS, caveLitsConstraint],
 	[TOOLS.LITS_BLACK_WHITE_STAR_BATTLE, litsBlackAndWhiteStarBattleConstraint],
 
-	[TOOLS.RENBAN_CAVES, renbanCavesConstraint]
+	[TOOLS.RENBAN_CAVES, renbanCavesConstraint],
+	[TOOLS.MAZE_DIRECTED_PATH, mazeDirectedPathConstraint]
 ]);
 
-export function undeterminedRegionsConstraints(puzzle: PuzzleI): string {
+export function undeterminedRegionsConstraints(model: PuzzleModel): string {
 	let out_str = '';
 
+	const puzzle = model.puzzle;
 	const gconstraints = puzzle.globalConstraints;
 	for (const [toolId, value] of gconstraints.entries()) {
 		if (!value) continue;
 		const constraintF = tool_map.get(toolId);
 		if (!constraintF) continue;
 
-		let constraint_str = constraintF(puzzle, toolId);
+		let constraint_str = constraintF(model, toolId);
 		constraint_str = addHeader(constraint_str, `${toolId}`);
 		out_str += constraint_str;
 	}

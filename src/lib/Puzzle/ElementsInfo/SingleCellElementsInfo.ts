@@ -558,8 +558,7 @@ export const coloredCountingCirclesInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description:
-			`Using red (1), green (2), and blue (3), color in all circles such that:
+		description: `Using red (1), green (2), and blue (3), color in all circles such that:
  - Orthogonally adjacent circles are different colors.
  - The digit inside a circle appears that many times in circles of that color.`,
 		tags: [],
@@ -585,8 +584,7 @@ export const uniqueCellsInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description:
-			'Digits do not repeat on cells with hexagons on them.',
+		description: 'Digits do not repeat on cells with hexagons on them.',
 		tags: [],
 		categories: singleCellShapeDefaultCategories
 	}
@@ -1090,6 +1088,54 @@ export const chaosConstructionArrowKnotsInfo: SquareCellElementInfo = {
 	meta: {
 		description: `From each circle, draw some arrows that travel in a straight line either horizontally only or vertically only. The number in the bottom right corner of a circle cell indicates the number of arrows that must be drawn from that circle. Digits along an arrow must sum to the digit in the attached circle.
 		Additionally, all cells along arrows must be part of the same region as the circle they originate from. If an arrow doesn't reach the edge of the grid, the cell directly after the tip must be in a different region than the arrow.`,
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const directedPathStartInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.DIRECTED_PATH_START,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.POLYGON,
+		n: { editable: false, value: 3 },
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'green' },
+		r: { editable: false, value: 0.4 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description: `A green triangle marks the start of a directed path.`,
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const directedPathEndInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.DIRECTED_PATH_END,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.POLYGON,
+		n: { editable: false, value: 6 },
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'red' },
+		r: { editable: false, value: 0.4 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description: `A red hexagon marks the end of a directed path.`,
 		tags: [],
 		categories: singleCellShapeDefaultCategories
 	}

@@ -84,7 +84,9 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	NOT_LOOP_SIZED_REGIONS = 'Not Loop Sized Regions',
 	MODULAR_LOOP = 'Modular Loop',
 
-	DIRECTED_PATH = 'Directed Path',
+	MAZE_DIRECTED_PATH = 'Directed Path',
+	DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME = 'Directed Path Adjacent Cells Sum Is Prime',
+	DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME = 'Directed Path Sum Of Cells Per Region Is Prime',
 
 	CAVE = 'Cave',
 	CAVE_CELLS_ARE_ODD = 'Cave Cells Are Odd',

@@ -1,5 +1,4 @@
 export function defineFunctionsPredicates() {
-
 	const tests = `test orth_adjacent_2d(
     int: r1, int: c1, 
     int: r2, int: c2
@@ -465,7 +464,16 @@ predicate conditional_strictly_increasing_p(
     assert(index_sets_agree(arr, labels), "arr and labels must have the same indexes")
     /\\ forall(i,j in idx where i < j) (
         (labels[i] = label /\\ labels[j] = label) -> arr[i] < arr[j]
-    );\n\n`;
+    );
+    
+predicate is_prime_p(var int: val) = let {
+    set of int: primes = {
+        2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 
+        79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 
+        167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 
+        257, 263, 269, 271
+    }
+} in member(primes, val);\n\n`;
 
 	const single_cell_constraints = `predicate odd_p(var int: x) =
     x mod 2 = 1;
@@ -3534,7 +3542,58 @@ predicate star_battle_no_touching_p(
     )
 );\n\n`;
 
-	const out_str = '\n' +
+	const direct_path = `predicate direct_path_adjacent_sum_is_prime(
+    array[int, int] of var int: grid,
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: es
+) = let {
+    set of int: e_idxs = index_set(es);
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_cols = length(cols);
+} in (
+    forall(k in e_idxs)(
+        es[k] -> let {
+            int: n1 = from[k];
+            int: n2 = to[k];
+            int: r1 = (n1 - 1) div n_cols;
+            int: c1 = (n1 - 1) mod n_cols;
+            int: r2 = (n2 - 1) div n_cols;
+            int: c2 = (n2 - 1) mod n_cols;
+            var int: sum_var;
+        } in (
+            sum_var = grid[r1,c1] + grid[r2,c2] /\\
+            is_prime_p(sum_var)
+        )
+    )
+);
+
+predicate directed_path_sum_path_cells_in_region_is_prime_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions,
+    array[int] of var bool: ns,
+    set of int: region_vals
+) = let {
+    array[int] of var int: regions_1d = array1d(regions);
+    set of int: idxs = index_set(regions_1d);
+} in (
+   forall(reg in region_vals)(
+       let {
+           array[idxs] of var bool: region_bools;
+           var int: sum_var;
+       } in (
+           forall(i in idxs)(
+               region_bools[i] = (regions_1d[i] == reg /\\ ns[i])
+           ) 
+           /\\ sum_var = conditional_sum_f(array1d(grid), region_bools, true)
+           /\\ is_prime_p(sum_var)
+       )
+   )
+);\n\n`;
+
+	const out_str =
+		'\n' +
 		tests +
 		helper_f +
 		more_helper_f +
@@ -3566,7 +3625,8 @@ predicate star_battle_no_touching_p(
 		global_constraints +
 		PENTOMINO_TILLING +
 		LITS +
-		star_battle;
+		star_battle +
+		direct_path;
 
 	return out_str;
 }

@@ -65,8 +65,8 @@
 		resetPuzzle();
 		// Define a simple MiniZinc model
 		console.log(puzzle);
-		const modelstr = createMinizincModel(puzzle);
-		model.addFile('test.mzn', modelstr);
+		const puzzle_model = createMinizincModel(puzzle);
+		model.addFile('test.mzn', puzzle_model.model_str);
 
 		timer.reset();
 		timer.start();
@@ -81,8 +81,8 @@
 		solver.on('solution', (solution) => {
 			const json = solution.output.json;
 			if (solution.type === 'solution' && sol_count !== null) sol_count += 1;
-			// console.log(json);
-			setBoardOnSolution(json, puzzle);
+			console.log(json);
+			setBoardOnSolution(json, puzzle_model);
 		});
 
 		solver.on('error', (error) => {

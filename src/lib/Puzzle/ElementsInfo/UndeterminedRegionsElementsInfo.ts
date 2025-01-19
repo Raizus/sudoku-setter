@@ -155,6 +155,41 @@ export const modularLoopInfo: AbstractElementInfo = {
 	}
 };
 
+export const mazeDirectedPathInfo: AbstractElementInfo = {
+	toolId: TOOLS.MAZE_DIRECTED_PATH,
+	order: 0,
+
+	meta: {
+		description:
+			"Draw a directect path in the grid. The path will be a snaking line that passes through the centres of cells, without visiting any cell more than once, crossing itself or passing through any thick maze walls. As well as moving orthogonally, the path may move diagonally if there's a 2x2 space in which to do so, but may never pass diagonally through the rounded end / corner of a wall.",
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const directedPathAdjacentCellsSumIsPrimeInfo: AbstractElementInfo = {
+	toolId: TOOLS.DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME,
+	order: 0,
+
+	meta: {
+		description: 'Any two adjacent cells along the correct path must sum to a prime number.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const directedPathSumOfCellsPerRegionIsPrimeInfo: AbstractElementInfo = {
+	toolId: TOOLS.DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME,
+	order: 0,
+
+	meta: {
+		description:
+			'All digits within a marked sudoku box that lie anywhere on the correct path must sum to a prime number.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
 export const caveInfo: AbstractElementInfo = {
 	toolId: TOOLS.CAVE,
 	order: 0,

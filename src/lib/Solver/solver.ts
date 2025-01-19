@@ -59,10 +59,10 @@ export function createMinizincModel(puzzle: PuzzleI) {
 	model.add(sudokuConstraints(puzzle));
 	model.add(hexedSudokuConstraint(puzzle));
 
-	model.add(undeterminedRegionsConstraints(puzzle));
+	model.add(undeterminedRegionsConstraints(model));
 	model.add(localConstraints(puzzle, model));
 	model.add(globalConstraints(puzzle));
 
 	model.add('\nsolve satisfy;');
-	return model.model_str;
+	return model;
 }

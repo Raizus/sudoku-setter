@@ -702,6 +702,24 @@ function yinYangNeighbourGreaterThanOneWithinRegionShadedConstraint(
 	return out_str;
 }
 
+function directedPathAdjacentCellsSumIsPrimeConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint direct_path_adjacent_sum_is_prime(board, dpath_from, dpath_to, dpath_es);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
+function directedPathSumOfCellsPerRegionIsPrimeConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+
+	const grid = puzzle.grid;
+	const regions = [...grid.getUsedRegions()];
+	const used_regions = '{' + regions.join(',') + '}';
+	out_str += `constraint directed_path_sum_path_cells_in_region_is_prime_p(board, board_regions, dpath_ns, ${used_regions});\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
 export function sudokuConstraints(puzzle: PuzzleI) {
 	const gconstraints = puzzle.globalConstraints;
 	if (gconstraints.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY)) {
@@ -815,6 +833,11 @@ const tool_map = new Map<string, ConstraintF>([
 	[
 		TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED,
 		yinYangNeighbourGreaterThanOneWithinRegionShadedConstraint
+	],
+	[TOOLS.DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME, directedPathAdjacentCellsSumIsPrimeConstraint],
+	[
+		TOOLS.DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME,
+		directedPathSumOfCellsPerRegionIsPrimeConstraint
 	]
 ]);
 
