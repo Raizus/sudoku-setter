@@ -75,6 +75,7 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	YIN_YANG = 'Yin Yang',
 	YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED = 'Yin Yang Neighbour Greater Than One Within Region Shaded',
 	NURIMISAKI = 'Nurimisaki',
+	NURIKABE = 'Nurikabe',
 	TWO_CONTIGUOUS_REGIONS = 'Two Contiguous Regions',
 	SASHIGANE = 'Sashigane',
 	GOLDILOCKS_ZONE = 'Goldilocks Zone',
@@ -164,6 +165,8 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	CHAOS_CONSTRUCTION_CHESS_SUMS = 'Chaos Construction Chess Sums',
 	CHAOS_CONSTRUCTION_ARROW_KNOTS = 'Chaos Construction Arrow Knots',
 
+	NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE = 'Nurikabe Island Product Of Sum And Size Clue',
+
 	DIRECTED_PATH_START = 'Directed Path Start',
 	DIRECTED_PATH_END = 'Directed Path End'
 }
@@ -181,7 +184,8 @@ export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
 	YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR = 'Yin Yang Sum Of Cells Of Opposite Color',
 	LOOP_CELL_COUNT_ARROWS = 'Loop Cell Count Arrows',
 	YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS = 'Yin Yang Count Unique Fillomino Same Shading Arrows',
-	SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS = 'Same Galaxy Unobstructed Count Arrows'
+	SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS = 'Same Galaxy Unobstructed Count Arrows',
+	NURIKABE_COUNT_ISLAND_CELLS_ARROWS = 'Nurikabe Count Island Cells Arrows',
 }
 
 export enum EDGE_CONSTRAINTS {
@@ -246,6 +250,7 @@ export enum LINE_CONSTRAINTS {
 	AT_LEAST_X_LINE = 'At Least X Line',
 	HEADLESS_ARROW = 'Headless Arrow',
 	SUPERFUZZY_ARROW = 'Superfuzzy Arrow',
+	AMBIGUOUS_ARROW = 'Ambiguous Arrow',
 	N_CONSECUTIVE_FUZZY_SUM_LINE = 'N-Consecutive Fuzzy Sum Line',
 	ADJACENT_CELL_SUM_IS_PRIME_LINE = 'Adjacent Cell Sum Is Prime Line',
 	PRODUCT_LINE = 'Product Line',

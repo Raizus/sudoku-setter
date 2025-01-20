@@ -276,6 +276,16 @@ function superfuzzyArrowConstraint(model: PuzzleModel, grid: Grid, c_id: string,
 	return constraint_str;
 }
 
+function ambiguousArrowConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: LineToolI
+) {
+	const constraint_str = simpleLineConstraint(grid, constraint, 'ambiguous_arrow_p', true);
+	return constraint_str;
+}
+
 function headlessArrowConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: LineToolI) {
 	const constraint_str = simpleLineConstraint(grid, constraint, 'headless_arrow_p');
 	return constraint_str;
@@ -599,6 +609,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.N_CONSECUTIVE_FUZZY_SUM_LINE, nConsecutiveFuzzySumLineConstraint],
 
 	[TOOLS.SUPERFUZZY_ARROW, superfuzzyArrowConstraint],
+	[TOOLS.AMBIGUOUS_ARROW, ambiguousArrowConstraint],
 	[TOOLS.HEADLESS_ARROW, headlessArrowConstraint],
 	[TOOLS.ARITHMETIC_SEQUENCE_LINE, arithmeticSequenceLineConstraint],
 	[TOOLS.ODD_EVEN_OSCILLATOR_LINE, oddEvenOscillatorLineConstraint],

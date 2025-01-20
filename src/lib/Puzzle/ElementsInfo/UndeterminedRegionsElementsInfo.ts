@@ -49,6 +49,18 @@ export const nurimisakiInfo: AbstractElementInfo = {
 	}
 };
 
+export const nurikabeInfo: AbstractElementInfo = {
+	toolId: TOOLS.NURIKABE,
+	order: 0,
+
+	meta: {
+		description:
+			'Shade some cells blue (representing water), such that all water cells are orthogonally connected, but water may not fully cover a 2x2 area. Shade the remaining cells green, which represent islands. Digits may not repeat within an island.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
 export const twoContiguousRegionsInfo: AbstractElementInfo = {
 	toolId: TOOLS.TWO_CONTIGUOUS_REGIONS,
 	order: 0,

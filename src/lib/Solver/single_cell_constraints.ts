@@ -15,6 +15,7 @@ import {
 	PuzzleModel,
 	VAR_2D_NAMES
 } from './solver_utils';
+import type { ParseOptions } from './value_parsing';
 
 function simpleSingleCellConstraint(grid: Grid, constraint: CellToolI, predicate: string) {
 	const coords = constraint.cell;
@@ -23,6 +24,17 @@ function simpleSingleCellConstraint(grid: Grid, constraint: CellToolI, predicate
 	const var1 = cellToVarName(cell);
 	const constraint_str = `constraint ${predicate}(${var1});\n`;
 	return constraint_str;
+}
+
+function getParsingResult(model: PuzzleModel, value: string, c_id: string) {
+	const parse_opts: ParseOptions = {
+		allow_var: true,
+		allow_interval: true,
+		allow_int_list: false
+	};
+	const default_name = `cell_var_${c_id}`;
+	const result = model.getOrSetSharedVar(value, default_name, parse_opts);
+	return result;
 }
 
 function valuedSingleCellConstraint(
@@ -298,14 +310,16 @@ function sandwichRowColCountConstraint(
 	return constraint_str;
 }
 
-function minMaxConstraint(grid: Grid, constraints: CellToolI[], predicate: string) {
+function minMaxConstraint(grid: Grid, constraints: Record<string, CellToolI>, predicate: string) {
+	const constl = Object.values(constraints);
+	
 	let out_str = '';
-	const all_max_coords = constraints.map((constraint) => constraint.cell);
+	const all_max_coords = constl.map((constraint) => constraint.cell);
 	const max_cells = new Set(
 		all_max_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
 	);
 
-	for (const constraint of constraints) {
+	for (const constraint of constl) {
 		const coord = constraint.cell;
 		const cell = grid.getCell(coord.r, coord.c);
 		if (!cell) continue;
@@ -321,19 +335,25 @@ function minMaxConstraint(grid: Grid, constraints: CellToolI[], predicate: strin
 	return out_str;
 }
 
-function maximumConstraint(grid: Grid, constraints: CellToolI[]) {
+function maximumConstraint(model: PuzzleModel, grid: Grid, constraints: Record<string, CellToolI>) {
 	const constraint_str = minMaxConstraint(grid, constraints, 'maximum_p');
 	return constraint_str;
 }
 
-function minimumConstraint(grid: Grid, constraints: CellToolI[]) {
+function minimumConstraint(model: PuzzleModel, grid: Grid, constraints: Record<string, CellToolI>) {
 	const constraint_str = minMaxConstraint(grid, constraints, 'minimum_p');
 	return constraint_str;
 }
 
-function countingCirclesConstraint(grid: Grid, constraints: CellToolI[]) {
+function countingCirclesConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	constraints: Record<string, CellToolI>
+) {
+	const constl = Object.values(constraints);
+
 	let out_str = '';
-	const all_coords = constraints.map((constraint) => constraint.cell);
+	const all_coords = constl.map((constraint) => constraint.cell);
 	const cells = new Set(
 		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
 	);
@@ -342,7 +362,7 @@ function countingCirclesConstraint(grid: Grid, constraints: CellToolI[]) {
 
 	out_str += `array[int] of var int: counting_circles = [\n\t${vars_str}\n];\n`;
 
-	for (const constraint of constraints) {
+	for (const constraint of constl) {
 		const coord = constraint.cell;
 		const cell = grid.getCell(coord.r, coord.c);
 		if (!cell) continue;
@@ -355,9 +375,15 @@ function countingCirclesConstraint(grid: Grid, constraints: CellToolI[]) {
 	return out_str;
 }
 
-function coloredCountingCirclesConstraint(grid: Grid, constraints: CellToolI[]) {
+function coloredCountingCirclesConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	constraints: Record<string, CellToolI>
+) {
+	const constl = Object.values(constraints);
+
 	let out_str = '';
-	const all_coords = constraints.map((constraint) => constraint.cell);
+	const all_coords = constl.map((constraint) => constraint.cell);
 	const cells = new Set(
 		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
 	);
@@ -379,7 +405,7 @@ function coloredCountingCirclesConstraint(grid: Grid, constraints: CellToolI[]) 
 		out_str += `constraint ${color_var} == 0;\n`;
 	}
 
-	for (const constraint of constraints) {
+	for (const constraint of constl) {
 		const coord = constraint.cell;
 		const cell = grid.getCell(coord.r, coord.c);
 		if (!cell) continue;
@@ -399,9 +425,15 @@ function coloredCountingCirclesConstraint(grid: Grid, constraints: CellToolI[]) 
 	return out_str;
 }
 
-function uniqueCellsConstraint(grid: Grid, constraints: CellToolI[]) {
+function uniqueCellsConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	constraints: Record<string, CellToolI>
+) {
+	const constl = Object.values(constraints);
+
 	let out_str = '';
-	const all_coords = constraints.map((constraint) => constraint.cell);
+	const all_coords = constl.map((constraint) => constraint.cell);
 	const cells = new Set(
 		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
 	);
@@ -795,7 +827,12 @@ function chaosConstructionArrowKnotsConstraint(
 	return out_str;
 }
 
-function directedPathStartConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: CellToolI) {
+function directedPathStartConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
@@ -822,8 +859,43 @@ function directedPathEndConstraint(
 	return constraint_str;
 }
 
+function nurikabeIslandProductOfSumAndSizeConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	constraints: Record<string, CellToolI>
+) {
+	let out_str: string = '';
+	let count = 0;
+
+	for (const [c_id, constraint] of Object.entries(constraints)) {
+		const coords = constraint.cell;
+		const cell = grid.getCell(coords.r, coords.c);
+		if (!cell) continue;
+		const value = constraint.value;
+		
+		if (!value) continue;
+		const result = getParsingResult(model, value, c_id);
+		if (!result) continue;
+		
+		const product_var = result[1];
+		out_str += result[0];
+		const region_var = cellToGridVarName(cell, VAR_2D_NAMES.NURIKABE_REGIONS);
+		
+		out_str += `constraint nurikabe_island_product_of_sum_and_size_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.NURIKABE_REGIONS}, ${region_var}, ${product_var});\n`;
+		count += 1;
+	}
+
+	out_str += `constraint count_unique_values(array1d(${VAR_2D_NAMES.NURIKABE_REGIONS})) == ${count+1};\n`;
+		
+	return out_str;
+}
+
 type ConstraintF = (model: PuzzleModel, grid: Grid, c_id: string, constraint: CellToolI) => string;
-type ConstraintF2 = (grid: Grid, constraint: CellToolI[]) => string;
+type ConstraintF2 = (
+	model: PuzzleModel,
+	grid: Grid,
+	constraints: Record<string, CellToolI>
+) => string;
 
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.ODD, oddConstraint],
@@ -882,7 +954,9 @@ const tool_map_2 = new Map<string, ConstraintF2>([
 	[TOOLS.MINIMUM, minimumConstraint],
 	[TOOLS.COUNTING_CIRCLES, countingCirclesConstraint],
 	[TOOLS.COLORED_COUNTING_CIRCLES, coloredCountingCirclesConstraint],
-	[TOOLS.UNIQUE_CELLS, uniqueCellsConstraint]
+	[TOOLS.UNIQUE_CELLS, uniqueCellsConstraint],
+
+	[TOOLS.NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE, nurikabeIslandProductOfSumAndSizeConstraint]
 ]);
 
 export function singleCellConstraints(
@@ -900,8 +974,7 @@ export function singleCellConstraints(
 			out_str += constraint_str;
 		}
 	} else if (constraintF2) {
-		const constl = Object.values(constraints) as CellToolI[];
-		const constraint_str = constraintF2(grid, constl);
+		const constraint_str = constraintF2(model, grid, constraints as Record<string, CellToolI>);
 		out_str += constraint_str;
 	}
 	return out_str;

@@ -643,7 +643,7 @@ function caveWallsAreEvenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 
 function cave2x2NotFullyShadedOrUnshadedConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	let out_str: string = '';
-	out_str += `constraint not_fully_shaded_or_unshaded_2x2_p(cave_shading);\n`;
+	out_str += `constraint shading_2x2_allowed_p(cave_shading, 1..3);\n`;
 	out_str = addHeader(out_str, `${toolId}`);
 	return out_str;
 }

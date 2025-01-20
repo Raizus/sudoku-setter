@@ -45,6 +45,24 @@ function nurimisakiConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
+function nurikabeConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outisde the grid.`);
+		return '';
+	}
+
+	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: nurikabe_shading;\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var int: nurikabe_regions;\n`;
+	out_str += `constraint nurikabe_p(nurikabe_shading, nurikabe_regions);\n`;
+
+	return out_str;
+}
+
 function twoContiguousRegionsConstraint(model: PuzzleModel, tool: TOOLID) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
@@ -626,6 +644,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.GALAXIES, galaxiesConstraint],
 	[TOOLS.YIN_YANG, yinYangConstraint],
 	[TOOLS.NURIMISAKI, nurimisakiConstraint],
+	[TOOLS.NURIKABE, nurikabeConstraint],
 	[TOOLS.TWO_CONTIGUOUS_REGIONS, twoContiguousRegionsConstraint],
 	[TOOLS.UNKNOWN_REGIONS, unknownRegionsConstraint],
 	[TOOLS.SASHIGANE, sashiganeConstraint],

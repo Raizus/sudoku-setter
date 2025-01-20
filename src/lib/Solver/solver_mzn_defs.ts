@@ -438,18 +438,20 @@ predicate multiples_p(var int: a, var int: b) =
       var int: larger = max([a,b]),
       var int: smaller = min([a,b])
     } in larger mod smaller == 0;
-     
-predicate not_fully_shaded_or_unshaded_2x2_p(array[int, int] of var 0..1: shading) =
+
+predicate shading_2x2_allowed_p(
+    array[int, int] of var 0..1: shading,
+    set of int: allowed
+) = (
     % For each possible 2x2 square in the grid
     forall(r in index_set_1of2(shading) where r < max(index_set_1of2(shading)),
            c in index_set_2of2(shading) where c < max(index_set_2of2(shading)))(
-        % Sum of the 2x2 area must be between 1 and 3 inclusive
-        % This prevents both all 0's (sum=0) and all 1's (sum=4)
+        % Sum of the 2x2 area must be in allowed
         let {
             var int: square_sum = shading[r,c] + shading[r+1,c] + shading[r,c+1] + shading[r+1,c+1]
-        } in
-        square_sum in 1..3
-    );
+        } in (square_sum in allowed)
+    )
+);
     
 predicate conditional_strictly_increasing_p(
     array[int] of var int: arr,
@@ -909,6 +911,14 @@ predicate superfuzzy_arrow_p(array[int] of var int: arr) =
             arr[b] = sum(i in b + 1 .. last_index)(arr[i])
         )
     );
+
+predicate ambiguous_arrow_p(array[int] of var int: arr) = let{
+    set of int: idxs = index_set(arr)
+} in (
+    exists(i in idxs)(
+        arr[i] == sum(j in idxs where j != i)(arr[j])
+    )
+);
 
 predicate headless_arrow_p(array[int] of var int: arr) =
     let {
@@ -1504,11 +1514,11 @@ forall(r in rows, c in cols)(
 		(grid[r+1,c] == grid[r, c+1] -> grid[r,c] != grid[r+1, c+1])
     );
 
-predicate yin_yang_p(array[int, int] of var 0..1: grid) =
-	connected_region(grid, 0) /\\
-    connected_region(grid, 1) /\\
-	not_fully_shaded_or_unshaded_2x2_p(grid) /\\
-	yin_yang_no_crossings(grid);
+predicate yin_yang_p(array[int, int] of var 0..1: shading) =
+	connected_region(shading, 0)
+    /\\ connected_region(shading, 1)
+    /\\ shading_2x2_allowed_p(shading, 1..3)
+	/\\ yin_yang_no_crossings(shading);
 	
 predicate yin_yang_antithesis_killer_cage_p(
 	array[int] of var int: arr, 
@@ -1847,8 +1857,8 @@ predicate chaos_construction_arrow_knots_p(
 );\n\n`;
 
 	const nurimisaki = `predicate nurimisaki_p(array[int, int] of var int: grid) =
-	connected_region(grid, 0) /\\
-	not_fully_shaded_or_unshaded_2x2_p(grid);
+	connected_region(grid, 0)
+    /\\ shading_2x2_allowed_p(grid, 1..3);
 
 predicate nurimisaki_unshaded_endpoint_p(array[int] of var int: adj_cells, var int: nurimisaki_cell) = 
     count(adj_cells, 0) == 1 /\\ nurimisaki_cell == 0;
@@ -2331,6 +2341,40 @@ predicate cave_floodfill_p(
     )
 );
 
+predicate cave_nurikabe_helper_p(
+    array[int, int] of var 0..1: shading, 
+    array[int, int] of var int: regions
+) =  let {
+    set of int: rows = index_set_1of2(shading);
+    set of int: cols = index_set_2of2(shading);
+} in (
+    % water cells (0 = water), must be all orthogonally connected
+    connected_region(shading, 0) /\\
+    sum(r in rows, c in cols)(bool2int(shading[r,c] = 0)) > 1 /\\
+    % label shading = 0 region with 0
+    forall(r in rows, c in cols) (
+        shading[r,c] = 0 <-> regions[r, c] = 0
+    ) /\\
+    forall(r in rows, c in cols) (
+        shading[r,c] = 1 <-> regions[r, c] != 0
+    ) /\\
+    % adjacent shading = 1 cells must belong to the same region (horiz adjacent)
+    forall (r in rows, c in cols where c > min(cols)) (
+        let { 
+            var int: id1 = regions[r, c - 1], 
+            var int: id2 = regions[r, c] 
+        } in (shading[r,c] = 1 /\\ shading[r, c - 1] = 1) -> id1 = id2
+    ) /\\
+    % adjacent shading = 1 cells must belong to the same region (vertical adjacent)
+    forall (r in rows, c in cols where r > min(rows)) (
+        let { var int: id1 = regions[r - 1, c], var int: id2 = regions[r, c] } in
+        (shading[r,c] = 1 /\\ shading[r - 1, c] = 1) -> id1 = id2
+    ) /\\
+    % we need to remove ambiguity from the region numbering 
+    % use the numbering each region by the id of the first element of that region
+    cave_floodfill_p(regions)
+);
+
 predicate cave_p(
     array[int, int] of var 0..1: shading, 
     array[int, int] of var int: regions
@@ -2338,37 +2382,12 @@ predicate cave_p(
     set of int: rows = index_set_1of2(shading);
     set of int: cols = index_set_2of2(shading);
 } in (
-    % unshaded cells (0 = cave), representing the cave must be all orthogonally connected
-    connected_region(shading, 0) /\\
-    sum(r in rows, c in cols)(bool2int(shading[r,c] = 0)) > 1 /\\
-    % label cave region with 0
-    forall(r in rows, c in cols) (
-        shading[r,c] = 0 <-> regions[r, c] = 0
-    ) /\\
-    forall(r in rows, c in cols) (
-        shading[r,c] = 1 <-> regions[r, c] != 0
-    ) /\\
-    % all shaded cells are orthogonally connected by other shaded cells to an edge of the grid
-    % adjacent shaded cells must belong to the same region (horiz adjacent)
-    forall (r in rows, c in cols where c > min(cols)) (
-        let { 
-            var int: id1 = regions[r, c - 1], 
-            var int: id2 = regions[r, c] 
-        } in (shading[r,c] = 1 /\\ shading[r, c - 1] = 1) -> id1 = id2
-    ) /\\
-    % adjacent shaded cells must belong to the same region (vertical adjacent)
-    forall (r in rows, c in cols where r > min(rows)) (
-        let { var int: id1 = regions[r - 1, c], var int: id2 = regions[r, c] } in
-        (shading[r,c] = 1 /\\ shading[r - 1, c] = 1) -> id1 = id2
-    ) /\\
+    cave_nurikabe_helper_p(shading, regions)
     % for each region not equal to 0, there must be at least one cell that is on the edge of the grid
-    forall(r in rows, c in cols where regions[r,c] != 0)(
+    /\\ forall(r in rows, c in cols where regions[r,c] != 0)(
         exists(r2 in rows, c2 in cols)(regions[r2,c2] = regions[r,c] /\\ on_edge_2d(r2, c2, regions))
-    ) /\\
-    % we need to remove ambiguity from the region numbering 
-    % use the numbering each region by the id of the first element of that region
-    cave_floodfill_p(regions)
-    );
+    )
+);
 
 
 predicate twilight_cave_fillomino_region_shading(
@@ -3242,26 +3261,9 @@ predicate tilling_region_no_empty_cells_p(
     set of int: cols = index_set_2of2(regions);
 } in forall(r in rows, c in cols)(regions[r,c] != 0);\n\n`;
 
-	const LITS = `predicate not_fully_shaded_2x2_p(
-    array[int, int] of var 0..1: shading
-) = let {
-   set of int: rows = index_set_1of2(shading);
-   set of int: cols = index_set_2of2(shading);
-} in
-    % For each possible 2x2 square in the grid
-    forall(r in rows where r < max(rows),
-           c in cols where c < max(cols))(
-        % Sum of the 2x2 area must be between 1 and 3 inclusive
-        % This prevents both all 0's (sum=0) and all 1's (sum=4)
-        let {
-            var int: square_sum = shading[r,c] + shading[r+1,c] + shading[r,c+1] + shading[r+1,c+1]
-        } in
-        square_sum in 0..3
-    );
-
-predicate lits_shading_p(array[int, int] of var 0..1: shading) =
-    connected_region(shading, 1) /\\
-	not_fully_shaded_2x2_p(shading);
+	const LITS = `predicate lits_shading_p(array[int, int] of var 0..1: shading) =
+    connected_region(shading, 1)
+    /\\ shading_2x2_allowed_p(shading, 0..3);
 
 predicate lits_shading_ids_p(
     array[int, int] of var 0..1: shading, 
@@ -3592,6 +3594,37 @@ predicate directed_path_sum_path_cells_in_region_is_prime_p(
    )
 );\n\n`;
 
+    const nurikabe = `predicate nurikabe_p(
+    array[int, int] of var 0..1: shading, 
+    array[int, int] of var int: regions
+) =  let {
+    set of int: rows = index_set_1of2(shading);
+    set of int: cols = index_set_2of2(shading);
+} in (
+    cave_nurikabe_helper_p(shading, regions)
+    % no 2x2 region can be all water (all zeros)
+    /\\ shading_2x2_allowed_p(shading, 1..4)
+);
+
+predicate nurikabe_island_product_of_sum_and_size_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions,
+    var int: region,
+    var int: prod_val
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    var int: size;
+    var int: island_sum;
+} in (
+    assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes")
+    % is island and not water
+    /\\ region != 0
+    /\\ size = count(array1d(regions), region)
+    /\\ island_sum = conditional_sum_f(array1d(grid), array1d(regions), region)
+    /\\ prod_val = size * island_sum
+);\n\n`;
+    
 	const out_str =
 		'\n' +
 		tests +
@@ -3626,7 +3659,8 @@ predicate directed_path_sum_path_cells_in_region_is_prime_p(
 		PENTOMINO_TILLING +
 		LITS +
 		star_battle +
-		direct_path;
+        direct_path +
+        nurikabe;
 
 	return out_str;
 }

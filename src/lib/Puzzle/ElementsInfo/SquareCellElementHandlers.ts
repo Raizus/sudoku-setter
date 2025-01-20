@@ -117,6 +117,7 @@ import {
 	goldilocksZoneInfo,
 	litsBlackAndWhiteStarBattleInfo,
 	mazeDirectedPathInfo,
+	nurikabeInfo,
 	oneGalaxyIsAGermanWhispersInfo,
 	pentominoTillingInfo,
 	renbanCavesInfo,
@@ -195,7 +196,8 @@ import {
 	goldilocksZoneRegionSumLineInfo,
 	fuzzyThermometerInfo,
 	customThermometerInfo,
-	segmentedSumAndRenbanLineInfo
+	segmentedSumAndRenbanLineInfo,
+	ambiguousArrowInfo
 } from './LineConstraintsElementsInfo';
 import {
 	littleKillerLookAndSayInfo,
@@ -267,12 +269,14 @@ import {
 	yinYangShadedNeighboursCountInfo,
 	coloredCountingCirclesInfo,
 	directedPathStartInfo,
-	directedPathEndInfo
+	directedPathEndInfo,
+	nurikabeIslandProductOfSumAndSizeInfo
 } from './SingleCellElementsInfo';
 import {
 	coldArrowsInfo,
 	countCellsNotInTheSameRegionArrowsInfo,
 	hotArrowsInfo,
+	nurikabeCountIslandCellsArrowsInfo,
 	yinYangCountShadedCellsInfo
 } from './SingleCellMultiArrowElementsInfo';
 import { yinYangSumOfCellsOfOppositeColorInfo } from './SingleCellMultiArrowElementsInfo';
@@ -368,6 +372,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED]:
 		yinYangNeighbourGreaterThanOneWithinRegionShadedInfo,
 	[TOOLS.NURIMISAKI]: nurimisakiInfo,
+	[TOOLS.NURIKABE]: nurikabeInfo,
 	[TOOLS.TWO_CONTIGUOUS_REGIONS]: twoContiguousRegionsInfo,
 	[TOOLS.SASHIGANE]: sashiganeRegionsInfo,
 	[TOOLS.GOLDILOCKS_ZONE]: goldilocksZoneInfo,
@@ -398,7 +403,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	[TOOLS.MAZE_DIRECTED_PATH]: mazeDirectedPathInfo,
 	[TOOLS.DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME]: directedPathAdjacentCellsSumIsPrimeInfo,
-	[TOOLS.DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME]: directedPathSumOfCellsPerRegionIsPrimeInfo,
+	[TOOLS.DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME]:
+		directedPathSumOfCellsPerRegionIsPrimeInfo,
 
 	// Single Cell Constraints
 	[TOOLS.ODD]: oddInfo,
@@ -452,6 +458,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS]: chaosConstructionChessSumsInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS]: chaosConstructionArrowKnotsInfo,
 
+	[TOOLS.NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE]: nurikabeIslandProductOfSumAndSizeInfo,
+
 	[TOOLS.DIRECTED_PATH_START]: directedPathStartInfo,
 	[TOOLS.DIRECTED_PATH_END]: directedPathEndInfo,
 
@@ -469,6 +477,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS]:
 		yinYangCountUniqueFillominoSameShadingInfo,
 	[TOOLS.SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS]: sameGalaxyUnobstructedCountArrowsInfo,
+	[TOOLS.NURIKABE_COUNT_ISLAND_CELLS_ARROWS]: nurikabeCountIslandCellsArrowsInfo,
 
 	// Edge Constraints
 	[TOOLS.DIFFERENCE]: differenceInfo,
@@ -528,6 +537,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.ROW_SUM_LINE]: rowSumLineInfo,
 	[TOOLS.AT_LEAST_X_LINE]: atLeastXLineInfo,
 	[TOOLS.SUPERFUZZY_ARROW]: superfuzzyArrowInfo,
+	[TOOLS.AMBIGUOUS_ARROW]: ambiguousArrowInfo,
 	[TOOLS.HEADLESS_ARROW]: headlessArrowInfo,
 	[TOOLS.N_CONSECUTIVE_FUZZY_SUM_LINE]: nConsecutiveFuzzySumLineInfo,
 	// [TOOLS.ADJACENT_CELL_SUM_IS_PRIME_LINE]: adjacentCellSumIsPrimeLineInfo,

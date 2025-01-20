@@ -167,3 +167,21 @@ export const hotArrowsInfo: SquareCellElementInfo = {
 		categories: defaultCategories
 	}
 };
+
+export const nurikabeCountIslandCellsArrowsInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.NURIKABE_COUNT_ISLAND_CELLS_ARROWS,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: defaultShape,
+
+	meta: {
+		description:
+			'A cell with arrow(s) may be land or water, and the digit gives the total number of island cells in the indicated directions combined, not including itself.',
+		tags: [],
+		categories: defaultCategories
+	}
+};

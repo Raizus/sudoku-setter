@@ -10,6 +10,8 @@ export enum VAR_2D_NAMES {
 	BOARD = 'board',
 	BOARD_REGIONS = 'board_regions',
 	YIN_YANG = 'yin_yang',
+	NURIKABE_SHADING = 'nurikabe_shading',
+	NURIKABE_REGIONS = 'nurikabe_regions',
 	UNKNOWN_REGIONS = 'unknown_regions',
 	DOUBLERS = 'doublers_grid',
 	NEGATORS = 'negators_grid',

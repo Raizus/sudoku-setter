@@ -1140,3 +1140,29 @@ export const directedPathEndInfo: SquareCellElementInfo = {
 		categories: singleCellShapeDefaultCategories
 	}
 };
+
+export const nurikabeIslandProductOfSumAndSizeInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
+			defaultValue: ''
+		});
+	},
+
+	toolId: TOOLS.NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CAGE,
+		strokeWidth: { editable: false, value: 0 },
+		stroke: { editable: false, value: 'none' },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description: `Each island contains exactly one numbered clue, which gives the product of the sum of the digits on the island and the size (number of cells) of the island, e.g. an island filled with 346 is would have a "39" clue (13x3). A "?" may represent any single, double, or triple-digit number.`,
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};

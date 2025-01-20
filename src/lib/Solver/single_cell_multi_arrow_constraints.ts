@@ -99,6 +99,27 @@ function yinYangCountUniqueFillominoSameShadingConstraint(
 	return out_str;
 }
 
+function nurikabeCountIslandCellsArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToVarName(cell);
+
+	const directions = constraint.directions;
+	const str_list: string[] = [];
+	for (const direction of directions) {
+		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
+
+		const shading_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.NURIKABE_SHADING);
+
+		const aux_str = `count(${shading_vars_str}, 1)`;
+		str_list.push(aux_str);
+	}
+
+	const out_str = `constraint ${str_list.join(' + ')} = ${cell_var};\n`;
+	return out_str;
+}
+
 function loopCellsCountArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
@@ -194,7 +215,8 @@ const tool_map = new Map<string, ConstraintF>([
 		yinYangCountUniqueFillominoSameShadingConstraint
 	],
 	[TOOLS.YIN_YANG_COUNT_SHADED_CELLS, yinYangCountShadedCellsConstraint],
-	[TOOLS.SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS, sameGalaxyUnobstructedCountArrowsConstraint]
+	[TOOLS.SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS, sameGalaxyUnobstructedCountArrowsConstraint],
+	[TOOLS.NURIKABE_COUNT_ISLAND_CELLS_ARROWS, nurikabeCountIslandCellsArrowsConstraint]
 ]);
 
 export function singleCellMultiArrowConstraints(

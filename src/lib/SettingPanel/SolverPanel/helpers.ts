@@ -189,6 +189,7 @@ function setBinaryHighlights(json: JsonT, grid: Grid) {
 		'yin_yang',
 		'two_contiguous_regions',
 		'nurimisaki',
+		'nurikabe_shading',
 		'even_odd_grid',
 		'cave_shading'
 	];
