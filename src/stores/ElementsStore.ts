@@ -26,7 +26,7 @@ import type { CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/Constraints/Center
 import type { ConstraintType } from '$src/lib/Puzzle/Constraints/LocalConstraints';
 import type { CornerLineToolI } from '$src/lib/Puzzle/Constraints/CornerLineConstraints';
 
-type Elements<T extends ConstraintType> = {
+export type Elements<T extends ConstraintType> = {
 	toolId: TOOLID;
 	element: Record<string, T>;
 };

@@ -5,12 +5,12 @@
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 
-	export let cageTool: CageToolI;
+	export let tool: CageToolI;
 
-	const defaultShape = getDefaultShape(cageTool.toolId, squareCellElementHandlers) ?? defaultCageShape;
-	$: shape = cageTool.shape ?? defaultShape;
+	const defaultShape = getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultCageShape;
+	$: shape = tool.shape ?? defaultShape;
 </script>
 
 <g class="cage-tool">
-	<ValuedCageRender cells={cageTool.cells} {shape} value={cageTool.value} />
+	<ValuedCageRender cells={tool.cells} {shape} value={tool.value} />
 </g>

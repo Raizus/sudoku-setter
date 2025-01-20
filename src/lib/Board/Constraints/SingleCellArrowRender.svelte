@@ -9,16 +9,16 @@
 	import type { DIRECTION } from '$lib/utils/directions';
 	import ArrowMarker from './ArrowMarker.svelte';
 
-	export let singleCellArrowTool: CellArrowToolI;
+	export let tool: CellArrowToolI;
 	export let id: string;
 
-	const cell = singleCellArrowTool.cell;
-	$: direction = singleCellArrowTool.direction;
+	const cell = tool.cell;
+	$: direction = tool.direction;
 
 	const defaultShape =
-		getDefaultShape(singleCellArrowTool.toolId, squareCellElementHandlers) ??
+		getDefaultShape(tool.toolId, squareCellElementHandlers) ??
 		defaultSingleCellArrowShape;
-	$: shape = singleCellArrowTool.shape ?? defaultShape;
+	$: shape = tool.shape ?? defaultShape;
 
 	$: strokeWidth = shape.strokeWidth ?? 0.1;
 	$: stroke = shape.stroke ?? 'black';

@@ -7,13 +7,13 @@
 	import { cellNotOnTheLoopInfo } from '$src/lib/Puzzle/ElementsInfo/SingleCellElementsInfo';
 	import CellTextLabelRender from './CellTextLabelRender.svelte';
 
-	export let centerCornerOrEdgeTool: CenterCornerOrEdgeToolI;
+	export let tool: CenterCornerOrEdgeToolI;
 
-	const coords = centerCornerOrEdgeTool.cell;
+	const coords = tool.cell;
 	const defaultShape =
-		getDefaultShape(centerCornerOrEdgeTool.toolId, squareCellElementHandlers) ??
+		getDefaultShape(tool.toolId, squareCellElementHandlers) ??
 		defaultEdgeCircleShape;
-	$: shape = centerCornerOrEdgeTool.shape ?? defaultShape;
+	$: shape = tool.shape ?? defaultShape;
 
 	$: center = coords;
 
@@ -35,7 +35,7 @@
 	<RenderShape cx={center.c} cy={center.r} {shape} />
 	{#if isCellCenter}
 		<CellTextLabelRender
-			value = {getText(centerCornerOrEdgeTool, type)}
+			value = {getText(tool, type)}
 			x={Math.floor(center.c)}
 			y={Math.floor(center.r)}
 			position="TL"
@@ -50,7 +50,7 @@
 			font-size={fontSize}
 			fill={fontColor}
 		>
-			{getText(centerCornerOrEdgeTool, type)}
+			{getText(tool, type)}
 		</text>
 	{/if}
 </g>

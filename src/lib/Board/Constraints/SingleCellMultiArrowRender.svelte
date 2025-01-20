@@ -13,15 +13,15 @@
 	import type { CellMultiArrowToolI } from '$lib/Puzzle/Constraints/SingleCellConstraints';
 	import type { DIRECTION } from '$lib/utils/directions';
 
-	export let singleCellMultiArrowTool: CellMultiArrowToolI;
+	export let tool: CellMultiArrowToolI;
 	export let id: string;
 
-	const cell = singleCellMultiArrowTool.cell;
+	const cell = tool.cell;
 
 	const defaultShape =
-		getDefaultShape(singleCellMultiArrowTool.toolId, squareCellElementHandlers) ??
+		getDefaultShape(tool.toolId, squareCellElementHandlers) ??
 		defaultSingleCellMultiArrowShape;
-	$: shape = singleCellMultiArrowTool.shape ?? defaultShape;
+	$: shape = tool.shape ?? defaultShape;
 
 	$: strokeWidth = shape.strokeWidth ?? 0.08;
 	$: stroke = shape.stroke ?? 'black';
@@ -48,7 +48,7 @@
 </script>
 
 <ArrowMarker id={markerId} l={0.1} {stroke} {strokeWidth} />
-{#each singleCellMultiArrowTool.directions as direction}
+{#each tool.directions as direction}
 	<path
 		d={getPath(direction)}
 		fill="none"

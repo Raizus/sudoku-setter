@@ -13,12 +13,12 @@
 	import BorderLineRender from './BorderLineRender.svelte';
 	import RenderShape from '$components/SvgRender/RenderShape.svelte';
 
-	export let edgeTool: EdgeToolI;
+	export let tool: EdgeToolI;
 
-	const coords = edgeTool.cells;
+	const coords = tool.cells;
 	const defaultShape =
-		getDefaultShape(edgeTool.toolId, squareCellElementHandlers) ?? defaultEdgeCircleShape;
-	$: shape = edgeTool.shape ?? defaultShape;
+		getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultEdgeCircleShape;
+	$: shape = tool.shape ?? defaultShape;
 
 	$: center = vectorAverage(cellsToVector2DPoints(coords));
 
@@ -35,7 +35,7 @@
 	}
 
 	function getTextAngle(): number {
-		if (edgeTool.toolId !== TOOLS.EDGE_INEQUALITY) return 0;
+		if (tool.toolId !== TOOLS.EDGE_INEQUALITY) return 0;
 
 		const p1 = cellToCellCenterVector(coords[0]);
 		const p2 = cellToCellCenterVector(coords[1]);
@@ -48,7 +48,7 @@
 
 {#if coords.length === 2}
 	<g class="edge-tool">
-		{#if edgeTool.toolId === TOOLS.EDGE_INEQUALITY}
+		{#if tool.toolId === TOOLS.EDGE_INEQUALITY}
 			<CircleRender x={center.x} y={center.y} {shape} />
 		{:else if type === SHAPE_TYPES.TEXT_ONLY}
 			<CircleRender x={center.x} y={center.y} {shape} />
@@ -66,7 +66,7 @@
 			fill={fontColor}
 			transform={`rotate(${getTextAngle()}, ${center.x}, ${center.y} )`}
 		>
-			{getText(edgeTool, type)}
+			{getText(tool, type)}
 		</text>
 	</g>
 {/if}

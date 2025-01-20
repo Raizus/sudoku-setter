@@ -11,35 +11,35 @@
 	import CellTextLabelRender from './CellTextLabelRender.svelte';
 	import ColoredCountingCircleRender from './ColoredCountingCircleRender.svelte';
 
-	export let singleCellTool: CellToolI;
+	export let tool: CellToolI;
 	export let id: string;
 
-	const coord = singleCellTool.cell;
+	const coord = tool.cell;
 
 	const defaultShape =
-		getDefaultShape(singleCellTool.toolId, squareCellElementHandlers) ??
+		getDefaultShape(tool.toolId, squareCellElementHandlers) ??
 		defaultSingleCellCircleShape;
-	$: shape = singleCellTool.shape ?? defaultShape;
+	$: shape = tool.shape ?? defaultShape;
 	$: type = shape?.type || SHAPE_TYPES.CIRCLE;
 	$: center = { x: coord.c + 0.5, y: coord.r + 0.5 };
 
 	$: cellTLCorner = new Vector2D(coord.c, coord.r);
-	$: value = singleCellTool.value;
+	$: value = tool.value;
 </script>
 
 <g class="single-cell-tool" id={`constraint-${id}`}>
-	{#if singleCellTool.toolId === TOOLS.MINIMUM}
+	{#if tool.toolId === TOOLS.MINIMUM}
 		<MinMaxRender {coord} minOrMax={'min'} />
-	{:else if singleCellTool.toolId === TOOLS.MAXIMUM}
+	{:else if tool.toolId === TOOLS.MAXIMUM}
 		<MinMaxRender {coord} minOrMax={'max'} />
-	{:else if singleCellTool.toolId === TOOLS.COLORED_COUNTING_CIRCLES}
+	{:else if tool.toolId === TOOLS.COLORED_COUNTING_CIRCLES}
 		<ColoredCountingCircleRender x={center.x} y={center.y} {value} {shape}/>
 	{:else if type === SHAPE_TYPES.CAGE}
-		<ValuedCageRender cells={[coord]} {shape} value={singleCellTool.value} />
+		<ValuedCageRender cells={[coord]} {shape} value={tool.value} />
 	{:else}
 		<RenderShape cx={center.x} cy={center.y} {shape} />
 	{/if}
-	{#if type !== SHAPE_TYPES.CAGE && singleCellTool.toolId !== TOOLS.COLORED_COUNTING_CIRCLES && value}
+	{#if type !== SHAPE_TYPES.CAGE && tool.toolId !== TOOLS.COLORED_COUNTING_CIRCLES && value}
 		<CellTextLabelRender {value} x={cellTLCorner.x} y={cellTLCorner.y} position="TL" />
 	{/if}
 </g>

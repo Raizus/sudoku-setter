@@ -9,12 +9,12 @@
 	import QuadrupleTextRender from './QuadrupleTextRender.svelte';
 	import RenderShape from '$components/SvgRender/RenderShape.svelte';
 
-	export let cornerTool: CornerToolI;
+	export let tool: CornerToolI;
 
-	const coords = cornerTool.cells;
+	const coords = tool.cells;
 	const defaultShape =
-		getDefaultShape(cornerTool.toolId, squareCellElementHandlers) ?? defaultCornerCircleShape;
-	$: shape = cornerTool.shape ?? defaultShape;
+		getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultCornerCircleShape;
+	$: shape = tool.shape ?? defaultShape;
 
 	$: type = shape?.type ?? SHAPE_TYPES.CIRCLE;
 	const center = new Vector2D(coords[coords.length - 1].c, coords[coords.length - 1].r);
@@ -34,8 +34,8 @@
 	<g class="corner-tool">
 		<RenderShape cx={center.x} cy={center.y} {shape} />
 		<!-- render text -->
-		{#if cornerTool.toolId === TOOLS.QUADRUPLE}
-			<QuadrupleTextRender {cornerTool} />
+		{#if tool.toolId === TOOLS.QUADRUPLE}
+			<QuadrupleTextRender cornerTool={tool} />
 		{:else}
 			<text
 				x={center.x}
@@ -46,7 +46,7 @@
 				fill={fontColor}
 			>
 				<!-- &#215; -->
-				{getText(cornerTool, type)}
+				{getText(tool, type)}
 			</text>
 		{/if}
 	</g>

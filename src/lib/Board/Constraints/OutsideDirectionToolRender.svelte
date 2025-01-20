@@ -7,16 +7,16 @@
 	import { gridCoordsNextInDirection } from '$lib/utils/SquareCellGridCoords';
 	import ArrowMarker from './ArrowMarker.svelte';
 
-	export let outsideEdgeTool: OutsideDirectionToolI;
+	export let tool: OutsideDirectionToolI;
 
-	const coords = outsideEdgeTool.cell;
-	const direction = outsideEdgeTool.direction;
+	const coords = tool.cell;
+	const direction = tool.direction;
 	const coords2 = gridCoordsNextInDirection(coords, direction);
 	const center = cellToCellCenterVector(coords);
 
 	const defaultShape =
-		getDefaultShape(outsideEdgeTool.toolId, squareCellElementHandlers) ?? defaultOutsideShape;
-	$: shape = outsideEdgeTool.shape ?? defaultShape;
+		getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultOutsideShape;
+	$: shape = tool.shape ?? defaultShape;
 
 	// maybe adjust fontSize to shape size?
 	const fontSize = shape?.fontSize ?? 0.5;
@@ -66,6 +66,6 @@
 		font-size={fontSize}
 		fill={fontColor}
 	>
-		{getText(outsideEdgeTool)}
+		{getText(tool)}
 	</text>
 </g>

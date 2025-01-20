@@ -9,11 +9,11 @@
 	import { SHAPE_TYPES, defaultLineShape } from '$lib/Puzzle/Shape/Shape';
 	import { cellsToVector2DPoints } from '$lib/utils/SquareCellGridRenderUtils';
 
-	export let lineTool: LineToolI;
-	const defaultShape = getDefaultShape(lineTool.toolId, squareCellElementHandlers) ?? defaultLineShape;
+	export let tool: LineToolI;
+	const defaultShape = getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultLineShape;
 
-	$: linePoints = cellsToVector2DPoints(lineTool.cells);
-	$: shape = lineTool.shape ?? defaultShape;
+	$: linePoints = cellsToVector2DPoints(tool.cells);
+	$: shape = tool.shape ?? defaultShape;
 	$: type = shape?.type || SHAPE_TYPES.LINE;
 	$: opacity = shape?.opacity ?? 0.8;
 </script>

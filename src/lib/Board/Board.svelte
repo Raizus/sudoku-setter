@@ -1,22 +1,16 @@
 <script lang="ts">
 	import type { GridShape } from './../Types/types.ts';
-	import OutsideDirectionToolsRender from './Constraints/OutsideDirectionToolsRender.svelte';
-	import CloneToolsRender from './Constraints/CloneToolsRender.svelte';
-	import LineToolsRender from './Constraints/LineToolsRender.svelte';
 	import type { Rectangle } from '$lib/Types/types.js';
 	import { cellsStore, gridStore, toolStore } from '$stores/BoardStore';
-		import { localConstraintsStore } from '$stores/BoardStore.js';
+	import { localConstraintsStore } from '$stores/BoardStore.js';
 	import CursorRender from './CursorRender.svelte';
 	import GridBorderRender from './GridLines/GridBorderRender.svelte';
 	import GridLinesRender from './GridLines/GridLinesRender.svelte';
 	import GridRegionsRender from './GridLines/GridRegionsRender.svelte';
 	import SelectionRender from './SelectionRender.svelte';
-	import CageToolsRender from './Constraints/CageToolsRender.svelte';
 	import BoardBackground from './BoardBackground.svelte';
-	import CornerToolsRender from './Constraints/CornerToolsRender.svelte';
 	import ArrowToolsRender from './Constraints/ArrowToolsRender.svelte';
 	import SingleCellToolsRender from './Constraints/SingleCellToolsRender.svelte';
-	import EdgeToolsRender from './Constraints/EdgeToolsRender.svelte';
 	import CellValuesRender from './CellRender/CellValuesRender.svelte';
 	import HighlightsRender from './CellRender/HighlightsRender.svelte';
 	import { isOutsideDirectionTool, type TOOLID } from '$lib/Puzzle/Tools';
@@ -29,7 +23,15 @@
 	import FogDefs from './FogDefs.svelte';
 	import FogCover from './FogCover.svelte';
 	import SolutionRender from './SolutionRender.svelte';
-	import CenterCornerOrEdgeToolsRender from './Constraints/CenterCornerOrEdgeToolsRender.svelte';
+	import GenericToolsRender from './Constraints/GenericToolsRender.svelte';
+	import { cageToolsStore, centerCornerOrEdgeToolsStore, cloneToolsStore, cornerToolsStore, edgeToolsStore, lineToolsStore, outsideDirectionToolsStore } from '$stores/ElementsStore.js';
+	import EdgeToolRender from './Constraints/EdgeToolRender.svelte';
+	import CornerToolRender from './Constraints/CornerToolRender.svelte';
+	import CenterCornerOrEdgeToolRender from './Constraints/CenterCornerOrEdgeToolRender.svelte';
+	import LineToolRender from './Constraints/LineToolRender.svelte';
+	import CageToolRender from './Constraints/CageToolRender.svelte';
+	import CloneToolRender from './Constraints/CloneToolRender.svelte';
+	import OutsideDirectionToolRender from './Constraints/OutsideDirectionToolRender.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 
@@ -95,29 +97,65 @@
 	<SeenCellsRender />
 
 	<SingleCellToolsRender />
+
+	<!-- <CageToolsRender /> -->
+	<GenericToolsRender
+		elements={$cageToolsStore}
+		g_name={'cage-tools-layer'}
+		Component={CageToolRender}
+	/>
 	
-	<CageToolsRender />
-	<LineToolsRender />
-	
-	<CloneToolsRender />
-	
+	<!-- <LineToolsRender /> -->
+	<GenericToolsRender
+		elements={$lineToolsStore}
+		g_name={'line-tools-layer'}
+		Component={LineToolRender}
+	/>
+
+	<!-- <CloneToolsRender /> -->
+	<GenericToolsRender
+		elements={$cloneToolsStore}
+		g_name={'clone-tools-layer'}
+		Component={CloneToolRender}
+	/>
+
 	<GridLinesRender />
 	<DiagonalsRender />
 	<GridRegionsRender />
-	
+
 	<ArrowToolsRender {boundingBox} />
 
-	<OutsideDirectionToolsRender />
+	<!-- <OutsideDirectionToolsRender /> -->
+	<GenericToolsRender
+		elements={$outsideDirectionToolsStore}
+		g_name={'outside-direction-tools-layer'}
+		Component={OutsideDirectionToolRender}
+	/>
 
 	<SelectionRender {boundingBox} />
 	<CursorRender />
 
-	<EdgeToolsRender />
-	<CornerToolsRender />
-	<CenterCornerOrEdgeToolsRender />
+	<!-- <EdgeToolsRender /> -->
+	<GenericToolsRender
+		elements={$edgeToolsStore}
+		g_name={'edge-tools-layer'}
+		Component={EdgeToolRender}
+	/>
+	<!-- <CornerToolsRender /> -->
+	<GenericToolsRender
+		elements={$cornerToolsStore}
+		g_name={'corner-tools-layer'}
+		Component={CornerToolRender}
+	/>
+	<!-- <CenterCornerOrEdgeToolsRender /> -->
+	<GenericToolsRender
+		elements={$centerCornerOrEdgeToolsStore}
+		g_name={'center-corner-edge-tools-layer'}
+		Component={CenterCornerOrEdgeToolRender}
+	/>
 
 	<PenToolRender />
-	
+
 	<g class="cell-values-layer">
 		{#each $cellsStore as cell}
 			<CellValuesRender {cell} />

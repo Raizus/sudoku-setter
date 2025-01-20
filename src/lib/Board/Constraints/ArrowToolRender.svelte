@@ -7,12 +7,12 @@
 	import { cellsLineToPathStr, cellsToVector2DPoints, linePointsToPathStr } from '$lib/utils/SquareCellGridRenderUtils';
 	import ArrowMarker from './ArrowMarker.svelte';
 
-	export let arrowTool: ArrowToolI;
+	export let tool: ArrowToolI;
 	export let arrowId: string;
 	export let boundingBox: Rectangle;
 
-	const defaultShape = getDefaultShape(arrowTool.toolId, squareCellElementHandlers) ?? defaultArrowShape;
-	$: shape = arrowTool.shape ?? defaultShape;
+	const defaultShape = getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultArrowShape;
+	$: shape = tool.shape ?? defaultShape;
 
 	$: bbx = boundingBox.x;
 	$: bby = boundingBox.y;
@@ -31,7 +31,7 @@
 	const strokeLinejoin = 'round';
 	const strokeLinecap = 'round';
 
-	$: bulbPath = cellsLineToPathStr(arrowTool.cells);
+	$: bulbPath = cellsLineToPathStr(tool.cells);
 
 	const uid = crypto.randomUUID()
 	const arrowMaskId = `arrow-mask-${arrowId}-${uid}`
@@ -64,7 +64,7 @@
 		{stroke}
 		mask="url(#{arrowMaskId})"
 	/>
-	{#each arrowTool.lines as line}
+	{#each tool.lines as line}
 		{#if line.length > 1}
 			<path
 				class="arrow-line"
