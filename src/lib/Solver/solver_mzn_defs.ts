@@ -3606,6 +3606,21 @@ predicate directed_path_sum_path_cells_in_region_is_prime_p(
     /\\ shading_2x2_allowed_p(shading, 1..4)
 );
 
+predicate nurikabe_no_repeats_in_islands_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions,
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes")
+    /\\ forall(r in rows, c in cols)(
+        forall(r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
+            regions[r,c] == regions[r2,c2] /\\ regions[r,c] != 0 /\\ regions[r2,c2] != 0 -> grid[r,c] != grid[r2,c2]
+        )
+    )
+);
+
 predicate nurikabe_island_product_of_sum_and_size_p(
     array[int, int] of var int: grid,
     array[int, int] of var int: regions,

@@ -59,6 +59,7 @@ function nurikabeConstraint(model: PuzzleModel, tool: TOOLID) {
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: nurikabe_shading;\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: nurikabe_regions;\n`;
 	out_str += `constraint nurikabe_p(nurikabe_shading, nurikabe_regions);\n`;
+	out_str += `constraint nurikabe_no_repeats_in_islands_p(board, nurikabe_regions);\n`;
 
 	return out_str;
 }
