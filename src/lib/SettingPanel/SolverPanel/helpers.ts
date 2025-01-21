@@ -13,6 +13,7 @@ import {
 	restoreCellsValueAction
 } from '$src/lib/reducers/UpdateCellsActions';
 import type { PuzzleModel } from '$src/lib/Solver/solver_utils';
+import { areCoordsNeighbours, type GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
 import { executeUpdateCellsAction } from '$stores/CellsStore';
 import { updatePenTool } from '$stores/PenToolStore';
 
@@ -487,6 +488,10 @@ function setDirectedPathPenMarks(json: JsonT, puzzle_model: PuzzleModel) {
 
 		const [r1, c1] = [Math.floor((n1 - 1) / grid.nCols), (n1 - 1) % grid.nCols];
 		const [r2, c2] = [Math.floor((n2 - 1) / grid.nCols), (n2 - 1) % grid.nCols];
+
+		const coord1: GridCoordI = { r: r1, c: c1 };
+		const coord2: GridCoordI = { r: r2, c: c2 };
+		if (!areCoordsNeighbours(coord1, coord2)) continue;
 
 		const marker: LineMarker = {
 			colorId: 4,

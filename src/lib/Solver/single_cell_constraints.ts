@@ -12,6 +12,7 @@ import {
 	cellToVarName,
 	getDirectionCells,
 	getDirectionsVars,
+	groupConstraintsByValue,
 	PuzzleModel,
 	VAR_2D_NAMES
 } from './solver_utils';
@@ -312,7 +313,7 @@ function sandwichRowColCountConstraint(
 
 function minMaxConstraint(grid: Grid, constraints: Record<string, CellToolI>, predicate: string) {
 	const constl = Object.values(constraints);
-	
+
 	let out_str = '';
 	const all_max_coords = constl.map((constraint) => constraint.cell);
 	const max_cells = new Set(
@@ -872,21 +873,50 @@ function nurikabeIslandProductOfSumAndSizeConstraint(
 		const cell = grid.getCell(coords.r, coords.c);
 		if (!cell) continue;
 		const value = constraint.value;
-		
+
 		if (!value) continue;
 		const result = getParsingResult(model, value, c_id);
 		if (!result) continue;
-		
+
 		const product_var = result[1];
 		out_str += result[0];
 		const region_var = cellToGridVarName(cell, VAR_2D_NAMES.NURIKABE_REGIONS);
-		
+
 		out_str += `constraint nurikabe_island_product_of_sum_and_size_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.NURIKABE_REGIONS}, ${region_var}, ${product_var});\n`;
 		count += 1;
 	}
 
-	out_str += `constraint count_unique_values(array1d(${VAR_2D_NAMES.NURIKABE_REGIONS})) == ${count+1};\n`;
-		
+	out_str += `constraint count_unique_values(array1d(${VAR_2D_NAMES.NURIKABE_REGIONS})) == ${count + 1};\n`;
+
+	return out_str;
+}
+
+function teleportConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	constraints: Record<string, CellToolI>
+) {
+
+	let out_str = '';
+	const groups = groupConstraintsByValue(Object.values(constraints));
+
+	for (const group of groups.values()) {
+		if (group.length <= 1) continue;
+		// for each combination of 2
+		for (const [e1, e2] of group.flatMap((v, i) => group.slice(i + 1).map((w) => [v, w]))) {
+			const coord1 = e1.cell;
+			const coord2 = e2.cell;
+			const cell1 = grid.getCell(coord1.r, coord1.c);
+			const cell2 = grid.getCell(coord2.r, coord2.c);
+			if (!cell1 || !cell2) continue;
+
+			const cell1_var = cellToGridVarName(cell1, VAR_2D_NAMES.BOARD);
+			const cell2_var = cellToGridVarName(cell2, VAR_2D_NAMES.BOARD);
+
+			out_str += `constraint ${cell1_var} == ${cell2_var};\n`
+		}
+	}
+
 	return out_str;
 }
 
@@ -955,8 +985,9 @@ const tool_map_2 = new Map<string, ConstraintF2>([
 	[TOOLS.COUNTING_CIRCLES, countingCirclesConstraint],
 	[TOOLS.COLORED_COUNTING_CIRCLES, coloredCountingCirclesConstraint],
 	[TOOLS.UNIQUE_CELLS, uniqueCellsConstraint],
-
-	[TOOLS.NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE, nurikabeIslandProductOfSumAndSizeConstraint]
+	
+	[TOOLS.NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE, nurikabeIslandProductOfSumAndSizeConstraint],
+	[TOOLS.TELEPORT, teleportConstraint],
 ]);
 
 export function singleCellConstraints(

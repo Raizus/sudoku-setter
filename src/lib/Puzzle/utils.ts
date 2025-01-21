@@ -16,6 +16,17 @@ export function parseCell(data: Record<string, unknown>): GridCoordI {
 	return coords;
 }
 
+export function parseCoords(data: Record<string, unknown>, key: string): GridCoordI[] {
+	const coords = data[key];
+	if (!Array.isArray(coords)) {
+		throw Error('coords entry must be an array.');
+	}
+
+	// TODO: add type checking
+
+	return coords;
+}
+
 export function parseCells(data: Record<string, unknown>, key: string): GridCoordI[] {
 	const cells = data[key];
 	if (!Array.isArray(cells)) {

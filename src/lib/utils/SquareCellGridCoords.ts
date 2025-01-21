@@ -30,7 +30,7 @@ export function coordsScale(coords: GridCoordI, scalar: number): GridCoordI {
 }
 
 export function areCoordsOnGrid(coords: GridCoordI, gridShape: GridShape): boolean {
-	return coords.c >= 0 && coords.c < gridShape.nCols && coords.r >= 0 && coords.r < gridShape.nRows;
+	return coords.c >= 0 && coords.c <= gridShape.nCols && coords.r >= 0 && coords.r <= gridShape.nRows;
 }
 
 export function areCoordsNeighbours(c1: GridCoordI, c2: GridCoordI): boolean {

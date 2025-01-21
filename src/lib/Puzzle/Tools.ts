@@ -88,6 +88,8 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	MAZE_DIRECTED_PATH = 'Directed Path',
 	DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME = 'Directed Path Adjacent Cells Sum Is Prime',
 	DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME = 'Directed Path Sum Of Cells Per Region Is Prime',
+	DIRECTED_PATH_ADJACENT_CELLS_DUTCH_WHISPERS = 'Directed Path Adjacent Cells Dutch Whispers',
+	DIRECTED_PATH_IS_REGION_SUM_LINE = "Directed Path Is Region Sum Line",
 
 	CAVE = 'Cave',
 	CAVE_CELLS_ARE_ODD = 'Cave Cells Are Odd',
@@ -168,7 +170,8 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE = 'Nurikabe Island Product Of Sum And Size Clue',
 
 	DIRECTED_PATH_START = 'Directed Path Start',
-	DIRECTED_PATH_END = 'Directed Path End'
+	DIRECTED_PATH_END = 'Directed Path End',
+	TELEPORT = 'Teleport',
 }
 
 export enum SINGLE_CELL_ARROW_CONSTRAINTS {
@@ -204,7 +207,6 @@ export enum EDGE_CONSTRAINTS {
 	UNKNOWN_REGION_BORDER = 'Unknown Region Border',
 	EDGE_CAVE_ONE_OF_EACH = 'Edge Cave One Of Each',
 
-	MAZE_WALL = 'Maze Wall',
 	ONE_WAY_DOOR = 'One Way Door'
 }
 
@@ -370,6 +372,10 @@ export enum CENTER_EDGE_CORNER_CONSTRAINTS {
 	YIN_YANG_SUM_OF_ADJACENT_SHADED_EDGE_CORNER = 'Yin Yang Sum Of Adjacent Shaded Edge Or Corner'
 }
 
+export enum CORNER_LINE_CONSTRAINTS {
+	MAZE_WALL = 'Maze Wall'
+}
+
 export enum VALUED_GLOBAL_CONSTRAINTS {
 	FORBIDDEN_ORTHOGONALLY_ADJACENT_SUM = 'Forbidden Orthogonally Adjacent Sum',
 	FORBIDDEN_KNIGHT_SUM = 'Forbidden Knight Sum',
@@ -421,6 +427,7 @@ export const LOCAL_CONSTRAINTS = {
 	...OUTSIDE_EDGE_CONSTRAINTS,
 	...OUTSIDE_CORNER_CONSTRAINTS,
 	...CENTER_EDGE_CORNER_CONSTRAINTS,
+	...CORNER_LINE_CONSTRAINTS,
 	...VALUED_GLOBAL_CONSTRAINTS
 };
 
@@ -454,6 +461,7 @@ export type TOOLID =
 	| OUTSIDE_EDGE_CONSTRAINTS
 	| OUTSIDE_CORNER_CONSTRAINTS
 	| CENTER_EDGE_CORNER_CONSTRAINTS
+	| CORNER_LINE_CONSTRAINTS
 	| VALUED_GLOBAL_CONSTRAINTS
 	| COSMETIC_TOOLS
 	| OTHER_TOOLS;
@@ -477,6 +485,7 @@ export enum TOOL_CATEGORIES {
 	CORNER_CONSTRAINT = 'Corner Constraint',
 
 	LINE_CONSTRAINT = 'Line Constraint',
+	CORNER_LINE_CONSTRAINT = 'Corner Line Constraint',
 	DOUBLE_ENDED_LINE_CONSTRAINT = 'Double Ended Line Constraint',
 	ARROW_CONSTRAINT = 'Arrow Constraint',
 
@@ -496,6 +505,7 @@ export enum TOOL_CATEGORIES {
 	EDGE_TOOL = 'Edge Tool',
 	CORNER_TOOL = 'Corner Tool',
 	LINE_TOOL = 'Line Tool',
+	CORNER_LINE_TOOL = 'Corner Line Tool',
 	ARROW_TOOL = 'Arrow Tool',
 	CAGE_TOOL = 'Cage Tool',
 	OUTSIDE_EDGE_TOOL = 'Outside Edge Tool',
@@ -570,6 +580,11 @@ export function isCenterEdgeCornerTool(toolId: TOOLID): boolean {
 	return enumValues.includes(toolId);
 }
 
+export function isCornerLineTool(toolId: TOOLID): boolean {
+	const enumValues = Object.values(CORNER_LINE_CONSTRAINTS) as string[];
+	return enumValues.includes(toolId);
+}
+
 export function isCloneTool(toolId: TOOLID): boolean {
 	const enumValues = Object.values(CLONE_CONSTRAINTS) as string[];
 	return enumValues.includes(toolId);
@@ -605,6 +620,7 @@ export const LOCAL_CONSTRAINTS_CATEGORIES = [
 	TOOL_CATEGORIES.EDGE_CONSTRAINT,
 	TOOL_CATEGORIES.CORNER_CONSTRAINT,
 	TOOL_CATEGORIES.LINE_CONSTRAINT,
+	TOOL_CATEGORIES.CORNER_LINE_CONSTRAINT,
 	TOOL_CATEGORIES.ARROW_CONSTRAINT,
 	TOOL_CATEGORIES.CAGE_CONSTRAINT,
 	TOOL_CATEGORIES.CLONE_CONSTRAINT,

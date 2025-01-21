@@ -127,7 +127,7 @@ export function constraintsBuilder<T extends ConstraintType>(
 export interface ModelI {
 	model_str: string; // string with minizinc model
 	used_vars: Set<string>; // keep track of shared vars
-	puzzle: PuzzleI,
+	puzzle: PuzzleI;
 }
 
 export class PuzzleModel implements ModelI {
@@ -490,10 +490,22 @@ export function set_board_regions(model: PuzzleModel, grid: Grid) {
 
 		for (const cell of grid.getAllCells()) {
 			const region_var = cellToGridVarName(cell, VAR_2D_NAMES.BOARD_REGIONS);
-			if (cell.region !== null)
-				model.add(`constraint ${region_var} = ${cell.region};\n`);
-			else
-				model.add(`constraint ${region_var} = ${min_r - 1};\n`);
+			if (cell.region !== null) model.add(`constraint ${region_var} = ${cell.region};\n`);
+			else model.add(`constraint ${region_var} = ${min_r - 1};\n`);
 		}
 	}
+}
+
+export function groupConstraintsByValue<T extends ConstraintType>(constraints: T[]) {
+	const groups = new Map<string, T[]>();
+	for (const constraint of constraints) {
+		const value = constraint.value ?? '';
+		const list = groups.get(value);
+		if (!list) {
+			groups.set(value, [constraint]);
+			continue;
+		}
+		list.push(constraint);
+	}
+	return groups;
 }

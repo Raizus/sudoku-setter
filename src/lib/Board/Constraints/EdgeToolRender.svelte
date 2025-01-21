@@ -35,7 +35,7 @@
 	}
 
 	function getTextAngle(): number {
-		if (tool.toolId !== TOOLS.EDGE_INEQUALITY) return 0;
+		if (tool.toolId !== TOOLS.EDGE_INEQUALITY && tool.toolId !== TOOLS.ONE_WAY_DOOR) return 0;
 
 		const p1 = cellToCellCenterVector(coords[0]);
 		const p2 = cellToCellCenterVector(coords[1]);
@@ -48,7 +48,7 @@
 
 {#if coords.length === 2}
 	<g class="edge-tool">
-		{#if tool.toolId === TOOLS.EDGE_INEQUALITY}
+		{#if tool.toolId === TOOLS.EDGE_INEQUALITY || tool.toolId === TOOLS.ONE_WAY_DOOR}
 			<CircleRender x={center.x} y={center.y} {shape} />
 		{:else if type === SHAPE_TYPES.TEXT_ONLY}
 			<CircleRender x={center.x} y={center.y} {shape} />

@@ -80,6 +80,7 @@ function differenceConstraint(model: PuzzleModel, grid: Grid, c_id: string,  con
 	const constraint_str = valuedEdgeConstraint(model, grid, c_id, constraint, 'abs_difference', '1');
 	return constraint_str;
 }
+
 function edgeInequalityConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: EdgeToolI) { 
 	const vars = getEdgeVars(grid, constraint);
 	const [var1, var2] = vars;
@@ -201,6 +202,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.DIFFERENCE, differenceConstraint],
 	[TOOLS.RATIO, ratioConstraint],
 	[TOOLS.EDGE_INEQUALITY, edgeInequalityConstraint],
+	[TOOLS.ONE_WAY_DOOR, edgeInequalityConstraint],
 	[TOOLS.EDGE_SUM, edgeSumConstraint],
 	[TOOLS.EDGE_MODULO, edgeModuloConstraint],
 	[TOOLS.EDGE_FACTOR, edgeFactorConstraint],

@@ -1,11 +1,20 @@
+import type { CornerLineToolI } from '../Puzzle/Constraints/CornerLineConstraints';
 import type { EdgeToolI } from '../Puzzle/Constraints/EdgeConstraints';
+import type { CellToolI } from '../Puzzle/Constraints/SingleCellConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
+	cellEdgeToCellCoords,
+	coordsAdd,
+	coordsScale,
+	type GridCoordI
+} from '../utils/SquareCellGridCoords';
+import {
 	addHeader,
 	cellsToGridVarsStr,
 	format_2d_array,
+	groupConstraintsByValue,
 	PENTOMINOES,
 	PuzzleModel,
 	VAR_2D_NAMES
@@ -573,6 +582,27 @@ function mazeDirectedPathConstraint(model: PuzzleModel, tool: TOOLID) {
 	}
 
 	const edge_list = constructEdgeList();
+
+	// add teleport edges
+	const lconstraints = puzzle.localConstraints;
+	const teleport_constraints = lconstraints.get(TOOLS.TELEPORT);
+	if (teleport_constraints) {
+		// group teleports by label
+		const constraints = Object.values(teleport_constraints) as CellToolI[];
+		const groups = groupConstraintsByValue(constraints);
+
+		for (const group of groups.values()) {
+			if (group.length <= 1) continue;
+			// for each combination of 2
+			for (const [e1, e2] of group.flatMap((v, i) => group.slice(i + 1).map((w) => [v, w]))) {
+				const n1 = e1.cell.r * grid.nCols + e1.cell.c + 1;
+				const n2 = e2.cell.r * grid.nCols + e2.cell.c + 1;
+				edge_list.push([n1, n2]);
+				edge_list.push([n2, n1]);
+			}
+		}
+	}
+
 	model.edge_list = edge_list;
 	const n = grid.nRows * grid.nCols;
 	const e = edge_list.length;
@@ -613,27 +643,55 @@ function mazeDirectedPathConstraint(model: PuzzleModel, tool: TOOLID) {
 		}
 	}
 
-	const lconstraints = puzzle.localConstraints;
+	// set the edge variables to false where there is a wall
 	const wall_constraints = lconstraints.get(TOOLS.MAZE_WALL);
-	if (!wall_constraints) return out_str;
-	for (const constraint of Object.values(wall_constraints) as EdgeToolI[]) {
-		const cells_coords = constraint.cells;
-		const cells = cells_coords
-			.map((coord) => grid.getCell(coord.r, coord.c))
-			.filter((cell) => !!cell);
-		const [cell1, cell2] = cells;
+	if (wall_constraints) {
+		out_str += `\n % Maze Walls\n`;
+		for (const constraint of Object.values(wall_constraints) as CornerLineToolI[]) {
+			const coords = constraint.coords;
+			for (let i = 0; i < coords.length - 1; i++) {
+				const edge_coord: GridCoordI = coordsScale(coordsAdd(coords[i], coords[i + 1]), 0.5);
+				const cells_coords = cellEdgeToCellCoords(edge_coord);
+				const cells = cells_coords
+					.map((_c) => grid.getCell(_c.r, _c.c))
+					.filter((cell) => cell !== undefined);
 
-		if (cell1.r === cell2.r) {
-			// vertical border
-			edge_constraints_1(cell1, cell2);
-			edge_constraints_1(cell2, cell1);
-		} else if (cell1.c === cell2.c) {
-			// horizontal border
-			edge_constraints_2(cell1, cell2);
-			edge_constraints_2(cell2, cell1);
+				if (cells.length !== 2) continue;
+				const [cell1, cell2] = cells;
+
+				if (cell1.r === cell2.r) {
+					// vertical border
+					edge_constraints_1(cell1, cell2);
+					edge_constraints_1(cell2, cell1);
+				} else if (cell1.c === cell2.c) {
+					// horizontal border
+					edge_constraints_2(cell1, cell2);
+					edge_constraints_2(cell2, cell1);
+				}
+			}
 		}
 	}
 
+	// set the edge variables to false where there is a one way door
+	const one_way_door_constraints = lconstraints.get(TOOLS.ONE_WAY_DOOR);
+	if (one_way_door_constraints) {
+		out_str += `\n % One Way Doors\n`;
+		for (const constraint of Object.values(one_way_door_constraints) as EdgeToolI[]) {
+			const coords = constraint.cells;
+			const cells = coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell);
+			const [cell1, cell2] = cells;
+			const value = constraint.value;
+
+			const n1 = cell1.r * grid.nCols + cell1.c + 1;
+			const n2 = cell2.r * grid.nCols + cell2.c + 1;
+			if (value === '<') {
+				remove_edge(n1, n2);
+			} else if (value === '>') {
+				remove_edge(n2, n1);
+			}
+		}
+	}
+	
 	return out_str;
 }
 

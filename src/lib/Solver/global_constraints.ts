@@ -709,6 +709,20 @@ function directedPathAdjacentCellsSumIsPrimeConstraint(puzzle: PuzzleI, toolId: 
 	return out_str;
 }
 
+function directedPathAdjacentCellsDutchWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint direct_path_adjacent_dutch_whispers(board, dpath_from, dpath_to, dpath_es);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
+function directedPathIsRegionSumLineConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint directed_path_is_region_sum_line_p(board, board_regions, dpath_from, dpath_to, dpath_ns, dpath_es, dpath_source);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
 function directedPathSumOfCellsPerRegionIsPrimeConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	let out_str: string = '';
 
@@ -838,7 +852,12 @@ const tool_map = new Map<string, ConstraintF>([
 	[
 		TOOLS.DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME,
 		directedPathSumOfCellsPerRegionIsPrimeConstraint
-	]
+	],
+	[
+		TOOLS.DIRECTED_PATH_ADJACENT_CELLS_DUTCH_WHISPERS,
+		directedPathAdjacentCellsDutchWhispersConstraint
+	],
+	[TOOLS.DIRECTED_PATH_IS_REGION_SUM_LINE, directedPathIsRegionSumLineConstraint]
 ]);
 
 export function globalConstraints(puzzle: PuzzleI): string {

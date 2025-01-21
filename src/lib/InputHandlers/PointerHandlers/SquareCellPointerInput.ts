@@ -25,7 +25,7 @@ export class CellPointerHandler {
 
 	private _lastTapPosition: Vector2D | null = null;
 	private _lastTapTime = 0;
-	private _margin: number;
+	private _margin: number | undefined = undefined;
 
 	constructor(margin: number = 0.4) {
 		this._margin = margin;
@@ -48,7 +48,7 @@ export class CellPointerHandler {
 		this._lastPointerDownTime = event.timeStamp;
 
 		const cellDragTapEvent: CellDragTapEvent = { event, cell, tapCount: this._tapCount };
-		if(this.onDragStart) this.onDragStart(cellDragTapEvent);
+		if (this.onDragStart) this.onDragStart(cellDragTapEvent);
 	}
 
 	pointerMove(event: PointerEvent, svgRef: SVGSVGElement): void {
@@ -68,7 +68,7 @@ export class CellPointerHandler {
 		this._isTap = false;
 
 		const cellDragTapEvent: CellDragTapEvent = { event, cell, tapCount: this._tapCount };
-		if(this.onDrag) this.onDrag(cellDragTapEvent);
+		if (this.onDrag) this.onDrag(cellDragTapEvent);
 	}
 
 	pointerUp(event: PointerEvent, svgRef: SVGSVGElement): void {
@@ -105,7 +105,7 @@ export class CellPointerHandler {
 		if (this._isTap && this._tapCount === 1) {
 			// console.log('Tap');
 			const dragTapEvent: CellDragTapEvent = { event, cell, tapCount: this._tapCount };
-			if(this.onTap) this.onTap(dragTapEvent);
+			if (this.onTap) this.onTap(dragTapEvent);
 		} else if (this._isTap && this._tapCount === 2) {
 			// console.log("Double Tap")
 			const dragTapEvent: CellDragTapEvent = { event, cell, tapCount: this._tapCount };

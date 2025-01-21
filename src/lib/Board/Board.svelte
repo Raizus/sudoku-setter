@@ -24,7 +24,16 @@
 	import FogCover from './FogCover.svelte';
 	import SolutionRender from './SolutionRender.svelte';
 	import GenericToolsRender from './Constraints/GenericToolsRender.svelte';
-	import { cageToolsStore, centerCornerOrEdgeToolsStore, cloneToolsStore, cornerToolsStore, edgeToolsStore, lineToolsStore, outsideDirectionToolsStore } from '$stores/ElementsStore.js';
+	import {
+		cageToolsStore,
+		centerCornerOrEdgeToolsStore,
+		cloneToolsStore,
+		cornerLineToolsStore,
+		cornerToolsStore,
+		edgeToolsStore,
+		lineToolsStore,
+		outsideDirectionToolsStore
+	} from '$stores/ElementsStore.js';
 	import EdgeToolRender from './Constraints/EdgeToolRender.svelte';
 	import CornerToolRender from './Constraints/CornerToolRender.svelte';
 	import CenterCornerOrEdgeToolRender from './Constraints/CenterCornerOrEdgeToolRender.svelte';
@@ -32,6 +41,7 @@
 	import CageToolRender from './Constraints/CageToolRender.svelte';
 	import CloneToolRender from './Constraints/CloneToolRender.svelte';
 	import OutsideDirectionToolRender from './Constraints/OutsideDirectionToolRender.svelte';
+	import CornerLineToolRender from './Constraints/CornerLineToolRender.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 
@@ -98,21 +108,21 @@
 
 	<SingleCellToolsRender />
 
-	<!-- <CageToolsRender /> -->
+	<!-- CageToolsRender -->
 	<GenericToolsRender
 		elements={$cageToolsStore}
 		g_name={'cage-tools-layer'}
 		Component={CageToolRender}
 	/>
-	
-	<!-- <LineToolsRender /> -->
+
+	<!-- LineToolsRender -->
 	<GenericToolsRender
 		elements={$lineToolsStore}
 		g_name={'line-tools-layer'}
 		Component={LineToolRender}
 	/>
 
-	<!-- <CloneToolsRender /> -->
+	<!-- CloneToolsRender -->
 	<GenericToolsRender
 		elements={$cloneToolsStore}
 		g_name={'clone-tools-layer'}
@@ -123,9 +133,16 @@
 	<DiagonalsRender />
 	<GridRegionsRender />
 
+	<!-- CornerLineToolsRender -->
+	<GenericToolsRender
+		elements={$cornerLineToolsStore}
+		g_name={'corner-line-tools-layer'}
+		Component={CornerLineToolRender}
+	/>
+
 	<ArrowToolsRender {boundingBox} />
 
-	<!-- <OutsideDirectionToolsRender /> -->
+	<!-- OutsideDirectionToolsRender -->
 	<GenericToolsRender
 		elements={$outsideDirectionToolsStore}
 		g_name={'outside-direction-tools-layer'}
@@ -135,19 +152,19 @@
 	<SelectionRender {boundingBox} />
 	<CursorRender />
 
-	<!-- <EdgeToolsRender /> -->
+	<!-- EdgeToolsRender -->
 	<GenericToolsRender
 		elements={$edgeToolsStore}
 		g_name={'edge-tools-layer'}
 		Component={EdgeToolRender}
 	/>
-	<!-- <CornerToolsRender /> -->
+	<!-- CornerToolsRender -->
 	<GenericToolsRender
 		elements={$cornerToolsStore}
 		g_name={'corner-tools-layer'}
 		Component={CornerToolRender}
 	/>
-	<!-- <CenterCornerOrEdgeToolsRender /> -->
+	<!-- CenterCornerOrEdgeToolsRender -->
 	<GenericToolsRender
 		elements={$centerCornerOrEdgeToolsStore}
 		g_name={'center-corner-edge-tools-layer'}

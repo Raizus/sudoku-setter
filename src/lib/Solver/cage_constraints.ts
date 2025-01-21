@@ -9,7 +9,8 @@ import {
 	cellsToValueVarsName,
 	PuzzleModel,
 	cellsToGridVarsStr,
-	VAR_2D_NAMES
+	VAR_2D_NAMES,
+	groupConstraintsByValue
 } from './solver_utils';
 import type { ParseOptions } from './value_parsing';
 
@@ -324,16 +325,7 @@ function multisetCageConstraint(grid: Grid, constraints: CageToolI[]) {
 	let out_str = '';
 
 	// group cells by value
-	const groups = new Map<string, CageToolI[]>();
-	for (const constraint of constraints) {
-		const value = constraint.value;
-		const list = groups.get(value);
-		if (!list) {
-			groups.set(value, [constraint]);
-			continue;
-		}
-		list.push(constraint);
-	}
+	const groups = groupConstraintsByValue(constraints);
 
 	for (const group of groups.values()) {
 		if (group.length <= 1) continue;

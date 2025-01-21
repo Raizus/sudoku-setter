@@ -3544,7 +3544,12 @@ predicate star_battle_no_touching_p(
     )
 );\n\n`;
 
-	const direct_path = `predicate direct_path_adjacent_sum_is_prime(
+	const direct_path = `function tuple(var int, var int): idx_to_coord2d(var int: n, int: n_cols) = let {
+    var int: r1 = (n - 1) div n_cols;
+    var int: c1 = (n - 1) mod n_cols;
+} in (r1, c1);
+
+predicate direct_path_adjacent_sum_is_prime(
     array[int, int] of var int: grid,
     array[int] of int: from,
     array[int] of int: to,
@@ -3559,15 +3564,59 @@ predicate star_battle_no_touching_p(
         es[k] -> let {
             int: n1 = from[k];
             int: n2 = to[k];
-            int: r1 = (n1 - 1) div n_cols;
-            int: c1 = (n1 - 1) mod n_cols;
-            int: r2 = (n2 - 1) div n_cols;
-            int: c2 = (n2 - 1) mod n_cols;
+            tuple(var int, var int): t1 = idx_to_coord2d(n1, n_cols);
+            tuple(var int, var int): t2 = idx_to_coord2d(n2, n_cols);
             var int: sum_var;
         } in (
-            sum_var = grid[r1,c1] + grid[r2,c2] /\\
+            sum_var = grid[t1.1,t1.2] + grid[t2.1,t2.2] /\\
             is_prime_p(sum_var)
         )
+    )
+);
+
+predicate directed_path_is_region_sum_line_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions, % sudoku regions
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: ns,
+    array[int] of var bool: es,
+    var int: source
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_cols = length(cols);
+    int: n_rows = length(rows);
+    array[rows, cols] of var 0..(n_cols*n_rows): rsl_labels; % region sum lines labels
+
+    set of int: e_idxs = index_set(es);
+    set of int: n_idxs = index_set(ns);
+    tuple(var int, var int): tsource = idx_to_coord2d(source, n_cols);
+    var int: sum_var;
+} in (
+    rsl_labels[tsource.1, tsource.2] = 1
+    % set region sum line labels for nodes not in the path
+    /\\ forall(k in n_idxs)(
+        not ns[k] -> let {
+            tuple(var int, var int): t1 = idx_to_coord2d(k, n_cols);
+        } in (rsl_labels[t1.1, t1.2] = 0)
+    )
+    % set region sum line labels for nodes connected by an edge
+    /\\ forall(k in e_idxs)(
+        es[k] -> let {
+            int: n1 = from[k];
+            int: n2 = to[k];
+            tuple(var int, var int): t1 = idx_to_coord2d(n1, n_cols);
+            tuple(var int, var int): t2 = idx_to_coord2d(n2, n_cols);
+        } in (
+            (regions[t1.1, t1.2] == regions[t2.1, t2.2] -> rsl_labels[t1.1, t1.2] == rsl_labels[t2.1, t2.2]) /\\
+            (regions[t1.1, t1.2] != regions[t2.1, t2.2] -> rsl_labels[t2.1, t2.2] == rsl_labels[t1.1, t1.2] + 1)
+        )
+    )
+    % region sum line
+    /\\ forall(label in 1..n_cols*n_rows)(
+        exists(r in rows, c in cols)(rsl_labels[r,c]==label) ->
+            sum_var = conditional_sum_f(array1d(grid), array1d(rsl_labels), label)
     )
 );
 
@@ -3592,6 +3641,31 @@ predicate directed_path_sum_path_cells_in_region_is_prime_p(
            /\\ is_prime_p(sum_var)
        )
    )
+);
+
+predicate direct_path_adjacent_dutch_whispers(
+    array[int, int] of var int: grid,
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: es
+) = let {
+    set of int: e_idxs = index_set(es);
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_cols = length(cols);
+} in (
+    forall(k in e_idxs)(
+        es[k] -> let {
+            int: n1 = from[k];
+            int: n2 = to[k];
+            int: r1 = (n1 - 1) div n_cols;
+            int: c1 = (n1 - 1) mod n_cols;
+            int: r2 = (n2 - 1) div n_cols;
+            int: c2 = (n2 - 1) mod n_cols;
+        } in (
+            abs(grid[r1,c1] - grid[r2,c2]) >= 4
+        )
+    )
 );\n\n`;
 
     const nurikabe = `predicate nurikabe_p(

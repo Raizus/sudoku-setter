@@ -190,6 +190,30 @@ export const directedPathAdjacentCellsSumIsPrimeInfo: AbstractElementInfo = {
 	}
 };
 
+export const directedPathAdjacentCellsDutchWhispersInfo: AbstractElementInfo = {
+	toolId: TOOLS.DIRECTED_PATH_ADJACENT_CELLS_DUTCH_WHISPERS,
+	order: 0,
+
+	meta: {
+		description:
+			'The correct path will be a valid Dutch Whisper line - adjacent digits along the path must have a difference of at least 4.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const directedPathIsRegionSumLineInfo: AbstractElementInfo = {
+	toolId: TOOLS.DIRECTED_PATH_IS_REGION_SUM_LINE,
+	order: 0,
+
+	meta: {
+		description:
+			'The correct path will be a valid Region Sum line - box borders (dotted lines) will divide the path into segments which each have the same sum.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
 export const directedPathSumOfCellsPerRegionIsPrimeInfo: AbstractElementInfo = {
 	toolId: TOOLS.DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME,
 	order: 0,

@@ -123,7 +123,7 @@ export function getCageToolInputHandler(
 	pointerHandler.onDragEnd = () => {
 		if (id && currentConstraint) {
 			// push command to history stack
-			pushAddLocalConstraintCommand(id, currentConstraint, tool);
+			pushAddLocalConstraintCommand(id, currentConstraint, tool, false);
 		}
 
 		id = null;

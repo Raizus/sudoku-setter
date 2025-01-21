@@ -44,7 +44,7 @@ export class PenToolPointerHandler {
 		this._prevType = cellFeatureInfo.type;
 		this._prevCoords = cellFeatureInfo.target;
 
-		this.onDragStart && this.onDragStart(penToolTapEvent);
+		if (this.onDragStart) this.onDragStart(penToolTapEvent);
 	}
 
 	pointerMove(event: PointerEvent, svgRef: SVGSVGElement): void {
@@ -72,7 +72,7 @@ export class PenToolPointerHandler {
 			isValidLinemarker(this._prevCoords, cellFeatureInfo.target) &&
 			(cellFeatureInfo.type === 'cell center' || cellFeatureInfo.type === 'corner')
 		) {
-			this.onDrag && this.onDrag(penToolDragEvent);
+			if (this.onDrag) this.onDrag(penToolDragEvent);
 		} else {
 			return;
 		}
@@ -83,7 +83,7 @@ export class PenToolPointerHandler {
 
 	pointerUp(event: PointerEvent, svgRef: SVGSVGElement): void {
 		if (this._isDown) {
-			this.onDragEnd && this.onDragEnd();
+			if (this.onDragEnd) this.onDragEnd();
 			this._isDown = false;
 		}
 
@@ -103,7 +103,7 @@ export class PenToolPointerHandler {
 			this._prevCoords &&
 			areCoordsEqual(this._prevCoords, cellFeatureInfo.target)
 		) {
-			this.onTap && this.onTap(penToolTapEvent);
+			if(this.onTap) this.onTap(penToolTapEvent);
 			this._isTap = false;
 		}
 

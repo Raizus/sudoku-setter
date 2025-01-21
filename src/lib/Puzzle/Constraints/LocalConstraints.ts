@@ -6,6 +6,7 @@ import {
 	isArrowTool,
 	isCageTool,
 	isCenterEdgeCornerTool,
+	isCornerLineTool,
 	isCornerTool,
 	isEdgeTool,
 	isLineTool,
@@ -41,8 +42,12 @@ import { getShapeDiff } from '../Shape/Shape';
 import { getDefaultShape } from '../ElementHandlersUtils';
 import { squareCellElementHandlers } from '../ElementsInfo/SquareCellElementHandlers';
 import { parseShape } from '../utils';
-import { centerCornerOrEdgeConstraintFromJson, type CenterCornerOrEdgeToolI } from './CenterCornerOrEdgeConstraints';
+import {
+	centerCornerOrEdgeConstraintFromJson,
+	type CenterCornerOrEdgeToolI
+} from './CenterCornerOrEdgeConstraints';
 import { valuedGlobalConstraintFromJson, type ValuedGlobalToolI } from './ValuedGlobalConstraints';
+import { cornerLineConstraintFromJson, type CornerLineToolI } from './CornerLineConstraints';
 
 export type ConstraintType =
 	| CellToolI
@@ -56,7 +61,6 @@ export type ConstraintType =
 	| OutsideDirectionToolI
 	| CenterCornerOrEdgeToolI
 	| ValuedGlobalToolI;
-
 
 export function updateConstraintValue<T extends ConstraintType>(constraint: T, value: string): T {
 	return { ...constraint, value } as T;
@@ -159,6 +163,8 @@ export class LocalConstraintsDict extends Map<TOOLID, Record<string, ConstraintT
 					constraint = cornerConstraintFromJson(tool, constraint_data);
 				} else if (isLineTool(tool)) {
 					constraint = lineConstraintFromJson(tool, constraint_data);
+				} else if (isCornerLineTool(tool)) {
+					constraint = cornerLineConstraintFromJson(tool, constraint_data);
 				} else if (isArrowTool(tool)) {
 					constraint = arrowConstraintFromJson(tool, constraint_data);
 				} else if (isCageTool(tool)) {
@@ -265,6 +271,23 @@ export function findLineConstraint(
 	for (const entry of Object.entries(elements)) {
 		const constraint = entry[1] as LineToolI;
 		const match = constraint.cells.some((_cell) => areCoordsEqual(_cell, cell));
+
+		if (match) return entry;
+	}
+	return null;
+}
+
+export function findCornerLineConstraint(
+	localConstraints: LocalConstraintsDict,
+	toolId: TOOLID,
+	coord: GridCoordI
+) {
+	const elements = localConstraints.get(toolId);
+	if (!elements) return null;
+
+	for (const entry of Object.entries(elements)) {
+		const constraint = entry[1] as CornerLineToolI;
+		const match = constraint.coords.some((_coord) => areCoordsEqual(_coord, coord));
 
 		if (match) return entry;
 	}
@@ -399,6 +422,11 @@ export function constraintToJson(constraint: ConstraintType) {
 	if ('cell' in constraint) {
 		const cell = gridCoordToStr(constraint['cell']);
 		jsonObj['cell'] = cell;
+	}
+
+	if ('coords' in constraint) {
+		const coords = constraint['coords'];
+		jsonObj['coords'] = coords;
 	}
 
 	if ('direction' in constraint) {

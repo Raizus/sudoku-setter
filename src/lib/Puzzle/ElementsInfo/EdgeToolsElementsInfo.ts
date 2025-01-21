@@ -407,25 +407,31 @@ export const edgeCaveOneOfEachInfo: SquareCellElementInfo = {
 	}
 };
 
-export const mazeWallInfo: SquareCellElementInfo = {
+export const oneWayDoorInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool);
+		return getEdgeToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: inequalityValueUpdater,
+			defaultValue: '<'
+		});
 	},
 
-	toolId: TOOLS.MAZE_WALL,
+	toolId: TOOLS.ONE_WAY_DOOR,
 	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
-		type: SHAPE_TYPES.BORDER_LINE,
-		strokeWidth: { editable: false, value: 0.15, lb: 0, ub: 1, step: 0.025 },
-		stroke: { editable: false, value: 'darkblue' },
-		opacity: { editable: false, value: 0.9 }
+		type: SHAPE_TYPES.TEXT_ONLY,
+		r: { editable: false, value: 0.1 },
+		strokeWidth: { editable: false, value: 0, lb: 0, ub: 1, step: 0.025 },
+		stroke: { editable: false, value: 'none' },
+		fontSize: { editable: false, value: 0.4 },
+		fontColor: { editable: true, value: 'darkblue' },
+		fill: { editable: false, value: 'var(--grid-background-color)' }
 	},
 
 	meta: {
 		description:
-			'Maze wall for directed paths.',
+			'The path may only pass directly through a purple arrow if moving in the direction the arrow is pointing. An arrow always points to the smaller of the two digits it sits between.',
 		tags: [],
-		categories: edgeDefaultCategories
+		categories: typableEdgeDefaultCategories
 	}
 };

@@ -10,6 +10,7 @@ export enum SHAPE_TYPES {
 	CAGE = 'Cage',
 	BORDER_LINE = 'Border Line',
 	LINE = 'Line',
+	MAZE_WALL = 'Maze Wall',
 	THERMO_WITH_CIRCLE = 'Thermo With Circle',
 	THERMO_WITH_POLYGON = 'Thermo With Polygon',
 	LINE_WITH_CIRCLE_ENDS = 'Line With Circle Ends',

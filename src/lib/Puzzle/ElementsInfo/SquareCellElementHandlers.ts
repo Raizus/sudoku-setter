@@ -60,7 +60,7 @@ import {
 	edgeModuloInfo,
 	edgeProductInfo,
 	edgeSumInfo,
-	mazeWallInfo,
+	oneWayDoorInfo,
 	ratioInfo,
 	unknownRegionBorderInfo,
 	xvInfo,
@@ -109,7 +109,9 @@ import {
 	adjacentCellsAlongLoopAreGermanWhispersInfo,
 	adjacentCellsAlongLoopAreMultiplesInfo,
 	caveLITSInfo,
+	directedPathAdjacentCellsDutchWhispersInfo,
 	directedPathAdjacentCellsSumIsPrimeInfo,
+	directedPathIsRegionSumLineInfo,
 	directedPathSumOfCellsPerRegionIsPrimeInfo,
 	everyCellBelongsToAGalaxyInfo,
 	galaxiesInfo,
@@ -270,7 +272,8 @@ import {
 	coloredCountingCirclesInfo,
 	directedPathStartInfo,
 	directedPathEndInfo,
-	nurikabeIslandProductOfSumAndSizeInfo
+	nurikabeIslandProductOfSumAndSizeInfo,
+	teleportInfo
 } from './SingleCellElementsInfo';
 import {
 	coldArrowsInfo,
@@ -298,6 +301,7 @@ import { twoContiguousRegionsInfo } from './UndeterminedRegionsElementsInfo';
 import { nurimisakiInfo } from './UndeterminedRegionsElementsInfo';
 import { yinYangInfo } from './UndeterminedRegionsElementsInfo';
 import { unknownRegionsInfo } from './UndeterminedRegionsElementsInfo';
+import { mazeWallInfo } from './CornerLineToolsElementsInfo';
 
 export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = {
 	// Cell input elements
@@ -405,6 +409,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME]: directedPathAdjacentCellsSumIsPrimeInfo,
 	[TOOLS.DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME]:
 		directedPathSumOfCellsPerRegionIsPrimeInfo,
+	[TOOLS.DIRECTED_PATH_ADJACENT_CELLS_DUTCH_WHISPERS]: directedPathAdjacentCellsDutchWhispersInfo,
+	[TOOLS.DIRECTED_PATH_IS_REGION_SUM_LINE]: directedPathIsRegionSumLineInfo,
 
 	// Single Cell Constraints
 	[TOOLS.ODD]: oddInfo,
@@ -462,6 +468,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	[TOOLS.DIRECTED_PATH_START]: directedPathStartInfo,
 	[TOOLS.DIRECTED_PATH_END]: directedPathEndInfo,
+	[TOOLS.TELEPORT]: teleportInfo,
 
 	// Single Cell Arrow Constraint
 	[TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND]: sashiganeArrowPointsToBendInfo,
@@ -495,7 +502,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.UNKNOWN_REGION_BORDER]: unknownRegionBorderInfo,
 	[TOOLS.EDGE_CAVE_ONE_OF_EACH]: edgeCaveOneOfEachInfo,
 
-	[TOOLS.MAZE_WALL]: mazeWallInfo,
+	[TOOLS.ONE_WAY_DOOR]: oneWayDoorInfo,
 
 	// Corner Constraints
 	[TOOLS.QUADRUPLE]: quadrupleInfo,
@@ -587,6 +594,9 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	// Arrow constraints
 	[TOOLS.ARROW]: arrowInfo,
 	[TOOLS.AVERAGE_ARROW]: averageArrowInfo,
+
+	// Corner Line Constraints
+	[TOOLS.MAZE_WALL]: mazeWallInfo,
 
 	// Cage Constraints
 	[TOOLS.KILLER_CAGE]: killerCageInfo,
