@@ -407,7 +407,8 @@ function setColoring(json: JsonT, grid: Grid) {
 		'cave_regions',
 		'fillomino_area',
 		'galaxy_regions',
-		'tilling_regions'
+		'tilling_regions',
+		'region_labels'
 	];
 
 	for (const name of grid_vars_names) {

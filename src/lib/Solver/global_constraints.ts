@@ -723,6 +723,27 @@ function directedPathIsRegionSumLineConstraint(puzzle: PuzzleI, toolId: TOOLID):
 	return out_str;
 }
 
+function directedPathTeleportSegmentsSumConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint directed_path_teleport_segments_sum_p(board, teleports, dpath_from, dpath_to, dpath_ns, dpath_es, dpath_source);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
+function directedPathTeleportRenbanSegmentsConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint directed_path_teleport_renban_segments_p(board, teleports, dpath_from, dpath_to, dpath_ns, dpath_es, dpath_source);\n`;
+
+	// out_str += `int: n_cols = length(COL_IDXS);\n`;
+    // out_str += `int: n_rows = length(ROW_IDXS);\n`;
+    // out_str += `int: g_size = n_rows * n_cols;\n`
+	// out_str += `array[ROW_IDXS, COL_IDXS] of var 0..(n_cols*n_rows): region_labels;\n`;
+	// out_str += `constraint directed_path_teleport_segments_p(region_labels, teleports, dpath_from, dpath_to, dpath_ns, dpath_es, dpath_source);\n`;
+
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
 function directedPathSumOfCellsPerRegionIsPrimeConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	let out_str: string = '';
 
@@ -857,7 +878,9 @@ const tool_map = new Map<string, ConstraintF>([
 		TOOLS.DIRECTED_PATH_ADJACENT_CELLS_DUTCH_WHISPERS,
 		directedPathAdjacentCellsDutchWhispersConstraint
 	],
-	[TOOLS.DIRECTED_PATH_IS_REGION_SUM_LINE, directedPathIsRegionSumLineConstraint]
+	[TOOLS.DIRECTED_PATH_IS_REGION_SUM_LINE, directedPathIsRegionSumLineConstraint],
+	[TOOLS.DIRECTED_PATH_TELEPORT_SEGMENTS_SUM, directedPathTeleportSegmentsSumConstraint],
+	[TOOLS.DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS, directedPathTeleportRenbanSegmentsConstraint]
 ]);
 
 export function globalConstraints(puzzle: PuzzleI): string {

@@ -896,7 +896,6 @@ function teleportConstraint(
 	grid: Grid,
 	constraints: Record<string, CellToolI>
 ) {
-
 	let out_str = '';
 	const groups = groupConstraintsByValue(Object.values(constraints));
 
@@ -913,9 +912,15 @@ function teleportConstraint(
 			const cell1_var = cellToGridVarName(cell1, VAR_2D_NAMES.BOARD);
 			const cell2_var = cellToGridVarName(cell2, VAR_2D_NAMES.BOARD);
 
-			out_str += `constraint ${cell1_var} == ${cell2_var};\n`
+			out_str += `constraint ${cell1_var} == ${cell2_var};\n`;
 		}
 	}
+	const first_coords = [...groups.values()].map((group) => group[0].cell);
+	const cells = first_coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => cell !== undefined);
+	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+	out_str += `constraint alldifferent(${vars_str});\n`;
 
 	return out_str;
 }
@@ -985,9 +990,9 @@ const tool_map_2 = new Map<string, ConstraintF2>([
 	[TOOLS.COUNTING_CIRCLES, countingCirclesConstraint],
 	[TOOLS.COLORED_COUNTING_CIRCLES, coloredCountingCirclesConstraint],
 	[TOOLS.UNIQUE_CELLS, uniqueCellsConstraint],
-	
+
 	[TOOLS.NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE, nurikabeIslandProductOfSumAndSizeConstraint],
-	[TOOLS.TELEPORT, teleportConstraint],
+	[TOOLS.TELEPORT, teleportConstraint]
 ]);
 
 export function singleCellConstraints(

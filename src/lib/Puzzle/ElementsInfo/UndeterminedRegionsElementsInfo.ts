@@ -226,6 +226,30 @@ export const directedPathSumOfCellsPerRegionIsPrimeInfo: AbstractElementInfo = {
 	}
 };
 
+export const directedPathTeleportSegmentsSumInfo: AbstractElementInfo = {
+	toolId: TOOLS.DIRECTED_PATH_TELEPORT_SEGMENTS_SUM,
+	order: 0,
+
+	meta: {
+		description:
+			'The sum of the digits on the path before teleporting must equal the sum of the digits on the path after teleporting.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const directedPathTeleportRenbanSegmentsInfo: AbstractElementInfo = {
+	toolId: TOOLS.DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS,
+	order: 0,
+
+	meta: {
+		description:
+			"The directed path is formed of one or more segments. Any uses of teleports will divide the path up into physically separate segments, ie; if a teleport is used, the current path segment ends at the entry teleport, and a new separate path segment begins at the matching exit teleport. Any path segment must function as a renban; it must consist entirely of a set of non-repeating, consecutive digits, which can be arranged in any order along the path segment.",
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
 export const caveInfo: AbstractElementInfo = {
 	toolId: TOOLS.CAVE,
 	order: 0,

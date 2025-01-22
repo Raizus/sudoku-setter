@@ -1,23 +1,23 @@
 export function defineFunctionsPredicates() {
-	const tests = `test orth_adjacent_2d(
-    int: r1, int: c1, 
-    int: r2, int: c2
+	const tests = `predicate orth_adjacent_2d(
+    var int: r1, var int: c1, 
+    var int: r2, var int: c2
 ) = let {
-    int: d1 = abs(r2-r1);
-    int: d2 = abs(c2-c1);
+    var int: d1 = abs(r2-r1);
+    var int: d2 = abs(c2-c1);
 } in d1 <= 1 /\\ d2 <= 1 /\\ d1 + d2 = 1;
 
-test diag_adjacent_2d(
-    int: r1, int: c1, 
-    int: r2, int: c2
+predicate diag_adjacent_2d(
+    var int: r1, var int: c1, 
+    var int: r2, var int: c2
 ) = let {
-    int: d1 = abs(r2-r1);
-    int: d2 = abs(c2-c1);
+    var int: d1 = abs(r2-r1);
+    var int: d2 = abs(c2-c1);
 } in d1 = 1 /\\ d2 = 1;
 
-test orth_or_diag_adjacent_2d(
-    int: r1, int: c1, 
-    int: r2, int: c2
+predicate orth_or_diag_adjacent_2d(
+    var int: r1, var int: c1, 
+    var int: r2, var int: c2
 ) = orth_adjacent_2d(r1,c1,r2,c2) \\/ diag_adjacent_2d(r1,c1,r2,c2);
 
 % (r, c) is in bounds if it is on the board.
@@ -3666,6 +3666,108 @@ predicate direct_path_adjacent_dutch_whispers(
             abs(grid[r1,c1] - grid[r2,c2]) >= 4
         )
     )
+);
+
+predicate directed_path_teleport_segments_p(
+    array[int, int] of var int: regions,
+    array[int, int] of var int: teleports,
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: ns,
+    array[int] of var bool: es,
+    var int: source
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+    int: n_cols = length(cols);
+    int: n_rows = length(rows);
+    set of int: n_idxs = index_set(ns);
+    set of int: e_idxs = index_set(es);
+    tuple(var int, var int): tsource = idx_to_coord2d(source, n_cols);
+} in (
+    regions[tsource.1, tsource.2] = 1
+    % set region labels for nodes not in the path
+    /\\ forall(k in n_idxs)(
+        not ns[k] -> let {
+            tuple(var int, var int): t1 = idx_to_coord2d(k, n_cols);
+        } in (regions[t1.1, t1.2] = 0)
+    )
+    % set region labels for nodes connected by an edge
+    /\\ forall(k in e_idxs)(
+        es[k] -> let {
+            int: n1 = from[k];
+            int: n2 = to[k];
+            tuple(var int, var int): t1 = idx_to_coord2d(n1, n_cols);
+            tuple(var int, var int): t2 = idx_to_coord2d(n2, n_cols);
+            var bool: is_tp = teleports[t1.1, t1.2] != 0 /\\ teleports[t2.1, t2.2] != 0 /\\ teleports[t1.1, t1.2] = teleports[t2.1, t2.2]
+        } in (
+            (not is_tp -> regions[t1.1, t1.2] == regions[t2.1, t2.2]) /\\
+            (is_tp -> regions[t2.1, t2.2] == regions[t1.1, t1.2] + 1)
+        )
+    )
+);
+
+predicate directed_path_teleport_segments_sum_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: teleports,    
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: ns,
+    array[int] of var bool: es,
+    var int: source
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_cols = length(cols);
+    int: n_rows = length(rows);
+    array[rows, cols] of var 0..(n_cols*n_rows): rsl_labels; % region sum lines labels
+    var int: sum_var;
+} in (
+    directed_path_teleport_segments_p(rsl_labels, teleports, from, to, ns, es, source)
+    % region sum line
+    /\\ forall(label in 1..2)(
+        sum_var = conditional_sum_f(array1d(grid), array1d(rsl_labels), label)
+    )
+    % /\\ forall(label in 1..n_cols*n_rows)(
+    %     exists(r in rows, c in cols)(rsl_labels[r,c]==label) ->
+    %         sum_var = conditional_sum_f(array1d(grid), array1d(rsl_labels), label)
+    % )
+);
+
+predicate directed_path_teleport_renban_segments_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: teleports,
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: ns,
+    array[int] of var bool: es,
+    var int: source
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_cols = length(cols);
+    int: n_rows = length(rows);
+    int: g_size = n_rows * n_cols;
+    array[rows, cols] of var 0..(n_cols*n_rows): region_labels;
+
+    tuple(var int, var int): tsource = idx_to_coord2d(source, n_cols);
+    set of int: ids = 1..g_size;
+    % array[ids] of var 0..g_size: sizes;
+} in (
+    directed_path_teleport_segments_p(region_labels, teleports, from, to, ns, es, source)
+    % /\\ forall (id in ids) (
+    %     sizes[id] = sum (r in rows, c in cols) (region_labels[r, c] = id)
+    % )
+    % renban line
+    % /\\ forall(r in rows, c in cols)(
+    %     forall(r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
+    %         let {
+    %             var int: id1 = region_labels[r, c];
+    %             var int: id2 = region_labels[r2, c2];
+    %         } in
+    %         id1 != 0 /\\ id2 != 0 /\\ id1 == id2 -> (grid[r,c] != grid[r2, c2]) % /\\ abs(grid[r,c] - grid[r2, c2]) <= sizes[id1] - 1)
+    %     )
+    % )
 );\n\n`;
 
     const nurikabe = `predicate nurikabe_p(

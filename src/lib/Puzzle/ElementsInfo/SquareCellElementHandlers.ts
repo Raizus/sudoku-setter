@@ -113,6 +113,8 @@ import {
 	directedPathAdjacentCellsSumIsPrimeInfo,
 	directedPathIsRegionSumLineInfo,
 	directedPathSumOfCellsPerRegionIsPrimeInfo,
+	directedPathTeleportRenbanSegmentsInfo,
+	directedPathTeleportSegmentsSumInfo,
 	everyCellBelongsToAGalaxyInfo,
 	galaxiesInfo,
 	galaxy2x2DoesNotBelongToOneGalaxyInfo,
@@ -411,6 +413,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 		directedPathSumOfCellsPerRegionIsPrimeInfo,
 	[TOOLS.DIRECTED_PATH_ADJACENT_CELLS_DUTCH_WHISPERS]: directedPathAdjacentCellsDutchWhispersInfo,
 	[TOOLS.DIRECTED_PATH_IS_REGION_SUM_LINE]: directedPathIsRegionSumLineInfo,
+	[TOOLS.DIRECTED_PATH_TELEPORT_SEGMENTS_SUM]: directedPathTeleportSegmentsSumInfo,
+	[TOOLS.DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS]: directedPathTeleportRenbanSegmentsInfo,
 
 	// Single Cell Constraints
 	[TOOLS.ODD]: oddInfo,

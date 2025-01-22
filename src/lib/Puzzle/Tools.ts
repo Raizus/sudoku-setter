@@ -56,7 +56,7 @@ export enum NEGATIVE_CONSTRAINTS {
 	ALL_INDEXING_ROW_GIVEN = 'All Indexing Row Given',
 	ALL_YIN_YANG_KROPKI_GIVEN = 'All Yin Yang Kropki Given',
 	ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN = 'All Nurimisaki Unshaded Endpoints Given',
-	ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN = "All Yin Yang Count Shaded Cells Given"
+	ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN = 'All Yin Yang Count Shaded Cells Given'
 }
 
 export enum VALUE_MODIFIER_CONSTRAINTS {
@@ -67,7 +67,7 @@ export enum VALUE_MODIFIER_CONSTRAINTS {
 	HOT_CELLS = 'Hot Cells',
 	COLD_CELLS = 'Cold Cells',
 	DECREMENT_FOUNTAIN = 'Decrement Fountain',
-	NEXUS = 'Nexus',
+	NEXUS = 'Nexus'
 }
 
 export enum UNDETERMINED_REGIONS_CONSTRAINTS {
@@ -89,7 +89,9 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME = 'Directed Path Adjacent Cells Sum Is Prime',
 	DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME = 'Directed Path Sum Of Cells Per Region Is Prime',
 	DIRECTED_PATH_ADJACENT_CELLS_DUTCH_WHISPERS = 'Directed Path Adjacent Cells Dutch Whispers',
-	DIRECTED_PATH_IS_REGION_SUM_LINE = "Directed Path Is Region Sum Line",
+	DIRECTED_PATH_IS_REGION_SUM_LINE = 'Directed Path Is Region Sum Line',
+	DIRECTED_PATH_TELEPORT_SEGMENTS_SUM = 'Directed Path Teleport Segments Sum',
+	DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS = 'Directed Path Teleport Renban Segments',
 
 	CAVE = 'Cave',
 	CAVE_CELLS_ARE_ODD = 'Cave Cells Are Odd',
@@ -171,12 +173,12 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 
 	DIRECTED_PATH_START = 'Directed Path Start',
 	DIRECTED_PATH_END = 'Directed Path End',
-	TELEPORT = 'Teleport',
+	TELEPORT = 'Teleport'
 }
 
 export enum SINGLE_CELL_ARROW_CONSTRAINTS {
 	SASHIGANE_ARROW_POINTS_TO_BEND = 'Sashigane Arrow Points To Bend',
-	THERMO_SIGHTLINE_LOOP_ARROW = 'Thermo Sightline Loop Arrow',
+	THERMO_SIGHTLINE_LOOP_ARROW = 'Thermo Sightline Loop Arrow'
 }
 
 export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
@@ -188,7 +190,7 @@ export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
 	LOOP_CELL_COUNT_ARROWS = 'Loop Cell Count Arrows',
 	YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS = 'Yin Yang Count Unique Fillomino Same Shading Arrows',
 	SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS = 'Same Galaxy Unobstructed Count Arrows',
-	NURIKABE_COUNT_ISLAND_CELLS_ARROWS = 'Nurikabe Count Island Cells Arrows',
+	NURIKABE_COUNT_ISLAND_CELLS_ARROWS = 'Nurikabe Count Island Cells Arrows'
 }
 
 export enum EDGE_CONSTRAINTS {

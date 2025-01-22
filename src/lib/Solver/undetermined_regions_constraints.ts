@@ -8,6 +8,7 @@ import {
 	cellEdgeToCellCoords,
 	coordsAdd,
 	coordsScale,
+	cornerCoordToAdjCellCoords,
 	type GridCoordI
 } from '../utils/SquareCellGridCoords';
 import {
@@ -557,6 +558,11 @@ function litsBlackAndWhiteStarBattleConstraint(model: PuzzleModel, tool: TOOLID)
 	return out_str;
 }
 
+function coordsToIdx(r: number, c: number, n_cols: number) {
+	const n = r * n_cols + c + 1;
+	return n;
+}
+
 function mazeDirectedPathConstraint(model: PuzzleModel, tool: TOOLID) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
@@ -567,21 +573,23 @@ function mazeDirectedPathConstraint(model: PuzzleModel, tool: TOOLID) {
 		return '';
 	}
 
+	let out_str: string = '';
+
 	function constructEdgeList() {
 		const edge_list: [s: number, t: number][] = [];
 
 		for (const cell of grid.getAllCells()) {
-			const source = cell.r * grid.nCols + cell.c + 1;
+			const source = coordsToIdx(cell.r, cell.c, grid.nCols);
 			const adj_cells = grid.getNeighboorCells(cell);
 			for (const cell2 of adj_cells) {
-				const target = cell2.r * grid.nCols + cell2.c + 1;
+				const target = coordsToIdx(cell2.r, cell2.c, grid.nCols);
 				edge_list.push([source, target]);
 			}
 		}
 		return edge_list;
 	}
 
-	const edge_list = constructEdgeList();
+	let edge_list = constructEdgeList();
 
 	// add teleport edges
 	const lconstraints = puzzle.localConstraints;
@@ -590,65 +598,76 @@ function mazeDirectedPathConstraint(model: PuzzleModel, tool: TOOLID) {
 		// group teleports by label
 		const constraints = Object.values(teleport_constraints) as CellToolI[];
 		const groups = groupConstraintsByValue(constraints);
-
+		const tp_arr = Array.from(Array(grid.nRows), () => new Array(grid.nRows).fill(0));
+		
+		let k = 1;
 		for (const group of groups.values()) {
 			if (group.length <= 1) continue;
 			// for each combination of 2
 			for (const [e1, e2] of group.flatMap((v, i) => group.slice(i + 1).map((w) => [v, w]))) {
-				const n1 = e1.cell.r * grid.nCols + e1.cell.c + 1;
-				const n2 = e2.cell.r * grid.nCols + e2.cell.c + 1;
+				const n1 = coordsToIdx(e1.cell.r, e1.cell.c, grid.nCols);
+				const n2 = coordsToIdx(e2.cell.r, e2.cell.c, grid.nCols);
 				edge_list.push([n1, n2]);
 				edge_list.push([n2, n1]);
+				tp_arr[e1.cell.r][e1.cell.c] = k;
+				tp_arr[e2.cell.r][e2.cell.c] = k;
 			}
+			k++;
 		}
+		const array_str = format_2d_array(tp_arr);
+		const l = groups.size;
+		out_str += `\n% teleports grid\n`
+		out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${l}: teleports = array2d(ROW_IDXS, COL_IDXS, ${array_str});\n`;
 	}
 
-	model.edge_list = edge_list;
-	const n = grid.nRows * grid.nCols;
-	const e = edge_list.length;
-	const from_str = '[' + edge_list.map((edge) => edge[0]).join(',') + ']';
-	const to_str = '[' + edge_list.map((edge) => edge[1]).join(',') + ']';
-
-	let out_str: string = '';
-	out_str += `array[int] of int: dpath_from = ${from_str};\n`;
-	out_str += `array[int] of int: dpath_to = ${to_str};\n`;
-	out_str += `var 1..${n}: dpath_source;\n`;
-	out_str += `var 1..${n}: dpath_target;\n`;
-	out_str += `array[1..${n}] of var bool: dpath_ns;\n`;
-	out_str += `array[1..${e}] of var bool: dpath_es;\n`;
-	out_str += `constraint dpath(dpath_from, dpath_to, dpath_source, dpath_target, dpath_ns, dpath_es);\n`;
-
-	function remove_edge(n1: number, n2: number) {
+	function set_edge_false(n1: number, n2: number) {
 		const edge_id = edge_list.findIndex((edge) => edge[0] === n1 && edge[1] === n2);
 		if (edge_id != -1) out_str += `constraint dpath_es[${edge_id + 1}] = false;\n`;
 	}
 
-	function edge_constraints_1(_cell1: Cell, _cell2: Cell) {
-		const n1 = _cell1.r * grid.nCols + _cell1.c + 1;
+	function edge_wall_vertical(cell1: Cell, cell2: Cell) {
+		const edges: [s: number, t: number][] = [];
+		const n1 = coordsToIdx(cell1.r, cell1.c, grid.nCols);
 		for (let i = -1; i <= 1; i++) {
-			const n2 = (_cell2.r + i) * grid.nCols + _cell2.c + 1;
-
-			remove_edge(n1, n2);
-			remove_edge(n2, n1);
+			const n2 = coordsToIdx(cell2.r + i, cell2.c, grid.nCols);
+			edges.push([n1, n2]);
+			edges.push([n2, n1]);
 		}
+		return edges;
 	}
 
-	function edge_constraints_2(_cell1: Cell, _cell2: Cell) {
-		const n1 = _cell1.r * grid.nCols + _cell1.c + 1;
+	function edge_wall_horizontal(cell1: Cell, cell2: Cell) {
+		const edges: [s: number, t: number][] = [];
+		const n1 = coordsToIdx(cell1.r, cell1.c, grid.nCols);
 		for (let j = -1; j <= 1; j++) {
-			const n2 = _cell2.r * grid.nCols + (_cell2.c + j) + 1;
-
-			remove_edge(n1, n2);
-			remove_edge(n2, n1);
+			const n2 = coordsToIdx(cell2.r, cell2.c + j, grid.nCols);
+			edges.push([n1, n2]);
+			edges.push([n2, n1]);
 		}
+		return edges;
 	}
 
-	// set the edge variables to false where there is a wall
+	const edges_rem: [s: number, t: number][] = [];
+	// find edges blocked by walls
 	const wall_constraints = lconstraints.get(TOOLS.MAZE_WALL);
 	if (wall_constraints) {
-		out_str += `\n % Maze Walls\n`;
 		for (const constraint of Object.values(wall_constraints) as CornerLineToolI[]) {
 			const coords = constraint.coords;
+			if (coords.length === 1) {
+				const corner_coord = coords[0];
+				const cells_coords = cornerCoordToAdjCellCoords(corner_coord);
+				const cells = cells_coords
+					.map((_c) => grid.getCell(_c.r, _c.c))
+					.filter((cell) => cell !== undefined);
+				let n1 = coordsToIdx(cells[0].r, cells[0].c, grid.nCols);
+				let n2 = coordsToIdx(cells[3].r, cells[3].c, grid.nCols);
+				edges_rem.push([n1, n2]);
+				edges_rem.push([n2, n1]);
+				n1 = coordsToIdx(cells[1].r, cells[1].c, grid.nCols);
+				n2 = coordsToIdx(cells[2].r, cells[2].c, grid.nCols);
+				edges_rem.push([n1, n2]);
+				edges_rem.push([n2, n1]);
+			}
 			for (let i = 0; i < coords.length - 1; i++) {
 				const edge_coord: GridCoordI = coordsScale(coordsAdd(coords[i], coords[i + 1]), 0.5);
 				const cells_coords = cellEdgeToCellCoords(edge_coord);
@@ -661,37 +680,131 @@ function mazeDirectedPathConstraint(model: PuzzleModel, tool: TOOLID) {
 
 				if (cell1.r === cell2.r) {
 					// vertical border
-					edge_constraints_1(cell1, cell2);
-					edge_constraints_1(cell2, cell1);
+					let edges = edge_wall_vertical(cell1, cell2);
+					edges_rem.push(...edges);
+					edges = edge_wall_vertical(cell2, cell1);
+					edges_rem.push(...edges);
 				} else if (cell1.c === cell2.c) {
 					// horizontal border
-					edge_constraints_2(cell1, cell2);
-					edge_constraints_2(cell2, cell1);
+					let edges = edge_wall_horizontal(cell1, cell2);
+					edges_rem.push(...edges);
+					edges = edge_wall_horizontal(cell2, cell1);
+					edges_rem.push(...edges);
 				}
 			}
 		}
 	}
 
-	// set the edge variables to false where there is a one way door
+	// find edges blocked by one way doors
 	const one_way_door_constraints = lconstraints.get(TOOLS.ONE_WAY_DOOR);
 	if (one_way_door_constraints) {
-		out_str += `\n % One Way Doors\n`;
 		for (const constraint of Object.values(one_way_door_constraints) as EdgeToolI[]) {
 			const coords = constraint.cells;
 			const cells = coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell);
 			const [cell1, cell2] = cells;
 			const value = constraint.value;
 
-			const n1 = cell1.r * grid.nCols + cell1.c + 1;
-			const n2 = cell2.r * grid.nCols + cell2.c + 1;
+			const n1 = coordsToIdx(cell1.r, cell1.c, grid.nCols);
+			const n2 = coordsToIdx(cell2.r, cell2.c, grid.nCols);
 			if (value === '<') {
-				remove_edge(n1, n2);
+				edges_rem.push([n1, n2]);
 			} else if (value === '>') {
-				remove_edge(n2, n1);
+				edges_rem.push([n2, n1]);
 			}
 		}
 	}
-	
+
+	edge_list = edge_list.filter(
+		(edge) => !edges_rem.some((edge2) => edge[0] === edge2[0] && edge[1] === edge2[1])
+	);
+
+	model.edge_list = edge_list;
+	const n = grid.nRows * grid.nCols;
+	const e = edge_list.length;
+	const from_str = '[' + edge_list.map((edge) => edge[0]).join(',') + ']';
+	const to_str = '[' + edge_list.map((edge) => edge[1]).join(',') + ']';
+
+	out_str += `array[int] of int: dpath_from = ${from_str};\n`;
+	out_str += `array[int] of int: dpath_to = ${to_str};\n`;
+	out_str += `var 1..${n}: dpath_source;\n`;
+	out_str += `var 1..${n}: dpath_target;\n`;
+	out_str += `array[1..${n}] of var bool: dpath_ns;\n`;
+	out_str += `array[1..${e}] of var bool: dpath_es;\n`;
+	out_str += `constraint dpath(dpath_from, dpath_to, dpath_source, dpath_target, dpath_ns, dpath_es);\n`;
+
+	out_str += `\n% Direct Path no crossings\n`;
+	for (let i = 0; i < grid.nRows - 1; i++) {
+		for (let j = 0; j < grid.nCols - 1; j++) {
+			const cell1 = grid.getCell(i, j);
+			const cell2 = grid.getCell(i, j + 1);
+			const cell3 = grid.getCell(i + 1, j);
+			const cell4 = grid.getCell(i + 1, j + 1);
+			if (!cell1 || !cell2 || !cell3 || !cell4) continue;
+			const n1 = coordsToIdx(cell1.r, cell1.c, grid.nCols);
+			const n2 = coordsToIdx(cell2.r, cell2.c, grid.nCols);
+			const n3 = coordsToIdx(cell3.r, cell3.c, grid.nCols);
+			const n4 = coordsToIdx(cell4.r, cell4.c, grid.nCols);
+
+			const edges: [s: number, t: number][] = [
+				[n1, n4],
+				[n4, n1],
+				[n2, n3],
+				[n3, n2]
+			];
+			const edge_idxs = edges.map((edge) =>
+				edge_list.findIndex((edge2) => edge[0] === edge2[0] && edge[1] === edge2[1])
+			).filter(idx => idx !== -1);
+			if (edge_idxs.length) {
+				const aux = edge_idxs.map(idx => `dpath_es[${idx + 1}]`).join(',')
+				out_str += `constraint sum([${aux}]) <= 1;\n`
+			}
+		}
+	}
+
+	out_str += `constraint dpath_ns[1] = true;\n`
+	out_str += `constraint dpath_ns[2] = true;\n`
+	out_str += `constraint dpath_ns[10] = true;\n`
+	out_str += `constraint dpath_ns[11] = true;\n`
+	out_str += `constraint dpath_ns[19] = true;\n`
+	out_str += `constraint dpath_ns[28] = true;\n`
+	out_str += `constraint dpath_ns[29] = true;\n`
+	out_str += `constraint dpath_ns[30] = true;\n`
+	out_str += `constraint dpath_ns[31] = true;\n`
+
+	out_str += `constraint dpath_ns[36] = true;\n`
+	out_str += `constraint dpath_ns[45] = true;\n`
+	out_str += `constraint dpath_ns[54] = true;\n`
+	out_str += `constraint dpath_ns[63] = true;\n`
+	out_str += `constraint dpath_ns[72] = true;\n`
+
+	out_str += `constraint dpath_ns[61] = true;\n`
+	out_str += `constraint dpath_ns[62] = true;\n`
+	out_str += `constraint dpath_ns[71] = true;\n`
+	out_str += `constraint dpath_ns[80] = true;\n`
+	out_str += `constraint dpath_ns[81] = true;\n`
+
+	out_str += `constraint dpath_ns[39] = true;\n`
+	out_str += `constraint dpath_ns[48] = true;\n`
+	out_str += `constraint dpath_ns[57] = true;\n`
+	out_str += `constraint dpath_ns[65] = true;\n`
+	out_str += `constraint dpath_ns[56] = true;\n`
+	out_str += `constraint dpath_ns[47] = true;\n`
+	out_str += `constraint dpath_ns[38] = true;\n`
+
+	out_str += `constraint dpath_ns[78] = true;\n`
+	out_str += `constraint dpath_ns[79] = true;\n`
+	out_str += `constraint dpath_ns[70] = true;\n`
+
+	out_str += `constraint dpath_ns[73] = true;\n`
+	out_str += `constraint dpath_ns[74] = true;\n`
+	out_str += `constraint dpath_ns[75] = true;\n`
+	out_str += `constraint dpath_ns[76] = true;\n`
+	out_str += `constraint dpath_ns[77] = true;\n`
+	out_str += `constraint dpath_ns[67] = true;\n`
+	out_str += `constraint dpath_ns[59] = true;\n`
+	out_str += `constraint dpath_ns[50] = true;\n`
+	out_str += `constraint dpath_ns[51] = true;\n`
+
 	return out_str;
 }
 
