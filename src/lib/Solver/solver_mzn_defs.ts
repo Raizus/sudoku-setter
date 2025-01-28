@@ -3741,7 +3741,8 @@ predicate directed_path_teleport_renban_segments_p(
     array[int] of int: to,
     array[int] of var bool: ns,
     array[int] of var bool: es,
-    var int: source
+    var int: source,
+    int: max_reg_size
 ) = let {
     set of int: rows = index_set_1of2(grid);
     set of int: cols = index_set_2of2(grid);
@@ -3752,22 +3753,22 @@ predicate directed_path_teleport_renban_segments_p(
 
     tuple(var int, var int): tsource = idx_to_coord2d(source, n_cols);
     set of int: ids = 1..g_size;
-    % array[ids] of var 0..g_size: sizes;
+    array[ids] of var 0..max_reg_size: sizes;
 } in (
     directed_path_teleport_segments_p(region_labels, teleports, from, to, ns, es, source)
-    % /\\ forall (id in ids) (
-    %     sizes[id] = sum (r in rows, c in cols) (region_labels[r, c] = id)
-    % )
+    /\\ forall (id in ids) (
+        sizes[id] = sum (r in rows, c in cols) (region_labels[r, c] = id)
+    )
     % renban line
-    % /\\ forall(r in rows, c in cols)(
-    %     forall(r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
-    %         let {
-    %             var int: id1 = region_labels[r, c];
-    %             var int: id2 = region_labels[r2, c2];
-    %         } in
-    %         id1 != 0 /\\ id2 != 0 /\\ id1 == id2 -> (grid[r,c] != grid[r2, c2]) % /\\ abs(grid[r,c] - grid[r2, c2]) <= sizes[id1] - 1)
-    %     )
-    % )
+    /\\ forall(r in rows, c in cols)(
+        forall(r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
+            let {
+                var int: id1 = region_labels[r, c];
+                var int: id2 = region_labels[r2, c2];
+            } in
+            id1 != 0 /\\ id2 != 0 /\\ id1 == id2 -> grid[r,c] != grid[r2, c2] /\\ abs(grid[r,c] - grid[r2, c2]) <= sizes[id1] - 1
+        )
+    )
 );\n\n`;
 
     const nurikabe = `predicate nurikabe_p(

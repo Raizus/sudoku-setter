@@ -732,13 +732,11 @@ function directedPathTeleportSegmentsSumConstraint(puzzle: PuzzleI, toolId: TOOL
 
 function directedPathTeleportRenbanSegmentsConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	let out_str: string = '';
-	out_str += `constraint directed_path_teleport_renban_segments_p(board, teleports, dpath_from, dpath_to, dpath_ns, dpath_es, dpath_source);\n`;
-
-	// out_str += `int: n_cols = length(COL_IDXS);\n`;
-    // out_str += `int: n_rows = length(ROW_IDXS);\n`;
-    // out_str += `int: g_size = n_rows * n_cols;\n`
-	// out_str += `array[ROW_IDXS, COL_IDXS] of var 0..(n_cols*n_rows): region_labels;\n`;
-	// out_str += `constraint directed_path_teleport_segments_p(region_labels, teleports, dpath_from, dpath_to, dpath_ns, dpath_es, dpath_source);\n`;
+	const grid = puzzle.grid;
+	const used_regions = puzzle.grid.getUsedRegions();
+	const reg_sizes = [...used_regions].map(reg => puzzle.grid.getRegion(reg).length);
+	const max_reg_size = reg_sizes.length ? Math.max(...reg_sizes) : grid.nCols * grid.nRows;
+	out_str += `constraint directed_path_teleport_renban_segments_p(board, teleports, dpath_from, dpath_to, dpath_ns, dpath_es, dpath_source, ${max_reg_size});\n`;
 
 	out_str = addHeader(out_str, `${toolId}`);
 	return out_str;
