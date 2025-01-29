@@ -2170,97 +2170,93 @@ predicate fillomino_restrict_floodfill_p(
 
 predicate fillomino_p(
     array[int, int] of var int: grid, 
-    array[int, int] of var int: area
-) =
-    let {
-        % 0-indexing arrays!!!! 
-        set of int: rows = index_set_1of2(grid);
-        set of int: cols = index_set_2of2(grid);
-        int: n_rows = length(rows);
-        int: n_cols = length(cols);
-        int: g_size = n_rows * n_cols;
-        set of int: ids = 1..g_size;
-        set of int: time = 1..g_size;
-        array[rows, cols] of var time: when;
-        array[rows, cols] of var int: same_before;
-        array[ids] of var 0..g_size: size;
-    } in (
-        % Optimisation: fix unambiguous "roots" at time 1, the id of the
-        % area will be the 'index' of the first element of that area
-        same_before_p(area, same_before) /\\
-        forall (r in rows, c in cols where grid[r, c] != 0) (
-            if same_before[r,c] = 0 then
-                when[r,c] = 1 /\\ area[r, c] = (r) * n_cols + c + 1
-            else
-                true
-            endif
-        ) /\\
+    array[int, int] of var int: regions
+) = let {
+    % 0-indexing arrays!!!! 
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_rows = length(rows);
+    int: n_cols = length(cols);
+    int: g_size = n_rows * n_cols;
+    set of int: ids = 1..g_size;
+    set of int: time = 1..g_size;
+    array[rows, cols] of var time: when;
+    array[rows, cols] of var int: same_before;
+    array[ids] of var 0..g_size: size;
+} in (
+    % Each cell contains the number corresponding to the size of its region.
+    forall (r in rows, c in cols) (
+        grid[r, c] = size[regions[r, c]]
+    )
 
-        % Each cell contains the number corresponding to the size of its area.
-        forall (r in rows, c in cols) (
-            grid[r, c] = size[area[r, c]]
-        ) /\\
-
-        % small optimization to reduce search space
-        forall(r in rows, c in cols) (
-            forall(r2 in rows, c2 in cols) (
-                abs(r2-r) + abs(c2-c) >= grid[r,c] -> area[r,c] != area[r2, c2]
-            )
-        ) /\\
-
-        forall(r in rows, c in cols) (
-            forall(r2 in rows, c2 in cols) (
-                abs(r2-r) + abs(c2-c) >= grid[r,c] -> area[r, c] != (r2) * n_cols + c2 + 1
-            )
-        ) /\\
-
-        % Each area's size is the number of cells in that area.
-        forall (id in ids) (
-            size[id] = sum (r in rows, c in cols) (bool2int(area[r, c] = id))
-        ) /\\
-
-        % Neighbouring areas must have different sizes. (horizontally adjacent)
-        forall (r in rows, c in cols where c > 0) (
-            let { var ids: id1 = area[r, c - 1], var ids: id2 = area[r, c] } in
-            (id1 != id2) = (size[id1] != size[id2])
-        ) /\\
-        % Neighbouring areas must have different sizes. (vertically adjacent)
-        forall (r in rows, c in cols where r > 0) (
-            let { var ids: id1 = area[r-1, c], var ids: id2 = area[r, c] } in
-            (id1 != id2) = (size[id1] != size[id2])
-        ) /\\
-
-        % Optimisation: the "when" label is actually the distance of a cell in an
-        % area from the area "root".  This distance cannot be larger than the size
-        % of the area.
-        forall (r in rows, c in cols) (
-            when[r, c] <= size[area[r, c]]
-        ) /\\
-
-        % Each cell is either the "root" of an area or is an extension of a
-        % neighbouring cell.
-        forall (r in rows, c in cols) (
-            ( when[r, c] = 1 /\\ area[r, c] = (r) * n_cols + c + 1 ) \\/  
-            ( when[r, c] > 1 /\\ 
-                ( fillomino_joins(r, c, r - 1, c, grid, when, area) \\/ 
-                  fillomino_joins(r, c, r + 1, c, grid, when, area) \\/
-                  fillomino_joins(r, c, r, c - 1, grid, when, area) \\/ 
-                  fillomino_joins(r, c, r, c + 1, grid, when, area)
-                )
-            )
-        ) /\\
-
-        % restricts the floodfilling growth,
-        % by minimizing the distance of each node in the branching tree (each region) to the root
-        % this removes solution with the same regions, but with different floodfilling (when array)
-        fillomino_restrict_floodfill_p(when, area)
-
-        % Symmetry breaking: canonical numbering of regions
-        /\\
-        forall(r in rows, c in cols) (
-            area[r, c] <= (r * n_cols + c + 1)
+    % small optimization to reduce search space
+    /\\ forall(r in rows, c in cols) (
+        forall(r2 in rows, c2 in cols) (
+            abs(r2-r) + abs(c2-c) >= grid[r,c] -> regions[r,c] != regions[r2, c2]
         )
-    );
+    )
+
+    /\\ forall(r in rows, c in cols) (
+        forall(r2 in rows, c2 in cols) (
+            abs(r2-r) + abs(c2-c) >= grid[r,c] -> regions[r, c] != (r2) * n_cols + c2 + 1
+        )
+    )
+
+    % Each region's size is the number of cells in that region.
+    /\\ forall (id in ids) (
+        size[id] = sum (r in rows, c in cols) (bool2int(regions[r, c] = id))
+    )
+
+    % Neighbouring regions must have different sizes. (horizontally adjacent)
+    /\\ forall (r in rows, c in cols where c > 0) (
+        let { var ids: id1 = regions[r, c - 1], var ids: id2 = regions[r, c] } in
+        (id1 != id2) = (size[id1] != size[id2])
+    )
+    % Neighbouring regions must have different sizes. (vertically adjacent)
+    /\\ forall (r in rows, c in cols where r > 0) (
+        let { var ids: id1 = regions[r-1, c], var ids: id2 = regions[r, c] } in
+        (id1 != id2) = (size[id1] != size[id2])
+    )
+
+    % Optimisation: the "when" label is actually the distance of a cell in a
+    % region from the region "root".  This distance cannot be larger than the size
+    % of the region.
+    /\\ forall (r in rows, c in cols) (
+        when[r, c] <= size[regions[r, c]]
+    )
+    % Optimisation: fix unambiguous "roots" at time 1, the id of the
+    % region will be the 'index' of the first element of that region
+    /\\ same_before_p(regions, same_before) 
+    /\\ forall (r in rows, c in cols where grid[r, c] != 0) (
+        if same_before[r,c] = 0 then
+            when[r,c] = 1 /\\ regions[r, c] = (r) * n_cols + c + 1
+        else
+            true
+        endif
+    )
+    % Each cell is either the "root" of a region or is an extension of a
+    % neighbouring cell.
+    /\\ forall (r in rows, c in cols) (
+        ( when[r, c] = 1 /\\ regions[r, c] = (r) * n_cols + c + 1 ) \\/  
+        ( when[r, c] > 1 /\\ 
+            ( fillomino_joins(r, c, r - 1, c, grid, when, regions) \\/ 
+                fillomino_joins(r, c, r + 1, c, grid, when, regions) \\/
+                fillomino_joins(r, c, r, c - 1, grid, when, regions) \\/ 
+                fillomino_joins(r, c, r, c + 1, grid, when, regions)
+            )
+        )
+    )
+
+    % restricts the floodfilling growth,
+    % by minimizing the distance of each node in the branching tree (each region) to the root
+    % this removes solution with the same regions, but with different floodfilling (when array)
+    /\\ fillomino_restrict_floodfill_p(when, regions)
+
+    % Symmetry breaking: canonical numbering of regions
+    /\\ forall(r in rows, c in cols) (
+        regions[r, c] <= (r * n_cols + c + 1)
+    )
+);
     
 predicate yin_yang_fillomino_parity_p(
     array[int, int] of var int: grid,
