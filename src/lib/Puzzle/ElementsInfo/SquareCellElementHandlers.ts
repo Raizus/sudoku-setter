@@ -53,6 +53,7 @@ import {
 	cosmeticOutsideDirectionInfo
 } from './CosmeticToolsElementsInfo';
 import {
+	chaosConstructionSuguruBorderInfo,
 	differenceInfo,
 	edgeCaveOneOfEachInfo,
 	edgeFactorInfo,
@@ -109,6 +110,7 @@ import {
 	adjacentCellsAlongLoopAreGermanWhispersInfo,
 	adjacentCellsAlongLoopAreMultiplesInfo,
 	caveLITSInfo,
+	chaosConstructionSuguruInfo,
 	directedPathAdjacentCellsDutchWhispersInfo,
 	directedPathAdjacentCellsSumIsPrimeInfo,
 	directedPathIsRegionSumLineInfo,
@@ -374,6 +376,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	// Undetermined Regions Constraints
 	[TOOLS.UNKNOWN_REGIONS]: unknownRegionsInfo,
+	[TOOLS.CHAOS_CONSTRUCTION_SUGURU]: chaosConstructionSuguruInfo,
 	[TOOLS.YIN_YANG]: yinYangInfo,
 	[TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED]:
 		yinYangNeighbourGreaterThanOneWithinRegionShadedInfo,
@@ -504,6 +507,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.YIN_YANG_KROPKI]: yinYangKropkiInfo,
 
 	[TOOLS.UNKNOWN_REGION_BORDER]: unknownRegionBorderInfo,
+	[TOOLS.CHAOS_CONSTRUCTION_SUGURU_BORDER]: chaosConstructionSuguruBorderInfo,
 	[TOOLS.EDGE_CAVE_ONE_OF_EACH]: edgeCaveOneOfEachInfo,
 
 	[TOOLS.ONE_WAY_DOOR]: oneWayDoorInfo,

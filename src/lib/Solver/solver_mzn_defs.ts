@@ -2796,7 +2796,20 @@ predicate loopwhiches_p(
     conditional_sum_f(arr, sandwiched, true) == val
 );\n\n`;
 
-	const global_constraints = `predicate anti_giraffe_p(array[int, int] of var int: grid) =
+	const global_constraints = `predicate antiking_p(
+    array[int, int] of var int: grid
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);  
+} in (
+    forall(r in rows, c in cols)(
+        forall(i,j in -1..1 where is_after(r,c, r+i,c+j) /\\ in_bounds_2d(r+i, c+j, grid))(
+            grid[r,c] != grid[r+i,c+j]
+        )
+    )
+);
+    
+predicate anti_giraffe_p(array[int, int] of var int: grid) =
     let {
         set of int: rows = index_set_1of2(grid);
         set of int: cols = index_set_2of2(grid);
@@ -2894,6 +2907,30 @@ predicate anti_entropy_p(
     ) /\\
     forall(r in rows, c in cols where c > min(cols))(
         anti_entropy_aux_p(grid[r,c-1], grid[r, c])
+    )
+);
+
+predicate max_grid_val_p(
+    array[int, int] of var int: grid,
+    var int: val,
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    forall(r in rows, c in cols)(
+        grid[r,c] <= val
+    )
+);
+
+predicate val_not_in_grid_p(
+    array[int, int] of var int: grid,
+    var int: val,
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    forall(r in rows, c in cols)(
+        grid[r,c] != val
     )
 );\n\n`;
 
@@ -3767,7 +3804,7 @@ predicate directed_path_teleport_renban_segments_p(
     )
 );\n\n`;
 
-    const nurikabe = `predicate nurikabe_p(
+	const nurikabe = `predicate nurikabe_p(
     array[int, int] of var 0..1: shading, 
     array[int, int] of var int: regions
 ) =  let {
@@ -3812,7 +3849,92 @@ predicate nurikabe_island_product_of_sum_and_size_p(
     /\\ island_sum = conditional_sum_f(array1d(grid), array1d(regions), region)
     /\\ prod_val = size * island_sum
 );\n\n`;
-    
+
+	const suguru = `
+predicate suguru_regions_p(
+    array[int, int] of var int: grid, 
+    array[int, int] of var int: regions
+) = let {
+    % 0-indexing arrays!!!! 
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_rows = length(rows);
+    int: n_cols = length(cols);
+    int: g_size = n_rows * n_cols;
+    set of int: ids = 1..g_size;
+    set of int: time = 1..g_size;
+    array[rows, cols] of var time: when;
+    array[rows, cols] of var int: same_before;
+    array[ids] of var 0..g_size: size;
+} in (
+    % Each cell contains the a number less or equal to the region's size.
+    forall (r in rows, c in cols) (
+        grid[r, c] <= size[regions[r, c]]
+    )
+    % Each region's size is the number of cells in that region.
+    /\\ forall (id in ids) (
+        size[id] = sum (r in rows, c in cols) (bool2int(regions[r, c] = id))
+    )
+    /\\ forall (id in ids)(
+        size[id] > 0 -> exists(r in rows, c in cols)(
+            regions[r,c] == id /\\ grid[r,c] == size[id]
+        )
+    )
+    % Optimisation: the "when" label is actually the distance of a cell in a
+    % region from the region "root".  This distance cannot be larger than the size
+    % of the region.
+    /\\ forall (r in rows, c in cols) (
+        when[r, c] <= size[regions[r, c]]
+    )
+    % Optimisation: fix unambiguous "roots" at time 1, the id of the
+    % region will be the 'index' of the first element of that region
+    /\\ same_before_p(regions, same_before) 
+    /\\ forall (r in rows, c in cols where grid[r, c] != 0) (
+        if same_before[r,c] = 0 then
+            when[r,c] = 1 /\\ regions[r, c] = (r) * n_cols + c + 1
+        else
+            true
+        endif
+    )
+    % Each cell is either the "root" of a region or is an extension of a
+    % neighbouring cell.
+    /\\ forall (r in rows, c in cols) (
+        ( when[r, c] = 1 /\\ regions[r, c] = (r) * n_cols + c + 1 ) \\/  
+        ( when[r, c] > 1 /\\ 
+            ( cave_joins(r, c, r - 1, c, when, regions) \\/ 
+                cave_joins(r, c, r + 1, c, when, regions) \\/
+                cave_joins(r, c, r, c - 1, when, regions) \\/ 
+                cave_joins(r, c, r, c + 1, when, regions)
+            )
+        )
+    )
+    % restricts the floodfilling growth,
+    % by minimizing the distance of each node in the branching tree (each region) to the root
+    % this removes solution with the same regions, but with different floodfilling (when array)
+    /\\ fillomino_restrict_floodfill_p(when, regions)
+    % Symmetry breaking: canonical numbering of regions
+    /\\ forall(r in rows, c in cols) (
+        regions[r, c] <= (r * n_cols + c + 1)
+    )
+);
+
+predicate chaos_construction_suguru_p(
+    array[int, int] of var int: grid, 
+    array[int, int] of var int: regions
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);  
+} in (
+    antiking_p(grid)
+    /\\ suguru_regions_p(grid, regions)
+    % digits in the same region are different
+    /\\ forall(r in rows, c in cols)(
+        forall(r2 in rows, c2 in cols where is_after(r, c, r2, c2))(
+            regions[r,c] == regions[r2,c2] -> grid[r,c] != grid[r2,c2]
+        )
+    )
+);\n\n`;
+
 	const out_str =
 		'\n' +
 		tests +
@@ -3847,8 +3969,9 @@ predicate nurikabe_island_product_of_sum_and_size_p(
 		PENTOMINO_TILLING +
 		LITS +
 		star_battle +
-        direct_path +
-        nurikabe;
+		direct_path +
+		nurikabe +
+		suguru;
 
 	return out_str;
 }

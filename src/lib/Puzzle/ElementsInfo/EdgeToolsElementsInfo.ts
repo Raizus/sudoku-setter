@@ -389,6 +389,28 @@ export const unknownRegionBorderInfo: SquareCellElementInfo = {
 	}
 };
 
+export const chaosConstructionSuguruBorderInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getEdgeToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.CHAOS_CONSTRUCTION_SUGURU_BORDER,
+	order: RENDER_ORDER.EDGE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.BORDER_LINE,
+		strokeWidth: { editable: false, value: 0.1, lb: 0, ub: 1, step: 0.025 },
+		stroke: { editable: false, value: 'black' },
+		opacity: { editable: false, value: 0.9 }
+	},
+
+	meta: {
+		description: 'A line in the border between cells indicates a region border.',
+		tags: [],
+		categories: edgeDefaultCategories
+	}
+};
+
 export const edgeCaveOneOfEachInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getEdgeToolInputHandler(svgRef, grid, tool);

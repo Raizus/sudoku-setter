@@ -72,6 +72,7 @@ export enum VALUE_MODIFIER_CONSTRAINTS {
 
 export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	UNKNOWN_REGIONS = 'Unknown Regions',
+	CHAOS_CONSTRUCTION_SUGURU = 'Chaos Construction Suguru',
 	YIN_YANG = 'Yin Yang',
 	YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED = 'Yin Yang Neighbour Greater Than One Within Region Shaded',
 	NURIMISAKI = 'Nurimisaki',
@@ -207,6 +208,7 @@ export enum EDGE_CONSTRAINTS {
 	YIN_YANG_WHITE_KROPKI = 'Yin Yang White Kropki',
 
 	UNKNOWN_REGION_BORDER = 'Unknown Region Border',
+	CHAOS_CONSTRUCTION_SUGURU_BORDER = 'Chaos Construction Suguru Border',
 	EDGE_CAVE_ONE_OF_EACH = 'Edge Cave One Of Each',
 
 	ONE_WAY_DOOR = 'One Way Door'

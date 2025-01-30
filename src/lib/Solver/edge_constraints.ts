@@ -178,6 +178,24 @@ function unknownRegionBorderConstraint(
 	return constraint_str;
 }
 
+
+function chaosConstructionSuguruBorderConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: EdgeToolI
+) {
+	const cells_coords = constraint.cells;
+	const cells = cells_coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+	const region_vars = cellsToGridVarsName(cells, VAR_2D_NAMES.SUGURU_REGIONS);
+	const [region1, region2] = region_vars;
+
+	const constraint_str = `constraint ${region1} != ${region2};\n`;
+	return constraint_str;
+}
+
 function edgeCaveOneOfEachConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -210,6 +228,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.YIN_YANG_KROPKI, yinYangKropkiConstraint],
 	[TOOLS.YIN_YANG_WHITE_KROPKI, yinYangWhiteKropkiConstraint],
 	[TOOLS.UNKNOWN_REGION_BORDER, unknownRegionBorderConstraint],
+	[TOOLS.CHAOS_CONSTRUCTION_SUGURU_BORDER, chaosConstructionSuguruBorderConstraint],
 	[TOOLS.EDGE_CAVE_ONE_OF_EACH, edgeCaveOneOfEachConstraint]
 ]);
 

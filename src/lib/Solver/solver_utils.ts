@@ -13,6 +13,7 @@ export enum VAR_2D_NAMES {
 	NURIKABE_SHADING = 'nurikabe_shading',
 	NURIKABE_REGIONS = 'nurikabe_regions',
 	UNKNOWN_REGIONS = 'unknown_regions',
+	SUGURU_REGIONS = 'suguru_regions',
 	DOUBLERS = 'doublers_grid',
 	NEGATORS = 'negators_grid',
 	VALUES_GRID = 'values_grid',

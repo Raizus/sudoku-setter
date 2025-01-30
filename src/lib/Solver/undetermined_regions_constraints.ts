@@ -843,6 +843,25 @@ function mazeDirectedPathConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
+function chaosConstructionSuguruConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name = 'suguru_regions';
+	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name};\n`;
+	out_str += `constraint chaos_construction_suguru_p(board, ${grid_name});\n`;
+	out_str += `constraint max_grid_val_p(board, 4);\n`;
+
+	return out_str;
+}
+
 type ConstraintF = (model: PuzzleModel, tool: TOOLID) => string;
 
 const tool_map = new Map<string, ConstraintF>([
@@ -871,7 +890,9 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.LITS_BLACK_WHITE_STAR_BATTLE, litsBlackAndWhiteStarBattleConstraint],
 
 	[TOOLS.RENBAN_CAVES, renbanCavesConstraint],
-	[TOOLS.MAZE_DIRECTED_PATH, mazeDirectedPathConstraint]
+	[TOOLS.MAZE_DIRECTED_PATH, mazeDirectedPathConstraint],
+
+	[TOOLS.CHAOS_CONSTRUCTION_SUGURU, chaosConstructionSuguruConstraint]
 ]);
 
 export function undeterminedRegionsConstraints(model: PuzzleModel): string {

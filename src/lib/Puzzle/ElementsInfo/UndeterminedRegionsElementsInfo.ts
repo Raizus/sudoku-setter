@@ -13,6 +13,18 @@ export const unknownRegionsInfo: AbstractElementInfo = {
 	}
 };
 
+export const chaosConstructionSuguruInfo: AbstractElementInfo = {
+	toolId: TOOLS.CHAOS_CONSTRUCTION_SUGURU,
+	order: 0,
+
+	meta: {
+		description:
+			'In each region of the grid, insert the numbers 1 to N, where N is the size of that region. Orthogonally adjacent and diagonally adjacent cells cannot contain the same digit. For this puzzle, the regions must be determined by the solver.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
 export const yinYangInfo: AbstractElementInfo = {
 	toolId: TOOLS.YIN_YANG,
 	order: 0,
