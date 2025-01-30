@@ -857,7 +857,7 @@ function chaosConstructionSuguruConstraint(model: PuzzleModel, tool: TOOLID) {
 	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name};\n`;
 	out_str += `constraint chaos_construction_suguru_p(board, ${grid_name});\n`;
-	out_str += `constraint max_grid_val_p(board, 4);\n`;
+	// out_str += `constraint max_grid_val_p(board, 4);\n`;
 
 	return out_str;
 }

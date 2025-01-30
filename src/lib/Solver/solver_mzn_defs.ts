@@ -2172,70 +2172,75 @@ predicate fillomino_p(
     array[int, int] of var int: grid, 
     array[int, int] of var int: regions
 ) = let {
-    % 0-indexing arrays!!!! 
     set of int: rows = index_set_1of2(grid);
     set of int: cols = index_set_2of2(grid);
     int: n_rows = length(rows);
     int: n_cols = length(cols);
     int: g_size = n_rows * n_cols;
-    set of int: ids = 1..g_size;
+    array[rows, cols] of var int: size = 
+        array2d(rows, cols, [grid[r,c] | r in rows, c in cols]);
     set of int: time = 1..g_size;
     array[rows, cols] of var time: when;
-    array[rows, cols] of var int: same_before;
-    array[ids] of var 0..g_size: size;
 } in (
-    % Each cell contains the number corresponding to the size of its region.
-    forall (r in rows, c in cols) (
-        grid[r, c] = size[regions[r, c]]
+    % 1. Each cell's region size matches its value
+    forall(r in rows, c in cols) (
+        grid[r, c] = size[r, c]
     )
 
-    % small optimization to reduce search space
+    % 2. Symmetry breaking: canonical numbering of regions (reduces search space, tested)
     /\\ forall(r in rows, c in cols) (
-        forall(r2 in rows, c2 in cols) (
-            abs(r2-r) + abs(c2-c) >= grid[r,c] -> regions[r,c] != regions[r2, c2]
-        )
+        regions[r, c] <= (r * n_cols + c + 1)
     )
 
+    % 3. regions of size 1
+    /\\ forall(r in rows, c in cols)(
+        grid[r,c] == 1 -> regions[r, c] = (r * n_cols + c + 1)
+    )
+
+    % 4. small optimization to reduce search space
     /\\ forall(r in rows, c in cols) (
         forall(r2 in rows, c2 in cols) (
             abs(r2-r) + abs(c2-c) >= grid[r,c] -> regions[r, c] != (r2) * n_cols + c2 + 1
         )
     )
 
-    % Each region's size is the number of cells in that region.
-    /\\ forall (id in ids) (
-        size[id] = sum (r in rows, c in cols) (bool2int(regions[r, c] = id))
+    % 5. Fix the roots (redundant but speeds up search)
+    /\\ forall(r in rows, c in cols) (
+        not exists(r2 in rows, c2 in cols where is_before(r,c,r2,c2)) (
+            regions[r2,c2] == regions[r,c]
+        ) -> regions[r,c] = (r * n_cols + c + 1)
     )
 
-    % Neighbouring regions must have different sizes. (horizontally adjacent)
-    /\\ forall (r in rows, c in cols where c > 0) (
-        let { var ids: id1 = regions[r, c - 1], var ids: id2 = regions[r, c] } in
-        (id1 != id2) = (size[id1] != size[id2])
-    )
-    % Neighbouring regions must have different sizes. (vertically adjacent)
-    /\\ forall (r in rows, c in cols where r > 0) (
-        let { var ids: id1 = regions[r-1, c], var ids: id2 = regions[r, c] } in
-        (id1 != id2) = (size[id1] != size[id2])
+    % 6. lex-order roots
+    /\\ forall(r in rows, c in cols where regions[r, c] == (r * n_cols + c + 1)) (
+        forall(r2 in rows, c2 in cols) (
+            (regions[r2, c2] = regions[r, c]) -> (r2 > r \\/ (r2 = r /\\ c2 >= c))
+        )
     )
 
-    % Optimisation: the "when" label is actually the distance of a cell in a
-    % region from the region "root".  This distance cannot be larger than the size
-    % of the region.
+    % 7. Adjacent cells in the same region have the same value and in different regions have different values
+    /\\ forall(r1 in rows, c1 in cols, r2 in rows, c2 in cols where orth_adjacent_2d(r1, c1, r2, c2)) (
+        (grid[r1, c1] != grid[r2, c2] -> regions[r1, c1] != regions[r2, c2]) /\\
+        (grid[r1, c1] == grid[r2, c2] <-> regions[r1, c1] == regions[r2, c2])
+    )
+
+    % 8. Each region's size equals the count of its cells
+    /\\ forall(r in rows, c in cols) (
+        grid[r, c] = sum(r2 in rows, c2 in cols)(bool2int(regions[r2, c2] = regions[r, c]))
+    )
+    
+    % floodfill - necessary to make sure each region is connected
+    % root fix
+    /\\ forall(r in rows, c in cols)(
+        when[r,c] == 1 <-> regions[r, c] = (r * n_cols + c + 1)
+    )
+    %% Optimisation: the "when" label is actually the 'distance' of a cell in a
+    %% region from the region "root".  This distance cannot be larger than the size
+    %% of the region.
     /\\ forall (r in rows, c in cols) (
-        when[r, c] <= size[regions[r, c]]
+        when[r, c] <= size[r, c]
     )
-    % Optimisation: fix unambiguous "roots" at time 1, the id of the
-    % region will be the 'index' of the first element of that region
-    /\\ same_before_p(regions, same_before) 
-    /\\ forall (r in rows, c in cols where grid[r, c] != 0) (
-        if same_before[r,c] = 0 then
-            when[r,c] = 1 /\\ regions[r, c] = (r) * n_cols + c + 1
-        else
-            true
-        endif
-    )
-    % Each cell is either the "root" of a region or is an extension of a
-    % neighbouring cell.
+
     /\\ forall (r in rows, c in cols) (
         ( when[r, c] = 1 /\\ regions[r, c] = (r) * n_cols + c + 1 ) \\/  
         ( when[r, c] > 1 /\\ 
@@ -2247,15 +2252,10 @@ predicate fillomino_p(
         )
     )
 
-    % restricts the floodfilling growth,
-    % by minimizing the distance of each node in the branching tree (each region) to the root
-    % this removes solution with the same regions, but with different floodfilling (when array)
+    %% restricts the floodfilling growth,
+    %% by minimizing the distance of each node in the branching tree (each region) to the root
+    %% this removes solutions with the same regions, but with different floodfilling (when array)
     /\\ fillomino_restrict_floodfill_p(when, regions)
-
-    % Symmetry breaking: canonical numbering of regions
-    /\\ forall(r in rows, c in cols) (
-        regions[r, c] <= (r * n_cols + c + 1)
-    )
 );
     
 predicate yin_yang_fillomino_parity_p(
@@ -2301,25 +2301,32 @@ predicate cave_floodfill_p(
         array [rows, cols] of var 0..g_size: same_before;
         array[rows, cols] of var 0..g_size: when;
 } in (
-    same_before_p(regions, same_before) /\\
-    forall (r in rows, c in cols) (
+    % Symmetry breaking: canonical numbering of regions
+    forall(r in rows, c in cols) (
+        regions[r, c] <= (r * n_cols + c + 1)
+    )
+
+    /\\ same_before_p(regions, same_before)
+    /\\ forall (r in rows, c in cols) (
         if same_before[r,c] = 0 /\\ regions[r, c] != 0 then
             % 0-indexing arrays!!!!
             when[r,c] = 1 /\\ regions[r, c] = (r) * n_cols + c + 1
         else
             true
         endif
-    ) /\\
-    forall (r in rows, c in cols) (
+    )
+
+    % region 0 is ignored because its handled elsewhere
+    /\\ forall (r in rows, c in cols) (
         regions[r, c] = 0 -> when[r,c] = 0
-    ) /\\
-    forall (r in rows, c in cols) (
+    )
+
+    /\\ forall (r in rows, c in cols) (
         regions[r, c] != 0 -> when[r,c] >= 1
-    ) /\\
-    % floodfilling
-    % Each cell is either the "root" of an area or is an extension of a
+    )
+    % floodfilling - Each cell is either the "root" of an area or is an extension of a
     % neighbouring cell.
-    forall (r in rows, c in cols) (
+    /\\ forall (r in rows, c in cols) (
         ( when[r, c] = 0 ) \\/
         ( when[r, c] = 1 /\\ regions[r, c] = (r) * n_cols + c + 1 ) \\/  
         ( when[r, c] > 1 /\\  
@@ -2330,11 +2337,7 @@ predicate cave_floodfill_p(
             )
         )
     )
-    /\\ fillomino_restrict_floodfill_p(when, regions)    
-    % Symmetry breaking: canonical numbering of regions
-    /\\ forall(r in rows, c in cols) (
-        regions[r, c] <= (r * n_cols + c + 1)
-    )
+    /\\ fillomino_restrict_floodfill_p(when, regions)
 );
 
 predicate cave_nurikabe_helper_p(
@@ -2344,7 +2347,7 @@ predicate cave_nurikabe_helper_p(
     set of int: rows = index_set_1of2(shading);
     set of int: cols = index_set_2of2(shading);
 } in (
-    % water cells (0 = water), must be all orthogonally connected
+    % water cells / cave cells (= 0), must be all orthogonally connected
     connected_region(shading, 0) /\\
     sum(r in rows, c in cols)(bool2int(shading[r,c] = 0)) > 1 /\\
     % label shading = 0 region with 0
@@ -2379,7 +2382,7 @@ predicate cave_p(
     set of int: cols = index_set_2of2(shading);
 } in (
     cave_nurikabe_helper_p(shading, regions)
-    % for each region not equal to 0, there must be at least one cell that is on the edge of the grid
+    % for each region not equal to 0 (cave wall), there must be at least one cell that is on the edge of the grid
     /\\ forall(r in rows, c in cols where regions[r,c] != 0)(
         exists(r2 in rows, c2 in cols)(regions[r2,c2] = regions[r,c] /\\ on_edge_2d(r2, c2, regions))
     )
@@ -3875,6 +3878,8 @@ predicate suguru_regions_p(
     /\\ forall (id in ids) (
         size[id] = sum (r in rows, c in cols) (bool2int(regions[r, c] = id))
     )
+
+    % Each region of size N must have N in it
     /\\ forall (id in ids)(
         size[id] > 0 -> exists(r in rows, c in cols)(
             regions[r,c] == id /\\ grid[r,c] == size[id]
