@@ -3637,8 +3637,11 @@ predicate star_battle_no_touching_p(
 } in (
     % if element is star, then adjacent elements cannot be 1
     forall(r in rows, c in cols)(
-        star_battle_grid[r,c] = 1 -> forall(idx in orth_or_diag_adjacent_idxs(r, c))(
-            in_bounds_2d(idx.1, idx.2, star_battle_grid) -> star_battle_grid[idx.1, idx.2] = 0
+        star_battle_grid[r,c] = 1 -> forall(
+            idx in orth_or_diag_adjacent_idxs(r, c)
+            where in_bounds_2d(idx.1, idx.2, star_battle_grid)
+        )(
+            star_battle_grid[idx.1, idx.2] = 0
         )
     )
 );\n\n`;
