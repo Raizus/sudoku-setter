@@ -382,6 +382,10 @@ predicate connected_region(array[int,int] of var int: grid, var int: x) =
 predicate all_equal_to_p(array[int] of var int: arr, var int: val) =
     forall(v in arr)(v = val);
 
+predicate different_parity_p(var int: val1, var int: val2) = (
+    (val1 mod 2) != (val2 mod 2)
+);
+
 predicate different_from_group_p(var int: a, array[int] of var int: arr) =
     forall(i in index_set(arr))(a != arr[i]);
 
@@ -605,7 +609,35 @@ predicate radar_p(
 	var int: dist4 = radar_distance_f(arr4, x),
 	var int: min_dist = min_non_negative([dist1, dist2, dist3, dist4])
 } in min_dist == val;
- 
+
+predicate counting_circles_p(
+    array[int] of var int: circles,
+    set of int: allowed
+) = let {
+    int: n = length(circles);
+    set of int: allowed_inds = index_set(allowed);
+    array[allowed_inds] of var bool: used_vals;
+} in (
+    % the sum of unique values in circles is equal to the number of circles
+    n = conditional_sum_f(allowed, used_vals, true) 
+    /\\ forall(i in allowed_inds)(
+        let {
+            int: value = allowed_inds[i];
+            var bool: used = used_vals[i];
+        } in (
+            (not used -> forall(circle in circles)(
+                circle != value
+            )) /\\
+            (used -> exists(circle in circles)(
+                circle == value
+            ))
+        )
+    )
+    /\\ forall(circle in circles)(
+        count(circles, circle) == circle
+    )
+);
+
 predicate colored_counting_circles_adjacent_p(
     array[int, int] of var int: regions
 ) = let {
@@ -1147,6 +1179,18 @@ predicate segmented_sum_and_renban_line_p(
     % each segment must be a renban
     /\\ forall(i,j in idxs where j>i)(
         segments[i] == segments[j] -> arr[i] != arr[j] /\\ abs(arr[i] - arr[j]) <= segment_sizes[i] - 1
+    )
+);
+
+predicate adjacent_cells_are_multiples_of_difference_line_p(
+    array[int] of var int: arr
+) = let {
+    set of int: idxs = index_set(arr);
+} in (
+    forall(i in idxs where i < max(idxs))(
+        let {
+            var int: absdiff = abs(arr[i] - arr[i+1]);
+        } in arr[i] mod absdiff == 0 /\\ arr[i+1] mod absdiff == 0
     )
 );\n\n`;
 
@@ -2156,7 +2200,7 @@ predicate fillomino_restrict_floodfill_p(
         set of int: cols = index_set_2of2(area);
     } in (
         forall (r in rows, c in cols where when[r,c] > 1)(
-            % when when[r, c] != 1, it is equal to the minimum adjacent element in the same region + 1
+            % when when[r, c] > 1, it is equal to the minimum adjacent element in the same region + 1
             when[r, c] = min([when[r+i, c+j] 
                 | i in -1..1, j in -1..1 
                     where (
@@ -2177,24 +2221,30 @@ predicate fillomino_p(
     int: n_rows = length(rows);
     int: n_cols = length(cols);
     int: g_size = n_rows * n_cols;
-    array[rows, cols] of var int: size = 
-        array2d(rows, cols, [grid[r,c] | r in rows, c in cols]);
     set of int: time = 1..g_size;
     array[rows, cols] of var time: when;
+    set of int: ids = 0..g_size;
+    array[ids] of var 0..g_size: size;
 } in (
     % 1. Each cell's region size matches its value
-    forall(r in rows, c in cols) (
-        grid[r, c] = size[r, c]
+    forall (r in rows, c in cols) (
+        grid[r, c] = size[regions[r, c]]
     )
 
     % 2. Symmetry breaking: canonical numbering of regions (reduces search space, tested)
     /\\ forall(r in rows, c in cols) (
-        regions[r, c] <= (r * n_cols + c + 1)
+        regions[r, c] <= (r * n_cols + c + 1) /\\
+        regions[r, c] >= 0
     )
 
     % 3. regions of size 1
     /\\ forall(r in rows, c in cols)(
         grid[r,c] == 1 -> regions[r, c] = (r * n_cols + c + 1)
+    )
+    /\\ forall(r in rows, c in cols)(
+        grid[r,c] == 1 -> forall(t in orth_adjacent_idxs(r,c) where in_bounds_2d(t.1, t.2, grid))(
+            regions[r,c] != regions[t.1, t.2]
+        )
     )
 
     % 4. small optimization to reduce search space
@@ -2220,8 +2270,7 @@ predicate fillomino_p(
 
     % 7. Adjacent cells in the same region have the same value and in different regions have different values
     /\\ forall(r1 in rows, c1 in cols, r2 in rows, c2 in cols where orth_adjacent_2d(r1, c1, r2, c2)) (
-        (grid[r1, c1] != grid[r2, c2] -> regions[r1, c1] != regions[r2, c2]) /\\
-        (grid[r1, c1] == grid[r2, c2] <-> regions[r1, c1] == regions[r2, c2])
+        (regions[r1, c1] != regions[r2, c2]) = (grid[r1, c1] != grid[r2, c2])
     )
 
     % 8. Each region's size equals the count of its cells
@@ -2238,7 +2287,7 @@ predicate fillomino_p(
     %% region from the region "root".  This distance cannot be larger than the size
     %% of the region.
     /\\ forall (r in rows, c in cols) (
-        when[r, c] <= size[r, c]
+        when[r, c] <= size[regions[r, c]]
     )
 
     /\\ forall (r in rows, c in cols) (
@@ -2256,8 +2305,22 @@ predicate fillomino_p(
     %% by minimizing the distance of each node in the branching tree (each region) to the root
     %% this removes solutions with the same regions, but with different floodfilling (when array)
     /\\ fillomino_restrict_floodfill_p(when, regions)
+
+    % all cells with a value equal to 2 must have exactly 1 neighbour equal to it
+    /\\ forall(r in rows, c in cols where grid[r,c] == 2)(
+        sum(t in orth_adjacent_idxs(r,c) where in_bounds_2d(t.1, t.2, grid))(
+            grid[r,c] == grid[t.1,t.2]
+        ) == 1
+    )
+
+    % all cells with a value greater than 2 must have at least 2 neighbour equal to it
+    /\\ forall(r in rows, c in cols where grid[r,c] > 2)(
+        exists(t in orth_adjacent_idxs(r,c) where in_bounds_2d(t.1, t.2, grid))(
+            grid[r,c] == grid[t.1,t.2]
+        )
+    )
 );
-    
+
 predicate yin_yang_fillomino_parity_p(
     array[int, int] of var int: grid,
     array[int, int] of var int: shading % yin yang shading
@@ -3803,6 +3866,33 @@ predicate directed_path_teleport_renban_segments_p(
                 var int: id2 = region_labels[r2, c2];
             } in
             id1 != 0 /\\ id2 != 0 /\\ id1 == id2 -> grid[r,c] != grid[r2, c2] /\\ abs(grid[r,c] - grid[r2, c2]) <= sizes[id1] - 1
+        )
+    )
+);
+
+predicate directed_path_is_parity_line_p(
+    array[int, int] of var int: grid,
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: es
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_cols = length(cols);
+    int: n_rows = length(rows);
+    int: g_size = n_rows * n_cols;
+    set of int: idxs = index_set(from);
+    array[int] of var int: grid1d = array1d(grid);
+} in (
+    forall(i in idxs)(
+        let {
+            int: n1 = from[i];
+            int: n2 = to[i];
+            var bool: in_edge = es[i];
+            var int: cell1 = grid1d[n1];
+            var int: cell2 = grid1d[n2];
+        } in (
+            in_edge -> different_parity_p(cell1, cell2)
         )
     )
 );\n\n`;

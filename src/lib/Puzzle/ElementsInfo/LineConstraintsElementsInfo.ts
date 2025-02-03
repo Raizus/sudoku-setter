@@ -1450,6 +1450,38 @@ export const segmentedSumAndRenbanLineInfo: SquareCellElementInfo = {
 	}
 };
 
+export const adjacentCellsAreMultiplesOfDifferenceLineInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, {
+			allowSelfIntersection: false,
+			defaultValue: ''
+		});
+	},
+
+	toolId: TOOLS.ADJACENT_CELLS_ARE_MULTIPLES_OF_DIFFERENCE_LINE,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		strokeWidth: { editable: true, value: 0.06 },
+		stroke: { editable: true, value: 'var(--constraint-color-light-blue)' },
+		linePathOptions: {
+			shortenHead: { editable: false, value: 0.05 },
+			shortenTail: { editable: false, value: 0.05 },
+			bezierRounding: { editable: false, value: 0 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		description:
+			'If two digits (called x and y) are (orthogonally or diagonally) adjacent along a blue line, then x as well as y has to be an integer multiple of the difference between x and y. For example, 6 and 4 are allowed to be adjacent on a blue line since both 6 and 4 are a multiple of 2 (the difference between 4 and 6).',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
 export const thermoOrAverageArrowInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });

@@ -214,6 +214,18 @@ export const directedPathAdjacentCellsDutchWhispersInfo: AbstractElementInfo = {
 	}
 };
 
+export const directedPathIsParityLineInfo: AbstractElementInfo = {
+	toolId: TOOLS.DIRECTED_PATH_IS_PARITY_LINE,
+	order: 0,
+
+	meta: {
+		description:
+			'the correct path will be a valid alternating parity line - ie: any pair of adjacent cells along the path must contain one even digit and one odd digit.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
 export const directedPathIsRegionSumLineInfo: AbstractElementInfo = {
 	toolId: TOOLS.DIRECTED_PATH_IS_REGION_SUM_LINE,
 	order: 0,

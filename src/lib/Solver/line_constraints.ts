@@ -326,6 +326,16 @@ function highLowOscillatorLineConstraint(model: PuzzleModel, grid: Grid, c_id: s
 	return constraint_str;
 }
 
+function adjacentCellsAreMultiplesOfDifferenceLineConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: LineToolI) {
+	const constraint_str = simpleLineConstraint(
+		grid,
+		constraint,
+		'adjacent_cells_are_multiples_of_difference_line_p',
+		false
+	);
+	return constraint_str;
+}
+
 function lookAndSayLineConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: LineToolI) {
 	const constraint_str = simpleLineConstraint(grid, constraint, 'look_and_say_line_p', true);
 	return constraint_str;
@@ -607,6 +617,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.SEGMENTED_SUM_LINE, segmentedSumLineConstraint],
 	[TOOLS.SEGMENTED_SUM_AND_RENBAN_LINE, segmentedSumAndRenbanLineConstraint],
 	[TOOLS.N_CONSECUTIVE_FUZZY_SUM_LINE, nConsecutiveFuzzySumLineConstraint],
+	[TOOLS.ADJACENT_CELLS_ARE_MULTIPLES_OF_DIFFERENCE_LINE, adjacentCellsAreMultiplesOfDifferenceLineConstraint],
 
 	[TOOLS.SUPERFUZZY_ARROW, superfuzzyArrowConstraint],
 	[TOOLS.AMBIGUOUS_ARROW, ambiguousArrowConstraint],

@@ -113,6 +113,7 @@ import {
 	chaosConstructionSuguruInfo,
 	directedPathAdjacentCellsDutchWhispersInfo,
 	directedPathAdjacentCellsSumIsPrimeInfo,
+	directedPathIsParityLineInfo,
 	directedPathIsRegionSumLineInfo,
 	directedPathSumOfCellsPerRegionIsPrimeInfo,
 	directedPathTeleportRenbanSegmentsInfo,
@@ -203,7 +204,8 @@ import {
 	fuzzyThermometerInfo,
 	customThermometerInfo,
 	segmentedSumAndRenbanLineInfo,
-	ambiguousArrowInfo
+	ambiguousArrowInfo,
+	adjacentCellsAreMultiplesOfDifferenceLineInfo
 } from './LineConstraintsElementsInfo';
 import {
 	littleKillerLookAndSayInfo,
@@ -418,6 +420,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.DIRECTED_PATH_IS_REGION_SUM_LINE]: directedPathIsRegionSumLineInfo,
 	[TOOLS.DIRECTED_PATH_TELEPORT_SEGMENTS_SUM]: directedPathTeleportSegmentsSumInfo,
 	[TOOLS.DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS]: directedPathTeleportRenbanSegmentsInfo,
+	[TOOLS.DIRECTED_PATH_IS_PARITY_LINE]: directedPathIsParityLineInfo,
 
 	// Single Cell Constraints
 	[TOOLS.ODD]: oddInfo,
@@ -564,6 +567,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.ZIPPER_LINE]: ZipperLineInfo,
 	[TOOLS.SEGMENTED_SUM_LINE]: segmentedSumLineInfo,
 	[TOOLS.SEGMENTED_SUM_AND_RENBAN_LINE]: segmentedSumAndRenbanLineInfo,
+	[TOOLS.ADJACENT_CELLS_ARE_MULTIPLES_OF_DIFFERENCE_LINE]: adjacentCellsAreMultiplesOfDifferenceLineInfo,
 
 	[TOOLS.SAME_PARITY_LINE]: sameParityLineLineInfo,
 	[TOOLS.MODULAR_LINE]: modularLineInfo,

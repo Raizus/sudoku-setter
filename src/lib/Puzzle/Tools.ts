@@ -93,6 +93,7 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	DIRECTED_PATH_IS_REGION_SUM_LINE = 'Directed Path Is Region Sum Line',
 	DIRECTED_PATH_TELEPORT_SEGMENTS_SUM = 'Directed Path Teleport Segments Sum',
 	DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS = 'Directed Path Teleport Renban Segments',
+	DIRECTED_PATH_IS_PARITY_LINE = 'Directed Path Is Parity Line',
 
 	CAVE = 'Cave',
 	CAVE_CELLS_ARE_ODD = 'Cave Cells Are Odd',
@@ -265,6 +266,7 @@ export enum LINE_CONSTRAINTS {
 	ZIPPER_LINE = 'Zipper Line',
 	SEGMENTED_SUM_LINE = 'Segmented Sum Line',
 	SEGMENTED_SUM_AND_RENBAN_LINE = 'Segmented Sum And Renban Line',
+	ADJACENT_CELLS_ARE_MULTIPLES_OF_DIFFERENCE_LINE = 'Adjacent Cells Are Multiples of Difference Line',
 
 	LOOK_AND_SAY_LINE = 'Look And Say Line',
 

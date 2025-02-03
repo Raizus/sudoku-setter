@@ -40,10 +40,10 @@ export function createMinizincModel(puzzle: PuzzleI) {
 	if (fillomino) {
 		allowed_digits_str = `1..${grid_size}`;
 	}
-	if (puzzle.globalConstraints.get(TOOLS.HEXED_SUDOKU)) {
+	else if (puzzle.globalConstraints.get(TOOLS.HEXED_SUDOKU)) {
 		valid_digits = [...range(1, 16)];
 	}
-	if (valid_digits) {
+	else if (valid_digits) {
 		allowed_digits_str = '{' + valid_digits.join(',') + '}';
 	}
 

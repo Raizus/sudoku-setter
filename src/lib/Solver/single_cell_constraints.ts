@@ -125,6 +125,7 @@ function countSameParityNeighbourConstraint(
 
 	const var1 = cellToVarName(cell);
 	const neighbours = grid.getNeighboorCells(cell);
+	neighbours.push(cell);
 	const vars_str = cellsToGridVarsStr(neighbours, VAR_2D_NAMES.BOARD);
 
 	const constraint_str = `constraint count_same_parity_p(${var1}, ${vars_str});\n`;
@@ -362,17 +363,8 @@ function countingCirclesConstraint(
 	const vars_str = `${vars.join(',\n\t')}`;
 
 	out_str += `array[int] of var int: counting_circles = [\n\t${vars_str}\n];\n`;
+	out_str += `constraint counting_circles_p(counting_circles, ALLOWED_DIGITS);\n`;
 
-	for (const constraint of constl) {
-		const coord = constraint.cell;
-		const cell = grid.getCell(coord.r, coord.c);
-		if (!cell) continue;
-		const cell_var = cellToVarName(cell);
-
-		const constraint_str = `constraint count(counting_circles, ${cell_var}) == ${cell_var};\n`;
-		out_str += constraint_str;
-	}
-	out_str += '\n';
 	return out_str;
 }
 

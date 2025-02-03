@@ -742,6 +742,14 @@ function directedPathTeleportRenbanSegmentsConstraint(puzzle: PuzzleI, toolId: T
 	return out_str;
 }
 
+function directedPathIsParityLineConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint directed_path_is_parity_line_p(board, dpath_from, dpath_to, dpath_es);\n`;
+
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
 function directedPathSumOfCellsPerRegionIsPrimeConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	let out_str: string = '';
 
@@ -878,7 +886,8 @@ const tool_map = new Map<string, ConstraintF>([
 	],
 	[TOOLS.DIRECTED_PATH_IS_REGION_SUM_LINE, directedPathIsRegionSumLineConstraint],
 	[TOOLS.DIRECTED_PATH_TELEPORT_SEGMENTS_SUM, directedPathTeleportSegmentsSumConstraint],
-	[TOOLS.DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS, directedPathTeleportRenbanSegmentsConstraint]
+	[TOOLS.DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS, directedPathTeleportRenbanSegmentsConstraint],
+	[TOOLS.DIRECTED_PATH_IS_PARITY_LINE, directedPathIsParityLineConstraint]
 ]);
 
 export function globalConstraints(puzzle: PuzzleI): string {
