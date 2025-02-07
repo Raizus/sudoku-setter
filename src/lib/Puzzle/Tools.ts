@@ -120,7 +120,7 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	CONNECT_FOUR = 'Connect Four',
 	CONNECT_FOUR_ALL_FILLED = 'Connect Four All Filled',
 	CONNECT_FOUR_DRAW = 'Connect Four Draw',
-	CONNECT_FOUR_ADJACENT_YELLOWS_MINIMUM_DIFFERENCE = 'Connect Four Adjacent Yellows Minimum Difference',
+	CONNECT_FOUR_ADJACENT_YELLOWS_MINIMUM_DIFFERENCE_AT_LEAST_3 = 'Connect Four Adjacent Yellows Minimum Difference At Least 3',
 	CONNECT_FOUR_ADJACENT_REDS_DIFFERENT_PARITY = 'Connect Four Adjacent Reds Different Parity'
 }
 

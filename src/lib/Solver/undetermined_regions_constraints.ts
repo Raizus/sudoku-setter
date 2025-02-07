@@ -893,6 +893,16 @@ function connectFourAdjacentRedsDifferentParityConstraint(model: PuzzleModel, to
 	return out_str;
 }
 
+function connectFourAdjacentYellowsMinimumDifferenceAtLeast3Constraint(
+	model: PuzzleModel,
+	tool: TOOLID
+) {
+	let out_str: string = '';
+	out_str += `constraint connect_four_adjacent_yellows_difference_at_least_3_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.CONNECT_FOUR});\n`;
+
+	return out_str;
+}
+
 type ConstraintF = (model: PuzzleModel, tool: TOOLID) => string;
 
 const tool_map = new Map<string, ConstraintF>([
@@ -927,7 +937,14 @@ const tool_map = new Map<string, ConstraintF>([
 
 	[TOOLS.CONNECT_FOUR, connectFourConstraint],
 	[TOOLS.CONNECT_FOUR_DRAW, connectFourDrawConstraint],
-	[TOOLS.CONNECT_FOUR_ADJACENT_REDS_DIFFERENT_PARITY, connectFourAdjacentRedsDifferentParityConstraint]
+	[
+		TOOLS.CONNECT_FOUR_ADJACENT_REDS_DIFFERENT_PARITY,
+		connectFourAdjacentRedsDifferentParityConstraint
+	],
+	[
+		TOOLS.CONNECT_FOUR_ADJACENT_YELLOWS_MINIMUM_DIFFERENCE_AT_LEAST_3,
+		connectFourAdjacentYellowsMinimumDifferenceAtLeast3Constraint
+	]
 ]);
 
 export function undeterminedRegionsConstraints(model: PuzzleModel): string {

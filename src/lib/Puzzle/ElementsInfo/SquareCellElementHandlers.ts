@@ -112,6 +112,7 @@ import {
 	caveLITSInfo,
 	chaosConstructionSuguruInfo,
 	connectFourAdjacentRedsDifferentParityInfo,
+	connectFourAdjacentYellowsMinimumDifferenceAtLeast3Info,
 	connectFourDrawInfo,
 	connectFourInfo,
 	directedPathAdjacentCellsDutchWhispersInfo,
@@ -431,6 +432,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.CONNECT_FOUR]: connectFourInfo,
 	[TOOLS.CONNECT_FOUR_DRAW]: connectFourDrawInfo,
 	[TOOLS.CONNECT_FOUR_ADJACENT_REDS_DIFFERENT_PARITY]: connectFourAdjacentRedsDifferentParityInfo,
+	[TOOLS.CONNECT_FOUR_ADJACENT_YELLOWS_MINIMUM_DIFFERENCE_AT_LEAST_3]: connectFourAdjacentYellowsMinimumDifferenceAtLeast3Info,
 
 	// Single Cell Constraints
 	[TOOLS.ODD]: oddInfo,

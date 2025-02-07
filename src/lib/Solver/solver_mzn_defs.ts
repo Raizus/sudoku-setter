@@ -4101,6 +4101,24 @@ predicate connect_four_adjacent_reds_different_parity_p(
     )
 );
 
+predicate connect_four_adjacent_yellows_difference_at_least_3_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    % adjacent horizontally
+    forall(r in rows, c in cols where c<max(cols))(
+        regions[r,c] == 2 /\\ regions[r, c+1] == 2 -> abs(grid[r,c] - grid[r,c+1]) >= 3
+    )
+
+    % adjacent vertically
+    /\\ forall(r in rows, c in cols where r<max(rows))(
+        regions[r,c] == 2 /\\ regions[r+1, c] == 2 -> abs(grid[r,c] - grid[r+1,c]) >= 3
+    )
+);
+
 
 predicate connect_four_red_p(var 0..2: cell) = cell == 1;
 

@@ -506,3 +506,14 @@ export const connectFourAdjacentRedsDifferentParityInfo: AbstractElementInfo = {
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
+
+export const connectFourAdjacentYellowsMinimumDifferenceAtLeast3Info: AbstractElementInfo = {
+	toolId: TOOLS.CONNECT_FOUR_ADJACENT_YELLOWS_MINIMUM_DIFFERENCE_AT_LEAST_3,
+	order: 0,
+
+	meta: {
+		description: 'Two orthogonally adjacent yellow discs must have a difference of at least 3.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
