@@ -862,6 +862,37 @@ function chaosConstructionSuguruConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
+function connectFourConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name = 'connect_four';
+	let out_str: string = '% 1 - Red, 2 - Yellow\n';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..2: ${grid_name};\n`;
+
+	return out_str;
+}
+
+function connectFourDrawConstraint(model: PuzzleModel, tool: TOOLID) {
+	let out_str: string = '';
+	out_str += `constraint connect_four_draw_p(${VAR_2D_NAMES.CONNECT_FOUR});\n`;
+
+	return out_str;
+}
+
+function connectFourAdjacentRedsDifferentParityConstraint(model: PuzzleModel, tool: TOOLID) {
+	let out_str: string = '';
+	out_str += `constraint connect_four_adjacent_reds_different_parity_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.CONNECT_FOUR});\n`;
+
+	return out_str;
+}
+
 type ConstraintF = (model: PuzzleModel, tool: TOOLID) => string;
 
 const tool_map = new Map<string, ConstraintF>([
@@ -892,7 +923,11 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.RENBAN_CAVES, renbanCavesConstraint],
 	[TOOLS.MAZE_DIRECTED_PATH, mazeDirectedPathConstraint],
 
-	[TOOLS.CHAOS_CONSTRUCTION_SUGURU, chaosConstructionSuguruConstraint]
+	[TOOLS.CHAOS_CONSTRUCTION_SUGURU, chaosConstructionSuguruConstraint],
+
+	[TOOLS.CONNECT_FOUR, connectFourConstraint],
+	[TOOLS.CONNECT_FOUR_DRAW, connectFourDrawConstraint],
+	[TOOLS.CONNECT_FOUR_ADJACENT_REDS_DIFFERENT_PARITY, connectFourAdjacentRedsDifferentParityConstraint]
 ]);
 
 export function undeterminedRegionsConstraints(model: PuzzleModel): string {

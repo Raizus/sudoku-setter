@@ -1280,6 +1280,13 @@ predicate average_arrow_or_thermometer_p(
     array[int] of var int: arr2 = [arr[i] | i in idxs where i > min(idxs)];
 } in (
     strictly_increasing(arr) /\\ average_arrow_p(arr2, first)
+);
+
+predicate bulbous_arrow_p(
+    array[int] of var int: bulb,
+    array[int] of var int: arrow
+) = (
+    sum(bulb) == sum(arrow)
 );\n\n`;
 
 	const cage_constraints = `predicate killer_cage(array[int] of var int: arr, var int: val) =
@@ -4033,6 +4040,72 @@ predicate chaos_construction_suguru_p(
     )
 );\n\n`;
 
+	const connect_four = `predicate connect_four_draw_p(
+    array[int, int] of var int: grid
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: max_r = max(rows);
+    int: min_r = min(rows);
+    int: max_c = max(cols);
+    int: min_c = min(cols);
+} in (
+    % all cells filled
+    forall(r in rows, c in cols)(
+        grid[r,c] != 0
+    )
+
+    % same number of yellow and red discs
+    /\\ count(array1d(grid), 1) == count(array1d(grid), 2)
+
+    % no four in a line in rows
+    /\\ forall(r in rows, c in cols where c <= max_c-3)(
+        not all_equal([grid[r,c], grid[r,c+1], grid[r,c+2], grid[r,c+3]])
+    )
+    
+    % no four in a line in cols
+    /\\ forall(r in rows, c in cols where r <= max_r-3)(
+        not all_equal([grid[r,c], grid[r+1,c], grid[r+2,c], grid[r+3,c]])
+    )
+
+    % no four in a line in positive diagonals
+    /\\ forall(c in cols where c <= max_c-3)(
+        forall(r in rows where r <= max_r-3)(
+            not all_equal([grid[r,c], grid[r+1,c+1], grid[r+2,c+2], grid[r+3,c+3]])
+        )          
+    )
+
+    % no four in a line in negative diagonals
+    /\\ forall(c in cols where c >= min_c+3)(
+        forall(r in rows where r <= max_r-3)(
+            not all_equal([grid[r,c], grid[r+1,c-1], grid[r+2,c-2], grid[r+3,c-3]])
+        )          
+    )
+);
+
+predicate connect_four_adjacent_reds_different_parity_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    % adjacent horizontally
+    forall(r in rows, c in cols where c<max(cols))(
+        regions[r,c] == 1 /\\ regions[r, c+1] == 1 -> different_parity_p(grid[r,c], grid[r,c+1])
+    )
+
+    % adjacent vertically
+    /\\ forall(r in rows, c in cols where r<max(rows))(
+        regions[r,c] == 1 /\\ regions[r+1, c] == 1 -> different_parity_p(grid[r,c], grid[r+1,c])
+    )
+);
+
+
+predicate connect_four_red_p(var 0..2: cell) = cell == 1;
+
+predicate connect_four_yellow_p(var 0..2: cell) = cell == 2;\n\n`;
+
 	const out_str =
 		'\n' +
 		tests +
@@ -4069,7 +4142,8 @@ predicate chaos_construction_suguru_p(
 		star_battle +
 		direct_path +
 		nurikabe +
-		suguru;
+		suguru +
+		connect_four;
 
 	return out_str;
 }

@@ -32,10 +32,16 @@ import {
 	pushUpdateLocalConstraintCommand
 } from './utils';
 
+export type ArrowInputHandlerOptions = {
+	allowSelfIntersection: boolean; // allow arrow to intersect bulb
+	defaultValue?: string;
+};
+
 export function getArrowToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
-	tool: TOOLID
+	tool: TOOLID,
+	options?: ArrowInputHandlerOptions
 ): InputHandler {
 	// console.log('getArrowToolInputHandler');
 	const pointerHandler = new CellPointerHandler();
@@ -104,7 +110,7 @@ export function getArrowToolInputHandler(
 			updateLocalConstraint(tool, id, currentConstraint);
 		} else if (mode === MODE.BODY && id && currentConstraint) {
 			// add to arrow line
-			currentConstraint = arrowAddToLast(currentConstraint, coords);
+			currentConstraint = arrowAddToLast(currentConstraint, coords, options?.allowSelfIntersection);
 			updateLocalConstraint(tool, id, currentConstraint);
 		}
 	}
@@ -123,7 +129,7 @@ export function getArrowToolInputHandler(
 			bypassDragEnd = false;
 			return;
 		}
-		
+
 		if (mode === MODE.BODY && id && currentConstraint) {
 			// remove last line if last line length <= 1;
 			if (arrowShouldRemoveLastLine(currentConstraint)) {

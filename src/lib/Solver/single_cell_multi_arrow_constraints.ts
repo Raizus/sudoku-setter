@@ -1,5 +1,6 @@
 import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { CellMultiArrowToolI } from '../Puzzle/Constraints/SingleCellConstraints';
+import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
@@ -202,6 +203,26 @@ function coldArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	return out_str;
 }
 
+function connectFourCountCellsOfSameColorConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToVarName(cell);
+	const c_four_var = cellToGridVarName(cell, VAR_2D_NAMES.CONNECT_FOUR);
+
+	const directions = constraint.directions;
+	const all_cells: Cell[] = [];
+	for (const direction of directions) {
+		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
+		all_cells.push(...cells);
+	}
+	if (all_cells.length === 0) return '';
+
+	const vars_str = cellsToGridVarsStr(all_cells, VAR_2D_NAMES.CONNECT_FOUR);
+	const out_str = `constraint count(${vars_str}, ${c_four_var}) == ${cell_var};\n`;
+	return out_str;
+}
+
 type ConstraintF = (grid: Grid, constraint: CellMultiArrowToolI) => string;
 
 const tool_map = new Map<string, ConstraintF>([
@@ -216,7 +237,8 @@ const tool_map = new Map<string, ConstraintF>([
 	],
 	[TOOLS.YIN_YANG_COUNT_SHADED_CELLS, yinYangCountShadedCellsConstraint],
 	[TOOLS.SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS, sameGalaxyUnobstructedCountArrowsConstraint],
-	[TOOLS.NURIKABE_COUNT_ISLAND_CELLS_ARROWS, nurikabeCountIslandCellsArrowsConstraint]
+	[TOOLS.NURIKABE_COUNT_ISLAND_CELLS_ARROWS, nurikabeCountIslandCellsArrowsConstraint],
+	[TOOLS.CONNECT_FOUR_COUNT_CELLS_OF_SAME_COLOR, connectFourCountCellsOfSameColorConstraint]
 ]);
 
 export function singleCellMultiArrowConstraints(

@@ -298,6 +298,19 @@ function setColoredCountingCirclesHighlights(json: JsonT, grid: Grid) {
 	grid_coloring(regions, grid, color_map);
 }
 
+function setConnectFourHighlights(json: JsonT, grid: Grid) {
+	if (json === undefined) return;
+	const regions = json['connect_four'] as number[][] | undefined;
+	if (regions === undefined) return;
+
+	const color_map: Map<number, number> = new Map([
+		[1, 7],
+		[2, 8],
+	]);
+
+	grid_coloring(regions, grid, color_map);
+}
+
 function setUnknownRegionsBorders(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
 	const grid_vars_names = [
@@ -525,4 +538,5 @@ export function setBoardOnSolution(json: JsonT, puzzle_model: PuzzleModel) {
 	setStarBattlePenMarks(json, grid);
 	setColoredCountingCirclesHighlights(json, grid);
 	setDirectedPathPenMarks(json, puzzle_model);
+	setConnectFourHighlights(json, grid);
 }

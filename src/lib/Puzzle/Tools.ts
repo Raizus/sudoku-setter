@@ -115,7 +115,13 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	PENTOMINO_TILLING = 'Pentomino Tilling',
 	TILLING_NO_EMPTY_CELLS = 'Tilling No Empty Cells',
 
-	LITS_BLACK_WHITE_STAR_BATTLE = 'LITS Black And White Star Battle'
+	LITS_BLACK_WHITE_STAR_BATTLE = 'LITS Black And White Star Battle',
+
+	CONNECT_FOUR = 'Connect Four',
+	CONNECT_FOUR_ALL_FILLED = 'Connect Four All Filled',
+	CONNECT_FOUR_DRAW = 'Connect Four Draw',
+	CONNECT_FOUR_ADJACENT_YELLOWS_MINIMUM_DIFFERENCE = 'Connect Four Adjacent Yellows Minimum Difference',
+	CONNECT_FOUR_ADJACENT_REDS_DIFFERENT_PARITY = 'Connect Four Adjacent Reds Different Parity'
 }
 
 export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
@@ -175,7 +181,10 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 
 	DIRECTED_PATH_START = 'Directed Path Start',
 	DIRECTED_PATH_END = 'Directed Path End',
-	TELEPORT = 'Teleport'
+	TELEPORT = 'Teleport',
+
+	CONNECT_FOUR_YELLOW = 'Connect Four Yellow',
+	CONENCT_FOUR_RED = 'Connect Four Red'
 }
 
 export enum SINGLE_CELL_ARROW_CONSTRAINTS {
@@ -192,7 +201,8 @@ export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
 	LOOP_CELL_COUNT_ARROWS = 'Loop Cell Count Arrows',
 	YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS = 'Yin Yang Count Unique Fillomino Same Shading Arrows',
 	SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS = 'Same Galaxy Unobstructed Count Arrows',
-	NURIKABE_COUNT_ISLAND_CELLS_ARROWS = 'Nurikabe Count Island Cells Arrows'
+	NURIKABE_COUNT_ISLAND_CELLS_ARROWS = 'Nurikabe Count Island Cells Arrows',
+	CONNECT_FOUR_COUNT_CELLS_OF_SAME_COLOR = 'Connect Four Count Cells Of Same Color'
 }
 
 export enum EDGE_CONSTRAINTS {
@@ -314,6 +324,7 @@ export enum LINE_CONSTRAINTS {
 export enum ARROW_CONSTRAINTS {
 	ARROW = 'Arrow',
 	AVERAGE_ARROW = 'Average Arrow',
+	BULBOUS_ARROW = 'Bulbous Arrow',
 	SQUARE_ROOT_ARROW = 'Square Root Arrow'
 }
 

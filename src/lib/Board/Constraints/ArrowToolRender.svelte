@@ -2,10 +2,10 @@
 	import type { ArrowToolI } from '$lib/Puzzle/Constraints/ArrowConstraints';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
-	import { defaultArrowShape } from '$lib/Puzzle/Shape/Shape';
+	import { defaultArrowShape, SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
 	import type { Rectangle } from '$lib/Types/types';
-	import { cellsLineToPathStr, cellsToVector2DPoints, linePointsToPathStr } from '$lib/utils/SquareCellGridRenderUtils';
-	import ArrowMarker from './ArrowMarker.svelte';
+	import BulbousArrowRender from './BulbousArrowRender.svelte';
+	import SimpleArrowToolRender from './SimpleArrowToolRender.svelte';
 
 	export let tool: ArrowToolI;
 	export let arrowId: string;
@@ -13,79 +13,12 @@
 
 	const defaultShape = getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultArrowShape;
 	$: shape = tool.shape ?? defaultShape;
-
-	$: bbx = boundingBox.x;
-	$: bby = boundingBox.y;
-
-	$: bulbRadius = shape?.r ?? 0.4;
-	$: stroke = shape?.stroke ?? 'gray';
-	$: strokeWidth = shape?.strokeWidth ?? 0.1;
-	$: strokeDasharray = shape?.strokeDasharray ?? 0;
-	$: opacity = shape?.opacity ?? 0.8;
-	$: linePathOptions = {
-		shortenHead: bulbRadius,
-		shortenTail: shape?.linePathOptions?.shortenTail ?? 0.2,
-		bezierRounding: shape?.linePathOptions?.bezierRounding ?? 0.4
-	};
-
-	const strokeLinejoin = 'round';
-	const strokeLinecap = 'round';
-
-	$: bulbPath = cellsLineToPathStr(tool.cells);
-
-	const uid = crypto.randomUUID()
-	const arrowMaskId = `arrow-mask-${arrowId}-${uid}`
-	const arrowMarkerId = `arrow-marker-${arrowId}-${uid}`
 </script>
 
-<g>
-	<mask
-		id={arrowMaskId}
-		maskUnits="userSpaceOnUse"
-		x={bbx}
-		y={bby}
-		width="100%"
-		height="100%"
-	>
-		<rect x={bbx} y={bby} width="100%" height="100%" fill="white" />
-		<path
-			class="arrow-bulb"
-			stroke-width={2 * bulbRadius - strokeWidth}
-			d={bulbPath}
-			stroke="black"
-		/>
-	</mask>
-	<ArrowMarker id={arrowMarkerId} l={0.2} {strokeWidth} {stroke}/>
-
-	<path
-		class="arrow-bulb"
-		d={bulbPath}
-		stroke-width={2 * bulbRadius + strokeWidth}
-		{stroke}
-		mask="url(#{arrowMaskId})"
-	/>
-	{#each tool.lines as line}
-		{#if line.length > 1}
-			<path
-				class="arrow-line"
-				d={cellsLineToPathStr(line, linePathOptions)}
-				{stroke}
-				stroke-width={strokeWidth}
-				fill="none"
-				{opacity}
-				stroke-dasharray={strokeDasharray}
-				stroke-linejoin={strokeLinejoin}
-				stroke-linecap={strokeLinecap}
-				marker-end="url(#{arrowMarkerId})"
-			/>
-		{/if}
-	{/each}
+<g class="arrow-tool">
+	{#if shape.type === SHAPE_TYPES.BULBOUS_ARROW}
+		<BulbousArrowRender {tool} {arrowId} {boundingBox}/>
+	{:else}
+		<SimpleArrowToolRender {tool} {arrowId} {boundingBox}/>
+	{/if}
 </g>
-
-<style>
-	.arrow-bulb {
-		stroke-linejoin: round;
-		stroke-linecap: round;
-		fill: none;
-	}
-</style>

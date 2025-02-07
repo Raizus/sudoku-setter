@@ -68,6 +68,40 @@ export const averageArrowInfo: SquareCellElementInfo = {
 	}
 };
 
+export const bulbousArrowInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getArrowToolInputHandler(svgRef, grid, tool, {allowSelfIntersection: true});
+	},
+
+	toolId: TOOLS.BULBOUS_ARROW,
+	order: RENDER_ORDER.ARROW_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.BULBOUS_ARROW,
+		r: { editable: false, value: 0.3 },
+		inset: {editable: false, value: 0.2},
+		strokeWidth: { editable: true, value: 0.04 },
+		stroke: { editable: true, value: 'var(--constraint-color-gray)' },
+		strokeLinejoin: {editable: false, value: "round"},
+		linePathOptions: {
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.25 }
+		}
+	},
+
+	meta: {
+		description:
+			'The sum of the digits in white bulb equals the sum of the digits on each attached arrow.',
+		usage: arrowUsage(),
+		tags: [],
+		categories: [
+			TOOL_CATEGORIES.ARROW_CONSTRAINT,
+			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
+			TOOL_CATEGORIES.ARROW_TOOL
+		]
+	}
+};
+
 export const squareRootArrowInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getArrowToolInputHandler(svgRef, grid, tool);

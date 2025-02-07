@@ -31,7 +31,8 @@ export enum VAR_2D_NAMES {
 	STAR_BATTLE = 'star_battle',
 	LITS_WHITE_BLACK_STAR_BATTLE = 'lits_white_black_star_battle',
 	COUNTING_CIRCLES_COLORS = 'counting_circles_colors_board',
-	MAZE_DIRECTED_PATH = 'maze_directed_path'
+	MAZE_DIRECTED_PATH = 'maze_directed_path',
+	CONNECT_FOUR = 'connect_four',
 }
 
 export function cellToGridVarName(cell: Cell, name: VAR_2D_NAMES): string {

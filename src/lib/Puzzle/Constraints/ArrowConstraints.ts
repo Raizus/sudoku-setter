@@ -1,8 +1,13 @@
-import { areCoordsEqual, areCoordsNeighbours, sortGridCoords, type GridCoordI } from "$lib/utils/SquareCellGridCoords";
-import type { TOOLID } from "../Tools";
-import { parseCells, parseLines } from "../utils";
-import type { ConstraintI } from "./ConstraintType";
-import { addToLineSelfHit } from "./LineConstraints";
+import {
+	areCoordsEqual,
+	areCoordsNeighbours,
+	sortGridCoords,
+	type GridCoordI
+} from '$lib/utils/SquareCellGridCoords';
+import type { TOOLID } from '../Tools';
+import { parseCells, parseLines } from '../utils';
+import type { ConstraintI } from './ConstraintType';
+import { addToLineSelfHit } from './LineConstraints';
 
 export interface ArrowToolI extends ConstraintI {
 	toolId: TOOLID;
@@ -35,21 +40,23 @@ export function arrowAddToBulb(arrow: ArrowToolI, cell: GridCoordI): ArrowToolI 
 	const inBulb = cells.some((_cell) => areCoordsEqual(_cell, cell));
 	const isNeighbour = cells.some((_cell) => areCoordsNeighbours(_cell, cell));
 
-	if (cells.length === 1) {
-		if (!inBulb && isNeighbour) {
-			cells.push(cell);
-			sortGridCoords(cells);
-			return {
-				...arrow,
-				cells
-			};
-		}
+	if (cells.length > 0 && !inBulb && isNeighbour) {
+		cells.push(cell);
+		sortGridCoords(cells);
+		return {
+			...arrow,
+			cells
+		};
 	}
 
 	return arrow;
 }
 
-export function arrowAddToLast(arrow: ArrowToolI, cell: GridCoordI): ArrowToolI {
+export function arrowAddToLast(
+	arrow: ArrowToolI,
+	cell: GridCoordI,
+	allowSelfIntersection?: boolean
+): ArrowToolI {
 	const cellInBulb = arrow.cells.some((_cell) => areCoordsEqual(_cell, cell));
 	const nlines = arrow.lines.length;
 
@@ -77,7 +84,7 @@ export function arrowAddToLast(arrow: ArrowToolI, cell: GridCoordI): ArrowToolI 
 			...arrow,
 			lines: [...arrow.lines.slice(0, nlines - 1), lastLine]
 		};
-	} else if (!cellInBulb) {
+	} else if (!cellInBulb || allowSelfIntersection) {
 		lastLine.push(cell);
 		return {
 			...arrow,

@@ -852,6 +852,36 @@ function directedPathEndConstraint(
 	return constraint_str;
 }
 
+function connectFourRedConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToGridVarName(cell, VAR_2D_NAMES.CONNECT_FOUR)
+
+	const constraint_str = `constraint connect_four_red_p(${cell_var});\n`;
+	return constraint_str;
+}
+
+function connectFourYellowConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToGridVarName(cell, VAR_2D_NAMES.CONNECT_FOUR);
+
+	const constraint_str = `constraint connect_four_yellow_p(${cell_var});\n`;
+	return constraint_str;
+}
+
 function nurikabeIslandProductOfSumAndSizeConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -973,7 +1003,10 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS, chaosConstructionArrowKnotsConstraint],
 
 	[TOOLS.DIRECTED_PATH_START, directedPathStartConstraint],
-	[TOOLS.DIRECTED_PATH_END, directedPathEndConstraint]
+	[TOOLS.DIRECTED_PATH_END, directedPathEndConstraint],
+
+	[TOOLS.CONENCT_FOUR_RED, connectFourRedConstraint],
+	[TOOLS.CONNECT_FOUR_YELLOW, connectFourYellowConstraint]
 ]);
 
 const tool_map_2 = new Map<string, ConstraintF2>([

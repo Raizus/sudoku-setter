@@ -1,6 +1,6 @@
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { TOOLS } from '../Tools';
-import { arrowInfo, averageArrowInfo } from './ArrowToolsElementsInfo';
+import { arrowInfo, averageArrowInfo, bulbousArrowInfo } from './ArrowToolsElementsInfo';
 import {
 	divisibleKillerCageInfo,
 	doublersKillerCageInfo,
@@ -111,6 +111,9 @@ import {
 	adjacentCellsAlongLoopAreMultiplesInfo,
 	caveLITSInfo,
 	chaosConstructionSuguruInfo,
+	connectFourAdjacentRedsDifferentParityInfo,
+	connectFourDrawInfo,
+	connectFourInfo,
 	directedPathAdjacentCellsDutchWhispersInfo,
 	directedPathAdjacentCellsSumIsPrimeInfo,
 	directedPathIsParityLineInfo,
@@ -279,10 +282,13 @@ import {
 	directedPathStartInfo,
 	directedPathEndInfo,
 	nurikabeIslandProductOfSumAndSizeInfo,
-	teleportInfo
+	teleportInfo,
+	connectFourYellowInfo,
+	connectFourRedInfo
 } from './SingleCellElementsInfo';
 import {
 	coldArrowsInfo,
+	connectFourCountCellsOfSameColorInfo,
 	countCellsNotInTheSameRegionArrowsInfo,
 	hotArrowsInfo,
 	nurikabeCountIslandCellsArrowsInfo,
@@ -422,6 +428,10 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS]: directedPathTeleportRenbanSegmentsInfo,
 	[TOOLS.DIRECTED_PATH_IS_PARITY_LINE]: directedPathIsParityLineInfo,
 
+	[TOOLS.CONNECT_FOUR]: connectFourInfo,
+	[TOOLS.CONNECT_FOUR_DRAW]: connectFourDrawInfo,
+	[TOOLS.CONNECT_FOUR_ADJACENT_REDS_DIFFERENT_PARITY]: connectFourAdjacentRedsDifferentParityInfo,
+
 	// Single Cell Constraints
 	[TOOLS.ODD]: oddInfo,
 	[TOOLS.EVEN]: evenInfo,
@@ -480,6 +490,9 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.DIRECTED_PATH_END]: directedPathEndInfo,
 	[TOOLS.TELEPORT]: teleportInfo,
 
+	[TOOLS.CONNECT_FOUR_YELLOW]: connectFourYellowInfo,
+	[TOOLS.CONENCT_FOUR_RED]: connectFourRedInfo,
+
 	// Single Cell Arrow Constraint
 	[TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND]: sashiganeArrowPointsToBendInfo,
 	[TOOLS.THERMO_SIGHTLINE_LOOP_ARROW]: thermoSightlineLoopArrowInfo,
@@ -495,6 +508,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 		yinYangCountUniqueFillominoSameShadingInfo,
 	[TOOLS.SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS]: sameGalaxyUnobstructedCountArrowsInfo,
 	[TOOLS.NURIKABE_COUNT_ISLAND_CELLS_ARROWS]: nurikabeCountIslandCellsArrowsInfo,
+
+	[TOOLS.CONNECT_FOUR_COUNT_CELLS_OF_SAME_COLOR]: connectFourCountCellsOfSameColorInfo,
 
 	// Edge Constraints
 	[TOOLS.DIFFERENCE]: differenceInfo,
@@ -567,7 +582,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.ZIPPER_LINE]: ZipperLineInfo,
 	[TOOLS.SEGMENTED_SUM_LINE]: segmentedSumLineInfo,
 	[TOOLS.SEGMENTED_SUM_AND_RENBAN_LINE]: segmentedSumAndRenbanLineInfo,
-	[TOOLS.ADJACENT_CELLS_ARE_MULTIPLES_OF_DIFFERENCE_LINE]: adjacentCellsAreMultiplesOfDifferenceLineInfo,
+	[TOOLS.ADJACENT_CELLS_ARE_MULTIPLES_OF_DIFFERENCE_LINE]:
+		adjacentCellsAreMultiplesOfDifferenceLineInfo,
 
 	[TOOLS.SAME_PARITY_LINE]: sameParityLineLineInfo,
 	[TOOLS.MODULAR_LINE]: modularLineInfo,
@@ -606,6 +622,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	// Arrow constraints
 	[TOOLS.ARROW]: arrowInfo,
 	[TOOLS.AVERAGE_ARROW]: averageArrowInfo,
+	[TOOLS.BULBOUS_ARROW]: bulbousArrowInfo,
 
 	// Corner Line Constraints
 	[TOOLS.MAZE_WALL]: mazeWallInfo,

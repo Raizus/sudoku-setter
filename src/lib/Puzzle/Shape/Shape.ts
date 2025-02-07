@@ -10,6 +10,7 @@ export enum SHAPE_TYPES {
 	CAGE = 'Cage',
 	BORDER_LINE = 'Border Line',
 	LINE = 'Line',
+	BULBOUS_ARROW = 'Bulbous Arrow',
 	MAZE_WALL = 'Maze Wall',
 	THERMO_WITH_CIRCLE = 'Thermo With Circle',
 	THERMO_WITH_POLYGON = 'Thermo With Polygon',
@@ -61,6 +62,7 @@ export interface ShapeI {
 	angle?: number;
 	fill?: string;
 	stroke?: string;
+	strokeLinejoin?: string;
 	strokeWidth?: number;
 	strokeDasharray?: number;
 	strokeDashoffset?: number;
@@ -82,6 +84,7 @@ export interface EditableShapeI {
 
 	fill?: EditableString;
 	stroke?: EditableString;
+	strokeLinejoin?: EditableString;
 	strokeWidth?: EditableNumber;
 	strokeDasharray?: EditableNumber;
 	strokeDashoffset?: EditableNumber;

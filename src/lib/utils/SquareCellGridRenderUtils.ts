@@ -112,26 +112,26 @@ export function getCagePoints(
 			adj.delete(corner3Id);
 			if (adj.size <= 0) adjList.delete(currentCornerId);
 
-			// if crossProd === 0 then it's a straight line and there's no need to add the corner to the list of points
-			if (crossProd !== 0) {
-				const ax = inset * (corner2.c - corner1.c);
-				const ay = inset * (corner3.c - corner2.c);
-				const bx = inset * (corner1.r - corner2.r);
-				const by = inset * (corner2.r - corner3.r);
+			const ax = inset * (corner2.c - corner1.c);
+			const ay = inset * (corner3.c - corner2.c);
+			const bx = inset * (corner1.r - corner2.r);
+			const by = inset * (corner2.r - corner3.r);
 
-				const dx = by + crossProd * ay;
-				const dy = ax + crossProd * bx;
+			const dx = by + crossProd * ay;
+			const dy = ax + crossProd * bx;
 
-				const res = new Vector2D(corner2.c + dx, corner2.r + dy);
+			const res = new Vector2D(corner2.c + dx, corner2.r + dy);
 
-				const a = 4;
-				if (connectDiags.has(currentCornerId)) {
-					points.push(new Vector2D(res.x - a * ax, res.y - a * ay));
-					points.push(new Vector2D(res.x - a * bx, res.y - a * by));
-				} else {
-					points.push(res);
-				}
+			const a = 4;
+			if (connectDiags.has(currentCornerId)) {
+				points.push(new Vector2D(res.x - a * ax, res.y - a * ay));
+				points.push(new Vector2D(res.x - a * bx, res.y - a * by));
+			} else {
+				points.push(res);
 			}
+			// if crossProd === 0 then it's a straight line and there's no need to add the corner to the list of points
+			// if (crossProd !== 0) {
+			// }
 
 			corner1 = corner2;
 			corner2 = corner3;

@@ -185,3 +185,21 @@ export const nurikabeCountIslandCellsArrowsInfo: SquareCellElementInfo = {
 		categories: defaultCategories
 	}
 };
+
+export const connectFourCountCellsOfSameColorInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.CONNECT_FOUR_COUNT_CELLS_OF_SAME_COLOR,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: defaultShape,
+
+	meta: {
+		description:
+			"A digit on an arrow disc indicates the total number of discs in the indicated directions (combined) that match its own colour. (The arrow disc itself isn't included in the count.)",
+		tags: [],
+		categories: defaultCategories
+	}
+};

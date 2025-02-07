@@ -6,6 +6,8 @@
 	export let cells: GridCoordI[];
     export let shape: ShapeI = defaultCageShape;
 
+	type Linejoin = "inherit" | "miter" | "arcs" | "miter-clip" | "round" | "bevel" | null | undefined;
+
 	$: inset = shape.inset ?? 0.06;
 	$: stroke = shape.stroke ?? 'black';
 	$: strokeWidth = shape.strokeWidth ?? 0.03;
@@ -14,6 +16,10 @@
 	$: connectDiag = shape.connectDiag ?? true;
 
 	$: maskPathStr = getCagePathStr(cells, inset, connectDiag);
+
+	$: strokeLinejoin = (shape.strokeLinejoin ?? "miter") as Linejoin;
+    const strokeLinecap = "square";
+
 </script>
 
 <path
@@ -22,5 +28,7 @@
 	stroke-width={strokeWidth}
 	{fill}
 	stroke-dasharray={strokeDasharray}
+	stroke-linejoin={strokeLinejoin}
+    stroke-linecap={strokeLinecap}
 />
 

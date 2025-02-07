@@ -1193,3 +1193,49 @@ export const nurikabeIslandProductOfSumAndSizeInfo: SquareCellElementInfo = {
 		categories: singleCellShapeDefaultCategories
 	}
 };
+
+export const connectFourYellowInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.CONNECT_FOUR_YELLOW,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: false, value: 0 },
+		stroke: { editable: false, value: 'none' },
+		r: { editable: false, value: 0.35 },
+		fill: { editable: false, value: 'yellow' }
+	},
+
+	meta: {
+		description: `A yellow circle represents a yellow disc in connect four.`,
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const connectFourRedInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.CONENCT_FOUR_RED,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: false, value: 0 },
+		stroke: { editable: false, value: 'none' },
+		r: { editable: false, value: 0.35 },
+		fill: { editable: false, value: 'red' }
+	},
+
+	meta: {
+		description: `A red circle represents a red disc in connect four.`,
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};

@@ -68,11 +68,32 @@ function averageArrowConstraint(
 	return out_str;
 }
 
+function bulbousArrowConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: ArrowToolI
+) {
+	let out_str = '';
+	const vars = getArrowPillVars(grid, constraint);
+
+	const bulb_str = '[' + vars.join(',') + ']';
+	const lines = constraint.lines;
+	for (const line of lines) {
+		const line_vars_str = lineToVarsStr(grid, line);
+		const constraint_str = `constraint bulbous_arrow_p(${bulb_str}, ${line_vars_str});\n`;
+		out_str += constraint_str;
+	}
+
+	return out_str;
+}
+
 type ConstraintF = (model: PuzzleModel, grid: Grid, c_id: string, constraint: ArrowToolI) => string;
 
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.ARROW, arrowConstraint],
-	[TOOLS.AVERAGE_ARROW, averageArrowConstraint]
+	[TOOLS.AVERAGE_ARROW, averageArrowConstraint],
+	[TOOLS.BULBOUS_ARROW, bulbousArrowConstraint]
 ]);
 
 export function arrowConstraints(
