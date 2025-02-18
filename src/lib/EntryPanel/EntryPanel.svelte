@@ -60,17 +60,15 @@
 	$panel-gap: 10px;
 
 	.entry-panel-wrapper {
-		max-width: 20%;
-		height: 100vh;
+		// max-width: 20%;
+		// height: 100vh;
 		display: flex;
   		flex-direction: column;
-	}
+		width: 100%;
 
-	.entry-subpanel1 {
-		display: flex;
-		flex-direction: row;
-		gap: $panel-gap;
-		user-select: none;
+		@include vars.breakpoint-mobile {
+			align-items: center;
+		}
 	}
 
 	.entry-panel {
@@ -80,6 +78,14 @@
 		user-select: none;
 		font-size: 1.5rem;
 	}
+
+	.entry-subpanel1 {
+		display: flex;
+		flex-direction: row;
+		gap: $panel-gap;
+		user-select: none;
+	}
+
 
 	.entry-panel {
 		& :global(.entry-panel-button) {
@@ -142,13 +148,12 @@
 		max-height: 40%;
 		display: flex;
 		flex-direction: column;
-	}
 
-	@include vars.breakpoint-mobile {
-		.puzzle-info {
+		@include vars.breakpoint-mobile {
 			display: none;
 		}
 	}
+
 
 	.puzzle-header {
 		background: var(--modal-header-background-color);

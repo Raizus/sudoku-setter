@@ -39,8 +39,12 @@
 				{#if game_mode === GAME_MODE.SETTING}
 					<SettingPanel />
 				{/if}
-				<BoardContainer />
-				<EntryPanel />
+				<div class="central-panel">
+					<BoardContainer />
+				</div>
+				<div class="right-panel">
+					<EntryPanel />
+				</div>
 			</div>
 		</div>
 	</main>
@@ -50,6 +54,8 @@
 </div>
 
 <style lang="scss">
+	@use '$src/vars' as vars;
+	
 	.App {
 		display: contents;
 	}
@@ -58,27 +64,49 @@
 		flex: 1 1 auto;
 		display: flex;
 		flex-direction: column;
-		// width: 100%;
-		// height: 100%;
 
 		background-color: var(--background-color);
 		color: var(--text-primary-color);
+
+		& .central-panel {
+			flex: 0 0 auto;
+	
+			width: vars.$board-size-big;
+			height: vars.$board-size-big;
+	
+			position: relative;
+		}
+
+		& .right-panel {
+			flex: 1 1 100%;
+		}
 	}
+
 
 	.game-wrapper {
 		flex-grow: 1;
-		// position: relative;
+		margin: 0 auto;
 	}
 
 	.game {
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
+	}
+
+	@include vars.breakpoint-mobile {
+        main {
+			.game {
+				flex-direction: column;
+			}
+
+			.central-panel {
+				align-self: center;
+
+				width: vars.$board-size-small;
+				height: vars.$board-size-small;
+			}
+		}
 	}
 
 	footer {
