@@ -898,7 +898,7 @@ function connectFourAdjacentYellowsMinimumDifferenceAtLeast3Constraint(
 	tool: TOOLID
 ) {
 	let out_str: string = '';
-	out_str += `constraint connect_four_adjacent_yellows_difference_at_least_3_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.CONNECT_FOUR});\n`;
+	out_str += `constraint connect_four_adjacent_yellows_difference_at_least_x_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.CONNECT_FOUR}, 3);\n`;
 
 	return out_str;
 }
