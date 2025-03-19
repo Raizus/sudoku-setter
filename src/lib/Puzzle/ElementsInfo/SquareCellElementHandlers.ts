@@ -1,6 +1,6 @@
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { TOOLS } from '../Tools';
-import { arrowInfo, averageArrowInfo, bulbousArrowInfo } from './ArrowToolsElementsInfo';
+import { arrowInfo, averageArrowInfo, bulbousArrowInfo, chaosConstructionArrowInfo } from './ArrowToolsElementsInfo';
 import {
 	divisibleKillerCageInfo,
 	doublersKillerCageInfo,
@@ -285,7 +285,10 @@ import {
 	nurikabeIslandProductOfSumAndSizeInfo,
 	teleportInfo,
 	connectFourYellowInfo,
-	connectFourRedInfo
+	connectFourRedInfo,
+	seenEvenCountInfo,
+	seenOddCountInfo,
+	chaosConstructionSeenSameRegionCountInfo
 } from './SingleCellElementsInfo';
 import {
 	coldArrowsInfo,
@@ -432,7 +435,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.CONNECT_FOUR]: connectFourInfo,
 	[TOOLS.CONNECT_FOUR_DRAW]: connectFourDrawInfo,
 	[TOOLS.CONNECT_FOUR_ADJACENT_REDS_DIFFERENT_PARITY]: connectFourAdjacentRedsDifferentParityInfo,
-	[TOOLS.CONNECT_FOUR_ADJACENT_YELLOWS_MINIMUM_DIFFERENCE_AT_LEAST_3]: connectFourAdjacentYellowsMinimumDifferenceAtLeast3Info,
+	[TOOLS.CONNECT_FOUR_ADJACENT_YELLOWS_MINIMUM_DIFFERENCE_AT_LEAST_3]:
+		connectFourAdjacentYellowsMinimumDifferenceAtLeast3Info,
 
 	// Single Cell Constraints
 	[TOOLS.ODD]: oddInfo,
@@ -460,6 +464,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.COUNTING_CIRCLES]: countingCirclesInfo,
 	[TOOLS.COLORED_COUNTING_CIRCLES]: coloredCountingCirclesInfo,
 	[TOOLS.UNIQUE_CELLS]: uniqueCellsInfo,
+	[TOOLS.SEEN_EVEN_COUNT]: seenEvenCountInfo,
+	[TOOLS.SEEN_ODD_COUNT]: seenOddCountInfo,
 
 	[TOOLS.YIN_YANG_MINESWEEPER]: yinYangMinesweeperInfo,
 	[TOOLS.YIN_YANG_SEEN_UNSHADED_CELLS]: yinYangSeenUnshadedCellsInfo,
@@ -485,6 +491,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	[TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS]: chaosConstructionChessSumsInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS]: chaosConstructionArrowKnotsInfo,
+	[TOOLS.CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT]: chaosConstructionSeenSameRegionCountInfo,
 
 	[TOOLS.NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE]: nurikabeIslandProductOfSumAndSizeInfo,
 
@@ -623,6 +630,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	// Arrow constraints
 	[TOOLS.ARROW]: arrowInfo,
+	[TOOLS.CHAOS_CONSTRUCTION_ARROW]: chaosConstructionArrowInfo,
 	[TOOLS.AVERAGE_ARROW]: averageArrowInfo,
 	[TOOLS.BULBOUS_ARROW]: bulbousArrowInfo,
 

@@ -45,6 +45,10 @@ export enum SIMPLE_GLOBAL_CONSTRAINTS {
 }
 
 export enum NEGATIVE_CONSTRAINTS {
+	ALL_GIVEN = 'All Given',
+	ALL_CAGE_TOTALS_DIFFERENT = 'All Cage Totals Different',
+	ADJACENT_CAGE_TOTALS_DIFFERENT = 'Adjacent Cage Totals Different',
+
 	ALL_RATIOS_GIVEN = 'All Ratios Given',
 	ALL_DIFFERENCES_GIVEN = 'All Differences Given',
 	ALL_X_GIVEN = "All X's Given",
@@ -81,11 +85,16 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	SASHIGANE = 'Sashigane',
 	GOLDILOCKS_ZONE = 'Goldilocks Zone',
 
-	CELL_CENTER_LOOP_NO_TOUCHING = 'Cell Center Loop No Touching',
-	CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY = 'Cell Center Loop Can Touch Diagonally',
-	NOT_LOOP_SIZED_REGIONS = 'Not Loop Sized Regions',
-	MODULAR_LOOP = 'Modular Loop',
+	TWILIGHT_CAVE_FILLOMINO_REGION_SHADING = 'Twilight Cave Fillomino Region Shading',
+	YIN_YANG_FILLOMINO_PARITY = 'Yin Yang Fillomino Parity',
 
+	PENTOMINO_TILLING = 'Pentomino Tilling',
+	TILLING_NO_EMPTY_CELLS = 'Tilling No Empty Cells',
+
+	LITS_BLACK_WHITE_STAR_BATTLE = 'LITS Black And White Star Battle',
+}
+
+export enum GLOBAL_DIRECTED_PATH_CONSTRAINTS {
 	MAZE_DIRECTED_PATH = 'Directed Path',
 	DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME = 'Directed Path Adjacent Cells Sum Is Prime',
 	DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME = 'Directed Path Sum Of Cells Per Region Is Prime',
@@ -93,35 +102,40 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	DIRECTED_PATH_IS_REGION_SUM_LINE = 'Directed Path Is Region Sum Line',
 	DIRECTED_PATH_TELEPORT_SEGMENTS_SUM = 'Directed Path Teleport Segments Sum',
 	DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS = 'Directed Path Teleport Renban Segments',
-	DIRECTED_PATH_IS_PARITY_LINE = 'Directed Path Is Parity Line',
+	DIRECTED_PATH_IS_PARITY_LINE = 'Directed Path Is Parity Line'
+}
 
+export enum GLOBAL_GALAXY_CONSTRAINTS {
+	GALAXIES = 'Galaxies',
+	TWO_SYMMETRIC_GALAXIES = 'Two Symmetric Galaxies',
+	EVERY_CELL_BELONGS_TO_A_GALAXY = 'Every Cell Belongs To A Galaxy',
+	GALAXY_2X2_DOES_NOT_BELONG_TO_ONE_GALAXY = 'Galaxy 2x2 Does Not Belong To One Galaxy',
+	ONE_GALAXY_IS_A_GERMAN_WHISPERS = 'One Galaxy Is A German Whispers'
+}
+
+export enum GLOBAL_CAVE_CONSTRAINTS {
 	CAVE = 'Cave',
 	CAVE_CELLS_ARE_ODD = 'Cave Cells Are Odd',
 	CAVE_WALLS_ARE_EVEN = 'Cave Walls Are Even',
 	CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED = 'Cave 2x2 Not Fully Shaded or Unshaded',
 	ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE = 'One Digit Does Not Appear In The Cave',
 	CAVE_LITS = 'Cave LITS',
-	RENBAN_CAVES = 'Renban Caves',
+	RENBAN_CAVES = 'Renban Caves'
+}
 
-	TWILIGHT_CAVE_FILLOMINO_REGION_SHADING = 'Twilight Cave Fillomino Region Shading',
-	YIN_YANG_FILLOMINO_PARITY = 'Yin Yang Fillomino Parity',
-
-	GALAXIES = 'Galaxies',
-	TWO_SYMMETRIC_GALAXIES = 'Two Symmetric Galaxies',
-	EVERY_CELL_BELONGS_TO_A_GALAXY = 'Every Cell Belongs To A Galaxy',
-	GALAXY_2X2_DOES_NOT_BELONG_TO_ONE_GALAXY = 'Galaxy 2x2 Does Not Belong To One Galaxy',
-	ONE_GALAXY_IS_A_GERMAN_WHISPERS = 'One Galaxy Is A German Whispers',
-
-	PENTOMINO_TILLING = 'Pentomino Tilling',
-	TILLING_NO_EMPTY_CELLS = 'Tilling No Empty Cells',
-
-	LITS_BLACK_WHITE_STAR_BATTLE = 'LITS Black And White Star Battle',
-
+export enum GLOBAL_CONNECT_FOUR_CONSTRAINTS {
 	CONNECT_FOUR = 'Connect Four',
 	CONNECT_FOUR_ALL_FILLED = 'Connect Four All Filled',
 	CONNECT_FOUR_DRAW = 'Connect Four Draw',
 	CONNECT_FOUR_ADJACENT_YELLOWS_MINIMUM_DIFFERENCE_AT_LEAST_3 = 'Connect Four Adjacent Yellows Minimum Difference At Least 3',
 	CONNECT_FOUR_ADJACENT_REDS_DIFFERENT_PARITY = 'Connect Four Adjacent Reds Different Parity'
+}
+
+export enum GLOBAL_LOOP_CONSTRAINTS {
+	CELL_CENTER_LOOP_NO_TOUCHING = 'Cell Center Loop No Touching',
+	CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY = 'Cell Center Loop Can Touch Diagonally',
+	NOT_LOOP_SIZED_REGIONS = 'Not Loop Sized Regions',
+	MODULAR_LOOP = 'Modular Loop'
 }
 
 export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
@@ -150,6 +164,8 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	COUNTING_CIRCLES = 'Counting Circles',
 	COLORED_COUNTING_CIRCLES = 'Colored Counting Circles',
 	UNIQUE_CELLS = 'Unique Cells',
+	SEEN_ODD_COUNT = 'Seen Odd Count',
+	SEEN_EVEN_COUNT = 'Seen Even Count',
 
 	CELL_ON_THE_LOOP = 'Cell On The Loop',
 	CELL_NOT_ON_THE_LOOP = 'Cell Not On The Loop',
@@ -176,6 +192,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	TWILIGHT_CAVE_FILLOMINO_CLUE = 'Twilight Cave Fillomino Clue',
 	CHAOS_CONSTRUCTION_CHESS_SUMS = 'Chaos Construction Chess Sums',
 	CHAOS_CONSTRUCTION_ARROW_KNOTS = 'Chaos Construction Arrow Knots',
+	CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT = 'Chaos Construction Seen Same Region Count',
 
 	NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE = 'Nurikabe Island Product Of Sum And Size Clue',
 
@@ -222,7 +239,9 @@ export enum EDGE_CONSTRAINTS {
 	CHAOS_CONSTRUCTION_SUGURU_BORDER = 'Chaos Construction Suguru Border',
 	EDGE_CAVE_ONE_OF_EACH = 'Edge Cave One Of Each',
 
-	ONE_WAY_DOOR = 'One Way Door'
+	ONE_WAY_DOOR = 'One Way Door',
+
+	CUSTOM_EDGE_CONSTRAINT = 'Custom Edge Constraint'
 }
 
 export enum CORNER_CONSTRAINTS {
@@ -325,7 +344,9 @@ export enum ARROW_CONSTRAINTS {
 	ARROW = 'Arrow',
 	AVERAGE_ARROW = 'Average Arrow',
 	BULBOUS_ARROW = 'Bulbous Arrow',
-	SQUARE_ROOT_ARROW = 'Square Root Arrow'
+	SQUARE_ROOT_ARROW = 'Square Root Arrow',
+
+	CHAOS_CONSTRUCTION_ARROW = 'Chaos Construction Arrow',
 }
 
 export enum CAGE_CONSTRAINTS {
@@ -426,6 +447,11 @@ export const GLOBAL_CONSTRAINTS = {
 	...SIMPLE_GLOBAL_CONSTRAINTS,
 	...NEGATIVE_CONSTRAINTS,
 	...VALUE_MODIFIER_CONSTRAINTS,
+	...GLOBAL_GALAXY_CONSTRAINTS,
+	...GLOBAL_CAVE_CONSTRAINTS,
+	...GLOBAL_DIRECTED_PATH_CONSTRAINTS,
+	...GLOBAL_CONNECT_FOUR_CONSTRAINTS,
+	...GLOBAL_LOOP_CONSTRAINTS,
 	...UNDETERMINED_REGIONS_CONSTRAINTS
 };
 
@@ -466,6 +492,11 @@ export type TOOLID =
 	| NEGATIVE_CONSTRAINTS
 	| VALUE_MODIFIER_CONSTRAINTS
 	| UNDETERMINED_REGIONS_CONSTRAINTS
+	| GLOBAL_GALAXY_CONSTRAINTS
+	| GLOBAL_CAVE_CONSTRAINTS
+	| GLOBAL_DIRECTED_PATH_CONSTRAINTS
+	| GLOBAL_CONNECT_FOUR_CONSTRAINTS
+	| GLOBAL_LOOP_CONSTRAINTS
 	| SIMPLE_SINGLE_CELL_CONSTRAINTS
 	| SINGLE_CELL_ARROW_CONSTRAINTS
 	| SINGLE_CELL_MULTIARROW_CONSTRAINTS
@@ -491,6 +522,12 @@ export enum TOOL_CATEGORIES {
 	NEGATIVE_CONSTRAINT = 'Negative Constraint',
 	VALUE_MODIFIER_CONSTRAINT = 'Value Modifier Constraint',
 	UNDETERMINED_REGIONS_CONSTRAINT = 'Undetermined Regions Constraint',
+	GLOBAL_GALAXY_CONSTRAINTS = 'Global Galaxy Constraints',
+	GLOBAL_CAVE_CONSTRAINTS = 'Global Cave Constraints',
+	GLOBAL_DIRECTED_PATH_CONSTRAINTS = 'Global Directed Path Constraints',
+	GLOBAL_CONNECT_FOUR_CONSTRAINTS = 'Global Connect Four Constraints',
+	GLOBAL_LOOP_CONSTRAINTS = 'Global Loop Constraints',
+
 	DIAGONAL_CONSTRAINT = 'Diagonal Constraint',
 
 	LOCAL_CONSTRAINT = 'Local Constraint',
@@ -650,7 +687,12 @@ export const GLOBAL_CONSTRAINT_CATEGORIES = [
 	TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT,
 	TOOL_CATEGORIES.NEGATIVE_CONSTRAINT,
 	TOOL_CATEGORIES.VALUE_MODIFIER_CONSTRAINT,
-	TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT
+	TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT,
+	TOOL_CATEGORIES.GLOBAL_GALAXY_CONSTRAINTS,
+	TOOL_CATEGORIES.GLOBAL_CAVE_CONSTRAINTS,
+	TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS,
+	TOOL_CATEGORIES.GLOBAL_CONNECT_FOUR_CONSTRAINTS,
+	TOOL_CATEGORIES.GLOBAL_LOOP_CONSTRAINTS
 ];
 
 export function toolKeyFromString(str: string): TOOLID | undefined {

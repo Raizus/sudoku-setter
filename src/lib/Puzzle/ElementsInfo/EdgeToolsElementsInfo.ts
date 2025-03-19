@@ -25,12 +25,19 @@ const typableEdgeDefaultCategories = [
 const EDGE_R_1 = 0.15;
 const EDGE_STROKE_WIDTH_1 = 0.02;
 
-const DEFAULT_EDGE_SHAPE_1: EditableShapeI = {
+const DEFAULT_WHITE_CIRCLE: EditableShapeI = {
 	type: SHAPE_TYPES.CIRCLE,
 	r: { editable: true, value: EDGE_R_1, lb: 0, ub: 1, step: 0.01 },
 	strokeWidth: { editable: true, value: EDGE_STROKE_WIDTH_1, lb: 0, ub: 1, step: 0.025 },
 	stroke: { editable: true, value: 'black' },
 	fill: { editable: true, value: 'var(--grid-background-color)' }
+};
+
+const DEFAULT_BORDER_LINE: EditableShapeI = {
+	type: SHAPE_TYPES.BORDER_LINE,
+	strokeWidth: { editable: true, value: 0.1, lb: 0, ub: 1, step: 0.025 },
+	stroke: { editable: true, value: 'black' },
+	opacity: { editable: true, value: 0.9 }
 };
 
 export function validateRatioValue(value: string, maxLength = 1): boolean {
@@ -137,7 +144,7 @@ export const differenceInfo: SquareCellElementInfo = {
 	toolId: TOOLS.DIFFERENCE,
 	order: RENDER_ORDER.EDGE_TOOLS,
 
-	shape: DEFAULT_EDGE_SHAPE_1,
+	shape: DEFAULT_WHITE_CIRCLE,
 
 	meta: {
 		description:
@@ -159,7 +166,7 @@ export const edgeSumInfo: SquareCellElementInfo = {
 	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
-		...DEFAULT_EDGE_SHAPE_1,
+		...DEFAULT_WHITE_CIRCLE,
 		fill: { editable: false, value: 'rgba(96, 96, 255, 0.8)' }
 	},
 
@@ -238,7 +245,7 @@ export const edgeProductInfo: SquareCellElementInfo = {
 	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
-		...DEFAULT_EDGE_SHAPE_1,
+		...DEFAULT_WHITE_CIRCLE,
 		fill: { editable: false, value: 'rgba(253, 79, 79, 0.5)' }
 	},
 
@@ -262,7 +269,7 @@ export const edgeModuloInfo: SquareCellElementInfo = {
 	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
-		...DEFAULT_EDGE_SHAPE_1,
+		...DEFAULT_WHITE_CIRCLE,
 		fill: { editable: false, value: 'rgba(253, 175, 49, 0.5)' }
 	},
 
@@ -286,7 +293,7 @@ export const edgeFactorInfo: SquareCellElementInfo = {
 	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
-		...DEFAULT_EDGE_SHAPE_1,
+		...DEFAULT_WHITE_CIRCLE,
 		fill: { editable: false, value: 'rgba(251, 251, 40, 0.5)' }
 	},
 
@@ -331,7 +338,7 @@ export const yinYangWhiteKropkiInfo: SquareCellElementInfo = {
 	toolId: TOOLS.YIN_YANG_WHITE_KROPKI,
 	order: RENDER_ORDER.EDGE_TOOLS,
 
-	shape: DEFAULT_EDGE_SHAPE_1,
+	shape: DEFAULT_WHITE_CIRCLE,
 
 	meta: {
 		description:
@@ -375,12 +382,7 @@ export const unknownRegionBorderInfo: SquareCellElementInfo = {
 	toolId: TOOLS.UNKNOWN_REGION_BORDER,
 	order: RENDER_ORDER.EDGE_TOOLS,
 
-	shape: {
-		type: SHAPE_TYPES.BORDER_LINE,
-		strokeWidth: { editable: false, value: 0.1, lb: 0, ub: 1, step: 0.025 },
-		stroke: { editable: false, value: 'black' },
-		opacity: { editable: false, value: 0.9 }
-	},
+	shape: DEFAULT_BORDER_LINE,
 
 	meta: {
 		description: 'A line in the border between cells indicates a region border.',
@@ -397,12 +399,7 @@ export const chaosConstructionSuguruBorderInfo: SquareCellElementInfo = {
 	toolId: TOOLS.CHAOS_CONSTRUCTION_SUGURU_BORDER,
 	order: RENDER_ORDER.EDGE_TOOLS,
 
-	shape: {
-		type: SHAPE_TYPES.BORDER_LINE,
-		strokeWidth: { editable: false, value: 0.1, lb: 0, ub: 1, step: 0.025 },
-		stroke: { editable: false, value: 'black' },
-		opacity: { editable: false, value: 0.9 }
-	},
+	shape: DEFAULT_BORDER_LINE,
 
 	meta: {
 		description: 'A line in the border between cells indicates a region border.',
@@ -419,7 +416,7 @@ export const edgeCaveOneOfEachInfo: SquareCellElementInfo = {
 	toolId: TOOLS.EDGE_CAVE_ONE_OF_EACH,
 	order: RENDER_ORDER.EDGE_TOOLS,
 
-	shape: DEFAULT_EDGE_SHAPE_1,
+	shape: DEFAULT_WHITE_CIRCLE,
 
 	meta: {
 		description:
@@ -453,6 +450,27 @@ export const oneWayDoorInfo: SquareCellElementInfo = {
 	meta: {
 		description:
 			'The path may only pass directly through a purple arrow if moving in the direction the arrow is pointing. An arrow always points to the smaller of the two digits it sits between.',
+		tags: [],
+		categories: typableEdgeDefaultCategories
+	}
+};
+
+export const customEdgeConstraintInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getEdgeToolInputHandler(svgRef, grid, tool, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultEdgeValueUpdater(oldValue, key, validateEdgeValue)
+		});
+	},
+
+	toolId: TOOLS.CUSTOM_EDGE_CONSTRAINT,
+	order: RENDER_ORDER.EDGE_TOOLS,
+
+	shape: DEFAULT_WHITE_CIRCLE,
+
+	meta: {
+		description:
+			'Custom Edge Constraint. Combines several edge constraints into one.',
 		tags: [],
 		categories: typableEdgeDefaultCategories
 	}

@@ -10,15 +10,13 @@ import {
 	PuzzleModel,
 	cellsToGridVarsStr,
 	VAR_2D_NAMES,
-	groupConstraintsByValue
+	groupConstraintsByValue,
+	cellsFromCoords
 } from './solver_utils';
 import type { ParseOptions } from './value_parsing';
 
 function getCageVars(grid: Grid, constraint: CageToolI) {
-	const cells_coords = constraint.cells;
-	const cells = cells_coords
-		.map((coord) => grid.getCell(coord.r, coord.c))
-		.filter((cell) => !!cell);
+	const cells = cellsFromCoords(grid, constraint.cells);
 	const vars = cellsToVarsName(cells);
 	return vars;
 }
@@ -219,10 +217,7 @@ function yinYangValuedCageConstraint(
 	constraint: CageToolI,
 	predicate: string
 ) {
-	const cells_coords = constraint.cells;
-	const cells = cells_coords
-		.map((coord) => grid.getCell(coord.r, coord.c))
-		.filter((cell) => !!cell);
+	const cells = cellsFromCoords(grid, constraint.cells);
 	const vars = cellsToVarsName(cells);
 	const vars_str = `[${vars.join(',')}]`;
 
@@ -277,10 +272,7 @@ function doublersKillerCageConstraint(
 	c_id: string,
 	constraint: CageToolI
 ) {
-	const cells_coords = constraint.cells;
-	const cells = cells_coords
-		.map((coord) => grid.getCell(coord.r, coord.c))
-		.filter((cell) => !!cell);
+	const cells = cellsFromCoords(grid, constraint.cells);
 	const vars = cellsToVarsName(cells);
 	const vars_str = `[${vars.join(',')}]`;
 
@@ -302,10 +294,7 @@ function negatorsKillerCageConstraint(
 	c_id: string,
 	constraint: CageToolI
 ) {
-	const cells_coords = constraint.cells;
-	const cells = cells_coords
-		.map((coord) => grid.getCell(coord.r, coord.c))
-		.filter((cell) => !!cell);
+	const cells = cellsFromCoords(grid, constraint.cells);
 	const vars = cellsToVarsName(cells);
 	const vars_str = `[${vars.join(',')}]`;
 

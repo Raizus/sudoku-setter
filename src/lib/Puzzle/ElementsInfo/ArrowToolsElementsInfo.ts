@@ -70,7 +70,7 @@ export const averageArrowInfo: SquareCellElementInfo = {
 
 export const bulbousArrowInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
-		return getArrowToolInputHandler(svgRef, grid, tool, {allowSelfIntersection: true});
+		return getArrowToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
 	},
 
 	toolId: TOOLS.BULBOUS_ARROW,
@@ -79,10 +79,10 @@ export const bulbousArrowInfo: SquareCellElementInfo = {
 	shape: {
 		type: SHAPE_TYPES.BULBOUS_ARROW,
 		r: { editable: false, value: 0.3 },
-		inset: {editable: false, value: 0.2},
+		inset: { editable: false, value: 0.2 },
 		strokeWidth: { editable: true, value: 0.04 },
 		stroke: { editable: true, value: 'var(--constraint-color-gray)' },
-		strokeLinejoin: {editable: false, value: "round"},
+		strokeLinejoin: { editable: false, value: 'round' },
 		linePathOptions: {
 			shortenTail: { editable: false, value: 0.15 },
 			bezierRounding: { editable: false, value: 0.25 }
@@ -122,7 +122,40 @@ export const squareRootArrowInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description: 'The digits along an arrow must sum to the square of the number in the connecting diamond.',
+		description:
+			'The digits along an arrow must sum to the square of the number in the connecting diamond.',
+		usage: arrowUsage(),
+		tags: [],
+		categories: [
+			TOOL_CATEGORIES.ARROW_CONSTRAINT,
+			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
+			TOOL_CATEGORIES.ARROW_TOOL
+		]
+	}
+};
+
+export const chaosConstructionArrowInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getArrowToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.CHAOS_CONSTRUCTION_ARROW,
+	order: RENDER_ORDER.ARROW_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		r: { editable: false, value: 0.35 },
+		strokeWidth: { editable: true, value: 0.05 },
+		stroke: { editable: true, value: 'var(--constraint-color-gray)' },
+		linePathOptions: {
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.25 }
+		}
+	},
+
+	meta: {
+		description:
+			'Digits along an arrow must sum to the number in the attached circle. Additionally, each arrow must be contained within one region, and the circle cannot belong to the same region as its arrow.',
 		usage: arrowUsage(),
 		tags: [],
 		categories: [

@@ -570,16 +570,15 @@ predicate sandwich_row_col_count_p(
     var int: r,
     var int: c,
     var int: val
-) = 
-    let {
-        array[int] of var bool: row_bools = sandwich_bools(row_arr, 1, 9),
-        array[int] of var bool: col_bools = sandwich_bools(col_arr, 1, 9),
-        var int: row_count = sandwich_bools_sum(row_bools),
-        var int: col_count = sandwich_bools_sum(col_bools),
-        var bool: in_row = c in index_set(row_bools) /\\ row_bools[c],
-        var bool: in_col = r in index_set(col_bools) /\\ col_bools[r],
-        var int: in_both = if in_row /\\ in_col then 1 else 0 endif
-    } in (row_count + col_count - in_both) == val;
+) = let {
+    array[int] of var bool: row_bools = sandwich_bools(row_arr, 1, 9),
+    array[int] of var bool: col_bools = sandwich_bools(col_arr, 1, 9),
+    var int: row_count = sandwich_bools_sum(row_bools),
+    var int: col_count = sandwich_bools_sum(col_bools),
+    var bool: in_row = c in index_set(row_bools) /\\ row_bools[c],
+    var bool: in_col = r in index_set(col_bools) /\\ col_bools[r],
+    var int: in_both = if in_row /\\ in_col then 1 else 0 endif
+} in (row_count + col_count - in_both) == val;
 	 
 function var int: radar_distance_f(array[int] of var int: arr, var int: x) =
     if length(index_set(arr)) = 0 \\/ forall(i in index_set(arr))(arr[i] != x) then
@@ -653,7 +652,48 @@ predicate colored_counting_circles_adjacent_p(
             endif
         )
     )
-);\n\n`;
+);
+
+predicate seen_modular_count_p(
+	array[int] of var int: arr1,
+	array[int] of var int: arr2, 
+	array[int] of var int: arr3, 
+	array[int] of var int: arr4,
+    var int: val,
+    var int: n,
+    var int: rem
+) = let {
+    % counts the number of seen uninterrupted values with remainder mod n = rem,
+    % for each of the arrays plus val, and the total count must be equal to val
+    array[int] of var bool: _arr1 = [x mod n == rem | x in arr1];
+    array[int] of var bool: _arr2 = [x mod n == rem | x in arr2];
+    array[int] of var bool: _arr3 = [x mod n == rem | x in arr3];
+    array[int] of var bool: _arr4 = [x mod n == rem | x in arr4];
+    var int: val_rem = bool2int(val mod n == rem);
+} in (
+    (count_uninterrupted(_arr1, true) + 
+     count_uninterrupted(_arr2, true) + 
+     count_uninterrupted(_arr3, true) + 
+     count_uninterrupted(_arr4, true) + 
+     val_rem
+    ) == val
+);
+
+predicate seen_even_count_p(
+	array[int] of var int: arr1,
+	array[int] of var int: arr2, 
+	array[int] of var int: arr3, 
+	array[int] of var int: arr4,
+    var int: val
+) = seen_modular_count_p(arr1, arr2, arr3, arr4, val, 2, 0);
+
+predicate seen_odd_count_p(
+	array[int] of var int: arr1,
+	array[int] of var int: arr2, 
+	array[int] of var int: arr3, 
+	array[int] of var int: arr4,
+    var int: val
+) = seen_modular_count_p(arr1, arr2, arr3, arr4, val, 2, 1);\n\n`;
 
 	const single_cell_multiarrow_constraints = `predicate cold_arrows_p(
     array[int] of var int: arr, 
@@ -1269,7 +1309,19 @@ predicate lockout_line_p(array[int] of var int: arr, var int: x) =
         arr[i] < lower_bound \\/ arr[i] > upper_bound
     );\n\n`;
 
-	const arrow_constraints = `predicate average_arrow_p(array[int] of var int: arr, var int: val) =
+    const arrow_constraints = `predicate arrow_p(
+    array[int] of var int: pill,
+    array[int] of var int: arrow
+) = let {
+    set of int: idxs = index_set(pill);
+    int: n = max(idxs);
+    array[int] of var int: pill_values = [pow(10, i-1)*pill[n-i+1] | i in idxs];
+    var int: arrow_val = sum(pill_values);
+} in (
+    arrow_val == sum(arrow)
+);
+    
+predicate average_arrow_p(array[int] of var int: arr, var int: val) =
 	sum(arr) == val * length(arr);
     
 predicate average_arrow_or_thermometer_p(
@@ -1905,6 +1957,28 @@ predicate chaos_construction_arrow_knots_p(
             endif
         )
     endif
+);
+    
+predicate chaos_costruction_seen_same_region_count_p(
+	array[int] of var int: arr1,
+	array[int] of var int: arr2,
+	array[int] of var int: arr3,
+	array[int] of var int: arr4,
+    var int: cell_region,
+    var int: val,
+) = 
+    count_uninterrupted(arr1, cell_region) + count_uninterrupted(arr2, cell_region) + count_uninterrupted(arr3, cell_region) + count_uninterrupted(arr4, cell_region) + 1 == val;
+
+predicate chaos_construction_arrow_p(
+	array[int] of var int: circle_regions,
+	array[int] of var int: arrow_regions
+) = let {
+    set of int: idxs1 = index_set(circle_regions);
+    set of int: idxs2 = index_set(arrow_regions);
+} in (
+    all_equal(arrow_regions) /\\ 
+    all_equal(circle_regions) /\\ 
+    circle_regions[min(idxs1)] != arrow_regions[min(idxs2)]
 );\n\n`;
 
 	const nurimisaki = `predicate nurimisaki_p(array[int, int] of var int: grid) =

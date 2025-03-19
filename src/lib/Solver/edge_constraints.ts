@@ -3,6 +3,7 @@ import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
+	cellsFromCoords,
 	cellsToGridVarsName,
 	cellsToVarsName,
 	cellToVarName,
@@ -12,10 +13,7 @@ import {
 import type { ParseOptions } from './value_parsing';
 
 function getEdgeVars(grid: Grid, constraint: EdgeToolI) {
-	const cells_coords = constraint.cells;
-	const cells = cells_coords
-		.map((coord) => grid.getCell(coord.r, coord.c))
-		.filter((cell) => !!cell);
+	const cells = cellsFromCoords(grid, constraint.cells);
 	const vars = cellsToVarsName(cells);
 	return vars;
 }
@@ -60,7 +58,7 @@ function valuedEdgeConstraint(
 	return out_str;
 }
 
-function xvConstraint(model: PuzzleModel, grid: Grid, c_id: string,  constraint: EdgeToolI) {
+function xvConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: EdgeToolI) {
 	const vars = getEdgeVars(grid, constraint);
 	const [var1, var2] = vars;
 	if (constraint.value === 'V' || constraint.value === 'v') {
@@ -71,17 +69,22 @@ function xvConstraint(model: PuzzleModel, grid: Grid, c_id: string,  constraint:
 	return constraint_str;
 }
 
-function ratioConstraint(model: PuzzleModel, grid: Grid, c_id: string,  constraint: EdgeToolI) {
+function ratioConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: EdgeToolI) {
 	const constraint_str = valuedEdgeConstraint(model, grid, c_id, constraint, 'ratio_p', '2');
 	return constraint_str;
 }
 
-function differenceConstraint(model: PuzzleModel, grid: Grid, c_id: string,  constraint: EdgeToolI) {
+function differenceConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: EdgeToolI) {
 	const constraint_str = valuedEdgeConstraint(model, grid, c_id, constraint, 'abs_difference', '1');
 	return constraint_str;
 }
 
-function edgeInequalityConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: EdgeToolI) { 
+function edgeInequalityConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: EdgeToolI
+) {
 	const vars = getEdgeVars(grid, constraint);
 	const [var1, var2] = vars;
 	const value = constraint.value;
@@ -93,29 +96,31 @@ function edgeInequalityConstraint(model: PuzzleModel, grid: Grid, c_id: string, 
 		const constraint_str = `constraint ${var1} > ${var2};\n`;
 		return constraint_str;
 	}
-	return ''
+	return '';
 }
 
-function edgeSumConstraint(model: PuzzleModel, grid: Grid, c_id: string,  constraint: EdgeToolI) {
+function edgeSumConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: EdgeToolI) {
 	const constraint_str = valuedEdgeConstraint(model, grid, c_id, constraint, 'edge_sum_p');
 	return constraint_str;
 }
 
-function edgeModuloConstraint(model: PuzzleModel, grid: Grid, c_id: string,  constraint: EdgeToolI) {
+function edgeModuloConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: EdgeToolI) {
 	const constraint_str = valuedEdgeConstraint(model, grid, c_id, constraint, 'edge_modulo_p');
 	return constraint_str;
 }
 
-function edgeFactorConstraint(model: PuzzleModel, grid: Grid, c_id: string,  constraint: EdgeToolI) {
+function edgeFactorConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: EdgeToolI) {
 	const constraint_str = simpleEdgeConstraint(grid, constraint, 'edge_factor_p');
 	return constraint_str;
 }
 
-function xyDifferencesConstraint(model: PuzzleModel, grid: Grid, c_id: string,  constraint: EdgeToolI) {
-	const cells_coords = constraint.cells;
-	const cells = cells_coords
-		.map((coord) => grid.getCell(coord.r, coord.c))
-		.filter((cell) => !!cell);
+function xyDifferencesConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: EdgeToolI
+) {
+	const cells = cellsFromCoords(grid, constraint.cells);
 	const [var1, var2] = cellsToVarsName(cells);
 	const [cell1, cell2] = cells;
 
@@ -135,11 +140,13 @@ function xyDifferencesConstraint(model: PuzzleModel, grid: Grid, c_id: string,  
 	return constraint_str;
 }
 
-function yinYangKropkiConstraint(model: PuzzleModel, grid: Grid, c_id: string,  constraint: EdgeToolI) {
-	const cells_coords = constraint.cells;
-	const cells = cells_coords
-		.map((coord) => grid.getCell(coord.r, coord.c))
-		.filter((cell) => !!cell);
+function yinYangKropkiConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: EdgeToolI
+) {
+	const cells = cellsFromCoords(grid, constraint.cells);
 	const [var1, var2] = cellsToVarsName(cells);
 	const yin_yang_vars = cellsToGridVarsName(cells, VAR_2D_NAMES.YIN_YANG);
 	const [yin_yang1, yin_yang2] = yin_yang_vars;
@@ -148,16 +155,27 @@ function yinYangKropkiConstraint(model: PuzzleModel, grid: Grid, c_id: string,  
 	return constraint_str;
 }
 
-function yinYangWhiteKropkiConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: EdgeToolI) {
-	const cells_coords = constraint.cells;
-	const cells = cells_coords
-		.map((coord) => grid.getCell(coord.r, coord.c))
-		.filter((cell) => !!cell);
+function yinYangWhiteKropkiConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: EdgeToolI
+) {
+	const cells = cellsFromCoords(grid, constraint.cells);
 	const [var1, var2] = cellsToVarsName(cells);
 	const yin_yang_vars = cellsToGridVarsName(cells, VAR_2D_NAMES.YIN_YANG);
 	const [yin_yang1, yin_yang2] = yin_yang_vars;
 
 	const constraint_str = `constraint yin_yang_white_kropki_p(${var1}, ${var2}, ${yin_yang1}, ${yin_yang2});\n`;
+	return constraint_str;
+}
+
+function regionBorderConstraint(grid: Grid, constraint: EdgeToolI, regions_var_name: VAR_2D_NAMES) {
+	const cells = cellsFromCoords(grid, constraint.cells);
+	const region_vars = cellsToGridVarsName(cells, regions_var_name);
+	const [region1, region2] = region_vars;
+
+	const constraint_str = `constraint ${region1} != ${region2};\n`;
 	return constraint_str;
 }
 
@@ -167,17 +185,9 @@ function unknownRegionBorderConstraint(
 	c_id: string,
 	constraint: EdgeToolI
 ) {
-	const cells_coords = constraint.cells;
-	const cells = cells_coords
-		.map((coord) => grid.getCell(coord.r, coord.c))
-		.filter((cell) => !!cell);
-	const region_vars = cellsToGridVarsName(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
-	const [region1, region2] = region_vars;
-
-	const constraint_str = `constraint ${region1} != ${region2};\n`;
+	const constraint_str = regionBorderConstraint(grid, constraint, VAR_2D_NAMES.UNKNOWN_REGIONS);
 	return constraint_str;
 }
-
 
 function chaosConstructionSuguruBorderConstraint(
 	model: PuzzleModel,
@@ -185,14 +195,7 @@ function chaosConstructionSuguruBorderConstraint(
 	c_id: string,
 	constraint: EdgeToolI
 ) {
-	const cells_coords = constraint.cells;
-	const cells = cells_coords
-		.map((coord) => grid.getCell(coord.r, coord.c))
-		.filter((cell) => !!cell);
-	const region_vars = cellsToGridVarsName(cells, VAR_2D_NAMES.SUGURU_REGIONS);
-	const [region1, region2] = region_vars;
-
-	const constraint_str = `constraint ${region1} != ${region2};\n`;
+	const constraint_str = regionBorderConstraint(grid, constraint, VAR_2D_NAMES.SUGURU_REGIONS);
 	return constraint_str;
 }
 
@@ -202,14 +205,7 @@ function edgeCaveOneOfEachConstraint(
 	c_id: string,
 	constraint: EdgeToolI
 ) {
-	const cells_coords = constraint.cells;
-	const cells = cells_coords
-		.map((coord) => grid.getCell(coord.r, coord.c))
-		.filter((cell) => !!cell);
-	const region_vars = cellsToGridVarsName(cells, VAR_2D_NAMES.CAVE_SHADING);
-	const [region1, region2] = region_vars;
-
-	const constraint_str = `constraint ${region1} != ${region2};\n`;
+	const constraint_str = regionBorderConstraint(grid, constraint, VAR_2D_NAMES.CAVE_SHADING);
 	return constraint_str;
 }
 

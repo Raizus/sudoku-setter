@@ -590,6 +590,54 @@ export const uniqueCellsInfo: SquareCellElementInfo = {
 	}
 };
 
+export const seenEvenCountInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.SEEN_EVEN_COUNT,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.SQUARE,
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'black' },
+		r: { editable: false, value: 0.35 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			'Black squares count the number of even digits that can be seen in all orthogonal directions combined, including itself.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const seenOddCountInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.SEEN_ODD_COUNT,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'black' },
+		r: { editable: false, value: 0.35 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			'Black circles count the number of odd digits that can be seen in all orthogonal directions combined, including itself.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
 export const yinYangMinesweeperInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getSingleCellToolInputHandler(svgRef, grid, tool);
@@ -1088,6 +1136,33 @@ export const chaosConstructionArrowKnotsInfo: SquareCellElementInfo = {
 	meta: {
 		description: `From each circle, draw some arrows that travel in a straight line either horizontally only or vertically only. The number in the bottom right corner of a circle cell indicates the number of arrows that must be drawn from that circle. Digits along an arrow must sum to the digit in the attached circle.
 		Additionally, all cells along arrows must be part of the same region as the circle they originate from. If an arrow doesn't reach the edge of the grid, the cell directly after the tip must be in a different region than the arrow.`,
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const chaosConstructionSeenSameRegionCountInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined, {
+			valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
+			defaultValue: ''
+		});
+	},
+
+	toolId: TOOLS.CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: false, value: 0.02 },
+		r: { editable: false, value: 0.4 },
+		stroke: { editable: false, value: 'black' },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description: `The number in the circle shows how many region cells it sees in its row and column (including the cell with the circle itself) until it reaches the borders of the region.`,
 		tags: [],
 		categories: singleCellShapeDefaultCategories
 	}

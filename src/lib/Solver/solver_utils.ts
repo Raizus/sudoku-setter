@@ -4,6 +4,7 @@ import type { Grid } from '../Puzzle/Grid/Grid';
 import type { PuzzleI } from '../Puzzle/Puzzle';
 import type { TOOLID } from '../Puzzle/Tools';
 import { DIRECTION } from '../utils/directions';
+import type { GridCoordI } from '../utils/SquareCellGridCoords';
 import { type ParseOptions, default_parse_opts, parseValue } from './value_parsing';
 
 export enum VAR_2D_NAMES {
@@ -46,6 +47,20 @@ export function cellsToGridVarsName(cells: Cell[], name: VAR_2D_NAMES): string[]
 
 export function cellsToGridVarsStr(cells: Cell[], name: VAR_2D_NAMES): string {
 	const out = '[' + cellsToGridVarsName(cells, name).join(',') + ']';
+	return out;
+}
+
+export function coordToGridVarName(coord: GridCoordI, name: VAR_2D_NAMES): string {
+	return `${name}[${coord.r},${coord.c}]`;
+}
+
+export function coordsToGridVarsName(coords: GridCoordI[], name: VAR_2D_NAMES): string[] {
+	const vars = coords.map((coord) => coordToGridVarName(coord, name));
+	return vars;
+}
+
+export function coordsToGridVarsStr(coords: GridCoordI[], name: VAR_2D_NAMES): string {
+	const out = '[' + coordsToGridVarsName(coords, name).join(',') + ']';
 	return out;
 }
 
@@ -522,4 +537,10 @@ export function groupConstraintsByValue<T extends ConstraintType>(constraints: T
 		list.push(constraint);
 	}
 	return groups;
+}export function cellsFromCoords(grid: Grid, coords: GridCoordI[]): Cell[] {
+	const cells = coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+	return cells;
 }
+

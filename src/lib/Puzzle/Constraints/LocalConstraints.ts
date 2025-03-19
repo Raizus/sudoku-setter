@@ -66,6 +66,12 @@ export function updateConstraintValue<T extends ConstraintType>(constraint: T, v
 	return { ...constraint, value } as T;
 }
 
+interface ConstraintGroupT {
+	// record mapping constraint id's to constraints
+	constraints: Record<string, ConstraintType>;
+	negative_constraints: string[];
+}
+
 export class LocalConstraintsDict extends Map<TOOLID, Record<string, ConstraintType>> {
 	addToDict(toolId: TOOLID) {
 		if (this.has(toolId)) {

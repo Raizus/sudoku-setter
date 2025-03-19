@@ -438,6 +438,42 @@ function uniqueCellsConstraint(
 	return out_str;
 }
 
+function seenEvenCountConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToVarName(cell);
+
+	const dirCells = getDirectionCells(grid, cell);
+	const cells_vars = dirCells.map(cells => cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD));
+
+	const constraint_str = `constraint seen_even_count_p(${cells_vars.join(', ')}, ${cell_var});\n`;
+	return constraint_str;
+}
+
+function seenOddCountConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToVarName(cell);
+
+	const dirCells = getDirectionCells(grid, cell);
+	const cells_vars = dirCells.map(cells => cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD));
+
+	const constraint_str = `constraint seen_odd_count_p(${cells_vars.join(', ')}, ${cell_var});\n`;
+	return constraint_str;
+}
+
 function yinYangMinesweeperConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -820,6 +856,31 @@ function chaosConstructionArrowKnotsConstraint(
 	return out_str;
 }
 
+function chaosConstructionSeenSameRegionCountConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const cell_var = cellToVarName(cell);
+
+	const dirCells = getDirectionCells(grid, cell);
+	const region_vars: string[] = [];
+	for (const cells of dirCells) {
+		const _region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+		region_vars.push(_region_vars);
+	}
+
+	const cell_region_var = cellToGridVarName(cell, VAR_2D_NAMES.UNKNOWN_REGIONS);
+
+	const constraint_str = `constraint chaos_costruction_seen_same_region_count_p(${region_vars.join(', ')}, ${cell_region_var}, ${cell_var});\n`;
+	return constraint_str;
+}
+
 function directedPathStartConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -977,6 +1038,9 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.INDEXING_ROW, indexingRowConstraint],
 	[TOOLS.SANDWICH_ROW_COL_COUNT, sandwichRowColCountConstraint],
 
+	[TOOLS.SEEN_EVEN_COUNT, seenEvenCountConstraint],
+	[TOOLS.SEEN_ODD_COUNT, seenOddCountConstraint],
+
 	[TOOLS.YIN_YANG_MINESWEEPER, yinYangMinesweeperConstraint],
 	[TOOLS.YIN_YANG_SEEN_UNSHADED_CELLS, yinYangSeenUnshadedConstraint],
 	[TOOLS.YIN_YANG_SEEN_SHADED_CELLS, yinYangSeenShadedConstraint],
@@ -1001,6 +1065,7 @@ const tool_map = new Map<string, ConstraintF>([
 
 	[TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS, chaosConstructionChessSumsConstraint],
 	[TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS, chaosConstructionArrowKnotsConstraint],
+	[TOOLS.CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT, chaosConstructionSeenSameRegionCountConstraint],
 
 	[TOOLS.DIRECTED_PATH_START, directedPathStartConstraint],
 	[TOOLS.DIRECTED_PATH_END, directedPathEndConstraint],

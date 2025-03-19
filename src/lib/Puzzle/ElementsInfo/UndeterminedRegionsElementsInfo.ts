@@ -116,7 +116,7 @@ export const cellCenterLoopNoTouchingInfo: AbstractElementInfo = {
 		description:
 			'Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself, even diagonally.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_LOOP_CONSTRAINTS]
 	}
 };
 
@@ -128,7 +128,7 @@ export const cellCenterCanTouchDiagonallyInfo: AbstractElementInfo = {
 		description:
 			'Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself orthogonally, but can touch itself diagonally.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_LOOP_CONSTRAINTS]
 	}
 };
 
@@ -140,7 +140,7 @@ export const adjacentCellsAlongLoopAreMultiplesInfo: AbstractElementInfo = {
 		description:
 			'For each pair of adjacent cells along the loop, the larger digit is an integer multiple of the smaller digit.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_LOOP_CONSTRAINTS]
 	}
 };
 
@@ -151,7 +151,7 @@ export const adjacentCellsAlongLoopAreGermanWhispersInfo: AbstractElementInfo = 
 	meta: {
 		description: 'Adjacent cells along a loop differ by 5 or more.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_LOOP_CONSTRAINTS]
 	}
 };
 
@@ -163,7 +163,7 @@ export const notLoopSizedRegionsInfo: AbstractElementInfo = {
 		description:
 			'Non-loop cells form several orthogonally connected groups. Such a group of size N contains exactly the digits from 1 to N.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_LOOP_CONSTRAINTS]
 	}
 };
 
@@ -175,7 +175,7 @@ export const modularLoopInfo: AbstractElementInfo = {
 		description:
 			'Draw an orthogonal loop through the grid. The loop must not touch itself orthogonally; however, it can touch diagonally. Along the loop, any three consecutive cells must contain numbers congruent to 0 mod 3, 1 mod 3, and 2 mod 3. (In other words, one of the numbers is from the set {3, 6, 9, 12, …}, one is from {1, 4, 7, 10, …}, and one from {2, 5, 8, 11, …}.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_LOOP_CONSTRAINTS]
 	}
 };
 
@@ -187,7 +187,7 @@ export const mazeDirectedPathInfo: AbstractElementInfo = {
 		description:
 			"Draw a directect path in the grid. The path will be a snaking line that passes through the centres of cells, without visiting any cell more than once, crossing itself or passing through any thick maze walls. As well as moving orthogonally, the path may move diagonally if there's a 2x2 space in which to do so, but may never pass diagonally through the rounded end / corner of a wall.",
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS]
 	}
 };
 
@@ -198,7 +198,7 @@ export const directedPathAdjacentCellsSumIsPrimeInfo: AbstractElementInfo = {
 	meta: {
 		description: 'Any two adjacent cells along the correct path must sum to a prime number.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS]
 	}
 };
 
@@ -210,7 +210,7 @@ export const directedPathAdjacentCellsDutchWhispersInfo: AbstractElementInfo = {
 		description:
 			'The correct path will be a valid Dutch Whisper line - adjacent digits along the path must have a difference of at least 4.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS]
 	}
 };
 
@@ -222,7 +222,7 @@ export const directedPathIsParityLineInfo: AbstractElementInfo = {
 		description:
 			'the correct path will be a valid alternating parity line - ie: any pair of adjacent cells along the path must contain one even digit and one odd digit.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS]
 	}
 };
 
@@ -234,7 +234,7 @@ export const directedPathIsRegionSumLineInfo: AbstractElementInfo = {
 		description:
 			'The correct path will be a valid Region Sum line - box borders (dotted lines) will divide the path into segments which each have the same sum.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS]
 	}
 };
 
@@ -246,7 +246,7 @@ export const directedPathSumOfCellsPerRegionIsPrimeInfo: AbstractElementInfo = {
 		description:
 			'All digits within a marked sudoku box that lie anywhere on the correct path must sum to a prime number.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS]
 	}
 };
 
@@ -258,7 +258,7 @@ export const directedPathTeleportSegmentsSumInfo: AbstractElementInfo = {
 		description:
 			'The sum of the digits on the path before teleporting must equal the sum of the digits on the path after teleporting.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS]
 	}
 };
 
@@ -270,7 +270,7 @@ export const directedPathTeleportRenbanSegmentsInfo: AbstractElementInfo = {
 		description:
 			'The directed path is formed of one or more segments. Any uses of teleports will divide the path up into physically separate segments, ie; if a teleport is used, the current path segment ends at the entry teleport, and a new separate path segment begins at the matching exit teleport. Any path segment must function as a renban; it must consist entirely of a set of non-repeating, consecutive digits, which can be arranged in any order along the path segment.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS]
 	}
 };
 
@@ -282,7 +282,7 @@ export const caveInfo: AbstractElementInfo = {
 		description:
 			'Shade some cells in the grid such that all unshaded cells are orthogonally connected, and all shaded cells are orthogonally connected by other shaded cells to an edge of the grid.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CAVE_CONSTRAINTS]
 	}
 };
 
@@ -306,7 +306,7 @@ export const cave2x2NotFullyShadedOrUnshadedInfo: AbstractElementInfo = {
 		description:
 			'No 2x2 cave region may be completely filled with cave cells or completely filled with wall cells.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CAVE_CONSTRAINTS]
 	}
 };
 
@@ -317,7 +317,7 @@ export const oneDigitDoesNotAppearInTheCaveInfo: AbstractElementInfo = {
 	meta: {
 		description: 'There is exactly one digit that does not appear anywhere in the cave.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CAVE_CONSTRAINTS]
 	}
 };
 
@@ -328,7 +328,7 @@ export const caveWallsAreEvenInfo: AbstractElementInfo = {
 	meta: {
 		description: 'Cave walls must contain even digits.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CAVE_CONSTRAINTS]
 	}
 };
 
@@ -339,7 +339,7 @@ export const caveCellsAreOddInfo: AbstractElementInfo = {
 	meta: {
 		description: 'Cave cells must contain odd digits.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CAVE_CONSTRAINTS]
 	}
 };
 
@@ -351,7 +351,7 @@ export const caveLITSInfo: AbstractElementInfo = {
 		description:
 			"The cave and each wall section is a separate region for the purposes of a 'LITS puzzle'. In a LITS puzzle, solvers must place one tetromino into each region. No two tetrominoes of the same shape may share an edge - reflections/rotations count as the same shape. All tetrominoes must form a single orthogonally connected area. No 2x2 area of the grid can be completely covered in tetrominoes.",
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CAVE_CONSTRAINTS]
 	}
 };
 
@@ -363,7 +363,7 @@ export const renbanCavesInfo: AbstractElementInfo = {
 		description:
 			'Every set of orthogonally connected unshaded cells within a 3x3 Sudoku region acts as a Renban line: that is, those cells must contain a nonrepeating set of consecutive digits in any order. Note that a 3x3 region may have more than one such set of cells. Also note that such a set may consist of just one cell.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CAVE_CONSTRAINTS]
 	}
 };
 
@@ -386,7 +386,7 @@ export const galaxiesInfo: AbstractElementInfo = {
 		description:
 			'Each galaxy must consist of a region of orthogonally connected cells, and must have 180 degree rotational symmetry.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_GALAXY_CONSTRAINTS]
 	}
 };
 
@@ -397,7 +397,7 @@ export const everyCellBelongsToAGalaxyInfo: AbstractElementInfo = {
 	meta: {
 		description: 'Every cell in the grid belongs to a galaxy.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_GALAXY_CONSTRAINTS]
 	}
 };
 
@@ -408,7 +408,7 @@ export const galaxy2x2DoesNotBelongToOneGalaxyInfo: AbstractElementInfo = {
 	meta: {
 		description: 'No 2x2 area may belong entirely to one galaxy.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_GALAXY_CONSTRAINTS]
 	}
 };
 
@@ -420,7 +420,7 @@ export const twoSymmetricGalaxiesInfo: AbstractElementInfo = {
 		description:
 			"Divide the grid into two galaxies. Each galaxy must consist of a region of orthogonally connected cells, and must have 180 degree rotational symmetry. (The central point around which a galaxy is symmetrical doesn't need to actually belong to that galaxy.)",
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_GALAXY_CONSTRAINTS]
 	}
 };
 
@@ -432,7 +432,7 @@ export const oneGalaxyIsAGermanWhispersInfo: AbstractElementInfo = {
 		description:
 			'One of the two galaxies behaves like a German whisper; orthogonally adjacent cells in this galaxy must have a difference of at least 5.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_GALAXY_CONSTRAINTS]
 	}
 };
 
@@ -479,7 +479,7 @@ export const connectFourInfo: AbstractElementInfo = {
 		description:
 			'The board represents a game of Connect 4. And so it resulted in a draw; the board became full of an equal number of red and yellow discs without either of them managing to get any horizontal, vertical or diagonal connected line of 4 discs of their colour. Recreate the end board state by colouring the holes red and yellow. The first two moves have been shown.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CONNECT_FOUR_CONSTRAINTS]
 	}
 };
 
@@ -491,7 +491,7 @@ export const connectFourDrawInfo: AbstractElementInfo = {
 		description:
 			'The board represents a game of Connect 4 ended in a draw. And so it resulted in a draw; the board became full of an equal number of red and yellow discs without either of them managing to get any horizontal, vertical or diagonal connected line of 4 discs of their colour. Recreate the end board state by colouring the holes red and yellow.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CONNECT_FOUR_CONSTRAINTS]
 	}
 };
 
@@ -503,7 +503,7 @@ export const connectFourAdjacentRedsDifferentParityInfo: AbstractElementInfo = {
 		description:
 			'Two orthogonally adjacent red discs must be of different parity (one odd digit and one even digit.)',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CONNECT_FOUR_CONSTRAINTS]
 	}
 };
 
@@ -514,6 +514,6 @@ export const connectFourAdjacentYellowsMinimumDifferenceAtLeast3Info: AbstractEl
 	meta: {
 		description: 'Two orthogonally adjacent yellow discs must have a difference of at least 3.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CONNECT_FOUR_CONSTRAINTS]
 	}
 };

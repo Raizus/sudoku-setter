@@ -2,14 +2,11 @@ import type { CornerToolI } from '../Puzzle/Constraints/CornerConstraints';
 import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { cellsToVarsName, PuzzleModel } from './solver_utils';
+import { cellsFromCoords, cellsToVarsName, PuzzleModel } from './solver_utils';
 import { parseVarList } from './value_parsing';
 
 function getCornerVars(grid: Grid, constraint: CornerToolI) {
-	const cells_coords = constraint.cells;
-	const cells = cells_coords
-		.map((coord) => grid.getCell(coord.r, coord.c))
-		.filter((cell) => !!cell);
+	const cells = cellsFromCoords(grid, constraint.cells);
 	const vars = cellsToVarsName(cells);
 	return vars;
 }
