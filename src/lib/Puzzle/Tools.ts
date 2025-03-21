@@ -325,6 +325,8 @@ export enum LINE_CONSTRAINTS {
 	THERMO_OR_AVERAGE_ARROW = 'Thermo Or Average Arrow',
 	INDEXER_CELLS_REGION_SUBSET_LINE = 'Indexer Cells Region Subset Line',
 
+	PEAPODS = 'Peapods',
+
 	// yin yang lines
 	YIN_YANG_INDEXING_LINE_COLORING = 'Yin Yang Indexing Line Coloring',
 	YIN_YANG_REGION_SUM_LINE = 'Yin Yang Region Sum Line',

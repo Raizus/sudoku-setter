@@ -1536,6 +1536,33 @@ export const indexerCellsRegionSubsetLineInfo: SquareCellElementInfo = {
 	}
 };
 
+
+export const peapodsLineInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
+	},
+
+	toolId: TOOLS.PEAPODS,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
+		stroke: { editable: true, value: 'darkseagreen' },
+		strokeWidth: { editable: true, value: 0.05 },
+		r: { editable: false, value: 0.40 },
+		opacity: { editable: false, value: 0.9 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			"Digits on a line sum up to a two digit number made out of the digit in the line's circle repeated twice. For example, 245 on a line would have a 1 in its circle.",
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
 /* ----------------------------------------------------------------------------- */
 
 export const yinYangShadedWhispersLineInfo: SquareCellElementInfo = {

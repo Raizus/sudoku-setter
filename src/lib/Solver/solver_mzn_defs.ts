@@ -1254,7 +1254,14 @@ predicate adjacent_cells_are_multiples_of_difference_line_p(
             var int: absdiff = abs(arr[i] - arr[i+1]);
         } in arr[i] mod absdiff == 0 /\\ arr[i+1] mod absdiff == 0
     )
-);\n\n`;
+);
+
+predicate peapods_p(
+    array[int] of var int: arr
+) = let {
+    int: idx1 = min(index_set(arr)),
+    var int: sum_var = sum(i in index_set(arr) where i != idx1)(arr[i])
+} in 10 * arr[idx1] + arr[idx1] = sum_var;\n\n`;
 
 	const double_end_line_constraints = `
 predicate between_line_p(array[int] of var int: arr) =

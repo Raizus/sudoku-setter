@@ -688,6 +688,16 @@ function entropicOrModularLineConstraint(
 	return constraint_str;
 }
 
+function peapodsLineConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: LineToolI
+) {
+	const constraint_str = simpleLineConstraint(grid, constraint, 'peapods_p');
+	return constraint_str;
+}
+
 function yinYangShadedWhispersLineConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -906,6 +916,8 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.ENTROPIC_LINE, entropicLineConstraint],
 	[TOOLS.ENTROPIC_OR_MODULAR_LINE, entropicOrModularLineConstraint],
 	[TOOLS.ROW_CYCLE_THERMOMETER, rowCycleThermoConstraint],
+
+	[TOOLS.PEAPODS, peapodsLineConstraint],
 
 	// double ended lines
 	[TOOLS.BETWEEN_LINE, betweenLineConstraint],

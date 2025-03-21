@@ -213,7 +213,8 @@ import {
 	segmentedSumAndRenbanLineInfo,
 	ambiguousArrowInfo,
 	adjacentCellsAreMultiplesOfDifferenceLineInfo,
-	indexerCellsRegionSubsetLineInfo
+	indexerCellsRegionSubsetLineInfo,
+	peapodsLineInfo
 } from './LineConstraintsElementsInfo';
 import {
 	littleKillerLookAndSayInfo,
@@ -400,8 +401,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.YIN_YANG]: yinYangInfo,
 	[TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED]:
 		yinYangNeighbourGreaterThanOneWithinRegionShadedInfo,
-	[TOOLS.YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS]:
-		yinYangShadedCellsAreGermanWhispersInfo,
+	[TOOLS.YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS]: yinYangShadedCellsAreGermanWhispersInfo,
 	[TOOLS.NURIMISAKI]: nurimisakiInfo,
 	[TOOLS.NURIKABE]: nurikabeInfo,
 	[TOOLS.NURIKABE_NO_REPEATS_IN_ISLANDS]: nurikabeNoRepeatsInIslandsInfo,
@@ -623,6 +623,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.INDEXING_ROW_IS_X_LINE]: indexingRowIsXLineInfo,
 
 	[TOOLS.INDEXER_CELLS_REGION_SUBSET_LINE]: indexerCellsRegionSubsetLineInfo,
+	[TOOLS.PEAPODS]: peapodsLineInfo,
 
 	// Yin Yang Lines
 	[TOOLS.YIN_YANG_INDEXING_LINE_COLORING]: yinYangIndexingLineColoringInfo,
