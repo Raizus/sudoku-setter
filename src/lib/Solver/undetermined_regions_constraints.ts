@@ -70,6 +70,21 @@ function nurikabeConstraint(model: PuzzleModel, tool: TOOLID) {
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: nurikabe_shading;\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: nurikabe_regions;\n`;
 	out_str += `constraint nurikabe_p(nurikabe_shading, nurikabe_regions);\n`;
+
+	return out_str;
+}
+
+function nurikabeNoRepeatsInIslandsConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outisde the grid.`);
+		return '';
+	}
+
+	let out_str: string = '';
 	out_str += `constraint nurikabe_no_repeats_in_islands_p(board, nurikabe_regions);\n`;
 
 	return out_str;
@@ -309,6 +324,31 @@ function fillominoConstraint(model: PuzzleModel, tool: TOOLID) {
 	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name};\n`;
 	out_str += `constraint fillomino_p(board, ${grid_name});\n`;
+
+	return out_str;
+}
+
+function indexerCellsConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const name1 = VAR_2D_NAMES.INDEXER_CELLS_GRID;
+
+	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: ${name1};\n`;
+	out_str += exactlyNPerRowColumnRegion(puzzle, 2, true, (cells: Cell[]) =>
+		cellsToGridVarsStr(cells, name1)
+	);
+
+	// values grid
+	out_str += `array[ROW_IDXS, COL_IDXS] of var int: values_grid;\n`;
+	out_str += `constraint indexer_cells_p(board, ${name1}, values_grid);\n`;
 
 	return out_str;
 }
@@ -912,6 +952,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.YIN_YANG, yinYangConstraint],
 	[TOOLS.NURIMISAKI, nurimisakiConstraint],
 	[TOOLS.NURIKABE, nurikabeConstraint],
+	[TOOLS.NURIKABE_NO_REPEATS_IN_ISLANDS, nurikabeNoRepeatsInIslandsConstraint],
 	[TOOLS.TWO_CONTIGUOUS_REGIONS, twoContiguousRegionsConstraint],
 	[TOOLS.UNKNOWN_REGIONS, unknownRegionsConstraint],
 	[TOOLS.SASHIGANE, sashiganeConstraint],
@@ -924,6 +965,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.NEGATORS, negatorsConstraint],
 	[TOOLS.GOLDILOCKS_ZONE, goldilocksConstraint],
 	[TOOLS.NEXUS, nexusConstraint],
+	[TOOLS.INDEXER_CELLS, indexerCellsConstraint],
 
 	[TOOLS.PENTOMINO_TILLING, pentominoTillingConstraint],
 	[TOOLS.LITS, litsConstraint],

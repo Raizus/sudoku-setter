@@ -6,7 +6,6 @@ import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
 	cellsToVarsName,
 	allDifferentConstraint,
-	cellsToValueVarsName,
 	PuzzleModel,
 	cellsToGridVarsStr,
 	VAR_2D_NAMES,
@@ -192,9 +191,7 @@ function vaultedCageConstraint(
 	}
 
 	const cells_coords = constraint.cells;
-	const cage_cells = cells_coords
-		.map((coord) => grid.getCell(coord.r, coord.c))
-		.filter((cell) => !!cell);
+	const cage_cells = cellsFromCoords(grid, cells_coords);
 
 	const cage_neighbours: Cell[] = [];
 	for (const cell of cage_cells) {
@@ -218,8 +215,7 @@ function yinYangValuedCageConstraint(
 	predicate: string
 ) {
 	const cells = cellsFromCoords(grid, constraint.cells);
-	const vars = cellsToVarsName(cells);
-	const vars_str = `[${vars.join(',')}]`;
+	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
 
 	const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
 
@@ -273,11 +269,8 @@ function doublersKillerCageConstraint(
 	constraint: CageToolI
 ) {
 	const cells = cellsFromCoords(grid, constraint.cells);
-	const vars = cellsToVarsName(cells);
-	const vars_str = `[${vars.join(',')}]`;
-
-	const values_vars = cellsToValueVarsName(cells);
-	const values_vars_str = `[${values_vars.join(', ')}]`;
+	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+	const values_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.VALUES_GRID);
 
 	const value = constraint.value;
 	if (value) {
@@ -295,11 +288,8 @@ function negatorsKillerCageConstraint(
 	constraint: CageToolI
 ) {
 	const cells = cellsFromCoords(grid, constraint.cells);
-	const vars = cellsToVarsName(cells);
-	const vars_str = `[${vars.join(',')}]`;
-
-	const values_vars = cellsToValueVarsName(cells);
-	const values_vars_str = `[${values_vars.join(', ')}]`;
+	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+	const values_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.VALUES_GRID);
 
 	const value = constraint.value;
 	if (value) {

@@ -49,6 +49,18 @@ export const yinYangNeighbourGreaterThanOneWithinRegionShadedInfo: AbstractEleme
 	}
 };
 
+export const yinYangShadedCellsAreGermanWhispersInfo: AbstractElementInfo = {
+	toolId: TOOLS.YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS,
+	order: 0,
+
+	meta: {
+		description:
+			'The yin yang shaded cells act as a German Whispers line: if two orthogonally connected cells are both shaded, then the digits in those cells must have a difference of at least 5.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
 export const nurimisakiInfo: AbstractElementInfo = {
 	toolId: TOOLS.NURIMISAKI,
 	order: 0,
@@ -67,7 +79,19 @@ export const nurikabeInfo: AbstractElementInfo = {
 
 	meta: {
 		description:
-			'Shade some cells blue (representing water), such that all water cells are orthogonally connected, but water may not fully cover a 2x2 area. Shade the remaining cells green, which represent islands. Digits may not repeat within an island.',
+			'Shade some cells blue (representing water), such that all water cells are orthogonally connected, but water may not fully cover a 2x2 area. Shade the remaining cells green, which represent islands.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const nurikabeNoRepeatsInIslandsInfo: AbstractElementInfo = {
+	toolId: TOOLS.NURIKABE_NO_REPEATS_IN_ISLANDS,
+	order: 0,
+
+	meta: {
+		description:
+			'Digits may not repeat within a nurikabe island.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}

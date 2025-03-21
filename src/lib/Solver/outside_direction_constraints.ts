@@ -6,7 +6,6 @@ import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import type { GridCoordI } from '../utils/SquareCellGridCoords';
 import {
 	cellsToGridVarsStr,
-	cellsToValueVarsName,
 	cellsToVarsName,
 	PuzzleModel,
 	VAR_2D_NAMES
@@ -274,9 +273,7 @@ function loopwhichesConstraint(
 	const direction = constraint.direction;
 
 	const cells = grid.getCellsInDirection(cell_coord.r, cell_coord.c, direction);
-	const vars = cellsToVarsName(cells);
-	const vars_str = `[${vars.join(',')}]`;
-
+	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
 	const loop_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.CELL_CENTER_LOOP);
 
 	const value = constraint.value;
@@ -370,8 +367,7 @@ function outsideEdgeYinYangAdjacentSumOfShadedConstraint(
 	const direction = constraint.direction;
 
 	const cells = grid.getCellsInDirection(cell_coord.r, cell_coord.c, direction);
-	const vars = cellsToVarsName(cells);
-	const vars_str = `[${vars.join(',')}]`;
+	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
 	const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
 
 	const value = constraint.value;
@@ -393,8 +389,7 @@ function negatorsLittleKillerSumConstraint(
 	const direction = constraint.direction;
 
 	const cells = grid.getCellsInDirection(cell_coord.r, cell_coord.c, direction);
-	const values_vars = cellsToValueVarsName(cells);
-	const values_vars_str = `[${values_vars.join(', ')}]`;
+	const values_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.VALUES_GRID);
 
 	const value = constraint.value;
 	if (value) {

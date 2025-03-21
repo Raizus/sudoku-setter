@@ -95,6 +95,15 @@ function var int: count_uninterrupted(
         } in sum(counts)
     endif
 );
+
+function var int: count_seen_orth_directions_f(
+	array[int] of var int: arr1, 
+	array[int] of var int: arr2, 
+	array[int] of var int: arr3, 
+	array[int] of var int: arr4,
+    var int: val
+) = 
+  count_uninterrupted(arr1, val) + count_uninterrupted(arr2, val) + count_uninterrupted(arr3, val) + count_uninterrupted(arr4, val);
     
 function var int: count_different(array[int] of var int: arr, var int: x) =
     let {
@@ -479,7 +488,18 @@ predicate is_prime_p(var int: val) = let {
         167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 
         257, 263, 269, 271
     }
-} in member(primes, val);\n\n`;
+} in member(primes, val);
+ 
+% Predicate to check if ms2 is a subset of ms1 (multiset subset)
+predicate subset_p(
+    array[int] of var int: ms1,
+    array[int] of var int: ms2
+) = forall(elem in ms2) (
+    % Count occurrences of elem in ms2
+    sum([1 | i in index_set(ms2) where ms2[i] == elem]) <=
+    % Count occurrences of elem in ms1
+    sum([1 | i in index_set(ms1) where ms1[i] == elem])
+);\n\n`;
 
 	const single_cell_constraints = `predicate odd_p(var int: x) =
     x mod 2 = 1;
@@ -637,6 +657,13 @@ predicate counting_circles_p(
     )
 );
 
+predicate reverse_counting_circles_p(
+    array[int] of var int: circles,
+    array[int] of var int: not_circles
+) = forall(circle in circles)(
+    count(not_circles, circle) == circle
+);
+
 predicate colored_counting_circles_adjacent_p(
     array[int, int] of var int: regions
 ) = let {
@@ -671,12 +698,7 @@ predicate seen_modular_count_p(
     array[int] of var bool: _arr4 = [x mod n == rem | x in arr4];
     var int: val_rem = bool2int(val mod n == rem);
 } in (
-    (count_uninterrupted(_arr1, true) + 
-     count_uninterrupted(_arr2, true) + 
-     count_uninterrupted(_arr3, true) + 
-     count_uninterrupted(_arr4, true) + 
-     val_rem
-    ) == val
+    count_seen_orth_directions_f(_arr1, _arr2, _arr3, _arr4, true) + val_rem == val
 );
 
 predicate seen_even_count_p(
@@ -1675,52 +1697,43 @@ predicate yin_yang_breakeven_killer_cage_p(
         % shading[i] == 0 <-> arr[i] mod 2 == 1
     );
 
-function var int: yin_yang_seen_sum_f(
-	array[int] of var int: arr1, 
-	array[int] of var int: arr2, 
-	array[int] of var int: arr3, 
-	array[int] of var int: arr4,
-    var int: val
-) = 
-  count_uninterrupted(arr1, val) + count_uninterrupted(arr2, val) + count_uninterrupted(arr3, val) + count_uninterrupted(arr4, val);
-
 predicate yin_yang_seen_unshaded_p(
-	var int: cell_var,
-    var int: yin_yang_var,
 	array[int] of var int: arr1, 
 	array[int] of var int: arr2, 
 	array[int] of var int: arr3, 
 	array[int] of var int: arr4,
+    var int: yin_yang_var,
+	var int: cell_var,
 ) = let {
     var int: count_cell = if yin_yang_var == 0 then 1 else 0 endif;
 } in (
-    yin_yang_seen_sum_f(arr1, arr2, arr3, arr4, 0) + count_cell == cell_var /\\
+    count_seen_orth_directions_f(arr1, arr2, arr3, arr4, 0) + count_cell == cell_var /\\
     yin_yang_var == 0
 );
 
 predicate yin_yang_seen_shaded_p(
-	var int: cell_var,
-    var int: yin_yang_var,
 	array[int] of var int: arr1, 
 	array[int] of var int: arr2, 
 	array[int] of var int: arr3, 
 	array[int] of var int: arr4,
+    var int: yin_yang_var,
+	var int: cell_var,
 ) = let {
     var int: count_cell = if yin_yang_var == 1 then 1 else 0 endif;
 } in (
-    yin_yang_seen_sum_f(arr1, arr2, arr3, arr4, 1) + count_cell == cell_var /\\
+    count_seen_orth_directions_f(arr1, arr2, arr3, arr4, 1) + count_cell == cell_var /\\
     yin_yang_var == 1
 );
 
 predicate yin_yang_seen_same_shade_p(
-	var int: cell_var,
-    var int: yin_yang_var,
 	array[int] of var int: arr1, 
 	array[int] of var int: arr2, 
 	array[int] of var int: arr3, 
 	array[int] of var int: arr4,
+    var int: yin_yang_var,
+	var int: cell_var,
 ) = (
-    yin_yang_seen_sum_f(arr1, arr2, arr3, arr4, yin_yang_var) + 1 == cell_var
+    count_seen_orth_directions_f(arr1, arr2, arr3, arr4, yin_yang_var) + 1 == cell_var
 );
 
 predicate yin_yang_adjacent_same_shade_count_p(
@@ -1856,7 +1869,25 @@ predicate yin_yang_neighbour_greater_than_one_within_region_shaded(
     var int: cell_var,
     var 0..1: shading,
     array[int] of var int: neighbours
-) = count(neighbours, cell_var-1) >= 1 <-> shading = 1;\n\n`;
+) = count(neighbours, cell_var-1) >= 1 <-> shading = 1;
+ 
+predicate yin_yang_shaded_cells_are_german_whispers_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var 0..1: shading
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);    
+} in (
+    assert(index_sets_agree(grid, shading), "grid and shading must have the same indexes")
+    % adjacent shaded cells must be german whispers (horiz adjacent)
+    /\\ forall (r in rows, c in cols where c > 0) (
+        (shading[r,c] = 1 /\\ shading[r, c - 1] = 1) -> abs(grid[r,c] - grid[r, c-1]) >= 5
+    ) /\\
+    % adjacent shaded cells must be german whispers (vertical adjacent)
+    forall (r in rows, c in cols where r > 0) (
+        (shading[r,c] = 1 /\\ shading[r-1, c] = 1) -> abs(grid[r,c] - grid[r-1, c]) >= 5
+    )
+);\n\n`;
 
 	const two_contiguous_regions = `predicate two_contiguous_regions_p(array[int, int] of var 0..1: grid) =
 	connected_region(grid, 0) /\\
@@ -1966,8 +1997,8 @@ predicate chaos_costruction_seen_same_region_count_p(
 	array[int] of var int: arr4,
     var int: cell_region,
     var int: val,
-) = 
-    count_uninterrupted(arr1, cell_region) + count_uninterrupted(arr2, cell_region) + count_uninterrupted(arr3, cell_region) + count_uninterrupted(arr4, cell_region) + 1 == val;
+) =
+    count_seen_orth_directions_f(arr1, arr2, arr3, arr4, cell_region) + 1 == val;
 
 predicate chaos_construction_arrow_p(
 	array[int] of var int: circle_regions,
@@ -1989,15 +2020,17 @@ predicate nurimisaki_unshaded_endpoint_p(array[int] of var int: adj_cells, var i
     count(adj_cells, 0) == 1 /\\ nurimisaki_cell == 0;
     
 predicate nurimisaki_count_uninterrupted_unshaded_p(
-	var int: cell_var,
-    var int: nurimisaki_var,
 	array[int] of var int: arr1, 
 	array[int] of var int: arr2, 
 	array[int] of var int: arr3, 
 	array[int] of var int: arr4,
+    var int: nurimisaki_var,
+	var int: cell_var,
 ) = let {
     var int: count_cell = if nurimisaki_var == 0 then 1 else 0 endif
-} in count_uninterrupted(arr1, 0) + count_uninterrupted(arr2, 0) + count_uninterrupted(arr3, 0) + count_uninterrupted(arr4, 0) + count_cell == cell_var;\n\n`;
+} in (
+    count_seen_orth_directions_f(arr1, arr2, arr3, arr4, 0) + count_cell == cell_var
+);\n\n`;
 
 	const odd_even_grid = `predicate odd_even_grid_p(
     array[int, int] of var int: grid,
@@ -2048,7 +2081,75 @@ predicate negators_killer_cage_p(
     array[int] of var int: value_vars,
     var int: val
 ) =
-    alldifferent(cells_vars) /\\ sum(value_vars) == val;\n\n`;
+    alldifferent(cells_vars) /\\ sum(value_vars) == val;
+    
+function tuple(var int, var int): first_two_true_indexes(array[int] of var bool: arr) =
+    let {
+        % Find the first index where the element is true
+        var int: first_index = min([i | i in index_set(arr) where arr[i] == true]);
+        % Find the second index where the element is true
+        var int: second_index = min([i | i in index_set(arr) where arr[i] == true /\\ i > first_index]);
+    } in
+    (first_index, second_index);
+
+predicate indexer_cells_p(
+    array[int, int] of var int: board,
+    array[int, int] of var bool: indexer_grid,
+    array[int, int] of var int: values_grid,
+) = let {
+    set of int: rows = index_set_1of2(indexer_grid);
+    set of int: cols = index_set_2of2(indexer_grid);
+} in (
+    assert(index_sets_agree(board, indexer_grid), "board and indexer_grid must have the same indexes") /\\
+    assert(index_sets_agree(board, values_grid), "board and values_grid must have the same indexes") /\\
+    % if not a indexer cell, the cell value is equal to its digit
+    forall(r in rows, c in cols)(
+        not indexer_grid[r,c] -> values_grid[r,c] = board[r,c]
+    ) /\\
+    % there are two indexers per row, one indexes the row and the other the column
+    forall(r in rows)(
+        let {
+            array[int] of var bool: row_bools = indexer_grid[r,..];
+            % extract the indexes of the two cells
+            tuple(var int, var int): t1 = first_two_true_indexes(row_bools);
+            var int: c1 = t1.1;
+            var int: c2 = t1.2;
+            var int: val1 = board[r, c1];
+            var int: val2 = board[r, c2];
+            % this assumes board is 0-indexed and board values start at 1
+            var int: idx1 = val1 - 1;
+            var int: idx2 = val2 - 1;
+        } in (
+            (idx1 in cols /\\ indexer_grid[r, idx1] /\\ idx1 == c2 /\\ values_grid[r, c1] = board[r, idx1]
+             /\\ idx2 in rows /\\ indexer_grid[idx2, c2] /\\ values_grid[r, c2] = board[idx2, c2])
+            \\/
+            (idx2 in cols /\\ indexer_grid[r, idx2] /\\ idx2 == c1 /\\ values_grid[r, c2] = board[r, idx2]
+             /\\ idx1 in rows /\\ indexer_grid[idx1, c1] /\\ values_grid[r, c1] = board[idx1, c1])
+        )
+    )
+    /\\
+    % there are two indexers per row, one indexes the row and the other the column
+    forall(c in cols)(
+        let {
+            array[int] of var bool: col_bools = indexer_grid[..,c];
+            % extract the indexes of the two cells
+            tuple(var int, var int): t1 = first_two_true_indexes(col_bools);
+            var int: r1 = t1.1;
+            var int: r2 = t1.2;
+            var int: val1 = board[r1, c];
+            var int: val2 = board[r2, c];
+            % this assumes board is 0-indexed and board values start at 1
+            var int: idx1 = val1 - 1;
+            var int: idx2 = val2 - 1;
+        } in (
+            (idx1 in rows /\\ indexer_grid[idx1, c] /\\ idx1 == r2 /\\ values_grid[r1, c] = board[idx1, c]
+             /\\ idx2 in cols /\\ indexer_grid[r2, idx2] /\\ values_grid[r2, c] = board[r2, idx2])
+            \\/
+            (idx2 in rows /\\ indexer_grid[idx2, c] /\\ idx2 == r1 /\\ values_grid[r2, c] = board[idx2, c]
+             /\\ idx1 in cols /\\ indexer_grid[r1, idx1] /\\ values_grid[r1, c] = board[r1, idx1])
+        )
+    )
+);\n\n`;
 
 	const sashigane = `% Helper function to count orthogonally adjacent cells with same value
 function var int: count_same_adjacent(
@@ -4025,6 +4126,28 @@ predicate nurikabe_island_product_of_sum_and_size_p(
     /\\ size = count(array1d(regions), region)
     /\\ island_sum = conditional_sum_f(array1d(grid), array1d(regions), region)
     /\\ prod_val = size * island_sum
+);
+
+predicate nurikabe_seen_waterway_cells_p(
+	array[int] of var int: arr1, 
+	array[int] of var int: arr2, 
+	array[int] of var int: arr3, 
+	array[int] of var int: arr4,
+    var int: nurikabe_var,
+	var int: cell_var,
+) = (
+    % count seen water cells plus itself (also water)
+    count_seen_orth_directions_f(arr1, arr2, arr3, arr4, 0) + 1 == cell_var /\\
+    nurikabe_var == 0 % water cell
+);
+
+predicate nurikabe_island_size_cell_p(
+    array[int, int] of var int: regions,
+    var int: region,
+    var int: cell_value
+) = (
+    region != 0    % is island and not water
+    /\\ cell_value = count(array1d(regions), region)
 );\n\n`;
 
 	const suguru = `

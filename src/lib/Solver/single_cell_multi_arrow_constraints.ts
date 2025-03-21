@@ -4,7 +4,6 @@ import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
-	cellsToGridVarsName,
 	cellsToGridVarsStr,
 	cellsToVarsName,
 	cellToGridVarName,
@@ -45,10 +44,9 @@ function yinYangSumOfCellsOfOppositeColorConstraint(grid: Grid, constraint: Cell
 	let out_str: string = '';
 	for (const direction of directions) {
 		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
-		const cells_vars = cellsToVarsName(cells);
-		const cells_vars_str = '[' + cells_vars.join(',') + ']';
-
+		const cells_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
 		const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
+
 		out_str += `constraint yin_yang_sum_of_opposite_color_f(${yin_yang_var}, ${cells_vars_str}, ${yin_yang_vars_str}) == ${cell_var};\n`;
 	}
 
@@ -153,8 +151,7 @@ function sameGalaxyUnobstructedCountArrowsConstraint(grid: Grid, constraint: Cel
 	const str_list: string[] = [];
 	for (const direction of directions) {
 		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
-		const region_vars = cellsToGridVarsName(cells, VAR_2D_NAMES.GALAXY_REGIONS);
-		const region_vars_str = '[' + region_vars.join(',') + ']';
+		const region_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.GALAXY_REGIONS);
 
 		const aux_str = `count(${region_vars_str}, ${region_var})`;
 		str_list.push(aux_str);
@@ -194,8 +191,7 @@ function coldArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	let out_str: string = '';
 	for (const direction of directions) {
 		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
-		const cells_vars = cellsToVarsName(cells);
-		const cells_vars_str = '[' + cells_vars.join(',') + ']';
+		const cells_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
 
 		out_str += `constraint cold_arrows_p(${cells_vars_str}, ${cell_var});\n`;
 	}

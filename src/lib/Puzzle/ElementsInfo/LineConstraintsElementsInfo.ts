@@ -1513,6 +1513,29 @@ export const thermoOrAverageArrowInfo: SquareCellElementInfo = {
 	}
 };
 
+export const indexerCellsRegionSubsetLineInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
+	},
+
+	toolId: TOOLS.INDEXER_CELLS_REGION_SUBSET_LINE,
+	order: RENDER_ORDER.LINE_TOOLS,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		stroke: { editable: true, value: 'darkseagreen' },
+		strokeWidth: { editable: true, value: 0.15 }
+	},
+
+	meta: {
+		description:
+			'All lines are region-subset lines: ie 3x3 box boundaries divide each line into segments. For any pair of segments on the same line, the values on one of those segments must all appear on the other segment. The value of an indexer cell is the digit in the cell it indexes. Example: A region-subset line could contain the values 189-8-98-918, where a dash represents a box boundary. This is valid because (8) is a subset of (89) and (189), (89) is a subset of (189), and (189) is a subset of itself.',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
 /* ----------------------------------------------------------------------------- */
 
 export const yinYangShadedWhispersLineInfo: SquareCellElementInfo = {

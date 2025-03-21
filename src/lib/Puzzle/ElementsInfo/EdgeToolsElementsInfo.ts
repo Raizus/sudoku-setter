@@ -374,6 +374,23 @@ export const yinYangKropkiInfo: SquareCellElementInfo = {
 	}
 };
 
+export const fillominoRegionBorderInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getEdgeToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.FILLOMINO_REGION_BORDER,
+	order: RENDER_ORDER.EDGE_TOOLS,
+
+	shape: DEFAULT_BORDER_LINE,
+
+	meta: {
+		description: 'A line in the border between cells indicates a fillomino region border.',
+		tags: [],
+		categories: edgeDefaultCategories
+	}
+};
+
 export const unknownRegionBorderInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getEdgeToolInputHandler(svgRef, grid, tool);

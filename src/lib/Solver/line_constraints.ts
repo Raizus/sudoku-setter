@@ -6,7 +6,6 @@ import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
 	cellsFromCoords,
 	cellsToGridVarsStr,
-	cellsToValueVarsName,
 	cellsToVarsName,
 	PuzzleModel,
 	VAR_2D_NAMES
@@ -137,11 +136,7 @@ function outOfOrderConsecutiveLineConstraint(
 }
 
 function whispersConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: LineToolI) {
-	const vars = getLineVars(grid, constraint);
-	const vars_str = `[${vars.join(',')}]`;
-	const value = constraint.value;
-	const val = value ? parseInt(value) : 5;
-	const constraint_str: string = `constraint whispers(${vars_str}, ${val});\n`;
+	const constraint_str = valuedLineConstraint(model, grid, c_id, constraint, 'whispers', '5');
 	return constraint_str;
 }
 
@@ -662,8 +657,7 @@ function regionSumLineConstraint(
 	const sum_var: string = `sum_line_${c_id}`;
 	out_str += `var int: ${sum_var};\n`;
 	for (const cell_region of cell_regions) {
-		const vars = cellsToVarsName(cell_region);
-		const vars_str = `[${vars.join(',')}]`;
+		const vars_str = cellsToGridVarsStr(cell_region, VAR_2D_NAMES.BOARD);
 		const constraint_str = `constraint sum(${vars_str}) == ${sum_var};\n`;
 		out_str += constraint_str;
 	}
@@ -701,9 +695,7 @@ function yinYangShadedWhispersLineConstraint(
 	constraint: LineToolI
 ) {
 	const cells = cellsFromCoords(grid, constraint.cells);
-	const vars = cellsToVarsName(cells);
-	const vars_str = `[${vars.join(',')}]`;
-
+	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
 	const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
 
 	let value = constraint.value;
@@ -721,9 +713,7 @@ function yinYangUnshadedModularLineConstraint(
 	constraint: LineToolI
 ) {
 	const cells = cellsFromCoords(grid, constraint.cells);
-	const vars = cellsToVarsName(cells);
-	const vars_str = `[${vars.join(',')}]`;
-
+	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
 	const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
 
 	let value = constraint.value;
@@ -736,9 +726,7 @@ function yinYangUnshadedModularLineConstraint(
 
 function yinYangSimpleLineConstraint(grid: Grid, constraint: LineToolI, predicate: string) {
 	const cells = cellsFromCoords(grid, constraint.cells);
-	const vars = cellsToVarsName(cells);
-	const vars_str = `[${vars.join(',')}]`;
-
+	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
 	const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
 
 	const constraint_str: string = `constraint ${predicate}(${vars_str}, ${yin_yang_vars_str});\n`;
@@ -804,9 +792,7 @@ function goldilocksZoneRegionSumLineConstraint(
 
 function simpleMultipliersLineConstraint(grid: Grid, constraint: LineToolI, predicate: string) {
 	const cells = cellsFromCoords(grid, constraint.cells);
-
-	const values_vars = cellsToValueVarsName(cells);
-	const values_vars_str = `[${values_vars.join(', ')}]`;
+	const values_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.VALUES_GRID);
 
 	const constraint_str: string = `constraint ${predicate}(${values_vars_str});\n`;
 	return constraint_str;
@@ -840,6 +826,31 @@ function doublersThermometerConstraint(
 ) {
 	const constraint_str = simpleMultipliersLineConstraint(grid, constraint, 'strictly_increasing');
 	return constraint_str;
+}
+
+function indexerCellsRegionSubsetLineConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: LineToolI
+) {
+	const cells = cellsFromCoords(grid, constraint.cells);
+
+	const cell_regions = splitLineByRegion(cells);
+	cell_regions.sort((group1, group2) => group2.length - group1.length);
+	if (cell_regions.length <= 1) return '';
+	let out_str: string = '';
+
+	const group1 = cell_regions[0];
+	const group1_vars = cellsToGridVarsStr(group1, VAR_2D_NAMES.VALUES_GRID);
+	for (const group2 of cell_regions.slice(1)) {
+		const group2_vars = cellsToGridVarsStr(group2, VAR_2D_NAMES.VALUES_GRID);
+
+		const constraint_str = `constraint subset_p(${group1_vars}, ${group2_vars});\n`;
+		out_str += constraint_str;
+	}
+
+	return out_str;
 }
 
 type ConstraintF = (model: PuzzleModel, grid: Grid, c_id: string, constraint: LineToolI) => string;
@@ -907,6 +918,8 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.DOUBLERS_THERMOMETER, doublersThermometerConstraint],
 	[TOOLS.DOUBLERS_BETWEEN_LINE, doublersBetweenLineConstraint],
 	[TOOLS.DOUBLERS_DOUBLE_ARROW_LINE, doublersDoubleArrowLineConstraint],
+
+	[TOOLS.INDEXER_CELLS_REGION_SUBSET_LINE, indexerCellsRegionSubsetLineConstraint],
 
 	// yin_yang_lines
 	[TOOLS.YIN_YANG_SHADED_WHISPERS_LINE, yinYangShadedWhispersLineConstraint],

@@ -58,6 +58,26 @@ function valuedSingleCellConstraint(
 	return constraint_str;
 }
 
+function orthogonalRegionSeenCountConstraint(
+	grid: Grid,
+	constraint: CellToolI,
+	region_var_name: VAR_2D_NAMES,
+	predicate: string
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToVarName(cell);
+
+	const dirCells = getDirectionCells(grid, cell);
+	const region_vars = dirCells.map((cells) => cellsToGridVarsStr(cells, region_var_name));
+
+	const cell_region_var = cellToGridVarName(cell, region_var_name);
+
+	const constraint_str = `constraint ${predicate}(${region_vars.join(', ')}, ${cell_region_var}, ${cell_var});\n`;
+	return constraint_str;
+}
+
 function oddConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: CellToolI) {
 	const constraint_str = simpleSingleCellConstraint(grid, constraint, 'odd_p');
 	return constraint_str;
@@ -368,6 +388,34 @@ function countingCirclesConstraint(
 	return out_str;
 }
 
+function reverseCountingCirclesConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	constraints: Record<string, CellToolI>
+) {
+	const constl = Object.values(constraints);
+
+	let out_str = '';
+	const all_coords = constl.map((constraint) => constraint.cell);
+	const circle_cells = new Set(
+		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
+	);
+
+	const not_circle_cells = grid.getAllCells().filter((cell) => !circle_cells.has(cell));
+
+	const circle_vars = cellsToVarsName([...circle_cells]);
+	const circle_vars_str = `${circle_vars.join(',\n\t')}`;
+
+	const not_circle_vars = cellsToVarsName([...not_circle_cells]);
+	const not_circle_vars_str = `${not_circle_vars.join(',\n\t')}`;
+
+	out_str += `array[int] of var int: reverse_counting_circles = [\n\t${circle_vars_str}\n];\n`;
+	out_str += `array[int] of var int: not_reverse_counting_circles = [\n\t${not_circle_vars_str}\n];\n`;
+	out_str += `constraint reverse_counting_circles_p(reverse_counting_circles, not_reverse_counting_circles);\n`;
+
+	return out_str;
+}
+
 function coloredCountingCirclesConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -450,7 +498,7 @@ function seenEvenCountConstraint(
 	const cell_var = cellToVarName(cell);
 
 	const dirCells = getDirectionCells(grid, cell);
-	const cells_vars = dirCells.map(cells => cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD));
+	const cells_vars = dirCells.map((cells) => cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD));
 
 	const constraint_str = `constraint seen_even_count_p(${cells_vars.join(', ')}, ${cell_var});\n`;
 	return constraint_str;
@@ -468,7 +516,7 @@ function seenOddCountConstraint(
 	const cell_var = cellToVarName(cell);
 
 	const dirCells = getDirectionCells(grid, cell);
-	const cells_vars = dirCells.map(cells => cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD));
+	const cells_vars = dirCells.map((cells) => cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD));
 
 	const constraint_str = `constraint seen_odd_count_p(${cells_vars.join(', ')}, ${cell_var});\n`;
 	return constraint_str;
@@ -493,32 +541,18 @@ function yinYangMinesweeperConstraint(
 	return constraint_str;
 }
 
-function yinYangSeenCountConstraint(grid: Grid, constraint: CellToolI, predicate: string) {
-	const coords = constraint.cell;
-	const cell = grid.getCell(coords.r, coords.c);
-	if (!cell) return '';
-	const cell_var = cellToVarName(cell);
-
-	const dirCells = getDirectionCells(grid, cell);
-	const yin_yang_vars: string[] = [];
-	for (const cells of dirCells) {
-		const _yin_yang_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
-		yin_yang_vars.push(_yin_yang_vars);
-	}
-
-	const cell_yin_yang_var = cellToGridVarName(cell, VAR_2D_NAMES.YIN_YANG);
-
-	const constraint_str = `constraint ${predicate}(${cell_var}, ${cell_yin_yang_var}, ${yin_yang_vars[0]}, ${yin_yang_vars[1]}, ${yin_yang_vars[2]}, ${yin_yang_vars[3]});\n`;
-	return constraint_str;
-}
-
 function yinYangSeenUnshadedConstraint(
 	model: PuzzleModel,
 	grid: Grid,
 	c_id: string,
 	constraint: CellToolI
 ) {
-	const constraint_str = yinYangSeenCountConstraint(grid, constraint, 'yin_yang_seen_unshaded_p');
+	const constraint_str = orthogonalRegionSeenCountConstraint(
+		grid,
+		constraint,
+		VAR_2D_NAMES.YIN_YANG,
+		'yin_yang_seen_unshaded_p'
+	);
 	return constraint_str;
 }
 
@@ -528,7 +562,12 @@ function yinYangSeenShadedConstraint(
 	c_id: string,
 	constraint: CellToolI
 ) {
-	const constraint_str = yinYangSeenCountConstraint(grid, constraint, 'yin_yang_seen_shaded_p');
+	const constraint_str = orthogonalRegionSeenCountConstraint(
+		grid,
+		constraint,
+		VAR_2D_NAMES.YIN_YANG,
+		'yin_yang_seen_shaded_p'
+	);
 	return constraint_str;
 }
 
@@ -538,7 +577,12 @@ function yinYangSeenSameShadeConstraint(
 	c_id: string,
 	constraint: CellToolI
 ) {
-	const constraint_str = yinYangSeenCountConstraint(grid, constraint, 'yin_yang_seen_same_shade_p');
+	const constraint_str = orthogonalRegionSeenCountConstraint(
+		grid,
+		constraint,
+		VAR_2D_NAMES.YIN_YANG,
+		'yin_yang_seen_same_shade_p'
+	);
 	return constraint_str;
 }
 
@@ -593,14 +637,8 @@ function twoConstiguousRegionsRowColumnOppositeSetCountConstraint(
 
 	const row_cells = grid.getRow(cell.r);
 	const col_cells = grid.getCol(cell.c);
-	const row_region_vars =
-		'[' +
-		row_cells.map((cell2) => `two_contiguous_regions[${cell2.r},${cell2.c}]`).join(', ') +
-		']';
-	const col_region_vars =
-		'[' +
-		col_cells.map((cell2) => `two_contiguous_regions[${cell2.r},${cell2.c}]`).join(', ') +
-		']';
+	const row_region_vars = cellsToGridVarsStr(row_cells, VAR_2D_NAMES.TWO_CONTIGUOUS_REGIONS);
+	const col_region_vars = cellsToGridVarsStr(col_cells, VAR_2D_NAMES.TWO_CONTIGUOUS_REGIONS);
 
 	const constraint_str = `constraint two_contiguous_regions_row_col_opposite_set_count_p(${row_region_vars}, ${col_region_vars}, ${cell_var}, ${region_var});\n`;
 	return constraint_str;
@@ -619,10 +657,8 @@ function seenRegionBordersCountConstraint(
 
 	const row_cells = grid.getRow(cell.r);
 	const col_cells = grid.getCol(cell.c);
-	const row_region_vars =
-		'[' + row_cells.map((cell2) => `unknown_regions[${cell2.r},${cell2.c}]`).join(', ') + ']';
-	const col_region_vars =
-		'[' + col_cells.map((cell2) => `unknown_regions[${cell2.r},${cell2.c}]`).join(', ') + ']';
+	const row_region_vars = cellsToGridVarsStr(row_cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const col_region_vars = cellsToGridVarsStr(col_cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
 
 	const constraint_str = `constraint unknown_regions_seen_region_border_count_p(${row_region_vars}, ${col_region_vars}, ${cell_var});\n`;
 	return constraint_str;
@@ -637,22 +673,19 @@ function nurimisakiUnshadedEndpointsConstraint(
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
-	const cell_var = cellToVarName(cell);
 	const cell_nurimisaki = `nurimisaki[${cell.r},${cell.c}]`;
 
 	const adj_cells = grid.getOrthogonallyAdjacentCells(cell);
-	const adj_nurimisaki_vars =
-		'[' + adj_cells.map((cell2) => `nurimisaki[${cell2.r},${cell2.c}]`).join(', ') + ']';
+	const adj_nurimisaki_vars = cellsToGridVarsStr(adj_cells, VAR_2D_NAMES.NURIMISAKI);
+
 	let out_str = `constraint nurimisaki_unshaded_endpoint_p(${adj_nurimisaki_vars}, ${cell_nurimisaki});\n`;
 
-	const dirCells = getDirectionCells(grid, cell);
-	const nurimisaki_vars: string[] = [];
-	for (const cells of dirCells) {
-		const _nurimisaki_vars =
-			'[' + cells.map((cell2) => `nurimisaki[${cell2.r}, ${cell2.c}]`).join(', ') + ']';
-		nurimisaki_vars.push(_nurimisaki_vars);
-	}
-	out_str += `constraint nurimisaki_count_uninterrupted_unshaded_p(${cell_var}, ${cell_nurimisaki}, ${nurimisaki_vars[0]}, ${nurimisaki_vars[1]}, ${nurimisaki_vars[2]}, ${nurimisaki_vars[3]});\n`;
+	out_str += orthogonalRegionSeenCountConstraint(
+		grid,
+		constraint,
+		VAR_2D_NAMES.NURIMISAKI,
+		'nurimisaki_count_uninterrupted_unshaded_p'
+	);
 
 	return out_str;
 }
@@ -862,22 +895,12 @@ function chaosConstructionSeenSameRegionCountConstraint(
 	c_id: string,
 	constraint: CellToolI
 ) {
-	const coords = constraint.cell;
-	const cell = grid.getCell(coords.r, coords.c);
-	if (!cell) return '';
-
-	const cell_var = cellToVarName(cell);
-
-	const dirCells = getDirectionCells(grid, cell);
-	const region_vars: string[] = [];
-	for (const cells of dirCells) {
-		const _region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
-		region_vars.push(_region_vars);
-	}
-
-	const cell_region_var = cellToGridVarName(cell, VAR_2D_NAMES.UNKNOWN_REGIONS);
-
-	const constraint_str = `constraint chaos_costruction_seen_same_region_count_p(${region_vars.join(', ')}, ${cell_region_var}, ${cell_var});\n`;
+	const constraint_str = orthogonalRegionSeenCountConstraint(
+		grid,
+		constraint,
+		VAR_2D_NAMES.UNKNOWN_REGIONS,
+		'chaos_costruction_seen_same_region_count_p'
+	);
 	return constraint_str;
 }
 
@@ -922,7 +945,7 @@ function connectFourRedConstraint(
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
-	const cell_var = cellToGridVarName(cell, VAR_2D_NAMES.CONNECT_FOUR)
+	const cell_var = cellToGridVarName(cell, VAR_2D_NAMES.CONNECT_FOUR);
 
 	const constraint_str = `constraint connect_four_red_p(${cell_var});\n`;
 	return constraint_str;
@@ -972,6 +995,38 @@ function nurikabeIslandProductOfSumAndSizeConstraint(
 	out_str += `constraint count_unique_values(array1d(${VAR_2D_NAMES.NURIKABE_REGIONS})) == ${count + 1};\n`;
 
 	return out_str;
+}
+
+function nurikabeSeenWaterwayCellsConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	const constraint_str = orthogonalRegionSeenCountConstraint(
+		grid,
+		constraint,
+		VAR_2D_NAMES.NURIKABE_SHADING,
+		'nurikabe_seen_waterway_cells_p'
+	);
+	return constraint_str;
+}
+
+function nurikabeIslandSizeCellConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToVarName(cell);
+
+	const cell_nurikabe_var = cellToGridVarName(cell, VAR_2D_NAMES.NURIKABE_REGIONS);
+
+	const constraint_str = `constraint nurikabe_island_size_cell_p(${VAR_2D_NAMES.NURIKABE_REGIONS}, ${cell_nurikabe_var}, ${cell_var});\n`;
+	return constraint_str;
 }
 
 function teleportConstraint(
@@ -1055,6 +1110,9 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.SEEN_REGION_BORDERS_COUNT, seenRegionBordersCountConstraint],
 	[TOOLS.NURIMISAKI_UNSHADED_ENDPOINTS, nurimisakiUnshadedEndpointsConstraint],
 
+	[TOOLS.NURIKABE_SEEN_WATERWAY_CELLS, nurikabeSeenWaterwayCellsConstraint],
+	[TOOLS.NURIKABE_ISLAND_SIZE_CELL, nurikabeIslandSizeCellConstraint],
+
 	[TOOLS.SASHIGANE_BEND_REGION_COUNT, sashiganeBendRegionCountConstraint],
 	[TOOLS.SASHIGANE_REGION_SUM, sashiganeRegionSumConstraint],
 
@@ -1078,6 +1136,7 @@ const tool_map_2 = new Map<string, ConstraintF2>([
 	[TOOLS.MAXIMUM, maximumConstraint],
 	[TOOLS.MINIMUM, minimumConstraint],
 	[TOOLS.COUNTING_CIRCLES, countingCirclesConstraint],
+	[TOOLS.REVERSE_COUNTING_CIRCLES, reverseCountingCirclesConstraint],
 	[TOOLS.COLORED_COUNTING_CIRCLES, coloredCountingCirclesConstraint],
 	[TOOLS.UNIQUE_CELLS, uniqueCellsConstraint],
 

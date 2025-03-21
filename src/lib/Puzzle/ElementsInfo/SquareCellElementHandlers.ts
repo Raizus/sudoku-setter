@@ -61,6 +61,7 @@ import {
 	edgeModuloInfo,
 	edgeProductInfo,
 	edgeSumInfo,
+	fillominoRegionBorderInfo,
 	oneWayDoorInfo,
 	ratioInfo,
 	unknownRegionBorderInfo,
@@ -129,12 +130,14 @@ import {
 	litsBlackAndWhiteStarBattleInfo,
 	mazeDirectedPathInfo,
 	nurikabeInfo,
+	nurikabeNoRepeatsInIslandsInfo,
 	oneGalaxyIsAGermanWhispersInfo,
 	pentominoTillingInfo,
 	renbanCavesInfo,
 	tillingNoEmptyCellsInfo,
 	twoSymmetricGalaxiesInfo,
-	yinYangNeighbourGreaterThanOneWithinRegionShadedInfo
+	yinYangNeighbourGreaterThanOneWithinRegionShadedInfo,
+	yinYangShadedCellsAreGermanWhispersInfo
 } from './UndeterminedRegionsElementsInfo';
 import {
 	caveCellsAreOddInfo,
@@ -209,7 +212,8 @@ import {
 	customThermometerInfo,
 	segmentedSumAndRenbanLineInfo,
 	ambiguousArrowInfo,
-	adjacentCellsAreMultiplesOfDifferenceLineInfo
+	adjacentCellsAreMultiplesOfDifferenceLineInfo,
+	indexerCellsRegionSubsetLineInfo
 } from './LineConstraintsElementsInfo';
 import {
 	littleKillerLookAndSayInfo,
@@ -288,7 +292,10 @@ import {
 	connectFourRedInfo,
 	seenEvenCountInfo,
 	seenOddCountInfo,
-	chaosConstructionSeenSameRegionCountInfo
+	chaosConstructionSeenSameRegionCountInfo,
+	nurikabeSeenWaterwayCellsInfo,
+	nurikabeIslandSizeCellInfo,
+	reverseCountingCirclesInfo
 } from './SingleCellElementsInfo';
 import {
 	coldArrowsInfo,
@@ -307,7 +314,7 @@ import {
 	forbiddenOrthogonallyAdjacentSumInfo,
 	minimumDiagonallyAdjacentDifferenceInfo
 } from './ValuedGlobalConstraintsElementsInfo';
-import { doublersInfo, negatorsInfo, nexusInfo } from './ValueModifierConstraintsElementsInfo';
+import { doublersInfo, indexerCellsInfo, negatorsInfo, nexusInfo } from './ValueModifierConstraintsElementsInfo';
 import { twilightCaveFillominoRegionShadingInfo } from './UndeterminedRegionsElementsInfo';
 import { caveInfo } from './UndeterminedRegionsElementsInfo';
 import { modularLoopInfo } from './UndeterminedRegionsElementsInfo';
@@ -380,6 +387,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.DOUBLERS]: doublersInfo,
 	[TOOLS.NEGATORS]: negatorsInfo,
 	[TOOLS.NEXUS]: nexusInfo,
+	[TOOLS.INDEXER_CELLS]: indexerCellsInfo,
 	// [TOOLS.VAMPIRE_AND_PREY]: vampireAndPreyInfo,
 	// [TOOLS.MARKED_CELLS]: markedCellsInfo,
 	// [TOOLS.HOT_CELLS]: hotCellsInfo,
@@ -392,8 +400,12 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.YIN_YANG]: yinYangInfo,
 	[TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED]:
 		yinYangNeighbourGreaterThanOneWithinRegionShadedInfo,
+	[TOOLS.YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS]:
+		yinYangShadedCellsAreGermanWhispersInfo,
 	[TOOLS.NURIMISAKI]: nurimisakiInfo,
 	[TOOLS.NURIKABE]: nurikabeInfo,
+	[TOOLS.NURIKABE_NO_REPEATS_IN_ISLANDS]: nurikabeNoRepeatsInIslandsInfo,
+
 	[TOOLS.TWO_CONTIGUOUS_REGIONS]: twoContiguousRegionsInfo,
 	[TOOLS.SASHIGANE]: sashiganeRegionsInfo,
 	[TOOLS.GOLDILOCKS_ZONE]: goldilocksZoneInfo,
@@ -462,6 +474,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 		adjacentCellsInDifferentDirectionsHaveOpositeParityInfo,
 	[TOOLS.SANDWICH_ROW_COL_COUNT]: sandwichRowColCountInfo,
 	[TOOLS.COUNTING_CIRCLES]: countingCirclesInfo,
+	[TOOLS.REVERSE_COUNTING_CIRCLES]: reverseCountingCirclesInfo,
 	[TOOLS.COLORED_COUNTING_CIRCLES]: coloredCountingCirclesInfo,
 	[TOOLS.UNIQUE_CELLS]: uniqueCellsInfo,
 	[TOOLS.SEEN_EVEN_COUNT]: seenEvenCountInfo,
@@ -517,6 +530,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 		yinYangCountUniqueFillominoSameShadingInfo,
 	[TOOLS.SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS]: sameGalaxyUnobstructedCountArrowsInfo,
 	[TOOLS.NURIKABE_COUNT_ISLAND_CELLS_ARROWS]: nurikabeCountIslandCellsArrowsInfo,
+	[TOOLS.NURIKABE_SEEN_WATERWAY_CELLS]: nurikabeSeenWaterwayCellsInfo,
+	[TOOLS.NURIKABE_ISLAND_SIZE_CELL]: nurikabeIslandSizeCellInfo,
 
 	[TOOLS.CONNECT_FOUR_COUNT_CELLS_OF_SAME_COLOR]: connectFourCountCellsOfSameColorInfo,
 
@@ -533,6 +548,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.YIN_YANG_WHITE_KROPKI]: yinYangWhiteKropkiInfo,
 	[TOOLS.YIN_YANG_KROPKI]: yinYangKropkiInfo,
 
+	[TOOLS.FILLOMINO_REGION_BORDER]: fillominoRegionBorderInfo,
 	[TOOLS.UNKNOWN_REGION_BORDER]: unknownRegionBorderInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_SUGURU_BORDER]: chaosConstructionSuguruBorderInfo,
 	[TOOLS.EDGE_CAVE_ONE_OF_EACH]: edgeCaveOneOfEachInfo,
@@ -605,6 +621,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	[TOOLS.INDEXING_COLUMN_IS_X_LINE]: indexingColumnIsXLineInfo,
 	[TOOLS.INDEXING_ROW_IS_X_LINE]: indexingRowIsXLineInfo,
+
+	[TOOLS.INDEXER_CELLS_REGION_SUBSET_LINE]: indexerCellsRegionSubsetLineInfo,
 
 	// Yin Yang Lines
 	[TOOLS.YIN_YANG_INDEXING_LINE_COLORING]: yinYangIndexingLineColoringInfo,

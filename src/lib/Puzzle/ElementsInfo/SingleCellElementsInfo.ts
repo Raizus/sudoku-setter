@@ -5,7 +5,7 @@ import {
 	type ValueValidatorOptions
 } from '$src/lib/InputHandlers/InputHandler';
 import { RENDER_ORDER } from '../RenderOrder';
-import { SHAPE_TYPES } from '../Shape/Shape';
+import { SHAPE_TYPES, type EditableShapeI } from '../Shape/Shape';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { getSingleCellToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/SingleCellToolInputHandler';
 import { getSingleCellArrowToolInputHandler } from '$input/ToolInputHandlers/SingleCellArrowToolInputHandler';
@@ -21,6 +21,22 @@ const singleCellColorDefaultCategories = [
 	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
 	TOOL_CATEGORIES.SINGLE_CELL_COLOR_TOOL
 ];
+
+const DEFAULT_SQUARE_SHAPE: EditableShapeI = {
+	type: SHAPE_TYPES.SQUARE,
+	strokeWidth: { editable: true, value: 0.03 },
+	stroke: { editable: true, value: 'black' },
+	r: { editable: true, value: 0.35 },
+	fill: { editable: true, value: 'none' }
+};
+
+const DEFAULT_CIRCLE_SHAPE: EditableShapeI = {
+	type: SHAPE_TYPES.CIRCLE,
+	r: { editable: true, value: 0.35 },
+	strokeWidth: { editable: true, value: 0.02 },
+	stroke: { editable: true, value: 'black' },
+	fill: { editable: true, value: 'none' }
+};
 
 export function validateSingleCellValue(value: string, maxLength = 3): boolean {
 	const options: ValueValidatorOptions = {
@@ -346,12 +362,13 @@ export const indexingColumnInfo: SquareCellElementInfo = {
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
 		strokeWidth: { editable: false, value: 0 },
-		fill: { editable: false, value: 'rgba(155, 40, 40, 0.7)' }
+		fill: { editable: false, value: 'rgba(155, 40, 40, 0.7)' },
+		opacity: { editable: false, value: 0.7 }
 	},
 
 	meta: {
 		description:
-			'Numbers in red cells are indexing columns: Any number X appearing in the Yth column of a row indicates the column X where the number Y appears in that row.',
+			'Numbers in red cells are indexing columns: Any number X appearing in the Yth column of a row indicates the column X where the number Y appears in that row. Example: if R5C1 is a 6, then R5C6 is a 1 as the 1 must appear in the 6th position.',
 		tags: [],
 		categories: singleCellColorDefaultCategories
 	}
@@ -368,12 +385,13 @@ export const indexingRowInfo: SquareCellElementInfo = {
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
 		strokeWidth: { editable: false, value: 0 },
-		fill: { editable: false, value: 'rgba(40, 40, 155, 0.7)' }
+		fill: { editable: false, value: 'rgba(40, 40, 155, 0.7)' },
+		opacity: { editable: false, value: 0.7 }
 	},
 
 	meta: {
 		description:
-			'Numbers in blue cells are indexing rows: Any number X appearing in the Yth row of a column indicates the row X where the number Y appears in that column.',
+			'Numbers in blue cells are indexing rows: Any number X appearing in the Yth row of a column indicates the row X where the number Y appears in that column. Example: if R1C5 is a 6, then R6C5 is a 1 as the 1 must appear in the 6th position.',
 		tags: [],
 		categories: singleCellColorDefaultCategories
 	}
@@ -498,13 +516,7 @@ export const sandwichRowColCountInfo: SquareCellElementInfo = {
 	toolId: TOOLS.SANDWICH_ROW_COL_COUNT,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
-	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: 0.35 },
-		strokeWidth: { editable: false, value: 0.02 },
-		stroke: { editable: false, value: 'black' },
-		fill: { editable: false, value: 'none' }
-	},
+	shape: DEFAULT_CIRCLE_SHAPE,
 
 	meta: {
 		description:
@@ -538,6 +550,30 @@ export const countingCirclesInfo: SquareCellElementInfo = {
 	}
 };
 
+export const reverseCountingCirclesInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	},
+
+	toolId: TOOLS.REVERSE_COUNTING_CIRCLES,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'black' },
+		r: { editable: false, value: 0.35 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			'A number appearing in a circle indicates how many times that number appears *outside* of circles.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
 export const coloredCountingCirclesInfo: SquareCellElementInfo = {
 	getInputHandler(svgRef, grid, tool) {
 		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined, {
@@ -550,12 +586,7 @@ export const coloredCountingCirclesInfo: SquareCellElementInfo = {
 	toolId: TOOLS.COLORED_COUNTING_CIRCLES,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
-	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		strokeWidth: { editable: false, value: 0.02 },
-		stroke: { editable: false, value: 'black' },
-		r: { editable: false, value: 0.35 }
-	},
+	shape: DEFAULT_CIRCLE_SHAPE,
 
 	meta: {
 		description: `Using red (1), green (2), and blue (3), color in all circles such that:
@@ -598,13 +629,7 @@ export const seenEvenCountInfo: SquareCellElementInfo = {
 	toolId: TOOLS.SEEN_EVEN_COUNT,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
-	shape: {
-		type: SHAPE_TYPES.SQUARE,
-		strokeWidth: { editable: false, value: 0.04 },
-		stroke: { editable: false, value: 'black' },
-		r: { editable: false, value: 0.35 },
-		fill: { editable: false, value: 'none' }
-	},
+	shape: DEFAULT_SQUARE_SHAPE,
 
 	meta: {
 		description:
@@ -718,13 +743,7 @@ export const yinYangSeenSameShadeCellsInfo: SquareCellElementInfo = {
 	toolId: TOOLS.YIN_YANG_SEEN_SAME_SHADE_CELLS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
-	shape: {
-		type: SHAPE_TYPES.SQUARE,
-		strokeWidth: { editable: false, value: 0.04 },
-		stroke: { editable: false, value: 'black' },
-		r: { editable: false, value: 0.35 },
-		fill: { editable: false, value: 'none' }
-	},
+	shape: DEFAULT_SQUARE_SHAPE,
 
 	meta: {
 		description:
@@ -968,13 +987,7 @@ export const cellOnTheLoopInfo: SquareCellElementInfo = {
 	toolId: TOOLS.CELL_ON_THE_LOOP,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
-	shape: {
-		type: SHAPE_TYPES.SQUARE,
-		strokeWidth: { editable: false, value: 0.02 },
-		stroke: { editable: false, value: 'black' },
-		r: { editable: false, value: 0.35 },
-		fill: { editable: false, value: 'none' }
-	},
+	shape: DEFAULT_SQUARE_SHAPE,
 
 	meta: {
 		description: 'A black square indicates the cell is on the loop.',
@@ -991,13 +1004,7 @@ export const cellNotOnTheLoopInfo: SquareCellElementInfo = {
 	toolId: TOOLS.CELL_NOT_ON_THE_LOOP,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
-	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		strokeWidth: { editable: false, value: 0.02 },
-		stroke: { editable: false, value: 'black' },
-		r: { editable: false, value: 0.35 },
-		fill: { editable: false, value: 'none' }
-	},
+	shape: DEFAULT_CIRCLE_SHAPE,
 
 	meta: {
 		description: 'A black circle indicates the cell is not on the loop.',
@@ -1153,13 +1160,7 @@ export const chaosConstructionSeenSameRegionCountInfo: SquareCellElementInfo = {
 	toolId: TOOLS.CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
-	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		strokeWidth: { editable: false, value: 0.02 },
-		r: { editable: false, value: 0.4 },
-		stroke: { editable: false, value: 'black' },
-		fill: { editable: false, value: 'none' }
-	},
+	shape: DEFAULT_CIRCLE_SHAPE,
 
 	meta: {
 		description: `The number in the circle shows how many region cells it sees in its row and column (including the cell with the circle itself) until it reaches the borders of the region.`,
@@ -1264,6 +1265,43 @@ export const nurikabeIslandProductOfSumAndSizeInfo: SquareCellElementInfo = {
 
 	meta: {
 		description: `Each island contains exactly one numbered clue, which gives the product of the sum of the digits on the island and the size (number of cells) of the island, e.g. an island filled with 346 is would have a "39" clue (13x3). A "?" may represent any single, double, or triple-digit number.`,
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const nurikabeSeenWaterwayCellsInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined);
+	},
+
+	toolId: TOOLS.NURIKABE_SEEN_WATERWAY_CELLS,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		...DEFAULT_SQUARE_SHAPE,
+		strokeDasharray: { editable: false, value: 0.08 }
+	},
+
+	meta: {
+		description: `Caged cells are waterway cells. The digit in a caged cell indicates how many waterway cells are seen orthogonally from that position, including itself (island cells block vision).`,
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const nurikabeIslandSizeCellInfo: SquareCellElementInfo = {
+	getInputHandler(svgRef, grid, tool) {
+		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined);
+	},
+
+	toolId: TOOLS.NURIKABE_ISLAND_SIZE_CELL,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: DEFAULT_CIRCLE_SHAPE,
+
+	meta: {
+		description: `Circled cells belong to an island; the digit in the circle indicates the number of cells making up the island.`,
 		tags: [],
 		categories: singleCellShapeDefaultCategories
 	}

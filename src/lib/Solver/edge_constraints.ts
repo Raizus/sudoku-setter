@@ -189,6 +189,16 @@ function unknownRegionBorderConstraint(
 	return constraint_str;
 }
 
+function fillominoRegionBorderConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: EdgeToolI
+) {
+	const constraint_str = regionBorderConstraint(grid, constraint, VAR_2D_NAMES.FILLOMINO_REGIONS);
+	return constraint_str;
+}
+
 function chaosConstructionSuguruBorderConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -223,6 +233,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.XY_DIFFERENCES, xyDifferencesConstraint],
 	[TOOLS.YIN_YANG_KROPKI, yinYangKropkiConstraint],
 	[TOOLS.YIN_YANG_WHITE_KROPKI, yinYangWhiteKropkiConstraint],
+	[TOOLS.FILLOMINO_REGION_BORDER, fillominoRegionBorderConstraint],
 	[TOOLS.UNKNOWN_REGION_BORDER, unknownRegionBorderConstraint],
 	[TOOLS.CHAOS_CONSTRUCTION_SUGURU_BORDER, chaosConstructionSuguruBorderConstraint],
 	[TOOLS.EDGE_CAVE_ONE_OF_EACH, edgeCaveOneOfEachConstraint]

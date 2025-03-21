@@ -71,7 +71,8 @@ export enum VALUE_MODIFIER_CONSTRAINTS {
 	HOT_CELLS = 'Hot Cells',
 	COLD_CELLS = 'Cold Cells',
 	DECREMENT_FOUNTAIN = 'Decrement Fountain',
-	NEXUS = 'Nexus'
+	NEXUS = 'Nexus',
+	INDEXER_CELLS = 'Indexer Cells'
 }
 
 export enum UNDETERMINED_REGIONS_CONSTRAINTS {
@@ -79,8 +80,10 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	CHAOS_CONSTRUCTION_SUGURU = 'Chaos Construction Suguru',
 	YIN_YANG = 'Yin Yang',
 	YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED = 'Yin Yang Neighbour Greater Than One Within Region Shaded',
+	YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS = 'Yin Yang Shaded Cells Are German Whispers',
 	NURIMISAKI = 'Nurimisaki',
 	NURIKABE = 'Nurikabe',
+	NURIKABE_NO_REPEATS_IN_ISLANDS = 'Nurikabe No Repeats In Islands',
 	TWO_CONTIGUOUS_REGIONS = 'Two Contiguous Regions',
 	SASHIGANE = 'Sashigane',
 	GOLDILOCKS_ZONE = 'Goldilocks Zone',
@@ -91,7 +94,7 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	PENTOMINO_TILLING = 'Pentomino Tilling',
 	TILLING_NO_EMPTY_CELLS = 'Tilling No Empty Cells',
 
-	LITS_BLACK_WHITE_STAR_BATTLE = 'LITS Black And White Star Battle',
+	LITS_BLACK_WHITE_STAR_BATTLE = 'LITS Black And White Star Battle'
 }
 
 export enum GLOBAL_DIRECTED_PATH_CONSTRAINTS {
@@ -162,6 +165,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	SNOWBALL = 'Snowball',
 	SANDWICH_ROW_COL_COUNT = 'Sandwich Row Column Count',
 	COUNTING_CIRCLES = 'Counting Circles',
+	REVERSE_COUNTING_CIRCLES = 'Reverse Counting Circles',
 	COLORED_COUNTING_CIRCLES = 'Colored Counting Circles',
 	UNIQUE_CELLS = 'Unique Cells',
 	SEEN_ODD_COUNT = 'Seen Odd Count',
@@ -194,6 +198,8 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	CHAOS_CONSTRUCTION_ARROW_KNOTS = 'Chaos Construction Arrow Knots',
 	CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT = 'Chaos Construction Seen Same Region Count',
 
+	NURIKABE_SEEN_WATERWAY_CELLS = 'Nurikabe Seen Waterway Cells',
+	NURIKABE_ISLAND_SIZE_CELL = 'Nurikabe Island Size Cell',
 	NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE = 'Nurikabe Island Product Of Sum And Size Clue',
 
 	DIRECTED_PATH_START = 'Directed Path Start',
@@ -234,6 +240,8 @@ export enum EDGE_CONSTRAINTS {
 	XY_DIFFERENCES = 'XY Differences',
 	YIN_YANG_KROPKI = 'Yin Yang Kropki',
 	YIN_YANG_WHITE_KROPKI = 'Yin Yang White Kropki',
+
+	FILLOMINO_REGION_BORDER = 'Fillomino Region Border',
 
 	UNKNOWN_REGION_BORDER = 'Unknown Region Border',
 	CHAOS_CONSTRUCTION_SUGURU_BORDER = 'Chaos Construction Suguru Border',
@@ -315,6 +323,7 @@ export enum LINE_CONSTRAINTS {
 	N_REPEATED_DIGITS_LINE = 'N-Repeated Digits Line',
 
 	THERMO_OR_AVERAGE_ARROW = 'Thermo Or Average Arrow',
+	INDEXER_CELLS_REGION_SUBSET_LINE = 'Indexer Cells Region Subset Line',
 
 	// yin yang lines
 	YIN_YANG_INDEXING_LINE_COLORING = 'Yin Yang Indexing Line Coloring',

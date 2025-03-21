@@ -212,6 +212,7 @@ function setOtherHighlights(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
 	const grid_vars_names = [
 		'doublers_grid',
+		'indexer_cells_grid',
 		'negators_grid',
 		'cell_center_loop',
 		'nexus'

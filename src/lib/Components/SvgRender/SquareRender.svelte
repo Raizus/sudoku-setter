@@ -16,6 +16,8 @@
 	$: strokeWidth = shape.strokeWidth ?? 0.02;
 	$: fill = shape.fill ?? 'none';
 	$: angle = shape.angle ?? 0;
+	$: strokeDasharray = shape.strokeDasharray ?? 0;
+	$: opacity = shape.opacity ?? 1;
 </script>
 
 <rect
@@ -27,5 +29,7 @@
 	stroke-width={strokeWidth}
 	{fill}
 	transform={`rotate(${angle}, ${cx}, ${cy})`}
+	stroke-dasharray={strokeDasharray}
+	opacity={opacity}
 />
 

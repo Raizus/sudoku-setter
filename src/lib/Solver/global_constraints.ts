@@ -613,6 +613,24 @@ function yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(
 	return out_str;
 }
 
+function yinYangShadedCellsAreGermanWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	const grid = puzzle.grid;
+	let out_str: string = `\n% ${toolId}\n`;
+	const name = VAR_2D_NAMES.YIN_YANG;
+
+	for (const [cell1, cell2] of adjCellPairGen(grid)) {
+		const var1 = cellToVarName(cell1);
+		const var2 = cellToVarName(cell2);
+
+		const yinyang1 = `${name}[${cell1.r},${cell1.c}]`;
+		const yinyang2 = `${name}[${cell2.r},${cell2.c}]`;
+
+		const constraint_str = `constraint (${yinyang1} == 1 /\\ ${yinyang2} == 1) -> abs(${var1} - ${var2}) >= 5;\n`;
+		out_str += constraint_str;
+	}
+	return out_str;
+}
+
 function twilightCaveFillominoRegionsShading(puzzle: PuzzleI, toolId: TOOLID): string {
 	let out_str: string = '';
 	out_str += `constraint twilight_cave_fillomino_region_shading(cave_shading, fillomino_area);\n`;
@@ -734,7 +752,7 @@ function directedPathTeleportRenbanSegmentsConstraint(puzzle: PuzzleI, toolId: T
 	let out_str: string = '';
 	const grid = puzzle.grid;
 	const used_regions = puzzle.grid.getUsedRegions();
-	const reg_sizes = [...used_regions].map(reg => puzzle.grid.getRegion(reg).length);
+	const reg_sizes = [...used_regions].map((reg) => puzzle.grid.getRegion(reg).length);
 	const max_reg_size = reg_sizes.length ? Math.max(...reg_sizes) : grid.nCols * grid.nRows;
 	out_str += `constraint directed_path_teleport_renban_segments_p(board, teleports, dpath_from, dpath_to, dpath_ns, dpath_es, dpath_source, ${max_reg_size});\n`;
 
@@ -875,6 +893,7 @@ const tool_map = new Map<string, ConstraintF>([
 		TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED,
 		yinYangNeighbourGreaterThanOneWithinRegionShadedConstraint
 	],
+	[TOOLS.YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS, yinYangShadedCellsAreGermanWhispersConstraint],
 	[TOOLS.DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME, directedPathAdjacentCellsSumIsPrimeConstraint],
 	[
 		TOOLS.DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME,

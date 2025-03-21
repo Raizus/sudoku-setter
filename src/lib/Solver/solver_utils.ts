@@ -11,11 +11,14 @@ export enum VAR_2D_NAMES {
 	BOARD = 'board',
 	BOARD_REGIONS = 'board_regions',
 	YIN_YANG = 'yin_yang',
+	NURIMISAKI = 'nurimisaki',
 	NURIKABE_SHADING = 'nurikabe_shading',
 	NURIKABE_REGIONS = 'nurikabe_regions',
 	UNKNOWN_REGIONS = 'unknown_regions',
+	TWO_CONTIGUOUS_REGIONS = 'two_contiguous_regions',
 	SUGURU_REGIONS = 'suguru_regions',
 	DOUBLERS = 'doublers_grid',
+	INDEXER_CELLS_GRID = 'indexer_cells_grid',
 	NEGATORS = 'negators_grid',
 	VALUES_GRID = 'values_grid',
 	SASHIGANE = 'sashigane',
@@ -33,7 +36,7 @@ export enum VAR_2D_NAMES {
 	LITS_WHITE_BLACK_STAR_BATTLE = 'lits_white_black_star_battle',
 	COUNTING_CIRCLES_COLORS = 'counting_circles_colors_board',
 	MAZE_DIRECTED_PATH = 'maze_directed_path',
-	CONNECT_FOUR = 'connect_four',
+	CONNECT_FOUR = 'connect_four'
 }
 
 export function cellToGridVarName(cell: Cell, name: VAR_2D_NAMES): string {
@@ -74,14 +77,6 @@ export function cellToVarName(cell: Cell): string {
 export function cellsToVarsName(cells: Cell[]): string[] {
 	const vars = cells.map((cell) => cellToVarName(cell));
 	return vars;
-}
-
-export function cellToValueVarName(cell: Cell): string {
-	return `values_grid[${cell.r},${cell.c}]`;
-}
-
-export function cellsToValueVarsName(cells: Cell[]): string[] {
-	return cells.map((cell) => cellToValueVarName(cell));
 }
 
 export function allDifferentConstraint(vars: string[]): string {
@@ -537,7 +532,9 @@ export function groupConstraintsByValue<T extends ConstraintType>(constraints: T
 		list.push(constraint);
 	}
 	return groups;
-}export function cellsFromCoords(grid: Grid, coords: GridCoordI[]): Cell[] {
+}
+
+export function cellsFromCoords(grid: Grid, coords: GridCoordI[]): Cell[] {
 	const cells = coords
 		.map((coord) => grid.getCell(coord.r, coord.c))
 		.filter((cell) => !!cell);
