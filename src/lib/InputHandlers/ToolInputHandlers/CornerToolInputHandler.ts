@@ -35,7 +35,7 @@ export function getCornerToolInputHandler(
 
 	function handle(event: CellCornerTapEvent) {
 		const localConstraints = get(localConstraintsStore);
-		const corner = event.cellCorner;
+		const corner = event.coord;
 
 		const cellsCoords = cornerCoordToAdjCellCoords(corner);
 

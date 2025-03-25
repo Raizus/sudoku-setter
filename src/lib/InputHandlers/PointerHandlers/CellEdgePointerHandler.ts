@@ -3,7 +3,7 @@ import { getClosestEdge, pointerEventToVector2D } from '$src/lib/InputHandlers/P
 
 export interface CellEdgeTapEvent {
 	event: PointerEvent;
-	edge: GridCoordI;
+	coord: GridCoordI;
 }
 
 export class CellEdgePointerHandler {
@@ -15,19 +15,21 @@ export class CellEdgePointerHandler {
 
 	private _isDown = false;
 
+	private _margin: number | undefined = 0.35;
+
 	pointerDown(event: PointerEvent, svgRef: SVGSVGElement): void {
 		this._isDown = true;
 
 		const point = pointerEventToVector2D(event, svgRef);
-        if (!point) return;
-        
-		const edgeInfo = getClosestEdge(point, true, 0.35);
+		if (!point) return;
+
+		const edgeInfo = getClosestEdge(point, this._margin);
 		if (!edgeInfo) return;
 
 		this._prevCellEdge = edgeInfo.edge;
 
-		const dragTapEvent: CellEdgeTapEvent = { event, edge: edgeInfo.edge };
-		this.onDragStart && this.onDragStart(dragTapEvent);
+		const dragTapEvent: CellEdgeTapEvent = { event, coord: edgeInfo.edge };
+		if (this.onDragStart) this.onDragStart(dragTapEvent);
 	}
 
 	pointerMove(event: PointerEvent, svgRef: SVGSVGElement): void {
@@ -36,17 +38,17 @@ export class CellEdgePointerHandler {
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
-		const edgeInfo = getClosestEdge(point, true, 0.35);
+		const edgeInfo = getClosestEdge(point, this._margin);
 		if (!edgeInfo) return;
 
 		if (this._prevCellEdge && areCoordsEqual(edgeInfo.edge, this._prevCellEdge)) {
 			return;
 		}
 
-		const dragTapEvent: CellEdgeTapEvent = { event, edge: edgeInfo.edge };
+		const dragTapEvent: CellEdgeTapEvent = { event, coord: edgeInfo.edge };
 		this._prevCellEdge = edgeInfo.edge;
 
-		this.onDrag && this.onDrag(dragTapEvent);
+		if (this.onDrag) this.onDrag(dragTapEvent);
 	}
 
 	pointerUp(event: PointerEvent, svgRef: SVGSVGElement): void {
@@ -58,7 +60,7 @@ export class CellEdgePointerHandler {
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
-		const edgeInfo = getClosestEdge(point, true, 0.35);
+		const edgeInfo = getClosestEdge(point, this._margin);
 		if (!edgeInfo) return;
 	}
 }

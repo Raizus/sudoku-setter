@@ -41,7 +41,7 @@ export class CellEdgeCornerPointerHandler {
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
-		const edgeInfo = getClosestEdge(point, false);
+		const edgeInfo = getClosestEdge(point, undefined);
 		if (!edgeInfo) return;
 
 		const cornerInfo = getClosestCorner(point, false);

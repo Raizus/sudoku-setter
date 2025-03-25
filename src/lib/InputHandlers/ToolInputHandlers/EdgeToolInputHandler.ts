@@ -42,7 +42,7 @@ export function getEdgeToolInputHandler(
 
 	function handle(event: CellEdgeTapEvent) {
 		const localConstraints = get(localConstraintsStore);
-		const edge = event.edge;
+		const edge = event.coord;
 
 		const cellsCoords = cellEdgeToCellCoords(edge);
 

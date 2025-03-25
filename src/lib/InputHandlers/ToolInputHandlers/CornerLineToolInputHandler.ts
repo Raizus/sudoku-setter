@@ -51,7 +51,7 @@ export function getCornerLineToolInputHandler(
 	function handle(event: CellCornerTapEvent) {
 		const localConstraints = get(localConstraintsStore);
 
-		const coord = event.cellCorner;
+		const coord = event.coord;
 		const onGrid = areCoordsOnGrid(coord, gridShape);
 		if (!onGrid) return;
 

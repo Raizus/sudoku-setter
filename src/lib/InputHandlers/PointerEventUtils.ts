@@ -71,8 +71,7 @@ export function getClosestCorner(
 
 export function getClosestEdge(
 	point: Vector2D,
-	conservative: boolean = true,
-	marginRadius: number = 0.5
+	marginRadius: number | undefined = 0.5
 ): { edge: GridCoordI; dist: number; idx: number } | null {
 	const cellCoord = pointToCell(point);
 	const edges = cellCoordToEdgeCoords(cellCoord);
@@ -82,7 +81,7 @@ export function getClosestEdge(
 	const closestEdge = edges[edgeIdx];
 	const minDist = edgesDist[edgeIdx];
 
-	if (!conservative || minDist < marginRadius)
+	if (marginRadius === undefined || minDist < marginRadius)
 		return { edge: closestEdge, dist: minDist, idx: edgeIdx };
 	return null;
 }
@@ -101,7 +100,7 @@ export function getClosestCellFeature(
 	conservative: boolean = true,
 	marginRadius: number = 0.5
 ): EventGeometry | null {
-	const edgeInfo = getClosestEdge(point, false);
+	const edgeInfo = getClosestEdge(point, undefined);
 	if (!edgeInfo) return null;
 
 	const cornerInfo = getClosestCorner(point, false);

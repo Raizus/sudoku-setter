@@ -3,14 +3,14 @@ import { getClosestCorner, pointerEventToVector2D } from '../PointerEventUtils';
 
 export interface CellCornerTapEvent {
 	event: PointerEvent;
-	cellCorner: GridCoordI;
+	coord: GridCoordI;
 }
 
 export class CellCornerPointerHandler {
-	onTap: null | ((event: CellCornerTapEvent) => void) = null;
 	onDragStart: null | ((event: CellCornerTapEvent) => void) = null;
 	onDrag: null | ((event: CellCornerTapEvent) => void) = null;
 	onDragEnd: null | ((event: CellCornerTapEvent) => void) = null;
+	onTap: null | ((event: CellCornerTapEvent) => void) = null;
 	onMove: null | ((event: CellCornerTapEvent) => void) = null;
 
 	private _prevCoord: GridCoordI | null = null;
@@ -34,7 +34,7 @@ export class CellCornerPointerHandler {
 
 		const dragTapEvent: CellCornerTapEvent = {
 			event,
-			cellCorner: cornerInfo.corner
+			coord: cornerInfo.corner
 		};
 		if (this.onDragStart) this.onDragStart(dragTapEvent);
 	}
@@ -55,7 +55,7 @@ export class CellCornerPointerHandler {
 
 		const dragTapEvent: CellCornerTapEvent = {
 			event,
-			cellCorner: cornerInfo.corner
+			coord: cornerInfo.corner
 		};
 		this._prevCoord = cornerInfo.corner;
 		this._isTap = false;
@@ -72,7 +72,7 @@ export class CellCornerPointerHandler {
 
 		const dragTapEvent: CellCornerTapEvent = {
 			event,
-			cellCorner: cornerInfo.corner
+			coord: cornerInfo.corner
 		};
 
 		if (this._isDown) {
