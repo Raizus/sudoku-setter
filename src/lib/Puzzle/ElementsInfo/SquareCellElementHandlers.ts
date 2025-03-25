@@ -141,13 +141,22 @@ import {
 } from './UndeterminedRegionsElementsInfo';
 import {
 	caveCellsAreOddInfo,
+	caveWallsAreEvenInfo,
+	cave2x2NotFullyShadedOrUnshadedInfo,
 	cellCenterCanTouchDiagonallyInfo,
 	notLoopSizedRegionsInfo,
 	oneDigitDoesNotAppearInTheCaveInfo,
-	yinYangFillominoParityInfo
+	yinYangFillominoParityInfo,
+	twilightCaveFillominoRegionShadingInfo,
+	caveInfo,
+	modularLoopInfo,
+	cellCenterLoopNoTouchingInfo,
+	sashiganeRegionsInfo,
+	twoContiguousRegionsInfo,
+	nurimisakiInfo,
+	yinYangInfo,
+	unknownRegionsInfo
 } from './UndeterminedRegionsElementsInfo';
-import { caveWallsAreEvenInfo } from './UndeterminedRegionsElementsInfo';
-import { cave2x2NotFullyShadedOrUnshadedInfo } from './UndeterminedRegionsElementsInfo';
 import {
 	adjacentMultiplesLineInfo,
 	arithmeticSequenceLineInfo,
@@ -307,24 +316,17 @@ import {
 	yinYangCountShadedCellsInfo
 } from './SingleCellMultiArrowElementsInfo';
 import { yinYangSumOfCellsOfOppositeColorInfo } from './SingleCellMultiArrowElementsInfo';
-import { loopCellCountArrowsInfo } from './SingleCellMultiArrowElementsInfo';
-import { yinYangCountUniqueFillominoSameShadingInfo } from './SingleCellMultiArrowElementsInfo';
-import { sameGalaxyUnobstructedCountArrowsInfo } from './SingleCellMultiArrowElementsInfo';
+import {
+	loopCellCountArrowsInfo,
+	yinYangCountUniqueFillominoSameShadingInfo,
+	sameGalaxyUnobstructedCountArrowsInfo
+} from './SingleCellMultiArrowElementsInfo';
 import {
 	forbiddenKnightSumInfo,
 	forbiddenOrthogonallyAdjacentSumInfo,
 	minimumDiagonallyAdjacentDifferenceInfo
 } from './ValuedGlobalConstraintsElementsInfo';
 import { doublersInfo, indexerCellsInfo, negatorsInfo, nexusInfo } from './ValueModifierConstraintsElementsInfo';
-import { twilightCaveFillominoRegionShadingInfo } from './UndeterminedRegionsElementsInfo';
-import { caveInfo } from './UndeterminedRegionsElementsInfo';
-import { modularLoopInfo } from './UndeterminedRegionsElementsInfo';
-import { cellCenterLoopNoTouchingInfo } from './UndeterminedRegionsElementsInfo';
-import { sashiganeRegionsInfo } from './UndeterminedRegionsElementsInfo';
-import { twoContiguousRegionsInfo } from './UndeterminedRegionsElementsInfo';
-import { nurimisakiInfo } from './UndeterminedRegionsElementsInfo';
-import { yinYangInfo } from './UndeterminedRegionsElementsInfo';
-import { unknownRegionsInfo } from './UndeterminedRegionsElementsInfo';
 import { mazeWallInfo } from './CornerLineToolsElementsInfo';
 
 export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = {
