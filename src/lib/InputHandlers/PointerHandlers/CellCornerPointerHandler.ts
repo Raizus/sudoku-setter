@@ -27,7 +27,8 @@ export class CellCornerPointerHandler {
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
-		const cornerInfo = getClosestCorner(point, !isFirstClick);
+		const margin = isFirstClick ? undefined : 0.5;
+		const cornerInfo = getClosestCorner(point, margin);
 		if (!cornerInfo) return;
 
 		this._prevCoord = cornerInfo.corner;

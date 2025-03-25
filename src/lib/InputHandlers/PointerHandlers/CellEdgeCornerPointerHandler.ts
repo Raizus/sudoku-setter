@@ -44,7 +44,7 @@ export class CellEdgeCornerPointerHandler {
 		const edgeInfo = getClosestEdge(point, undefined);
 		if (!edgeInfo) return;
 
-		const cornerInfo = getClosestCorner(point, false);
+		const cornerInfo = getClosestCorner(point, undefined);
 		if (!cornerInfo) return;
 
 		const cellInfo = getClosestCell(point, false);
