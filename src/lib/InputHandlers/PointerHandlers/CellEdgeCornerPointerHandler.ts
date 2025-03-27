@@ -6,6 +6,7 @@ import {
 	pointerEventToVector2D
 } from '$src/lib/InputHandlers/PointerEventUtils';
 import type { GridCoordI } from '$lib/utils/SquareCellGridCoords';
+import { CornerOrEdge } from '$input/ToolInputHandlers/types';
 
 export interface CellEdgeCornerEvent {
 	event: PointerEvent;
@@ -18,18 +19,7 @@ export interface CellEdgeCornerEvent {
 	direction: number;
 }
 
-export enum CornerOrEdge {
-	EDGE,
-	CORNER,
-	CELL_CENTER,
-	CORNER_OR_EDGE,
-	CORNER_OR_CENTER,
-	EDGE_OR_CENTER,
-	CLOSEST,
-	BOTH
-}
-
-export class CellEdgeCornerPointerHandler {
+export class CellFeaturePointerHandler {
 	onDragStart: null | ((event: CellEdgeCornerEvent) => void) = null;
 	target: CornerOrEdge;
 
@@ -50,7 +40,7 @@ export class CellEdgeCornerPointerHandler {
 		const cellInfo = getClosestCell(point, false);
 		if (!cellInfo) return;
 
-		const cellCenterInfo = getClosestCellCenter(point, false);
+		const cellCenterInfo = getClosestCellCenter(point, undefined);
 		if (!cellCenterInfo) return;
 
 		let closestCoord: GridCoordI;

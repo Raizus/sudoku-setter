@@ -1,3 +1,5 @@
+import type { Grid } from "../Puzzle/Grid/Grid";
+import type { TOOLID } from "../Puzzle/Tools";
 import { isBackspace } from "./KeyboardEventUtils";
 
 export interface InputHandler {
@@ -10,14 +12,7 @@ export interface InputHandler {
 	padClick?(event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }): void;
 }
 
-export type ValueUpdaterI = (value: string | undefined, key: string) => string | undefined;
-
-// If a constraint has a value field and it can be modified by keyboard input,
-// this interface validates the values
-export interface ValueToolInputOptions {
-	valueUpdater?: ValueUpdaterI;
-	defaultValue?: string;
-}
+export type GetInputHandler = (svgRef: SVGSVGElement, grid: Grid, tool: TOOLID) => InputHandler;
 
 export interface ValueValidatorOptions {
 	allowInequalities?: boolean;

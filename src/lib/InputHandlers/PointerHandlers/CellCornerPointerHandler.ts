@@ -16,18 +16,17 @@ export class CellCornerPointerHandler {
 	private _prevCoord: GridCoordI | null = null;
 	private _isDown = false;
 	private _isTap = false;
-
-	private _margin: number | undefined = undefined;
+	private _margin: number | undefined = 0.5;
 
 	pointerDown(event: PointerEvent, svgRef: SVGSVGElement): void {
 		this._isDown = true;
 		this._isTap = true;
 
-		const isFirstClick = null === this._prevCoord;
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
-
-		const margin = isFirstClick ? undefined : 0.5;
+		
+		const isFirstClick = null === this._prevCoord;
+		const margin = isFirstClick ? undefined : this._margin;
 		const cornerInfo = getClosestCorner(point, margin);
 		if (!cornerInfo) return;
 
@@ -64,7 +63,7 @@ export class CellCornerPointerHandler {
 		if (this.onDrag) this.onDrag(dragTapEvent);
 	}
 
-	pointerUp(event: PointerEvent, svgRef: SVGSVGElement): void {
+	pointerUp(event: PointerEvent, svgRef: SVGSVGElement): void {		
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
@@ -85,6 +84,5 @@ export class CellCornerPointerHandler {
 		if (this._isTap) {
 			if (this.onTap) this.onTap(dragTapEvent);
 		}
-
 	}
 }

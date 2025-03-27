@@ -36,8 +36,7 @@ export function getClosestCell(
 
 export function getClosestCellCenter(
 	point: Vector2D,
-	conservative: boolean = true,
-	marginRadius: number = 0.5
+	marginRadius: number | undefined = 0.5
 ): { cellCenter: GridCoordI; dist: number } | null {
 	const cellCoord = pointToCell(point);
 	const cellCenter: Vector2D = new Vector2D(cellCoord.c + 0.5, cellCoord.r + 0.5);
@@ -45,7 +44,9 @@ export function getClosestCellCenter(
 
 	const cellCenterCoords: GridCoordI = { r: cellCenter.y, c: cellCenter.x };
 
-	if (!conservative || dist < marginRadius) return { cellCenter: cellCenterCoords, dist };
+	if (marginRadius === undefined || dist < marginRadius) {
+		return { cellCenter: cellCenterCoords, dist };
+	}
 	return null;
 }
 
@@ -105,7 +106,7 @@ export function getClosestCellFeature(
 	const cornerInfo = getClosestCorner(point, undefined);
 	if (!cornerInfo) return null;
 
-	const cellCenterInfo = getClosestCellCenter(point, false);
+	const cellCenterInfo = getClosestCellCenter(point, undefined);
 	if (!cellCenterInfo) return null;
 
 	const featureCoords = [cellCenterInfo.cellCenter, edgeInfo.edge, cornerInfo.corner];
