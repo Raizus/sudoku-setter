@@ -19,3 +19,12 @@ export enum GAME_MODE {
 	SETTING,
 	SOLVING,
 }
+
+export interface PuzzleInfo {
+	id: string;
+	title: string;
+	authors: string[];
+	description: string;
+	thumbnail: string;
+	difficulty?: string;
+}

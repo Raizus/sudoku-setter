@@ -1,0 +1,16 @@
+[
+	{
+		"id": "p1",
+		"title": "Assigned Seating",
+		"authors": ["ChinStrap"],
+		"description": "Sudoku rules apply.\n\n**Yin Yang**: Shade some cells in the grid such that all shaded cells are orthogonally connected and all unshaded cells are orthogonally connected, and no 2x2 area is fully shaded or fully unshaded.\n\n**Index Line**: On an index line, the digit in the Nth cell along the line (starting from the diamond) indicates the position along the line where the digit N appears. Eg: 3214 would be a valid line with 3 as the diamond; the 1st digit, 3, indicates that the 3rd cell contains a 1, the 2nd cell a 2, and so on.\n\n**Yin Yang Indexing Line Coloring**: All cells that reference their own position on a indexing line (the digit N is in position N) should be dark. Cells that are not self referencing should be light. For example for the line 3214 with 3 as the diamond, the 2 and 4 would be dark and the 1 and 3 would be light.\n\n**Yin Yang White Kropki**: Cells separated by a dot indicate that the two connected cells have the same Yin Yang shading and their digits are consecutive.\n",
+		"thumbnail": "/thumbnails/AssignedSeating_by_ChinStrap.png"
+	},
+	{
+		"id": "p2",
+		"title": "Stepping Stones",
+		"authors": ["grkles"],
+		"description": "Sudoku rules apply.\n\n**Unknown Regions**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.\n\n**Chaos Construction Sum Of First Each Region**: Clues outside the grid give the sum of the first digit seen in each successive region in that row or column. **The summed digits always appear in increasing order.**\n\n**Unknown Region Border**: A line in the border between cells indicates a region border.",
+		"thumbnail": "/thumbnails/SteppingStones_by_grkles.png"
+	}
+]
