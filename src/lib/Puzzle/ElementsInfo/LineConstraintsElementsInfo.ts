@@ -3,7 +3,7 @@ import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '$lib/Puzzle/ElementInfo';
 import { RENDER_ORDER } from '$lib/Puzzle/RenderOrder';
 import { lineUsage } from '../ToolUsage';
-import { getLineToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/LineToolInputHandler';
+import { HANDLER_TOOL_TYPE, type LineToolInputOptions } from '$input/ToolInputHandlers/types';
 
 const simpleLineDefaultCategories = [
 	TOOL_CATEGORIES.LINE_CONSTRAINT,
@@ -25,10 +25,18 @@ const DEFAULT_META_1 = {
 	categories: simpleLineDefaultCategories
 };
 
+const DEFAULT_LINE_OPTIONS_INTERSECT: LineToolInputOptions = {
+	type: HANDLER_TOOL_TYPE.LINE,
+	allowSelfIntersection: true
+};
+
+const DEFAULT_LINE_OPTIONS_NO_INTERSECT: LineToolInputOptions = {
+	type: HANDLER_TOOL_TYPE.LINE,
+	allowSelfIntersection: false
+};
+
 export const thermometerInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.THERMOMETER,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -54,11 +62,10 @@ export const thermometerInfo: SquareCellElementInfo = {
 };
 
 export const customThermometerInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: false,
-			defaultValue: '2'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: false,
+		defaultValue: '2'
 	},
 
 	toolId: TOOLS.CUSTOM_THERMOMETER,
@@ -86,9 +93,7 @@ export const customThermometerInfo: SquareCellElementInfo = {
 };
 
 export const fuzzyThermometerInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.FUZZY_THERMOMETER,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -114,9 +119,7 @@ export const fuzzyThermometerInfo: SquareCellElementInfo = {
 };
 
 export const slowThermometerInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.SLOW_THERMOMETER,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -142,9 +145,7 @@ export const slowThermometerInfo: SquareCellElementInfo = {
 };
 
 export const rowCyclethermometerInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.ROW_CYCLE_THERMOMETER,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -171,9 +172,7 @@ export const rowCyclethermometerInfo: SquareCellElementInfo = {
 };
 
 export const palindromeInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.PALINDROME,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -193,9 +192,7 @@ export const palindromeInfo: SquareCellElementInfo = {
 };
 
 export const renbanLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.RENBAN_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -222,9 +219,7 @@ export const renbanLineInfo: SquareCellElementInfo = {
 };
 
 export const doubleRenbanLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.DOUBLE_RENBAN_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -251,9 +246,7 @@ export const doubleRenbanLineInfo: SquareCellElementInfo = {
 };
 
 export const renrenbanbanLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.RENRENBANBAN_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -280,11 +273,10 @@ export const renrenbanbanLineInfo: SquareCellElementInfo = {
 };
 
 export const nConsecutiveRenbanLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: '5'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: '5'
 	},
 
 	toolId: TOOLS.N_CONSECUTIVE_RENBAN_LINE,
@@ -311,9 +303,7 @@ export const nConsecutiveRenbanLineInfo: SquareCellElementInfo = {
 };
 
 export const nabnerLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.NABNER_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -340,11 +330,10 @@ export const nabnerLineInfo: SquareCellElementInfo = {
 };
 
 export const whispersLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: '5'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: '5'
 	},
 
 	toolId: TOOLS.WHISPERS_LINE,
@@ -371,11 +360,10 @@ export const whispersLineInfo: SquareCellElementInfo = {
 };
 
 export const dutchWhispersInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: '4'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: '4'
 	},
 
 	toolId: TOOLS.DUTCH_WHISPERS,
@@ -402,11 +390,10 @@ export const dutchWhispersInfo: SquareCellElementInfo = {
 };
 
 export const maximumAdjacentDifferenceLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: '2'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: '2'
 	},
 
 	toolId: TOOLS.MAXIMUM_ADJACENT_DIFFERENCE_LINE,
@@ -434,11 +421,10 @@ export const maximumAdjacentDifferenceLineInfo: SquareCellElementInfo = {
 };
 
 export const renbanOrWhispersLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: '5'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: '5'
 	},
 
 	toolId: TOOLS.RENBAN_OR_WHISPERS_LINE,
@@ -466,11 +452,10 @@ export const renbanOrWhispersLineInfo: SquareCellElementInfo = {
 };
 
 export const renbanOrNabnerLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: '5'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: '5'
 	},
 
 	toolId: TOOLS.RENBAN_OR_NABNER_LINE,
@@ -498,9 +483,7 @@ export const renbanOrNabnerLineInfo: SquareCellElementInfo = {
 };
 
 export const outOfOrderConsecutiveLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.OUT_OF_ORDER_CONSECUTIVE_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -527,9 +510,7 @@ export const outOfOrderConsecutiveLineInfo: SquareCellElementInfo = {
 };
 
 export const indexLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.INDEX_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -559,9 +540,7 @@ export const indexLineInfo: SquareCellElementInfo = {
 };
 
 export const uniqueValuesLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.UNIQUE_VALUES_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -581,9 +560,7 @@ export const uniqueValuesLineInfo: SquareCellElementInfo = {
 };
 
 export const regionSumLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.REGION_SUM_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -610,11 +587,10 @@ export const regionSumLineInfo: SquareCellElementInfo = {
 };
 
 export const sumLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: ''
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: ''
 	},
 
 	toolId: TOOLS.SUM_LINE,
@@ -641,9 +617,7 @@ export const sumLineInfo: SquareCellElementInfo = {
 };
 
 export const arithmeticSequenceLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.ARITHMETIC_SEQUENCE_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -670,11 +644,7 @@ export const arithmeticSequenceLineInfo: SquareCellElementInfo = {
 };
 
 export const sameParityLineLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true
-		});
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.SAME_PARITY_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -700,11 +670,10 @@ export const sameParityLineLineInfo: SquareCellElementInfo = {
 };
 
 export const modularLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: '3'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: '3'
 	},
 
 	toolId: TOOLS.MODULAR_LINE,
@@ -732,11 +701,10 @@ export const modularLineInfo: SquareCellElementInfo = {
 };
 
 export const unimodularLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: '3'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: '3'
 	},
 
 	toolId: TOOLS.UNIMODULAR_LINE,
@@ -764,11 +732,10 @@ export const unimodularLineInfo: SquareCellElementInfo = {
 };
 
 export const modularOrUnimodularLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: false,
-			defaultValue: '3'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: '3'
 	},
 
 	toolId: TOOLS.MODULAR_OR_UNIMODULAR_LINE,
@@ -796,9 +763,7 @@ export const modularOrUnimodularLineInfo: SquareCellElementInfo = {
 };
 
 export const oddEvenOscilatorLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.ODD_EVEN_OSCILLATOR_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -824,11 +789,10 @@ export const oddEvenOscilatorLineInfo: SquareCellElementInfo = {
 };
 
 export const highLowOscilatorLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: '5'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: '5'
 	},
 
 	toolId: TOOLS.HIGH_LOW_OSCILLATOR_LINE,
@@ -856,9 +820,7 @@ export const highLowOscilatorLineInfo: SquareCellElementInfo = {
 };
 
 export const entropicLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.ENTROPIC_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -885,9 +847,7 @@ export const entropicLineInfo: SquareCellElementInfo = {
 };
 
 export const entropicOrModularLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.ENTROPIC_OR_MODULAR_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -914,11 +874,10 @@ export const entropicOrModularLineInfo: SquareCellElementInfo = {
 };
 
 export const indexingColumnIsXLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: '5'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: '5'
 	},
 
 	toolId: TOOLS.INDEXING_COLUMN_IS_X_LINE,
@@ -946,11 +905,10 @@ export const indexingColumnIsXLineInfo: SquareCellElementInfo = {
 };
 
 export const indexingRowIsXLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: '5'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: '5'
 	},
 
 	toolId: TOOLS.INDEXING_ROW_IS_X_LINE,
@@ -978,9 +936,7 @@ export const indexingRowIsXLineInfo: SquareCellElementInfo = {
 };
 
 export const repeatedDigitsLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.REPEATED_DIGITS_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1007,9 +963,7 @@ export const repeatedDigitsLineInfo: SquareCellElementInfo = {
 };
 
 export const superfuzzyArrowInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.SUPERFUZZY_ARROW,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1036,9 +990,7 @@ export const superfuzzyArrowInfo: SquareCellElementInfo = {
 };
 
 export const ambiguousArrowInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.AMBIGUOUS_ARROW,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1065,9 +1017,7 @@ export const ambiguousArrowInfo: SquareCellElementInfo = {
 };
 
 export const headlessArrowInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.HEADLESS_ARROW,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1093,9 +1043,7 @@ export const headlessArrowInfo: SquareCellElementInfo = {
 };
 
 export const xvLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.XV_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1121,9 +1069,7 @@ export const xvLineInfo: SquareCellElementInfo = {
 };
 
 export const rowSumLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.ROW_SUM_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1149,11 +1095,10 @@ export const rowSumLineInfo: SquareCellElementInfo = {
 };
 
 export const atLeastXLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: '10'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: '10'
 	},
 
 	toolId: TOOLS.AT_LEAST_X_LINE,
@@ -1180,11 +1125,10 @@ export const atLeastXLineInfo: SquareCellElementInfo = {
 };
 
 export const nConsecutiveFuzzySumLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: '3'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: '3'
 	},
 
 	toolId: TOOLS.N_CONSECUTIVE_FUZZY_SUM_LINE,
@@ -1212,9 +1156,7 @@ export const nConsecutiveFuzzySumLineInfo: SquareCellElementInfo = {
 };
 
 export const adjacentCellSumIsPrimeLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.ADJACENT_CELL_SUM_IS_PRIME_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1240,11 +1182,10 @@ export const adjacentCellSumIsPrimeLineInfo: SquareCellElementInfo = {
 };
 
 export const productLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: ''
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: ''
 	},
 
 	toolId: TOOLS.PRODUCT_LINE,
@@ -1271,9 +1212,7 @@ export const productLineInfo: SquareCellElementInfo = {
 };
 
 export const adjacentMultiplesLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.ADJACENT_MULTIPLES_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1300,9 +1239,7 @@ export const adjacentMultiplesLineInfo: SquareCellElementInfo = {
 };
 
 export const adjacentDifferencesCountLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.ADJACENT_DIFFERENCES_COUNT_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1329,9 +1266,7 @@ export const adjacentDifferencesCountLineInfo: SquareCellElementInfo = {
 };
 
 export const lookandSayLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.LOOK_AND_SAY_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1358,9 +1293,7 @@ export const lookandSayLineInfo: SquareCellElementInfo = {
 };
 
 export const ZipperLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.ZIPPER_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1387,11 +1320,10 @@ export const ZipperLineInfo: SquareCellElementInfo = {
 };
 
 export const segmentedSumLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: '10'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: '10'
 	},
 
 	toolId: TOOLS.SEGMENTED_SUM_LINE,
@@ -1419,11 +1351,10 @@ export const segmentedSumLineInfo: SquareCellElementInfo = {
 };
 
 export const segmentedSumAndRenbanLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: false,
-			defaultValue: ''
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: false,
+		defaultValue: ''
 	},
 
 	toolId: TOOLS.SEGMENTED_SUM_AND_RENBAN_LINE,
@@ -1451,11 +1382,10 @@ export const segmentedSumAndRenbanLineInfo: SquareCellElementInfo = {
 };
 
 export const adjacentCellsAreMultiplesOfDifferenceLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: false,
-			defaultValue: ''
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: false,
+		defaultValue: ''
 	},
 
 	toolId: TOOLS.ADJACENT_CELLS_ARE_MULTIPLES_OF_DIFFERENCE_LINE,
@@ -1483,9 +1413,7 @@ export const adjacentCellsAreMultiplesOfDifferenceLineInfo: SquareCellElementInf
 };
 
 export const thermoOrAverageArrowInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.THERMO_OR_AVERAGE_ARROW,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1514,9 +1442,7 @@ export const thermoOrAverageArrowInfo: SquareCellElementInfo = {
 };
 
 export const indexerCellsRegionSubsetLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.INDEXER_CELLS_REGION_SUBSET_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1536,11 +1462,8 @@ export const indexerCellsRegionSubsetLineInfo: SquareCellElementInfo = {
 	}
 };
 
-
 export const peapodsLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.PEAPODS,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1549,7 +1472,7 @@ export const peapodsLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
 		stroke: { editable: true, value: 'darkseagreen' },
 		strokeWidth: { editable: true, value: 0.05 },
-		r: { editable: false, value: 0.40 },
+		r: { editable: false, value: 0.4 },
 		opacity: { editable: false, value: 0.9 },
 		fill: { editable: false, value: 'none' }
 	},
@@ -1566,11 +1489,10 @@ export const peapodsLineInfo: SquareCellElementInfo = {
 /* ----------------------------------------------------------------------------- */
 
 export const yinYangShadedWhispersLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: '5'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: '5'
 	},
 
 	toolId: TOOLS.YIN_YANG_SHADED_WHISPERS_LINE,
@@ -1598,9 +1520,7 @@ export const yinYangShadedWhispersLineInfo: SquareCellElementInfo = {
 };
 
 export const yinYangUnshadedEntropicLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.YIN_YANG_UNSHADED_ENTROPIC_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1627,11 +1547,10 @@ export const yinYangUnshadedEntropicLineInfo: SquareCellElementInfo = {
 };
 
 export const yinYangUnshadedModularLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: '3'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: '3'
 	},
 
 	toolId: TOOLS.YIN_YANG_UNSHADED_MODULAR_LINE,
@@ -1659,9 +1578,7 @@ export const yinYangUnshadedModularLineInfo: SquareCellElementInfo = {
 };
 
 export const yinYangRegionSumLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.YIN_YANG_REGION_SUM_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1688,9 +1605,7 @@ export const yinYangRegionSumLineInfo: SquareCellElementInfo = {
 };
 
 export const yinYangIndexingLineColoringInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.YIN_YANG_INDEXING_LINE_COLORING,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1722,9 +1637,7 @@ export const yinYangIndexingLineColoringInfo: SquareCellElementInfo = {
 /* ----------------------------------------------------------------------------- */
 
 export const goldilocksZoneRegionSumLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.GOLDILOCKS_ZONE_REGION_SUM,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1753,9 +1666,7 @@ export const goldilocksZoneRegionSumLineInfo: SquareCellElementInfo = {
 /* ----------------------------------------------------------------------------- */
 
 export const betweenLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.BETWEEN_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1780,11 +1691,10 @@ export const betweenLineInfo: SquareCellElementInfo = {
 };
 
 export const lockoutLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, {
-			allowSelfIntersection: true,
-			defaultValue: '4'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true,
+		defaultValue: '4'
 	},
 
 	toolId: TOOLS.LOCKOUT_LINE,
@@ -1811,9 +1721,7 @@ export const lockoutLineInfo: SquareCellElementInfo = {
 };
 
 export const tightropeLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.TIGHTROPE_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1838,9 +1746,7 @@ export const tightropeLineInfo: SquareCellElementInfo = {
 };
 
 export const parityCountLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.PARITY_COUNT_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1865,9 +1771,7 @@ export const parityCountLineInfo: SquareCellElementInfo = {
 };
 
 export const doubleArrowLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.DOUBLE_ARROW_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1892,9 +1796,7 @@ export const doubleArrowLineInfo: SquareCellElementInfo = {
 };
 
 export const productOfEndsEqualsSumOfLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.PRODUCT_OF_ENDS_EQUALS_SUM_OF_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1920,9 +1822,7 @@ export const productOfEndsEqualsSumOfLineInfo: SquareCellElementInfo = {
 };
 
 export const splitPeasLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.SPLIT_PEAS,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1947,9 +1847,7 @@ export const splitPeasLineInfo: SquareCellElementInfo = {
 };
 
 export const doublersThermometerInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: false });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.DOUBLERS_THERMOMETER,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -1978,9 +1876,7 @@ export const doublersThermometerInfo: SquareCellElementInfo = {
 };
 
 export const doublersBetweenLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.DOUBLERS_BETWEEN_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,
@@ -2005,9 +1901,7 @@ export const doublersBetweenLineInfo: SquareCellElementInfo = {
 };
 
 export const doublersDoubleArrowLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.DOUBLERS_DOUBLE_ARROW_LINE,
 	order: RENDER_ORDER.LINE_TOOLS,

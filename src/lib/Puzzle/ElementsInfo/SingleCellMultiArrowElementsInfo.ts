@@ -1,4 +1,8 @@
-import { getSingleCellMultiArrowToolInputHandler } from '$input/ToolInputHandlers/SingleCellMultiArrowToolInputHandler';
+import {
+	CornerOrEdge,
+	HANDLER_TOOL_TYPE,
+	type SingleCellMultiArrowToolOptions
+} from '$input/ToolInputHandlers/types';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { RENDER_ORDER } from '../RenderOrder';
 import { SHAPE_TYPES, type EditableShapeI } from '../Shape/Shape';
@@ -16,10 +20,13 @@ const defaultShape: EditableShapeI = {
 	stroke: { editable: true, value: 'black' }
 };
 
+const DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS: SingleCellMultiArrowToolOptions = {
+	type: HANDLER_TOOL_TYPE.SINGLE_CELL_MULTI_ARROW,
+	cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
+};
+
 export const sameGalaxyUnobstructedCountArrowsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -35,9 +42,7 @@ export const sameGalaxyUnobstructedCountArrowsInfo: SquareCellElementInfo = {
 };
 
 export const yinYangCountUniqueFillominoSameShadingInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -53,9 +58,7 @@ export const yinYangCountUniqueFillominoSameShadingInfo: SquareCellElementInfo =
 };
 
 export const loopCellCountArrowsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.LOOP_CELL_COUNT_ARROWS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -71,9 +74,7 @@ export const loopCellCountArrowsInfo: SquareCellElementInfo = {
 };
 
 export const yinYangSumOfCellsOfOppositeColorInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -89,9 +90,7 @@ export const yinYangSumOfCellsOfOppositeColorInfo: SquareCellElementInfo = {
 };
 
 export const yinYangCountShadedCellsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_COUNT_SHADED_CELLS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -107,9 +106,7 @@ export const yinYangCountShadedCellsInfo: SquareCellElementInfo = {
 };
 
 export const countCellsNotInTheSameRegionArrowsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -125,9 +122,7 @@ export const countCellsNotInTheSameRegionArrowsInfo: SquareCellElementInfo = {
 };
 
 export const coldArrowsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.COLD_ARROWS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -147,9 +142,7 @@ export const coldArrowsInfo: SquareCellElementInfo = {
 };
 
 export const hotArrowsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.HOT_ARROWS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -169,9 +162,7 @@ export const hotArrowsInfo: SquareCellElementInfo = {
 };
 
 export const nurikabeCountIslandCellsArrowsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.NURIKABE_COUNT_ISLAND_CELLS_ARROWS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -187,9 +178,7 @@ export const nurikabeCountIslandCellsArrowsInfo: SquareCellElementInfo = {
 };
 
 export const connectFourCountCellsOfSameColorInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.CONNECT_FOUR_COUNT_CELLS_OF_SAME_COLOR,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,

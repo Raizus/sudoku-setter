@@ -1,4 +1,5 @@
-import type { InputHandler, ValueToolInputOptions } from '../InputHandler';
+import type { InputHandler } from '../InputHandler';
+import type { EdgeToolOptions } from "./types";
 import {
 	currentConstraintStore,
 	updateLocalConstraint
@@ -27,7 +28,7 @@ export function getEdgeToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
 	tool: TOOLID,
-	options?: ValueToolInputOptions
+	options?: EdgeToolOptions
 ): InputHandler {
 	// console.log('getEdgeToolInputHandler');
 	const pointerHandler = new CellEdgePointerHandler();

@@ -1,14 +1,12 @@
-import { getArrowToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/ArrowToolInputHandler';
 import { SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
 import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { RENDER_ORDER } from '../RenderOrder';
 import { arrowUsage } from '../ToolUsage';
+import { HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
 
 export const arrowInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getArrowToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: {type: HANDLER_TOOL_TYPE.ARROW},
 
 	toolId: TOOLS.ARROW,
 	order: RENDER_ORDER.ARROW_TOOLS,
@@ -38,9 +36,7 @@ export const arrowInfo: SquareCellElementInfo = {
 };
 
 export const averageArrowInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getArrowToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW },
 
 	toolId: TOOLS.AVERAGE_ARROW,
 	order: RENDER_ORDER.ARROW_TOOLS,
@@ -69,9 +65,7 @@ export const averageArrowInfo: SquareCellElementInfo = {
 };
 
 export const bulbousArrowInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getArrowToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
-	},
+	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW, allowSelfIntersection: true },
 
 	toolId: TOOLS.BULBOUS_ARROW,
 	order: RENDER_ORDER.ARROW_TOOLS,
@@ -103,9 +97,7 @@ export const bulbousArrowInfo: SquareCellElementInfo = {
 };
 
 export const squareRootArrowInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getArrowToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW},
 
 	toolId: TOOLS.SQUARE_ROOT_ARROW,
 	order: RENDER_ORDER.ARROW_TOOLS,
@@ -135,9 +127,7 @@ export const squareRootArrowInfo: SquareCellElementInfo = {
 };
 
 export const chaosConstructionArrowInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getArrowToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW },
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_ARROW,
 	order: RENDER_ORDER.ARROW_TOOLS,

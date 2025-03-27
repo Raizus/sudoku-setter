@@ -1,9 +1,9 @@
+import { HANDLER_TOOL_TYPE, type CageToolInputOptions } from '$input/ToolInputHandlers/types';
 import {
 	defaultValidateValueOnInput,
 	defaultValueUpdater,
 	type ValueValidatorOptions
 } from '$src/lib/InputHandlers/InputHandler';
-import { getCageToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/CageToolInputHandler';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { RENDER_ORDER } from '../RenderOrder';
 import { SHAPE_TYPES, type EditableShapeI } from '../Shape/Shape';
@@ -51,15 +51,20 @@ const DEFAULT_CAGE_SHAPE: EditableShapeI = {
 	inset: { editable: true, value: 0.06, lb: 0, ub: 0.5, step: 0.01 }
 };
 
+const DEFAULT_UNVALUED_CAGE_OPTIONS: CageToolInputOptions = {
+	type: HANDLER_TOOL_TYPE.CAGE,
+	defaultValue: '',
+	allowDiagonallyAdjacent: true,
+};
+
+const DEFAULT_CAGE_OPTIONS: CageToolInputOptions = {
+	...DEFAULT_UNVALUED_CAGE_OPTIONS,
+	valueUpdater: (oldValue: string | undefined, key: string) =>
+		defaultCageValueUpdater(oldValue, key, validateCageValue)
+};
+
 export const killerCageInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCageToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCageValueUpdater(oldValue, key, validateCageValue),
-			defaultValue: '',
-			allowDiagonallyAdjacent: true
-		});
-	},
+	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.KILLER_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
@@ -75,14 +80,7 @@ export const killerCageInfo: SquareCellElementInfo = {
 };
 
 export const uniqueDigitsCageInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCageToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCageValueUpdater(oldValue, key, validateCageValue),
-			defaultValue: '',
-			allowDiagonallyAdjacent: true
-		});
-	},
+	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.UNIQUE_DIGITS_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
@@ -106,14 +104,7 @@ export const uniqueDigitsCageInfo: SquareCellElementInfo = {
 };
 
 export const invertedKillerCageInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCageToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCageValueUpdater(oldValue, key, validateCageValue),
-			defaultValue: '',
-			allowDiagonallyAdjacent: true
-		});
-	},
+	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.INVERTED_KILLER_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
@@ -129,14 +120,7 @@ export const invertedKillerCageInfo: SquareCellElementInfo = {
 };
 
 export const sumCageInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCageToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCageValueUpdater(oldValue, key, validateCageValue),
-			defaultValue: '',
-			allowDiagonallyAdjacent: true
-		});
-	},
+	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.SUM_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
@@ -152,12 +136,7 @@ export const sumCageInfo: SquareCellElementInfo = {
 };
 
 export const sumCageLookAndSayInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCageToolInputHandler(svgRef, grid, tool, {
-			defaultValue: '',
-			allowDiagonallyAdjacent: true
-		});
-	},
+	inputOptions: DEFAULT_UNVALUED_CAGE_OPTIONS,
 
 	toolId: TOOLS.SUM_CAGE_LOOK_AND_SAY,
 	order: RENDER_ORDER.CAGE_TOOLS,
@@ -173,12 +152,7 @@ export const sumCageLookAndSayInfo: SquareCellElementInfo = {
 };
 
 export const parityBalanceCageInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCageToolInputHandler(svgRef, grid, tool, {
-			defaultValue: '',
-			allowDiagonallyAdjacent: true
-		});
-	},
+	inputOptions: DEFAULT_UNVALUED_CAGE_OPTIONS,
 
 	toolId: TOOLS.PARITY_BALANCE_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
@@ -194,14 +168,7 @@ export const parityBalanceCageInfo: SquareCellElementInfo = {
 };
 
 export const divisibleKillerCageInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCageToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCageValueUpdater(oldValue, key, validateCageValue),
-			defaultValue: '',
-			allowDiagonallyAdjacent: true
-		});
-	},
+	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.DIVISIBLE_KILLER_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
@@ -217,14 +184,7 @@ export const divisibleKillerCageInfo: SquareCellElementInfo = {
 };
 
 export const spotlightCageInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCageToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCageValueUpdater(oldValue, key, validateCageValue),
-			defaultValue: '',
-			allowDiagonallyAdjacent: true
-		});
-	},
+	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.SPOTLIGHT_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
@@ -240,11 +200,7 @@ export const spotlightCageInfo: SquareCellElementInfo = {
 };
 
 export const putteriaCageInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCageToolInputHandler(svgRef, grid, tool, {
-			allowDiagonallyAdjacent: true
-		});
-	},
+	inputOptions: DEFAULT_UNVALUED_CAGE_OPTIONS,
 
 	toolId: TOOLS.PUTTERIA_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
@@ -260,14 +216,7 @@ export const putteriaCageInfo: SquareCellElementInfo = {
 };
 
 export const killerCageLookAndSayInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCageToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCageValueUpdater(oldValue, key, validateCageValue),
-			defaultValue: '',
-			allowDiagonallyAdjacent: true
-		});
-	},
+	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.KILLER_CAGE_LOOK_AND_SAY,
 	order: RENDER_ORDER.CAGE_TOOLS,
@@ -283,14 +232,7 @@ export const killerCageLookAndSayInfo: SquareCellElementInfo = {
 };
 
 export const multisetCageInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCageToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCageValueUpdater(oldValue, key, validateCageValue),
-			defaultValue: '',
-			allowDiagonallyAdjacent: true
-		});
-	},
+	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.MULTISET_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
@@ -313,14 +255,7 @@ export const multisetCageInfo: SquareCellElementInfo = {
 };
 
 export const vaultedCageInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCageToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCageValueUpdater(oldValue, key, validateCageValue),
-			defaultValue: '',
-			allowDiagonallyAdjacent: true
-		});
-	},
+	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.VAULTED_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
@@ -336,14 +271,7 @@ export const vaultedCageInfo: SquareCellElementInfo = {
 };
 
 export const aquariumCageInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCageToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCageValueUpdater(oldValue, key, validateCageValue),
-			defaultValue: '',
-			allowDiagonallyAdjacent: true
-		});
-	},
+	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.AQUARIUM_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
@@ -359,14 +287,7 @@ export const aquariumCageInfo: SquareCellElementInfo = {
 };
 
 export const yinYangAntithesisKillerCageInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCageToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCageValueUpdater(oldValue, key, validateCageValue),
-			defaultValue: '',
-			allowDiagonallyAdjacent: true
-		});
-	},
+	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_ANTITHESIS_KILLER_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
@@ -382,14 +303,7 @@ export const yinYangAntithesisKillerCageInfo: SquareCellElementInfo = {
 };
 
 export const yinYangBreakevenKillerCageInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCageToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCageValueUpdater(oldValue, key, validateCageValue),
-			defaultValue: '',
-			allowDiagonallyAdjacent: true
-		});
-	},
+	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_BREAKEVEN_KILLER_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
@@ -405,14 +319,7 @@ export const yinYangBreakevenKillerCageInfo: SquareCellElementInfo = {
 };
 
 export const doublersKillerCageInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCageToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCageValueUpdater(oldValue, key, validateCageValue),
-			defaultValue: '',
-			allowDiagonallyAdjacent: true
-		});
-	},
+	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.DOUBLERS_KILLER_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,
@@ -428,14 +335,7 @@ export const doublersKillerCageInfo: SquareCellElementInfo = {
 };
 
 export const negatorsKillerCageInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCageToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCageValueUpdater(oldValue, key, validateCageValue),
-			defaultValue: '',
-			allowDiagonallyAdjacent: true
-		});
-	},
+	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.NEGATORS_KILLER_CAGE,
 	order: RENDER_ORDER.CAGE_TOOLS,

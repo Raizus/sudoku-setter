@@ -1,4 +1,4 @@
-import { getCornerLineToolInputHandler } from "$input/ToolInputHandlers/CornerLineToolInputHandler";
+import { HANDLER_TOOL_TYPE } from "$input/ToolInputHandlers/types";
 import type { SquareCellElementInfo } from "../ElementInfo";
 import { RENDER_ORDER } from "../RenderOrder";
 import { SHAPE_TYPES } from "../Shape/Shape";
@@ -11,8 +11,8 @@ const cornerLineDefaultCategories = [
 ];
 
 export const mazeWallInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCornerLineToolInputHandler(svgRef, grid, tool);
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.CORNER_LINE,
 	},
 
 	toolId: TOOLS.MAZE_WALL,

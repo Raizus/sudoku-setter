@@ -6,8 +6,8 @@ import {
 	type ValueValidatorOptions
 } from '$src/lib/InputHandlers/InputHandler';
 import { RENDER_ORDER } from '../RenderOrder';
-import { getEdgeToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/EdgeToolInputHandler';
 import type { SquareCellElementInfo } from '../ElementInfo';
+import { HANDLER_TOOL_TYPE, type EdgeToolOptions } from '$input/ToolInputHandlers/types';
 
 const edgeDefaultCategories = [
 	TOOL_CATEGORIES.EDGE_CONSTRAINT,
@@ -105,12 +105,17 @@ export function inequalityValueUpdater(
 	return key;
 }
 
+const DEFAULT_EDGE_OPTIONS: EdgeToolOptions = {
+	type: HANDLER_TOOL_TYPE.EDGE,
+	valueUpdater: (oldValue: string | undefined, key: string) =>
+		defaultEdgeValueUpdater(oldValue, key, validateEdgeValue)
+};
+
 export const ratioInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultEdgeValueUpdater(oldValue, key, validateRatioValue)
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE,
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+			defaultEdgeValueUpdater(oldValue, key, validateRatioValue)
 	},
 
 	toolId: TOOLS.RATIO,
@@ -134,12 +139,7 @@ export const ratioInfo: SquareCellElementInfo = {
 };
 
 export const differenceInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultEdgeValueUpdater(oldValue, key, validateEdgeValue)
-		});
-	},
+	inputOptions: DEFAULT_EDGE_OPTIONS,
 
 	toolId: TOOLS.DIFFERENCE,
 	order: RENDER_ORDER.EDGE_TOOLS,
@@ -155,12 +155,7 @@ export const differenceInfo: SquareCellElementInfo = {
 };
 
 export const edgeSumInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultEdgeValueUpdater(oldValue, key, validateEdgeValue)
-		});
-	},
+	inputOptions: DEFAULT_EDGE_OPTIONS,
 
 	toolId: TOOLS.EDGE_SUM,
 	order: RENDER_ORDER.EDGE_TOOLS,
@@ -179,11 +174,10 @@ export const edgeSumInfo: SquareCellElementInfo = {
 };
 
 export const xvInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: XVValueUpdater,
-			defaultValue: 'V'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE,
+		defaultValue: 'V',
+		valueUpdater: XVValueUpdater
 	},
 
 	toolId: TOOLS.XV,
@@ -206,11 +200,10 @@ export const xvInfo: SquareCellElementInfo = {
 };
 
 export const edgeInequalityInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: inequalityValueUpdater,
-			defaultValue: '<'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE,
+		valueUpdater: inequalityValueUpdater,
+		defaultValue: '<'
 	},
 
 	toolId: TOOLS.EDGE_INEQUALITY,
@@ -234,12 +227,7 @@ export const edgeInequalityInfo: SquareCellElementInfo = {
 };
 
 export const edgeProductInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultEdgeValueUpdater(oldValue, key, validateEdgeValue)
-		});
-	},
+	inputOptions: DEFAULT_EDGE_OPTIONS,
 
 	toolId: TOOLS.EDGE_PRODUCT,
 	order: RENDER_ORDER.EDGE_TOOLS,
@@ -258,12 +246,7 @@ export const edgeProductInfo: SquareCellElementInfo = {
 };
 
 export const edgeModuloInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultEdgeValueUpdater(oldValue, key, validateEdgeValue)
-		});
-	},
+	inputOptions: DEFAULT_EDGE_OPTIONS,
 
 	toolId: TOOLS.EDGE_MODULO,
 	order: RENDER_ORDER.EDGE_TOOLS,
@@ -282,12 +265,7 @@ export const edgeModuloInfo: SquareCellElementInfo = {
 };
 
 export const edgeFactorInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultEdgeValueUpdater(oldValue, key, validateEdgeValue)
-		});
-	},
+	inputOptions: DEFAULT_EDGE_OPTIONS,
 
 	toolId: TOOLS.EDGE_FACTOR,
 	order: RENDER_ORDER.EDGE_TOOLS,
@@ -306,8 +284,8 @@ export const edgeFactorInfo: SquareCellElementInfo = {
 };
 
 export const xyDifferencesInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool);
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE
 	},
 
 	toolId: TOOLS.XY_DIFFERENCES,
@@ -331,8 +309,8 @@ export const xyDifferencesInfo: SquareCellElementInfo = {
 };
 
 export const yinYangWhiteKropkiInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool);
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE
 	},
 
 	toolId: TOOLS.YIN_YANG_WHITE_KROPKI,
@@ -349,8 +327,8 @@ export const yinYangWhiteKropkiInfo: SquareCellElementInfo = {
 };
 
 export const yinYangKropkiInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool);
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE
 	},
 
 	toolId: TOOLS.YIN_YANG_KROPKI,
@@ -375,8 +353,8 @@ export const yinYangKropkiInfo: SquareCellElementInfo = {
 };
 
 export const fillominoRegionBorderInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool);
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE
 	},
 
 	toolId: TOOLS.FILLOMINO_REGION_BORDER,
@@ -392,8 +370,8 @@ export const fillominoRegionBorderInfo: SquareCellElementInfo = {
 };
 
 export const unknownRegionBorderInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool);
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE
 	},
 
 	toolId: TOOLS.UNKNOWN_REGION_BORDER,
@@ -409,8 +387,8 @@ export const unknownRegionBorderInfo: SquareCellElementInfo = {
 };
 
 export const chaosConstructionSuguruBorderInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool);
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE
 	},
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_SUGURU_BORDER,
@@ -426,8 +404,8 @@ export const chaosConstructionSuguruBorderInfo: SquareCellElementInfo = {
 };
 
 export const edgeCaveOneOfEachInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool);
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE
 	},
 
 	toolId: TOOLS.EDGE_CAVE_ONE_OF_EACH,
@@ -444,11 +422,10 @@ export const edgeCaveOneOfEachInfo: SquareCellElementInfo = {
 };
 
 export const oneWayDoorInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: inequalityValueUpdater,
-			defaultValue: '<'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE,
+		valueUpdater: inequalityValueUpdater,
+		defaultValue: '<'
 	},
 
 	toolId: TOOLS.ONE_WAY_DOOR,
@@ -473,12 +450,7 @@ export const oneWayDoorInfo: SquareCellElementInfo = {
 };
 
 export const customEdgeConstraintInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultEdgeValueUpdater(oldValue, key, validateEdgeValue)
-		});
-	},
+	inputOptions: DEFAULT_EDGE_OPTIONS,
 
 	toolId: TOOLS.CUSTOM_EDGE_CONSTRAINT,
 	order: RENDER_ORDER.EDGE_TOOLS,
@@ -486,8 +458,7 @@ export const customEdgeConstraintInfo: SquareCellElementInfo = {
 	shape: DEFAULT_WHITE_CIRCLE,
 
 	meta: {
-		description:
-			'Custom Edge Constraint. Combines several edge constraints into one.',
+		description: 'Custom Edge Constraint. Combines several edge constraints into one.',
 		tags: [],
 		categories: typableEdgeDefaultCategories
 	}

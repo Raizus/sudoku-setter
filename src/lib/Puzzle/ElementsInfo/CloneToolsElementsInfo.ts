@@ -1,12 +1,12 @@
-import { getCloneToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/CloneToolInputHandler';
 import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { RENDER_ORDER } from '../RenderOrder';
 import { SHAPE_TYPES } from '../Shape/Shape';
+import { HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
 
 export const cloneRegionInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, hexGrid, tool) {
-		return getCloneToolInputHandler(svgRef, hexGrid, tool);
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.CLONE
 	},
 
 	toolId: TOOLS.CLONE_REGION,

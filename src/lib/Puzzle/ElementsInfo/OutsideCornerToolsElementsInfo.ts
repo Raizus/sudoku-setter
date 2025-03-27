@@ -3,8 +3,11 @@ import {
 	defaultValueUpdater,
 	type ValueValidatorOptions
 } from '$src/lib/InputHandlers/InputHandler';
-import { CornerOrEdge } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
-import { getOutsideDirectionToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/OutsideDirectionInputHandler';
+import {
+	CornerOrEdge,
+	HANDLER_TOOL_TYPE,
+	type OutsideDirectionToolInputOptions
+} from '$input/ToolInputHandlers/types';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { RENDER_ORDER } from '../RenderOrder';
 import type { EditableShapeI } from '../Shape/Shape';
@@ -43,15 +46,16 @@ const OUTSIDE_DEFAULT_SHAPE: EditableShapeI = {
 	stroke: { editable: true, value: 'var(--text-primary-color)' }
 };
 
+const DEFAULT_OUTSIDE_CORNER_OPTIONS: OutsideDirectionToolInputOptions = {
+	type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
+	valueUpdater: (oldValue: string | undefined, key: string) =>
+		defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
+	defaultValue: '',
+	cornerOrEdge: CornerOrEdge.CORNER
+};
+
 export const littleKillerSumInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.CORNER
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
 
 	toolId: TOOLS.LITTLE_KILLER_SUM,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -67,14 +71,7 @@ export const littleKillerSumInfo: SquareCellElementInfo = {
 };
 
 export const littleKillerProductInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.CORNER
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
 
 	toolId: TOOLS.LITTLE_KILLER_PRODUCT,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -90,14 +87,7 @@ export const littleKillerProductInfo: SquareCellElementInfo = {
 };
 
 export const littleKillerLookAndSayInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.CORNER
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
 
 	toolId: TOOLS.LITTLE_KILLER_LOOK_AND_SAY,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -113,14 +103,7 @@ export const littleKillerLookAndSayInfo: SquareCellElementInfo = {
 };
 
 export const xOmitLittleKillerSumInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.CORNER
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
 
 	toolId: TOOLS.X_OMIT_LITTLE_KILLER_SUM,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -136,14 +119,7 @@ export const xOmitLittleKillerSumInfo: SquareCellElementInfo = {
 };
 
 export const littleKillerRegionSumProductInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.CORNER
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
 
 	toolId: TOOLS.LITTLE_KILLER_REGION_SUM_PRODUCT,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -159,14 +135,7 @@ export const littleKillerRegionSumProductInfo: SquareCellElementInfo = {
 };
 
 export const negatorsLittleKillerSumInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.CORNER
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
 
 	toolId: TOOLS.NEGATORS_LITTLE_KILLER_SUM,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,

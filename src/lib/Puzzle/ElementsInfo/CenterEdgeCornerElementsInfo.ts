@@ -1,18 +1,22 @@
 import { defaultValueUpdater } from '$input/InputHandler';
-import { CornerOrEdge } from '$input/PointerHandlers/CellEdgeCornerPointerHandler';
-import { getCenterCornerOrEdgeToolInputHandler } from '$input/ToolInputHandlers/CenterCornerOrEdgeInputHandler';
+import {
+	CornerOrEdge,
+	HANDLER_TOOL_TYPE,
+	type CenterCornerOrEdgeToolInputOptions
+} from '$input/ToolInputHandlers/types';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { RENDER_ORDER } from '../RenderOrder';
 import { SHAPE_TYPES } from '../Shape/Shape';
 import { TOOL_CATEGORIES, TOOLS } from '../Tools';
 import { centerCornerOrEdgeUsage } from '../ToolUsage';
 
+const DEFAULT_CLOSEST_OPTIONS: CenterCornerOrEdgeToolInputOptions = {
+	type: HANDLER_TOOL_TYPE.CENTER_CORNER_OR_EDGE,
+	targets: CornerOrEdge.CLOSEST
+};
+
 export const rotationallySymmetricGalaxyCenterInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCenterCornerOrEdgeToolInputHandler(svgRef, grid, tool, {
-			targets: CornerOrEdge.CLOSEST
-		});
-	},
+	inputOptions: DEFAULT_CLOSEST_OPTIONS,
 
 	toolId: TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -35,16 +39,15 @@ export const rotationallySymmetricGalaxyCenterInfo: SquareCellElementInfo = {
 };
 
 export const rotationallySymmetricGalaxyCenterSumInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCenterCornerOrEdgeToolInputHandler(svgRef, grid, tool, {
-			targets: CornerOrEdge.CLOSEST,
-			valueUpdater: (oldValue: string | undefined, key: string) => {
-				return defaultValueUpdater(oldValue, key, () => {
-					return true;
-				});
-			},
-			defaultValue: ''
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.CENTER_CORNER_OR_EDGE,
+		targets: CornerOrEdge.CLOSEST,
+		valueUpdater: (oldValue: string | undefined, key: string) => {
+			return defaultValueUpdater(oldValue, key, () => {
+				return true;
+			});
+		},
+		defaultValue: ''
 	},
 
 	toolId: TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER_SUM,
@@ -68,16 +71,15 @@ export const rotationallySymmetricGalaxyCenterSumInfo: SquareCellElementInfo = {
 };
 
 export const yinYangSumOfAdjacentShadedEdgeOrCornerInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCenterCornerOrEdgeToolInputHandler(svgRef, grid, tool, {
-			targets: CornerOrEdge.CORNER_OR_EDGE,
-			valueUpdater: (oldValue: string | undefined, key: string) => {
-				return defaultValueUpdater(oldValue, key, () => {
-					return true;
-				});
-			},
-			defaultValue: ''
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.CENTER_CORNER_OR_EDGE,
+		targets: CornerOrEdge.CORNER_OR_EDGE,
+		valueUpdater: (oldValue: string | undefined, key: string) => {
+			return defaultValueUpdater(oldValue, key, () => {
+				return true;
+			});
+		},
+		defaultValue: ''
 	},
 
 	toolId: TOOLS.YIN_YANG_SUM_OF_ADJACENT_SHADED_EDGE_CORNER,

@@ -22,17 +22,13 @@ import {
 	CellCornerPointerHandler,
 	type CellCornerTapEvent
 } from '$input/PointerHandlers/CellCornerPointerHandler';
-
-export type CornerLineInputHandlerOptions = {
-	allowSelfIntersection: boolean;
-	defaultValue?: string;
-};
+import type { CornerLineToolInputOptions } from './types';
 
 export function getCornerLineToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
 	tool: TOOLID,
-	options?: CornerLineInputHandlerOptions
+	options?: CornerLineToolInputOptions
 ): InputHandler {
 	// console.log('getRCLineToolInputHandler');
 	const pointerHandler = new CellCornerPointerHandler();

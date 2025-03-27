@@ -1,5 +1,4 @@
-import type { InputHandler } from '$src/lib/InputHandlers/InputHandler';
-import type { Grid } from './Grid/Grid';
+import type { ToolHandlerOptions } from '$input/ToolInputHandlers/types';
 import type { EditableShapeI } from './Shape/Shape';
 import type { TOOLID } from './Tools';
 
@@ -8,6 +7,7 @@ export interface AbstractMenuComponent {
 	name?: string;
 	icon?: string;
 }
+
 export interface SelectMenuComponent extends AbstractMenuComponent {
 	type: 'select';
 }
@@ -35,5 +35,5 @@ export interface AbstractElementInfo {
 }
 
 export interface SquareCellElementInfo extends AbstractElementInfo {
-	getInputHandler?: (svgRef: SVGSVGElement, grid: Grid, tool: TOOLID) => InputHandler;
+	inputOptions?: ToolHandlerOptions;
 }

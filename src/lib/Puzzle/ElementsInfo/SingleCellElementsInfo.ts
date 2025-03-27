@@ -7,8 +7,7 @@ import {
 import { RENDER_ORDER } from '../RenderOrder';
 import { SHAPE_TYPES, type EditableShapeI } from '../Shape/Shape';
 import type { SquareCellElementInfo } from '../ElementInfo';
-import { getSingleCellToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/SingleCellToolInputHandler';
-import { getSingleCellArrowToolInputHandler } from '$input/ToolInputHandlers/SingleCellArrowToolInputHandler';
+import { CornerOrEdge, HANDLER_TOOL_TYPE, type SingleCellArrowToolOptions, type SingleCellToolOptions } from '$input/ToolInputHandlers/types';
 
 const singleCellShapeDefaultCategories = [
 	TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
@@ -62,10 +61,24 @@ export function defaultSingleCellValueUpdater(
 	return defaultValueUpdater(oldValue, key, validatorFunc);
 }
 
+const DEFAULT_SINGLE_CELL_OPTIONS: SingleCellToolOptions = {
+	type: HANDLER_TOOL_TYPE.SINGLE_CELL
+};
+
+const DEFAULT_VALUED_SINGLE_CELL_OPTIONS: SingleCellToolOptions = {
+	type: HANDLER_TOOL_TYPE.SINGLE_CELL,
+	valueUpdater: (oldValue: string | undefined, key: string) =>
+		defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
+	defaultValue: ''
+};
+
+const DEFAULT_SINGLE_CELL_ARROW_OPTIONS: SingleCellArrowToolOptions = {
+	type: HANDLER_TOOL_TYPE.SINGLE_CELL_ARROW,
+	cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
+};
+
 export const oddInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.ODD,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -86,9 +99,7 @@ export const oddInfo: SquareCellElementInfo = {
 };
 
 export const evenInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.EVEN,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -109,9 +120,7 @@ export const evenInfo: SquareCellElementInfo = {
 };
 
 export const minimumInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.MINIMUM,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -124,9 +133,7 @@ export const minimumInfo: SquareCellElementInfo = {
 };
 
 export const maximumInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.MAXIMUM,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -139,9 +146,7 @@ export const maximumInfo: SquareCellElementInfo = {
 };
 
 export const primeCellInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.PRIME_CELL,
 	order: RENDER_ORDER.CELL_COLOR_TOOL,
@@ -154,9 +159,7 @@ export const primeCellInfo: SquareCellElementInfo = {
 };
 
 export const oddMinesweeperInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.ODD_MINESWEEPER,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -178,9 +181,7 @@ export const oddMinesweeperInfo: SquareCellElementInfo = {
 };
 
 export const evenMinesweeperInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.EVEN_MINESWEEPER,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -202,9 +203,7 @@ export const evenMinesweeperInfo: SquareCellElementInfo = {
 };
 
 export const countSameParityNeighborCellsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.COUNT_SAME_PARITY_NEIGHBOUR_CELLS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -226,9 +225,7 @@ export const countSameParityNeighborCellsInfo: SquareCellElementInfo = {
 };
 
 export const watchtowerInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.WATCHTOWER,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -250,9 +247,7 @@ export const watchtowerInfo: SquareCellElementInfo = {
 };
 
 export const notWatchtowerInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.NOT_WATCHTOWER,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -274,13 +269,7 @@ export const notWatchtowerInfo: SquareCellElementInfo = {
 };
 
 export const farsightInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
-			defaultValue: ''
-		});
-	},
+	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.FARSIGHT,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -301,12 +290,11 @@ export const farsightInfo: SquareCellElementInfo = {
 };
 
 export const radarInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
-			defaultValue: '9'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.SINGLE_CELL,
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+			defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
+		defaultValue: '9'
 	},
 
 	toolId: TOOLS.RADAR,
@@ -328,9 +316,7 @@ export const radarInfo: SquareCellElementInfo = {
 };
 
 export const orthogonalSumInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.ORTHOGONAL_SUM,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -352,9 +338,7 @@ export const orthogonalSumInfo: SquareCellElementInfo = {
 };
 
 export const indexingColumnInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.INDEXING_COLUMN,
 	order: RENDER_ORDER.CELL_COLOR_TOOL,
@@ -375,9 +359,7 @@ export const indexingColumnInfo: SquareCellElementInfo = {
 };
 
 export const indexingRowInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.INDEXING_ROW,
 	order: RENDER_ORDER.CELL_COLOR_TOOL,
@@ -398,9 +380,7 @@ export const indexingRowInfo: SquareCellElementInfo = {
 };
 
 export const lowDigitInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.LOW_DIGIT,
 	order: RENDER_ORDER.CELL_COLOR_TOOL,
@@ -419,9 +399,7 @@ export const lowDigitInfo: SquareCellElementInfo = {
 };
 
 export const highDigitInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.HIGH_DIGIT,
 	order: RENDER_ORDER.CELL_COLOR_TOOL,
@@ -440,9 +418,7 @@ export const highDigitInfo: SquareCellElementInfo = {
 };
 
 export const friendlyCellInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.FRIENDLY_CELL,
 	order: RENDER_ORDER.CELL_COLOR_TOOL,
@@ -462,9 +438,7 @@ export const friendlyCellInfo: SquareCellElementInfo = {
 };
 
 export const diagonallyAdjacentSumInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.DIAGONALLY_ADJACENT_SUM,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -485,9 +459,7 @@ export const diagonallyAdjacentSumInfo: SquareCellElementInfo = {
 };
 
 export const adjacentCellsInDifferentDirectionsHaveOpositeParityInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.ADJACENT_CELLS_IN_DIFFERENT_DIRECTIONS_HAVE_OPPOSITE_PARITY,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -509,9 +481,7 @@ export const adjacentCellsInDifferentDirectionsHaveOpositeParityInfo: SquareCell
 };
 
 export const sandwichRowColCountInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.SANDWICH_ROW_COL_COUNT,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -527,9 +497,7 @@ export const sandwichRowColCountInfo: SquareCellElementInfo = {
 };
 
 export const countingCirclesInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.COUNTING_CIRCLES,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -551,9 +519,7 @@ export const countingCirclesInfo: SquareCellElementInfo = {
 };
 
 export const reverseCountingCirclesInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.REVERSE_COUNTING_CIRCLES,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -575,12 +541,11 @@ export const reverseCountingCirclesInfo: SquareCellElementInfo = {
 };
 
 export const coloredCountingCirclesInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultSingleCellValueUpdater(oldValue, key, validateColoredCountingCirclesValue),
-			defaultValue: ''
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.SINGLE_CELL,
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+			defaultSingleCellValueUpdater(oldValue, key, validateColoredCountingCirclesValue),
+		defaultValue: ''
 	},
 
 	toolId: TOOLS.COLORED_COUNTING_CIRCLES,
@@ -598,9 +563,7 @@ export const coloredCountingCirclesInfo: SquareCellElementInfo = {
 };
 
 export const uniqueCellsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.UNIQUE_CELLS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -622,9 +585,7 @@ export const uniqueCellsInfo: SquareCellElementInfo = {
 };
 
 export const seenEvenCountInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.SEEN_EVEN_COUNT,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -640,9 +601,7 @@ export const seenEvenCountInfo: SquareCellElementInfo = {
 };
 
 export const seenOddCountInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.SEEN_ODD_COUNT,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -664,9 +623,7 @@ export const seenOddCountInfo: SquareCellElementInfo = {
 };
 
 export const yinYangMinesweeperInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_MINESWEEPER,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -688,9 +645,7 @@ export const yinYangMinesweeperInfo: SquareCellElementInfo = {
 };
 
 export const yinYangSeenUnshadedCellsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_SEEN_UNSHADED_CELLS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -712,9 +667,7 @@ export const yinYangSeenUnshadedCellsInfo: SquareCellElementInfo = {
 };
 
 export const yinYangSeenShadedCellsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_SEEN_SHADED_CELLS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -736,9 +689,7 @@ export const yinYangSeenShadedCellsInfo: SquareCellElementInfo = {
 };
 
 export const yinYangSeenSameShadeCellsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_SEEN_SAME_SHADE_CELLS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -754,9 +705,7 @@ export const yinYangSeenSameShadeCellsInfo: SquareCellElementInfo = {
 };
 
 export const yinYangAdjacentSameShadeCountInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_ADJACENT_SAME_SHADE_COUNT,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -779,9 +728,7 @@ export const yinYangAdjacentSameShadeCountInfo: SquareCellElementInfo = {
 };
 
 export const yinYangShadedNeighboursCountInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_SHADED_NEIGHBOURS_COUNT,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -805,9 +752,7 @@ export const yinYangShadedNeighboursCountInfo: SquareCellElementInfo = {
 };
 
 export const twoContiguousRegionsRowColumnOppositeSetCountInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.TWO_CONTIGUOUS_REGIONS_ROW_COLUMN_OPPOSITE_SET_COUNT,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -829,9 +774,7 @@ export const twoContiguousRegionsRowColumnOppositeSetCountInfo: SquareCellElemen
 };
 
 export const seenRegionBordersCountInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.SEEN_REGION_BORDERS_COUNT,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -853,9 +796,7 @@ export const seenRegionBordersCountInfo: SquareCellElementInfo = {
 };
 
 export const nurimisakiUnshadedEndpointInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.NURIMISAKI_UNSHADED_ENDPOINTS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -877,9 +818,7 @@ export const nurimisakiUnshadedEndpointInfo: SquareCellElementInfo = {
 };
 
 export const sashiganeBendRegionCountInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.SASHIGANE_BEND_REGION_COUNT,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -901,9 +840,7 @@ export const sashiganeBendRegionCountInfo: SquareCellElementInfo = {
 };
 
 export const sashiganeArrowPointsToBendInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellArrowToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
 
 	toolId: TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -927,9 +864,7 @@ export const sashiganeArrowPointsToBendInfo: SquareCellElementInfo = {
 };
 
 export const thermoSightlineLoopArrowInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellArrowToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
 
 	toolId: TOOLS.THERMO_SIGHTLINE_LOOP_ARROW,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -953,13 +888,7 @@ export const thermoSightlineLoopArrowInfo: SquareCellElementInfo = {
 };
 
 export const sashiganeRegionSumInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
-			defaultValue: ''
-		});
-	},
+	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.SASHIGANE_REGION_SUM,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -980,9 +909,7 @@ export const sashiganeRegionSumInfo: SquareCellElementInfo = {
 };
 
 export const cellOnTheLoopInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.CELL_ON_THE_LOOP,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -997,9 +924,7 @@ export const cellOnTheLoopInfo: SquareCellElementInfo = {
 };
 
 export const cellNotOnTheLoopInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.CELL_NOT_ON_THE_LOOP,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -1014,9 +939,7 @@ export const cellNotOnTheLoopInfo: SquareCellElementInfo = {
 };
 
 export const countLoopNeighbourCellsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.COUNT_LOOP_NEIGHBOUR_CELLS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -1038,13 +961,7 @@ export const countLoopNeighbourCellsInfo: SquareCellElementInfo = {
 };
 
 export const twilightCaveFillominoClueInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
-			defaultValue: ''
-		});
-	},
+	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.TWILIGHT_CAVE_FILLOMINO_CLUE,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -1065,9 +982,7 @@ export const twilightCaveFillominoClueInfo: SquareCellElementInfo = {
 };
 
 export const caveClueInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.CAVE_CLUE,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -1089,13 +1004,7 @@ export const caveClueInfo: SquareCellElementInfo = {
 };
 
 export const chaosConstructionChessSumsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
-			defaultValue: ''
-		});
-	},
+	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -1121,13 +1030,7 @@ Clarifications:
 };
 
 export const chaosConstructionArrowKnotsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
-			defaultValue: ''
-		});
-	},
+	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -1149,13 +1052,7 @@ export const chaosConstructionArrowKnotsInfo: SquareCellElementInfo = {
 };
 
 export const chaosConstructionSeenSameRegionCountInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
-			defaultValue: ''
-		});
-	},
+	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -1170,9 +1067,7 @@ export const chaosConstructionSeenSameRegionCountInfo: SquareCellElementInfo = {
 };
 
 export const directedPathStartInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.DIRECTED_PATH_START,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -1194,9 +1089,7 @@ export const directedPathStartInfo: SquareCellElementInfo = {
 };
 
 export const directedPathEndInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.DIRECTED_PATH_END,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -1218,13 +1111,7 @@ export const directedPathEndInfo: SquareCellElementInfo = {
 };
 
 export const teleportInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
-			defaultValue: ''
-		});
-	},
+	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.TELEPORT,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -1245,13 +1132,7 @@ export const teleportInfo: SquareCellElementInfo = {
 };
 
 export const nurikabeIslandProductOfSumAndSizeInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
-			defaultValue: ''
-		});
-	},
+	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -1271,9 +1152,7 @@ export const nurikabeIslandProductOfSumAndSizeInfo: SquareCellElementInfo = {
 };
 
 export const nurikabeSeenWaterwayCellsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.NURIKABE_SEEN_WATERWAY_CELLS,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -1291,9 +1170,7 @@ export const nurikabeSeenWaterwayCellsInfo: SquareCellElementInfo = {
 };
 
 export const nurikabeIslandSizeCellInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, undefined);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.NURIKABE_ISLAND_SIZE_CELL,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -1308,9 +1185,7 @@ export const nurikabeIslandSizeCellInfo: SquareCellElementInfo = {
 };
 
 export const connectFourYellowInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.CONNECT_FOUR_YELLOW,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
@@ -1331,9 +1206,7 @@ export const connectFourYellowInfo: SquareCellElementInfo = {
 };
 
 export const connectFourRedInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
-	},
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.CONENCT_FOUR_RED,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,

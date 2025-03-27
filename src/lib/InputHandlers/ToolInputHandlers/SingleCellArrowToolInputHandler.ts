@@ -9,10 +9,10 @@ import { uniqueId } from 'lodash';
 import { eventIsAltR } from '$src/lib/InputHandlers/KeyboardEventUtils';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import {
-	CellEdgeCornerPointerHandler,
-	CornerOrEdge,
+	CellFeaturePointerHandler,
 	type CellEdgeCornerEvent
 } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
+import type { SingleCellArrowToolOptions } from './types';
 import type { GridShape } from '$lib/Types/types';
 import {
 	singleCellArrowConstraint,
@@ -27,7 +27,7 @@ export function getSingleCellArrowToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
 	tool: TOOLID,
-	cornerOrEdge = CornerOrEdge.CORNER_OR_EDGE
+	options: SingleCellArrowToolOptions
 ): InputHandler {
 	// console.log('getSingleCellArrowToolInputHandler');
 	const validDirections = [
@@ -40,7 +40,8 @@ export function getSingleCellArrowToolInputHandler(
 		DIRECTION.W,
 		DIRECTION.NW
 	];
-	const pointerHandler = new CellEdgeCornerPointerHandler(cornerOrEdge);
+
+	const pointerHandler = new CellFeaturePointerHandler(options.cornerOrEdge);
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	let currentConstraint: CellArrowToolI | null = null;

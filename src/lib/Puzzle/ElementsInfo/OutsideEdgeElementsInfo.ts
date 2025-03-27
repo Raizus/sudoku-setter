@@ -3,8 +3,11 @@ import {
 	defaultValueUpdater,
 	type ValueValidatorOptions
 } from '$src/lib/InputHandlers/InputHandler';
-import { CornerOrEdge } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
-import { getOutsideDirectionToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/OutsideDirectionInputHandler';
+import {
+	CornerOrEdge,
+	HANDLER_TOOL_TYPE,
+	type OutsideDirectionToolInputOptions
+} from '$input/ToolInputHandlers/types';
 import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { RENDER_ORDER } from '../RenderOrder';
@@ -43,15 +46,16 @@ const OUTSIDE_DEFAULT_SHAPE: EditableShapeI = {
 	stroke: { editable: true, value: 'var(--text-primary-color)' }
 };
 
+const DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS: OutsideDirectionToolInputOptions = {
+	type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
+	valueUpdater: (oldValue: string | undefined, key: string) =>
+		defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
+	defaultValue: '',
+	cornerOrEdge: CornerOrEdge.EDGE
+};
+
 export const sandwichSumInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.EDGE
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.SANDWICH_SUM,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -67,14 +71,7 @@ export const sandwichSumInfo: SquareCellElementInfo = {
 };
 
 export const sandwichSumXorXSumInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.EDGE
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.SANDWICH_SUM_XOR_X_SUM,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -90,14 +87,7 @@ export const sandwichSumXorXSumInfo: SquareCellElementInfo = {
 };
 
 export const xSumInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.EDGE
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.X_SUM,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -113,14 +103,7 @@ export const xSumInfo: SquareCellElementInfo = {
 };
 
 export const shortsightedXSumInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.EDGE
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.SHORTSIGHTED_X_SUM,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -136,14 +119,7 @@ export const shortsightedXSumInfo: SquareCellElementInfo = {
 };
 
 export const shiftedXSumInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.EDGE
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.SHIFTED_X_SUM,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -159,14 +135,7 @@ export const shiftedXSumInfo: SquareCellElementInfo = {
 };
 
 export const brokenXSumInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.EDGE
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.BROKEN_X_SUM,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -182,14 +151,7 @@ export const brokenXSumInfo: SquareCellElementInfo = {
 };
 
 export const xSumSkyscrapersInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.EDGE
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.X_SUM_SKYSCRAPERS,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -205,14 +167,7 @@ export const xSumSkyscrapersInfo: SquareCellElementInfo = {
 };
 
 export const battlefieldInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.EDGE
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.BATTLEFIELD,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -228,14 +183,7 @@ export const battlefieldInfo: SquareCellElementInfo = {
 };
 
 export const skyscrapersInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.EDGE
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.SKYSCRAPERS,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -250,14 +198,7 @@ export const skyscrapersInfo: SquareCellElementInfo = {
 };
 
 export const xIndexInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.EDGE
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.X_INDEX,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -273,14 +214,7 @@ export const xIndexInfo: SquareCellElementInfo = {
 };
 
 export const risingStreakInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.EDGE
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.RISING_STREAK,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -296,14 +230,7 @@ export const risingStreakInfo: SquareCellElementInfo = {
 };
 
 export const rowOrColumnRankInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.EDGE
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.ROW_OR_COLUMN_RANK,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -319,14 +246,7 @@ export const rowOrColumnRankInfo: SquareCellElementInfo = {
 };
 
 export const outsideEdgeYinYangSumOfShadedInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.EDGE
-		});
-	},
+	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED,
 	order: RENDER_ORDER.OUTSIDE_TOOLS,
@@ -342,13 +262,12 @@ export const outsideEdgeYinYangSumOfShadedInfo: SquareCellElementInfo = {
 };
 
 export const outsideConsecutiveSumInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.BOTH
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+			defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
+		defaultValue: '',
+		cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
 	},
 
 	toolId: TOOLS.OUTSIDE_CONSECUTIVE_SUM,
@@ -365,13 +284,12 @@ export const outsideConsecutiveSumInfo: SquareCellElementInfo = {
 };
 
 export const loopwhichesInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.BOTH
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+			defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
+		defaultValue: '',
+		cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
 	},
 
 	toolId: TOOLS.LOOPWICHES,
@@ -388,13 +306,12 @@ export const loopwhichesInfo: SquareCellElementInfo = {
 };
 
 export const chaosConstructionSumOfFirstEachRegionInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.BOTH
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+			defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
+		defaultValue: '',
+		cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
 	},
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION,

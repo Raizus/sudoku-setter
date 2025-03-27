@@ -1,26 +1,35 @@
-import type { InputHandler, ValueToolInputOptions } from '../InputHandler';
-import {
-	currentConstraintStore,
-	updateLocalConstraint
-} from '$stores/BoardStore';
-import { localConstraintsStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
+
+import type { InputHandler } from '../InputHandler';
+import type { CornerToolOptions } from './types';
+import {
+	currentConstraintStore,
+	updateLocalConstraint,
+	localConstraintsStore
+} from '$stores/BoardStore';
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import { keyboardInputDefaultValidator } from '$src/lib/InputHandlers/KeyboardEventUtils';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import type { GridShape } from '$lib/Types/types';
-import { findCornerConstraint, updateConstraintValue, type ConstraintType } from '$lib/Puzzle/Constraints/LocalConstraints';
+import {
+	findCornerConstraint,
+	updateConstraintValue,
+	type ConstraintType
+} from '$lib/Puzzle/Constraints/LocalConstraints';
 import { cornerConstraint, type CornerToolI } from '$lib/Puzzle/Constraints/CornerConstraints';
 import { cornerCoordToAdjCellCoords, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
-import { CellCornerPointerHandler, type CellCornerTapEvent } from '$src/lib/InputHandlers/PointerHandlers/CellCornerPointerHandler';
+import {
+	CellCornerPointerHandler,
+	type CellCornerTapEvent
+} from '$src/lib/InputHandlers/PointerHandlers/CellCornerPointerHandler';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 
 export function getCornerToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
 	tool: TOOLID,
-	options?: ValueToolInputOptions
+	options?: CornerToolOptions
 ): InputHandler {
 	// console.log('getCornerToolInputHandler');
 	const pointerHandler = new CellCornerPointerHandler();
@@ -105,4 +114,3 @@ export function getCornerToolInputHandler(
 
 	return inputHandler;
 }
-

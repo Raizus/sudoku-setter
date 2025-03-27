@@ -1,8 +1,8 @@
+import { get } from 'svelte/store';
 import type { InputHandler } from '../InputHandler';
 import { updateLocalConstraint } from '$stores/BoardStore';
 import { localConstraintsStore } from '$stores/BoardStore';
 import { addLocalConstraint } from '$stores/LocalConstraintsStore';
-import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
@@ -31,17 +31,13 @@ import {
 	pushRemoveLocalConstraintCommand,
 	pushUpdateLocalConstraintCommand
 } from './utils';
-
-export type ArrowInputHandlerOptions = {
-	allowSelfIntersection: boolean; // allow arrow to intersect bulb
-	defaultValue?: string;
-};
+import type { ArrowToolInputOptions } from './types';
 
 export function getArrowToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
 	tool: TOOLID,
-	options?: ArrowInputHandlerOptions
+	options?: ArrowToolInputOptions
 ): InputHandler {
 	// console.log('getArrowToolInputHandler');
 	const pointerHandler = new CellPointerHandler();

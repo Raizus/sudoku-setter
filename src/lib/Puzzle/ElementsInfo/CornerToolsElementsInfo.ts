@@ -3,12 +3,12 @@ import {
 	defaultValueUpdater,
 	type ValueValidatorOptions
 } from '$src/lib/InputHandlers/InputHandler';
-import { getCornerToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/CornerToolInputHandler';
 import { SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
 import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { RENDER_ORDER } from '../RenderOrder';
 import { cornerUsage, quadrupleUsage } from '../ToolUsage';
+import { HANDLER_TOOL_TYPE, type CornerToolOptions } from '$input/ToolInputHandlers/types';
 
 export function validateCornerValue(value: string, maxLength = 3): boolean {
 	const options: ValueValidatorOptions = {
@@ -30,20 +30,26 @@ export function defaultCornerValueUpdater(
 }
 
 function quadrupleValueUpdater(oldValue: string | undefined, key: string): string | undefined {
-	function quadrupleValidator(value: string): boolean {
+	function quadrupleValidator(): boolean {
 		return true;
 	}
 
 	return defaultValueUpdater(oldValue, key, quadrupleValidator);
 }
 
+const DEFAULT_CORNER_OPTIONS: CornerToolOptions = {
+	type: HANDLER_TOOL_TYPE.CORNER,
+	defaultValue: '',
+	valueUpdater: (oldValue: string | undefined, key: string) =>
+		defaultCornerValueUpdater(oldValue, key, validateCornerValue)
+};
+
 export const quadrupleInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCornerToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				quadrupleValueUpdater(oldValue, key),
-			defaultValue: ''
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.CORNER,
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+			quadrupleValueUpdater(oldValue, key),
+		defaultValue: ''
 	},
 
 	toolId: TOOLS.QUADRUPLE,
@@ -71,13 +77,7 @@ export const quadrupleInfo: SquareCellElementInfo = {
 };
 
 export const cornerSumInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCornerToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCornerValueUpdater(oldValue, key, validateCornerValue),
-			defaultValue: ''
-		});
-	},
+	inputOptions: DEFAULT_CORNER_OPTIONS,
 
 	toolId: TOOLS.CORNER_SUM,
 	order: RENDER_ORDER.CORNER_TOOLS,
@@ -105,8 +105,9 @@ export const cornerSumInfo: SquareCellElementInfo = {
 };
 
 export const cornerSumOfThreeEqualsTheOtherInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCornerToolInputHandler(svgRef, grid, tool);
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.CORNER,
+		defaultValue: ''
 	},
 
 	toolId: TOOLS.CORNER_SUM_OF_THREE_EQUALS_THE_OTHER,
@@ -134,13 +135,7 @@ export const cornerSumOfThreeEqualsTheOtherInfo: SquareCellElementInfo = {
 };
 
 export const cornerEvenCountInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCornerToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCornerValueUpdater(oldValue, key, validateCornerValue),
-			defaultValue: ''
-		});
-	},
+	inputOptions: DEFAULT_CORNER_OPTIONS,
 
 	toolId: TOOLS.CORNER_EVEN_COUNT,
 	order: RENDER_ORDER.CORNER_TOOLS,
@@ -167,13 +162,7 @@ export const cornerEvenCountInfo: SquareCellElementInfo = {
 };
 
 export const cornerCellsBelongToExacltyThreeRegionsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCornerToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCornerValueUpdater(oldValue, key, validateCornerValue),
-			defaultValue: ''
-		});
-	},
+	inputOptions: DEFAULT_CORNER_OPTIONS,
 
 	toolId: TOOLS.CORNER_CELLS_BELONG_TO_EXACTLY_THREE_REGIONS,
 	order: RENDER_ORDER.CORNER_TOOLS,
@@ -201,10 +190,9 @@ export const cornerCellsBelongToExacltyThreeRegionsInfo: SquareCellElementInfo =
 };
 
 export const productSquareInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCornerToolInputHandler(svgRef, grid, tool, {
-			defaultValue: 'X'
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.CORNER,
+		defaultValue: 'X'
 	},
 
 	toolId: TOOLS.PRODUCT_SQUARE,
@@ -233,10 +221,9 @@ export const productSquareInfo: SquareCellElementInfo = {
 };
 
 export const equalDiagonalDifferencesInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCornerToolInputHandler(svgRef, grid, tool, {
-			defaultValue: ''
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.CORNER,
+		defaultValue: ''
 	},
 
 	toolId: TOOLS.EQUAL_DIAGONAL_DIFFERENCES,

@@ -1,4 +1,5 @@
-import type { InputHandler, ValueToolInputOptions } from '../InputHandler';
+import type { InputHandler } from '../InputHandler';
+import type { SingleCellToolOptions } from "./types";
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import {
 	currentConstraintStore,
@@ -29,8 +30,7 @@ export function getSingleCellToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
 	tool: TOOLID,
-	oppositeConstraintId?: TOOLID,
-	options?: ValueToolInputOptions
+	options?: SingleCellToolOptions
 ): InputHandler {
 	const pointerHandler = new CellPointerHandler();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
@@ -55,10 +55,10 @@ export function getSingleCellToolInputHandler(
 			mode = match ? MODE.REMOVING : MODE.ADDING;
 		}
 
-		if (oppositeConstraintId) {
+		if (options?.oppositeConstraintId) {
 			const oppositeConstraintMatch = findSingleCellConstraint<CellToolI>(
 				localConstraints,
-				oppositeConstraintId,
+				options.oppositeConstraintId,
 				coords
 			);
 			if (oppositeConstraintMatch) return;
@@ -67,8 +67,7 @@ export function getSingleCellToolInputHandler(
 		if (match && mode === MODE.REMOVING) {
 			const [id, constraint] = match;
 			pushRemoveLocalConstraintCommand(id, constraint, tool);
-		}
-		else if (mode === MODE.ADDING) {
+		} else if (mode === MODE.ADDING) {
 			const newConstraint = singleCellConstraint(tool, coords, options?.defaultValue);
 			const id = uniqueId();
 			pushAddLocalConstraintCommand(id, newConstraint, tool, true);

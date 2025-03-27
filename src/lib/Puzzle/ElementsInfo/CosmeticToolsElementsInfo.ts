@@ -2,25 +2,16 @@ import { SHAPE_TYPES } from '../Shape/Shape';
 import { TOOLS, TOOL_CATEGORIES } from '../Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { RENDER_ORDER } from '../RenderOrder';
-import { getCornerToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/CornerToolInputHandler';
-import { getLineToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/LineToolInputHandler';
-import { getCageToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/CageToolInputHandler';
-import { getArrowToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/ArrowToolInputHandler';
-import { getSingleCellToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/SingleCellToolInputHandler';
-import { getEdgeToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/EdgeToolInputHandler';
-import { getSingleCellArrowToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/SingleCellArrowToolInputHandler';
-import { getSingleCellMultiArrowToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/SingleCellMultiArrowToolInputHandler';
 import { defaultCageValueUpdater, validateCageValue } from './CageToolsElementsInfo';
 import { defaultEdgeValueUpdater, validateEdgeValue } from './EdgeToolsElementsInfo';
 import { defaultCornerValueUpdater, validateCornerValue } from './CornerToolsElementsInfo';
-import { getOutsideDirectionToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/OutsideDirectionInputHandler';
 import { defaultOutsideDirectionValueUpdater } from './OutsideCornerToolsElementsInfo';
-import { CornerOrEdge } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
+import { CornerOrEdge, HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
 import { validateOutsideDirectionValue } from './OutsideEdgeElementsInfo';
 
 export const cosmeticCellShapeInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellToolInputHandler(svgRef, grid, tool);
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.SINGLE_CELL
 	},
 
 	toolId: TOOLS.COSMETIC_CELL_SHAPE,
@@ -51,8 +42,9 @@ export const cosmeticCellShapeInfo: SquareCellElementInfo = {
 };
 
 export const cosmeticCellArrowInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellArrowToolInputHandler(svgRef, grid, tool);
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.SINGLE_CELL_ARROW,
+		cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
 	},
 
 	toolId: TOOLS.COSMETIC_CELL_ARROW,
@@ -72,8 +64,9 @@ export const cosmeticCellArrowInfo: SquareCellElementInfo = {
 };
 
 export const cosmeticCellMultiArrowInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool);
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.SINGLE_CELL_MULTI_ARROW,
+		cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
 	},
 
 	toolId: TOOLS.COSMETIC_CELL_MULTI_ARROW,
@@ -93,11 +86,11 @@ export const cosmeticCellMultiArrowInfo: SquareCellElementInfo = {
 };
 
 export const cosmeticEdgeInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getEdgeToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultEdgeValueUpdater(oldValue, key, validateEdgeValue)
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE,
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+				defaultEdgeValueUpdater(oldValue, key, validateEdgeValue),
+		defaultValue: ''
 	},
 
 	toolId: TOOLS.COSMETIC_EDGE,
@@ -135,12 +128,11 @@ export const cosmeticEdgeInfo: SquareCellElementInfo = {
 };
 
 export const cosmeticCornerInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCornerToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCornerValueUpdater(oldValue, key, validateCornerValue),
-			defaultValue: ''
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.CORNER,
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+			defaultCornerValueUpdater(oldValue, key, validateCornerValue),
+		defaultValue: ''		
 	},
 
 	toolId: TOOLS.COSMETIC_CORNER,
@@ -178,8 +170,9 @@ export const cosmeticCornerInfo: SquareCellElementInfo = {
 };
 
 export const cosmeticLineInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true
 	},
 
 	toolId: TOOLS.COSMETIC_LINE,
@@ -212,8 +205,9 @@ export const cosmeticLineInfo: SquareCellElementInfo = {
 };
 
 export const cosmeticLineWithCircleEndsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true
 	},
 
 	toolId: TOOLS.COSMETIC_LINE_WITH_CIRCLE_ENDS,
@@ -248,8 +242,9 @@ export const cosmeticLineWithCircleEndsInfo: SquareCellElementInfo = {
 };
 
 export const cosmeticLineWithPolygonEndsInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getLineToolInputHandler(svgRef, grid, tool, { allowSelfIntersection: true });
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: true
 	},
 
 	toolId: TOOLS.COSMETIC_LINE_WITH_POLYGON_ENDS,
@@ -285,13 +280,12 @@ export const cosmeticLineWithPolygonEndsInfo: SquareCellElementInfo = {
 };
 
 export const cosmeticCageInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getCageToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultCageValueUpdater(oldValue, key, validateCageValue),
-			defaultValue: '',
-			allowDiagonallyAdjacent: true
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.CAGE,
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+			defaultCageValueUpdater(oldValue, key, validateCageValue),
+		defaultValue: '',
+		allowDiagonallyAdjacent: true		
 	},
 
 	toolId: TOOLS.COSMETIC_CAGE,
@@ -318,8 +312,8 @@ export const cosmeticCageInfo: SquareCellElementInfo = {
 };
 
 export const cosmeticArrowInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getArrowToolInputHandler(svgRef, grid, tool);
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.ARROW,
 	},
 
 	toolId: TOOLS.COSMETIC_ARROW,
@@ -344,13 +338,12 @@ export const cosmeticArrowInfo: SquareCellElementInfo = {
 };
 
 export const cosmeticOutsideDirectionInfo: SquareCellElementInfo = {
-	getInputHandler(svgRef, grid, tool) {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, {
-			valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-			defaultValue: '',
-			cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
-		});
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+			defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
+		defaultValue: '',
+		cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE		
 	},
 
 	toolId: TOOLS.COSMETIC_OUTSIDE_DIRECTION,

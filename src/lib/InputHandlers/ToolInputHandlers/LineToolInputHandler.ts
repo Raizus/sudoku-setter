@@ -15,19 +15,13 @@ import { updateLineConstraintCells, type LineToolI, lineConstraint } from '$lib/
 import { findLineConstraint } from '$lib/Puzzle/Constraints/LocalConstraints';
 import { CellPointerHandler, type CellDragTapEvent } from '$src/lib/InputHandlers/PointerHandlers/SquareCellPointerInput';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
-
-export type LineInputHandlerOptions = {
-	// deletePrioritizeHead: boolean,
-	// deletePrioritizeTail: boolean,
-	allowSelfIntersection: boolean;
-	defaultValue?: string;
-};
+import type { LineToolInputOptions } from './types';
 
 export function getLineToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
 	tool: TOOLID,
-	options?: LineInputHandlerOptions
+	options?: LineToolInputOptions
 ): InputHandler {
 	// console.log('getLineToolInputHandler');
 	const pointerHandler = new CellPointerHandler();

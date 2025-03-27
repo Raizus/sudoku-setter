@@ -9,7 +9,8 @@ import { addLocalConstraint } from '$stores/LocalConstraintsStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
-import { CellEdgeCornerPointerHandler, CornerOrEdge, type CellEdgeCornerEvent } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
+import { CellFeaturePointerHandler, type CellEdgeCornerEvent } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
+import type { SingleCellMultiArrowToolOptions } from './types';
 import { singleCellMultiArrowConstraint, type CellMultiArrowToolI } from '$lib/Puzzle/Constraints/SingleCellConstraints';
 import { findSingleCellConstraint } from '$lib/Puzzle/Constraints/LocalConstraints';
 import { idxToDirection, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
@@ -32,10 +33,10 @@ export function getSingleCellMultiArrowToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
 	tool: TOOLID,
-	cornerOrEdge = CornerOrEdge.CORNER_OR_EDGE
+	options: SingleCellMultiArrowToolOptions
 ): InputHandler {
 	// console.log('getSingleCellMultiArrowToolInputHandler');
-	const pointerHandler = new CellEdgeCornerPointerHandler(cornerOrEdge);
+	const pointerHandler = new CellFeaturePointerHandler(options.cornerOrEdge);
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	let currentConstraint: CellMultiArrowToolI | null = null;

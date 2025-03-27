@@ -1,4 +1,4 @@
-import type { InputHandler, ValueToolInputOptions } from '../InputHandler';
+import type { InputHandler } from '../InputHandler';
 import {
 	currentConstraintStore,
 	setCurrentConstraint,
@@ -22,10 +22,7 @@ import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { findCageConstraint } from '$lib/Puzzle/Constraints/LocalConstraints';
 import { CellPointerHandler, type CellDragTapEvent } from '$src/lib/InputHandlers/PointerHandlers/SquareCellPointerInput';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
-
-export interface CageToolInputOptions extends ValueToolInputOptions {
-	allowDiagonallyAdjacent?: boolean;
-}
+import type { CageToolInputOptions } from './types';
 
 export function getCageToolInputHandler(
 	svgRef: SVGSVGElement,

@@ -1,4 +1,4 @@
-import type { InputHandler, ValueToolInputOptions } from '../InputHandler';
+import type { InputHandler } from '../InputHandler';
 import {
 	currentConstraintStore,
 	updateLocalConstraint
@@ -12,10 +12,10 @@ import type { TOOLID } from '$lib/Puzzle/Tools';
 import { keyboardInputDefaultValidator } from '$src/lib/InputHandlers/KeyboardEventUtils';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import {
-	CellEdgeCornerPointerHandler,
-	CornerOrEdge,
+	CellFeaturePointerHandler,
 	type CellEdgeCornerEvent
 } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
+import { CornerOrEdge } from './types';
 import type { GridShape } from '$lib/Types/types';
 import {
 	updateConstraintValue,
@@ -23,10 +23,7 @@ import {
 } from '$lib/Puzzle/Constraints/LocalConstraints';
 import { gridCoordsNextInDirection, idxToDirection, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { outsideDirectionConstraint, type OutsideDirectionToolI } from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
-
-export interface OutsideDirectionToolInputOptions extends ValueToolInputOptions {
-	cornerOrEdge: CornerOrEdge;
-}
+import type { OutsideDirectionToolInputOptions } from './types';
 
 export function getOutsideDirectionToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -37,7 +34,7 @@ export function getOutsideDirectionToolInputHandler(
 	// console.log('getOutsideEdgeToolInputHandler');
 	
 	const cornerOrEdge = options?.cornerOrEdge ?? CornerOrEdge.CORNER_OR_EDGE;
-	const pointerHandler = new CellEdgeCornerPointerHandler(cornerOrEdge);
+	const pointerHandler = new CellFeaturePointerHandler(cornerOrEdge);
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	let currentConstraint: OutsideDirectionToolI | null = null;

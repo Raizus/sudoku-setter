@@ -1,4 +1,4 @@
-import type { InputHandler, ValueToolInputOptions } from '../InputHandler';
+import type { InputHandler } from '../InputHandler';
 import {
     currentConstraintStore,
     updateLocalConstraint
@@ -12,10 +12,10 @@ import type { TOOLID } from '$lib/Puzzle/Tools';
 import { keyboardInputDefaultValidator } from '$src/lib/InputHandlers/KeyboardEventUtils';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import {
-    CellEdgeCornerPointerHandler,
-    CornerOrEdge,
+    CellFeaturePointerHandler,
     type CellEdgeCornerEvent
 } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
+import { CornerOrEdge } from './types';
 import type { GridShape } from '$lib/Types/types';
 import {
     updateConstraintValue,
@@ -23,10 +23,7 @@ import {
 } from '$lib/Puzzle/Constraints/LocalConstraints';
 import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { centerCornerOrEdgeConstraint, type CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/Constraints/CenterCornerOrEdgeConstraints';
-
-export interface CenterCornerOrEdgeToolInputOptions extends ValueToolInputOptions {
-    targets: CornerOrEdge;
-}
+import type { CenterCornerOrEdgeToolInputOptions } from './types';
 
 export function getCenterCornerOrEdgeToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -37,7 +34,7 @@ export function getCenterCornerOrEdgeToolInputHandler(
 	// console.log('getCenterCornerOrEdgeToolInputHandler');
 
 	const targets = options?.targets ?? CornerOrEdge.CLOSEST;
-    const pointerHandler = new CellEdgeCornerPointerHandler(targets);
+    const pointerHandler = new CellFeaturePointerHandler(targets);
     
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 

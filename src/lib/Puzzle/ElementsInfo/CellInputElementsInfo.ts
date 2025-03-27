@@ -1,10 +1,9 @@
 import { TOOLS, TOOL_CATEGORIES } from '../Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
-import { getSelectionInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/SelectionInputHandler';
-import { getPenToolInputHandler } from '$src/lib/InputHandlers/ToolInputHandlers/PenToolInputHandler';
+import { HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
 
 export const givenInfo: SquareCellElementInfo = {
-	getInputHandler: getSelectionInputHandler,
+	inputOptions: {type: HANDLER_TOOL_TYPE.SELECTION},
 	toolId: TOOLS.GIVEN,
 	order: 0,
 
@@ -22,7 +21,7 @@ export const givenInfo: SquareCellElementInfo = {
 };
 
 export const digitInfo: SquareCellElementInfo = {
-	getInputHandler: getSelectionInputHandler,
+	inputOptions: { type: HANDLER_TOOL_TYPE.SELECTION },
 	toolId: TOOLS.DIGIT,
 	order: 0,
 
@@ -40,7 +39,7 @@ export const digitInfo: SquareCellElementInfo = {
 };
 
 export const regionsInfo: SquareCellElementInfo = {
-	getInputHandler: getSelectionInputHandler,
+	inputOptions: { type: HANDLER_TOOL_TYPE.SELECTION },
 	toolId: TOOLS.REGIONS,
 	order: 0,
 
@@ -58,7 +57,7 @@ export const regionsInfo: SquareCellElementInfo = {
 };
 
 export const cornerPMInfo: SquareCellElementInfo = {
-	getInputHandler: getSelectionInputHandler,
+	inputOptions: { type: HANDLER_TOOL_TYPE.SELECTION },
 	toolId: TOOLS.CORNER_PM,
 	order: 0,
 
@@ -76,7 +75,7 @@ export const cornerPMInfo: SquareCellElementInfo = {
 };
 
 export const centerPMInfo: SquareCellElementInfo = {
-	getInputHandler: getSelectionInputHandler,
+	inputOptions: { type: HANDLER_TOOL_TYPE.SELECTION },
 	toolId: TOOLS.CENTER_PM,
 	order: 0,
 
@@ -94,7 +93,7 @@ export const centerPMInfo: SquareCellElementInfo = {
 };
 
 export const highlightsInfo: SquareCellElementInfo = {
-	getInputHandler: getSelectionInputHandler,
+	inputOptions: { type: HANDLER_TOOL_TYPE.SELECTION },
 	toolId: TOOLS.HIGHLIGHTS,
 	order: 0,
 
@@ -112,7 +111,7 @@ export const highlightsInfo: SquareCellElementInfo = {
 };
 
 export const outsideInfo: SquareCellElementInfo = {
-	getInputHandler: getSelectionInputHandler,
+	inputOptions: { type: HANDLER_TOOL_TYPE.SELECTION },
 	toolId: TOOLS.OUTSIDE,
 	order: 0,
 
@@ -130,7 +129,7 @@ export const outsideInfo: SquareCellElementInfo = {
 };
 
 export const fogInfo: SquareCellElementInfo = {
-	getInputHandler: getSelectionInputHandler,
+	inputOptions: { type: HANDLER_TOOL_TYPE.SELECTION },
 	toolId: TOOLS.FOG,
 	order: 0,
 
@@ -148,7 +147,7 @@ export const fogInfo: SquareCellElementInfo = {
 };
 
 export const penToolInfo: SquareCellElementInfo = {
-	getInputHandler: getPenToolInputHandler,
+	inputOptions: { type: HANDLER_TOOL_TYPE.PEN },
 	toolId: TOOLS.PEN_TOOL,
 	order: 0,
 
@@ -160,8 +159,7 @@ export const penToolInfo: SquareCellElementInfo = {
 
 	meta: {
 		description: 'Pen Tool',
-		usage:
-			`Click and drag between cell centers or cell corners to draw lines.\n\tClick on a cell edge of center to draw marks.`,
+		usage: `Click and drag between cell centers or cell corners to draw lines.\n\tClick on a cell edge of center to draw marks.`,
 		tags: [],
 		categories: []
 	}
