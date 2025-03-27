@@ -29,8 +29,8 @@
 <CageRender cells={tool.cells} {shape} />
 <CellTextLabelRender
 	value={label}
-	x={cell2TL.x}
-	y={cell2TL.y}
+	x={cell1TL.x}
+	y={cell1TL.y}
 	position="BR"
 	fontColor={textColor}
 	{fontWeight}
