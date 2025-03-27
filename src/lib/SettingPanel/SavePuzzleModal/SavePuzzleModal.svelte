@@ -44,9 +44,11 @@
 		return clone;
 	}
 
-	function downloadAsPNG(svgElement: SVGSVGElement, fileName = 'download.png') {
+	function downloadAsPNG(svgElement: SVGSVGElement) {
 		// Create a deep clone with computed styles
 		const clonedSvg = deepCloneWithStyles(svgElement);
+
+		const fileName = getPuzzleFilename($puzzleMetaStore);
 
 		// Get the SVG content
 		const serializer = new XMLSerializer();
