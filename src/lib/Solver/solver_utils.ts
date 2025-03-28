@@ -498,7 +498,7 @@ export function set_board_regions(model: PuzzleModel, grid: Grid) {
 		const max_r = Math.max(...regions);
 		const regions_arr: number[][] = [];
 		for (let i = 0; i < grid.nRows; i++) {
-			const row: number[] = []
+			const row: number[] = [];
 			for (let j = 0; j < grid.nCols; j++) {
 				const cell = grid.getCell(i, j);
 				if (!cell || cell.region === null) row.push(min_r - 1);
@@ -506,7 +506,7 @@ export function set_board_regions(model: PuzzleModel, grid: Grid) {
 			}
 			regions_arr.push(row);
 		}
-		
+
 		const array_str = format_2d_array(regions_arr);
 		model.add(
 			`array[ROW_IDXS, COL_IDXS] of var ${min_r - 1}..${max_r}: ${VAR_2D_NAMES.BOARD_REGIONS} = array2d(ROW_IDXS, COL_IDXS, ${array_str});\n`
@@ -535,9 +535,6 @@ export function groupConstraintsByValue<T extends ConstraintType>(constraints: T
 }
 
 export function cellsFromCoords(grid: Grid, coords: GridCoordI[]): Cell[] {
-	const cells = coords
-		.map((coord) => grid.getCell(coord.r, coord.c))
-		.filter((cell) => !!cell);
+	const cells = coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell);
 	return cells;
 }
-
