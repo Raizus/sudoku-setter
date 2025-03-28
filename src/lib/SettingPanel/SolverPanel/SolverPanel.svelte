@@ -4,6 +4,7 @@
 	import Panel from '../Subpanel/Panel.svelte';
 	import PanelHeader from '../Subpanel/PanelHeader.svelte';
 	import * as MiniZinc from 'minizinc';
+	// import * as MiniZinc from 'https://cdn.jsdelivr.net/npm/minizinc/dist/minizinc.mjs';
 	import SolverModal from './SolverModal.svelte';
 	import { setBoardOnSolution } from './helpers';
 	import { readable } from 'svelte/store';
@@ -64,7 +65,6 @@
 
 		resetPuzzle();
 		// Define a simple MiniZinc model
-		console.log(puzzle);
 		const puzzle_model = createMinizincModel(puzzle);
 		model.addFile('test.mzn', puzzle_model.model_str);
 
@@ -81,7 +81,7 @@
 		solver.on('solution', (solution) => {
 			const json = solution.output.json;
 			if (solution.type === 'solution' && sol_count !== null) sol_count += 1;
-			console.log(json);
+			// console.log(json);
 			setBoardOnSolution(json, puzzle_model);
 		});
 
