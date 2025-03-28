@@ -1,5 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from '../../$types';
+import { base } from '$app/paths';
 
 interface PuzzleParams extends Record<string, string> {
 	puzzleId: string;
@@ -12,7 +13,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 	const { puzzleId } = params as PuzzleParams;
 
 	try {
-		const response = await fetch(`/puzzles/${puzzleId}.json`);
+		const response = await fetch(`${base}/puzzles/${puzzleId}.json`);
 
 		if (!response.ok) {
 			throw error(404, `Puzzle "${puzzleId}" not found`);
