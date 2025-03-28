@@ -7,14 +7,13 @@
 	import { gameModeStore } from '$stores/BoardStore';
 	import { onMount } from 'svelte';
 	import * as MiniZinc from 'minizinc';
+	import { base } from '$app/paths';
 
 	$: game_mode = $gameModeStore;
 
 	onMount(async () => {
-		const baseUrl = window.location.origin;
-		// If we're on the dev server, use origin, otherwise use origin + pathname
-		// const base = import.meta.env.BASE_URL;
-		// const baseUrl = base === '/' ? window.location.origin + '/' : `${window.location.origin}${base}`;
+		const origin = window.location.origin;
+		const baseUrl = base === '' ? origin : `${origin}/${base}`;
 
 		try {
 			await MiniZinc.init({

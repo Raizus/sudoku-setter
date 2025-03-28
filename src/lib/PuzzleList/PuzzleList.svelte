@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import type { PuzzleInfo } from '../Types/types';
 	import PuzzleCard from '$src/lib/PuzzleList/PuzzleCard.svelte';
+	import { base } from '$app/paths';
 
 	let puzzles: PuzzleInfo[];
 	let loading: boolean = true;
@@ -9,7 +10,7 @@
 
 	onMount(async () => {
 		try {
-			const response = await fetch('/puzzles.json');
+			const response = await fetch(`${base}/puzzles.json`);
 			if (!response.ok) throw new Error('Failed to fetch puzzles');
 			puzzles = await response.json();
 		} catch (err) {

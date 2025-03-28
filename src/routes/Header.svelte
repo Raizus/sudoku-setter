@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import '../global.scss';
+	import { base } from '$app/paths';
 
 	let isMenuOpen = $state(false);
 
@@ -24,8 +25,8 @@
 <header class="header">
 	<div class="header-container">
 		<nav class="desktop-nav">
-			<a href="/" class="nav-link">Home</a>
-			<a href="/puzzles" class="nav-link">Puzzles</a>
+			<a href="{base}/" class="nav-link">Home</a>
+			<a href="{base}/puzzles" class="nav-link">Puzzles</a>
 		</nav>
 
 		<!-- Mobile menu -->
@@ -40,8 +41,8 @@
 			</button>
 			{#if isMenuOpen}
 				<div class="dropdown-menu">
-					<a href="/" class="nav-link" onclick={() => (isMenuOpen = false)}>Home</a>
-					<a href="/puzzles" class="nav-link" onclick={() => (isMenuOpen = false)}>Puzzles</a>
+					<a href="%base%/" class="nav-link" onclick={() => (isMenuOpen = false)}>Home</a>
+					<a href="%base%/puzzles" class="nav-link" onclick={() => (isMenuOpen = false)}>Puzzles</a>
 				</div>
 			{/if}
 		</div>
