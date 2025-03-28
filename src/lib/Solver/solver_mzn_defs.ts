@@ -735,10 +735,10 @@ predicate hot_arrows_p(
 } in (
     cell_var <= n /\\
     arr[cell_var] > cell_var
-);`;
+);\n\n`;
 
-	const edge_constraints = `predicate consecutive_p(var int: a, var int: b) =
-	abs(a - b) = 1;
+    const edge_constraints = `predicate consecutive_p(var int: a, var int: b) = 
+    abs(a - b) = 1;
 
 predicate abs_difference(var int: a, var int: b, var int: d) =
 	abs(a - b) = d;
@@ -1776,9 +1776,9 @@ predicate yin_yang_indexing_line_coloring_p(array[int] of var int: arr, array[in
         index_set(arr) = index_set(labels),
         "Arrays must have same index set"
     )
-    /\\
+    /\\ index_line_p(arr)
     % Elements that reference themselves should be dark
-    forall(i in index_set(arr))(
+    /\\ forall(i in index_set(arr))(
         arr[i] == i <-> labels[i] == 0
     );
 
