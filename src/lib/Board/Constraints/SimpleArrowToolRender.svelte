@@ -4,9 +4,7 @@
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { defaultArrowShape } from '$lib/Puzzle/Shape/Shape';
 	import type { Rectangle } from '$lib/Types/types';
-	import {
-		cellsLineToPathStr,
-	} from '$lib/utils/SquareCellGridRenderUtils';
+	import { cellsLineToPathStr } from '$lib/utils/SquareCellGridRenderUtils';
 	import ArrowMarker from './ArrowMarker.svelte';
 
 	export let tool: ArrowToolI;

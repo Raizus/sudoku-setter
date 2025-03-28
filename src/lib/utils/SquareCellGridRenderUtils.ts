@@ -239,52 +239,53 @@ export function linePointsToPathStr(
 	linePoints: Vector2D[],
 	{ shortenHead, shortenTail, closeLoops, bezierRounding }: PathOptions = {}
 ): string {
-	if (closeLoops && linePoints.length > 1) {
-		const lastCoord = linePoints[linePoints.length - 1];
-		for (let i = 0; i < linePoints.length - 1; i++) {
-			if (lastCoord.equals(linePoints[i])) {
-				linePoints.push(linePoints[i + 1]);
+	const linePoints2: Vector2D[] = linePoints.map((point) => new Vector2D(point.x, point.y));
+	if (closeLoops && linePoints2.length > 1) {
+		const lastCoord = linePoints2[linePoints2.length - 1];
+		for (let i = 0; i < linePoints2.length - 1; i++) {
+			if (lastCoord.equals(linePoints2[i])) {
+				linePoints2.push(linePoints2[i + 1]);
 				break;
 			}
 		}
 
-		const firstCoord = linePoints[0];
-		for (let i = 1; i < linePoints.length; i++) {
-			if (firstCoord.equals(linePoints[i])) {
-				linePoints.unshift(linePoints[i - 1]);
+		const firstCoord = linePoints2[0];
+		for (let i = 1; i < linePoints2.length; i++) {
+			if (firstCoord.equals(linePoints2[i])) {
+				linePoints2.unshift(linePoints2[i - 1]);
 				break;
 			}
 		}
 	}
 
-	if (linePoints.length === 1) {
-		linePoints.push(linePoints[0]);
+	if (linePoints2.length === 1) {
+		linePoints2.push(linePoints2[0]);
 	} else {
 		if (shortenHead) {
-			let dv = linePoints[1].subtract(linePoints[0]);
+			let dv = linePoints2[1].subtract(linePoints2[0]);
 			dv = dv.normalise();
 			dv = dv.scale(shortenHead);
-			linePoints[0] = linePoints[0].add(dv);
+			linePoints2[0] = linePoints2[0].add(dv);
 		}
 
 		if (shortenTail) {
-			const l = linePoints.length;
-			let dv = linePoints[l - 2].subtract(linePoints[l - 1]);
+			const l = linePoints2.length;
+			let dv = linePoints2[l - 2].subtract(linePoints2[l - 1]);
 			dv = dv.normalise();
 			dv = dv.scale(shortenTail);
-			linePoints[l - 1] = linePoints[l - 1].add(dv);
+			linePoints2[l - 1] = linePoints2[l - 1].add(dv);
 		}
 	}
 
-	if (!bezierRounding) return pointsToPathStr(linePoints);
+	if (!bezierRounding) return pointsToPathStr(linePoints2);
 
-	const point = linePoints[0];
+	const point = linePoints2[0];
 	const out: string[] = ['M', `${point.x},${point.y}`];
-	const len = linePoints.length;
+	const len = linePoints2.length;
 	for (let i = 2; i < len; i++) {
-		const a = linePoints[i - 2];
-		const b = linePoints[i - 1];
-		const c = linePoints[i];
+		const a = linePoints2[i - 2];
+		const b = linePoints2[i - 1];
+		const c = linePoints2[i];
 
 		let ba = a.subtract(b).normalise();
 		ba = ba.scale(bezierRounding);
@@ -297,7 +298,7 @@ export function linePointsToPathStr(
 		out.push('L' + `${ba.x},${ba.y}` + ' Q ' + `${b.x},${b.y}` + ' ' + `${bc.x},${bc.y}`);
 	}
 
-	const lastPoint = linePoints[len - 1];
+	const lastPoint = linePoints2[len - 1];
 	out.push('L' + `${lastPoint.x},${lastPoint.y}`);
 	return out.join(' ');
 }
