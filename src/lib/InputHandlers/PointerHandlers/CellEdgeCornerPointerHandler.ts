@@ -43,8 +43,6 @@ export class CellFeaturePointerHandler {
 		const cellCenterInfo = getClosestCellCenter(point, undefined);
 		if (!cellCenterInfo) return;
 
-		console.log('5');
-
 		let closestCoord: GridCoordI;
 		if (this.target === CornerOrEdge.CORNER) {
 			closestCoord = cornerInfo.corner;

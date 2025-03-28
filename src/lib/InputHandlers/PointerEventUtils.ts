@@ -43,7 +43,6 @@ export function getClosestCellCenter(
 	const dist = point.distance(cellCenter);
 
 	const cellCenterCoords: GridCoordI = { r: cellCenter.y, c: cellCenter.x };
-	console.log('marginRadius: ', marginRadius);
 	if (marginRadius === undefined || dist < marginRadius) {
 		return { cellCenter: cellCenterCoords, dist };
 	}
@@ -74,7 +73,7 @@ export function getClosestEdge(
 	marginRadius: number | undefined
 ): { edge: GridCoordI; dist: number; idx: number } | null {
 	const cellCoord = pointToCell(point);
-	
+
 	const edges = cellCoordToEdgeCoords(cellCoord);
 	const edgesPoints = edges.map((edge) => new Vector2D(edge.c, edge.r));
 	const edgesDist = edgesPoints.map((edge) => edge.distance(point));
