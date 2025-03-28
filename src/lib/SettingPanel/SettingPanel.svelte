@@ -26,8 +26,10 @@
 
 	.setting-panel-wrapper {
 		display: flex;
+		flex: 1 1 100%;
+		max-width: 25%;
 		flex-direction: column;
-		height: 100vh;
+		max-height: calc(100vh - vars.$header-height);
 		align-items: flex-start;
 	}
 

@@ -10,7 +10,7 @@ export type Solution = undefined | Array<Array<null | number>>;
 
 export interface PuzzleI {
 	grid: Grid;
-	solution: Solution;
+	solution?: Solution;
 	valid_digits: number[];
 	puzzleMeta: PuzzleMetaI;
 	localConstraints: LocalConstraintsDict;
@@ -83,5 +83,20 @@ export function puzzleFromJson(puzzleJson: Record<string, unknown>) {
 		globalConstraints: global_constraints
 	};
 
+	return puzzle;
+}
+
+export function blankPuzzle(): PuzzleI {
+	const grid = new Grid(9, 9);
+	const local_constraints = new LocalConstraintsDict();
+	const global_constraints = new GlobalConstraintsDict();
+	const puzzle: PuzzleI = {
+		grid,
+		solution: undefined,
+		valid_digits: range(1, 10),
+		puzzleMeta: {},
+		localConstraints: local_constraints,
+		globalConstraints: global_constraints,
+	}
 	return puzzle;
 }

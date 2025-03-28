@@ -60,11 +60,11 @@
 	$panel-gap: 10px;
 
 	.entry-panel-wrapper {
-		// max-width: 20%;
-		// height: 100vh;
+		max-height: calc(100vh - vars.$header-height);
 		display: flex;
   		flex-direction: column;
 		width: 100%;
+		padding: 0.5rem;
 
 		@include vars.breakpoint-mobile {
 			align-items: center;
@@ -145,7 +145,7 @@
 		margin-top: 0.5rem;
 		margin-bottom: 0.5rem;
 		border-radius: 10px;
-		max-height: 40%;
+		max-height: 30%;
 		display: flex;
 		flex-direction: column;
 
@@ -153,7 +153,6 @@
 			display: none;
 		}
 	}
-
 
 	.puzzle-header {
 		background: var(--modal-header-background-color);
@@ -166,6 +165,7 @@
 	.puzzle-rules {
 		margin-top: 0.25rem;
 		background: var(--panel-background-color);
+		max-height: 40vh;
 		padding: 0.5rem;
 		border-radius: 5px;
 		overflow-y: scroll;

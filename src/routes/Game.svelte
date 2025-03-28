@@ -27,7 +27,6 @@
 			console.log(error);
 		}
 	});
-
 </script>
 
 <div class="game-wrapper">
@@ -77,14 +76,17 @@
 	@include vars.breakpoint-mobile {
 		.game {
 			flex-direction: column;
-		}
 
-		.central-panel {
-			align-self: center;
+			& .central-panel {
+				align-self: center;
 
-			width: vars.$board-size-small;
-			height: vars.$board-size-small;
+				width: vars.$board-size-small;
+				height: vars.$board-size-small;
+			}
+
+			& .right-panel {
+				max-width: 100%;
+			}
 		}
 	}
-
 </style>

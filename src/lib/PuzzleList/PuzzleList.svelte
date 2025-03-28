@@ -25,15 +25,26 @@
 {:else if error}
 	<div class="error">{error}</div>
 {:else}
-	<div class="puzzle-list">
-		{#each puzzles as puzzle}
-			<PuzzleCard {puzzle} />
-		{/each}
+	<div class="list-container">
+		<div class="puzzle-list">
+			{#each puzzles as puzzle}
+				<PuzzleCard {puzzle} />
+			{/each}
+		</div>
 	</div>
 {/if}
 
-<style>
+<style lang="scss">
+	@use '$src/vars' as vars;
+
+	.list-container {
+		overflow-y: scroll;
+		max-height: calc(100vh - vars.$header-height);
+	}
+
 	.puzzle-list {
+		display: flex;
+		flex-direction: column;
 		max-width: 800px;
 		margin: 0 auto;
 		padding: 1rem;

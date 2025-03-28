@@ -10,7 +10,6 @@
 	let initialized = false;
 
 	onMount(() => {
-		console.log('Initializing puzzle client-side');
 		if (browser && !initialized) {
 			try {
 				const newPuzzle = puzzleFromJson(data.puzzle.data);

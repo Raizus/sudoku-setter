@@ -4,7 +4,7 @@
 	export let puzzle: PuzzleInfo;
 </script>
 
-<a href="/puzzle/{puzzle.id}" class="card" data-sveltekit-preload-data="false">
+<a href="/puzzle/{puzzle.id}" class="card">
 	<div class="thumbnail">
 		<img src={puzzle.thumbnail} alt="{puzzle.title} thumbnail" />
 	</div>
@@ -16,7 +16,7 @@
 				<span class="difficulty">{puzzle.difficulty}</span>
 			{/if}
 		</div>
-		<p class="description">{puzzle.description.slice(0, 100)}...</p>
+		<p class="description">{puzzle.description.slice(0, 200)}...</p>
 	</div>
 </a>
 
@@ -24,7 +24,7 @@
 	.card {
 		display: flex;
 		padding: 1rem;
-		margin: 1rem 0;
+		margin: 0.2rem 0;
 		border: 1px solid #e0e0e0;
 		border-radius: 8px;
 		text-decoration: none;
