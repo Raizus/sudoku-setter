@@ -53,11 +53,14 @@ export function getSingleCellMultiArrowToolInputHandler(
 		const localConstraints = get(localConstraintsStore);
 		const coords = event.cell;
 
+		console.log(event);
+
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
 
 		if (event.event.altKey) mode = MODE.REMOVING;
 		// determine if adding or removing
+
 		
 		const direction = idxToDirection(event.direction);
 		const match = findSingleCellConstraint<CellMultiArrowToolI>(localConstraints, tool, coords);

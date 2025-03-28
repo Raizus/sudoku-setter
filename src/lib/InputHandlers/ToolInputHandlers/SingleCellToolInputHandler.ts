@@ -13,7 +13,7 @@ import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import {
 	CellPointerHandler,
 	type CellDragTapEvent
-} from '$src/lib/InputHandlers/PointerHandlers/SquareCellPointerInput';
+} from '$input/PointerHandlers/CellPointerHandler';
 import type { GridShape } from '$lib/Types/types';
 import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import {

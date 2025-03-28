@@ -12,7 +12,7 @@ import {
 import {
 	CellPointerHandler,
 	type CellDragTapEvent
-} from '$src/lib/InputHandlers/PointerHandlers/SquareCellPointerInput';
+} from '$input/PointerHandlers/CellPointerHandler';
 import type { Cell } from '$lib/Puzzle/Grid/Cell';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';

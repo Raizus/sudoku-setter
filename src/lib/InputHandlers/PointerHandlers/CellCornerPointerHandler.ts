@@ -45,7 +45,7 @@ export class CellCornerPointerHandler {
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
-		const cornerInfo = getClosestCorner(point);
+		const cornerInfo = getClosestCorner(point, this._margin);
 		if (!cornerInfo) return;
 
 		// if the new coord is the same as the old one don't to anything
@@ -67,7 +67,7 @@ export class CellCornerPointerHandler {
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
-		const cornerInfo = getClosestCorner(point);
+		const cornerInfo = getClosestCorner(point, this._margin);
 		if (!cornerInfo) return;
 
 		const dragTapEvent: CellCornerTapEvent = {

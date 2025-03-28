@@ -13,7 +13,7 @@ import type { GridShape } from '$lib/Types/types';
 import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { updateLineConstraintCells, type LineToolI, lineConstraint } from '$lib/Puzzle/Constraints/LineConstraints';
 import { findLineConstraint } from '$lib/Puzzle/Constraints/LocalConstraints';
-import { CellPointerHandler, type CellDragTapEvent } from '$src/lib/InputHandlers/PointerHandlers/SquareCellPointerInput';
+import { CellPointerHandler, type CellDragTapEvent } from '$input/PointerHandlers/CellPointerHandler';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import type { LineToolInputOptions } from './types';
 

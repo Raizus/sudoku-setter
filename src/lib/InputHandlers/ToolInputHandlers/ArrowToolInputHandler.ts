@@ -9,7 +9,7 @@ import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import {
 	CellPointerHandler,
 	type CellDragTapEvent
-} from '$src/lib/InputHandlers/PointerHandlers/SquareCellPointerInput';
+} from '$input/PointerHandlers/CellPointerHandler';
 import {
 	arrowAddToBulb,
 	arrowAddToLast,

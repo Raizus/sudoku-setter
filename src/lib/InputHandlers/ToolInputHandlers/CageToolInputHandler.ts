@@ -20,7 +20,7 @@ import {
 } from '$lib/Puzzle/Constraints/CageConstraints';
 import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { findCageConstraint } from '$lib/Puzzle/Constraints/LocalConstraints';
-import { CellPointerHandler, type CellDragTapEvent } from '$src/lib/InputHandlers/PointerHandlers/SquareCellPointerInput';
+import { CellPointerHandler, type CellDragTapEvent } from '$input/PointerHandlers/CellPointerHandler';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import type { CageToolInputOptions } from './types';
 

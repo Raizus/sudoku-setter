@@ -10,7 +10,7 @@ import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import type { GridShape } from '$lib/Types/types';
-import { CellPointerHandler, type CellDragTapEvent } from '$src/lib/InputHandlers/PointerHandlers/SquareCellPointerInput';
+import { CellPointerHandler, type CellDragTapEvent } from '$input/PointerHandlers/CellPointerHandler';
 import { cloneConstraint, updateCloneConstraintCells, type CloneToolI } from '$lib/Puzzle/Constraints/CloneConstraints';
 import { isCellOnGrid, type GridCoordI, areCoordsEqual } from '$lib/utils/SquareCellGridCoords';
 import { findCloneConstraint, findUsedCloneLabels } from '$lib/Puzzle/Constraints/LocalConstraints';
