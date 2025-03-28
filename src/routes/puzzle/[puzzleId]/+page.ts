@@ -6,9 +6,6 @@ interface PuzzleParams extends Record<string, string> {
 	puzzleId: string;
 }
 
-// export const ssr = false;
-// export const csr = true;
-
 export const load: PageLoad = async ({ params, fetch }) => {
 	const { puzzleId } = params as PuzzleParams;
 

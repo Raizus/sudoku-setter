@@ -1,10 +1,11 @@
 <script lang="ts">
 	import type { PuzzleInfo } from '../Types/types';
-
+	import { base } from '$app/paths';
+	
 	export let puzzle: PuzzleInfo;
 </script>
 
-<a href="/puzzle/{puzzle.id}" class="card">
+<a href="{base}/puzzle/{puzzle.id}" class="card">
 	<div class="thumbnail">
 		<img src={puzzle.thumbnail} alt="{puzzle.title} thumbnail" />
 	</div>
