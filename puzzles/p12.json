@@ -1,0 +1,68 @@
+{
+	"puzzleInfo": {
+		"title": "Alarm",
+		"authors": ["zetamath"],
+		"ruleset": "Sudoku rules apply.\n\n**Renban Line**: Number along a purple line form a set of non-repeating consecutive digits (which can be in any order).\n\n**Between Line**: Numbers on a green line must be numerically in between the two circled cells at the line's ends.\n\n**Ratio**: Cells separated by a black dot have a 1:2 ratio or a 1:X ratio if the circle has value X.\n\n**Segmented Sum Line**: Each thick grey line can be divided into one or more non-overlapping segments. Each segment contains digits that sum to 10. Eg 513173 is a valid fill for a length 6 line, because it can be broken into 5131 and 73, each of which sum to 10.\n",
+		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=4nnuyyvQ2jI",
+		"ctcUrl": "https://sudokupad.app/nivm1qdkzj"
+	},
+	"nRows": 9,
+	"nCols": 9,
+	"grid": [
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}]
+	],
+	"local_constraints": {
+		"Renban Line": [
+			{
+				"cells": ["R2C4", "R3C5", "R4C6", "R5C7", "R6C8"]
+			},
+			{
+				"cells": ["R4C2", "R5C3", "R6C4", "R7C5"]
+			}
+		],
+		"Between Line": [
+			{
+				"cells": ["R2C3", "R1C4", "R1C5", "R1C6", "R2C7"]
+			},
+			{
+				"cells": ["R3C8", "R4C9", "R5C9", "R6C9", "R7C8"]
+			},
+			{
+				"cells": ["R9C7", "R8C6", "R8C5", "R8C4", "R9C3"]
+			},
+			{
+				"cells": ["R9C1", "R9C2", "R8C3"]
+			},
+			{
+				"cells": ["R7C2", "R6C1", "R5C1", "R4C1", "R3C2"]
+			}
+		],
+		"Ratio": [
+			{
+				"cells": ["R7C5", "R8C5"]
+			}
+		],
+		"Segmented Sum Line": [
+			{
+				"cells": ["R3C1", "R2C1", "R1C1", "R1C2", "R1C3"],
+        "value": "10"
+			},
+			{
+				"cells": ["R1C7", "R1C8", "R1C9", "R2C9", "R3C9"],
+				"value": "10"
+			},
+			{
+				"cells": ["R7C7", "R8C7", "R9C8"],
+				"value": "10"
+			}
+		]
+	}
+}
