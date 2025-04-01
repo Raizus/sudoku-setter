@@ -2,10 +2,10 @@
 	import type { Cell } from '$lib/Puzzle/Grid/Cell';
 	import type { GridCoordI } from '$lib/utils/SquareCellGridCoords';
 	import { getCagePathStr } from '$lib/utils/SquareCellGridRenderUtils';
-	import { cellsStore, gridStore } from '$stores/BoardStore';
+	import { cellsStore } from '$stores/BoardStore';
 
 	$: allCells = $cellsStore;
-	$: usedRegions = $gridStore.getUsedRegions();
+	$: usedRegions = new Set(allCells.map(cell => cell.region).filter(region => region !== null));
 
 	function getCellsInRegion(cells: Cell[], region: number) {
 		const regionCells = cells.filter((cell) => cell.region === region);

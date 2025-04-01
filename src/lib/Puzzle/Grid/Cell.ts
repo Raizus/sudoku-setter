@@ -86,8 +86,13 @@ export class Cell implements CellI {
 	}
 
 	enterRegion(region: number | null): void {
-		this.region = region;
-		if (region !== null) this.outside = false;
+		if (this.outside) return;
+		if (region === null || this.region === null) {
+			this.region = region;
+			return;
+		}
+		const new_region = Number(String(this.region) + String(region))
+		this.region = new_region;
 	}
 
 	enterCenterPM(value: number | null): void {
@@ -135,8 +140,7 @@ export class Cell implements CellI {
 			cellRecord.value = this.value;
 		}
 
-		if (this.region !== getRegionIndex(this.r, this.c, g_size))
-			cellRecord['region'] = this.region;
+		if (this.region !== getRegionIndex(this.r, this.c, g_size)) cellRecord['region'] = this.region;
 
 		if (this.fog) {
 			cellRecord.fog = this.fog;
