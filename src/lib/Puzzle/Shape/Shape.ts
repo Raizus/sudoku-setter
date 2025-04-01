@@ -68,6 +68,7 @@ export interface ShapeI {
 	strokeDashoffset?: number;
 	fontSize?: number;
 	fontColor?: string;
+	displayValue?: boolean;
 	opacity?: number;
 	linePathOptions?: PathOptions;
 }
@@ -90,6 +91,7 @@ export interface EditableShapeI {
 	strokeDashoffset?: EditableNumber;
 	fontSize?: EditableNumber;
 	fontColor?: EditableString;
+	displayValue?: EditableBoolean;
 	opacity?: EditableNumber;
 	linePathOptions?: EditablePathOptions;
 }
@@ -113,7 +115,8 @@ export function shapeHasEditableProps(eShape: EditableShapeI): boolean {
 		eShape.strokeDashoffset?.editable ||
 		eShape.fontSize?.editable ||
 		eShape.fontColor?.editable ||
-		eShape.opacity?.editable
+		eShape.opacity?.editable ||
+		eShape.displayValue?.editable
 	) {
 		return true;
 	}
@@ -139,6 +142,7 @@ export function editableShapeToShape(eShape: EditableShapeI): ShapeI {
 	updateShape(shape, 'fontSize', eShape.fontSize?.value);
 	updateShape(shape, 'fontColor', eShape.fontColor?.value);
 	updateShape(shape, 'opacity', eShape.opacity?.value);
+	updateShape(shape, 'displayValue', eShape.displayValue?.value);
 
 	if (eShape.linePathOptions) {
 		shape.linePathOptions = {
