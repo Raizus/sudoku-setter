@@ -82,7 +82,19 @@ export const antiGiraffeInfo: AbstractElementInfo = {
 
 	meta: {
 		description:
-			'Cells (1,4) apart cannot contain the same digit. (eg the digit in r1c5 cannot appear in r2c1/r2c9/r5c4/r5c6.)',
+			'Cells (1,4) or (4,1) apart cannot contain the same digit. (eg the digit in r1c5 cannot appear in r2c1/r2c9/r5c4/r5c6.)',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	}
+};
+
+export const antiLongKnightInfo: AbstractElementInfo = {
+	toolId: TOOLS.ANTI_LONG_KNIGHT,
+	order: 0,
+
+	meta: {
+		description:
+			'Cells (1,3) or (3,1) apart cannot contain the same digit. (eg the digit in r1c5 cannot appear in r2c2/r2c8/r4c4/r4c6.)',
 		tags: [],
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
 	}

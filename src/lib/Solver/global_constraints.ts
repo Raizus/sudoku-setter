@@ -162,6 +162,13 @@ function antiGiraffeConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	return out_str;
 }
 
+function antiLongKnightConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint anti_long_knight_p(board);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
 function tangoConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	let out_str: string = '';
 	out_str += `constraint tango_p(board);\n`;
@@ -847,6 +854,7 @@ const tool_map = new Map<string, ConstraintF>([
 
 	[TOOLS.ANTIKING, antikingConstraint],
 	[TOOLS.ANTIKNIGHT, antiknightConstraint],
+	[TOOLS.ANTI_LONG_KNIGHT, antiLongKnightConstraint],
 	[TOOLS.ANTI_GIRAFFE, antiGiraffeConstraint],
 	[TOOLS.DISJOINT_GROUPS, disjointGroupsConstraint],
 	[TOOLS.TANGO, tangoConstraint],

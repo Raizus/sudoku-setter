@@ -3063,7 +3063,24 @@ predicate loopwhiches_p(
         )
     )
 );
-    
+
+predicate anti_long_knight_p(
+    array[int, int] of var int: grid
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);  
+} in (
+    forall(r in rows, c in cols)(
+        forall(dr, dc in [-3,-1,1,3]
+            where abs(dr) + abs(dc) == 4
+            /\\ is_after(r,c, r+dr,c+dc)
+            /\\ in_bounds_2d(r+dr, c+dc, grid)
+        )(
+            grid[r,c] != grid[r+dr,c+dc]
+        )
+    )
+);
+
 predicate anti_giraffe_p(array[int, int] of var int: grid) =
     let {
         set of int: rows = index_set_1of2(grid);

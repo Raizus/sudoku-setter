@@ -18,6 +18,7 @@ export enum SIMPLE_GLOBAL_CONSTRAINTS {
 	HEXED_SUDOKU = 'Hexed Sudoku',
 	FILLOMINO = 'Fillomino',
 	ANTIKNIGHT = 'Antiknight',
+	ANTI_LONG_KNIGHT = 'Anti-Long-Knight',
 	ANTIKING = 'Antiking',
 	ANTI_GIRAFFE = 'Anti-Giraffe',
 	DISJOINT_GROUPS = 'Disjoint Groups',
