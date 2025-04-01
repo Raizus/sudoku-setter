@@ -308,7 +308,8 @@ import {
 	chaosConstructionSeenSameRegionCountInfo,
 	nurikabeSeenWaterwayCellsInfo,
 	nurikabeIslandSizeCellInfo,
-	reverseCountingCirclesInfo
+	reverseCountingCirclesInfo,
+	cellKnightWhispersInfo
 } from './SingleCellElementsInfo';
 import {
 	coldArrowsInfo,
@@ -487,6 +488,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.UNIQUE_CELLS]: uniqueCellsInfo,
 	[TOOLS.SEEN_EVEN_COUNT]: seenEvenCountInfo,
 	[TOOLS.SEEN_ODD_COUNT]: seenOddCountInfo,
+	[TOOLS.CELL_KNIGHT_WHISPERS]: cellKnightWhispersInfo,
 
 	[TOOLS.YIN_YANG_MINESWEEPER]: yinYangMinesweeperInfo,
 	[TOOLS.YIN_YANG_SEEN_UNSHADED_CELLS]: yinYangSeenUnshadedCellsInfo,

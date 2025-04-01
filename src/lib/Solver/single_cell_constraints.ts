@@ -522,6 +522,32 @@ function seenOddCountConstraint(
 	return constraint_str;
 }
 
+function cellKnightWhispersConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToVarName(cell);
+
+	const knights_move_cells = grid.getCellsByKnightMove(cell);
+	const cells_vars = cellsToGridVarsStr(knights_move_cells, VAR_2D_NAMES.BOARD);
+
+	const value = constraint.value ?? '5';
+	const result = getParsingResult(model, value, c_id);
+	if (!result) return '';
+
+	let out_str = '';
+	const var_name = result[1];
+	out_str += result[0];
+
+	out_str += `constraint cell_knights_whisper_p(${cell_var}, ${cells_vars}, ${var_name});\n`;
+	return out_str;
+}
+
 function yinYangMinesweeperConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -1095,6 +1121,8 @@ const tool_map = new Map<string, ConstraintF>([
 
 	[TOOLS.SEEN_EVEN_COUNT, seenEvenCountConstraint],
 	[TOOLS.SEEN_ODD_COUNT, seenOddCountConstraint],
+
+	[TOOLS.CELL_KNIGHT_WHISPERS, cellKnightWhispersConstraint],
 
 	[TOOLS.YIN_YANG_MINESWEEPER, yinYangMinesweeperConstraint],
 	[TOOLS.YIN_YANG_SEEN_UNSHADED_CELLS, yinYangSeenUnshadedConstraint],

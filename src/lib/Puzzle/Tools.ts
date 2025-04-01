@@ -173,6 +173,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	UNIQUE_CELLS = 'Unique Cells',
 	SEEN_ODD_COUNT = 'Seen Odd Count',
 	SEEN_EVEN_COUNT = 'Seen Even Count',
+	CELL_KNIGHT_WHISPERS = 'Cell Knight Whispers',
 
 	CELL_ON_THE_LOOP = 'Cell On The Loop',
 	CELL_NOT_ON_THE_LOOP = 'Cell Not On The Loop',

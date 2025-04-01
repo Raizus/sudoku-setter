@@ -600,6 +600,27 @@ export const seenEvenCountInfo: SquareCellElementInfo = {
 	}
 };
 
+export const cellKnightWhispersInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.SINGLE_CELL,
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+			defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
+		defaultValue: '5'
+	},
+
+	toolId: TOOLS.CELL_KNIGHT_WHISPERS,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: DEFAULT_CIRCLE_SHAPE,
+
+	meta: {
+		description:
+			'Digits in a circle must differ in value by at least X (default X = 5) with every cell a (chess) knights move away.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
 export const seenOddCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 

@@ -715,7 +715,15 @@ predicate seen_odd_count_p(
 	array[int] of var int: arr3, 
 	array[int] of var int: arr4,
     var int: val
-) = seen_modular_count_p(arr1, arr2, arr3, arr4, val, 2, 1);\n\n`;
+) = seen_modular_count_p(arr1, arr2, arr3, arr4, val, 2, 1);
+ 
+predicate cell_knights_whisper_p(
+    var int: cell, 
+    array[int] of var int: knights_cells, 
+    var int: value
+) = forall(cell2 in knights_cells)(
+    abs(cell2 - cell) >= value
+);\n\n`;
 
 	const single_cell_multiarrow_constraints = `predicate cold_arrows_p(
     array[int] of var int: arr, 
