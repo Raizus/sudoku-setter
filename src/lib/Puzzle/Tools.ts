@@ -87,6 +87,7 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	NURIKABE_NO_REPEATS_IN_ISLANDS = 'Nurikabe No Repeats In Islands',
 	TWO_CONTIGUOUS_REGIONS = 'Two Contiguous Regions',
 	SASHIGANE = 'Sashigane',
+	NORINORI = 'Norinori',
 	GOLDILOCKS_ZONE = 'Goldilocks Zone',
 
 	TWILIGHT_CAVE_FILLOMINO_REGION_SHADING = 'Twilight Cave Fillomino Region Shading',
@@ -95,7 +96,8 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	PENTOMINO_TILLING = 'Pentomino Tilling',
 	TILLING_NO_EMPTY_CELLS = 'Tilling No Empty Cells',
 
-	LITS_BLACK_WHITE_STAR_BATTLE = 'LITS Black And White Star Battle'
+	LITS_BLACK_WHITE_STAR_BATTLE = 'LITS Black And White Star Battle',
+	NORINORI_STAR_BATTLE = 'Norinori Star Battle'
 }
 
 export enum GLOBAL_DIRECTED_PATH_CONSTRAINTS {

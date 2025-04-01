@@ -188,6 +188,7 @@ function setBinaryHighlights(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
 	const grid_vars_names = [
 		'yin_yang',
+		'norinori_shading',
 		'two_contiguous_regions',
 		'nurimisaki',
 		'nurikabe_shading',
@@ -454,7 +455,7 @@ function setColoring(json: JsonT, grid: Grid) {
 
 function setStarBattlePenMarks(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
-	const grid_vars_names = ['lits_white_black_star_battle'];
+	const grid_vars_names = ['lits_white_black_star_battle', 'star_battle'];
 
 	for (const name of grid_vars_names) {
 		const regions_grid = json[name] as number[][] | undefined;

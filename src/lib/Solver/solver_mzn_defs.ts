@@ -737,7 +737,7 @@ predicate hot_arrows_p(
     arr[cell_var] > cell_var
 );\n\n`;
 
-    const edge_constraints = `predicate consecutive_p(var int: a, var int: b) = 
+	const edge_constraints = `predicate consecutive_p(var int: a, var int: b) = 
     abs(a - b) = 1;
 
 predicate abs_difference(var int: a, var int: b, var int: d) =
@@ -1338,7 +1338,7 @@ predicate lockout_line_p(array[int] of var int: arr, var int: x) =
         arr[i] < lower_bound \\/ arr[i] > upper_bound
     );\n\n`;
 
-    const arrow_constraints = `predicate arrow_p(
+	const arrow_constraints = `predicate arrow_p(
     array[int] of var int: pill,
     array[int] of var int: arrow
 ) = let {
@@ -4349,6 +4349,36 @@ predicate connect_four_yellow_p(
     var 0..2: cell
 ) = cell == 2;\n\n`;
 
+	const norinori_str = `predicate norinori_p(
+    array[int, int] of var int: regions,
+    array[int, int] of var 0..1: shading
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);    
+} in (
+    assert(index_sets_agree(regions, shading), "regions and shading must have the same indexes.")
+    % Shade two cells in each region such that all shaded cells are part of dominoes and no two dominoes touch each other orthogonally (but may touch diagonally).
+    /\\ forall(r in rows, c in cols)(
+        % if a cell is shaded it has exactly 1 shaded neighbour (is part of a domino)
+        shading[r,c] = 1 -> sum(
+          [ shading[idx.1, idx.2] | idx in orth_adjacent_idxs(r, c) where in_bounds_2d(idx.1, idx.2, shading) ]
+        ) == 1
+    )
+);
+
+predicate norinori_star_battle_not_on_shaded_p(
+    array[int, int] of var 0..1: shading,
+    array[int, int] of var 0..1: star_battle_grid
+) = let {
+    set of int: rows = index_set_1of2(shading);
+    set of int: cols = index_set_2of2(shading);    
+} in (
+    assert(index_sets_agree(shading, star_battle_grid), "shading and star_battle_grid must have the same indexes.")
+    /\\ forall(r in rows, c in cols)(
+        shading[r,c] == 1 -> star_battle_grid[r,c] == 0
+    )
+);\n\n`;
+
 	const out_str =
 		'\n' +
 		tests +
@@ -4386,7 +4416,8 @@ predicate connect_four_yellow_p(
 		direct_path +
 		nurikabe +
 		suguru +
-		connect_four;
+		connect_four +
+		norinori_str;
 
 	return out_str;
 }

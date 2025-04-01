@@ -219,7 +219,7 @@ function modularLoopConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
-function exactlyNPerRowColumnRegion(
+function exactlyNPerRow(
 	puzzle: PuzzleI,
 	n: number,
 	target: boolean | number,
@@ -236,7 +236,18 @@ function exactlyNPerRowColumnRegion(
 		out_str += `constraint count_eq(${vars_str}, ${target}, ${n});\n`;
 	}
 
-	// one doubler per column
+	return out_str;
+}
+
+function exactlyNPerColumn(
+	puzzle: PuzzleI,
+	n: number,
+	target: boolean | number,
+	vars_func: (cells: Cell[]) => string
+) {
+	const grid = puzzle.grid;
+
+	let out_str: string = '';
 	out_str += `\n% Exactly ${n} per column \n`;
 	const ncols = grid.nCols;
 	for (let i = 0; i < ncols; i++) {
@@ -245,7 +256,18 @@ function exactlyNPerRowColumnRegion(
 		out_str += `constraint count_eq(${vars_str}, ${target}, ${n});\n`;
 	}
 
-	// one doubler per region
+	return out_str;
+}
+
+function exactlyNPerRegion(
+	puzzle: PuzzleI,
+	n: number,
+	target: boolean | number,
+	vars_func: (cells: Cell[]) => string
+) {
+	const grid = puzzle.grid;
+
+	let out_str: string = '';
 	const gconstraints = puzzle.globalConstraints;
 	const unknown_regions = gconstraints.get(TOOLS.UNKNOWN_REGIONS);
 	if (!unknown_regions) {
@@ -257,6 +279,19 @@ function exactlyNPerRowColumnRegion(
 			out_str += `constraint count_eq(${vars_str}, ${target}, ${n});\n`;
 		}
 	}
+
+	return out_str;
+}
+
+function exactlyNPerRowColumnRegion(
+	puzzle: PuzzleI,
+	n: number,
+	target: boolean | number,
+	vars_func: (cells: Cell[]) => string
+) {
+	let out_str: string = exactlyNPerRow(puzzle, n, target, vars_func);
+	out_str += exactlyNPerColumn(puzzle, n, target, vars_func);
+	out_str += exactlyNPerRegion(puzzle, n, target, vars_func);
 
 	return out_str;
 }
@@ -520,6 +555,35 @@ function litsConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
+function norinoriConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name1 = VAR_2D_NAMES.NORINORI_SHADING;
+
+	let out_str: string = '';
+
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name1};\n`;
+	out_str += `constraint norinori_p(${VAR_2D_NAMES.BOARD_REGIONS}, ${grid_name1});\n`;
+
+	const regions = grid.getUsedRegions();
+	if (regions.size) out_str += `\n% Exactly 2 shaded cells per region (known regions)\n`;
+	for (const region of regions) {
+		const region_cells = grid.getRegion(region);
+		const shading_vars = cellsToGridVarsStr(region_cells, VAR_2D_NAMES.NORINORI_SHADING);
+		const constraint = `constraint count_eq(${shading_vars}, 1, 2);\n`;
+		out_str += constraint;
+	}
+
+	return out_str;
+}
+
 function caveLitsConstraint(model: PuzzleModel, tool: TOOLID) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
@@ -595,6 +659,45 @@ function litsBlackAndWhiteStarBattleConstraint(model: PuzzleModel, tool: TOOLID)
 	);
 	out_str += `constraint black_and_white_star_battle_p(${grid_name2}, ${grid_name3});\n`;
 	out_str += `constraint lits_black_and_white_star_battle_p(${grid_name1}, ${grid_name3});\n`;
+
+	return out_str;
+}
+
+function norinoriStarBattleConstraint(model: PuzzleModel, tool: TOOLID) {
+	// Place one star in each region such that there are exactly two in each row and column.
+	// Stars cannot touch each other, even diagonally.
+	// Stars cannot be placed on shaded Norinori cells.
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name1 = VAR_2D_NAMES.NORINORI_SHADING;
+	const grid_name2 = VAR_2D_NAMES.STAR_BATTLE;
+
+	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name2};\n`;
+
+	// 2 stars per column, row, 1 per region
+	out_str += exactlyNPerColumn(puzzle, 2, 1, (cells: Cell[]) =>
+		cellsToGridVarsStr(cells, grid_name2)
+	);
+	out_str += exactlyNPerRow(puzzle, 2, 1, (cells: Cell[]) => cellsToGridVarsStr(cells, grid_name2));
+	out_str += exactlyNPerRegion(puzzle, 1, 1, (cells: Cell[]) =>
+		cellsToGridVarsStr(cells, grid_name2)
+	);
+
+	// no touching diagonally or orthogonally
+	out_str += `\n% Star battle stars can't touch orthogonally or diagonally\n`;
+	out_str += `constraint star_battle_no_touching_p(${grid_name2});\n`;
+
+	// Stars cannot be placed on shaded Norinori cells.
+	out_str += `\n% Stars cannot be placed on shaded Norinori cells\n`;
+	out_str += `constraint norinori_star_battle_not_on_shaded_p(${grid_name1}, ${grid_name2});\n`;
 
 	return out_str;
 }
@@ -950,6 +1053,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.CAVE, caveConstraint],
 	[TOOLS.GALAXIES, galaxiesConstraint],
 	[TOOLS.YIN_YANG, yinYangConstraint],
+	[TOOLS.NORINORI, norinoriConstraint],
 	[TOOLS.NURIMISAKI, nurimisakiConstraint],
 	[TOOLS.NURIKABE, nurikabeConstraint],
 	[TOOLS.NURIKABE_NO_REPEATS_IN_ISLANDS, nurikabeNoRepeatsInIslandsConstraint],
@@ -971,6 +1075,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.LITS, litsConstraint],
 	[TOOLS.CAVE_LITS, caveLitsConstraint],
 	[TOOLS.LITS_BLACK_WHITE_STAR_BATTLE, litsBlackAndWhiteStarBattleConstraint],
+	[TOOLS.NORINORI_STAR_BATTLE, norinoriStarBattleConstraint],
 
 	[TOOLS.RENBAN_CAVES, renbanCavesConstraint],
 	[TOOLS.MAZE_DIRECTED_PATH, mazeDirectedPathConstraint],

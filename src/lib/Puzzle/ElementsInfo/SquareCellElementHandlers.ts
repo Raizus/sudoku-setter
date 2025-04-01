@@ -130,6 +130,8 @@ import {
 	goldilocksZoneInfo,
 	litsBlackAndWhiteStarBattleInfo,
 	mazeDirectedPathInfo,
+	norinoriInfo,
+	norinoriStarBattleInfo,
 	nurikabeInfo,
 	nurikabeNoRepeatsInIslandsInfo,
 	oneGalaxyIsAGermanWhispersInfo,
@@ -412,6 +414,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	[TOOLS.TWO_CONTIGUOUS_REGIONS]: twoContiguousRegionsInfo,
 	[TOOLS.SASHIGANE]: sashiganeRegionsInfo,
+	[TOOLS.NORINORI]: norinoriInfo,
 	[TOOLS.GOLDILOCKS_ZONE]: goldilocksZoneInfo,
 	[TOOLS.CELL_CENTER_LOOP_NO_TOUCHING]: cellCenterLoopNoTouchingInfo,
 	[TOOLS.CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY]: cellCenterCanTouchDiagonallyInfo,
@@ -437,6 +440,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.TILLING_NO_EMPTY_CELLS]: tillingNoEmptyCellsInfo,
 
 	[TOOLS.LITS_BLACK_WHITE_STAR_BATTLE]: litsBlackAndWhiteStarBattleInfo,
+	[TOOLS.NORINORI_STAR_BATTLE]: norinoriStarBattleInfo,
 
 	[TOOLS.MAZE_DIRECTED_PATH]: mazeDirectedPathInfo,
 	[TOOLS.DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME]: directedPathAdjacentCellsSumIsPrimeInfo,

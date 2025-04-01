@@ -120,6 +120,30 @@ export const sashiganeRegionsInfo: AbstractElementInfo = {
 	}
 };
 
+export const norinoriInfo: AbstractElementInfo = {
+	toolId: TOOLS.NORINORI,
+	order: 0,
+
+	meta: {
+		description:
+			'Shade two cells in each region such that all shaded cells are part of dominoes and no two dominoes touch each other orthogonally (but may touch diagonally).',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const norinoriStarBattleInfo: AbstractElementInfo = {
+	toolId: TOOLS.NORINORI_STAR_BATTLE,
+	order: 0,
+
+	meta: {
+		description:
+			'Place one star in each region such that there are exactly two in each row and column. Stars cannot touch each other, even diagonally. Stars cannot be placed on shaded Norinori cells.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
 export const goldilocksZoneInfo: AbstractElementInfo = {
 	toolId: TOOLS.GOLDILOCKS_ZONE,
 	order: 0,
