@@ -88,6 +88,7 @@
 		solver.on('error', (error) => {
 			solverLabel = 'Solve';
 			status = 'ERROR';
+			console.log(error.message);
 			timer.stop();
 			if (solver) solver.cancel();
 		});
