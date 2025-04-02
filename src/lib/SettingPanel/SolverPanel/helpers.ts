@@ -22,6 +22,13 @@ type JsonT = { [variable: string]: unknown } | undefined;
 type Point = [number, number];
 type Region = Point[];
 
+export interface SolverOptions {
+	solver: string;
+	'num-solutions'?: number;
+	'all-solutions'?: boolean;
+	'random-seed'?: number;
+};
+
 function grid_coloring(
 	solution_grid: (number | boolean)[][],
 	grid: Grid,

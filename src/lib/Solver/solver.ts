@@ -22,7 +22,7 @@ function givenConstraints(puzzle: PuzzleI) {
 	return out_str;
 }
 
-export function createMinizincModel(puzzle: PuzzleI) {
+export function createMinizincModel(puzzle: PuzzleI, randomize_search: boolean = false) {
 	const grid = puzzle.grid;
 	let valid_digits = puzzle.valid_digits;
 	const model = new PuzzleModel(puzzle);
@@ -33,17 +33,15 @@ export function createMinizincModel(puzzle: PuzzleI) {
 	model.add('include "globals.mzn";\n');
 	model.add('include "alldifferent.mzn";\n\n');
 	model.add(defineFunctionsPredicates());
-	
+
 	const max_val = Math.max(nrows, ncols);
 	let allowed_digits_str = `1..${max_val}`;
 	const fillomino = !!puzzle.globalConstraints.get(TOOLS.FILLOMINO);
 	if (fillomino) {
 		allowed_digits_str = `1..${grid_size}`;
-	}
-	else if (puzzle.globalConstraints.get(TOOLS.HEXED_SUDOKU)) {
+	} else if (puzzle.globalConstraints.get(TOOLS.HEXED_SUDOKU)) {
 		valid_digits = [...range(1, 16)];
-	}
-	else if (valid_digits) {
+	} else if (valid_digits) {
 		allowed_digits_str = '{' + valid_digits.join(',') + '}';
 	}
 
@@ -63,6 +61,13 @@ export function createMinizincModel(puzzle: PuzzleI) {
 	model.add(localConstraints(puzzle, model));
 	model.add(globalConstraints(puzzle));
 
-	model.add('\nsolve satisfy;');
+	if (randomize_search) {
+		model.add(
+			`\nsolve :: int_search(array1d(board), first_fail, indomain_random) satisfy;`
+		);
+	} else {
+		model.add('\nsolve satisfy;');
+	}
+
 	return model;
 }
