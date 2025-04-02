@@ -111,6 +111,7 @@ export const InputHandlerStore = derived<
 		console.warn(`Element handler for ${$toolStore} is not defined`);
 		return undefined;
 	}
+	if ($svgRefStore === null) return undefined;
 
 	const inputOpts = toolInfo.inputOptions;	
 	const getInputHandler = inputOpts ? getInputHandlerF(inputOpts) : undefined;

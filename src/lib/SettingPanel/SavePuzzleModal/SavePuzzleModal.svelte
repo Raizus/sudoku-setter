@@ -44,7 +44,8 @@
 		return clone;
 	}
 
-	function downloadAsPNG(svgElement: SVGSVGElement) {
+	function downloadAsPNG(svgElement: SVGSVGElement | null) {
+		if (!svgElement) return;
 		// Create a deep clone with computed styles
 		const clonedSvg = deepCloneWithStyles(svgElement);
 
@@ -92,7 +93,8 @@
 		img.src = url;
 	}
 
-	function downloadAsSVG(svgElement: SVGSVGElement, fileName = 'download.svg') {
+	function downloadAsSVG(svgElement: SVGSVGElement | null, fileName = 'download.svg') {
+		if (!svgElement) return;
 		// Get the SVG content
 		const clonedSvg = deepCloneWithStyles(svgElement);
 

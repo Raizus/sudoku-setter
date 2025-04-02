@@ -5,10 +5,10 @@
 	import { puzzleMetaStore, svgRefStore, toolStore } from '$stores/BoardStore';
 	import ExtraControlsPad from './ExtraControls/ExtraControlsPad.svelte';
 	import { joinStrList } from '../utils/functionUtils';
-	import Markdown from '@magidoc/plugin-svelte-marked'
+	import Markdown from '@magidoc/plugin-svelte-marked';
 
 	function onClickCb(): void {
-		$svgRefStore.focus();
+		if ($svgRefStore) $svgRefStore.focus();
 	}
 
 	function getAuthorsStr(authors?: string[]) {
@@ -32,7 +32,7 @@
 			<div class="authors">by {authors}</div>
 		</div>
 		<div class="puzzle-rules">
-			<Markdown source={getRulesetStr($puzzleMetaStore.ruleset)}/>
+			<Markdown source={getRulesetStr($puzzleMetaStore.ruleset)} />
 			<!-- <SvelteMarkdown source={getRulesetStr($puzzleMetaStore.ruleset)} /> -->
 			<!-- {getRulesetStr($puzzleMetaStore.ruleset)} -->
 		</div>
@@ -62,7 +62,7 @@
 	.entry-panel-wrapper {
 		max-height: calc(100vh - vars.$header-height);
 		display: flex;
-  		flex-direction: column;
+		flex-direction: column;
 		width: 100%;
 		padding: 0.5rem;
 
@@ -85,7 +85,6 @@
 		gap: $panel-gap;
 		user-select: none;
 	}
-
 
 	.entry-panel {
 		& :global(.entry-panel-button) {

@@ -27,7 +27,7 @@ interface ConstraintAndId {
 	constraint: ConstraintType;
 }
 
-export const svgRefStore = writable<SVGSVGElement>();
+export const svgRefStore = writable<SVGSVGElement | null>(null);
 
 export const gameModeStore = writable<GAME_MODE>(GAME_MODE.SETTING);
 
