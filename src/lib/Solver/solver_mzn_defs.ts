@@ -4357,7 +4357,7 @@ predicate connect_four_yellow_p(
     var 0..2: cell
 ) = cell == 2;\n\n`;
 
-	const norinori_str = `predicate norinori_p(
+	const norinori = `predicate norinori_p(
     array[int, int] of var int: regions,
     array[int, int] of var 0..1: shading
 ) = let {
@@ -4385,6 +4385,102 @@ predicate norinori_star_battle_not_on_shaded_p(
     /\\ forall(r in rows, c in cols)(
         shading[r,c] == 1 -> star_battle_grid[r,c] == 0
     )
+);\n\n`;
+
+	const shikaku = `predicate shikaku_p(
+    array[int, int] of var int: shikaku_grid
+) = let {
+    set of int: rows = index_set_1of2(shikaku_grid),
+    set of int: cols = index_set_2of2(shikaku_grid),
+    int: min_r = min(rows);
+    int: min_c = min(cols);
+    int: max_r = max(rows);
+    int: max_c = max(cols);
+    int: n_rows = length(rows);
+    int: n_cols = length(cols);
+    int: g_size = n_rows * n_cols;
+    array[int] of int: reg_idxs = [i | i in 0..(g_size)];
+    array[rows, cols] of var rows: min_row,
+    array[rows, cols] of var rows: max_row,
+    array[rows, cols] of var cols: min_col,
+    array[rows, cols] of var cols: max_col,
+} in (
+    forall(r in rows, c in cols) (
+        shikaku_grid[r, c] >= 0 /\\
+        shikaku_grid[r, c] <= g_size
+    )
+    % order regions lexicographically
+    % /\\ value_precede_chain(reg_idxs, array1d(shikaku_grid))
+    /\\ forall(r1 in rows, c1 in cols, r2 in rows, c2 in cols where is_after(r1,c1,r2,c2))(
+        shikaku_grid[r1, c1] == shikaku_grid[r2, c2] -> (
+            min_row[r1,c1] == min_row[r2,c2] /\\
+            min_col[r1,c1] == min_col[r2,c2] /\\
+            max_row[r1,c1] == max_row[r2,c2] /\\
+            max_col[r1,c1] == max_col[r2,c2] /\\
+            min_row[r1,c1] <= r2 /\\
+            min_col[r1,c1] <= c2 /\\
+            max_row[r1,c1] >= r1 /\\
+            max_col[r1,c1] >= c1
+        )
+    )
+    % first cell
+    /\\ shikaku_grid[min_r, min_c] = (min_r * n_cols + min_c + 1)
+    % first row
+    /\\ forall(c in cols where c > min_c)(
+        shikaku_grid[min_r, c] != shikaku_grid[min_r, c-1] -> (
+            min_row[min_r, c] == min_r /\\ 
+            min_col[min_r, c] = c /\\
+            shikaku_grid[min_r, c] = (min_r * n_cols + c + 1)
+        )
+    )
+    % first col
+    /\\ forall(r in rows where r > min_r)(
+        shikaku_grid[r, min_c] != shikaku_grid[r-1, min_c] -> (
+            min_row[r, min_c] == r /\\ 
+            min_col[r, min_c] = min_c /\\
+            shikaku_grid[r, min_c] = (r * n_cols + min_c + 1)
+        )
+    )
+    % rest of the grid, min row and col
+    /\\ forall(r in rows, c in cols where r > min_r /\\ c > min_c)(
+        (shikaku_grid[r, c] != shikaku_grid[r-1, c] -> min_row[r, c] == r) /\\
+        (shikaku_grid[r, c] != shikaku_grid[r, c-1] -> min_col[r, c] = c) /\\
+        (shikaku_grid[r, c] != shikaku_grid[r-1, c] /\\ shikaku_grid[r, c] != shikaku_grid[r, c-1] -> shikaku_grid[r, c] = (r * n_cols + c + 1))
+    )
+    % rest of the grid, max row and col
+    /\\ forall(r in rows, c in cols where r < max_r /\\ c < max_c)(
+        (shikaku_grid[r, c] != shikaku_grid[r+1, c] -> max_row[r, c] == r) /\\
+        (shikaku_grid[r, c] != shikaku_grid[r, c+1] -> max_col[r, c] = c)
+    )
+    % All cells within the rectangle are part of the region
+    /\\ forall(r1 in rows, c1 in cols, r2 in rows, c2 in cols) (
+        (r2 >= min_row[r1,c1] /\\ r2 <= max_row[r1,c1] /\\
+            c2 >= min_col[r1,c1] /\\ c2 <= max_col[r1,c1]) 
+        -> (shikaku_grid[r2,c2] == shikaku_grid[r1,c1])
+    )
+);
+
+predicate shikaku_no_repeats_in_regions_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions,
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes")
+    /\\ forall(r in rows, c in cols)(
+        forall(r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
+            regions[r,c] == regions[r2,c2] -> grid[r,c] != grid[r2,c2]
+        )
+    )
+);
+
+predicate shikaku_region_size_p(
+    array[int, int] of var int: shikaku_grid,
+    var int: shikaku_region, 
+    var int: size
+) = (
+    count(array1d(shikaku_grid), shikaku_region) == size
 );\n\n`;
 
 	const out_str =
@@ -4425,7 +4521,8 @@ predicate norinori_star_battle_not_on_shaded_p(
 		nurikabe +
 		suguru +
 		connect_four +
-		norinori_str;
+		norinori +
+		shikaku;
 
 	return out_str;
 }

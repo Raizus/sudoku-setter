@@ -388,6 +388,41 @@ function indexerCellsConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
+function shikakuConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name1 = VAR_2D_NAMES.SHIKAKU_REGIONS;
+
+	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name1};\n`;
+	out_str += `constraint shikaku_p(${grid_name1});\n`;
+
+	return out_str;
+}
+
+function shikakuNoRepeatsInRegionConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outisde the grid.`);
+		return '';
+	}
+
+	let out_str: string = '';
+	out_str += `constraint shikaku_no_repeats_in_regions_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.SHIKAKU_REGIONS});\n`;
+
+	return out_str;
+}
+
 function caveConstraint(model: PuzzleModel, tool: TOOLID) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
@@ -1053,6 +1088,8 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.CAVE, caveConstraint],
 	[TOOLS.GALAXIES, galaxiesConstraint],
 	[TOOLS.YIN_YANG, yinYangConstraint],
+	[TOOLS.SHIKAKU, shikakuConstraint],
+	[TOOLS.SHIKAKU_NO_REPEATS_IN_REGION, shikakuNoRepeatsInRegionConstraint],
 	[TOOLS.NORINORI, norinoriConstraint],
 	[TOOLS.NURIMISAKI, nurimisakiConstraint],
 	[TOOLS.NURIKABE, nurikabeConstraint],

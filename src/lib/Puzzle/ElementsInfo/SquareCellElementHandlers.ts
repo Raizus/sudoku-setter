@@ -137,6 +137,8 @@ import {
 	oneGalaxyIsAGermanWhispersInfo,
 	pentominoTillingInfo,
 	renbanCavesInfo,
+	shikakuInfo,
+	shikakuNoRepeatsInRegionInfo,
 	tillingNoEmptyCellsInfo,
 	twoSymmetricGalaxiesInfo,
 	yinYangNeighbourGreaterThanOneWithinRegionShadedInfo,
@@ -309,7 +311,8 @@ import {
 	nurikabeSeenWaterwayCellsInfo,
 	nurikabeIslandSizeCellInfo,
 	reverseCountingCirclesInfo,
-	cellKnightWhispersInfo
+	cellKnightWhispersInfo,
+	shikakuRegionSizeInfo
 } from './SingleCellElementsInfo';
 import {
 	coldArrowsInfo,
@@ -416,6 +419,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.TWO_CONTIGUOUS_REGIONS]: twoContiguousRegionsInfo,
 	[TOOLS.SASHIGANE]: sashiganeRegionsInfo,
 	[TOOLS.NORINORI]: norinoriInfo,
+	[TOOLS.SHIKAKU]: shikakuInfo,
+	[TOOLS.SHIKAKU_NO_REPEATS_IN_REGION]: shikakuNoRepeatsInRegionInfo,
 	[TOOLS.GOLDILOCKS_ZONE]: goldilocksZoneInfo,
 	[TOOLS.CELL_CENTER_LOOP_NO_TOUCHING]: cellCenterLoopNoTouchingInfo,
 	[TOOLS.CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY]: cellCenterCanTouchDiagonallyInfo,
@@ -511,6 +516,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.CAVE_CLUE]: caveClueInfo,
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_CLUE]: twilightCaveFillominoClueInfo,
 	[TOOLS.YIN_YANG_FILLOMINO_PARITY]: yinYangFillominoParityInfo,
+
+	[TOOLS.SHIKAKU_REGION_SIZE]: shikakuRegionSizeInfo,
 
 	[TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS]: chaosConstructionChessSumsInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS]: chaosConstructionArrowKnotsInfo,

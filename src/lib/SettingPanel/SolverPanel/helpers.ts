@@ -325,6 +325,7 @@ function setUnknownRegionsBorders(json: JsonT, grid: Grid) {
 	const grid_vars_names = [
 		'unknown_regions',
 		'sashigane',
+		'shikaku_regions',
 		'fillomino_area',
 		'galaxy_regions',
 		'suguru_regions'
@@ -432,7 +433,8 @@ function setColoring(json: JsonT, grid: Grid) {
 		'galaxy_regions',
 		'tilling_regions',
 		'region_labels',
-		'suguru_regions'
+		'suguru_regions',
+		'shikaku_regions'
 	];
 
 	for (const name of grid_vars_names) {

@@ -1089,6 +1089,36 @@ function teleportConstraint(
 	return out_str;
 }
 
+function shikakuRegionSizeConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	constraints: Record<string, CellToolI>
+) {
+	const constl = Object.values(constraints);
+
+	let out_str = '';
+	const all_coords = constl.map((constraint) => constraint.cell);
+	const cells = new Set(
+		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
+	);
+	const shikaku_vars = cellsToGridVarsName([...cells], VAR_2D_NAMES.SHIKAKU_REGIONS);
+	const vars_str = `${shikaku_vars.join(',\n\t')}`;
+
+	out_str += `array[int] of var int: shikaku_region_sizes = [\n\t${vars_str}\n];\n`;
+	out_str += `constraint alldifferent(shikaku_region_sizes);\n`;
+
+	for (const constraint of Object.values(constraints)) {
+		const coords = constraint.cell;
+		const cell = grid.getCell(coords.r, coords.c);
+		if (!cell) continue;
+		const cell_var = cellToVarName(cell);
+		const shikaku_var = cellToGridVarName(cell, VAR_2D_NAMES.SHIKAKU_REGIONS);
+		out_str += `constraint shikaku_region_size_p(${VAR_2D_NAMES.SHIKAKU_REGIONS}, ${shikaku_var}, ${cell_var});\n`;
+	}
+
+	return out_str;
+}
+
 type ConstraintF = (model: PuzzleModel, grid: Grid, c_id: string, constraint: CellToolI) => string;
 type ConstraintF2 = (
 	model: PuzzleModel,
@@ -1167,6 +1197,7 @@ const tool_map_2 = new Map<string, ConstraintF2>([
 	[TOOLS.REVERSE_COUNTING_CIRCLES, reverseCountingCirclesConstraint],
 	[TOOLS.COLORED_COUNTING_CIRCLES, coloredCountingCirclesConstraint],
 	[TOOLS.UNIQUE_CELLS, uniqueCellsConstraint],
+	[TOOLS.SHIKAKU_REGION_SIZE, shikakuRegionSizeConstraint],
 
 	[TOOLS.NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE, nurikabeIslandProductOfSumAndSizeConstraint],
 	[TOOLS.TELEPORT, teleportConstraint]

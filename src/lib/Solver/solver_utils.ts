@@ -15,6 +15,7 @@ export enum VAR_2D_NAMES {
 	NURIKABE_SHADING = 'nurikabe_shading',
 	NURIKABE_REGIONS = 'nurikabe_regions',
 	NORINORI_SHADING = 'norinori_shading',
+	SHIKAKU_REGIONS = 'shikaku_regions',
 	UNKNOWN_REGIONS = 'unknown_regions',
 	TWO_CONTIGUOUS_REGIONS = 'two_contiguous_regions',
 	SUGURU_REGIONS = 'suguru_regions',

@@ -7,7 +7,12 @@ import {
 import { RENDER_ORDER } from '../RenderOrder';
 import { SHAPE_TYPES, type EditableShapeI } from '../Shape/Shape';
 import type { SquareCellElementInfo } from '../ElementInfo';
-import { CornerOrEdge, HANDLER_TOOL_TYPE, type SingleCellArrowToolOptions, type SingleCellToolOptions } from '$input/ToolInputHandlers/types';
+import {
+	CornerOrEdge,
+	HANDLER_TOOL_TYPE,
+	type SingleCellArrowToolOptions,
+	type SingleCellToolOptions
+} from '$input/ToolInputHandlers/types';
 
 const singleCellShapeDefaultCategories = [
 	TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
@@ -1242,6 +1247,22 @@ export const connectFourRedInfo: SquareCellElementInfo = {
 
 	meta: {
 		description: `A red circle represents a red disc in connect four.`,
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const shikakuRegionSizeInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+
+	toolId: TOOLS.SHIKAKU_REGION_SIZE,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: DEFAULT_CIRCLE_SHAPE,
+
+	meta: {
+		description:
+			'Each shikaku region contains exactly one circle, and a digit in a circle indicates the number of cells in its region.',
 		tags: [],
 		categories: singleCellShapeDefaultCategories
 	}

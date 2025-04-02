@@ -88,6 +88,8 @@ export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	TWO_CONTIGUOUS_REGIONS = 'Two Contiguous Regions',
 	SASHIGANE = 'Sashigane',
 	NORINORI = 'Norinori',
+	SHIKAKU = 'Shikaku',
+	SHIKAKU_NO_REPEATS_IN_REGION = 'Shikaku No Repeats In Region',
 	GOLDILOCKS_ZONE = 'Goldilocks Zone',
 
 	TWILIGHT_CAVE_FILLOMINO_REGION_SHADING = 'Twilight Cave Fillomino Region Shading',
@@ -196,6 +198,8 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	CAVE_CLUE = 'Cave Clue',
 	CAVE_UNSHADED_SEEN_COUNT_INCLUDING_ITSELF = 'Cave Unshaded Seen Count Including Itself',
 	CAVE_UNSHADED_CELL = 'Cave Unshaded Cell',
+
+	SHIKAKU_REGION_SIZE = 'Shikaku Region Size',
 
 	TWILIGHT_CAVE_FILLOMINO_CLUE = 'Twilight Cave Fillomino Clue',
 	CHAOS_CONSTRUCTION_CHESS_SUMS = 'Chaos Construction Chess Sums',
