@@ -1104,8 +1104,8 @@ function shikakuRegionSizeConstraint(
 	const shikaku_vars = cellsToGridVarsName([...cells], VAR_2D_NAMES.SHIKAKU_REGIONS);
 	const vars_str = `${shikaku_vars.join(',\n\t')}`;
 
-	out_str += `array[int] of var int: shikaku_region_sizes = [\n\t${vars_str}\n];\n`;
-	out_str += `constraint alldifferent(shikaku_region_sizes);\n`;
+	out_str += `array[int] of var int: shikaku_region_clues = [\n\t${vars_str}\n];\n`;
+	out_str += `constraint alldifferent(shikaku_region_clues);\n`;
 
 	for (const constraint of Object.values(constraints)) {
 		const coords = constraint.cell;
@@ -1113,7 +1113,9 @@ function shikakuRegionSizeConstraint(
 		if (!cell) continue;
 		const cell_var = cellToVarName(cell);
 		const shikaku_var = cellToGridVarName(cell, VAR_2D_NAMES.SHIKAKU_REGIONS);
-		out_str += `constraint shikaku_region_size_p(${VAR_2D_NAMES.SHIKAKU_REGIONS}, ${shikaku_var}, ${cell_var});\n`;
+		const shikaku_width = cellToGridVarName(cell, VAR_2D_NAMES.SHIKAKU_WIDTH);
+		const shikaku_height = cellToGridVarName(cell, VAR_2D_NAMES.SHIKAKU_HEIGHT);
+		out_str += `constraint shikaku_region_size_p(${VAR_2D_NAMES.SHIKAKU_REGIONS}, ${shikaku_var}, ${cell_var}, ${shikaku_width}, ${shikaku_height});\n`;
 	}
 
 	return out_str;

@@ -4458,6 +4458,11 @@ predicate norinori_star_battle_not_on_shaded_p(
             c2 >= min_col[r1,c1] /\\ c2 <= max_col[r1,c1]) 
         -> (shikaku_grid[r2,c2] == shikaku_grid[r1,c1])
     )
+    % regions width and height
+    /\\ forall(r in rows, c in cols)(
+        shikaku_height[r,c] = max_row[r,c] - min_row[r,c] + 1 /\\
+        shikaku_width[r,c] = max_col[r,c] - min_col[r,c] + 1
+    )
 );
 
 predicate shikaku_no_repeats_in_regions_p(
@@ -4478,9 +4483,12 @@ predicate shikaku_no_repeats_in_regions_p(
 predicate shikaku_region_size_p(
     array[int, int] of var int: shikaku_grid,
     var int: shikaku_region, 
-    var int: size
+    var int: size,
+    var int: width,
+    var int: height    
 ) = (
-    count(array1d(shikaku_grid), shikaku_region) == size
+    count(array1d(shikaku_grid), shikaku_region) == size /\\
+    size == width * height
 );\n\n`;
 
 	const out_str =

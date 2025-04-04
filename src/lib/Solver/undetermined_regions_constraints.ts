@@ -401,8 +401,12 @@ function shikakuConstraint(model: PuzzleModel, tool: TOOLID) {
 	const grid_name1 = VAR_2D_NAMES.SHIKAKU_REGIONS;
 
 	let out_str: string = '';
+	const n_rows = grid.nRows;
+	const n_cols = grid.nCols;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name1};\n`;
-	out_str += `constraint shikaku_p(${grid_name1});\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${n_rows}: ${VAR_2D_NAMES.SHIKAKU_HEIGHT};\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${n_cols}: ${VAR_2D_NAMES.SHIKAKU_WIDTH};\n`;
+	out_str += `constraint shikaku_p(${grid_name1}, ${VAR_2D_NAMES.SHIKAKU_WIDTH}, ${VAR_2D_NAMES.SHIKAKU_HEIGHT});\n`;
 
 	return out_str;
 }
