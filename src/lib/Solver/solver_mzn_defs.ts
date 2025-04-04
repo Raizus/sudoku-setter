@@ -1402,8 +1402,8 @@ predicate sum_cage_look_and_say_p(array[int] of var int: arr) =
 
 predicate parity_balance_cage_p(array[int] of var int: arr) =
     let {
-        var int: odd_sum = sum(i in index_set(arr) where arr[i] mod 2 = 1)(arr[i]),
-        var int: even_sum = sum(i in index_set(arr) where arr[i] mod 2 = 0)(arr[i])
+        var int: odd_sum = sum(i in index_set(arr) where arr[i] mod 2 = 1)(arr[i]);
+        var int: even_sum = sum(i in index_set(arr) where arr[i] mod 2 = 0)(arr[i]);
     } in
     alldifferent(arr) /\\ odd_sum = even_sum;
 
@@ -2374,40 +2374,26 @@ predicate same_before_p(
             | r2 in rows, c2 in cols where is_before(r1, c1, r2, c2)])
     );
 
-predicate fillomino_joins(
-    int: r1, int: c1, int: r2, int: c2,
-    array[int, int] of var int: grid,
+predicate floodfill_p(
+    array[int, int] of var int: regions,
     array[int, int] of var int: when,
-    array[int, int] of var int: area) =
-    if in_bounds_2d(r2, c2, grid) then
-        when[r1, c1] = 1 + when[r2, c2] /\\ 
-        area[r1, c1] = area[r2, c2] /\\ 
-        grid[r1, c1] = grid[r2, c2]
-    else
-        false
-    endif;
-
-% restrict the floodfilling order to remove ambigous solutions
-predicate fillomino_restrict_floodfill_p(
-    array[int, int] of var int: when,
-    array[int, int] of var int: area,
-) = 
-    let {
-        set of int: rows = index_set_1of2(area);
-        set of int: cols = index_set_2of2(area);
-    } in (
-        forall (r in rows, c in cols where when[r,c] > 1)(
-            % when when[r, c] > 1, it is equal to the minimum adjacent element in the same region + 1
-            when[r, c] = min([when[r+i, c+j] 
-                | i in -1..1, j in -1..1 
-                    where (
-                        in_bounds_2d(r+i, c+j, when) /\\ 
-                        orth_adjacent_2d(r,c,r+i,c+j) /\\
-                        area[r,c] == area[r+i, c+j]
-                    )
-                ]) + 1
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions); 
+} in (
+    % Improved connectivity constraint with earlier propagation
+    forall(r in rows, c in cols where when[r, c] > 1) (
+        exists(t in orth_adjacent_idxs(r, c) where in_bounds_2d(t.1, t.2, regions)) (
+            regions[r, c] = regions[t.1, t.2] /\\ when[r, c] = when[t.1, t.2] + 1
         )
-    );
+    )
+    
+    % Restrict floodfill growth to improve propagation
+    /\\ forall(r in rows, c in cols where when[r, c] > 1) (
+        when[r, c] = 1 + min([when[t.1, t.2] | 
+            t in orth_adjacent_idxs(r, c) where in_bounds_2d(t.1, t.2, regions) /\\ regions[r, c] = regions[t.1, t.2]])
+    ) 
+);
 
 predicate fillomino_p(
     array[int, int] of var int: grid, 
@@ -2445,10 +2431,8 @@ predicate fillomino_p(
     )
 
     % 4. small optimization to reduce search space
-    /\\ forall(r in rows, c in cols) (
-        forall(r2 in rows, c2 in cols) (
-            abs(r2-r) + abs(c2-c) >= grid[r,c] -> regions[r, c] != (r2) * n_cols + c2 + 1
-        )
+    /\\ forall(r in rows, c in cols, r2 in rows, c2 in cols) (
+        abs(r2-r) + abs(c2-c) >= grid[r,c] -> regions[r, c] != (r2) * n_cols + c2 + 1
     )
 
     % 5. Fix the roots (redundant but speeds up search)
@@ -2466,42 +2450,16 @@ predicate fillomino_p(
     )
 
     % 7. Adjacent cells in the same region have the same value and in different regions have different values
-    /\\ forall(r1 in rows, c1 in cols, r2 in rows, c2 in cols where orth_adjacent_2d(r1, c1, r2, c2)) (
-        (regions[r1, c1] != regions[r2, c2]) = (grid[r1, c1] != grid[r2, c2])
-    )
-
-    % 8. Each region's size equals the count of its cells
-    /\\ forall(r in rows, c in cols) (
-        grid[r, c] = sum(r2 in rows, c2 in cols)(bool2int(regions[r2, c2] = regions[r, c]))
-    )
-    
-    % floodfill - necessary to make sure each region is connected
-    % root fix
-    /\\ forall(r in rows, c in cols)(
-        when[r,c] == 1 <-> regions[r, c] = (r * n_cols + c + 1)
-    )
-    %% Optimisation: the "when" label is actually the 'distance' of a cell in a
-    %% region from the region "root".  This distance cannot be larger than the size
-    %% of the region.
-    /\\ forall (r in rows, c in cols) (
-        when[r, c] <= size[regions[r, c]]
-    )
-
-    /\\ forall (r in rows, c in cols) (
-        ( when[r, c] = 1 /\\ regions[r, c] = (r) * n_cols + c + 1 ) \\/  
-        ( when[r, c] > 1 /\\ 
-            ( fillomino_joins(r, c, r - 1, c, grid, when, regions) \\/ 
-                fillomino_joins(r, c, r + 1, c, grid, when, regions) \\/
-                fillomino_joins(r, c, r, c - 1, grid, when, regions) \\/ 
-                fillomino_joins(r, c, r, c + 1, grid, when, regions)
-            )
+    /\\ forall(r1 in rows, c1 in cols) (
+        forall(t in orth_adjacent_idxs(r1,c1) where in_bounds_2d(t.1, t.2, regions))(
+            (regions[r1, c1] != regions[t.1, t.2]) = (grid[r1, c1] != grid[t.1, t.2])
         )
     )
 
-    %% restricts the floodfilling growth,
-    %% by minimizing the distance of each node in the branching tree (each region) to the root
-    %% this removes solutions with the same regions, but with different floodfilling (when array)
-    /\\ fillomino_restrict_floodfill_p(when, regions)
+    % 8. Each region's size equals the count of its cells
+    /\\ forall(id in ids where exists(r in rows, c in cols)(regions[r, c] = id)) (
+        size[id] = sum(r in rows, c in cols)(bool2int(regions[r, c] = id))
+    )
 
     % all cells with a value equal to 2 must have exactly 1 neighbour equal to it
     /\\ forall(r in rows, c in cols where grid[r,c] == 2)(
@@ -2516,6 +2474,22 @@ predicate fillomino_p(
             grid[r,c] == grid[t.1,t.2]
         )
     )
+    
+    % floodfill - necessary to make sure each region is connected
+    % root fix
+    /\\ forall(r in rows, c in cols)(
+        when[r,c] == 1 <-> regions[r, c] = (r * n_cols + c + 1)
+    )
+
+    % Upper bound on when values
+    % Optimisation: the "when" label is actually the 'distance' of a cell in a
+    % region from the region "root".  This distance cannot be larger than the size
+    % of the region.
+    /\\ forall(r in rows, c in cols) (
+        when[r, c] >= 1 /\\ when[r, c] <= grid[r, c] /\\ when[r, c] <= size[regions[r, c]]
+    )
+
+    /\\ floodfill_p(regions, when)
 );
 
 predicate yin_yang_fillomino_parity_p(
@@ -2538,17 +2512,6 @@ test on_edge_2d(int: r, int: c, array[int, int] of var int: grid) =
         int: min_c = min(index_set_2of2(grid));
         int: max_c = max(index_set_2of2(grid));
     } in r = min_r \\/ r = max_r \\/ c = min_c \\/ c = max_c;
-
-predicate cave_joins(
-    int: r1, int: c1, int: r2, int: c2,
-    array[int, int] of var int: when,
-    array[int, int] of var int: regions) =
-    if in_bounds_2d(r2, c2, regions) then
-        when[r1, c1] = 1 + when[r2, c2] /\\ 
-        regions[r1, c1] = regions[r2, c2]
-    else
-        false
-    endif;
 
 predicate cave_floodfill_p(
     array[int, int] of var int: regions,
@@ -2584,20 +2547,12 @@ predicate cave_floodfill_p(
     /\\ forall (r in rows, c in cols) (
         regions[r, c] != 0 -> when[r,c] >= 1
     )
-    % floodfilling - Each cell is either the "root" of an area or is an extension of a
-    % neighbouring cell.
-    /\\ forall (r in rows, c in cols) (
-        ( when[r, c] = 0 ) \\/
-        ( when[r, c] = 1 /\\ regions[r, c] = (r) * n_cols + c + 1 ) \\/  
-        ( when[r, c] > 1 /\\  
-            ( cave_joins(r, c, r - 1, c, when, regions) \\/ 
-              cave_joins(r, c, r + 1, c, when, regions) \\/
-              cave_joins(r, c, r, c - 1, when, regions) \\/ 
-              cave_joins(r, c, r, c + 1, when, regions)
-            )
-        )
+    
+    /\\ floodfill_p(regions, when)
+    
+    /\\ forall(r in rows, c in cols where when[r, c] == 1)(
+        regions[r, c] = (r) * n_cols + c + 1
     )
-    /\\ fillomino_restrict_floodfill_p(when, regions)
 );
 
 predicate cave_nurikabe_helper_p(
@@ -2852,7 +2807,7 @@ predicate cell_center_loop_p(array[int, int] of var 0..1: grid, bool: no_diag_to
 predicate cell_center_loop_regions_p(
     array[int, int] of var 0..1: shading, % loop / non-loop cells
     array[int, int] of var int: regions
-) =  let {
+) = let {
         set of int: rows = index_set_1of2(shading);
         set of int: cols = index_set_2of2(shading);
         int: n_rows = length(rows);
@@ -2861,14 +2816,16 @@ predicate cell_center_loop_regions_p(
         array [rows, cols] of var 0..g_size: same_before;
         array[rows, cols] of var 0..g_size: when;
         array[int] of int: reg_idxs = [i | i in 1..g_size];
-    } in
+    } in (
     % shaded cells (1 = loop) correspond to region 0
     forall(r in rows, c in cols) (
         shading[r,c] = 1 <-> regions[r, c] = 0
-    ) /\\
-    forall(r in rows, c in cols) (
+    )
+    
+    /\\ forall(r in rows, c in cols) (
         shading[r,c] = 0 <-> regions[r, c] != 0
     )
+    
     % adjacent unshaded cells must belong to the same region (horiz adjacent)
     /\\ forall (r in rows, c in cols where c > 0) (
         let { 
@@ -2876,6 +2833,7 @@ predicate cell_center_loop_regions_p(
             var int: id2 = regions[r, c] 
         } in (shading[r,c] = 0 /\\ shading[r, c - 1] = 0) -> id1 = id2
     ) /\\
+    
     % adjacent shaded cells must belong to the same region (vertical adjacent)
     forall (r in rows, c in cols where r > 0) (
         let { var int: id1 = regions[r - 1, c], var int: id2 = regions[r, c] } in
@@ -2897,24 +2855,17 @@ predicate cell_center_loop_regions_p(
     /\\ forall (r in rows, c in cols) (
         regions[r, c] != 0 -> when[r,c] >= 1
     )
-    % floodfilling
-    % Each cell is either the "root" of an area or is an extension of a
-    % neighbouring cell.
-    /\\ forall (r in rows, c in cols) (
-        ( when[r, c] = 0 ) \\/
-        ( when[r, c] = 1 /\\ regions[r, c] = (r) * n_cols + c + 1 ) \\/
-        ( when[r, c] > 1 /\\
-            ( cave_joins(r, c, r - 1, c, when, regions) \\/
-              cave_joins(r, c, r + 1, c, when, regions) \\/
-              cave_joins(r, c, r, c - 1, when, regions) \\/ 
-              cave_joins(r, c, r, c + 1, when, regions)
-            )
-        )
+
+    /\\ floodfill_p(regions, when)
+    
+    /\\ forall(r in rows, c in cols where when[r, c] == 1)(
+        regions[r, c] = (r) * n_cols + c + 1
     )
-    /\\ fillomino_restrict_floodfill_p(when, regions)
+
     /\\ forall(r in rows, c in cols) (
         regions[r, c] <= (r * n_cols + c + 1)
-    );
+    )
+);
 
 predicate not_loop_sized_regions_p(
     array[int, int] of var int: grid, 
@@ -3241,7 +3192,7 @@ predicate gallaxy_connected_regions_p(
         int: g_size = n_rows * n_cols;
         array [rows, cols] of var 0..g_size: same_before;
         array[rows, cols] of var 0..g_size: when;
-    } in
+    } in (
     % we need to remove ambiguity from the region numbering 
     % use the numbering each region by the id of the first element of that region
     same_before_p(regions, same_before) /\\
@@ -3251,28 +3202,21 @@ predicate gallaxy_connected_regions_p(
         else
             true
         endif
-    ) /\\
-    forall (r in rows, c in cols) (
+    )
+
+    /\\ forall (r in rows, c in cols) (
         regions[r, c] = 0 -> when[r,c] = 0
-    ) /\\
-    forall (r in rows, c in cols) (
+    )
+
+    /\\forall (r in rows, c in cols) (
         regions[r, c] != 0 -> when[r,c] >= 1
-    ) /\\
+    )
     % floodfilling
-    % Each cell is either the "root" of an area or is an extension of a
-    % neighbouring cell.
-    forall (r in rows, c in cols) (
-        ( when[r, c] = 0 ) \\/
-        ( when[r, c] = 1 /\\ same_before[r,c] == 0) \\/
-        ( when[r, c] > 1 /\\  
-            ( cave_joins(r, c, r - 1, c, when, regions) \\/ 
-              cave_joins(r, c, r + 1, c, when, regions) \\/
-              cave_joins(r, c, r, c - 1, when, regions) \\/ 
-              cave_joins(r, c, r, c + 1, when, regions)
-            )
-        )
-    ) /\\
-    fillomino_restrict_floodfill_p(when, regions);
+    /\\ floodfill_p(regions, when)
+    /\\ forall (r in rows, c in cols where when[r, c] = 1)(
+        same_before[r,c] == 0
+    )
+);
 
 predicate two_symmetric_galaxies_p(
     array[int, int] of var int: regions
@@ -4230,22 +4174,13 @@ predicate suguru_regions_p(
             true
         endif
     )
-    % Each cell is either the "root" of a region or is an extension of a
-    % neighbouring cell.
-    /\\ forall (r in rows, c in cols) (
-        ( when[r, c] = 1 /\\ regions[r, c] = (r) * n_cols + c + 1 ) \\/  
-        ( when[r, c] > 1 /\\ 
-            ( cave_joins(r, c, r - 1, c, when, regions) \\/ 
-                cave_joins(r, c, r + 1, c, when, regions) \\/
-                cave_joins(r, c, r, c - 1, when, regions) \\/ 
-                cave_joins(r, c, r, c + 1, when, regions)
-            )
-        )
+
+    /\\ floodfill_p(regions, when)
+
+    /\\ forall(r in rows, c in cols where when[r, c] == 1)(
+        regions[r, c] = (r) * n_cols + c + 1
     )
-    % restricts the floodfilling growth,
-    % by minimizing the distance of each node in the branching tree (each region) to the root
-    % this removes solution with the same regions, but with different floodfilling (when array)
-    /\\ fillomino_restrict_floodfill_p(when, regions)
+
     % Symmetry breaking: canonical numbering of regions
     /\\ forall(r in rows, c in cols) (
         regions[r, c] <= (r * n_cols + c + 1)
