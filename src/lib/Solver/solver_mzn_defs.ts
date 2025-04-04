@@ -4388,7 +4388,9 @@ predicate norinori_star_battle_not_on_shaded_p(
 );\n\n`;
 
 	const shikaku = `predicate shikaku_p(
-    array[int, int] of var int: shikaku_grid
+    array[int, int] of var int: shikaku_grid,
+    array[int, int] of var int: shikaku_width,
+    array[int, int] of var int: shikaku_height
 ) = let {
     set of int: rows = index_set_1of2(shikaku_grid),
     set of int: cols = index_set_2of2(shikaku_grid),
@@ -4420,7 +4422,9 @@ predicate norinori_star_battle_not_on_shaded_p(
             min_row[r1,c1] <= r2 /\\
             min_col[r1,c1] <= c2 /\\
             max_row[r1,c1] >= r1 /\\
-            max_col[r1,c1] >= c1
+            max_col[r1,c1] >= c1 /\\
+            shikaku_width[r1,c1] == shikaku_width[r2,c2] /\\
+            shikaku_height[r1,c1] == shikaku_height[r2,c2]
         )
     )
     % first cell
