@@ -108,7 +108,7 @@ function twoContiguousRegionsConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
-function unknownRegionsConstraint(model: PuzzleModel, tool: TOOLID) {
+function chaosConstructionConstraint(model: PuzzleModel, tool: TOOLID) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 
@@ -269,8 +269,8 @@ function exactlyNPerRegion(
 
 	let out_str: string = '';
 	const gconstraints = puzzle.globalConstraints;
-	const unknown_regions = gconstraints.get(TOOLS.UNKNOWN_REGIONS);
-	if (!unknown_regions) {
+	const chaos_construction = gconstraints.get(TOOLS.CHAOS_CONSTRUCTION);
+	if (!chaos_construction) {
 		out_str += `\n% Exactly ${n} per region \n`;
 		const regions = grid.getUsedRegions();
 		for (const region of regions) {
@@ -1099,7 +1099,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.NURIKABE, nurikabeConstraint],
 	[TOOLS.NURIKABE_NO_REPEATS_IN_ISLANDS, nurikabeNoRepeatsInIslandsConstraint],
 	[TOOLS.TWO_CONTIGUOUS_REGIONS, twoContiguousRegionsConstraint],
-	[TOOLS.UNKNOWN_REGIONS, unknownRegionsConstraint],
+	[TOOLS.CHAOS_CONSTRUCTION, chaosConstructionConstraint],
 	[TOOLS.SASHIGANE, sashiganeConstraint],
 	[TOOLS.CELL_CENTER_LOOP_NO_TOUCHING, cellCenterLoopNoTouchingConstraint],
 	[TOOLS.CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY, cellCenterLoopCanTouchDiagonallyConstraint],

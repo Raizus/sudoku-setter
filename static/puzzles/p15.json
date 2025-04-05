@@ -2,7 +2,7 @@
 	"puzzleInfo": {
 		"title": "Decapitated",
 		"authors": ["Black_Doom"],
-		"ruleset": "Sudoku rules apply.\n\n**Unknown Regions**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.\n\n**Chaos Construction Seen Same Region Count**: The number in the circle shows how many region cells it sees in its row and column (including the cell with the circle itself) until it reaches the borders of the region.\n\n**Chaos Construction Arrow**: Digits along an arrow must sum to the number in the attached circle. Additionally, each arrow must be contained within one region, and the circle cannot belong to the same region as its arrow.",
+		"ruleset": "Sudoku rules apply.\n\n**Chaos Construction**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.\n\n**Chaos Construction Seen Same Region Count**: The number in the circle shows how many region cells it sees in its row and column (including the cell with the circle itself) until it reaches the borders of the region.\n\n**Chaos Construction Arrow**: Digits along an arrow must sum to the number in the attached circle. Additionally, each arrow must be contained within one region, and the circle cannot belong to the same region as its arrow.",
 		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=n23BHxpMjY0",
 		"ctcUrl": "https://sudokupad.app/dndxixp4qb"
 	},
@@ -272,7 +272,7 @@
 		]
 	],
 	"bool_constraints": {
-		"Unknown Regions": true
+		"Chaos Construction": true
 	},
 	"local_constraints": {
 		"Chaos Construction Seen Same Region Count": [

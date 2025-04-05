@@ -4,7 +4,7 @@
     "authors": [
       "grkles"
     ],
-    "ruleset": "Sudoku rules apply.\n\n**Unknown Regions**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.\n\n**Chaos Construction Sum Of First Each Region**: Clues outside the grid give the sum of the first digit seen in each successive region in that row or column. **The summed digits always appear in increasing order.**\n\n**Unknown Region Border**: A line in the border between cells indicates a region border.",
+    "ruleset": "Sudoku rules apply.\n\n**Chaos Construction**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.\n\n**Chaos Construction Sum Of First Each Region**: Clues outside the grid give the sum of the first digit seen in each successive region in that row or column. **The summed digits always appear in increasing order.**\n\n**Unknown Region Border**: A line in the border between cells indicates a region border.",
     "ctcYoutubeUrl": "https://www.youtube.com/watch?v=o3IZb-jZ_d8",
     "ctcUrl": "https://sudokupad.app/cj8grmrtes"
   },
@@ -278,7 +278,7 @@
     ]
   ],
   "bool_constraints": {
-    "Unknown Regions": true
+    "Chaos Construction": true
   },
   "local_constraints": {
     "Chaos Construction Sum Of First Each Region": [

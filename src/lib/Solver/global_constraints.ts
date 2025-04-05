@@ -816,8 +816,8 @@ export function sudokuConstraints(puzzle: PuzzleI) {
 	}
 
 	// region constraints (digits do not repeat on regions)
-	const unknown_regions = gconstraints.get(TOOLS.UNKNOWN_REGIONS);
-	if (!unknown_regions) {
+	const chaos_construction = gconstraints.get(TOOLS.CHAOS_CONSTRUCTION);
+	if (!chaos_construction) {
 		out_str += '\n% region constraints (digits do not repeat on regions)\n';
 		const regions = grid.getUsedRegions();
 		for (const region of regions) {

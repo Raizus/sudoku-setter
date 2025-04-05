@@ -77,7 +77,7 @@ export enum VALUE_MODIFIER_CONSTRAINTS {
 }
 
 export enum UNDETERMINED_REGIONS_CONSTRAINTS {
-	UNKNOWN_REGIONS = 'Unknown Regions',
+	CHAOS_CONSTRUCTION = 'Chaos Construction',
 	CHAOS_CONSTRUCTION_SUGURU = 'Chaos Construction Suguru',
 	YIN_YANG = 'Yin Yang',
 	YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED = 'Yin Yang Neighbour Greater Than One Within Region Shaded',

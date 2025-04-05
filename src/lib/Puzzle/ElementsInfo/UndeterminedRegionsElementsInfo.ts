@@ -1,8 +1,8 @@
 import type { AbstractElementInfo } from '../ElementInfo';
 import { TOOLS, TOOL_CATEGORIES } from '../Tools';
 
-export const unknownRegionsInfo: AbstractElementInfo = {
-	toolId: TOOLS.UNKNOWN_REGIONS,
+export const chaosConstructionInfo: AbstractElementInfo = {
+	toolId: TOOLS.CHAOS_CONSTRUCTION,
 	order: 0,
 
 	meta: {

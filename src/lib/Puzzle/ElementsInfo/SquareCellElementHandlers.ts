@@ -160,7 +160,7 @@ import {
 	twoContiguousRegionsInfo,
 	nurimisakiInfo,
 	yinYangInfo,
-	unknownRegionsInfo
+	chaosConstructionInfo
 } from './UndeterminedRegionsElementsInfo';
 import {
 	adjacentMultiplesLineInfo,
@@ -406,7 +406,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	// [TOOLS.DECREMENT_FOUNTAIN]: decrementFountainInfo,
 
 	// Undetermined Regions Constraints
-	[TOOLS.UNKNOWN_REGIONS]: unknownRegionsInfo,
+	[TOOLS.CHAOS_CONSTRUCTION]: chaosConstructionInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_SUGURU]: chaosConstructionSuguruInfo,
 	[TOOLS.YIN_YANG]: yinYangInfo,
 	[TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED]:
