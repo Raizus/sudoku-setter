@@ -2431,16 +2431,16 @@ predicate fillomino_p(
     )
 
     % 4. small optimization to reduce search space
-    % /\\ forall(r in rows, c in cols, r2 in rows, c2 in cols where is_after(r,c,r2,c2)) (
-    %     abs(r2-r) + abs(c2-c) >= grid[r,c] -> regions[r, c] != (r2) * n_cols + c2 + 1
-    % )
+    /\\ forall(r in rows, c in cols, r2 in rows, c2 in cols where is_after(r,c,r2,c2)) (
+        abs(r2-r) + abs(c2-c) >= grid[r,c] -> regions[r, c] != (r2) * n_cols + c2 + 1
+    )
 
     % 5. Fix the roots (redundant but speeds up search)
-    % /\\ forall(r in rows, c in cols) (
-    %     not exists(r2 in rows, c2 in cols where is_before(r,c,r2,c2)) (
-    %         regions[r2,c2] == regions[r,c]
-    %     ) -> regions[r,c] = (r * n_cols + c + 1)
-    % )
+    /\\ forall(r in rows, c in cols) (
+        not exists(r2 in rows, c2 in cols where is_before(r,c,r2,c2)) (
+            regions[r2,c2] == regions[r,c]
+        ) -> regions[r,c] = (r * n_cols + c + 1)
+    )
 
     % 6. lex-order roots
     /\\ forall(r in rows, c in cols where regions[r, c] == (r * n_cols + c + 1)) (
@@ -2524,12 +2524,7 @@ predicate cave_floodfill_p(
         array [rows, cols] of var 0..g_size: same_before;
         array[rows, cols] of var 0..g_size: when;
 } in (
-    % Symmetry breaking: canonical numbering of regions
-    forall(r in rows, c in cols) (
-        regions[r, c] <= (r * n_cols + c + 1)
-    )
-
-    /\\ same_before_p(regions, same_before)
+    same_before_p(regions, same_before)
     /\\ forall (r in rows, c in cols) (
         if same_before[r,c] = 0 /\\ regions[r, c] != 0 then
             % 0-indexing arrays!!!!
@@ -2545,13 +2540,18 @@ predicate cave_floodfill_p(
     )
 
     /\\ forall (r in rows, c in cols) (
-        regions[r, c] != 0 -> when[r,c] >= 1
+        regions[r, c] > 0 -> when[r,c] >= 1
     )
     
     /\\ floodfill_p(regions, when)
     
     /\\ forall(r in rows, c in cols where when[r, c] == 1)(
         regions[r, c] = (r) * n_cols + c + 1
+    )
+    
+    % Symmetry breaking: canonical numbering of regions
+    /\\ forall(r in rows, c in cols) (
+        regions[r, c] <= (r * n_cols + c + 1)
     )
 );
 
@@ -2572,6 +2572,7 @@ predicate cave_nurikabe_helper_p(
     forall(r in rows, c in cols) (
         shading[r,c] = 1 <-> regions[r, c] != 0
     ) /\\
+    
     % adjacent shading = 1 cells must belong to the same region (horiz adjacent)
     forall (r in rows, c in cols where c > min(cols)) (
         let { 
@@ -2579,6 +2580,7 @@ predicate cave_nurikabe_helper_p(
             var int: id2 = regions[r, c] 
         } in (shading[r,c] = 1 /\\ shading[r, c - 1] = 1) -> id1 = id2
     ) /\\
+    
     % adjacent shading = 1 cells must belong to the same region (vertical adjacent)
     forall (r in rows, c in cols where r > min(rows)) (
         let { var int: id1 = regions[r - 1, c], var int: id2 = regions[r, c] } in
@@ -2813,9 +2815,6 @@ predicate cell_center_loop_regions_p(
         int: n_rows = length(rows);
         int: n_cols = length(cols);
         int: g_size = n_rows * n_cols;
-        array [rows, cols] of var 0..g_size: same_before;
-        array[rows, cols] of var 0..g_size: when;
-        array[int] of int: reg_idxs = [i | i in 1..g_size];
     } in (
     % shaded cells (1 = loop) correspond to region 0
     forall(r in rows, c in cols) (
@@ -2832,39 +2831,15 @@ predicate cell_center_loop_regions_p(
             var int: id1 = regions[r, c - 1], 
             var int: id2 = regions[r, c] 
         } in (shading[r,c] = 0 /\\ shading[r, c - 1] = 0) -> id1 = id2
-    ) /\\
+    )
     
-    % adjacent shaded cells must belong to the same region (vertical adjacent)
-    forall (r in rows, c in cols where r > 0) (
+    % adjacent unshaded cells must belong to the same region (vertical adjacent)
+    /\\ forall (r in rows, c in cols where r > 0) (
         let { var int: id1 = regions[r - 1, c], var int: id2 = regions[r, c] } in
         (shading[r,c] = 0 /\\ shading[r - 1, c] = 0) -> id1 = id2
     )
-    % we need to remove ambiguity from the region numbering 
-    % use the numbering each region by the id of the first element of that region
-    % /\\ same_before_p(regions, same_before)
-    /\\ forall (r in rows, c in cols) (
-        if same_before[r,c] = 0 /\\ regions[r, c] != 0 then
-            when[r,c] = 1 /\\ regions[r, c] = (r) * n_cols + c + 1
-        else
-            true
-        endif
-    )
-    /\\ forall (r in rows, c in cols) (
-        regions[r, c] = 0 -> when[r,c] = 0
-    )
-    /\\ forall (r in rows, c in cols) (
-        regions[r, c] != 0 -> when[r,c] >= 1
-    )
 
-    /\\ floodfill_p(regions, when)
-    
-    /\\ forall(r in rows, c in cols where when[r, c] == 1)(
-        regions[r, c] = (r) * n_cols + c + 1
-    )
-
-    /\\ forall(r in rows, c in cols) (
-        regions[r, c] <= (r * n_cols + c + 1)
-    )
+    /\\ cave_floodfill_p(regions)
 );
 
 predicate not_loop_sized_regions_p(
