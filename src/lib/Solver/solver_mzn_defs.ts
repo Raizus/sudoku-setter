@@ -2388,7 +2388,7 @@ predicate floodfill_p(
         )
     )
     
-    % Restrict floodfill growth to improve propagation
+    % Restrict floodfill growth to ensure unique solution
     /\\ forall(r in rows, c in cols where when[r, c] > 1) (
         when[r, c] = 1 + min([when[t.1, t.2] | 
             t in orth_adjacent_idxs(r, c) where in_bounds_2d(t.1, t.2, regions) /\\ regions[r, c] = regions[t.1, t.2]])
