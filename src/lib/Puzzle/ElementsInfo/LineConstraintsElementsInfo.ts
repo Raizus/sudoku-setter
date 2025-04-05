@@ -771,7 +771,7 @@ export const oddEvenOscilatorLineInfo: SquareCellElementInfo = {
 	shape: {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
-		stroke: { editable: true, value: 'var(--constraint-color-light-blue)' },
+		stroke: { editable: true, value: 'var(--constraint-color-red)' },
 		linePathOptions: {
 			shortenHead: { editable: false, value: 0.15 },
 			shortenTail: { editable: false, value: 0.15 },
@@ -781,7 +781,7 @@ export const oddEvenOscilatorLineInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description: 'Digits along a light blue line alternate between odd and even numbers.',
+		description: 'Digits along a red blue line alternate between odd and even numbers.',
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
