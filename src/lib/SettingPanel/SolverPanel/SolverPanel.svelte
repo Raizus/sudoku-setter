@@ -7,10 +7,9 @@
 	// import * as MiniZinc from 'https://cdn.jsdelivr.net/npm/minizinc/dist/minizinc.mjs';
 	import SolverModal from './SolverModal.svelte';
 	import { setBoardOnSolution } from './helpers';
-	import { readable } from 'svelte/store';
 	import { createStopwatch } from '$stores/timer';
 
-	let isOpen = false;
+	let isOpen = true;
 	$: puzzle = $puzzleStore;
 	$: grid = $gridStore;
 
