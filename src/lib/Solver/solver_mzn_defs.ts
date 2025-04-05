@@ -2422,25 +2422,25 @@ predicate fillomino_p(
 
     % 3. regions of size 1
     /\\ forall(r in rows, c in cols)(
-        grid[r,c] == 1 -> regions[r, c] = (r * n_cols + c + 1)
+        grid[r,c] == 1 -> regions[r, c] = (r * n_cols + c + 1) /\\ when[r,c] == 1
     )
     /\\ forall(r in rows, c in cols)(
         grid[r,c] == 1 -> forall(t in orth_adjacent_idxs(r,c) where in_bounds_2d(t.1, t.2, grid))(
-            regions[r,c] != regions[t.1, t.2]
+            regions[r,c] != regions[t.1, t.2] /\\ grid[t.1,t.2] != 1
         )
     )
 
     % 4. small optimization to reduce search space
-    /\\ forall(r in rows, c in cols, r2 in rows, c2 in cols) (
-        abs(r2-r) + abs(c2-c) >= grid[r,c] -> regions[r, c] != (r2) * n_cols + c2 + 1
-    )
+    % /\\ forall(r in rows, c in cols, r2 in rows, c2 in cols where is_after(r,c,r2,c2)) (
+    %     abs(r2-r) + abs(c2-c) >= grid[r,c] -> regions[r, c] != (r2) * n_cols + c2 + 1
+    % )
 
     % 5. Fix the roots (redundant but speeds up search)
-    /\\ forall(r in rows, c in cols) (
-        not exists(r2 in rows, c2 in cols where is_before(r,c,r2,c2)) (
-            regions[r2,c2] == regions[r,c]
-        ) -> regions[r,c] = (r * n_cols + c + 1)
-    )
+    % /\\ forall(r in rows, c in cols) (
+    %     not exists(r2 in rows, c2 in cols where is_before(r,c,r2,c2)) (
+    %         regions[r2,c2] == regions[r,c]
+    %     ) -> regions[r,c] = (r * n_cols + c + 1)
+    % )
 
     % 6. lex-order roots
     /\\ forall(r in rows, c in cols where regions[r, c] == (r * n_cols + c + 1)) (
@@ -2468,7 +2468,7 @@ predicate fillomino_p(
         ) == 1
     )
 
-    % all cells with a value greater than 2 must have at least 2 neighbour equal to it
+    % all cells with a value greater than 2 must have at least a neighbour equal to it
     /\\ forall(r in rows, c in cols where grid[r,c] > 2)(
         exists(t in orth_adjacent_idxs(r,c) where in_bounds_2d(t.1, t.2, grid))(
             grid[r,c] == grid[t.1,t.2]
