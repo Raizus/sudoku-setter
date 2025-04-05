@@ -78,6 +78,7 @@ export enum VALUE_MODIFIER_CONSTRAINTS {
 
 export enum UNDETERMINED_REGIONS_CONSTRAINTS {
 	CHAOS_CONSTRUCTION = 'Chaos Construction',
+	NUMBERED_CHAOS_CONSTRUCTION = 'Numbered Chaos Construction',
 	CHAOS_CONSTRUCTION_SUGURU = 'Chaos Construction Suguru',
 	YIN_YANG = 'Yin Yang',
 	YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED = 'Yin Yang Neighbour Greater Than One Within Region Shaded',
@@ -233,7 +234,9 @@ export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
 	YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS = 'Yin Yang Count Unique Fillomino Same Shading Arrows',
 	SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS = 'Same Galaxy Unobstructed Count Arrows',
 	NURIKABE_COUNT_ISLAND_CELLS_ARROWS = 'Nurikabe Count Island Cells Arrows',
-	CONNECT_FOUR_COUNT_CELLS_OF_SAME_COLOR = 'Connect Four Count Cells Of Same Color'
+	CONNECT_FOUR_COUNT_CELLS_OF_SAME_COLOR = 'Connect Four Count Cells Of Same Color',
+
+	NEXT_NUMBERED_REGION_DISTANCE_ARROWS = 'Next Numbered Region Distance Arrows'
 }
 
 export enum EDGE_CONSTRAINTS {

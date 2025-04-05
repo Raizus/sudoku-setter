@@ -219,6 +219,25 @@ function connectFourCountCellsOfSameColorConstraint(grid: Grid, constraint: Cell
 	return out_str;
 }
 
+function nextNumberedRegionDistanceArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToVarName(cell);
+	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.UNKNOWN_REGIONS);
+
+	const directions = constraint.directions;
+	let out_str: string = '';
+	for (const direction of directions) {
+		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
+		const region_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+
+		out_str += `constraint next_numbered_region_distance_arrow_p(${cell_var}, ${region_var}, ${region_vars_str});\n`;
+	}
+
+	return out_str;
+}
+
 type ConstraintF = (grid: Grid, constraint: CellMultiArrowToolI) => string;
 
 const tool_map = new Map<string, ConstraintF>([
@@ -234,7 +253,8 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.YIN_YANG_COUNT_SHADED_CELLS, yinYangCountShadedCellsConstraint],
 	[TOOLS.SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS, sameGalaxyUnobstructedCountArrowsConstraint],
 	[TOOLS.NURIKABE_COUNT_ISLAND_CELLS_ARROWS, nurikabeCountIslandCellsArrowsConstraint],
-	[TOOLS.CONNECT_FOUR_COUNT_CELLS_OF_SAME_COLOR, connectFourCountCellsOfSameColorConstraint]
+	[TOOLS.CONNECT_FOUR_COUNT_CELLS_OF_SAME_COLOR, connectFourCountCellsOfSameColorConstraint],
+	[TOOLS.NEXT_NUMBERED_REGION_DISTANCE_ARROWS, nextNumberedRegionDistanceArrowsConstraint]
 ]);
 
 export function singleCellMultiArrowConstraints(

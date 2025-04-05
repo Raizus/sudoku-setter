@@ -255,7 +255,7 @@ function setUnknownRegionsHighlights(json: JsonT, grid: Grid) {
 			if (!cell) continue;
 			cells.push(cell);
 			const val = row[j];
-			values.push([val + 1]);
+			values.push([val]);
 		}
 	}
 	const action = restoreCellsHighlightsAction(cells, values);

@@ -13,6 +13,18 @@ export const chaosConstructionInfo: AbstractElementInfo = {
 	}
 };
 
+export const numberedChaosConstructionInfo: AbstractElementInfo = {
+	toolId: TOOLS.NUMBERED_CHAOS_CONSTRUCTION,
+	order: 0,
+
+	meta: {
+		description:
+			'The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells. The digit in the top-left cell of a region (the leftmost cell in its highest row) is its region number. All region numbers are different.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
 export const chaosConstructionSuguruInfo: AbstractElementInfo = {
 	toolId: TOOLS.CHAOS_CONSTRUCTION_SUGURU,
 	order: 0,

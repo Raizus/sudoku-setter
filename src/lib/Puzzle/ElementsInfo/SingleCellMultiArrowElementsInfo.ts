@@ -192,3 +192,19 @@ export const connectFourCountCellsOfSameColorInfo: SquareCellElementInfo = {
 		categories: defaultCategories
 	}
 };
+
+export const nextNumberedRegionDistanceArrowsInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
+
+	toolId: TOOLS.NEXT_NUMBERED_REGION_DISTANCE_ARROWS,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: defaultShape,
+
+	meta: {
+		description:
+			'If a cell with the digit X in a region with the number N contains an arrow, then the cell X steps away in the indicated direction belongs to the region numbered N+1.',
+		tags: [],
+		categories: defaultCategories
+	}
+};

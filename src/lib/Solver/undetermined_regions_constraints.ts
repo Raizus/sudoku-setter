@@ -1,3 +1,4 @@
+import { range } from 'lodash';
 import type { CornerLineToolI } from '../Puzzle/Constraints/CornerLineConstraints';
 import type { EdgeToolI } from '../Puzzle/Constraints/EdgeConstraints';
 import type { CellToolI } from '../Puzzle/Constraints/SingleCellConstraints';
@@ -119,11 +120,35 @@ function chaosConstructionConstraint(model: PuzzleModel, tool: TOOLID) {
 	}
 
 	const n_regions = Math.max(grid.nCols, grid.nRows);
-
+	const reg_idxs = range(1, n_regions + 1);
 	let out_str: string = '';
-	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${n_regions - 1}: unknown_regions;\n`;
-	out_str += `constraint unknown_sudoku_regions_p(unknown_regions, ${n_regions});\n`;
-	out_str += `constraint no_repeats_in_unknown_regions_p(board, unknown_regions, ALLOWED_DIGITS, ${n_regions});\n`;
+	const reg_idxs_str = '[' + reg_idxs.join(',') + ']';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var ${1}..${n_regions}: unknown_regions;\n`;
+	out_str += `constraint chaos_construction_p(unknown_regions, ${reg_idxs_str}, ${n_regions});\n`;
+	out_str += `constraint no_repeats_in_unknown_regions_p(board, unknown_regions, ALLOWED_DIGITS, ${reg_idxs_str});\n`;
+
+	return out_str;
+}
+
+function numberedChaosConstructionConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outisde the grid.`);
+		return '';
+	}
+
+	const grid_name = VAR_2D_NAMES.UNKNOWN_REGIONS;
+
+	const n_regions = Math.max(grid.nCols, grid.nRows);
+	const reg_idxs = range(1, n_regions + 1);
+	let out_str: string = '';
+	const reg_idxs_str = '[' + reg_idxs.join(',') + ']';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var ${1}..${n_regions}: ${grid_name};\n`;
+	out_str += `constraint numbered_chaos_construction_p(${VAR_2D_NAMES.BOARD}, ${grid_name}, ${reg_idxs_str}, ${n_regions});\n`;
+	out_str += `constraint no_repeats_in_unknown_regions_p(${VAR_2D_NAMES.BOARD}, ${grid_name}, ALLOWED_DIGITS, ${reg_idxs_str});\n`;
 
 	return out_str;
 }
@@ -1100,6 +1125,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.NURIKABE_NO_REPEATS_IN_ISLANDS, nurikabeNoRepeatsInIslandsConstraint],
 	[TOOLS.TWO_CONTIGUOUS_REGIONS, twoContiguousRegionsConstraint],
 	[TOOLS.CHAOS_CONSTRUCTION, chaosConstructionConstraint],
+	[TOOLS.NUMBERED_CHAOS_CONSTRUCTION, numberedChaosConstructionConstraint],
 	[TOOLS.SASHIGANE, sashiganeConstraint],
 	[TOOLS.CELL_CENTER_LOOP_NO_TOUCHING, cellCenterLoopNoTouchingConstraint],
 	[TOOLS.CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY, cellCenterLoopCanTouchDiagonallyConstraint],

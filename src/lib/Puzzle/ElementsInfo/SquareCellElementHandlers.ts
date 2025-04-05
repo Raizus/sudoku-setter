@@ -132,6 +132,7 @@ import {
 	mazeDirectedPathInfo,
 	norinoriInfo,
 	norinoriStarBattleInfo,
+	numberedChaosConstructionInfo,
 	nurikabeInfo,
 	nurikabeNoRepeatsInIslandsInfo,
 	oneGalaxyIsAGermanWhispersInfo,
@@ -319,6 +320,7 @@ import {
 	connectFourCountCellsOfSameColorInfo,
 	countCellsNotInTheSameRegionArrowsInfo,
 	hotArrowsInfo,
+	nextNumberedRegionDistanceArrowsInfo,
 	nurikabeCountIslandCellsArrowsInfo,
 	yinYangCountShadedCellsInfo
 } from './SingleCellMultiArrowElementsInfo';
@@ -407,6 +409,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	// Undetermined Regions Constraints
 	[TOOLS.CHAOS_CONSTRUCTION]: chaosConstructionInfo,
+	[TOOLS.NUMBERED_CHAOS_CONSTRUCTION]: numberedChaosConstructionInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_SUGURU]: chaosConstructionSuguruInfo,
 	[TOOLS.YIN_YANG]: yinYangInfo,
 	[TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED]:
@@ -551,6 +554,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.NURIKABE_ISLAND_SIZE_CELL]: nurikabeIslandSizeCellInfo,
 
 	[TOOLS.CONNECT_FOUR_COUNT_CELLS_OF_SAME_COLOR]: connectFourCountCellsOfSameColorInfo,
+
+	[TOOLS.NEXT_NUMBERED_REGION_DISTANCE_ARROWS]: nextNumberedRegionDistanceArrowsInfo,
 
 	// Edge Constraints
 	[TOOLS.DIFFERENCE]: differenceInfo,

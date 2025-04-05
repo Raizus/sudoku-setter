@@ -1916,8 +1916,11 @@ predicate two_contiguous_regions_row_col_opposite_set_count_p(
 ) =
     count_different(row_vars, region_var) + count_different(col_vars, region_var) == cell_var;\n\n`;
 
-	const unknown_sudoku_regions_p = `function array[int] of var int: regions_idxs_f(array[int, int] of var int: regions, int: n_regions) =
-  [first_idx(array1d(regions), reg_i) | reg_i in 0..(n_regions-1)];
+    const unknown_sudoku_regions = `function array[int] of var int: regions_idxs_f(
+    array[int, int] of var int: regions,
+    int: n_regions
+) =
+    [first_idx(array1d(regions), reg_i) | reg_i in 0..(n_regions-1)];
 
 predicate unknown_regions_ordering_p(array[int, int] of var int: regions, int: n_regions) = 
     let {
@@ -1926,35 +1929,70 @@ predicate unknown_regions_ordering_p(array[int, int] of var int: regions, int: n
         strictly_increasing(regions_idxs)
     );
     
-predicate unknown_sudoku_regions_p(
+predicate chaos_construction_p(
     array[int, int] of var int: regions,
-    int: n_regions
+    array[int] of int: reg_idxs,
+    int: region_size,
 ) = let {
     set of int: rows = index_set_1of2(regions);
     set of int: cols = index_set_2of2(regions);
-    array[int] of int: reg_idxs = [i | i in 0..(n_regions-1)];
 } in (
-    forall (reg_i in 0..(n_regions-1)) (
+    forall (reg_i in reg_idxs) (
         connected_region(regions, reg_i)
         % each region has exactly n_regions cells
-        /\\ count(array1d(regions), reg_i) = n_regions
-        % order regions lexicographically
-        /\\ value_precede_chain(reg_idxs, array1d(regions))
+        /\\ count(array1d(regions), reg_i) = region_size
     )
+    % order regions lexicographically
+    /\\ value_precede_chain(reg_idxs, array1d(regions))
 );
     
 predicate no_repeats_in_unknown_regions_p(
     array[int, int] of var int: grid, 
     array[int, int] of var int: regions,
     set of int: allowed_vals,
-    int: n_regions
+    array[int] of int: reg_idxs,
 ) =
-    forall(reg_i in 0..(n_regions-1)) (
+    forall(reg_i in reg_idxs) (
         % for each region, the counts of each digit is at most 1
         forall(val in allowed_vals) (
             conditional_count_f(array1d(grid), array1d(regions), val, reg_i) <= 1
         )
     );
+
+predicate numbered_chaos_construction_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions,
+    array[int] of int: reg_idxs,
+    int: region_size,
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+    
+} in (
+    assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes")
+    /\\ forall (reg_i in reg_idxs) (
+        connected_region(regions, reg_i)
+        % each region has exactly n_regions cells
+        /\\ count(array1d(regions), reg_i) = region_size
+    )
+    % numbered regions
+    /\\ forall(r in rows, c in cols) (
+        not exists(r2 in rows, c2 in cols where is_before(r,c,r2,c2)) (
+            regions[r2,c2] == regions[r,c]
+        ) -> regions[r,c] = grid[r,c]
+    )
+);
+
+predicate next_numbered_region_distance_arrow_p(
+    var int: cell_var,
+    var int: cell_region,
+    array[int] of var int: region_cells_in_dir
+) = let {
+    int: n = length(region_cells_in_dir);
+} in (
+    cell_var <= n
+    /\\ region_cells_in_dir[cell_var] == cell_region + 1
+);
 
 predicate unknown_regions_seen_region_border_count_p(
     array[int] of var int: row_region_vars, 
@@ -1962,6 +2000,7 @@ predicate unknown_regions_seen_region_border_count_p(
     var int: cell
 ) = count_transitions_f(row_region_vars) + count_transitions_f(col_region_vars) == cell;
  
+
 predicate chaos_construction_arrow_knots_in_arrow_p(
     array[int] of var bool: in_arrow
 ) = let {
@@ -4133,12 +4172,14 @@ predicate suguru_regions_p(
             regions[r,c] == id /\\ grid[r,c] == size[id]
         )
     )
+    
     % Optimisation: the "when" label is actually the distance of a cell in a
     % region from the region "root".  This distance cannot be larger than the size
     % of the region.
     /\\ forall (r in rows, c in cols) (
         when[r, c] <= size[regions[r, c]]
     )
+    
     % Optimisation: fix unambiguous "roots" at time 1, the id of the
     % region will be the 'index' of the first element of that region
     /\\ same_before_p(regions, same_before) 
@@ -4425,7 +4466,7 @@ predicate shikaku_region_size_p(
 		valued_global_constraints +
 		yin_yang +
 		two_contiguous_regions +
-		unknown_sudoku_regions_p +
+		unknown_sudoku_regions +
 		nurimisaki +
 		odd_even_grid +
 		value_modifier +
