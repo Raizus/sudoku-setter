@@ -10,7 +10,7 @@
 		"id": "p2",
 		"title": "Stepping Stones",
 		"authors": ["grkles"],
-		"description": "Sudoku rules apply.\n\n**Unknown Regions**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.\n\n**Chaos Construction Sum Of First Each Region**: Clues outside the grid give the sum of the first digit seen in each successive region in that row or column. **The summed digits always appear in increasing order.**\n\n**Unknown Region Border**: A line in the border between cells indicates a region border.",
+		"description": "Sudoku rules apply.\n\n**Chaos Construction**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.\n\n**Chaos Construction Sum Of First Each Region**: Clues outside the grid give the sum of the first digit seen in each successive region in that row or column. **The summed digits always appear in increasing order.**\n\n**Unknown Region Border**: A line in the border between cells indicates a region border.",
 		"thumbnail": "/thumbnails/SteppingStones_by_grkles.png"
 	},
 	{
@@ -101,7 +101,7 @@
 		"id": "p15",
 		"title": "Decapitated",
 		"authors": ["Black_Doom"],
-		"description": "Sudoku rules apply.\n\n**Unknown Regions**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.\n\n**Chaos Construction Seen Same Region Count**: The number in the circle shows how many region cells it sees in its row and column (including the cell with the circle itself) until it reaches the borders of the region.\n\n**Chaos Construction Arrow**: Digits along an arrow must sum to the number in the attached circle. Additionally, each arrow must be contained within one region, and the circle cannot belong to the same region as its arrow.",
+		"description": "Sudoku rules apply.\n\n**Chaos Construction**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.\n\n**Chaos Construction Seen Same Region Count**: The number in the circle shows how many region cells it sees in its row and column (including the cell with the circle itself) until it reaches the borders of the region.\n\n**Chaos Construction Arrow**: Digits along an arrow must sum to the number in the attached circle. Additionally, each arrow must be contained within one region, and the circle cannot belong to the same region as its arrow.",
 		"thumbnail": "/thumbnails/Decapitated_by_Black_Doom.png"
 	},
 	{
@@ -131,5 +131,14 @@
 		"authors": ["Stephen Mason"],
 		"description": "Sudoku rules apply.\n\n**Cave**: Shade some cells in the grid such that all unshaded cells are orthogonally connected, and all shaded cells are orthogonally connected by other shaded cells to an edge of the grid.\n\n**One Digit Does Not Appear In The Cave**: There is exactly one digit that does not appear anywhere in the cave.\n\n**Killer Cage**: Numbers must not repeat in a killer cage. The numbers in the cage must sum to the given total in the top left (if one exists).\n\n**Cave Clue**: Light blue circled cells are cave clues. Cave clues must be a part of the cave, with each number indicating the total count of cells connected vertically and horizontally to the numbered cell including the cell itself.\n",
 		"thumbnail": "/thumbnails/KillerCaves_by_StephenMason.png"
+	},
+	{
+		"id": "p20",
+		"title": "The Moving Finger",
+		"authors": ["Tallcat"],
+		"description": "Sudoku rules apply.\n\n**Numbered Chaos Construction**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells. The digit in the top-left cell of a region (the leftmost cell in its highest row) is its region number. All region numbers are different.\n\n**Next Numbered Region Distance Arrows**: If a cell with the digit X in a region with the number N contains an arrow, then the cell X steps away in the indicated direction belongs to the region numbered N+1.",
+		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=SEkdIt_LrYQ",
+		"ctcUrl": "https://sudokupad.app/2zohak8sgm",
+		"thumbnail": "/thumbnails/TheMovingFinger_by_Tallcat.png"
 	}
 ]
