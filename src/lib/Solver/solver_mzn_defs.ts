@@ -3624,6 +3624,12 @@ predicate check_tetra_p(array[int] of var int: tetra, var int: val) =
     else
         true
     endif;
+    
+function array[int] of var int: get_n_omino(
+    array[int, int] of var int: ids_grid,
+    tuple(int, int): tl_anchor,
+    array[int] of tuple(int, int): rel_coords,
+) = [ids_grid[tl_anchor.1 + t.1, tl_anchor.2 + t.2] | t in rel_coords];
 
 predicate lits_o_tetra_p(
     array[int, int] of var int: ids_grid
@@ -3638,126 +3644,77 @@ predicate lits_o_tetra_p(
     )  
 );
 
+predicate check_tetras_p(
+    array[int, int] of var int: ids_grid,
+    array[int] of array[int] of tuple(int, int): all_coords,
+    var int: val,
+) = let {
+    set of int: rows = index_set_1of2(ids_grid);
+    set of int: cols = index_set_2of2(ids_grid);    
+} in (
+    forall(i in index_set(all_coords)) (
+        let {
+            array[int] of tuple(int, int): coords = all_coords[i];
+            int: max_dr = max(t in coords)(t.1);
+            int: max_dc = max(t in coords)(t.2);
+        } in (
+            forall(r in rows where r <= max(rows) - max_dr, c in cols where c <= max(cols) - max_dc)(
+                let {
+                    array[int] of var int: tetra = get_n_omino(ids_grid, (r,c), coords);
+                } in check_tetra_p(tetra, val)
+            )
+        )
+    )  
+);
+
 predicate lits_i_tetra_p(
     array[int, int] of var int: ids_grid
 ) = let {
-    set of int: rows = index_set_1of2(ids_grid);
-    set of int: cols = index_set_2of2(ids_grid);
+    array[int] of tuple(int, int): t1 = [(0, 0), (0, 1), (0, 2), (0, 3)];
+    array[int] of tuple(int, int): t2 = [(0, 0), (1, 0), (2, 0), (3, 0)];
+    array[int] of array[int] of tuple(int, int): ts = [t1, t2];
 } in (
-    forall(r in rows, c in cols where c <= max(cols) - 3)(
-        let {
-            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r,c+1], ids_grid[r,c+2], ids_grid[r,c+3]];
-        } in check_tetra_p(tetra, 2)
-    ) /\\
-    forall(r in rows where r <= max(rows) - 3, c in cols)(
-        let {
-            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r+1,c], ids_grid[r+2,c], ids_grid[r+3,c]];
-        } in check_tetra_p(tetra, 2)
-    )
+    check_tetras_p(ids_grid, ts, 2)
 );
 
 predicate lits_t_tetra_p(
     array[int, int] of var int: ids_grid
 ) = let {
-    set of int: rows = index_set_1of2(ids_grid);
-    set of int: cols = index_set_2of2(ids_grid);
+    array[int] of tuple(int, int): t1 = [(0, 0), (0, 1), (0, 2), (1, 1)];
+    array[int] of tuple(int, int): t2 = [(0, 1), (1, 0), (1, 1), (1, 2)];
+    array[int] of tuple(int, int): t3 = [(0, 0), (1, 0), (2, 0), (1, 1)];
+    array[int] of tuple(int, int): t4 = [(1, 0), (0, 1), (1, 1), (2, 1)];
+    array[int] of array[int] of tuple(int, int): ts = [t1, t2, t3, t4];
 } in (
-    forall(r in rows where r <= max(cols) - 1, c in cols where c <= max(cols) - 2)(
-        let {
-            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r,c+1], ids_grid[r,c+2], ids_grid[r+1,c+1]];
-        } in check_tetra_p(tetra, 3)
-    ) /\\
-    forall(r in rows where r <= max(cols) - 1, c in cols where c <= max(cols) - 2)(
-        let {
-            array[int] of var int: tetra = [ids_grid[r,c+1], ids_grid[r+1,c], ids_grid[r+1,c+1], ids_grid[r+1,c+2]];
-        } in check_tetra_p(tetra, 3)
-    ) /\\
-    forall(r in rows where r <= max(cols) - 2, c in cols where c <= max(cols) - 1)(
-        let {
-            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r+1,c], ids_grid[r+2,c], ids_grid[r+1,c+1]];
-        } in check_tetra_p(tetra, 3)
-    ) /\\
-    forall(r in rows where r <= max(cols) - 2, c in cols where c <= max(cols) - 1)(
-        let {
-            array[int] of var int: tetra = [ids_grid[r+1,c], ids_grid[r,c+1], ids_grid[r+1,c+1], ids_grid[r+2,c+1]];
-        } in check_tetra_p(tetra, 3)
-    )
+    check_tetras_p(ids_grid, ts, 3)
 );
 
 predicate lits_s_tetra_p(
     array[int, int] of var int: ids_grid
 ) = let {
-    set of int: rows = index_set_1of2(ids_grid);
-    set of int: cols = index_set_2of2(ids_grid);
+    array[int] of tuple(int, int): t1 = [(0, 1), (0, 2), (1, 0), (1, 1)];
+    array[int] of tuple(int, int): t2 = [(0, 0), (0, 1), (1, 1), (1, 2)];
+    array[int] of tuple(int, int): t3 = [(1, 0), (2, 0), (0, 1), (1, 1)];
+    array[int] of tuple(int, int): t4 = [(0, 0), (1, 0), (1, 1), (2, 1)];
+    array[int] of array[int] of tuple(int, int): ts = [t1, t2, t3, t4];
 } in (
-    forall(r in rows where r <= max(cols) - 1, c in cols where c <= max(cols) - 2)(
-        let {
-            array[int] of var int: tetra = [ids_grid[r,c+1], ids_grid[r,c+2], ids_grid[r+1,c], ids_grid[r+1,c+1]];
-        } in check_tetra_p(tetra, 4)
-    ) /\\
-    forall(r in rows where r <= max(cols) - 1, c in cols where c <= max(cols) - 2)(
-        let {
-            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r,c+1], ids_grid[r+1,c+1], ids_grid[r+1,c+2]];
-        } in check_tetra_p(tetra, 4)
-    ) /\\
-    forall(r in rows where r <= max(cols) - 2, c in cols where c <= max(cols) - 1)(
-        let {
-            array[int] of var int: tetra = [ids_grid[r+1,c], ids_grid[r+2,c], ids_grid[r,c+1], ids_grid[r+1,c+1]];
-        } in check_tetra_p(tetra, 4)
-    ) /\\
-    forall(r in rows where r <= max(cols) - 2, c in cols where c <= max(cols) - 1)(
-        let {
-            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r+1,c], ids_grid[r+1,c+1], ids_grid[r+2,c+1]];
-        } in check_tetra_p(tetra, 4)
-    )
+    check_tetras_p(ids_grid, ts, 4)
 );
 
 predicate lits_l_tetra_p(
     array[int, int] of var int: ids_grid
 ) = let {
-    set of int: rows = index_set_1of2(ids_grid);
-    set of int: cols = index_set_2of2(ids_grid);
+    array[int] of tuple(int, int): t1 = [(0, 0), (0, 1), (0, 2), (1, 0)];
+    array[int] of tuple(int, int): t2 = [(0, 0), (0, 1), (0, 2), (1, 2)];
+    array[int] of tuple(int, int): t3 = [(0, 0), (1, 0), (1, 1), (1, 2)];
+    array[int] of tuple(int, int): t4 = [(0, 2), (1, 0), (1, 1), (1, 2)];
+    array[int] of tuple(int, int): t5 = [(0, 0), (1, 0), (2, 0), (0, 1)];
+    array[int] of tuple(int, int): t6 = [(0, 0), (1, 0), (2, 0), (2, 1)];
+    array[int] of tuple(int, int): t7 = [(0, 0), (0, 1), (1, 1), (2, 1)];
+    array[int] of tuple(int, int): t8 = [(2, 0), (0, 1), (1, 1), (2, 1)];
+    array[int] of array[int] of tuple(int, int): ts = [t1, t2, t3, t4, t5, t6, t7, t8];    
 } in (
-    forall(r in rows where r <= max(cols) - 1, c in cols where c <= max(cols) - 2)(
-        let {
-            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r,c+1], ids_grid[r,c+2], ids_grid[r+1,c]];
-        } in check_tetra_p(tetra, 1)
-    ) /\\
-    forall(r in rows where r <= max(cols) - 1, c in cols where c <= max(cols) - 2)(
-        let {
-            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r,c+1], ids_grid[r,c+2], ids_grid[r+1,c+2]];
-        } in check_tetra_p(tetra, 1)
-    ) /\\
-    forall(r in rows where r <= max(cols) - 1, c in cols where c <= max(cols) - 2)(
-        let {
-            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r+1,c], ids_grid[r+1,c+1], ids_grid[r+1,c+2]];
-        } in check_tetra_p(tetra, 1)
-    ) /\\
-    forall(r in rows where r <= max(cols) - 1, c in cols where c <= max(cols) - 2)(
-        let {
-            array[int] of var int: tetra = [ids_grid[r,c+2], ids_grid[r+1,c], ids_grid[r+1,c+1], ids_grid[r+1,c+2]];
-        } in check_tetra_p(tetra, 1)
-    ) /\\
-    forall(r in rows where r <= max(cols) - 2, c in cols where c <= max(cols) - 1)(
-        let {
-            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r+1,c], ids_grid[r+2,c], ids_grid[r,c+1]];
-        } in check_tetra_p(tetra, 1)
-    ) /\\
-    forall(r in rows where r <= max(cols) - 2, c in cols where c <= max(cols) - 1)(
-        let {
-            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r+1,c], ids_grid[r+2,c], ids_grid[r+2,c+1]];
-        } in check_tetra_p(tetra, 1)
-    ) /\\
-    forall(r in rows where r <= max(cols) - 2, c in cols where c <= max(cols) - 1)(
-        let {
-            array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r,c+1], ids_grid[r+1,c+1], ids_grid[r+2,c+1]];
-        } in check_tetra_p(tetra, 1)
-    ) /\\
-    forall(r in rows where r <= max(cols) - 2, c in cols where c <= max(cols) - 1)(
-        let {
-            array[int] of var int: tetra = [ids_grid[r+2,c], ids_grid[r,c+1], ids_grid[r+1,c+1], ids_grid[r+2,c+1]];
-        } in check_tetra_p(tetra, 1)
-    ) 
+    check_tetras_p(ids_grid, ts, 1)
 );
 
 predicate lits_tetromino_shapes_p(array[int, int] of var int: ids_grid) = (
