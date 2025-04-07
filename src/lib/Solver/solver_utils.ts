@@ -278,6 +278,7 @@ function _pruneMinizincModel(model: string): string {
 	let currentDef: { name: string; startLine: number; content: string[] } | null = null;
 	let bracketCount = 0;
 	let curlyBracketCount = 0;
+	let squareBracketCount = 0;
 
 	for (let i = 0; i < lines.length; i++) {
 		const line = lines[i].trim();
@@ -298,6 +299,7 @@ function _pruneMinizincModel(model: string): string {
 			// Count opening brackets/parentheses in the first line
 			bracketCount = (line.match(/\(/g) || []).length - (line.match(/\)/g) || []).length;
 			curlyBracketCount = (line.match(/\{/g) || []).length - (line.match(/\}/g) || []).length;
+			squareBracketCount = (line.match(/\[/g) || []).length - (line.match(/\]/g) || []).length;
 			continue;
 		}
 
@@ -308,17 +310,21 @@ function _pruneMinizincModel(model: string): string {
 			// Update bracket count
 			bracketCount += (line.match(/\(/g) || []).length - (line.match(/\)/g) || []).length;
 			curlyBracketCount += (line.match(/\{/g) || []).length - (line.match(/\}/g) || []).length;
+			squareBracketCount += (line.match(/\[/g) || []).length - (line.match(/\]/g) || []).length;
 			// Check if this is the end of the definition
 			// A function/predicate ends when:
 			// 1. All brackets are closed (bracketCount === 0)
 			// 2. The line ends with a semicolon
 			// 3. We're not inside a local variable declaration (no 'let' or 'var' on this line)
-			if (bracketCount === 0 && curlyBracketCount === 0 && line.endsWith(';')) {
+			if (
+				bracketCount === 0 &&
+				curlyBracketCount === 0 &&
+				squareBracketCount === 0 &&
+				line.endsWith(';')
+			) {
 				definitions[currentDef.name] = {
-					startLine: currentDef.startLine,
-					endLine: i,
-					name: currentDef.name,
-					content: currentDef.content
+					...currentDef,
+					endLine: i
 				};
 
 				// check previous line(s) for comments and add them to the range
@@ -333,29 +339,29 @@ function _pruneMinizincModel(model: string): string {
 		}
 	}
 
-	// Second pass: find all function/predicate usage in the model
-	const usedDefinitions = new Set<string>();
-
 	// Helper function to find all function/predicate/test calls in a line
-	function findCalls(line: string): string[] {
-		const calls: string[] = [];
+	function findReferences(line: string): string[] {
+		const references: string[] = [];
 		for (const defName of Object.keys(definitions)) {
 			// Look for the function/predicate name followed by an opening parenthesis
 			// Make sure we're not inside a function/predicate declaration
 			if (!line.includes('function') && !line.includes('predicate') && !line.includes('test')) {
 				const regex = new RegExp(`\\b${defName}\\s*\\(`, 'g');
 				if (regex.test(line)) {
-					calls.push(defName);
+					references.push(defName);
 				}
 			}
 		}
-		return calls;
+		return references;
 	}
+
+	// Second pass: find all function/predicate usage in the model
+	const usedDefinitions = new Set<string>();
 
 	// Process all lines to find function/predicate usage
 	for (const line of lines) {
-		const calls = findCalls(line);
-		calls.forEach((call) => usedDefinitions.add(call));
+		const references = findReferences(line);
+		references.forEach((call) => usedDefinitions.add(call));
 	}
 
 	// Create the pruned model by removing unused definitions
@@ -402,94 +408,6 @@ export function pruneMinizincModel(model: string): string {
 	}
 	return current;
 }
-
-export const PENTOMINOES = new Map<number, number[][]>([
-	[1, [[1], [1], [1], [1], [1]]], // I
-	[
-		2, // X
-		[
-			[0, 1, 0],
-			[1, 1, 1],
-			[0, 1, 0]
-		]
-	],
-	[
-		3, // T
-		[
-			[1, 1, 1],
-			[0, 1, 0],
-			[0, 1, 0]
-		]
-	],
-	[
-		4, // U
-		[
-			[1, 0, 1],
-			[1, 1, 1]
-		]
-	],
-	[
-		5, // V
-		[
-			[1, 0, 0],
-			[1, 0, 0],
-			[1, 1, 1]
-		]
-	],
-	[
-		6, // W
-		[
-			[1, 0, 0],
-			[1, 1, 0],
-			[0, 1, 1]
-		]
-	],
-	[
-		7, // Z
-		[
-			[1, 1, 0],
-			[0, 1, 0],
-			[0, 1, 1]
-		]
-	],
-	[
-		8, // F
-		[
-			[0, 1, 1],
-			[1, 1, 0],
-			[0, 1, 0]
-		]
-	],
-	[
-		9, // L
-		[
-			[1, 0, 0, 0],
-			[1, 1, 1, 1]
-		]
-	],
-	[
-		10, // N
-		[
-			[1, 1, 0, 0],
-			[0, 1, 1, 1]
-		]
-	],
-	[
-		11, // P
-		[
-			[1, 1],
-			[1, 1],
-			[1, 0]
-		]
-	],
-	[
-		12, // Y
-		[
-			[1, 1, 1, 1],
-			[0, 1, 0, 0]
-		]
-	]
-]);
 
 export function format_2d_array(arr: number[][]): string {
 	if (arr.length === 0) return '[| |]';
