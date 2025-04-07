@@ -2,6 +2,16 @@ export function defineFunctionsPredicates() {
 
     const poliominoes = `
 
+array[int] of tuple(int, int): P3_I1 = [(0, 0), (0, 1), (0, 2)];
+array[int] of tuple(int, int): P3_I2 = [(0, 0), (1, 0), (2, 0)];
+array[int] of array[int] of tuple(int, int): P3_I = [P3_I1, P3_I2];
+
+array[int] of tuple(int, int): P3_L1 = [(0, 0), (1, 0), (1, 1)];
+array[int] of tuple(int, int): P3_L2 = [(0, 1), (1, 0), (1, 1)];
+array[int] of tuple(int, int): P3_L3 = [(0, 0), (0, 1), (1, 0)];
+array[int] of tuple(int, int): P3_L4 = [(0, 0), (0, 1), (1, 1)];
+array[int] of array[int] of tuple(int, int): P3_L = [P3_L1, P3_L2, P3_L3, P3_L4];
+
 array[int] of tuple(int, int): P4_O1 = [(0, 0), (0, 1), (1, 0), (1, 1)];
 array[int] of array[int] of tuple(int, int): P4_O = [P4_O1];
 
