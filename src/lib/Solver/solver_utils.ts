@@ -250,6 +250,11 @@ export class PuzzleModel implements ModelI {
 	}
 }
 
+/**
+ * Prunes the minizinc model by removind unused predicate, function and test clauses
+ * @param model 
+ * @returns 
+ */
 function _pruneMinizincModel(model: string): string {
 	// Split the model into lines for processing
 	const lines = model.split('\n');
@@ -331,7 +336,7 @@ function _pruneMinizincModel(model: string): string {
 	// Second pass: find all function/predicate usage in the model
 	const usedDefinitions = new Set<string>();
 
-	// Helper function to find all function/predicate calls in a line
+	// Helper function to find all function/predicate/test calls in a line
 	function findCalls(line: string): string[] {
 		const calls: string[] = [];
 		for (const defName of Object.keys(definitions)) {
