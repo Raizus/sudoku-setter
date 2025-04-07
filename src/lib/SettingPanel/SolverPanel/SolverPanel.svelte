@@ -6,7 +6,7 @@
 	import * as MiniZinc from 'minizinc';
 	// import * as MiniZinc from 'https://cdn.jsdelivr.net/npm/minizinc/dist/minizinc.mjs';
 	import SolverModal from './SolverModal.svelte';
-	import { setBoardOnSolution } from './helpers';
+	import { setBoardOnSolution } from './solution_render_helpers';
 	import { createStopwatch } from '$stores/timer';
 
 	let isOpen = true;
