@@ -418,7 +418,21 @@ function var int: first_idx(array[int] of var int: arr, var int: x) =
         else
             -1
         endif
-    endif;\n\n`;
+    endif;
+    
+function array[int] of var int: entropic_group_f(
+    array[int] of var int: arr,
+) = let {
+    set of int: group1 = {1, 2, 3};
+    set of int: group2 = {4, 5, 6};
+    set of int: group3 = {7, 8, 9};
+} in [
+    if arr[i] in group1 then 1
+    elseif arr[i] in group2 then 2
+    elseif arr[i] in group3 then 3
+    else 0
+    endif | i in index_set(arr)    
+];\n\n`;
 
 	const more_helper_f = `function array[int] of int: grid_to_graph_from_edges(array[int,int] of var int: grid) = 
     let {
@@ -3361,6 +3375,20 @@ predicate val_not_in_grid_p(
     forall(r in rows, c in cols)(
         grid[r,c] != val
     )
+);
+
+predicate entropy_and_modularity_set_p(
+    array[int] of var int: arr
+) = let {
+    int: n = 3;
+    array[int] of var int: remainders = [x mod n | x in arr];
+    var bool: all_equal_rem = all_equal(remainders);
+    var bool: all_different_rem = all_different(remainders);
+    array[int] of var int: entropy = entropic_group_f(arr);
+    var bool: same_entropy = forall(x in entropy)(x > 0) /\\ all_equal(entropy);
+    var bool: different_entropy = forall(x in entropy)(x > 0) /\\ all_different(entropy);
+} in (
+    (all_equal_rem \\/ all_different_rem) /\\ (same_entropy \\/ different_entropy)
 );\n\n`;
 
 	const galaxies = `predicate every_cell_is_in_a_galaxy_p(

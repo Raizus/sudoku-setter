@@ -786,6 +786,35 @@ function directedPathSumOfCellsPerRegionIsPrimeConstraint(puzzle: PuzzleI, toolI
 	return out_str;
 }
 
+function boxRowsAndColumnsFormModularityAndEntropySetConstraint(
+	puzzle: PuzzleI,
+	toolId: TOOLID
+): string {
+	let out_str: string = '';
+	const grid = puzzle.grid;
+	const used_regions = puzzle.grid.getUsedRegions();
+	for (const region of used_regions) {
+		const region_cells = grid.getRegion(region);
+		const used_rows = [...new Set(region_cells.map((cell) => cell.r))];
+		const used_cols = [...new Set(region_cells.map((cell) => cell.c))];
+
+		for (const col of used_cols) {
+			const cells = region_cells.filter((cell) => cell.c === col);
+			const cells_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+			out_str += `constraint entropy_and_modularity_set_p(${cells_vars});\n`;
+		}
+
+		for (const row of used_rows) {
+			const cells = region_cells.filter((cell) => cell.r === row);
+			const cells_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+			out_str += `constraint entropy_and_modularity_set_p(${cells_vars});\n`;
+		}
+	}
+
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
 export function sudokuConstraints(puzzle: PuzzleI) {
 	const gconstraints = puzzle.globalConstraints;
 	if (gconstraints.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY)) {
@@ -861,6 +890,10 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.NONCONSECUTIVE, nonconsecutiveConstraint],
 	[TOOLS.NONRATIO, nonratioConstraint],
 	[TOOLS.ANTI_ENTROPY, antiEntropyConstraint],
+	[
+		TOOLS.BOX_ROWS_AND_COLUMNS_FORM_MODULARITY_AND_ENTROPY_SETS,
+		boxRowsAndColumnsFormModularityAndEntropySetConstraint
+	],
 
 	[TOOLS.GLOBAL_INDEXING_COLUMN, globalIndexingColumnConstraint],
 	[TOOLS.ALL_V_GIVEN, allXVGivenConstraint],

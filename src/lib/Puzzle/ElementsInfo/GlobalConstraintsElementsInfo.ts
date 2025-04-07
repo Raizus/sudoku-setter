@@ -223,6 +223,18 @@ export const oddEvenParityMirrorAlongPositiveDiagonalInfo: AbstractElementInfo =
 	}
 };
 
+export const boxRowsAndColumnsFormModularityAndEntropySetInfo: AbstractElementInfo = {
+	toolId: TOOLS.BOX_ROWS_AND_COLUMNS_FORM_MODULARITY_AND_ENTROPY_SETS,
+	order: 0,
+
+	meta: {
+		description:
+			"Let a digit's entropy describe if it is low (123), medium (456), or high (789). Let its modularity be its remainder when divided by 3. Let a SET be a set of three digits such that their entropy and modularity are either all the same or all different. Some examples of SETs are: 789 (same entropy, different modularity), 258 (different entropy, same modularity), 168 and 348 (different entropy and different modularity). In this puzzle, the three rows and three columns of each box all form SETs.",
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	}
+};
+
 export const antiEntropyInfo: AbstractElementInfo = {
 	toolId: TOOLS.ANTI_ENTROPY,
 	order: 0,

@@ -33,6 +33,8 @@ export enum SIMPLE_GLOBAL_CONSTRAINTS {
 	ODD_EVEN_PARITY_MIRROR_ALONG_POSITIVE_DIAGONAL = 'Odd/Even Parity Mirror Along Positive Diagonal',
 	ODD_EVEN_PARITY_MIRROR_ALONG_NEGATIVE_DIAGONAL = 'Odd/Even Parity Mirror Along Negative Diagonal',
 
+	BOX_ROWS_AND_COLUMNS_FORM_MODULARITY_AND_ENTROPY_SETS = 'Box Rows And Columns Form Modularity and Entropy Sets',
+
 	GLOBAL_ENTROPY = 'Global Entropy',
 	GLOBAL_INDEXING_COLUMN = 'Global Indexing Column',
 	GLOBAL_INDEXING_ROW = 'Global Indexing Row',

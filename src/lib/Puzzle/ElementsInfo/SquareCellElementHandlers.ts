@@ -89,6 +89,7 @@ import {
 	antikingInfo,
 	antiknightInfo,
 	antiLongKnightInfo,
+	boxRowsAndColumnsFormModularityAndEntropySetInfo,
 	disjointGroupsInfo,
 	fillominoInfo,
 	globalIndexingColumnInfo,
@@ -369,6 +370,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.ANTI_ENTROPY]: antiEntropyInfo,
 	[TOOLS.GLOBAL_INDEXING_COLUMN]: globalIndexingColumnInfo,
 	[TOOLS.ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED]: allOddDigitsAreOrthogonallyConnectedInfo,
+	[TOOLS.BOX_ROWS_AND_COLUMNS_FORM_MODULARITY_AND_ENTROPY_SETS]: boxRowsAndColumnsFormModularityAndEntropySetInfo,
 
 	[TOOLS.NEGATIVE_DIAGONAL]: negativeDiagonalInfo,
 	[TOOLS.POSITIVE_DIAGONAL]: positiveDiagonalInfo,
