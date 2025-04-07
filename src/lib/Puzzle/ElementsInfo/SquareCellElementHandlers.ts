@@ -246,6 +246,7 @@ import {
 	loopwhichesInfo,
 	outsideConsecutiveSumInfo,
 	outsideEdgeYinYangSumOfShadedInfo,
+	pentominoBorderCountInfo,
 	risingStreakInfo,
 	sandwichSumInfo,
 	sandwichSumXorXSumInfo,
@@ -717,6 +718,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.OUTSIDE_CONSECUTIVE_SUM]: outsideConsecutiveSumInfo,
 	[TOOLS.LOOPWICHES]: loopwhichesInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION]: chaosConstructionSumOfFirstEachRegionInfo,
+	[TOOLS.PENTOMINO_BORDER_COUNT]: pentominoBorderCountInfo,
 
 	// Outside Corner Constraints
 	[TOOLS.LITTLE_KILLER_SUM]: littleKillerSumInfo,

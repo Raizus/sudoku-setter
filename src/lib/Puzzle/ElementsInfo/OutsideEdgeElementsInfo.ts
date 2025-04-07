@@ -326,3 +326,25 @@ export const chaosConstructionSumOfFirstEachRegionInfo: SquareCellElementInfo = 
 		categories: outsideEdgeDefaultCategories
 	}
 };
+
+export const pentominoBorderCountInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+			defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
+		defaultValue: '',
+		cornerOrEdge: CornerOrEdge.EDGE
+	},
+
+	toolId: TOOLS.PENTOMINO_BORDER_COUNT,
+	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
+
+	meta: {
+		description:
+			'Clues outside the grid indicate the number of borders between pentominoes present in that row or column.',
+		usage: outsideEdgeUsage(),
+		tags: [],
+		categories: outsideEdgeDefaultCategories
+	}
+};

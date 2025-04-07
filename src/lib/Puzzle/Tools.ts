@@ -413,7 +413,8 @@ export enum OUTSIDE_EDGE_CONSTRAINTS {
 	X_SUM_REGION_BORDERS = 'X-Sum Region Borders',
 	OUTSIDE_CONSECUTIVE_SUM = 'Outside Consecutive Sum',
 	LOOPWICHES = 'Loopwhiches',
-	CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION = 'Chaos Construction Sum Of First Each Region'
+	CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION = 'Chaos Construction Sum Of First Each Region',
+	PENTOMINO_BORDER_COUNT = 'Pentomino Border Count'
 }
 
 export enum OUTSIDE_CORNER_CONSTRAINTS {

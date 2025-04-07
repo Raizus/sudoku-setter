@@ -1,132 +1,150 @@
 export function defineFunctionsPredicates() {
 
     const poliominoes = `
+array[int] of array[int] of tuple(int, int): P3_I = [
+    [(0, 0), (0, 1), (0, 2)],
+    [(0, 0), (1, 0), (2, 0)],
+];
 
-array[int] of tuple(int, int): P3_I1 = [(0, 0), (0, 1), (0, 2)];
-array[int] of tuple(int, int): P3_I2 = [(0, 0), (1, 0), (2, 0)];
-array[int] of array[int] of tuple(int, int): P3_I = [P3_I1, P3_I2];
+array[int] of array[int] of tuple(int, int): P3_L = [
+    [(0, 0), (1, 0), (1, 1)],
+    [(0, 1), (1, 0), (1, 1)],
+    [(0, 0), (0, 1), (1, 0)],
+    [(0, 0), (0, 1), (1, 1)],
+];
 
-array[int] of tuple(int, int): P3_L1 = [(0, 0), (1, 0), (1, 1)];
-array[int] of tuple(int, int): P3_L2 = [(0, 1), (1, 0), (1, 1)];
-array[int] of tuple(int, int): P3_L3 = [(0, 0), (0, 1), (1, 0)];
-array[int] of tuple(int, int): P3_L4 = [(0, 0), (0, 1), (1, 1)];
-array[int] of array[int] of tuple(int, int): P3_L = [P3_L1, P3_L2, P3_L3, P3_L4];
+array[int] of array[int] of tuple(int, int): P4_O = [
+    [(0, 0), (0, 1), (1, 0), (1, 1)]
+];
 
-array[int] of tuple(int, int): P4_O1 = [(0, 0), (0, 1), (1, 0), (1, 1)];
-array[int] of array[int] of tuple(int, int): P4_O = [P4_O1];
+array[int] of array[int] of tuple(int, int): P4_I = [
+    [(0, 0), (0, 1), (0, 2), (0, 3)],
+    [(0, 0), (1, 0), (2, 0), (3, 0)],
+];
 
-array[int] of tuple(int, int): P4_I1 = [(0, 0), (0, 1), (0, 2), (0, 3)];
-array[int] of tuple(int, int): P4_I2 = [(0, 0), (1, 0), (2, 0), (3, 0)];
-array[int] of array[int] of tuple(int, int): P4_I = [P4_I1, P4_I2];
+array[int] of array[int] of tuple(int, int): P4_T = [
+    [(0, 0), (0, 1), (0, 2), (1, 1)],
+    [(0, 1), (1, 0), (1, 1), (1, 2)],
+    [(0, 0), (1, 0), (2, 0), (1, 1)],
+    [(1, 0), (0, 1), (1, 1), (2, 1)],
+];
 
-array[int] of tuple(int, int): P4_T1 = [(0, 0), (0, 1), (0, 2), (1, 1)];
-array[int] of tuple(int, int): P4_T2 = [(0, 1), (1, 0), (1, 1), (1, 2)];
-array[int] of tuple(int, int): P4_T3 = [(0, 0), (1, 0), (2, 0), (1, 1)];
-array[int] of tuple(int, int): P4_T4 = [(1, 0), (0, 1), (1, 1), (2, 1)];
-array[int] of array[int] of tuple(int, int): P4_T = [P4_T1, P4_T2, P4_T3, P4_T4];
+array[int] of array[int] of tuple(int, int): P4_S = [
+    [(0, 1), (0, 2), (1, 0), (1, 1)],
+    [(0, 0), (0, 1), (1, 1), (1, 2)],
+    [(1, 0), (2, 0), (0, 1), (1, 1)],
+    [(0, 0), (1, 0), (1, 1), (2, 1)],
+];
 
-array[int] of tuple(int, int): P4_S1 = [(0, 1), (0, 2), (1, 0), (1, 1)];
-array[int] of tuple(int, int): P4_S2 = [(0, 0), (0, 1), (1, 1), (1, 2)];
-array[int] of tuple(int, int): P4_S3 = [(1, 0), (2, 0), (0, 1), (1, 1)];
-array[int] of tuple(int, int): P4_S4 = [(0, 0), (1, 0), (1, 1), (2, 1)];
-array[int] of array[int] of tuple(int, int): P4_S = [P4_S1, P4_S2, P4_S3, P4_S4];
+array[int] of array[int] of tuple(int, int): P4_L = [
+    [(0, 0), (0, 1), (0, 2), (1, 0)],
+    [(0, 0), (0, 1), (0, 2), (1, 2)],
+    [(0, 0), (1, 0), (1, 1), (1, 2)],
+    [(0, 2), (1, 0), (1, 1), (1, 2)],
+    [(0, 0), (1, 0), (2, 0), (0, 1)],
+    [(0, 0), (1, 0), (2, 0), (2, 1)],
+    [(0, 0), (0, 1), (1, 1), (2, 1)],
+    [(2, 0), (0, 1), (1, 1), (2, 1)],
+];
 
-array[int] of tuple(int, int): P4_L1 = [(0, 0), (0, 1), (0, 2), (1, 0)];
-array[int] of tuple(int, int): P4_L2 = [(0, 0), (0, 1), (0, 2), (1, 2)];
-array[int] of tuple(int, int): P4_L3 = [(0, 0), (1, 0), (1, 1), (1, 2)];
-array[int] of tuple(int, int): P4_L4 = [(0, 2), (1, 0), (1, 1), (1, 2)];
-array[int] of tuple(int, int): P4_L5 = [(0, 0), (1, 0), (2, 0), (0, 1)];
-array[int] of tuple(int, int): P4_L6 = [(0, 0), (1, 0), (2, 0), (2, 1)];
-array[int] of tuple(int, int): P4_L7 = [(0, 0), (0, 1), (1, 1), (2, 1)];
-array[int] of tuple(int, int): P4_L8 = [(2, 0), (0, 1), (1, 1), (2, 1)];
-array[int] of array[int] of tuple(int, int): P4_L = [P4_L1, P4_L2, P4_L3, P4_L4, P4_L5, P4_L6, P4_L7, P4_L8];
+array[int] of array[int] of tuple(int, int): P5_I = [
+    [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4)],
+    [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0)],
+];
 
-array[int] of tuple(int, int): P5_I1 = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4)];
-array[int] of tuple(int, int): P5_I2 = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0)];
-array[int] of array[int] of tuple(int, int): P5_I = [P5_I1, P5_I2];
+array[int] of array[int] of tuple(int, int): P5_X = [
+    [(0, 1), (1, 0), (1, 1), (1, 2), (2, 1)]
+];
 
-array[int] of tuple(int, int): P5_X1 = [(0, 1), (1, 0), (1, 1), (1, 2), (2, 1)];
-array[int] of array[int] of tuple(int, int): P5_X = [P5_X1];
+array[int] of array[int] of tuple(int, int): P5_T = [
+    [(0,0), (0,1), (0,2), (1,1), (2,1)],
+    [(0,2), (1,0), (1,1), (1,2), (2,2)],
+    [(0,1), (1,1), (2,0), (2,1), (2,2)],
+    [(0,0), (1,0), (1,1), (1,2), (2,0)],
+];
 
-array[int] of tuple(int, int): P5_T1 = [(0,0), (0,1), (0,2), (1,1), (2,1)];
-array[int] of tuple(int, int): P5_T2 = [(0,2), (1,0), (1,1), (1,2), (2,2)];
-array[int] of tuple(int, int): P5_T3 = [(0,1), (1,1), (2,0), (2,1), (2,2)];
-array[int] of tuple(int, int): P5_T4 = [(0,0), (1,0), (1,1), (1,2), (2,0)];
-array[int] of array[int] of tuple(int, int): P5_T = [P5_T1, P5_T2, P5_T3, P5_T4];
+array[int] of array[int] of tuple(int, int): P5_U = [
+    [(0,0), (0,2), (1,0), (1,1), (1,2)],
+    [(0,0), (0,1), (1,0), (2,0), (2,1)],
+    [(0,0), (0,1), (0,2), (1,0), (1,2)],
+    [(0,0), (0,1), (1,1), (2,0), (2,1)],
+];
 
-array[int] of tuple(int, int): P5_U1 = [(0,0), (0,2), (1,0), (1,1), (1,2)];
-array[int] of tuple(int, int): P5_U2 = [(0,0), (0,1), (1,0), (2,0), (2,1)];
-array[int] of tuple(int, int): P5_U3 = [(0,0), (0,1), (0,2), (1,0), (1,2)];
-array[int] of tuple(int, int): P5_U4 = [(0,0), (0,1), (1,1), (2,0), (2,1)];
-array[int] of array[int] of tuple(int, int): P5_U = [P5_U1, P5_U2, P5_U3, P5_U4];
+array[int] of array[int] of tuple(int, int): P5_V = [
+    [(0,0), (0,1), (0,2), (1,0), (2,0)],
+    [(0,0), (0,1), (0,2), (1,2), (2,2)],
+    [(0,0), (1,0), (2,0), (2,1), (2,2)],
+    [(0,2), (1,2), (2,0), (2,1), (2,2)],
+];
 
-array[int] of tuple(int, int): P5_V1 = [(0,0), (0,1), (0,2), (1,0), (2,0)];
-array[int] of tuple(int, int): P5_V2 = [(0,0), (0,1), (0,2), (1,2), (2,2)];
-array[int] of tuple(int, int): P5_V3 = [(0,0), (1,0), (2,0), (2,1), (2,2)];
-array[int] of tuple(int, int): P5_V4 = [(0,2), (1,2), (2,0), (2,1), (2,2)];
-array[int] of array[int] of tuple(int, int): P5_V = [P5_V1, P5_V2, P5_V3, P5_V4];
+array[int] of array[int] of tuple(int, int): P5_W = [
+    [(0,1), (0,2), (1,0), (1,1), (2,0)],
+    [(0,0), (0,1), (1,1), (1,2), (2,2)],
+    [(0,0), (1,0), (1,1), (2,1), (2,2)],
+    [(0,2), (1,1), (1,2), (2,0), (2,1)],
+];
 
-array[int] of tuple(int, int): P5_W1 = [(0,1), (0,2), (1,0), (1,1), (2,0)];
-array[int] of tuple(int, int): P5_W2 = [(0,0), (0,1), (1,1), (1,2), (2,2)];
-array[int] of tuple(int, int): P5_W3 = [(0,0), (1,0), (1,1), (2,1), (2,2)];
-array[int] of tuple(int, int): P5_W4 = [(0,2), (1,1), (1,2), (2,0), (2,1)];
-array[int] of array[int] of tuple(int, int): P5_W = [P5_W1,P5_W2,P5_W3,P5_W4];
+array[int] of array[int] of tuple(int, int): P5_Z = [
+    [(0,0), (0,1), (1,1), (2,1), (2,2)],
+    [(0,1), (0,2), (1,1), (2,0), (2,1)],
+    [(0,2), (1,0), (1,1), (1,2), (2,0)],
+    [(0,0), (1,0), (1,1), (1,2), (2,2)],
+];
 
-array[int] of tuple(int, int): P5_Z1 = [(0,0), (0,1), (1,1), (2,1), (2,2)];
-array[int] of tuple(int, int): P5_Z2 = [(0,1), (0,2), (1,1), (2,0), (2,1)];
-array[int] of tuple(int, int): P5_Z3 = [(0,2), (1,0), (1,1), (1,2), (2,0)];
-array[int] of tuple(int, int): P5_Z4 = [(0,2), (1,0), (1,1), (1,2), (2,2)];
-array[int] of array[int] of tuple(int, int): P5_Z = [P5_Z1, P5_Z2, P5_Z3, P5_Z4];
+array[int] of array[int] of tuple(int, int): P5_F = [
+    [(0,1), (0,2), (1,0), (1,1), (2,1)],
+    [(0,1), (1,0), (1,1), (1,2), (2,2)],
+    [(0,0), (1,0), (1,1), (1,2), (2,1)],
+    [(0,1), (1,1), (1,2), (2,1), (2,0)],
+    [(0,1), (1,0), (1,1), (1,2), (2,0)],
+    [(0,0), (0,1), (1,1), (1,2), (2,1)],
+    [(0,1), (1,0), (1,1), (2,1), (2,2)],
+    [(0,2), (1,0), (1,1), (1,2), (2,1)],
+];
 
-array[int] of tuple(int, int): P5_F1 = [(0,1), (0,2), (1,0), (1,1), (2,1)];
-array[int] of tuple(int, int): P5_F2 = [(0,1), (1,0), (1,1), (1,2), (2,2)];
-array[int] of tuple(int, int): P5_F3 = [(0,0), (1,0), (1,1), (1,2), (2,1)];
-array[int] of tuple(int, int): P5_F4 = [(0,1), (1,1), (1,2), (2,1), (2,2)];
-array[int] of tuple(int, int): P5_F5 = [(0,1), (1,0), (1,1), (1,2), (2,0)];
-array[int] of tuple(int, int): P5_F6 = [(0,0), (0,1), (1,1), (1,2), (2,1)];
-array[int] of tuple(int, int): P5_F7 = [(0,1), (1,0), (1,1), (2,1), (2,2)];
-array[int] of tuple(int, int): P5_F8 = [(0,2), (1,0), (1,1), (1,2), (2,1)];
-array[int] of array[int] of tuple(int, int): P5_F = [P5_F1, P5_F2, P5_F3, P5_F4, P5_F5, P5_F6, P5_F7, P5_F8];
+array[int] of array[int] of tuple(int, int): P5_L = [
+    [(0,0), (0,1), (0,2), (0,3), (1,3)],
+    [(0,0), (0,1), (0,2), (0,3), (1,0)],
+    [(0,0), (1,0), (1,1), (1,2), (1,3)],
+    [(0,3), (1,0), (1,1), (1,2), (1,3)],
+    [(0,0), (0,1), (1,0), (2,0), (3,0)],
+    [(0,0), (1,0), (2,0), (3,0), (3,1)],
+    [(0,1), (1,1), (2,1), (3,0), (3,1)],
+    [(0,0), (0,1), (1,1), (2,1), (3,1)],
+];
 
-array[int] of tuple(int, int): P5_L1 = [(0,0), (0,1), (0,2), (0,3), (2,3)];
-array[int] of tuple(int, int): P5_L2 = [(0,0), (0,1), (0,2), (0,3), (2,0)];  
-array[int] of tuple(int, int): P5_L3 = [(0,0), (2,0), (2,1), (2,2), (2,3)];
-array[int] of tuple(int, int): P5_L4 = [(0,3), (2,0), (2,1), (2,2), (2,3)];
-array[int] of tuple(int, int): P5_L5 = [(0,0), (0,1), (1,0), (2,0), (3,0)];
-array[int] of tuple(int, int): P5_L6 = [(0,0), (1,0), (2,0), (3,0), (3,1)];
-array[int] of tuple(int, int): P5_L7 = [(0,1), (1,1), (2,1), (3,0), (3,1)];
-array[int] of tuple(int, int): P5_L8 = [(0,0), (0,1), (1,1), (2,1), (3,1)];
-array[int] of array[int] of tuple(int, int): P5_L = [P5_L1,P5_L2,P5_L3,P5_L4,P5_L5,P5_L6,P5_L7,P5_L8];
+array[int] of array[int] of tuple(int, int): P5_N = [
+    [(0,1), (0,2), (0,3), (1,0), (1,1)],
+    [(0,0), (0,1), (0,2), (1,2), (1,3)],
+    [(0,0), (1,0), (2,0), (2,1), (3,1)],
+    [(0,1), (1,1), (2,0), (2,1), (3,0)],
+    [(0,0), (1,0), (1,1), (2,1), (3,1)],
+    [(0,1), (1,0), (1,1), (2,0), (3,0)],
+    [(0,2), (0,3), (1,0), (1,1), (1,2)],
+    [(0,0), (0,1), (1,1), (1,2), (1,3)],
+];
 
-array[int] of tuple(int, int): P5_N1 = [(0,1), (0,2), (0,3), (1,0), (1,1)];
-array[int] of tuple(int, int): P5_N2 = [(0,0), (0,1), (0,2), (1,2), (1,3)];  
-array[int] of tuple(int, int): P5_N3 = [(0,0), (1,0), (2,0), (2,1), (3,1)];
-array[int] of tuple(int, int): P5_N4 = [(0,1), (1,1), (2,0), (2,1), (3,0)];
-array[int] of tuple(int, int): P5_N5 = [(0,0), (1,0), (1,1), (2,1), (3,1)];
-array[int] of tuple(int, int): P5_N6 = [(0,1), (1,0), (1,1), (2,0), (3,0)];
-array[int] of tuple(int, int): P5_N7 = [(0,2), (0,3), (1,0), (1,1), (1,2)];
-array[int] of tuple(int, int): P5_N8 = [(0,0), (0,1), (1,1), (1,2), (1,3)];
-array[int] of array[int] of tuple(int, int): P5_N = [P5_N1,P5_N2,P5_N3,P5_N4,P5_N5,P5_N6,P5_N7,P5_N8];
+array[int] of array[int] of tuple(int, int): P5_P = [
+    [(0,0), (0,1), (0,2), (1,0), (1,1)],
+    [(0,0), (0,1), (0,2), (1,1), (1,2)],
+    [(0,0), (0,1), (1,0), (1,1), (2,1)],
+    [(0,0), (0,1), (1,0), (1,1), (2,0)],
+    [(0,0), (1,0), (1,1), (2,0), (2,1)],
+    [(0,1), (1,0), (1,1), (2,0), (2,1)],
+    [(0,1), (0,2), (1,0), (1,1), (1,2)],
+    [(0,0), (0,1), (1,0), (1,1), (1,2)],
+];
 
-array[int] of tuple(int, int): P5_P1 = [(0,0), (0,1), (0,2), (1,0), (1,1)];
-array[int] of tuple(int, int): P5_P2 = [(0,0), (0,1), (0,2), (1,1), (1,2)];
-array[int] of tuple(int, int): P5_P3 = [(0,0), (0,1), (1,0), (1,1), (2,1)];
-array[int] of tuple(int, int): P5_P4 = [(0,0), (0,1), (1,0), (1,1), (2,0)];
-array[int] of tuple(int, int): P5_P5 = [(0,0), (1,0), (1,1), (2,0), (2,1)];
-array[int] of tuple(int, int): P5_P6 = [(0,1), (1,0), (1,1), (2,0), (2,1)];
-array[int] of tuple(int, int): P5_P7 = [(0,1), (0,2), (1,0), (1,1), (1,2)];
-array[int] of tuple(int, int): P5_P8 = [(0,0), (0,1), (1,0), (1,1), (1,2)];
-array[int] of array[int] of tuple(int, int): P5_P = [P5_P1, P5_P2, P5_P3, P5_P4, P5_P5, P5_P6, P5_P7, P5_P8];
-
-array[int] of tuple(int, int): P5_Y1 = [(0,0), (1,0), (2,0), (3,0), (2,1)];
-array[int] of tuple(int, int): P5_Y2 = [(0,0), (1,0), (2,0), (3,0), (1,1)];
-array[int] of tuple(int, int): P5_Y3 = [(1,0), (0,1), (1,1), (2,1), (3,1)];
-array[int] of tuple(int, int): P5_Y4 = [(2,0), (0,1), (1,1), (2,1), (3,1)];
-array[int] of tuple(int, int): P5_Y5 = [(0,0), (0,1), (0,2), (0,3), (1,1)];
-array[int] of tuple(int, int): P5_Y6 = [(0,0), (0,1), (0,2), (0,3), (1,2)];
-array[int] of tuple(int, int): P5_Y7 = [(0,1), (1,0), (1,1), (1,2), (1,3)];
-array[int] of tuple(int, int): P5_Y8 = [(0,2), (1,0), (1,1), (1,2), (1,3)];
-array[int] of array[int] of tuple(int, int): P5_Y = [P5_Y1,P5_Y2,P5_Y3,P5_Y4,P5_Y5,P5_Y6,P5_Y7,P5_Y8];\n\n`;
+array[int] of array[int] of tuple(int, int): P5_Y = [
+    [(0,0), (1,0), (2,0), (3,0), (2,1)],
+    [(0,0), (1,0), (2,0), (3,0), (1,1)],
+    [(1,0), (0,1), (1,1), (2,1), (3,1)],
+    [(2,0), (0,1), (1,1), (2,1), (3,1)],
+    [(0,0), (0,1), (0,2), (0,3), (1,1)],
+    [(0,0), (0,1), (0,2), (0,3), (1,2)],
+    [(0,1), (1,0), (1,1), (1,2), (1,3)],
+    [(0,2), (1,0), (1,1), (1,2), (1,3)],
+];\n\n`;
 
 	const tests = `predicate orth_adjacent_2d(
     var int: r1, var int: c1, 
@@ -3627,7 +3645,7 @@ predicate goldilocks_zone_region_sum_p(
 
     const PENTOMINO_TILLING = `predicate check_pentominos_tilling_p(
     array[int, int] of var int: pentomino_regions,
-    array[int, int] of var int: pentomino_anchors,
+    % array[int, int] of var int: pentomino_anchors,
     array[int] of array[int] of tuple(int, int): all_coords, % relative coordinates of all possible orientations of a given pentomino
     int: val, % pentomino id
 ) = let {
@@ -3654,17 +3672,49 @@ predicate goldilocks_zone_region_sum_p(
                     var bool: has_filled_cell = exists(id1 in pentomino)(id1 != 0);
                     var bool: is_pentomino = all_equal_to_p(pentomino, val);
                 } in (
-                    all_equal_cells /\\ has_filled_cell -> is_pentomino /\\ pentomino_anchors[r,c] == val /\\ count_eq(neighbour, val, 0)
+                    all_equal_cells /\\ has_filled_cell -> is_pentomino /\\ count_eq(neighbour, val, 0)
+                    % /\\ pentomino_anchors[r,c] == val
                 )
             )
         )
     )
 );
-    
-    
+
+predicate forbidden_poliomino_config_p(
+    array[int, int] of var int: poliomino_regions,
+    array[int] of array[int] of tuple(int, int): all_coords, % relative coordinates of all possible orientations of a given pentomino
+) = let {
+    set of int: rows = index_set_1of2(poliomino_regions);
+    set of int: cols = index_set_2of2(poliomino_regions);
+} in (
+    forall(i in index_set(all_coords)) (
+        let {
+            array[int] of tuple(int, int): rel_coords = all_coords[i];
+            array[int] of tuple(int, int): rel_neighbour = neighbour_frontier_f(rel_coords);
+            int: max_dr = max(t in rel_coords)(t.1);
+            int: max_dc = max(t in rel_coords)(t.2);
+        } in (
+            forall(r in rows where r <= max(rows) - max_dr, c in cols where c <= max(cols) - max_dc)(
+                let {
+                    array[int] of tuple(int, int): abs_coords = [(r + t.1, c + t.2) | t in rel_coords];
+                    array[int] of tuple(int, int): abs_neighbour = [(r + t.1, c + t.2) | t in rel_neighbour];
+                    array[int] of var int: poliomino = [poliomino_regions[t.1, t.2] | t in abs_coords];
+                    array[int] of var int: neighbour = [
+                        poliomino_regions[t.1, t.2] | t in abs_neighbour 
+                            where in_bounds_2d(t.1, t.2, poliomino_regions)
+                    ];
+                    var bool: all_equal_cells = all_equal(poliomino);
+                    var bool: has_filled_cell = exists(id1 in poliomino)(id1 != 0);
+                } in (
+                    all_equal_cells /\\ has_filled_cell -> count(neighbour, poliomino[1]) > 0
+                )
+            )
+        )
+    )
+);
+
 predicate pentomino_tilling_p(
     array[int, int] of var int: pentomino_regions,
-    array[int, int] of var int: pentomino_anchors,
 ) = let {
     set of int: rows = index_set_1of2(pentomino_regions);
     set of int: cols = index_set_2of2(pentomino_regions);
@@ -3673,8 +3723,6 @@ predicate pentomino_tilling_p(
     int: total_pentominos = gsize div 5;
 } in (
     assert(gsize mod 5 == 0, "grid size (gsize) must be divisible by 5")
-
-    /\\ count_different(array1d(pentomino_anchors), 0) == total_pentominos
 
     % all cells belong to a pentomino
     /\\ forall(r in rows, c in cols)(
@@ -3702,97 +3750,47 @@ predicate pentomino_tilling_p(
         )
     )
 
+    % triomino - forbidden configurations
+    /\\ forbidden_poliomino_config_p(pentomino_regions, P3_I)
+    /\\ forbidden_poliomino_config_p(pentomino_regions, P3_L)
+
+    % tetromino - forbidden configurations
+    /\\ forbidden_poliomino_config_p(pentomino_regions, P4_L)
+    /\\ forbidden_poliomino_config_p(pentomino_regions, P4_I)
+    /\\ forbidden_poliomino_config_p(pentomino_regions, P4_T)
+    /\\ forbidden_poliomino_config_p(pentomino_regions, P4_S)
+    /\\ forbidden_poliomino_config_p(pentomino_regions, P4_O)
+
     % f
-    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_F, 1)
+    /\\ check_pentominos_tilling_p(pentomino_regions, P5_F, 1)
     % i
-    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_I, 2)
+    /\\ check_pentominos_tilling_p(pentomino_regions, P5_I, 2)
     % l
-    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_L, 3)
+    /\\ check_pentominos_tilling_p(pentomino_regions, P5_L, 3)
     % n
-    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_N, 4)
+    /\\ check_pentominos_tilling_p(pentomino_regions, P5_N, 4)
     % p
-    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_P, 5)
+    /\\ check_pentominos_tilling_p(pentomino_regions, P5_P, 5)
     % t
-    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_T, 6)
+    /\\ check_pentominos_tilling_p(pentomino_regions, P5_T, 6)
     % u
-    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_U, 7)
+    /\\ check_pentominos_tilling_p(pentomino_regions, P5_U, 7)
     % v
-    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_V, 8)
+    /\\ check_pentominos_tilling_p(pentomino_regions, P5_V, 8)
     % w
-    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_W, 9)
+    /\\ check_pentominos_tilling_p(pentomino_regions, P5_W, 9)
     % x
-    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_X, 10)
+    /\\ check_pentominos_tilling_p(pentomino_regions, P5_X, 10)
     % y
-    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_Y, 11)
+    /\\ check_pentominos_tilling_p(pentomino_regions, P5_Y, 11)
     % z
-    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_Z, 12)
-);
-    
-predicate n_omino_same_shape_no_touching(
-    array[int, int] of var int: regions,
-    array[int, int] of var int: n_omino,
-    int: target_n_omino,
-    int: r,
-    int: c,
-) = forall(i in index_set_1of2(n_omino), j in index_set_2of2(n_omino))(
-    % all adjacent cells that are not in the n-omino are not in the same region
-    n_omino[i, j] != 0 -> (
-        forall(delta in [(-1, 0), (1, 0), (0, -1), (0, 1)]) (
-            let {
-                int: om_r = i+delta.1;
-                int: om_c = j+delta.2;
-                bool: in_omino = in_bounds_2d(om_r, om_c, n_omino);
-                int: reg_r = r+(i-1)+delta.1;
-                int: reg_c = c+(j-1)+delta.2;
-                bool: in_region = in_bounds_2d(reg_r, reg_c, regions);
-            } in (
-                if in_region then
-                    ((in_omino /\\ n_omino[om_r, om_c] == 0) \\/ not in_omino) -> regions[reg_r, reg_c] != target_n_omino
-                else
-                    true
-                endif
-            )
-        )
-    )
+    /\\ check_pentominos_tilling_p(pentomino_regions, P5_Z, 12)
 );
 
-predicate n_omino_is_placed_p(
-    array[int, int] of var int: regions,
-    array[int, int] of var int: n_omino,
-    int: target_n_omino,
-    int: r,
-    int: c,
-) = forall(i in index_set_1of2(n_omino), j in index_set_2of2(n_omino))(
-    n_omino[i, j] != 0 -> regions[r+(i-1),c+(j-1)] = target_n_omino
-);
-
-predicate n_omino_place_p(
-    array[int, int] of var int: n_omino_placement, 
-    array[int, int] of var int: regions,
-    array[int, int] of var int: n_omino,
-    int: target_n_omino % a number for each n-omino starting at 1
-) = let {
-    set of int: rows = index_set_1of2(n_omino_placement);
-    set of int: cols = index_set_2of2(n_omino_placement);
-    int: min_r = min(rows);
-    int: min_c = min(cols);
-    int: max_r = max(rows);
-    int: max_c = max(cols);
-    int: n_omino_h = length(index_set_1of2(n_omino));
-    int: n_omino_w = length(index_set_2of2(n_omino));
-} in (
-    forall(r in rows, c in cols where r <= max_r - n_omino_h + 1 /\\ c <= max_c - n_omino_w + 1)(
-        % placing the n_omino on (r, c)
-        n_omino_placement[r, c] == target_n_omino <-> n_omino_is_placed_p(regions, n_omino, target_n_omino, r, c)
-    ) /\\ 
-    forall(r in rows, c in cols where r <= max_r - n_omino_h + 1 /\\ c <= max_c - n_omino_w + 1)(
-        % placing the n_omino on (r, c)
-        n_omino_placement[r, c] == target_n_omino ->            
-        % when placing the n-omino at (r,c), adjacent n-ominoes cannot have the same shape
-        % each shape is encoded as an integer by target_n_omino
-        n_omino_same_shape_no_touching(regions, n_omino, target_n_omino, r, c)
-    )
-);
+predicate pentomino_border_count_p(
+    array[int] of var int: regions,
+    var int: val
+) = count_transitions_f(regions) == val;
 
 predicate tilling_region_no_empty_cells_p(
     array[int, int] of var int: regions

@@ -570,20 +570,7 @@ function pentominoTillingConstraint(model: PuzzleModel, tool: TOOLID) {
 
 	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${num_pentominoes}: ${grid_name};\n`;
-	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${num_pentominoes}: pentomino_anchors;\n`;
-	out_str += `constraint pentomino_tilling_p(${grid_name}, pentomino_anchors);\n`;
-
-	// out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${num_pentominoes}: tilling_placing_grid;\n`;
-	// out_str += `constraint count_different(array1d(tilling_placing_grid), 0) >= 5;\n`;
-	// // out_str += `constraint tilling_region_no_empty_cells_p(tilling_regions);\n`;
-	// // iterate over all pentominoes and rotations / reflections
-	// for (const [pentomino_id, pentomino] of PENTOMINOES.entries()) {
-	// 	const h = pentomino.length;
-	// 	const w = pentomino[0].length;
-	// 	const var_name = `pentomino_${pentomino_id}`;
-	// 	out_str += `array[1..${h}, 1..${w}] of 0..1: ${var_name} = ${format_2d_array(pentomino)};\n`;
-	// 	out_str += `constraint n_omino_place_p(tilling_placing_grid, tilling_regions, ${var_name}, ${pentomino_id});\n`;
-	// }
+	out_str += `constraint pentomino_tilling_p(${grid_name});\n`;
 
 	return out_str;
 }

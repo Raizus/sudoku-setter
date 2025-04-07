@@ -4,12 +4,7 @@ import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import type { GridCoordI } from '../utils/SquareCellGridCoords';
-import {
-	cellsToGridVarsStr,
-	cellsToVarsName,
-	PuzzleModel,
-	VAR_2D_NAMES
-} from './solver_utils';
+import { cellsToGridVarsStr, cellsToVarsName, PuzzleModel, VAR_2D_NAMES } from './solver_utils';
 import type { ParseOptions } from './value_parsing';
 
 function getOutsideDirectionConstraintVars(grid: Grid, constraint: OutsideDirectionToolI) {
@@ -285,7 +280,7 @@ function loopwhichesConstraint(
 	return '';
 }
 
-function chaosConstructionSumOfFirstEachRegionInfoConstraint(
+function chaosConstructionSumOfFirstEachRegionConstraint(
 	model: PuzzleModel,
 	grid: Grid,
 	c_id: string,
@@ -400,6 +395,31 @@ function negatorsLittleKillerSumConstraint(
 	return '';
 }
 
+function pentominoBorderCountConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	const cell_coord = constraint.cell;
+	const cell = grid.getCell(cell_coord.r, cell_coord.c);
+	const direction = constraint.direction;
+
+	const cells = grid.getCellsInDirection(cell_coord.r, cell_coord.c, direction);
+	const region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.PENTOMINO_REGIONS);
+
+	const value = constraint.value;
+	const result = getParsingResult(model, value, cell_coord, cell);
+	if (!result) return '';
+
+	const var_name = result[1];
+	let out_str: string = result[0];
+
+	out_str += `constraint pentomino_border_count_p(${region_vars}, ${var_name});\n`;
+
+	return out_str;
+}
+
 type ConstraintF = (
 	model: PuzzleModel,
 	grid: Grid,
@@ -424,8 +444,9 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.LOOPWICHES, loopwhichesConstraint],
 	[
 		TOOLS.CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION,
-		chaosConstructionSumOfFirstEachRegionInfoConstraint
+		chaosConstructionSumOfFirstEachRegionConstraint
 	],
+	[TOOLS.PENTOMINO_BORDER_COUNT, pentominoBorderCountConstraint],
 
 	// outside corner
 	[TOOLS.LITTLE_KILLER_SUM, littleKillerSumConstraint],
