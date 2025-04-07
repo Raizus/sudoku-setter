@@ -137,8 +137,13 @@
 		"title": "The Moving Finger",
 		"authors": ["Tallcat"],
 		"description": "Sudoku rules apply.\n\n**Numbered Chaos Construction**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells. The digit in the top-left cell of a region (the leftmost cell in its highest row) is its region number. All region numbers are different.\n\n**Next Numbered Region Distance Arrows**: If a cell with the digit X in a region with the number N contains an arrow, then the cell X steps away in the indicated direction belongs to the region numbered N+1.",
-		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=SEkdIt_LrYQ",
-		"ctcUrl": "https://sudokupad.app/2zohak8sgm",
 		"thumbnail": "/thumbnails/TheMovingFinger_by_Tallcat.png"
+	},
+	{
+		"id": "p21",
+		"title": "Border Count Pentominous",
+		"authors": ["Gliperal"],
+		"description": "Sudoku rules do not apply.\n\n**Pentomino Tilling**: Divide the grid into pentominoes, such that no two pentominoes of the same shape (including rotations and reflections) touch orthogonally.\n\n**Pentomino Border Count**: Clues outside the grid indicate the number of borders between pentominoes present in that row or column.",
+		"thumbnail": "/thumbnails/BorderCountPentominous_by_Gliperal.png"
 	}
 ]
