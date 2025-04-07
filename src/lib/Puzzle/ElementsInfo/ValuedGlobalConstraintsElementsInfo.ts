@@ -33,3 +33,14 @@ export const forbiddenKnightSumInfo: AbstractElementInfo = {
 		categories: [TOOL_CATEGORIES.LOCAL_CONSTRAINT, TOOL_CATEGORIES.VALUED_GLOBAL_CONSTRAINT]
 	}
 };
+
+export const litsMaxTetrominoSumInfo: AbstractElementInfo = {
+	toolId: TOOLS.LITS_MAX_TETROMINO_SUM,
+	order: 0,
+
+	meta: {
+		description: "Each tetromino must contain digits summing to less than 'X'.",
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_CONSTRAINT, TOOL_CATEGORIES.VALUED_GLOBAL_CONSTRAINT]
+	}
+};

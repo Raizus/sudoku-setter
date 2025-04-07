@@ -18,7 +18,6 @@ import {
 	cellsToGridVarsStr,
 	format_2d_array,
 	groupConstraintsByValue,
-	PENTOMINOES,
 	PuzzleModel,
 	VAR_2D_NAMES
 } from './solver_utils';
@@ -566,21 +565,25 @@ function pentominoTillingConstraint(model: PuzzleModel, tool: TOOLID) {
 		return '';
 	}
 
-	const num_pentominoes = PENTOMINOES.size;
+	const num_pentominoes = 12;
+	const grid_name = VAR_2D_NAMES.PENTOMINO_REGIONS;
 
 	let out_str: string = '';
-	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${num_pentominoes}: tilling_regions;\n`;
-	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${num_pentominoes}: tilling_placing_grid;\n`;
-	out_str += `constraint count_different(array1d(tilling_placing_grid), 0) >= 5;\n`;
-	// out_str += `constraint tilling_region_no_empty_cells_p(tilling_regions);\n`;
-	// iterate over all pentominoes and rotations / reflections
-	for (const [pentomino_id, pentomino] of PENTOMINOES.entries()) {
-		const h = pentomino.length;
-		const w = pentomino[0].length;
-		const var_name = `pentomino_${pentomino_id}`;
-		out_str += `array[1..${h}, 1..${w}] of 0..1: ${var_name} = ${format_2d_array(pentomino)};\n`;
-		out_str += `constraint n_omino_place_p(tilling_placing_grid, tilling_regions, ${var_name}, ${pentomino_id});\n`;
-	}
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${num_pentominoes}: ${grid_name};\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${num_pentominoes}: pentomino_anchors;\n`;
+	out_str += `constraint pentomino_tilling_p(${grid_name}, pentomino_anchors);\n`;
+
+	// out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${num_pentominoes}: tilling_placing_grid;\n`;
+	// out_str += `constraint count_different(array1d(tilling_placing_grid), 0) >= 5;\n`;
+	// // out_str += `constraint tilling_region_no_empty_cells_p(tilling_regions);\n`;
+	// // iterate over all pentominoes and rotations / reflections
+	// for (const [pentomino_id, pentomino] of PENTOMINOES.entries()) {
+	// 	const h = pentomino.length;
+	// 	const w = pentomino[0].length;
+	// 	const var_name = `pentomino_${pentomino_id}`;
+	// 	out_str += `array[1..${h}, 1..${w}] of 0..1: ${var_name} = ${format_2d_array(pentomino)};\n`;
+	// 	out_str += `constraint n_omino_place_p(tilling_placing_grid, tilling_regions, ${var_name}, ${pentomino_id});\n`;
+	// }
 
 	return out_str;
 }
@@ -595,20 +598,27 @@ function litsConstraint(model: PuzzleModel, tool: TOOLID) {
 		return '';
 	}
 
-	const grid_name1 = VAR_2D_NAMES.LITS_SHADING;
-	const grid_name2 = VAR_2D_NAMES.LITS_REGIONS;
+	const lits_shading = VAR_2D_NAMES.LITS_SHADING;
+	const lits_region = VAR_2D_NAMES.LITS_REGIONS;
+	const lits_grid = VAR_2D_NAMES.LITS_GRID;
+	const board_regions = VAR_2D_NAMES.BOARD_REGIONS;
+
+	const regions = [...grid.getUsedRegions()];
+	regions.sort();
+	const min_region = Math.min(...regions);
+	const max_region = Math.max(...regions);
 
 	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${lits_shading};\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..4: ${lits_region};\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${regions.length}: ${lits_grid};\n`;
+	out_str += `constraint lits_shading_p(${lits_shading});\n`;
+	out_str += `constraint lits_shading_ids_p(${lits_shading}, ${lits_region});\n`;
+	out_str += `constraint lits_region_and_ids_p(${board_regions}, ${lits_region});\n`;
+	out_str += `constraint lits_tetromino_shapes_p(${lits_region});\n`;
+	out_str += `constraint lits_grid_p(${lits_grid}, ${board_regions}, ${lits_shading}, ${min_region}..${max_region});\n`;
 
-	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name1};\n`;
-	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..4: ${grid_name2};\n`;
-	out_str += `constraint lits_shading_p(${grid_name1});\n`;
-	out_str += `constraint lits_shading_ids_p(${grid_name1}, ${grid_name2});\n`;
-	out_str += `constraint lits_region_and_ids_p(${VAR_2D_NAMES.BOARD_REGIONS}, ${grid_name2});\n`;
-	out_str += `constraint lits_tetromino_shapes_p(${grid_name2});\n`;
-
-	const regions = grid.getUsedRegions();
-	if (regions.size) out_str += `\n% Exactly 4 shaded cells per region (known regions)\n`;
+	if (regions.length) out_str += `\n% Exactly 4 shaded cells per region (known regions)\n`;
 	for (const region of regions) {
 		const region_cells = grid.getRegion(region);
 		const shading_vars = cellsToGridVarsStr(region_cells, VAR_2D_NAMES.LITS_SHADING);

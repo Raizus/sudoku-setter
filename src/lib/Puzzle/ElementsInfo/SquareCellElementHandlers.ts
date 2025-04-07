@@ -333,6 +333,7 @@ import {
 import {
 	forbiddenKnightSumInfo,
 	forbiddenOrthogonallyAdjacentSumInfo,
+	litsMaxTetrominoSumInfo,
 	minimumDiagonallyAdjacentDifferenceInfo
 } from './ValuedGlobalConstraintsElementsInfo';
 import { doublersInfo, indexerCellsInfo, negatorsInfo, nexusInfo } from './ValueModifierConstraintsElementsInfo';
@@ -735,6 +736,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.FORBIDDEN_ORTHOGONALLY_ADJACENT_SUM]: forbiddenOrthogonallyAdjacentSumInfo,
 	[TOOLS.MINIMUM_DIAGONALLY_ADJACENT_DIFFERENCE]: minimumDiagonallyAdjacentDifferenceInfo,
 	[TOOLS.FORBIDDEN_KNIGHT_SUM]: forbiddenKnightSumInfo,
+	[TOOLS.LITS_MAX_TETROMINO_SUM]: litsMaxTetrominoSumInfo,
 
 	// Cosmetic Tools
 	[TOOLS.COSMETIC_CELL_SHAPE]: cosmeticCellShapeInfo,

@@ -36,6 +36,8 @@ export enum VAR_2D_NAMES {
 	GOLDILOCKS_REGIONS = 'goldilocks_regions',
 	LITS_SHADING = 'lits_shading',
 	LITS_REGIONS = 'lits_regions',
+	LITS_GRID = 'lits_grid',
+	PENTOMINO_REGIONS = 'pentomino_regions',
 	STAR_BATTLE = 'star_battle',
 	LITS_WHITE_BLACK_STAR_BATTLE = 'lits_white_black_star_battle',
 	COUNTING_CIRCLES_COLORS = 'counting_circles_colors_board',

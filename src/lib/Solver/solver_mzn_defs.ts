@@ -1,4 +1,123 @@
 export function defineFunctionsPredicates() {
+
+    const poliominoes = `
+
+array[int] of tuple(int, int): P4_O1 = [(0, 0), (0, 1), (1, 0), (1, 1)];
+array[int] of array[int] of tuple(int, int): P4_O = [P4_O1];
+
+array[int] of tuple(int, int): P4_I1 = [(0, 0), (0, 1), (0, 2), (0, 3)];
+array[int] of tuple(int, int): P4_I2 = [(0, 0), (1, 0), (2, 0), (3, 0)];
+array[int] of array[int] of tuple(int, int): P4_I = [P4_I1, P4_I2];
+
+array[int] of tuple(int, int): P4_T1 = [(0, 0), (0, 1), (0, 2), (1, 1)];
+array[int] of tuple(int, int): P4_T2 = [(0, 1), (1, 0), (1, 1), (1, 2)];
+array[int] of tuple(int, int): P4_T3 = [(0, 0), (1, 0), (2, 0), (1, 1)];
+array[int] of tuple(int, int): P4_T4 = [(1, 0), (0, 1), (1, 1), (2, 1)];
+array[int] of array[int] of tuple(int, int): P4_T = [P4_T1, P4_T2, P4_T3, P4_T4];
+
+array[int] of tuple(int, int): P4_S1 = [(0, 1), (0, 2), (1, 0), (1, 1)];
+array[int] of tuple(int, int): P4_S2 = [(0, 0), (0, 1), (1, 1), (1, 2)];
+array[int] of tuple(int, int): P4_S3 = [(1, 0), (2, 0), (0, 1), (1, 1)];
+array[int] of tuple(int, int): P4_S4 = [(0, 0), (1, 0), (1, 1), (2, 1)];
+array[int] of array[int] of tuple(int, int): P4_S = [P4_S1, P4_S2, P4_S3, P4_S4];
+
+array[int] of tuple(int, int): P4_L1 = [(0, 0), (0, 1), (0, 2), (1, 0)];
+array[int] of tuple(int, int): P4_L2 = [(0, 0), (0, 1), (0, 2), (1, 2)];
+array[int] of tuple(int, int): P4_L3 = [(0, 0), (1, 0), (1, 1), (1, 2)];
+array[int] of tuple(int, int): P4_L4 = [(0, 2), (1, 0), (1, 1), (1, 2)];
+array[int] of tuple(int, int): P4_L5 = [(0, 0), (1, 0), (2, 0), (0, 1)];
+array[int] of tuple(int, int): P4_L6 = [(0, 0), (1, 0), (2, 0), (2, 1)];
+array[int] of tuple(int, int): P4_L7 = [(0, 0), (0, 1), (1, 1), (2, 1)];
+array[int] of tuple(int, int): P4_L8 = [(2, 0), (0, 1), (1, 1), (2, 1)];
+array[int] of array[int] of tuple(int, int): P4_L = [P4_L1, P4_L2, P4_L3, P4_L4, P4_L5, P4_L6, P4_L7, P4_L8];
+
+array[int] of tuple(int, int): P5_I1 = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4)];
+array[int] of tuple(int, int): P5_I2 = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0)];
+array[int] of array[int] of tuple(int, int): P5_I = [P5_I1, P5_I2];
+
+array[int] of tuple(int, int): P5_X1 = [(0, 1), (1, 0), (1, 1), (1, 2), (2, 1)];
+array[int] of array[int] of tuple(int, int): P5_X = [P5_X1];
+
+array[int] of tuple(int, int): P5_T1 = [(0,0), (0,1), (0,2), (1,1), (2,1)];
+array[int] of tuple(int, int): P5_T2 = [(0,2), (1,0), (1,1), (1,2), (2,2)];
+array[int] of tuple(int, int): P5_T3 = [(0,1), (1,1), (2,0), (2,1), (2,2)];
+array[int] of tuple(int, int): P5_T4 = [(0,0), (1,0), (1,1), (1,2), (2,0)];
+array[int] of array[int] of tuple(int, int): P5_T = [P5_T1, P5_T2, P5_T3, P5_T4];
+
+array[int] of tuple(int, int): P5_U1 = [(0,0), (0,2), (1,0), (1,1), (1,2)];
+array[int] of tuple(int, int): P5_U2 = [(0,0), (0,1), (1,0), (2,0), (2,1)];
+array[int] of tuple(int, int): P5_U3 = [(0,0), (0,1), (0,2), (1,0), (1,2)];
+array[int] of tuple(int, int): P5_U4 = [(0,0), (0,1), (1,1), (2,0), (2,1)];
+array[int] of array[int] of tuple(int, int): P5_U = [P5_U1, P5_U2, P5_U3, P5_U4];
+
+array[int] of tuple(int, int): P5_V1 = [(0,0), (0,1), (0,2), (1,0), (2,0)];
+array[int] of tuple(int, int): P5_V2 = [(0,0), (0,1), (0,2), (1,2), (2,2)];
+array[int] of tuple(int, int): P5_V3 = [(0,0), (1,0), (2,0), (2,1), (2,2)];
+array[int] of tuple(int, int): P5_V4 = [(0,2), (1,2), (2,0), (2,1), (2,2)];
+array[int] of array[int] of tuple(int, int): P5_V = [P5_V1, P5_V2, P5_V3, P5_V4];
+
+array[int] of tuple(int, int): P5_W1 = [(0,1), (0,2), (1,0), (1,1), (2,0)];
+array[int] of tuple(int, int): P5_W2 = [(0,0), (0,1), (1,1), (1,2), (2,2)];
+array[int] of tuple(int, int): P5_W3 = [(0,0), (1,0), (1,1), (2,1), (2,2)];
+array[int] of tuple(int, int): P5_W4 = [(0,2), (1,1), (1,2), (2,0), (2,1)];
+array[int] of array[int] of tuple(int, int): P5_W = [P5_W1,P5_W2,P5_W3,P5_W4];
+
+array[int] of tuple(int, int): P5_Z1 = [(0,0), (0,1), (1,1), (2,1), (2,2)];
+array[int] of tuple(int, int): P5_Z2 = [(0,1), (0,2), (1,1), (2,0), (2,1)];
+array[int] of tuple(int, int): P5_Z3 = [(0,2), (1,0), (1,1), (1,2), (2,0)];
+array[int] of tuple(int, int): P5_Z4 = [(0,2), (1,0), (1,1), (1,2), (2,2)];
+array[int] of array[int] of tuple(int, int): P5_Z = [P5_Z1, P5_Z2, P5_Z3, P5_Z4];
+
+array[int] of tuple(int, int): P5_F1 = [(0,1), (0,2), (1,0), (1,1), (2,1)];
+array[int] of tuple(int, int): P5_F2 = [(0,1), (1,0), (1,1), (1,2), (2,2)];
+array[int] of tuple(int, int): P5_F3 = [(0,0), (1,0), (1,1), (1,2), (2,1)];
+array[int] of tuple(int, int): P5_F4 = [(0,1), (1,1), (1,2), (2,1), (2,2)];
+array[int] of tuple(int, int): P5_F5 = [(0,1), (1,0), (1,1), (1,2), (2,0)];
+array[int] of tuple(int, int): P5_F6 = [(0,0), (0,1), (1,1), (1,2), (2,1)];
+array[int] of tuple(int, int): P5_F7 = [(0,1), (1,0), (1,1), (2,1), (2,2)];
+array[int] of tuple(int, int): P5_F8 = [(0,2), (1,0), (1,1), (1,2), (2,1)];
+array[int] of array[int] of tuple(int, int): P5_F = [P5_F1, P5_F2, P5_F3, P5_F4, P5_F5, P5_F6, P5_F7, P5_F8];
+
+array[int] of tuple(int, int): P5_L1 = [(0,0), (0,1), (0,2), (0,3), (2,3)];
+array[int] of tuple(int, int): P5_L2 = [(0,0), (0,1), (0,2), (0,3), (2,0)];  
+array[int] of tuple(int, int): P5_L3 = [(0,0), (2,0), (2,1), (2,2), (2,3)];
+array[int] of tuple(int, int): P5_L4 = [(0,3), (2,0), (2,1), (2,2), (2,3)];
+array[int] of tuple(int, int): P5_L5 = [(0,0), (0,1), (1,0), (2,0), (3,0)];
+array[int] of tuple(int, int): P5_L6 = [(0,0), (1,0), (2,0), (3,0), (3,1)];
+array[int] of tuple(int, int): P5_L7 = [(0,1), (1,1), (2,1), (3,0), (3,1)];
+array[int] of tuple(int, int): P5_L8 = [(0,0), (0,1), (1,1), (2,1), (3,1)];
+array[int] of array[int] of tuple(int, int): P5_L = [P5_L1,P5_L2,P5_L3,P5_L4,P5_L5,P5_L6,P5_L7,P5_L8];
+
+array[int] of tuple(int, int): P5_N1 = [(0,1), (0,2), (0,3), (1,0), (1,1)];
+array[int] of tuple(int, int): P5_N2 = [(0,0), (0,1), (0,2), (1,2), (1,3)];  
+array[int] of tuple(int, int): P5_N3 = [(0,0), (1,0), (2,0), (2,1), (3,1)];
+array[int] of tuple(int, int): P5_N4 = [(0,1), (1,1), (2,0), (2,1), (3,0)];
+array[int] of tuple(int, int): P5_N5 = [(0,0), (1,0), (1,1), (2,1), (3,1)];
+array[int] of tuple(int, int): P5_N6 = [(0,1), (1,0), (1,1), (2,0), (3,0)];
+array[int] of tuple(int, int): P5_N7 = [(0,2), (0,3), (1,0), (1,1), (1,2)];
+array[int] of tuple(int, int): P5_N8 = [(0,0), (0,1), (1,1), (1,2), (1,3)];
+array[int] of array[int] of tuple(int, int): P5_N = [P5_N1,P5_N2,P5_N3,P5_N4,P5_N5,P5_N6,P5_N7,P5_N8];
+
+array[int] of tuple(int, int): P5_P1 = [(0,0), (0,1), (0,2), (1,0), (1,1)];
+array[int] of tuple(int, int): P5_P2 = [(0,0), (0,1), (0,2), (1,1), (1,2)];
+array[int] of tuple(int, int): P5_P3 = [(0,0), (0,1), (1,0), (1,1), (2,1)];
+array[int] of tuple(int, int): P5_P4 = [(0,0), (0,1), (1,0), (1,1), (2,0)];
+array[int] of tuple(int, int): P5_P5 = [(0,0), (1,0), (1,1), (2,0), (2,1)];
+array[int] of tuple(int, int): P5_P6 = [(0,1), (1,0), (1,1), (2,0), (2,1)];
+array[int] of tuple(int, int): P5_P7 = [(0,1), (0,2), (1,0), (1,1), (1,2)];
+array[int] of tuple(int, int): P5_P8 = [(0,0), (0,1), (1,0), (1,1), (1,2)];
+array[int] of array[int] of tuple(int, int): P5_P = [P5_P1, P5_P2, P5_P3, P5_P4, P5_P5, P5_P6, P5_P7, P5_P8];
+
+array[int] of tuple(int, int): P5_Y1 = [(0,0), (1,0), (2,0), (3,0), (2,1)];
+array[int] of tuple(int, int): P5_Y2 = [(0,0), (1,0), (2,0), (3,0), (1,1)];
+array[int] of tuple(int, int): P5_Y3 = [(1,0), (0,1), (1,1), (2,1), (3,1)];
+array[int] of tuple(int, int): P5_Y4 = [(2,0), (0,1), (1,1), (2,1), (3,1)];
+array[int] of tuple(int, int): P5_Y5 = [(0,0), (0,1), (0,2), (0,3), (1,1)];
+array[int] of tuple(int, int): P5_Y6 = [(0,0), (0,1), (0,2), (0,3), (1,2)];
+array[int] of tuple(int, int): P5_Y7 = [(0,1), (1,0), (1,1), (1,2), (1,3)];
+array[int] of tuple(int, int): P5_Y8 = [(0,2), (1,0), (1,1), (1,2), (1,3)];
+array[int] of array[int] of tuple(int, int): P5_Y = [P5_Y1,P5_Y2,P5_Y3,P5_Y4,P5_Y5,P5_Y6,P5_Y7,P5_Y8];\n\n`;
+
 	const tests = `predicate orth_adjacent_2d(
     var int: r1, var int: c1, 
     var int: r2, var int: c2
@@ -134,14 +253,13 @@ function var int: count_transitions_f(array[int] of var int: arr) =
 function var int: conditional_sum_f(
     array[int] of var int: arr,
     array[int] of var $$T: labels,
-    var $$T: label) =
-    let {
-        constraint assert(
-            index_set(arr) = index_set(labels),
-            "Arrays must have same index set"
-        )
-    } in
-    sum(i in index_set(arr) where labels[i] == label)(arr[i]);
+    var $$T: label
+) = let {
+    constraint assert(
+        index_set(arr) = index_set(labels),
+        "Arrays must have same index set"
+    )
+} in sum(i in index_set(arr) where labels[i] == label)(arr[i]);
 
 function array[int] of var $$T: rotate_right_f(array[int] of var $$T: arr, int: x) =
     let {
@@ -378,7 +496,45 @@ predicate connected_region(array[int,int] of var int: grid, var int: x) =
         graph_edges_connected_region_p(grid, es, x) /\\
         % Apply connected constraint
         connected(from, to, ns, es)
-    );\n\n`;
+    );
+    
+% Function to check if a point is in the object
+function bool: in_object(
+    array[int] of tuple(int,int): object,
+    tuple(int, int): point
+) =  exists(i in index_set(object))(object[i].1 == point.1 /\\ object[i].2 == point.2);
+
+function array[int] of tuple(int,int): neighbour_frontier_f(
+    array[int] of tuple(int,int): object
+) = let {
+    % Directions for orthogonal neighbors (up, right, down, left)
+    array[1..4] of tuple(int,int): directions = [(0,1), (1,0), (0,-1), (-1,0)],
+    
+    % Generate all potential neighbors
+    array[int] of tuple(int,int): all_neighbors = [
+      (object[i].1 + directions[d].1, object[i].2 + directions[d].2) 
+      | i in index_set(object), d in 1..4
+    ],
+    
+    % Filter to keep only neighbors not in the original object
+    array[int] of tuple(int,int): valid_neighbors = [
+        all_neighbors[i] | i in index_set(all_neighbors) where not in_object(object, all_neighbors[i])
+    ],
+    
+    % Remove duplicates by maintaining indices of unique elements
+    array[int] of int: unique_indices = [
+        i | i in index_set(valid_neighbors) 
+            where not exists(j in 1..i-1)(
+                valid_neighbors[j].1 == valid_neighbors[i].1 /\\ 
+                valid_neighbors[j].2 == valid_neighbors[i].2
+            )
+    ],
+    
+    % Create final result array using the unique indices
+    array[1..length(unique_indices)] of tuple(int,int): result = [
+      valid_neighbors[unique_indices[i]] | i in 1..length(unique_indices)
+    ]
+} in result;\n\n`;
 
 	const helper_p = `predicate multisets_equal_p(array[int] of var int: arr1, array[int] of var int: arr2) =
 	forall(i in index_set(arr1)) (
@@ -3459,7 +3615,110 @@ predicate goldilocks_zone_region_sum_p(
     regions[min_i] != regions[max_i]
 );\n\n`;
 
-	const PENTOMINO_TILLING = `predicate n_omino_same_shape_no_touching(
+    const PENTOMINO_TILLING = `predicate check_pentominos_tilling_p(
+    array[int, int] of var int: pentomino_regions,
+    array[int, int] of var int: pentomino_anchors,
+    array[int] of array[int] of tuple(int, int): all_coords, % relative coordinates of all possible orientations of a given pentomino
+    int: val, % pentomino id
+) = let {
+    set of int: rows = index_set_1of2(pentomino_regions);
+    set of int: cols = index_set_2of2(pentomino_regions);
+} in (
+    forall(i in index_set(all_coords)) (
+        let {
+            array[int] of tuple(int, int): rel_coords = all_coords[i];
+            array[int] of tuple(int, int): rel_neighbour = neighbour_frontier_f(rel_coords);
+            int: max_dr = max(t in rel_coords)(t.1);
+            int: max_dc = max(t in rel_coords)(t.2);
+        } in (
+            forall(r in rows where r <= max(rows) - max_dr, c in cols where c <= max(cols) - max_dc)(
+                let {
+                    array[int] of tuple(int, int): abs_coords = [(r + t.1, c + t.2) | t in rel_coords];
+                    array[int] of tuple(int, int): abs_neighbour = [(r + t.1, c + t.2) | t in rel_neighbour];
+                    array[int] of var int: pentomino = [pentomino_regions[t.1, t.2] | t in abs_coords];
+                    array[int] of var int: neighbour = [
+                        pentomino_regions[t.1, t.2] | t in abs_neighbour 
+                            where in_bounds_2d(t.1, t.2, pentomino_regions)
+                    ];
+                    var bool: all_equal_cells = all_equal(pentomino);
+                    var bool: has_filled_cell = exists(id1 in pentomino)(id1 != 0);
+                    var bool: is_pentomino = all_equal_to_p(pentomino, val);
+                } in (
+                    all_equal_cells /\\ has_filled_cell -> is_pentomino /\\ pentomino_anchors[r,c] == val /\\ count_eq(neighbour, val, 0)
+                )
+            )
+        )
+    )
+);
+    
+    
+predicate pentomino_tilling_p(
+    array[int, int] of var int: pentomino_regions,
+    array[int, int] of var int: pentomino_anchors,
+) = let {
+    set of int: rows = index_set_1of2(pentomino_regions);
+    set of int: cols = index_set_2of2(pentomino_regions);
+    set of int: PENTOMINOES = 1..12;
+    int: gsize = length(rows) * length(cols);
+    int: total_pentominos = gsize div 5;
+} in (
+    assert(gsize mod 5 == 0, "grid size (gsize) must be divisible by 5")
+
+    /\\ count_different(array1d(pentomino_anchors), 0) == total_pentominos
+
+    % all cells belong to a pentomino
+    /\\ forall(r in rows, c in cols)(
+        pentomino_regions[r,c] != 0
+    )
+
+    % non zero ids cannot be alone (must have at least one adjacent cell equal to it)
+    /\\ forall (r in rows, c in cols)(
+        pentomino_regions[r,c] != 0 -> count_same_adjacent(pentomino_regions, r, c) >= 1
+    )
+
+    % non zero ids cannot be in dominoes
+    % horizontal dominoes
+    /\\ forall(r in rows, c in cols where c>min(cols))(
+        let { var int: id1 = pentomino_regions[r,c], var int: id2 = pentomino_regions[r,c-1] } in (
+            (id1 != 0 /\\ id2 != 0 /\\ id1 == id2) -> 
+                count_same_adjacent(pentomino_regions, r, c) + count_same_adjacent(pentomino_regions, r, c-1) > 2
+        )
+    )
+    % vertical dominoes
+    /\\ forall(r in rows, c in cols where r>min(rows))(
+        let { var int: id1 = pentomino_regions[r,c], var int: id2 = pentomino_regions[r-1,c] } in (
+            (id1 != 0 /\\ id2 != 0 /\\ id1 == id2) -> 
+                count_same_adjacent(pentomino_regions, r, c) + count_same_adjacent(pentomino_regions, r-1, c) > 2
+        )
+    )
+
+    % f
+    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_F, 1)
+    % i
+    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_I, 2)
+    % l
+    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_L, 3)
+    % n
+    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_N, 4)
+    % p
+    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_P, 5)
+    % t
+    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_T, 6)
+    % u
+    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_U, 7)
+    % v
+    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_V, 8)
+    % w
+    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_W, 9)
+    % x
+    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_X, 10)
+    % y
+    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_Y, 11)
+    % z
+    /\\ check_pentominos_tilling_p(pentomino_regions, pentomino_anchors, P5_Z, 12)
+);
+    
+predicate n_omino_same_shape_no_touching(
     array[int, int] of var int: regions,
     array[int, int] of var int: n_omino,
     int: target_n_omino,
@@ -3560,19 +3819,23 @@ predicate lits_region_and_ids_p(
     set of int: rows = index_set_1of2(regions);
     set of int: cols = index_set_2of2(regions);
 } in (
-    assert(index_sets_agree(regions, ids_grid), "regions and ids_grid must have the same indexes.")
     % Shade one tetromino in each region. 
     % No two tetrominoes of the same shape may share an edge - reflections/rotations count as the same shape.
+    assert(index_sets_agree(regions, ids_grid), "regions and ids_grid must have the same indexes.")
+
     % if adjacent cells are in different regions than ids cannot be the same (unless they're both zero)
+    % horizontally adjacent
     /\\ forall (r in rows, c in cols where c > min(cols)) (
         let { var int: id1 = ids_grid[r,c], var int: id2 = ids_grid[r,c-1] } in (
             regions[r,c] != regions[r,c-1] -> ((id1 = 0 /\\ id2 = 0) \\/ (id1 != id2))
         )
     )
+    % vertically adjacent
     /\\ forall (r in rows, c in cols where r > min(rows)) (
         let { var int: id1 = ids_grid[r,c], var int: id2 = ids_grid[r-1,c] } in
         regions[r,c] != regions[r-1,c] -> ((id1 = 0 /\\ id2 = 0) \\/ (id1 != id2))
     )
+
     % two cells in the same region cannot have different ids (except 0)
     /\\ forall(r in rows, c in cols)(
             forall(r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
@@ -3580,17 +3843,21 @@ predicate lits_region_and_ids_p(
                     regions[r,c] == regions[r2,c2] -> id1 = 0 \\/ id2 = 0 \\/ id1 = id2
           )
     )
+
     % non zero ids cannot be alone (must have at least one adjacent cell equal to it)
     /\\ forall (r in rows, c in cols)(
         ids_grid[r,c] != 0 -> count_same_adjacent(ids_grid, r, c) >= 1
     )
+
     % non zero ids cannot be in dominoes
+    % horizontal dominoes
     /\\ forall(r in rows, c in cols where c>min(cols))(
         let { var int: id1 = ids_grid[r,c], var int: id2 = ids_grid[r,c-1] } in (
             (id1 != 0 /\\ id2 != 0 /\\ id1 == id2) -> 
                 count_same_adjacent(ids_grid, r, c) + count_same_adjacent(ids_grid, r, c-1) > 2
         )
     )
+    % vertical dominoes
     /\\ forall(r in rows, c in cols where r>min(rows))(
         let { var int: id1 = ids_grid[r,c], var int: id2 = ids_grid[r-1,c] } in (
             (id1 != 0 /\\ id2 != 0 /\\ id1 == id2) -> 
@@ -3618,12 +3885,8 @@ predicate lits_4_per_region_p(
     )
 );
 
-predicate check_tetra_p(array[int] of var int: tetra, var int: val) = 
-    if (all_equal(tetra) /\\ exists(id1 in tetra)(id1 != 0)) then 
-        all_equal_to_p(tetra, val)
-    else
-        true
-    endif;
+predicate check_lits_tetra_p(array[int] of var int: poliomino, var int: val) = 
+    (all_equal(poliomino) /\\ exists(id1 in poliomino)(id1 != 0)) -> all_equal_to_p(poliomino, val);
     
 function array[int] of var int: get_n_omino(
     array[int, int] of var int: ids_grid,
@@ -3640,11 +3903,11 @@ predicate lits_o_tetra_p(
     forall(r in rows where r < max(rows), c in cols where c < max(cols))(
         let {
             array[int] of var int: tetra = [ids_grid[r,c], ids_grid[r,c+1], ids_grid[r+1,c], ids_grid[r+1,c+1]];
-        } in check_tetra_p(tetra, 5)
+        } in check_lits_tetra_p(tetra, 5)
     )  
 );
 
-predicate check_tetras_p(
+predicate check_lits_tetras_p(
     array[int, int] of var int: ids_grid,
     array[int] of array[int] of tuple(int, int): all_coords,
     var int: val,
@@ -3661,67 +3924,52 @@ predicate check_tetras_p(
             forall(r in rows where r <= max(rows) - max_dr, c in cols where c <= max(cols) - max_dc)(
                 let {
                     array[int] of var int: tetra = get_n_omino(ids_grid, (r,c), coords);
-                } in check_tetra_p(tetra, val)
+                } in check_lits_tetra_p(tetra, val)
             )
         )
     )  
 );
 
-predicate lits_i_tetra_p(
-    array[int, int] of var int: ids_grid
-) = let {
-    array[int] of tuple(int, int): t1 = [(0, 0), (0, 1), (0, 2), (0, 3)];
-    array[int] of tuple(int, int): t2 = [(0, 0), (1, 0), (2, 0), (3, 0)];
-    array[int] of array[int] of tuple(int, int): ts = [t1, t2];
-} in (
-    check_tetras_p(ids_grid, ts, 2)
-);
-
-predicate lits_t_tetra_p(
-    array[int, int] of var int: ids_grid
-) = let {
-    array[int] of tuple(int, int): t1 = [(0, 0), (0, 1), (0, 2), (1, 1)];
-    array[int] of tuple(int, int): t2 = [(0, 1), (1, 0), (1, 1), (1, 2)];
-    array[int] of tuple(int, int): t3 = [(0, 0), (1, 0), (2, 0), (1, 1)];
-    array[int] of tuple(int, int): t4 = [(1, 0), (0, 1), (1, 1), (2, 1)];
-    array[int] of array[int] of tuple(int, int): ts = [t1, t2, t3, t4];
-} in (
-    check_tetras_p(ids_grid, ts, 3)
-);
-
-predicate lits_s_tetra_p(
-    array[int, int] of var int: ids_grid
-) = let {
-    array[int] of tuple(int, int): t1 = [(0, 1), (0, 2), (1, 0), (1, 1)];
-    array[int] of tuple(int, int): t2 = [(0, 0), (0, 1), (1, 1), (1, 2)];
-    array[int] of tuple(int, int): t3 = [(1, 0), (2, 0), (0, 1), (1, 1)];
-    array[int] of tuple(int, int): t4 = [(0, 0), (1, 0), (1, 1), (2, 1)];
-    array[int] of array[int] of tuple(int, int): ts = [t1, t2, t3, t4];
-} in (
-    check_tetras_p(ids_grid, ts, 4)
-);
-
-predicate lits_l_tetra_p(
-    array[int, int] of var int: ids_grid
-) = let {
-    array[int] of tuple(int, int): t1 = [(0, 0), (0, 1), (0, 2), (1, 0)];
-    array[int] of tuple(int, int): t2 = [(0, 0), (0, 1), (0, 2), (1, 2)];
-    array[int] of tuple(int, int): t3 = [(0, 0), (1, 0), (1, 1), (1, 2)];
-    array[int] of tuple(int, int): t4 = [(0, 2), (1, 0), (1, 1), (1, 2)];
-    array[int] of tuple(int, int): t5 = [(0, 0), (1, 0), (2, 0), (0, 1)];
-    array[int] of tuple(int, int): t6 = [(0, 0), (1, 0), (2, 0), (2, 1)];
-    array[int] of tuple(int, int): t7 = [(0, 0), (0, 1), (1, 1), (2, 1)];
-    array[int] of tuple(int, int): t8 = [(2, 0), (0, 1), (1, 1), (2, 1)];
-    array[int] of array[int] of tuple(int, int): ts = [t1, t2, t3, t4, t5, t6, t7, t8];    
-} in (
-    check_tetras_p(ids_grid, ts, 1)
-);
-
 predicate lits_tetromino_shapes_p(array[int, int] of var int: ids_grid) = (
-    lits_l_tetra_p(ids_grid)
-    /\\ lits_i_tetra_p(ids_grid)
-    /\\ lits_t_tetra_p(ids_grid)
-    /\\ lits_s_tetra_p(ids_grid)
+    check_lits_tetras_p(ids_grid, P4_I, 2)
+    /\\ check_lits_tetras_p(ids_grid, P4_T, 3)
+    /\\ check_lits_tetras_p(ids_grid, P4_S, 4)
+    /\\ check_lits_tetras_p(ids_grid, P4_L, 1)
+);
+
+predicate lits_grid_p(
+    array[int, int] of var int: lits_grid, 
+    array[int, int] of var int: regions, 
+    array[int, int] of var 0..1: shading,
+    set of int: region_ids
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+    int: min_region = min(region_ids);
+    int: offset = if min_region <= 0 then -min_region + 1 else 0 endif;
+} in (
+    % each tetromino has a different id > 0
+    assert(index_sets_agree(regions, shading), "regions and shading must have the same indexes.")
+    /\\ assert(index_sets_agree(regions, lits_grid), "regions and lits_grid must have the same indexes.")
+    /\\ forall(r in rows, c in cols)(
+        (shading[r,c] == 1 /\\ lits_grid[r,c] = regions[r,c] + offset) \\/
+        (shading[r,c] == 0 /\\ lits_grid[r,c] = 0)
+    )
+);
+
+predicate lits_max_tetromino_sum_p(
+    array[int, int] of var int: grid, 
+    array[int, int] of var int: lits_grid,
+    var int: val,
+    set of int: region_ids
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    assert(index_sets_agree(grid, lits_grid), "grid and lits_grid must have the same indexes.")
+    /\\ forall(r_id in region_ids where r_id > 0)(
+        exists(r in rows, c in cols)(lits_grid[r,c] == r_id) -> conditional_sum_f(array1d(grid), array1d(lits_grid), r_id) <= val
+    )
 );\n\n`;
 
 	const star_battle = `predicate black_and_white_star_battle_p(
@@ -4404,7 +4652,8 @@ predicate shikaku_region_size_p(
 );\n\n`;
 
 	const out_str =
-		'\n' +
+        '\n' +
+        poliominoes +
 		tests +
 		helper_f +
 		more_helper_f +
@@ -4434,8 +4683,8 @@ predicate shikaku_region_size_p(
 		galaxies +
 		goldilocks +
 		global_constraints +
-		PENTOMINO_TILLING +
 		LITS +
+		PENTOMINO_TILLING +
 		star_battle +
 		direct_path +
 		nurikabe +

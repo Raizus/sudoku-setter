@@ -439,7 +439,8 @@ export enum CORNER_LINE_CONSTRAINTS {
 export enum VALUED_GLOBAL_CONSTRAINTS {
 	FORBIDDEN_ORTHOGONALLY_ADJACENT_SUM = 'Forbidden Orthogonally Adjacent Sum',
 	FORBIDDEN_KNIGHT_SUM = 'Forbidden Knight Sum',
-	MINIMUM_DIAGONALLY_ADJACENT_DIFFERENCE = 'Minimum Diagonally Adjacent Difference'
+	MINIMUM_DIAGONALLY_ADJACENT_DIFFERENCE = 'Minimum Diagonally Adjacent Difference',
+	LITS_MAX_TETROMINO_SUM = 'LITS Max Tetromino Sum'
 }
 
 export enum COSMETIC_TOOLS {
