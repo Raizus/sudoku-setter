@@ -90,6 +90,13 @@ function parseInterval(expression: string): IntervalI | null {
 	return null;
 }
 
+export function parseInteger(value: string): string | null {
+	const regex = /^(-?\d+)$/;
+	const result = value.match(regex);
+	if (!result) return null;
+	return result[0];
+}
+
 export function parseVariable(value: string): string | null {
 	const regex = /^([a-zA-Z][a-zA-Z0-9]*)$/;
 	const result = value.match(regex);
@@ -128,9 +135,10 @@ export function parseVarList(input: string): null | string[] {
 
 export function parseValue(value: string, parse_opts: ParseOptions): ParsedValue | null {
 	// match number
-	const parsed_int = parseInt(value);
-	if (typeof parsed_int === 'number' && !Number.isNaN(parsed_int)) {
-		return { type: 'number', parsed: parsed_int };
+	const parsed_int = parseInteger(value);
+	if (parsed_int) {
+		const value = parseInt(parsed_int);
+		return { type: 'number', parsed: value };
 	}
 
 	// match variable

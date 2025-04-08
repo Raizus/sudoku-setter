@@ -179,7 +179,6 @@ export class PuzzleModel implements ModelI {
 	): [model_str: string, var_name: string] | null {
 		const parsed_value = parseValue(value, parse_opts);
 		if (!parsed_value) return null;
-
 		// parse number
 		if (parsed_value.type === 'number') {
 			const value = parsed_value.parsed;
@@ -231,20 +230,20 @@ export class PuzzleModel implements ModelI {
 			model_str += `constraint member(${values_str}, ${default_name});\n`;
 		}
 
-		if (parsed_value.type === 'var_list') return null;
 		// parse number / variable list
-		// if (parsed_value.type === 'var_list') {
-		// 	const values = parsed_value.parsed;
-		// 	const values_str = '[' + values.join(',') + ']';
-		// 	for (const value in values) {
-		// 		const val = parseInt(value);
-		// 		if (Number.isNaN(val) && !this.hasVariable(value)) {
-		// 			model_str += `var int: ${value};\n`;
-		// 			this.addVariable(value);
-		// 		}
-		// 		model_str += `constraint member(${values_str}, ${default_name});\n`;
-		// 	}
-		// }
+		// if (parsed_value.type === 'var_list') return null;
+		if (parsed_value.type === 'var_list') {
+			const values = parsed_value.parsed;
+			const values_str = '[' + values.join(',') + ']';
+			for (const value of values) {
+				const val = parseInt(value);
+				if (Number.isNaN(val) && !this.hasVariable(value)) {
+					model_str += `var int: ${value};\n`;
+					this.addVariable(value);
+				}
+			}
+			model_str += `constraint member(${values_str}, ${default_name});\n`;
+		}
 
 		return [model_str, default_name];
 	}
