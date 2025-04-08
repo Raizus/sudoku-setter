@@ -1267,3 +1267,29 @@ export const shikakuRegionSizeInfo: SquareCellElementInfo = {
 		categories: singleCellShapeDefaultCategories
 	}
 };
+
+export const shikakuRegionSumInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.SINGLE_CELL,
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+			defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
+		defaultValue: '?'
+	},
+
+	toolId: TOOLS.SHIKAKU_REGION_SUM,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	shape: {
+		type: SHAPE_TYPES.CAGE,
+		strokeWidth: { editable: false, value: 0 },
+		stroke: { editable: false, value: 'none' },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			'Each shikaku region contains exactly one clue, and each clue indicates the sum of the digits in its shikaku region.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};

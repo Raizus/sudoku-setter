@@ -27,12 +27,18 @@ function simpleSingleCellConstraint(grid: Grid, constraint: CellToolI, predicate
 	return constraint_str;
 }
 
-function getParsingResult(model: PuzzleModel, value: string, c_id: string) {
-	const parse_opts: ParseOptions = {
-		allow_var: true,
-		allow_interval: true,
-		allow_int_list: false
-	};
+const DEFAULT_PARSE_OPTS: ParseOptions = {
+	allow_var: true,
+	allow_interval: true,
+	allow_int_list: false
+};
+
+function getParsingResult(
+	model: PuzzleModel,
+	value: string,
+	c_id: string,
+	parse_opts: ParseOptions = DEFAULT_PARSE_OPTS
+) {
 	const default_name = `cell_var_${c_id}`;
 	const result = model.getOrSetSharedVar(value, default_name, parse_opts);
 	return result;
@@ -1104,8 +1110,9 @@ function shikakuRegionSizeConstraint(
 	const shikaku_vars = cellsToGridVarsName([...cells], VAR_2D_NAMES.SHIKAKU_REGIONS);
 	const vars_str = `${shikaku_vars.join(',\n\t')}`;
 
-	out_str += `array[int] of var int: shikaku_region_clues = [\n\t${vars_str}\n];\n`;
-	out_str += `constraint alldifferent(shikaku_region_clues);\n`;
+	out_str += `array[int] of var int: shikaku_region_size_clues = [\n\t${vars_str}\n];\n`;
+	out_str += `constraint alldifferent(shikaku_region_size_clues);\n`;
+	out_str += `constraint shikaku_each_region_contains_one_circle_p(${VAR_2D_NAMES.SHIKAKU_REGIONS}, shikaku_region_size_clues);\n`;
 
 	for (const constraint of Object.values(constraints)) {
 		const coords = constraint.cell;
@@ -1116,6 +1123,51 @@ function shikakuRegionSizeConstraint(
 		const shikaku_width = cellToGridVarName(cell, VAR_2D_NAMES.SHIKAKU_WIDTH);
 		const shikaku_height = cellToGridVarName(cell, VAR_2D_NAMES.SHIKAKU_HEIGHT);
 		out_str += `constraint shikaku_region_size_p(${VAR_2D_NAMES.SHIKAKU_REGIONS}, ${shikaku_var}, ${cell_var}, ${shikaku_width}, ${shikaku_height});\n`;
+	}
+
+	return out_str;
+}
+
+function shikakuRegionSumConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	constraints: Record<string, CellToolI>
+) {
+	const constl = Object.values(constraints);
+
+	let out_str = '';
+	const all_coords = constl.map((constraint) => constraint.cell);
+	const cells = new Set(
+		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
+	);
+	const shikaku_vars = cellsToGridVarsName([...cells], VAR_2D_NAMES.SHIKAKU_REGIONS);
+	const vars_str = `${shikaku_vars.join(',\n\t')}`;
+
+	out_str += `array[int] of var int: shikaku_region_sum_clues = [\n\t${vars_str}\n];\n`;
+	out_str += `constraint alldifferent(shikaku_region_sum_clues);\n`;
+	out_str += `constraint shikaku_each_region_contains_one_circle_p(${VAR_2D_NAMES.SHIKAKU_REGIONS}, shikaku_region_sum_clues);\n`;
+
+	const parse_opts: ParseOptions = {
+		allow_var: true,
+		allow_interval: true,
+		allow_int_list: true,
+		allow_var_list: true
+	};
+
+	for (const [c_id, constraint] of Object.entries(constraints)) {
+		const coords = constraint.cell;
+		const cell = grid.getCell(coords.r, coords.c);
+		if (!cell) continue;
+		const shikaku_var = cellToGridVarName(cell, VAR_2D_NAMES.SHIKAKU_REGIONS);
+
+		const value = constraint.value ?? '';
+		const result = getParsingResult(model, value, c_id, parse_opts);
+		if (!result) continue;
+
+		const var_name = result[1];
+		out_str += result[0];
+
+		out_str += `constraint shikaku_region_sum_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.SHIKAKU_REGIONS}, ${shikaku_var}, ${var_name});\n`;
 	}
 
 	return out_str;
@@ -1200,6 +1252,7 @@ const tool_map_2 = new Map<string, ConstraintF2>([
 	[TOOLS.COLORED_COUNTING_CIRCLES, coloredCountingCirclesConstraint],
 	[TOOLS.UNIQUE_CELLS, uniqueCellsConstraint],
 	[TOOLS.SHIKAKU_REGION_SIZE, shikakuRegionSizeConstraint],
+	[TOOLS.SHIKAKU_REGION_SUM, shikakuRegionSumConstraint],
 
 	[TOOLS.NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE, nurikabeIslandProductOfSumAndSizeConstraint],
 	[TOOLS.TELEPORT, teleportConstraint]

@@ -203,6 +203,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	CAVE_UNSHADED_CELL = 'Cave Unshaded Cell',
 
 	SHIKAKU_REGION_SIZE = 'Shikaku Region Size',
+	SHIKAKU_REGION_SUM = 'Shikaku Region Sum',
 
 	TWILIGHT_CAVE_FILLOMINO_CLUE = 'Twilight Cave Fillomino Clue',
 	CHAOS_CONSTRUCTION_CHESS_SUMS = 'Chaos Construction Chess Sums',

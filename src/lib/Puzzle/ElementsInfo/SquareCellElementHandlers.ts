@@ -315,7 +315,8 @@ import {
 	nurikabeIslandSizeCellInfo,
 	reverseCountingCirclesInfo,
 	cellKnightWhispersInfo,
-	shikakuRegionSizeInfo
+	shikakuRegionSizeInfo,
+	shikakuRegionSumInfo
 } from './SingleCellElementsInfo';
 import {
 	coldArrowsInfo,
@@ -370,7 +371,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.ANTI_ENTROPY]: antiEntropyInfo,
 	[TOOLS.GLOBAL_INDEXING_COLUMN]: globalIndexingColumnInfo,
 	[TOOLS.ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED]: allOddDigitsAreOrthogonallyConnectedInfo,
-	[TOOLS.BOX_ROWS_AND_COLUMNS_FORM_MODULARITY_AND_ENTROPY_SETS]: boxRowsAndColumnsFormModularityAndEntropySetInfo,
+	[TOOLS.BOX_ROWS_AND_COLUMNS_FORM_MODULARITY_AND_ENTROPY_SETS]:
+		boxRowsAndColumnsFormModularityAndEntropySetInfo,
 
 	[TOOLS.NEGATIVE_DIAGONAL]: negativeDiagonalInfo,
 	[TOOLS.POSITIVE_DIAGONAL]: positiveDiagonalInfo,
@@ -525,6 +527,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.YIN_YANG_FILLOMINO_PARITY]: yinYangFillominoParityInfo,
 
 	[TOOLS.SHIKAKU_REGION_SIZE]: shikakuRegionSizeInfo,
+	[TOOLS.SHIKAKU_REGION_SUM]: shikakuRegionSumInfo,
 
 	[TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS]: chaosConstructionChessSumsInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS]: chaosConstructionArrowKnotsInfo,

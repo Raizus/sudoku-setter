@@ -4685,6 +4685,28 @@ predicate shikaku_region_size_p(
 ) = (
     count(array1d(shikaku_grid), shikaku_region) == size /\\
     size == width * height
+);
+
+predicate shikaku_each_region_contains_one_circle_p(
+    array[int, int] of var int: regions,
+    array[int] of var int: circles,
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+} in (
+    forall(r in rows, c in cols)(
+        regions[r,c] in circles
+    )
+);
+
+predicate shikaku_region_sum_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions,
+    var int: region_var,
+    var int: sum_var
+) = (
+    assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes.")
+    /\\ conditional_sum_f(array1d(grid), array1d(regions), region_var) == sum_var
 );\n\n`;
 
 	const out_str =
