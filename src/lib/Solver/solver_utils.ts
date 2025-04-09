@@ -251,8 +251,8 @@ export class PuzzleModel implements ModelI {
 
 /**
  * Prunes the minizinc model by removind unused predicate, function and test clauses
- * @param model 
- * @returns 
+ * @param model
+ * @returns
  */
 function _pruneMinizincModel(model: string): string {
 	// Split the model into lines for processing
@@ -265,6 +265,7 @@ function _pruneMinizincModel(model: string): string {
 			endLine: number;
 			name: string;
 			content: string[];
+			type: 'function' | 'predicate' | 'test' | 'variable';
 		};
 	} = {};
 
@@ -272,9 +273,15 @@ function _pruneMinizincModel(model: string): string {
 	const functionStartRegex = /^function(?:\s+[\w[\].$(),]+)+\s*:\s*(\w+)\s*\(/;
 	const predicateStartRegex = /^predicate\s+(\w+)\s*\(/;
 	const testStartRegex = /^test\s+(\w+)\s*\(/;
+	const variableStartRegex = /^(?:array|set|int|var)\b.*?:\s*(\w+)(?:\s*=)/;
 
 	// First pass: identify all function and predicate definitions
-	let currentDef: { name: string; startLine: number; content: string[] } | null = null;
+	let currentDef: {
+		name: string;
+		startLine: number;
+		content: string[];
+		type: 'function' | 'predicate' | 'test' | 'variable';
+	} | null = null;
 	let bracketCount = 0;
 	let curlyBracketCount = 0;
 	let squareBracketCount = 0;
@@ -286,13 +293,15 @@ function _pruneMinizincModel(model: string): string {
 		const funcMatch = line.match(functionStartRegex);
 		const predMatch = line.match(predicateStartRegex);
 		const testMatch = line.match(testStartRegex);
+		const varMatch = line.match(variableStartRegex);
 
-		if (funcMatch || predMatch || testMatch) {
-			const name = (funcMatch || predMatch || testMatch)![1];
+		if (!currentDef && (funcMatch || predMatch || testMatch || varMatch)) {
+			const name = (funcMatch || predMatch || testMatch || varMatch)![1];
 			currentDef = {
 				name,
 				startLine: i,
-				content: [lines[i]]
+				content: [lines[i]],
+				type: funcMatch ? 'function' : predMatch ? 'predicate' : testMatch ? 'test' : 'variable'
 			};
 
 			// Count opening brackets/parentheses in the first line
@@ -341,12 +350,31 @@ function _pruneMinizincModel(model: string): string {
 	// Helper function to find all function/predicate/test calls in a line
 	function findReferences(line: string): string[] {
 		const references: string[] = [];
+		const funcMatch = line.match(functionStartRegex);
+		const predMatch = line.match(predicateStartRegex);
+		const testMatch = line.match(testStartRegex);
+
 		for (const defName of Object.keys(definitions)) {
+			
+			const deftype = definitions[defName].type;
+			
 			// Look for the function/predicate name followed by an opening parenthesis
 			// Make sure we're not inside a function/predicate declaration
-			if (!line.includes('function') && !line.includes('predicate') && !line.includes('test')) {
+			if (deftype === 'function' || deftype === 'test' || deftype === 'predicate') {
+				if (funcMatch || predMatch || testMatch) continue;
 				const regex = new RegExp(`\\b${defName}\\s*\\(`, 'g');
 				if (regex.test(line)) {
+					// console.log('reference', defName);
+					references.push(defName);
+				}
+			} else if (deftype === 'variable') {
+				const regex = new RegExp(
+					`^(?:array|set|int|var)\\b.*?:\\s*${defName}(?:\\s*=|\\s*:|\\s*\\[|\\s*\\(|\\s*;)`
+				);
+				const is_definition = line.match(regex);
+				if (is_definition) continue;
+				const regex2 = new RegExp(`\\b${defName}\\b`, 'g');
+				if (regex2.test(line)) {
 					references.push(defName);
 				}
 			}
@@ -362,6 +390,8 @@ function _pruneMinizincModel(model: string): string {
 		const references = findReferences(line);
 		references.forEach((call) => usedDefinitions.add(call));
 	}
+
+	console.log('usedDefinitions', usedDefinitions);
 
 	// Create the pruned model by removing unused definitions
 	const unusedRanges = Object.values(definitions)
