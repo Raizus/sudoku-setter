@@ -53,8 +53,6 @@ export function getSingleCellMultiArrowToolInputHandler(
 		const localConstraints = get(localConstraintsStore);
 		const coords = event.cell;
 
-		console.log(event);
-
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
 
