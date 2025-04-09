@@ -34,7 +34,7 @@ export function defaultValidateValueOnInput(
 
 	const ineqPattern = allowInequalities ? /(?:<|>|>=|<=)?/ : RegExp('');
 	const negPattern = allowNegatives ? /-?/ : RegExp('');
-	const varPattern = /[a-zA-Z]*?/;
+	const varPattern = /[a-zA-Z][a-zA-Z0-9]*?/;
 	const numberPattern = /[0-9]*/;
 
 	if (allowSymbolicVariables) {
