@@ -145,5 +145,19 @@
 		"authors": ["Gliperal"],
 		"description": "Sudoku rules do not apply.\n\n**Pentomino Tilling**: Divide the grid into pentominoes, such that no two pentominoes of the same shape (including rotations and reflections) touch orthogonally.\n\n**Pentomino Border Count**: Clues outside the grid indicate the number of borders between pentominoes present in that row or column.",
 		"thumbnail": "/thumbnails/BorderCountPentominous_by_Gliperal.png"
+	},
+	{
+		"id": "p22",
+		"title": "Shikaku-doku",
+		"authors": ["James Sinclair"],
+		"description": "Sudoku rules apply.\n\n**Positive Diagonal**: Numbers must not repeat on the positive diagonal.\n\n**Shikaku**: Divide the grid into rectangular regions of orthogonally connected cells, so that every cell is in a region and regions do not overlap.\n\n**Killer Cage**: Numbers must not repeat in a killer cage. The numbers in the cage must sum to the given total in the top left (if one exists).\n\n**Shikaku Region Size**: Each shikaku region contains exactly one circle, and a digit in a circle indicates the number of cells in its region.",
+		"thumbnail": "/thumbnails/Shikakudoku_by_JamesSinclair.png"
+	},
+	{
+		"id": "p23",
+		"title": "Medieval Upheaval 4",
+		"authors": ["Nordy"],
+		"description": "Sudoku rules apply.\n\n**Chaos Construction**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.\n\n**Renban Line**: Number along a purple line form a set of non-repeating consecutive digits (which can be in any order).\n\n**Chaos Construction Chess Sums**: A cell with a number in its top-left corner is a Chess Sums cell. The number in the top-left corner indicates the amount of Chess Sums satisfied by the digit in that cell. A digit in a Chess Sums cell gives one or more of the following:\n - The sum of all digits that share its region and are a king's move away\n - The sum of all digits that share its region and are a knight's move away\n - The sum of all digits that share its region and are a bishop's move away\nClarifications:\n - Bishops can “see” past cells from other regions—cells from other regions do not block a bishop's vision.\n - Each Chess Sum is calculated separately. For example, a cell with a “2” clue that contains a 7 can see 4 and 3 by king's move, and can see 5 and 2 by knight's move—the king's move digits and the knight's move digits each sum to 7 separately.",
+		"thumbnail": "/thumbnails/MedievalUpheaval4_by_Nordy.png"
 	}
 ]
