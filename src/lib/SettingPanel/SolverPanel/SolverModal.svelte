@@ -53,6 +53,11 @@
 		<button class="modal-button" on:click={copyPrunedCb}>Copy pruned version to clipboard</button>
 		<button class="modal-button" on:click={downloadCb}>Download Minizinc File</button>
 		<button class="modal-button" on:click={downloadPrunedCb}>Download Pruned Minizinc File</button>
+		<p>Note: You can play with the minizinc model 
+			<a href={'https://play.minizinc.dev/'} target="_blank" rel="noreferrer noopener">
+				here
+			</a>. Choose chuffed as the solver.
+		</p>
 	</div>
 </Modal>
 
