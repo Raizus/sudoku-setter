@@ -20,7 +20,7 @@
 	$: outlineShape = {
 		...shape,
 		stroke: 'var(--grid-background-color)',
-		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.08 : 0.08
+		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.06 : 0.06
 	};
 </script>
 
