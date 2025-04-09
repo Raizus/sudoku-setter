@@ -93,7 +93,7 @@ export const oddInfo: SquareCellElementInfo = {
 		strokeWidth: { editable: false, value: 0 },
 		stroke: { editable: false, value: 'none' },
 		r: { editable: false, value: 0.3 },
-		fill: { editable: false, value: 'rgba(170, 170, 170, 0.6)' }
+		fill: { editable: false, value: 'rgb(160, 160, 160)' }
 	},
 
 	meta: {
@@ -114,7 +114,7 @@ export const evenInfo: SquareCellElementInfo = {
 		strokeWidth: { editable: false, value: 0 },
 		stroke: { editable: false, value: 'none' },
 		r: { editable: false, value: 0.3 },
-		fill: { editable: false, value: 'rgba(170, 170, 170, 0.6)' }
+		fill: { editable: false, value: 'rgb(160, 160, 160)' }
 	},
 
 	meta: {
@@ -331,7 +331,7 @@ export const orthogonalSumInfo: SquareCellElementInfo = {
 		r: { editable: false, value: 0.35 },
 		strokeWidth: { editable: false, value: 0.04 },
 		stroke: { editable: false, value: 'var(--constraint-color-blue)' },
-		fill: { editable: false, value: 'rgba(170, 170, 170, 0.6)' }
+		fill: { editable: false, value: 'rgb(160, 160, 160)' }
 	},
 
 	meta: {
@@ -352,7 +352,7 @@ export const indexingColumnInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.SQUARE,
 		strokeWidth: { editable: false, value: 0 },
 		fill: { editable: false, value: 'rgba(155, 40, 40, 0.7)' },
-		opacity: { editable: false, value: 0.7 }
+		opacity: { editable: false, value: 0.7 },
 	},
 
 	meta: {
