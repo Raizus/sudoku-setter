@@ -245,6 +245,7 @@ import {
 	brokenXSumInfo,
 	chaosConstructionSumOfFirstEachRegionInfo,
 	loopwhichesInfo,
+	mysterySandwichSumInfo,
 	outsideConsecutiveSumInfo,
 	outsideEdgeYinYangSumOfShadedInfo,
 	pentominoBorderCountInfo,
@@ -708,6 +709,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	// Outside Edge Constraints
 	[TOOLS.SANDWICH_SUM]: sandwichSumInfo,
+	[TOOLS.MYSTERY_SANDWICH_SUM]: mysterySandwichSumInfo,
 	[TOOLS.X_SUM]: xSumInfo,
 	[TOOLS.SHORTSIGHTED_X_SUM]: shortsightedXSumInfo,
 	[TOOLS.SHIFTED_X_SUM]: shiftedXSumInfo,

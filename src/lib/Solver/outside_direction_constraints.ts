@@ -420,11 +420,53 @@ function pentominoBorderCountConstraint(
 	return out_str;
 }
 
+function mysterySandwichSumConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	constraints: Record<string, OutsideDirectionToolI>
+) {
+	let out_str = '';
+
+	const var_a = 'mystery_sandwich_a';
+	const var_b = 'mystery_sandwich_b';
+
+	out_str += `var int: ${var_a};\n`;
+	out_str += `var int: ${var_b};\n`;
+	out_str += `constraint member(ALLOWED_DIGITS, ${var_a});\n`;
+	out_str += `constraint member(ALLOWED_DIGITS, ${var_b});\n`;
+	out_str += `constraint ${var_a} <= ${var_b};\n`;
+
+	for (const constraint of Object.values(constraints)) {
+		const cell_coord = constraint.cell;
+		const cell = grid.getCell(cell_coord.r, cell_coord.c);
+
+		const vars = getOutsideDirectionConstraintVars(grid, constraint);
+		const vars_str = `[${vars.join(',')}]`;
+		const value = constraint.value ?? '';
+
+		const result = getParsingResult(model, value, cell_coord, cell);
+		if (!result) continue;
+
+		const var_name = result[1];
+		out_str += result[0];
+
+		out_str += `constraint sandwich_sum_p(${vars_str}, ${var_name}, ${var_a}, ${var_b});\n`;
+	}
+
+	return out_str;
+}
+
 type ConstraintF = (
 	model: PuzzleModel,
 	grid: Grid,
 	c_id: string,
 	constraint: OutsideDirectionToolI
+) => string;
+
+type ConstraintF2 = (
+	model: PuzzleModel,
+	grid: Grid,
+	constraints: Record<string, OutsideDirectionToolI>
 ) => string;
 
 const tool_map = new Map<string, ConstraintF>([
@@ -455,6 +497,10 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.NEGATORS_LITTLE_KILLER_SUM, negatorsLittleKillerSumConstraint]
 ]);
 
+const tool_map_2 = new Map<string, ConstraintF2>([
+	[TOOLS.MYSTERY_SANDWICH_SUM, mysterySandwichSumConstraint]
+]);
+
 export function outsideDirectionConstraints(
 	model: PuzzleModel,
 	grid: Grid,
@@ -463,11 +509,19 @@ export function outsideDirectionConstraints(
 ) {
 	let out_str = '';
 	const constraintF = tool_map.get(toolId);
+	const constraintF2 = tool_map_2.get(toolId);
 	if (constraintF) {
 		for (const [c_id, constraint] of Object.entries(constraints)) {
 			const constraint_str = constraintF(model, grid, c_id, constraint as OutsideDirectionToolI);
 			out_str += constraint_str;
 		}
+	} else if (constraintF2) {
+		const constraint_str = constraintF2(
+			model,
+			grid,
+			constraints as Record<string, OutsideDirectionToolI>
+		);
+		out_str += constraint_str;
 	}
 	return out_str;
 }

@@ -70,6 +70,25 @@ export const sandwichSumInfo: SquareCellElementInfo = {
 	}
 };
 
+export const mysterySandwichSumInfo: SquareCellElementInfo = {
+	inputOptions: {
+		...DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
+		cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
+	},
+
+	toolId: TOOLS.MYSTERY_SANDWICH_SUM,
+	order: RENDER_ORDER.OUTSIDE_TOOLS,
+	shape: OUTSIDE_DEFAULT_SHAPE,
+
+	meta: {
+		description:
+			'A number outside the grid gives the sum of the digits sandwiched between the "a" and "b" in that direction. "a" and "b" must be determined by the solver.',
+		usage: outsideEdgeUsage(),
+		tags: [],
+		categories: outsideEdgeDefaultCategories
+	}
+};
+
 export const sandwichSumXorXSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 

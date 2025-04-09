@@ -209,7 +209,7 @@ function var int: count_unique_values(array[int] of var int: arr) =
         sum(i in index_set(arr))(bool2int(is_unique[i]))
     endif;
 
-function array[int] of var bool: sandwich_bools(array[int] of var int: arr, int: a, int: b) =
+function array[int] of var bool: sandwich_bools_f(array[int] of var int: arr, var int: a, var int: b) =
     [exists(j in index_set(arr) where j < i)(
          exists(k in index_set(arr) where k > i)(
              (arr[j] == a /\\ arr[k] == b) \\/ (arr[j] == b /\\ arr[k] == a)
@@ -789,8 +789,8 @@ predicate sandwich_row_col_count_p(
     var int: c,
     var int: val
 ) = let {
-    array[int] of var bool: row_bools = sandwich_bools(row_arr, 1, 9),
-    array[int] of var bool: col_bools = sandwich_bools(col_arr, 1, 9),
+    array[int] of var bool: row_bools = sandwich_bools_f(row_arr, 1, 9),
+    array[int] of var bool: col_bools = sandwich_bools_f(col_arr, 1, 9),
     var int: row_count = sandwich_bools_sum(row_bools),
     var int: col_count = sandwich_bools_sum(col_bools),
     var bool: in_row = c in index_set(row_bools) /\\ row_bools[c],
@@ -1627,10 +1627,10 @@ predicate vaulted_cage_p(
     not member(cage, cell_v)
 );\n\n`;
 
-	const outside_edge_constraints = `function var int: sandwich_sum(array[int] of var int: arr, int: a, int: b) =
-    sum(i in index_set(arr)) (arr[i] * bool2int(sandwich_bools(arr, a, b)[i]));
+	const outside_edge_constraints = `function var int: sandwich_sum(array[int] of var int: arr, var int: a, var int: b) =
+    sum(i in index_set(arr)) (arr[i] * bool2int(sandwich_bools_f(arr, a, b)[i]));
 
-predicate sandwich_sum_p(array[int] of var int: arr, var int: val, int: a, int: b) =
+predicate sandwich_sum_p(array[int] of var int: arr, var int: val, var int: a, var int: b) =
     val == sandwich_sum(arr, a, b);
 
 function var int: x_sum_f(array[int] of var int: arr, var int: x) =

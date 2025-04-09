@@ -401,6 +401,7 @@ export enum CLONE_CONSTRAINTS {
 
 export enum OUTSIDE_EDGE_CONSTRAINTS {
 	SANDWICH_SUM = 'Sandwich Sum',
+	MYSTERY_SANDWICH_SUM = 'Mystery Sandwich Sum',
 	X_SUM = 'X-Sum',
 	SHORTSIGHTED_X_SUM = 'Shortsighted X-Sum',
 	SHIFTED_X_SUM = 'Shifted X-Sum',
