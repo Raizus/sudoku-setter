@@ -399,6 +399,30 @@ export const allYinYangCountShadedCellsGivenInfo: AbstractElementInfo = {
 	}
 };
 
+export const shikakuEachRegionContainsOneSizeCircleInfo: AbstractElementInfo = {
+	toolId: TOOLS.SHIKAKU_EACH_REGION_CONTAINS_ONE_SIZE_CIRCLE,
+	order: 0,
+
+	meta: {
+		description:
+			'Each shikaku region contains exactly one circle where a digit in a circle indicates the number of cells in its region.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
+
+export const shikakuEachRegionContainsOneRegionSumClueInfo: AbstractElementInfo = {
+	toolId: TOOLS.SHIKAKU_EACH_REGION_CONTAINS_ONE_REGION_SUM_CLUE,
+	order: 0,
+
+	meta: {
+		description:
+			'Each shikaku region contains exactly one shikaku region sum clue, and each clue indicates the sum of the digits in its shikaku region.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
+	}
+};
+
 export const nurimisakiPathGermanWhispersInfo: AbstractElementInfo = {
 	toolId: TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS,
 	order: 0,

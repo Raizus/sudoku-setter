@@ -63,7 +63,10 @@ export enum NEGATIVE_CONSTRAINTS {
 	ALL_INDEXING_ROW_GIVEN = 'All Indexing Row Given',
 	ALL_YIN_YANG_KROPKI_GIVEN = 'All Yin Yang Kropki Given',
 	ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN = 'All Nurimisaki Unshaded Endpoints Given',
-	ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN = 'All Yin Yang Count Shaded Cells Given'
+	ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN = 'All Yin Yang Count Shaded Cells Given',
+
+	SHIKAKU_EACH_REGION_CONTAINS_ONE_SIZE_CIRCLE = 'Shikaku Each Regions Contains One Size Circle',
+	SHIKAKU_EACH_REGION_CONTAINS_ONE_REGION_SUM_CLUE = 'Shikaku Each Regions Contains One Region Sum Clue'
 }
 
 export enum VALUE_MODIFIER_CONSTRAINTS {
