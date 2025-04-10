@@ -27,6 +27,12 @@
 		<nav class="desktop-nav">
 			<a href="{base}/" class="nav-link">Home</a>
 			<a href="{base}/puzzles" class="nav-link">Puzzles</a>
+			<a
+				href="https://github.com/Raizus/sudoku-setter"
+				class="nav-link"
+				target="_blank"
+				rel="noreferrer noopener">Github</a
+			>
 		</nav>
 
 		<!-- Mobile menu -->
@@ -43,6 +49,13 @@
 				<div class="dropdown-menu">
 					<a href="%base%/" class="nav-link" onclick={() => (isMenuOpen = false)}>Home</a>
 					<a href="%base%/puzzles" class="nav-link" onclick={() => (isMenuOpen = false)}>Puzzles</a>
+					<a
+						href="https://github.com/Raizus/sudoku-setter"
+						class="nav-link"
+						target="_blank"
+						rel="noreferrer noopener"
+						onclick={() => (isMenuOpen = false)}>Github</a
+					>
 				</div>
 			{/if}
 		</div>
@@ -82,7 +95,7 @@
 	.nav-link {
 		color: var(--text-primary-color);
 		text-decoration: none;
-        font-size: 1rem;
+		font-size: 1rem;
 		font-weight: 500;
 		transition: color 0.2s ease;
 		padding: 0.5rem;
@@ -120,7 +133,7 @@
 		min-width: 150px;
 	}
 
-    @include vars.breakpoint-mobile {
+	@include vars.breakpoint-mobile {
 		.desktop-nav {
 			display: none;
 		}
