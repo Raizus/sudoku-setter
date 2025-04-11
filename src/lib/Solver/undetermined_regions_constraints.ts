@@ -244,41 +244,25 @@ function modularLoopConstraint(model: PuzzleModel, tool: TOOLID) {
 }
 
 function exactlyNPerRow(
-	puzzle: PuzzleI,
 	n: number,
 	target: boolean | number,
-	vars_func: (cells: Cell[]) => string
+	grid_name: string
 ) {
-	const grid = puzzle.grid;
-
 	let out_str: string = '';
 	out_str += `% Exactly ${n} per row \n`;
-	const nrows = grid.nRows;
-	for (let i = 0; i < nrows; i++) {
-		const row_cells = grid.getRow(i);
-		const vars_str = vars_func(row_cells);
-		out_str += `constraint count_eq(${vars_str}, ${target}, ${n});\n`;
-	}
+	out_str += `constraint exactly_n_per_row_p(${grid_name}, ${target}, ${n});\n`;
 
 	return out_str;
 }
 
 function exactlyNPerColumn(
-	puzzle: PuzzleI,
 	n: number,
 	target: boolean | number,
-	vars_func: (cells: Cell[]) => string
+	grid_name: string
 ) {
-	const grid = puzzle.grid;
-
 	let out_str: string = '';
 	out_str += `\n% Exactly ${n} per column \n`;
-	const ncols = grid.nCols;
-	for (let i = 0; i < ncols; i++) {
-		const col_cells = grid.getCol(i);
-		const vars_str = vars_func(col_cells);
-		out_str += `constraint count_eq(${vars_str}, ${target}, ${n});\n`;
-	}
+	out_str += `constraint exactly_n_per_column_p(${grid_name}, ${target}, ${n});\n`;
 
 	return out_str;
 }
@@ -287,7 +271,7 @@ function exactlyNPerRegion(
 	puzzle: PuzzleI,
 	n: number,
 	target: boolean | number,
-	vars_func: (cells: Cell[]) => string
+	grid_name: string
 ) {
 	const grid = puzzle.grid;
 
@@ -299,7 +283,7 @@ function exactlyNPerRegion(
 		const regions = grid.getUsedRegions();
 		for (const region of regions) {
 			const region_cells = grid.getRegion(region);
-			const vars_str = vars_func(region_cells);
+			const vars_str = cellsToGridVarsStr(region_cells, grid_name);
 			out_str += `constraint count_eq(${vars_str}, ${target}, ${n});\n`;
 		}
 	}
@@ -311,11 +295,11 @@ function exactlyNPerRowColumnRegion(
 	puzzle: PuzzleI,
 	n: number,
 	target: boolean | number,
-	vars_func: (cells: Cell[]) => string
+	grid_name: string
 ) {
-	let out_str: string = exactlyNPerRow(puzzle, n, target, vars_func);
-	out_str += exactlyNPerColumn(puzzle, n, target, vars_func);
-	out_str += exactlyNPerRegion(puzzle, n, target, vars_func);
+	let out_str: string = exactlyNPerRow(n, target, grid_name);
+	out_str += exactlyNPerColumn(n, target, grid_name);
+	out_str += exactlyNPerRegion(puzzle, n, target, grid_name);
 
 	return out_str;
 }
@@ -332,9 +316,7 @@ function doublersConstraint(model: PuzzleModel, tool: TOOLID) {
 
 	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: doublers_grid;\n`;
-	out_str += exactlyNPerRowColumnRegion(puzzle, 1, true, (cells: Cell[]) =>
-		cellsToGridVarsStr(cells, VAR_2D_NAMES.DOUBLERS)
-	);
+	out_str += exactlyNPerRowColumnRegion(puzzle, 1, true, VAR_2D_NAMES.DOUBLERS);
 	// only one of each digit
 	out_str += `\nconstraint one_of_each_digit_p(board, doublers_grid, ALLOWED_DIGITS);\n`;
 	// values grid
@@ -358,9 +340,7 @@ function negatorsConstraint(model: PuzzleModel, tool: TOOLID) {
 	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: ${grid_name};\n`;
 
-	out_str += exactlyNPerRowColumnRegion(puzzle, 1, true, (cells: Cell[]) =>
-		cellsToGridVarsStr(cells, VAR_2D_NAMES.NEGATORS)
-	);
+	out_str += exactlyNPerRowColumnRegion(puzzle, 1, true, VAR_2D_NAMES.NEGATORS);
 	// only one of each digit
 	out_str += `\nconstraint one_of_each_digit_p(board, ${grid_name}, ALLOWED_DIGITS);\n`;
 	// values grid
@@ -401,9 +381,7 @@ function indexerCellsConstraint(model: PuzzleModel, tool: TOOLID) {
 
 	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: ${name1};\n`;
-	out_str += exactlyNPerRowColumnRegion(puzzle, 2, true, (cells: Cell[]) =>
-		cellsToGridVarsStr(cells, name1)
-	);
+	out_str += exactlyNPerRowColumnRegion(puzzle, 2, true, name1);
 
 	// values grid
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: values_grid;\n`;
@@ -635,12 +613,7 @@ function norinoriConstraint(model: PuzzleModel, tool: TOOLID) {
 
 	const regions = grid.getUsedRegions();
 	if (regions.size) out_str += `\n% Exactly 2 shaded cells per region (known regions)\n`;
-	for (const region of regions) {
-		const region_cells = grid.getRegion(region);
-		const shading_vars = cellsToGridVarsStr(region_cells, VAR_2D_NAMES.NORINORI_SHADING);
-		const constraint = `constraint count_eq(${shading_vars}, 1, 2);\n`;
-		out_str += constraint;
-	}
+	out_str += exactlyNPerRegion(puzzle, 2, 1, VAR_2D_NAMES.NORINORI_SHADING);
 
 	return out_str;
 }
@@ -698,9 +671,7 @@ function litsBlackAndWhiteStarBattleConstraint(model: PuzzleModel, tool: TOOLID)
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name2};\n`;
 
 	// 2 stars per column, row, region
-	out_str += exactlyNPerRowColumnRegion(puzzle, 2, 1, (cells: Cell[]) =>
-		cellsToGridVarsStr(cells, VAR_2D_NAMES.STAR_BATTLE)
-	);
+	out_str += exactlyNPerRowColumnRegion(puzzle, 2, 1, VAR_2D_NAMES.STAR_BATTLE);
 
 	// no touching diagonally or orthogonally
 	out_str += `\n% Star battle stars can't touch orthogonally or diagonally\n`;
@@ -711,13 +682,9 @@ function litsBlackAndWhiteStarBattleConstraint(model: PuzzleModel, tool: TOOLID)
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..2: ${grid_name3};\n`;
 	// 1 white star and 1 black star per column, row, region
 	out_str += `\n% 1 white star per row, column, region\n`;
-	out_str += exactlyNPerRowColumnRegion(puzzle, 1, 1, (cells: Cell[]) =>
-		cellsToGridVarsStr(cells, VAR_2D_NAMES.LITS_WHITE_BLACK_STAR_BATTLE)
-	);
+	out_str += exactlyNPerRowColumnRegion(puzzle, 1, 1, VAR_2D_NAMES.LITS_WHITE_BLACK_STAR_BATTLE);
 	out_str += `\n% 1 black star per row, column, region\n`;
-	out_str += exactlyNPerRowColumnRegion(puzzle, 1, 2, (cells: Cell[]) =>
-		cellsToGridVarsStr(cells, VAR_2D_NAMES.LITS_WHITE_BLACK_STAR_BATTLE)
-	);
+	out_str += exactlyNPerRowColumnRegion(puzzle, 1, 2, VAR_2D_NAMES.LITS_WHITE_BLACK_STAR_BATTLE);
 	out_str += `constraint black_and_white_star_battle_p(${grid_name2}, ${grid_name3});\n`;
 	out_str += `constraint lits_black_and_white_star_battle_p(${grid_name1}, ${grid_name3});\n`;
 
@@ -744,13 +711,9 @@ function norinoriStarBattleConstraint(model: PuzzleModel, tool: TOOLID) {
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name2};\n`;
 
 	// 2 stars per column, row, 1 per region
-	out_str += exactlyNPerColumn(puzzle, 2, 1, (cells: Cell[]) =>
-		cellsToGridVarsStr(cells, grid_name2)
-	);
-	out_str += exactlyNPerRow(puzzle, 2, 1, (cells: Cell[]) => cellsToGridVarsStr(cells, grid_name2));
-	out_str += exactlyNPerRegion(puzzle, 1, 1, (cells: Cell[]) =>
-		cellsToGridVarsStr(cells, grid_name2)
-	);
+	out_str += exactlyNPerColumn(2, 1, grid_name2);
+	out_str += exactlyNPerRow(2, 1, grid_name2);
+	out_str += exactlyNPerRegion(puzzle, 1, 1, grid_name2);
 
 	// no touching diagonally or orthogonally
 	out_str += `\n% Star battle stars can't touch orthogonally or diagonally\n`;

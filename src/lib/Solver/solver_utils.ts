@@ -45,16 +45,16 @@ export enum VAR_2D_NAMES {
 	CONNECT_FOUR = 'connect_four'
 }
 
-export function cellToGridVarName(cell: Cell, name: VAR_2D_NAMES): string {
+export function cellToGridVarName(cell: Cell, name: string): string {
 	return `${name}[${cell.r},${cell.c}]`;
 }
 
-export function cellsToGridVarsName(cells: Cell[], name: VAR_2D_NAMES): string[] {
+export function cellsToGridVarsName(cells: Cell[], name: string): string[] {
 	const vars = cells.map((cell) => cellToGridVarName(cell, name));
 	return vars;
 }
 
-export function cellsToGridVarsStr(cells: Cell[], name: VAR_2D_NAMES): string {
+export function cellsToGridVarsStr(cells: Cell[], name: string): string {
 	const out = '[' + cellsToGridVarsName(cells, name).join(',') + ']';
 	return out;
 }

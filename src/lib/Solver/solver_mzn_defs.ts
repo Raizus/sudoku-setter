@@ -578,7 +578,61 @@ function array[int] of tuple(int,int): neighbour_frontier_f(
     ]
 } in result;\n\n`;
 
-	const helper_p = `predicate multisets_equal_p(array[int] of var int: arr1, array[int] of var int: arr2) =
+    const helper_p = `predicate exactly_n_in_row_p(
+    array[int, int] of var $$T: grid,
+    int: row,
+    var $$T: target,
+    var int: n
+) = let {
+    set of int: cols = index_set_2of2(grid);
+    array[int] of var int: row_vars = [grid[row, c] | c in cols];
+} in (
+    count_eq(row_vars, target, n)
+);
+
+predicate exactly_n_in_column_p(
+    array[int, int] of var $$T: grid,
+    int: column,
+    var $$T: target,
+    var int: n
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    array[int] of var int: col_vars = [grid[r, column] | r in rows];
+} in (
+    count_eq(col_vars, target, n)
+);
+
+predicate exactly_n_per_row_p(
+    array[int, int] of var $$T: grid,
+    var $$T: target,
+    var int: n
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    forall(r in rows)(
+        let {
+            array[int] of var int: row_vars = [grid[r, c] | c in cols];
+        } in count_eq(row_vars, target, n)
+    )
+);
+
+predicate exactly_n_per_column_p(
+    array[int, int] of var $$T: grid,
+    var $$T: target,
+    var int: n
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    forall(c in cols)(
+        let {
+            array[int] of var int: col_vars = [grid[r, c] | r in rows];
+        } in count_eq(col_vars, target, n)
+    )
+);
+
+predicate multisets_equal_p(array[int] of var int: arr1, array[int] of var int: arr2) =
 	forall(i in index_set(arr1)) (
 		let {
 			var int: count1 = count(arr1, arr1[i]),
