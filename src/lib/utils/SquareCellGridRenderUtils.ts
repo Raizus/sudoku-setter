@@ -1,4 +1,5 @@
 import type { PathOptions } from '$lib/Puzzle/Shape/Shape';
+import { DIRECTION } from './directions';
 // import { cloneDeep } from 'lodash';
 import type { GridCoordI } from './SquareCellGridCoords';
 import { Vector2D, type Point } from './Vector2D';
@@ -408,4 +409,27 @@ export function minMaxShape(minMax: 'min' | 'max', r: number, c: number): Vector
 		})
 	);
 	return shape;
+}
+
+export function getArrowHead(l: number, _direction: DIRECTION) {
+	const head = [new Vector2D(-l, 0), new Vector2D(0, 0), new Vector2D(0, l)];
+
+	// Define rotation angles (in radians) for each direction
+	// Starting from East (default) and rotating counterclockwise
+	const rotationAngles = {
+		[DIRECTION.NE]: 0, // 0 degrees (default)
+		[DIRECTION.E]: Math.PI / 4, // 45 degrees
+		[DIRECTION.SE]: Math.PI / 2, // 90 degrees
+		[DIRECTION.S]: (3 * Math.PI) / 4, // 135 degrees
+		[DIRECTION.SW]: Math.PI, // 180 degrees
+		[DIRECTION.W]: (5 * Math.PI) / 4, // 225 degrees
+		[DIRECTION.NW]: (3 * Math.PI) / 2, // 270 degrees
+		[DIRECTION.N]: (7 * Math.PI) / 4 // 315 degrees
+	};
+
+	// Get the rotation angle for the target direction
+	const angle = rotationAngles[_direction];
+	// Rotate each point in the head array
+	const rotatedHead = head.map((p) => p.rotate(angle));
+	return rotatedHead;
 }

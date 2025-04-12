@@ -1,30 +1,34 @@
 <script lang="ts">
 	import { defaultSingleCellMultiArrowShape } from '$lib/Puzzle/Shape/Shape';
-
-	import ArrowMarker from './ArrowMarker.svelte';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { directionToCoords, type GridCoordI } from '$lib/utils/SquareCellGridCoords';
 	import { Vector2D } from '$lib/utils/Vector2D';
 	import {
 		cellToCellCenterVector,
+		getArrowHead,
 		linePointsToPathStr
 	} from '$lib/utils/SquareCellGridRenderUtils';
 	import type { CellMultiArrowToolI } from '$lib/Puzzle/Constraints/SingleCellConstraints';
 	import type { DIRECTION } from '$lib/utils/directions';
 
 	export let tool: CellMultiArrowToolI;
-	export let id: string;
 
 	const cell = tool.cell;
+	const outline = true;
 
 	const defaultShape =
 		getDefaultShape(tool.toolId, squareCellElementHandlers) ??
 		defaultSingleCellMultiArrowShape;
 	$: shape = tool.shape ?? defaultShape;
-
 	$: strokeWidth = shape.strokeWidth ?? 0.08;
 	$: stroke = shape.stroke ?? 'black';
+
+	$: outlineShape = {
+		...shape,
+		stroke: 'var(--grid-background-color)',
+		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.03 : 0.03
+	};
 
 	const arrow_l = 0.2;
 
@@ -39,21 +43,37 @@
 		return line;
 	}
 
-	function getPath(direction: DIRECTION) {
-		return linePointsToPathStr(getLine(cell, direction));
-	}
+	function getArrowPath(_cell: GridCoordI, _direction: DIRECTION) {
+		const l = 0.1;
+		const line = getLine(_cell, _direction);
+		let head = getArrowHead(l, _direction);
+		head = head.map((p) => p.add(line[1]));
 
-	const uid = crypto.randomUUID();
-	const markerId = `single-cell-multi-arrow-marker-${id}-${uid}`;
+		const linePathStr = linePointsToPathStr(line);
+		const headPathStr = linePointsToPathStr(head);
+		const arrowPathStr = linePathStr + headPathStr;
+		return arrowPathStr;
+	}
 </script>
 
-<ArrowMarker id={markerId} l={0.1} {stroke} {strokeWidth} />
+{#if outline}
+	{#each tool.directions as direction}
+		<path
+			d={getArrowPath(cell, direction)}
+			fill="none"
+			stroke={outlineShape.stroke}
+			stroke-width={outlineShape.strokeWidth}
+			stroke-linecap="round"
+		/>
+	{/each}
+{/if}
 {#each tool.directions as direction}
 	<path
-		d={getPath(direction)}
+		d={getArrowPath(cell, direction)}
 		fill="none"
 		{stroke}
 		stroke-width={strokeWidth}
-		marker-end="url(#{markerId})"
+		stroke-linecap="round"
 	/>
 {/each}
+

@@ -30,7 +30,7 @@
 		const newShape = cloneDeep(shape);
 		newShape.r = newShape.r || 0.3;
 		newShape.opacity = 1;
-		newShape.strokeWidth = 0;
+		// newShape.strokeWidth = 0;
 		const shorten = newShape.r;
 		newShape.linePathOptions = {
 			shortenHead: newShape.linePathOptions?.shortenHead || shorten,
