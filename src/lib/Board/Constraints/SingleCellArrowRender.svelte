@@ -13,7 +13,6 @@
 	import { DIRECTION } from '$lib/utils/directions';
 
 	export let tool: CellArrowToolI;
-	export let id: string;
 
 	const outline = true;
 	const cell = tool.cell;

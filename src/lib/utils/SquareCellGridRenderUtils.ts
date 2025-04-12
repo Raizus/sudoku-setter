@@ -417,7 +417,7 @@ export function getArrowHead(l: number, _direction: DIRECTION) {
 	// Define rotation angles (in radians) for each direction
 	// Starting from East (default) and rotating counterclockwise
 	const rotationAngles = {
-		[DIRECTION.NE]: 0, // 0 degrees (default)
+		[DIRECTION.NE]: 0, // 0 degrees
 		[DIRECTION.E]: Math.PI / 4, // 45 degrees
 		[DIRECTION.SE]: Math.PI / 2, // 90 degrees
 		[DIRECTION.S]: (3 * Math.PI) / 4, // 135 degrees

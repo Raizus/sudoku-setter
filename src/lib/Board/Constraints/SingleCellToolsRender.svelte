@@ -12,9 +12,9 @@
 		<g class={`element-group ${toolId}`}>
 			{#each Object.entries(element) as entry (entry[0])}
 				{#if entry[1].type === 'ARROW'}
-					<SingleCellArrowRender tool={entry[1]} id={entry[0]} />
+					<SingleCellArrowRender tool={entry[1]} />
 				{:else if entry[1].type === 'MULTIARROW'}
-					<SingleCellMultiArrowRender tool={entry[1]} id={entry[0]} />
+					<SingleCellMultiArrowRender tool={entry[1]} />
 				{:else if entry[1].type === 'SIMPLE'}
 					<SingleCellToolRender tool={entry[1]} id={entry[0]} />
 				{/if}
