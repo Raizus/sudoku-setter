@@ -9,8 +9,6 @@
 	import GridRegionsRender from './GridLines/GridRegionsRender.svelte';
 	import SelectionRender from './SelectionRender.svelte';
 	import BoardBackground from './BoardBackground.svelte';
-	import ArrowToolsRender from './Constraints/ArrowToolsRender.svelte';
-	import SingleCellToolsRender from './Constraints/SingleCellToolsRender.svelte';
 	import CellValuesRender from './CellRender/CellValuesRender.svelte';
 	import HighlightsRender from './CellRender/HighlightsRender.svelte';
 	import { isOutsideDirectionTool, type TOOLID } from '$lib/Puzzle/Tools';
@@ -23,8 +21,9 @@
 	import FogDefs from './FogDefs.svelte';
 	import FogCover from './FogCover.svelte';
 	import SolutionRender from './SolutionRender.svelte';
-	import GenericToolsRender from './Constraints/GenericToolsRender.svelte';
+	import ToolsLayerRender from './Constraints/ToolsLayerRender.svelte';
 	import {
+	arrowToolsStore,
 		cageToolsStore,
 		centerCornerOrEdgeToolsStore,
 		cloneToolsStore,
@@ -32,7 +31,10 @@
 		cornerToolsStore,
 		edgeToolsStore,
 		lineToolsStore,
-		outsideDirectionToolsStore
+		outsideDirectionToolsStore,
+
+		singleCellToolsStore
+
 	} from '$stores/ElementsStore.js';
 	import EdgeToolRender from './Constraints/EdgeToolRender.svelte';
 	import CornerToolRender from './Constraints/CornerToolRender.svelte';
@@ -42,6 +44,8 @@
 	import CloneToolRender from './Constraints/CloneToolRender.svelte';
 	import OutsideDirectionToolRender from './Constraints/OutsideDirectionToolRender.svelte';
 	import CornerLineToolRender from './Constraints/CornerLineToolRender.svelte';
+	import SingleCellToolRender from './Constraints/SingleCellToolRender.svelte';
+	import ArrowToolRender from './Constraints/ArrowToolRender.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 
@@ -106,27 +110,39 @@
 
 	<SeenCellsRender />
 
-	<SingleCellToolsRender />
+	<!-- <SingleCellToolsRender /> -->
+	<ToolsLayerRender
+		elements={$singleCellToolsStore}
+		g_name={'single-cell-tools-layer'}
+		Component={SingleCellToolRender}
+	/>
 
 	<!-- CageToolsRender -->
-	<GenericToolsRender
+	<ToolsLayerRender
 		elements={$cageToolsStore}
 		g_name={'cage-tools-layer'}
 		Component={CageToolRender}
 	/>
 
 	<!-- LineToolsRender -->
-	<GenericToolsRender
+	<ToolsLayerRender
 		elements={$lineToolsStore}
 		g_name={'line-tools-layer'}
 		Component={LineToolRender}
 	/>
 
 	<!-- CloneToolsRender -->
-	<GenericToolsRender
+	<ToolsLayerRender
 		elements={$cloneToolsStore}
 		g_name={'clone-tools-layer'}
 		Component={CloneToolRender}
+	/>
+
+	<!-- <ArrowToolsRender/> -->
+	<ToolsLayerRender
+		elements={$arrowToolsStore}
+		g_name={'arrow-tools-layer'}
+		Component={ArrowToolRender}
 	/>
 
 	<GridLinesRender />
@@ -134,16 +150,14 @@
 	<GridRegionsRender />
 
 	<!-- CornerLineToolsRender -->
-	<GenericToolsRender
+	<ToolsLayerRender
 		elements={$cornerLineToolsStore}
 		g_name={'corner-line-tools-layer'}
 		Component={CornerLineToolRender}
 	/>
 
-	<ArrowToolsRender {boundingBox} />
-
 	<!-- OutsideDirectionToolsRender -->
-	<GenericToolsRender
+	<ToolsLayerRender
 		elements={$outsideDirectionToolsStore}
 		g_name={'outside-direction-tools-layer'}
 		Component={OutsideDirectionToolRender}
@@ -153,19 +167,21 @@
 	<CursorRender />
 
 	<!-- EdgeToolsRender -->
-	<GenericToolsRender
+	<ToolsLayerRender
 		elements={$edgeToolsStore}
 		g_name={'edge-tools-layer'}
 		Component={EdgeToolRender}
 	/>
+
 	<!-- CornerToolsRender -->
-	<GenericToolsRender
+	<ToolsLayerRender
 		elements={$cornerToolsStore}
 		g_name={'corner-tools-layer'}
 		Component={CornerToolRender}
 	/>
+
 	<!-- CenterCornerOrEdgeToolsRender -->
-	<GenericToolsRender
+	<ToolsLayerRender
 		elements={$centerCornerOrEdgeToolsStore}
 		g_name={'center-corner-edge-tools-layer'}
 		Component={CenterCornerOrEdgeToolRender}

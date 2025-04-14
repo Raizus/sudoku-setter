@@ -1,17 +1,12 @@
 <script lang="ts">
 	import type { ArrowToolI } from '$lib/Puzzle/Constraints/ArrowConstraints';
 	import type { ShapeI } from '$lib/Puzzle/Shape/Shape';
-	import type { Rectangle } from '$lib/Types/types';
 	import { cellsLineToPathStr } from '$lib/utils/SquareCellGridRenderUtils';
 	import ArrowMarker from './ArrowMarker.svelte';
 
 	export let tool: ArrowToolI;
 	export let c_id: string;
-	export let boundingBox: Rectangle;
 	export let shape: ShapeI;
-
-	$: bbx = boundingBox.x;
-	$: bby = boundingBox.y;
 
 	$: bulbRadius = shape?.r ?? 0.4;
 	$: stroke = shape?.stroke ?? 'gray';
@@ -33,8 +28,8 @@
 	const arrowMarkerId = `arrow-marker-${c_id}-${uid}`;
 </script>
 
-<mask id={arrowMaskId} maskUnits="userSpaceOnUse" x={bbx} y={bby} width="100%" height="100%">
-	<rect x={bbx} y={bby} width="100%" height="100%" fill="white" />
+<mask id={arrowMaskId} maskUnits="userSpaceOnUse" x="0%" y="0%" width="100%" height="100%">
+	<rect x="0%" y="0%" width="100%" height="100%" fill="white" />
 	<path
 		class="arrow-bulb"
 		stroke-width={2 * bulbRadius - strokeWidth}

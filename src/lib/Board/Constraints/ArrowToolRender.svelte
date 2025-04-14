@@ -3,14 +3,12 @@
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { defaultArrowShape, SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
-	import type { Rectangle } from '$lib/Types/types';
 	import BulbousArrowRender from './BulbousArrowRender.svelte';
 	import SimpleArrowToolRender from './SimpleArrowToolRender.svelte';
 	import { currentConstraintStore } from '$stores/BoardStore';
 
 	export let tool: ArrowToolI;
 	export let c_id: string;
-	export let boundingBox: Rectangle;
 	
 	const outline = true;
 	const defaultShape = getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultArrowShape;
@@ -32,14 +30,14 @@
 
 <g class="arrow-tool">
 	{#if shape.type === SHAPE_TYPES.BULBOUS_ARROW}
-		<BulbousArrowRender {tool} arrowId={c_id} {boundingBox}/>
+		<BulbousArrowRender {tool} arrowId={c_id}/>
 	{:else}
 		{#if outline}
-			<SimpleArrowToolRender {tool} c_id={c_id} {boundingBox} shape={outlineShape}/>
+			<SimpleArrowToolRender {tool} c_id={c_id} shape={outlineShape}/>
 		{/if}
 		{#if c_id === currentConstraintId}
-			<SimpleArrowToolRender {tool} c_id={c_id} {boundingBox} shape={selectedOutlineShape}/>
+			<SimpleArrowToolRender {tool} c_id={c_id} shape={selectedOutlineShape}/>
 		{/if}
-		<SimpleArrowToolRender {tool} c_id={c_id} {boundingBox} {shape}/>
+		<SimpleArrowToolRender {tool} c_id={c_id} {shape}/>
 	{/if}
 </g>

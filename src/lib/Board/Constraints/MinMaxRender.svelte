@@ -1,5 +1,4 @@
 <script lang="ts">
-	import SquareRender from '$components/SvgRender/SquareRender.svelte';
 	import type { SingleCellTool } from '$src/lib/Puzzle/Constraints/SingleCellConstraints';
 	import { areCoordsEqual, type GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
 	import { minMaxShape, pointsToPathStr } from '$src/lib/utils/SquareCellGridRenderUtils';

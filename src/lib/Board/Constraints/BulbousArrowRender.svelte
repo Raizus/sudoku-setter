@@ -15,13 +15,9 @@
 
 	export let tool: ArrowToolI;
 	export let arrowId: string;
-	export let boundingBox: Rectangle;
 
 	const defaultShape = getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultArrowShape;
 	$: shape = tool.shape ?? defaultShape;
-
-	$: bbx = boundingBox.x;
-	$: bby = boundingBox.y;
 
 	$: bulbRadius = shape?.r ?? 0.4;
 	$: stroke = shape?.stroke ?? 'gray';
@@ -53,8 +49,8 @@
 	const arrowMarkerId = `arrow-marker-${arrowId}-${uid}`;
 </script>
 
-<mask id={arrowMaskId} maskUnits="userSpaceOnUse" x={bbx} y={bby} width="100%" height="100%">
-	<rect x={bbx} y={bby} width="100%" height="100%" fill="white" />
+<mask id={arrowMaskId} maskUnits="userSpaceOnUse" x="0%" y="0%" width="100%" height="100%">
+	<rect x="0%" y="0%" width="100%" height="100%" fill="white" />
 	<path
 		class="arrow-bulb"
 		stroke-width={2 * bulbRadius - strokeWidth}
