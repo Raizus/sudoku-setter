@@ -53,7 +53,7 @@
 	<svelte:fragment slot="panel-content">
 		<ToolSelectorButton elementInfo={getToolInfo(TOOLS.GIVEN, elementHandlers)} />
 		<ToolSelectorButton elementInfo={getToolInfo(TOOLS.REGIONS, elementHandlers)} />
-		<ToolSelectorButton elementInfo={getToolInfo(TOOLS.FOG, elementHandlers)} />
+		<!-- <ToolSelectorButton elementInfo={getToolInfo(TOOLS.FOG, elementHandlers)} /> -->
 
 		{#each $localConstraintsStore.entries() as [toolId, value] (toolId)}
 			{#if isLocalConstraint(toolId)}
