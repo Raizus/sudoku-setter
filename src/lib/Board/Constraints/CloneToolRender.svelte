@@ -6,12 +6,21 @@
 	import CageRender from './CageRender.svelte';
 	import CellTextLabelRender from './CellTextLabelRender.svelte';
 	import { Vector2D } from '$src/lib/utils/Vector2D';
+	import { currentConstraintStore } from '$stores/BoardStore';
 
 	export let tool: CloneToolI;
+	export let c_id: string;
 
-	const defaultShape =
-		getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultCloneShape;
+	$: currentConstraintId = $currentConstraintStore?.id;
+
+	const defaultShape = getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultCloneShape;
 	$: shape = tool.shape ?? defaultShape;
+
+	$: selectedOutlineShape = {
+		...shape,
+		stroke: 'var(--constraint-selected-color)',
+		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.07 : 0.07
+	};
 
 	$: inset = shape.inset ?? 0.15;
 	$: strokeWidth = shape.strokeWidth ?? 0.07;
@@ -26,21 +35,27 @@
 	$: cell2TL = new Vector2D(cell2.c + 1 - inset - 0.05, cell2.r + 1 - inset - 0.05);
 </script>
 
-<CageRender cells={tool.cells} {shape} />
-<CellTextLabelRender
-	value={label}
-	x={cell1TL.x}
-	y={cell1TL.y}
-	position="BR"
-	fontColor={textColor}
-	{fontWeight}
-/>
-<CageRender cells={tool.cells2} {shape} />
-<CellTextLabelRender
-	value={label}
-	x={cell2TL.x}
-	y={cell2TL.y}
-	position="BR"
-	fontColor={textColor}
-	{fontWeight}
-/>
+<g class="clone-tool">
+	{#if c_id === currentConstraintId}
+		<CageRender cells={tool.cells} shape={selectedOutlineShape} />
+		<CageRender cells={tool.cells2} shape={selectedOutlineShape} />
+	{/if}
+	<CageRender cells={tool.cells} {shape} />
+	<CellTextLabelRender
+		value={label}
+		x={cell1TL.x}
+		y={cell1TL.y}
+		position="BR"
+		fontColor={textColor}
+		{fontWeight}
+	/>
+	<CageRender cells={tool.cells2} {shape} />
+	<CellTextLabelRender
+		value={label}
+		x={cell2TL.x}
+		y={cell2TL.y}
+		position="BR"
+		fontColor={textColor}
+		{fontWeight}
+	/>
+</g>

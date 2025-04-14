@@ -11,7 +11,7 @@
 	{#each elements as { toolId, element }}
 		<g class={`element-group ${toolId}`}>
 			{#each Object.entries(element) as entry (entry[0])}
-				<ArrowToolRender arrowId={entry[0]} tool={entry[1]} {boundingBox} />
+				<ArrowToolRender c_id={entry[0]} tool={entry[1]} {boundingBox} />
 			{/each}
 		</g>
 	{/each}

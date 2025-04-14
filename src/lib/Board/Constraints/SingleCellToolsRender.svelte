@@ -16,7 +16,7 @@
 				{:else if entry[1].type === 'MULTIARROW'}
 					<SingleCellMultiArrowRender tool={entry[1]} />
 				{:else if entry[1].type === 'SIMPLE'}
-					<SingleCellToolRender tool={entry[1]} id={entry[0]} />
+					<SingleCellToolRender tool={entry[1]} c_id={entry[0]} />
 				{/if}
 			{/each}
 		</g>

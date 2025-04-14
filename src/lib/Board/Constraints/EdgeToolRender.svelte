@@ -12,14 +12,23 @@
 	import { vectorAverage } from '$lib/utils/Vector2D';
 	import BorderLineRender from './BorderLineRender.svelte';
 	import RenderShape from '$components/SvgRender/RenderShape.svelte';
+	import { currentConstraintStore } from '$stores/BoardStore';
 
 	export let tool: EdgeToolI;
+	export let c_id: string;
 
-	const coords = tool.cells;
+	$: currentConstraintId = $currentConstraintStore?.id;
+
 	const defaultShape =
 		getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultEdgeCircleShape;
 	$: shape = tool.shape ?? defaultShape;
+	$: selectedOutlineShape = {
+		...shape,
+		stroke: 'var(--constraint-selected-color)',
+		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.07 : 0.07
+	};
 
+	const coords = tool.cells;
 	$: center = vectorAverage(cellsToVector2DPoints(coords));
 
 	// maybe adjust fontSize to shape size?
@@ -49,13 +58,25 @@
 {#if coords.length === 2}
 	<g class="edge-tool">
 		{#if tool.toolId === TOOLS.EDGE_INEQUALITY || tool.toolId === TOOLS.ONE_WAY_DOOR}
+			{#if c_id === currentConstraintId}
+				<CircleRender x={center.x} y={center.y} shape={selectedOutlineShape} />
+			{/if}
 			<CircleRender x={center.x} y={center.y} {shape} />
 		{:else if type === SHAPE_TYPES.TEXT_ONLY}
+			{#if c_id === currentConstraintId}
+				<CircleRender x={center.x} y={center.y} shape={selectedOutlineShape} />
+			{/if}
 			<CircleRender x={center.x} y={center.y} {shape} />
 		{:else if type === SHAPE_TYPES.BORDER_LINE}
+			{#if c_id === currentConstraintId}
+				<BorderLineRender {coords} shape={selectedOutlineShape} />
+			{/if}
 			<BorderLineRender {coords} {shape} />
 		{:else}
-			<RenderShape cx={center.x} cy={center.y} {shape}/>
+			{#if c_id === currentConstraintId}
+				<RenderShape cx={center.x} cy={center.y} shape={selectedOutlineShape} />
+			{/if}
+			<RenderShape cx={center.x} cy={center.y} {shape} />
 		{/if}
 		<text
 			x={center.x}

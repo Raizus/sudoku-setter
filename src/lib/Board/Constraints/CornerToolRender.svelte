@@ -8,15 +8,25 @@
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 	import QuadrupleTextRender from './QuadrupleTextRender.svelte';
 	import RenderShape from '$components/SvgRender/RenderShape.svelte';
+	import { currentConstraintStore } from '$stores/BoardStore';
 
 	export let tool: CornerToolI;
+	export let c_id: string;
+
+	$: currentConstraintId = $currentConstraintStore?.id;
+
+	const defaultShape =
+	getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultCornerCircleShape;
+	$: shape = tool.shape ?? defaultShape;
+	$: type = shape?.type ?? SHAPE_TYPES.CIRCLE;
+
+	$: selectedOutlineShape = {
+		...shape,
+		stroke: 'var(--constraint-selected-color)',
+		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.07 : 0.07
+	};
 
 	const coords = tool.cells;
-	const defaultShape =
-		getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultCornerCircleShape;
-	$: shape = tool.shape ?? defaultShape;
-
-	$: type = shape?.type ?? SHAPE_TYPES.CIRCLE;
 	const center = new Vector2D(coords[coords.length - 1].c, coords[coords.length - 1].r);
 
 	$: fontSize = shape?.fontSize ?? 0.2;
@@ -32,6 +42,9 @@
 
 {#if coords.length === 4}
 	<g class="corner-tool">
+		{#if c_id === currentConstraintId}
+			<RenderShape cx={center.x} cy={center.y} shape={selectedOutlineShape} />
+		{/if}
 		<RenderShape cx={center.x} cy={center.y} {shape} />
 		<!-- render text -->
 		{#if tool.toolId === TOOLS.QUADRUPLE}

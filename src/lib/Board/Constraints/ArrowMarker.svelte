@@ -18,5 +18,5 @@
 	markerHeight={1}
 	orient="auto"
 >
-	<path d={markerPath} fill="none" stroke-width={strokeWidth} {stroke} stroke-linejoin="miter" />
+	<path d={markerPath} fill="none" stroke-width={strokeWidth} {stroke} stroke-linejoin="miter" stroke-linecap='round'/>
 </marker>

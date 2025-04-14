@@ -4,10 +4,13 @@
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import type { CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/Constraints/CenterCornerOrEdgeConstraints';
 	import RenderShape from '$components/SvgRender/RenderShape.svelte';
-	import { cellNotOnTheLoopInfo } from '$src/lib/Puzzle/ElementsInfo/SingleCellElementsInfo';
 	import CellTextLabelRender from './CellTextLabelRender.svelte';
+	import { currentConstraintStore } from '$stores/BoardStore';
 
 	export let tool: CenterCornerOrEdgeToolI;
+	export let c_id: string;
+
+	$: currentConstraintId = $currentConstraintStore?.id;
 
 	const coords = tool.cell;
 	const defaultShape =
@@ -15,8 +18,13 @@
 		defaultEdgeCircleShape;
 	$: shape = tool.shape ?? defaultShape;
 
-	$: center = coords;
+	$: selectedOutlineShape = {
+		...shape,
+		stroke: 'var(--constraint-selected-color)',
+		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.07 : 0.07
+	};
 
+	$: center = coords;
 	$: type = shape?.type || SHAPE_TYPES.CIRCLE;
 	$: fontSize = shape?.fontSize ?? 0.2;
 	$: fontColor = shape?.fontColor ?? 'black';
@@ -32,6 +40,9 @@
 </script>
 
 <g class="center-corner-or-edge-tool">
+	{#if c_id === currentConstraintId}
+		<RenderShape cx={center.c} cy={center.r} shape={selectedOutlineShape}  />
+	{/if}
 	<RenderShape cx={center.c} cy={center.r} {shape} />
 	{#if isCellCenter}
 		<CellTextLabelRender

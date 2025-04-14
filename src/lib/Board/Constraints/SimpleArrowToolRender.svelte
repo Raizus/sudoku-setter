@@ -1,18 +1,14 @@
 <script lang="ts">
 	import type { ArrowToolI } from '$lib/Puzzle/Constraints/ArrowConstraints';
-	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
-	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
-	import { defaultArrowShape } from '$lib/Puzzle/Shape/Shape';
+	import type { ShapeI } from '$lib/Puzzle/Shape/Shape';
 	import type { Rectangle } from '$lib/Types/types';
 	import { cellsLineToPathStr } from '$lib/utils/SquareCellGridRenderUtils';
 	import ArrowMarker from './ArrowMarker.svelte';
 
 	export let tool: ArrowToolI;
-	export let arrowId: string;
+	export let c_id: string;
 	export let boundingBox: Rectangle;
-
-	const defaultShape = getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultArrowShape;
-	$: shape = tool.shape ?? defaultShape;
+	export let shape: ShapeI;
 
 	$: bbx = boundingBox.x;
 	$: bby = boundingBox.y;
@@ -21,7 +17,6 @@
 	$: stroke = shape?.stroke ?? 'gray';
 	$: strokeWidth = shape?.strokeWidth ?? 0.1;
 	$: strokeDasharray = shape?.strokeDasharray ?? 0;
-	$: opacity = shape?.opacity ?? 0.8;
 	$: linePathOptions = {
 		shortenHead: bulbRadius,
 		shortenTail: shape?.linePathOptions?.shortenTail ?? 0.2,
@@ -34,8 +29,8 @@
 	$: bulbPath = cellsLineToPathStr(tool.cells);
 
 	const uid = crypto.randomUUID();
-	const arrowMaskId = `arrow-mask-${arrowId}-${uid}`;
-	const arrowMarkerId = `arrow-marker-${arrowId}-${uid}`;
+	const arrowMaskId = `arrow-mask-${c_id}-${uid}`;
+	const arrowMarkerId = `arrow-marker-${c_id}-${uid}`;
 </script>
 
 <mask id={arrowMaskId} maskUnits="userSpaceOnUse" x={bbx} y={bby} width="100%" height="100%">
@@ -64,7 +59,6 @@
 			{stroke}
 			stroke-width={strokeWidth}
 			fill="none"
-			{opacity}
 			stroke-dasharray={strokeDasharray}
 			stroke-linejoin={strokeLinejoin}
 			stroke-linecap={strokeLinecap}
