@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { cellToCellCenterVector, cellsLineToPathStr } from '$lib/utils/SquareCellGridRenderUtils';
+	import { cellToCellCenterVector, getArrowHead, linePointsToPathStr } from '$lib/utils/SquareCellGridRenderUtils';
 	import type { OutsideDirectionToolI } from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { defaultOutsideShape } from '$lib/Puzzle/Shape/Shape';
-	import { gridCoordsNextInDirection } from '$lib/utils/SquareCellGridCoords';
-	import ArrowMarker from './ArrowMarker.svelte';
+	import { directionToCoords, gridCoordsNextInDirection, type GridCoordI } from '$lib/utils/SquareCellGridCoords';
+	import type { DIRECTION } from '$src/lib/utils/directions';
+	import { Vector2D } from '$src/lib/utils/Vector2D';
 
 	export let tool: OutsideDirectionToolI;
 
@@ -28,36 +29,34 @@
 		return tool.value ? (tool.value.length ? tool.value : '-') : '-';
 	}
 
-	function getLinePath() {
-		const p2 = cellToCellCenterVector(coords2);
-		const dv = p2.subtract(center);
-		const l = dv.length()
-		const linePathOptions = {
-			shortenHead: 0.3*l,
-			shortenTail: 0.55*l
-		};
-		const linePath = cellsLineToPathStr([coords, coords2], linePathOptions);
-		return linePath;
+	function getLine(_cell: GridCoordI, _direction: DIRECTION) {
+		const delta = directionToCoords(_direction);
+		const vec = new Vector2D(delta.c, delta.r).normalise();
+		const cellCenter = cellToCellCenterVector(_cell);
+
+		const p1 = cellCenter.add(vec.scale(0.35));
+		const p2 = cellCenter.add(vec.scale(0.58));
+		const line = [p1, p2];
+		return line;
 	}
 
-	const uid = crypto.randomUUID();
-	const markerId = `outside-tool-arrow-marker-${uid}`;
+	function getArrowPath(_cell: GridCoordI, _direction: DIRECTION) {
+		const l = 0.12;
+		const line = getLine(_cell, _direction);
+		let head = getArrowHead(l, _direction);
+		head = head.map((p) => p.add(line[1]));
+
+		const linePathStr = linePointsToPathStr(line);
+		const headPathStr = linePointsToPathStr(head);
+		const arrowPathStr = linePathStr + headPathStr;
+		return arrowPathStr;
+	}
+
+	$: arrowPathStr = getArrowPath(coords, direction);
 </script>
 
 <g class="outside-direction-tool">
-	<ArrowMarker
-		id={markerId}
-		l={0.07}
-		strokeWidth={arrowStrokeWidth}
-		{stroke}
-	/>
-	<path
-		d={getLinePath()}
-		stroke-width={arrowStrokeWidth}
-		fill="none"
-		{stroke}
-		marker-end="url(#{markerId})"
-	/>
+	<path d={arrowPathStr} fill="none" {stroke} stroke-width={arrowStrokeWidth} stroke-linecap="round"/>
 	<text
 		x={center.x}
 		y={center.y}
