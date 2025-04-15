@@ -1,11 +1,8 @@
 import {
-	getClosestCell,
-	getClosestCellCenter,
-	getClosestCorner,
-	getClosestEdge,
+	getClosestCellFeature,
 	pointerEventToVector2D
 } from '$src/lib/InputHandlers/PointerEventUtils';
-import type { GridCoordI } from '$lib/utils/SquareCellGridCoords';
+import { areCoordsEqual, type GridCoordI } from '$lib/utils/SquareCellGridCoords';
 import { CornerOrEdge } from '$input/ToolInputHandlers/types';
 
 export interface CellEdgeCornerEvent {
@@ -21,76 +18,50 @@ export interface CellEdgeCornerEvent {
 
 export class CellFeaturePointerHandler {
 	onDragStart: null | ((event: CellEdgeCornerEvent) => void) = null;
-	target: CornerOrEdge;
+	onMove: null | ((event: CellEdgeCornerEvent) => void) = null;
+
+	feature: CornerOrEdge;
+	private _prevCoord: GridCoordI | null = null;
 
 	constructor(cornerOrEdge: CornerOrEdge) {
-		this.target = cornerOrEdge;
+		this.feature = cornerOrEdge;
 	}
 
 	pointerDown(event: PointerEvent, svgRef: SVGSVGElement): void {
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
-		const edgeInfo = getClosestEdge(point, undefined);
-		if (!edgeInfo) return;
+		const cell_feature = getClosestCellFeature(point, this.feature);
+		if (!cell_feature) return;
 
-		const cornerInfo = getClosestCorner(point, undefined);
-		if (!cornerInfo) return;
-
-		const cellInfo = getClosestCell(point, false);
-		if (!cellInfo) return;
-
-		const cellCenterInfo = getClosestCellCenter(point, undefined);
-		if (!cellCenterInfo) return;
-
-		let closestCoord: GridCoordI;
-		if (this.target === CornerOrEdge.CORNER) {
-			closestCoord = cornerInfo.corner;
-		} else if (this.target === CornerOrEdge.EDGE) {
-			closestCoord = edgeInfo.edge;
-		} else if (this.target === CornerOrEdge.CELL_CENTER) {
-			closestCoord = cellCenterInfo.cellCenter;
-		} else if (this.target === CornerOrEdge.CORNER_OR_EDGE) {
-			if (cornerInfo.dist < edgeInfo.dist) closestCoord = cornerInfo.corner;
-			else closestCoord = edgeInfo.edge;
-		} else if (this.target === CornerOrEdge.CORNER_OR_CENTER) {
-			if (cornerInfo.dist < cellCenterInfo.dist) closestCoord = cornerInfo.corner;
-			else closestCoord = cellCenterInfo.cellCenter;
-		} else if (this.target === CornerOrEdge.EDGE_OR_CENTER) {
-			if (edgeInfo.dist < cellCenterInfo.dist) closestCoord = edgeInfo.edge;
-			else closestCoord = cellCenterInfo.cellCenter;
-		} else {
-			// closest
-			if (edgeInfo.dist < cornerInfo.dist && edgeInfo.dist < cellCenterInfo.dist)
-				closestCoord = edgeInfo.edge;
-			else if (cornerInfo.dist < edgeInfo.dist && cornerInfo.dist < cellCenterInfo.dist)
-				closestCoord = cornerInfo.corner;
-			else closestCoord = cellCenterInfo.cellCenter;
-		}
-
-		let edgeOrCorner: 'edge' | 'corner' =
-			this.target === CornerOrEdge.CORNER || this.target === CornerOrEdge.CORNER_OR_CENTER
-				? 'corner'
-				: 'edge';
-		if (
-			(this.target === CornerOrEdge.CORNER_OR_EDGE || this.target === CornerOrEdge.CLOSEST) &&
-			cornerInfo.dist < edgeInfo.dist
-		)
-			edgeOrCorner = 'corner';
-
-		const dirIdx = edgeOrCorner === 'edge' ? 2 * edgeInfo.idx : 2 * cornerInfo.idx + 1;
-
-		const hexEdgeCornerEvent: CellEdgeCornerEvent = {
+		const cellEdgeCornerEvent: CellEdgeCornerEvent = {
 			event,
-			cell: cellInfo.cell,
-			edge: edgeInfo.edge,
-			corner: cornerInfo.corner,
-			closest: closestCoord,
-			edgeIdx: edgeInfo.idx,
-			cornerIdx: cornerInfo.idx,
-			direction: dirIdx
+			...cell_feature
 		};
 
-		if (this.onDragStart) this.onDragStart(hexEdgeCornerEvent);
+		this._prevCoord = cell_feature.closest;
+
+		if (this.onDragStart) this.onDragStart(cellEdgeCornerEvent);
+	}
+
+	pointerMove(event: PointerEvent, svgRef: SVGSVGElement): void {
+		const point = pointerEventToVector2D(event, svgRef);
+		if (!point) return;
+
+		const cell_feature = getClosestCellFeature(point, this.feature);
+		if (!cell_feature) return;
+
+		// if the new coord is the same as the old one don't to anything
+		if (this._prevCoord && areCoordsEqual(cell_feature.closest, this._prevCoord)) {
+			return;
+		}
+
+		const cellEdgeCornerEvent: CellEdgeCornerEvent = {
+			event,
+			...cell_feature
+		};
+		this._prevCoord = cell_feature.corner;
+
+		if (this.onMove) this.onMove(cellEdgeCornerEvent);
 	}
 }

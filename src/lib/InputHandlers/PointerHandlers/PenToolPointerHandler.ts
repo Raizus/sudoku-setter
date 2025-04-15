@@ -1,6 +1,7 @@
 import { getClosestCellFeature, pointerEventToVector2D } from '$src/lib/InputHandlers/PointerEventUtils';
 import { isValidLinemarker } from '$lib/Puzzle/PenTool';
 import { areCoordsEqual, type GridCoordI } from '$lib/utils/SquareCellGridCoords';
+import { CornerOrEdge } from '$input/ToolInputHandlers/types';
 
 type CellFeature = 'corner' | 'edge' | 'cell center';
 
@@ -33,16 +34,16 @@ export class PenToolPointerHandler {
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
-		const cellFeatureInfo = getClosestCellFeature(point, false);
+		const cellFeatureInfo = getClosestCellFeature(point, CornerOrEdge.CLOSEST);
 		if (!cellFeatureInfo) return;
 
 		const penToolTapEvent: PenToolTapEvent = {
-			coords: cellFeatureInfo.target,
+			coords: cellFeatureInfo.closest,
 			type: cellFeatureInfo.type
 		};
 
 		this._prevType = cellFeatureInfo.type;
-		this._prevCoords = cellFeatureInfo.target;
+		this._prevCoords = cellFeatureInfo.closest;
 
 		if (this.onDragStart) this.onDragStart(penToolTapEvent);
 	}
@@ -53,14 +54,14 @@ export class PenToolPointerHandler {
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
-		const cellFeatureInfo = getClosestCellFeature(point, false);
+		const cellFeatureInfo = getClosestCellFeature(point, CornerOrEdge.CLOSEST);
 		if (!cellFeatureInfo) return;
 
-		if (this._prevCoords && areCoordsEqual(this._prevCoords, cellFeatureInfo.target)) return;
+		if (this._prevCoords && areCoordsEqual(this._prevCoords, cellFeatureInfo.closest)) return;
 		this._isTap = false;
 
 		const penToolDragEvent: PenToolDragEvent = {
-            coords: cellFeatureInfo.target,
+            coords: cellFeatureInfo.closest,
             prevCoords: this._prevCoords as GridCoordI,
 			type: cellFeatureInfo.type
 		};
@@ -69,7 +70,7 @@ export class PenToolPointerHandler {
 		// drag between the corners of the same cell
 		if (
 			this._prevCoords &&
-			isValidLinemarker(this._prevCoords, cellFeatureInfo.target) &&
+			isValidLinemarker(this._prevCoords, cellFeatureInfo.closest) &&
 			(cellFeatureInfo.type === 'cell center' || cellFeatureInfo.type === 'corner')
 		) {
 			if (this.onDrag) this.onDrag(penToolDragEvent);
@@ -78,7 +79,7 @@ export class PenToolPointerHandler {
 		}
 
 		this._prevType = cellFeatureInfo.type;
-		this._prevCoords = cellFeatureInfo.target;
+		this._prevCoords = cellFeatureInfo.closest;
 	}
 
 	pointerUp(event: PointerEvent, svgRef: SVGSVGElement): void {
@@ -90,18 +91,18 @@ export class PenToolPointerHandler {
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
-		const cellFeatureInfo = getClosestCellFeature(point, false);
+		const cellFeatureInfo = getClosestCellFeature(point, CornerOrEdge.CLOSEST);
 		if (!cellFeatureInfo) return;
 
 		const penToolTapEvent: PenToolTapEvent = {
-			coords: cellFeatureInfo.target,
+			coords: cellFeatureInfo.closest,
 			type: cellFeatureInfo.type
 		};
 
 		if (
 			this._isTap &&
 			this._prevCoords &&
-			areCoordsEqual(this._prevCoords, cellFeatureInfo.target)
+			areCoordsEqual(this._prevCoords, cellFeatureInfo.closest)
 		) {
 			if(this.onTap) this.onTap(penToolTapEvent);
 			this._isTap = false;

@@ -5,6 +5,7 @@ import {
 	cellCoordToCornerCoords
 } from '$lib/utils/SquareCellGridCoords';
 import { Vector2D } from '$lib/utils/Vector2D';
+import { CornerOrEdge } from './ToolInputHandlers/types';
 
 export const pointerEventToVector2D = (
 	event: PointerEvent,
@@ -23,20 +24,19 @@ export const pointerEventToVector2D = (
 
 export function getClosestCell(
 	point: Vector2D,
-	conservative: boolean = true,
-	marginRadius: number = 0.5
+	marginRadius?: number
 ): { cell: GridCoordI; dist: number } | null {
 	const cellCoord = pointToCell(point);
 	const cellCenter: Vector2D = new Vector2D(cellCoord.c + 0.5, cellCoord.r + 0.5);
 	const dist = point.distance(cellCenter);
 
-	if (!conservative || dist < marginRadius) return { cell: cellCoord, dist };
+	if (marginRadius === undefined || dist < marginRadius) return { cell: cellCoord, dist };
 	return null;
 }
 
 export function getClosestCellCenter(
 	point: Vector2D,
-	marginRadius: number | undefined
+	marginRadius?: number
 ): { cellCenter: GridCoordI; dist: number } | null {
 	const cellCoord = pointToCell(point);
 	const cellCenter: Vector2D = new Vector2D(cellCoord.c + 0.5, cellCoord.r + 0.5);
@@ -51,7 +51,7 @@ export function getClosestCellCenter(
 
 export function getClosestCorner(
 	point: Vector2D,
-	marginRadius: number | undefined
+	marginRadius?: number
 ): { corner: GridCoordI; dist: number; idx: number } | null {
 	const cellCoord = pointToCell(point);
 
@@ -70,7 +70,7 @@ export function getClosestCorner(
 
 export function getClosestEdge(
 	point: Vector2D,
-	marginRadius: number | undefined
+	marginRadius?: number
 ): { edge: GridCoordI; dist: number; idx: number } | null {
 	const cellCoord = pointToCell(point);
 
@@ -88,45 +88,100 @@ export function getClosestEdge(
 
 interface EventGeometry {
 	type: 'corner' | 'edge' | 'cell center';
-	target: GridCoordI;
+	cell: GridCoordI;
+	closest: GridCoordI;
 	cellCenter: GridCoordI;
 	edge: GridCoordI;
 	corner: GridCoordI;
 	dist: number;
+	edgeIdx: number;
+	cornerIdx: number;
+	direction: number;
 }
 
 export function getClosestCellFeature(
 	point: Vector2D,
-	conservative: boolean = true,
-	marginRadius: number = 0.5
+	feature: CornerOrEdge,
+	marginRadius?: number
 ): EventGeometry | null {
-	const edgeInfo = getClosestEdge(point, undefined);
+	const cellInfo = getClosestCell(point);
+	if (!cellInfo) return null;
+
+	const edgeInfo = getClosestEdge(point);
 	if (!edgeInfo) return null;
 
-	const cornerInfo = getClosestCorner(point, undefined);
+	const cornerInfo = getClosestCorner(point);
 	if (!cornerInfo) return null;
 
-	const cellCenterInfo = getClosestCellCenter(point, undefined);
+	const cellCenterInfo = getClosestCellCenter(point);
 	if (!cellCenterInfo) return null;
 
-	const featureCoords = [cellCenterInfo.cellCenter, edgeInfo.edge, cornerInfo.corner];
-	const featurePoints = featureCoords.map((coord) => new Vector2D(coord.c, coord.r));
-	const dists = featurePoints.map((feat) => feat.distance(point));
-	const minDist = Math.min(...dists);
-	const idx = dists.findIndex((val) => val === minDist);
-	const target = featureCoords[idx];
-	const types = ['cell center', 'edge', 'corner'] as const;
-	const ftype = types[idx];
+	let closestCoord: GridCoordI;
+	let ftype: 'edge' | 'corner' | 'cell center';
+	if (feature === CornerOrEdge.CORNER) {
+		closestCoord = cornerInfo.corner;
+		ftype = 'corner';
+	} else if (feature === CornerOrEdge.EDGE) {
+		closestCoord = edgeInfo.edge;
+		ftype = 'edge';
+	} else if (feature === CornerOrEdge.CELL_CENTER) {
+		closestCoord = cellCenterInfo.cellCenter;
+		ftype = 'cell center';
+	} else if (feature === CornerOrEdge.CORNER_OR_EDGE) {
+		if (cornerInfo.dist < edgeInfo.dist) {
+			closestCoord = cornerInfo.corner;
+			ftype = 'corner';
+		} else {
+			closestCoord = edgeInfo.edge;
+			ftype = 'edge';
+		}
+	} else if (feature === CornerOrEdge.CORNER_OR_CENTER) {
+		if (cornerInfo.dist < cellCenterInfo.dist) {
+			closestCoord = cornerInfo.corner;
+			ftype = 'corner';
+		} else {
+			closestCoord = cellCenterInfo.cellCenter;
+			ftype = 'cell center';
+		}
+	} else if (feature === CornerOrEdge.EDGE_OR_CENTER) {
+		if (edgeInfo.dist < cellCenterInfo.dist) {
+			closestCoord = edgeInfo.edge;
+			ftype = 'edge';
+		} else {
+			closestCoord = cellCenterInfo.cellCenter;
+			ftype = 'cell center';
+		}
+	} else {
+		// closest
+		if (edgeInfo.dist < cornerInfo.dist && edgeInfo.dist < cellCenterInfo.dist) {
+			closestCoord = edgeInfo.edge;
+			ftype = 'edge';
+		} else if (cornerInfo.dist < edgeInfo.dist && cornerInfo.dist < cellCenterInfo.dist) {
+			closestCoord = cornerInfo.corner;
+			ftype = 'corner';
+		} else {
+			closestCoord = cellCenterInfo.cellCenter;
+			ftype = 'cell center';
+		}
+	}
+
+	const closest_point = new Vector2D(closestCoord.c, closestCoord.r);
+	const minDist = closest_point.subtract(point).length();
+	const dirIdx = ftype === 'edge' ? 2 * edgeInfo.idx : 2 * cornerInfo.idx + 1;
 
 	const eventGeometry: EventGeometry = {
+		cell: cellInfo.cell,
 		cellCenter: cellCenterInfo.cellCenter,
 		edge: edgeInfo.edge,
 		corner: cornerInfo.corner,
 		dist: minDist,
-		target,
-		type: ftype
+		closest: closestCoord,
+		type: ftype,
+		edgeIdx: edgeInfo.idx,
+		cornerIdx: cornerInfo.idx,
+		direction: dirIdx
 	};
 
-	if (!conservative || minDist < marginRadius) return eventGeometry;
+	if (marginRadius === undefined || minDist < marginRadius) return eventGeometry;
 	return null;
 }

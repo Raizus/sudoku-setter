@@ -40,7 +40,8 @@ export class CellPointerHandler {
 		if (!point) return;
 
 		this._prevPoint = point;
-		const cellInfo = getClosestCell(point, !isFirstClick, this._margin);
+		const margin = isFirstClick ? undefined : this._margin;
+		const cellInfo = getClosestCell(point, margin);
 		if (!cellInfo) return;
 
 		const cell = cellInfo.cell;
@@ -57,7 +58,7 @@ export class CellPointerHandler {
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
-		const cellInfo = getClosestCell(point, true, this._margin);
+		const cellInfo = getClosestCell(point, this._margin);
 		if (!cellInfo) return;
 
 		const cell = cellInfo.cell;
@@ -82,7 +83,7 @@ export class CellPointerHandler {
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
-		const cellInfo = getClosestCell(point, false);
+		const cellInfo = getClosestCell(point, undefined);
 		if (!cellInfo) return;
 
 		const cell = cellInfo.cell;
