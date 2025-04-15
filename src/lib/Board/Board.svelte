@@ -23,7 +23,7 @@
 	import SolutionRender from './SolutionRender.svelte';
 	import ToolsLayerRender from './Constraints/ToolsLayerRender.svelte';
 	import {
-	arrowToolsStore,
+		arrowToolsStore,
 		cageToolsStore,
 		centerCornerOrEdgeToolsStore,
 		cloneToolsStore,
@@ -32,9 +32,7 @@
 		edgeToolsStore,
 		lineToolsStore,
 		outsideDirectionToolsStore,
-
 		singleCellToolsStore
-
 	} from '$stores/ElementsStore.js';
 	import EdgeToolRender from './Constraints/EdgeToolRender.svelte';
 	import CornerToolRender from './Constraints/CornerToolRender.svelte';
