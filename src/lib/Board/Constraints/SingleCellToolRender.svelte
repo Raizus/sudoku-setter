@@ -10,9 +10,9 @@
 
 
 {#if tool.type === 'ARROW'}
-    <SingleCellArrowRender {tool} />
+    <SingleCellArrowRender {tool} {c_id}/>
 {:else if tool.type === 'MULTIARROW'}
-    <SingleCellMultiArrowRender {tool} />
+    <SingleCellMultiArrowRender {tool} {c_id}/>
 {:else if tool.type === 'SIMPLE'}
     <SimpleSingleCellToolRender {tool} {c_id} />
 {/if}

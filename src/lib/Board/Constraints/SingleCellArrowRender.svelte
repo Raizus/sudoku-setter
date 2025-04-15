@@ -11,8 +11,12 @@
 	} from '$lib/utils/SquareCellGridRenderUtils';
 	import { Vector2D } from '$lib/utils/Vector2D';
 	import { DIRECTION } from '$lib/utils/directions';
+	import { currentConstraintStore } from '$stores/BoardStore';
 
 	export let tool: CellArrowToolI;
+	export let c_id: string;
+
+	$: currentConstraintId = $currentConstraintStore?.id;
 
 	const outline = true;
 	const cell = tool.cell;
@@ -28,11 +32,17 @@
 		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.05 : 0.05
 	};
 
+	$: selectedOutlineShape = {
+		...shape,
+		stroke: 'var(--constraint-selected-color)',
+		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.07 : 0.07
+	};
+
 	$: strokeWidth = shape.strokeWidth ?? 0.1;
 	$: stroke = shape.stroke ?? 'black';
 
-	const scale = 0.3;
 	function getLine(_cell: GridCoordI, _direction: DIRECTION) {
+		const scale = 0.3;
 		const delta = directionToCoords(_direction);
 		const vec = new Vector2D(delta.c, delta.r).normalise().scale(scale);
 		const cellCenter = cellToCellCenterVector(_cell);
@@ -64,6 +74,15 @@
 		fill="none"
 		stroke={outlineShape.stroke}
 		stroke-width={outlineShape.strokeWidth}
+		stroke-linecap="round"
+	/>
+{/if}
+{#if c_id === currentConstraintId}
+	<path
+		d={arrowPathStr}
+		fill="none"
+		stroke={selectedOutlineShape.stroke}
+		stroke-width={selectedOutlineShape.strokeWidth}
 		stroke-linecap="round"
 	/>
 {/if}

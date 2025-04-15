@@ -11,8 +11,12 @@
 	} from '$lib/utils/SquareCellGridRenderUtils';
 	import type { CellMultiArrowToolI } from '$lib/Puzzle/Constraints/SingleCellConstraints';
 	import type { DIRECTION } from '$lib/utils/directions';
+	import { currentConstraintStore } from '$stores/BoardStore';
 
 	export let tool: CellMultiArrowToolI;
+	export let c_id: string;
+
+	$: currentConstraintId = $currentConstraintStore?.id;
 
 	const cell = tool.cell;
 	const outline = true;
@@ -28,6 +32,12 @@
 		...shape,
 		stroke: 'var(--grid-background-color)',
 		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.03 : 0.03
+	};
+
+	$: selectedOutlineShape = {
+		...shape,
+		stroke: 'var(--constraint-selected-color)',
+		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.05 : 0.05
 	};
 
 	const arrow_l = 0.2;
@@ -63,6 +73,17 @@
 			fill="none"
 			stroke={outlineShape.stroke}
 			stroke-width={outlineShape.strokeWidth}
+			stroke-linecap="round"
+		/>
+	{/each}
+{/if}
+{#if c_id === currentConstraintId}
+	{#each tool.directions as direction}
+		<path
+			d={getArrowPath(cell, direction)}
+			fill="none"
+			stroke={selectedOutlineShape.stroke}
+			stroke-width={selectedOutlineShape.strokeWidth}
 			stroke-linecap="round"
 		/>
 	{/each}
