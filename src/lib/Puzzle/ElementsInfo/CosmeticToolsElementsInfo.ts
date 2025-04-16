@@ -14,7 +14,7 @@ export const cosmeticCellShapeInfo: SquareCellElementInfo = {
 		type: HANDLER_TOOL_TYPE.SINGLE_CELL
 	},
 
-	toolId: TOOLS.COSMETIC_CELL_SHAPE,
+	toolId: TOOLS.COSMETIC_CELL_CENTER_SHAPE,
 	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {

@@ -748,7 +748,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.LITS_MAX_TETROMINO_SUM]: litsMaxTetrominoSumInfo,
 
 	// Cosmetic Tools
-	[TOOLS.COSMETIC_CELL_SHAPE]: cosmeticCellShapeInfo,
+	[TOOLS.COSMETIC_CELL_CENTER_SHAPE]: cosmeticCellShapeInfo,
 	[TOOLS.COSMETIC_CELL_ARROW]: cosmeticCellArrowInfo,
 	[TOOLS.COSMETIC_CELL_MULTI_ARROW]: cosmeticCellMultiArrowInfo,
 	[TOOLS.COSMETIC_EDGE]: cosmeticEdgeInfo,

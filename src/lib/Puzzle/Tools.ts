@@ -452,7 +452,7 @@ export enum VALUED_GLOBAL_CONSTRAINTS {
 }
 
 export enum COSMETIC_TOOLS {
-	COSMETIC_CELL_SHAPE = 'Cosmetic Cell Shape',
+	COSMETIC_CELL_CENTER_SHAPE = 'Cosmetic Cell Center Shape',
 	COSMETIC_CELL_ARROW = 'Cosmetic Cell Arrow',
 	COSMETIC_CELL_MULTI_ARROW = 'Cosmetic Cell Multi Arrow',
 
@@ -624,7 +624,7 @@ export function isSingleCellTool(toolId: TOOLID): boolean {
 		enumValues.includes(toolId) ||
 		isSingleCellArrowTool(toolId) ||
 		isSingleCellMultiArrowTool(toolId) ||
-		toolId === TOOLS.COSMETIC_CELL_SHAPE ||
+		toolId === TOOLS.COSMETIC_CELL_CENTER_SHAPE ||
 		toolId === TOOLS.COSMETIC_CELL_ARROW ||
 		toolId === TOOLS.COSMETIC_CELL_MULTI_ARROW
 	);
