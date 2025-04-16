@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { TOOLS } from '$lib/Puzzle/Tools';
+	import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';
 	import { SHAPE_TYPES, defaultEdgeCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import type { EdgeToolI } from '$lib/Puzzle/Constraints/EdgeConstraints';
@@ -43,8 +43,8 @@
 		return tool.value ?? '';
 	}
 
-	function getTextAngle(): number {
-		if (tool.toolId !== TOOLS.EDGE_INEQUALITY && tool.toolId !== TOOLS.ONE_WAY_DOOR) return 0;
+	function getEdgeTextAngle(tool_id: TOOLID): number {
+		if (tool_id !== TOOLS.EDGE_INEQUALITY && tool_id !== TOOLS.ONE_WAY_DOOR) return 0;
 
 		const p1 = cellToCellCenterVector(coords[0]);
 		const p2 = cellToCellCenterVector(coords[1]);
@@ -85,7 +85,7 @@
 			dominant-baseline="central"
 			font-size={fontSize}
 			fill={fontColor}
-			transform={`rotate(${getTextAngle()}, ${center.x}, ${center.y} )`}
+			transform={`rotate(${getEdgeTextAngle(tool.toolId)}, ${center.x}, ${center.y} )`}
 		>
 			{getText(tool, type)}
 		</text>

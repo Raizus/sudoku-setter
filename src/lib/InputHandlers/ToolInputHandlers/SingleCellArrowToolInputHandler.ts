@@ -1,8 +1,6 @@
 import type { InputHandler } from '../InputHandler';
 import type { TOOLID } from '$lib/Puzzle/Tools';
-import {
-	updateLocalConstraint
-} from '$stores/BoardStore';
+import { updateLocalConstraint } from '$stores/BoardStore';
 import { localConstraintsStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
@@ -22,6 +20,7 @@ import { idxToDirection, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { findSingleCellConstraint } from '$lib/Puzzle/Constraints/LocalConstraints';
 import { DIRECTION } from '$lib/utils/directions';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
+import { singleCellArrowPreviewStore } from '$stores/ElementsStore';
 
 export function getSingleCellArrowToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -66,7 +65,7 @@ export function getSingleCellArrowToolInputHandler(
 		const match = findSingleCellConstraint<CellArrowToolI>(localConstraints, tool, coords);
 		const direction = idxToDirection(event.direction);
 		if (match) {
-			[id, currentConstraint] = match
+			[id, currentConstraint] = match;
 			// update arrow or remove
 			if (currentConstraint.direction === direction || mode === MODE.REMOVING) {
 				//remove
@@ -101,12 +100,26 @@ export function getSingleCellArrowToolInputHandler(
 		handle(event);
 	};
 
+	pointerHandler.onMove = (event: CellEdgeCornerEvent): void => {
+		const onGrid = isCellOnGrid(event.cell, gridShape);
+		if (!onGrid) {
+			singleCellArrowPreviewStore.set(undefined);
+			return;
+		}
+
+		const direction = idxToDirection(event.direction);
+		const constraint_preview = singleCellArrowConstraint(tool, event.cell, direction);
+
+		singleCellArrowPreviewStore.set(constraint_preview);
+	};
+
 	const inputHandler: InputHandler = {
 		pointerDown: (event: PointerEvent): void => {
 			if (event.button !== 0) return;
 			pointerHandler.pointerDown(event, svgRef);
 		},
-		pointerMove: (): void => {
+		pointerMove: (event: PointerEvent): void => {
+			pointerHandler.pointerMove(event, svgRef);
 			return;
 		},
 		pointerUp: (): void => {

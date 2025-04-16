@@ -1,21 +1,26 @@
 import type { InputHandler } from '../InputHandler';
 import type { TOOLID } from '$lib/Puzzle/Tools';
-import {
-	updateLocalConstraint
-} from '$stores/BoardStore';
+import { updateLocalConstraint } from '$stores/BoardStore';
 import { localConstraintsStore } from '$stores/BoardStore';
 import { removeLocalConstraint } from '$stores/LocalConstraintsStore';
 import { addLocalConstraint } from '$stores/LocalConstraintsStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
-import { CellFeaturePointerHandler, type CellEdgeCornerEvent } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
+import {
+	CellFeaturePointerHandler,
+	type CellEdgeCornerEvent
+} from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
 import type { SingleCellMultiArrowToolOptions } from './types';
-import { singleCellMultiArrowConstraint, type CellMultiArrowToolI } from '$lib/Puzzle/Constraints/SingleCellConstraints';
+import {
+	singleCellMultiArrowConstraint,
+	type CellMultiArrowToolI
+} from '$lib/Puzzle/Constraints/SingleCellConstraints';
 import { findSingleCellConstraint } from '$lib/Puzzle/Constraints/LocalConstraints';
 import { idxToDirection, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import type { GridShape } from '$lib/Types/types';
 import type { DIRECTION } from '$lib/utils/directions';
+import { singleCellMultiArrowPreviewStore } from '$stores/ElementsStore';
 
 function updateDirections(directions: DIRECTION[], dir: DIRECTION): DIRECTION[] {
 	directions = [...directions];
@@ -59,7 +64,6 @@ export function getSingleCellMultiArrowToolInputHandler(
 		if (event.event.altKey) mode = MODE.REMOVING;
 		// determine if adding or removing
 
-		
 		const direction = idxToDirection(event.direction);
 		const match = findSingleCellConstraint<CellMultiArrowToolI>(localConstraints, tool, coords);
 		if (match) {
@@ -98,12 +102,25 @@ export function getSingleCellMultiArrowToolInputHandler(
 		handle(event);
 	};
 
+	pointerHandler.onMove = (event: CellEdgeCornerEvent): void => {
+		const onGrid = isCellOnGrid(event.cell, gridShape);
+		if (!onGrid) {
+			singleCellMultiArrowPreviewStore.set(undefined);
+			return;
+		}
+
+		const direction = idxToDirection(event.direction);
+		const phantom_constraint = singleCellMultiArrowConstraint(tool, event.cell, direction);
+		singleCellMultiArrowPreviewStore.set(phantom_constraint);
+	};
+
 	const inputHandler: InputHandler = {
 		pointerDown: (event: PointerEvent): void => {
 			if (event.button !== 0) return;
 			pointerHandler.pointerDown(event, svgRef);
 		},
-		pointerMove: (): void => {
+		pointerMove: (event: PointerEvent): void => {
+			pointerHandler.pointerMove(event, svgRef);
 			return;
 		},
 		pointerUp: (): void => {

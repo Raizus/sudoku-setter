@@ -12,14 +12,18 @@ import {
 	TOOLS,
 	type TOOLID
 } from '$lib/Puzzle/Tools';
-import { derived, type Readable } from 'svelte/store';
+import { derived, writable, type Readable } from 'svelte/store';
 import { localConstraintsStore } from './BoardStore';
 import type { LineToolI } from '$lib/Puzzle/Constraints/LineConstraints';
 import type { CageToolI } from '$lib/Puzzle/Constraints/CageConstraints';
 import type { CornerToolI } from '$lib/Puzzle/Constraints/CornerConstraints';
 import type { CloneToolI } from '$lib/Puzzle/Constraints/CloneConstraints';
 import type { ArrowToolI } from '$lib/Puzzle/Constraints/ArrowConstraints';
-import type { SingleCellTool } from '$lib/Puzzle/Constraints/SingleCellConstraints';
+import type {
+	CellArrowToolI,
+	CellMultiArrowToolI,
+	SingleCellTool
+} from '$lib/Puzzle/Constraints/SingleCellConstraints';
 import type { EdgeToolI } from '$lib/Puzzle/Constraints/EdgeConstraints';
 import type { OutsideDirectionToolI } from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
 import type { CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/Constraints/CenterCornerOrEdgeConstraints';
@@ -70,14 +74,24 @@ export const maximumConstraintsStore = derived(singleCellToolsStore, ($singleCel
 	return record;
 });
 
-
 export const edgeToolsStore = getToolsStore<EdgeToolI>(isEdgeTool);
-export const centerCornerOrEdgeToolsStore = getToolsStore<CenterCornerOrEdgeToolI>(isCenterEdgeCornerTool);
+export const centerCornerOrEdgeToolsStore =
+	getToolsStore<CenterCornerOrEdgeToolI>(isCenterEdgeCornerTool);
 export const cornerToolsStore = getToolsStore<CornerToolI>(isCornerTool);
 export const lineToolsStore = getToolsStore<LineToolI>(isLineTool);
 export const cornerLineToolsStore = getToolsStore<CornerLineToolI>(isCornerLineTool);
 export const arrowToolsStore = getToolsStore<ArrowToolI>(isArrowTool);
 export const cageToolsStore = getToolsStore<CageToolI>(isCageTool);
 export const cloneToolsStore = getToolsStore<CloneToolI>(isCloneTool);
-export const outsideDirectionToolsStore = getToolsStore<OutsideDirectionToolI>(isOutsideDirectionTool);
+export const outsideDirectionToolsStore =
+	getToolsStore<OutsideDirectionToolI>(isOutsideDirectionTool);
 
+export const singleCellArrowPreviewStore = writable<undefined | CellArrowToolI>(undefined);
+
+export const singleCellMultiArrowPreviewStore = writable<undefined | CellMultiArrowToolI>(
+	undefined
+);
+
+export const edgeToolPreviewStore = writable<undefined | EdgeToolI>(
+	undefined
+);

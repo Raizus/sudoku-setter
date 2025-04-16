@@ -11,7 +11,7 @@
 	import BoardBackground from './BoardBackground.svelte';
 	import CellValuesRender from './CellRender/CellValuesRender.svelte';
 	import HighlightsRender from './CellRender/HighlightsRender.svelte';
-	import { isOutsideDirectionTool, type TOOLID } from '$lib/Puzzle/Tools';
+	import { isEdgeTool, isOutsideDirectionTool, isSingleCellArrowTool, isSingleCellMultiArrowTool, type TOOLID } from '$lib/Puzzle/Tools';
 	import type { OutsideDirectionToolI } from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
 	import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 	import PenToolRender from './PenToolRender/PenToolRender.svelte';
@@ -29,9 +29,12 @@
 		cloneToolsStore,
 		cornerLineToolsStore,
 		cornerToolsStore,
+		edgeToolPreviewStore,
 		edgeToolsStore,
 		lineToolsStore,
 		outsideDirectionToolsStore,
+		singleCellArrowPreviewStore,
+		singleCellMultiArrowPreviewStore,
 		singleCellToolsStore
 	} from '$stores/ElementsStore.js';
 	import EdgeToolRender from './Constraints/EdgeToolRender.svelte';
@@ -44,6 +47,9 @@
 	import CornerLineToolRender from './Constraints/CornerLineToolRender.svelte';
 	import SingleCellToolRender from './Constraints/SingleCellToolRender.svelte';
 	import ArrowToolRender from './Constraints/ArrowToolRender.svelte';
+	import SingleCellArrowPreviewRender from './Constraints/SingleCellArrowPreviewRender.svelte';
+	import SingleCellMultiArrowPreviewRender from './Constraints/SingleCellMultiArrowPreviewRender.svelte';
+	import EdgeToolPreviewRender from './Constraints/EdgeToolPreviewRender.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 
@@ -195,4 +201,14 @@
 	<SolutionRender />
 
 	<ConflictsRender />
+
+	{#if isSingleCellArrowTool($toolStore) && $singleCellArrowPreviewStore}
+		<SingleCellArrowPreviewRender tool={$singleCellArrowPreviewStore} />
+	{/if}
+	{#if isSingleCellMultiArrowTool($toolStore) && $singleCellMultiArrowPreviewStore}
+		<SingleCellMultiArrowPreviewRender tool={$singleCellMultiArrowPreviewStore} />
+	{/if}
+	{#if isEdgeTool($toolStore) && $edgeToolPreviewStore}
+		<EdgeToolPreviewRender tool={$edgeToolPreviewStore} />
+	{/if}
 </svg>

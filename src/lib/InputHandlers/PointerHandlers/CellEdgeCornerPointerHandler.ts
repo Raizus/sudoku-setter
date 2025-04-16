@@ -22,6 +22,7 @@ export class CellFeaturePointerHandler {
 
 	feature: CornerOrEdge;
 	private _prevCoord: GridCoordI | null = null;
+	private _prevCellCoord: GridCoordI | null = null;
 
 	constructor(cornerOrEdge: CornerOrEdge) {
 		this.feature = cornerOrEdge;
@@ -40,6 +41,7 @@ export class CellFeaturePointerHandler {
 		};
 
 		this._prevCoord = cell_feature.closest;
+		this._prevCellCoord = cell_feature.cell;
 
 		if (this.onDragStart) this.onDragStart(cellEdgeCornerEvent);
 	}
@@ -52,7 +54,12 @@ export class CellFeaturePointerHandler {
 		if (!cell_feature) return;
 
 		// if the new coord is the same as the old one don't to anything
-		if (this._prevCoord && areCoordsEqual(cell_feature.closest, this._prevCoord)) {
+		if (
+			this._prevCoord &&
+			areCoordsEqual(cell_feature.closest, this._prevCoord) &&
+			this._prevCellCoord &&
+			areCoordsEqual(this._prevCellCoord, cell_feature.cell)
+		) {
 			return;
 		}
 
@@ -60,7 +67,8 @@ export class CellFeaturePointerHandler {
 			event,
 			...cell_feature
 		};
-		this._prevCoord = cell_feature.corner;
+		this._prevCoord = cell_feature.closest;
+		this._prevCellCoord = cell_feature.cell;
 
 		if (this.onMove) this.onMove(cellEdgeCornerEvent);
 	}

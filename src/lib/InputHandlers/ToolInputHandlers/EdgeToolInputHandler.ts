@@ -23,6 +23,7 @@ import {
 import { cellEdgeToCellCoords, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { edgeConstraint, type EdgeToolI } from '$lib/Puzzle/Constraints/EdgeConstraints';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
+import { edgeToolPreviewStore } from '$stores/ElementsStore';
 
 export function getEdgeToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -90,6 +91,20 @@ export function getEdgeToolInputHandler(
 	pointerHandler.onDragStart = (event: CellEdgeTapEvent): void => {
 		mode = MODE.DYNAMIC;
 		handle(event);
+	};
+
+	pointerHandler.onMove = (event: CellEdgeTapEvent): void => {
+		const onGrid = isCellOnGrid(event.coord, gridShape);
+		if (!onGrid) {
+			edgeToolPreviewStore.set(undefined);
+			return;
+		}
+
+		const cellsCoords = cellEdgeToCellCoords(event.coord);
+		const defaultValue = options?.defaultValue ?? '';
+		const constraint_preview = edgeConstraint(tool, cellsCoords, defaultValue);
+
+		edgeToolPreviewStore.set(constraint_preview);
 	};
 
 	const inputHandler: InputHandler = {

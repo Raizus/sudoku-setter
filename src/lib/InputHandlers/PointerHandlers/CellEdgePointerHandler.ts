@@ -8,6 +8,7 @@ export interface CellEdgeTapEvent {
 
 export class CellEdgePointerHandler {
 	onDragStart: null | ((event: CellEdgeTapEvent) => void) = null;
+	onMove: null | ((event: CellEdgeTapEvent) => void) = null;
 	onDrag: null | ((event: CellEdgeTapEvent) => void) = null;
 	onDragEnd: null | ((event: CellEdgeTapEvent) => void) = null;
 	onTap: null | ((event: CellEdgeTapEvent) => void) = null;
@@ -34,8 +35,6 @@ export class CellEdgePointerHandler {
 	}
 
 	pointerMove(event: PointerEvent, svgRef: SVGSVGElement): void {
-		if (!this._isDown) return;
-
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
@@ -49,9 +48,11 @@ export class CellEdgePointerHandler {
 
 		const dragTapEvent: CellEdgeTapEvent = { event, coord: edgeInfo.edge };
 		this._prevCoord = edgeInfo.edge;
-		this._isTap = false;
 
-		if (this.onDrag) this.onDrag(dragTapEvent);
+		if (this.onMove) this.onMove(dragTapEvent);
+
+		if (this._isDown) this._isTap = false;
+		if (this._isDown && this.onDrag) this.onDrag(dragTapEvent);
 	}
 
 	pointerUp(event: PointerEvent, svgRef: SVGSVGElement): void {

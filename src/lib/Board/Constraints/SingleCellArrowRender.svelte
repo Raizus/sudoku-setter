@@ -3,14 +3,9 @@
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { defaultSingleCellArrowShape } from '$lib/Puzzle/Shape/Shape';
-	import { directionToCoords, type GridCoordI } from '$lib/utils/SquareCellGridCoords';
 	import {
-		cellToCellCenterVector,
-		getArrowHead,
-		linePointsToPathStr
+		getSingleCellArrowPath,
 	} from '$lib/utils/SquareCellGridRenderUtils';
-	import { Vector2D } from '$lib/utils/Vector2D';
-	import { DIRECTION } from '$lib/utils/directions';
 	import { currentConstraintStore } from '$stores/BoardStore';
 
 	export let tool: CellArrowToolI;
@@ -41,31 +36,7 @@
 	$: strokeWidth = shape.strokeWidth ?? 0.1;
 	$: stroke = shape.stroke ?? 'black';
 
-	function getLine(_cell: GridCoordI, _direction: DIRECTION) {
-		const scale = 0.3;
-		const delta = directionToCoords(_direction);
-		const vec = new Vector2D(delta.c, delta.r).normalise().scale(scale);
-		const cellCenter = cellToCellCenterVector(_cell);
-
-		const p1 = cellCenter.subtract(vec);
-		const p2 = cellCenter.add(vec);
-		const line = [p1, p2];
-		return line;
-	}
-
-	function getArrowPath(_cell: GridCoordI, _direction: DIRECTION) {
-		const l = 0.2;
-		const line = getLine(_cell, _direction);
-		let head = getArrowHead(l, _direction);
-		head = head.map((p) => p.add(line[1]));
-
-		const linePathStr = linePointsToPathStr(line);
-		const headPathStr = linePointsToPathStr(head);
-		const arrowPathStr = linePathStr + headPathStr;
-		return arrowPathStr;
-	}
-
-	$: arrowPathStr = getArrowPath(cell, direction);
+	$: arrowPathStr = getSingleCellArrowPath(cell, direction);
 </script>
 
 {#if outline}
