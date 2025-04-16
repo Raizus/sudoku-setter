@@ -92,6 +92,6 @@ export const singleCellMultiArrowPreviewStore = writable<undefined | CellMultiAr
 	undefined
 );
 
-export const edgeToolPreviewStore = writable<undefined | EdgeToolI>(
-	undefined
-);
+export const edgeToolPreviewStore = writable<undefined | EdgeToolI>(undefined);
+
+export const cornerToolPreviewStore = writable<undefined | CornerToolI>(undefined);

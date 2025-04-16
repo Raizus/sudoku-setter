@@ -11,7 +11,7 @@
 	import BoardBackground from './BoardBackground.svelte';
 	import CellValuesRender from './CellRender/CellValuesRender.svelte';
 	import HighlightsRender from './CellRender/HighlightsRender.svelte';
-	import { isEdgeTool, isOutsideDirectionTool, isSingleCellArrowTool, isSingleCellMultiArrowTool, type TOOLID } from '$lib/Puzzle/Tools';
+	import { isCornerTool, isEdgeTool, isOutsideDirectionTool, isSingleCellArrowTool, isSingleCellMultiArrowTool, type TOOLID } from '$lib/Puzzle/Tools';
 	import type { OutsideDirectionToolI } from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
 	import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 	import PenToolRender from './PenToolRender/PenToolRender.svelte';
@@ -28,6 +28,7 @@
 		centerCornerOrEdgeToolsStore,
 		cloneToolsStore,
 		cornerLineToolsStore,
+		cornerToolPreviewStore,
 		cornerToolsStore,
 		edgeToolPreviewStore,
 		edgeToolsStore,
@@ -50,6 +51,7 @@
 	import SingleCellArrowPreviewRender from './Constraints/SingleCellArrowPreviewRender.svelte';
 	import SingleCellMultiArrowPreviewRender from './Constraints/SingleCellMultiArrowPreviewRender.svelte';
 	import EdgeToolPreviewRender from './Constraints/EdgeToolPreviewRender.svelte';
+	import CornerToolPreviewRender from './Constraints/CornerToolPreviewRender.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 
@@ -210,5 +212,8 @@
 	{/if}
 	{#if isEdgeTool($toolStore) && $edgeToolPreviewStore}
 		<EdgeToolPreviewRender tool={$edgeToolPreviewStore} />
+	{/if}
+	{#if isCornerTool($toolStore) && $cornerToolPreviewStore}
+		<CornerToolPreviewRender tool={$cornerToolPreviewStore} />
 	{/if}
 </svg>

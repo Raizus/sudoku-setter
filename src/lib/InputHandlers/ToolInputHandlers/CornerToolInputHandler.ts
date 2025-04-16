@@ -24,6 +24,7 @@ import {
 	type CellCornerTapEvent
 } from '$src/lib/InputHandlers/PointerHandlers/CellCornerPointerHandler';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
+import { cornerToolPreviewStore } from '$stores/ElementsStore';
 
 export function getCornerToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -91,6 +92,19 @@ export function getCornerToolInputHandler(
 	pointerHandler.onDragStart = (event: CellCornerTapEvent): void => {
 		mode = MODE.DYNAMIC;
 		handle(event);
+	};
+
+	pointerHandler.onMove = (event: CellCornerTapEvent): void => {
+		const onGrid = isCellOnGrid(event.coord, gridShape);
+		if (!onGrid) {
+			cornerToolPreviewStore.set(undefined);
+			return;
+		}
+
+		const cellsCoords = cornerCoordToAdjCellCoords(event.coord);
+		const constraint_preview = cornerConstraint(tool, cellsCoords, options?.defaultValue);
+
+		cornerToolPreviewStore.set(constraint_preview);
 	};
 
 	const inputHandler: InputHandler = {

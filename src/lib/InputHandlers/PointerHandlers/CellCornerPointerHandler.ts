@@ -40,8 +40,6 @@ export class CellCornerPointerHandler {
 	}
 
 	pointerMove(event: PointerEvent, svgRef: SVGSVGElement): void {
-		if (!this._isDown) return;
-
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
@@ -58,9 +56,11 @@ export class CellCornerPointerHandler {
 			coord: cornerInfo.corner
 		};
 		this._prevCoord = cornerInfo.corner;
-		this._isTap = false;
 
-		if (this.onDrag) this.onDrag(dragTapEvent);
+		if (this.onMove) this.onMove(dragTapEvent);
+		
+		if (this._isDown) this._isTap = false;
+		if (this._isDown && this.onDrag) this.onDrag(dragTapEvent);
 	}
 
 	pointerUp(event: PointerEvent, svgRef: SVGSVGElement): void {		
