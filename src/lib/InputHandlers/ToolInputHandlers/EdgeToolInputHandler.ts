@@ -2,6 +2,7 @@ import type { InputHandler } from '../InputHandler';
 import type { EdgeToolOptions } from "./types";
 import {
 	currentConstraintStore,
+	currentShapeStore,
 	updateLocalConstraint
 } from '$stores/BoardStore';
 import { localConstraintsStore } from '$stores/BoardStore';
@@ -103,6 +104,10 @@ export function getEdgeToolInputHandler(
 		const cellsCoords = cellEdgeToCellCoords(event.coord);
 		const defaultValue = options?.defaultValue ?? '';
 		const constraint_preview = edgeConstraint(tool, cellsCoords, defaultValue);
+		const currentShape = get(currentShapeStore);
+		if (currentShape) {
+			constraint_preview.shape = { ...currentShape };
+		}
 
 		edgeToolPreviewStore.set(constraint_preview);
 	};

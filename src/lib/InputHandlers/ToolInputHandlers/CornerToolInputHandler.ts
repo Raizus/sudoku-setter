@@ -6,7 +6,8 @@ import type { CornerToolOptions } from './types';
 import {
 	currentConstraintStore,
 	updateLocalConstraint,
-	localConstraintsStore
+	localConstraintsStore,
+	currentShapeStore
 } from '$stores/BoardStore';
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import { keyboardInputDefaultValidator } from '$src/lib/InputHandlers/KeyboardEventUtils';
@@ -103,6 +104,10 @@ export function getCornerToolInputHandler(
 
 		const cellsCoords = cornerCoordToAdjCellCoords(event.coord);
 		const constraint_preview = cornerConstraint(tool, cellsCoords, options?.defaultValue);
+		const currentShape = get(currentShapeStore);
+		if (currentShape) {
+			constraint_preview.shape = { ...currentShape };
+		}
 
 		cornerToolPreviewStore.set(constraint_preview);
 	};
