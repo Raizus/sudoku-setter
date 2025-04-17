@@ -43,17 +43,17 @@
 
 	function getLine(_cell: GridCoordI, _direction: DIRECTION) {
 		const delta = directionToCoords(_direction);
-		const vec = new Vector2D(delta.c, delta.r).normalise();
+		const vec = new Vector2D(delta.c, delta.r).scale(0.5);
 		const cellCenter = cellToCellCenterVector(_cell);
 
-		const p1 = cellCenter.add(vec.scale(0.35));
-		const p2 = cellCenter.add(vec.scale(0.58));
+		const p1 = cellCenter.add(vec.scale(0.5));
+		const p2 = cellCenter.add(vec.scale(0.8));
 		const line = [p1, p2];
 		return line;
 	}
 
 	function getArrowPath(_cell: GridCoordI, _direction: DIRECTION) {
-		const l = 0.12;
+		const l = 0.08;
 		const line = getLine(_cell, _direction);
 		let head = getArrowHead(l, _direction);
 		head = head.map((p) => p.add(line[1]));
@@ -68,11 +68,13 @@
 </script>
 
 <g class="outside-direction-tool">
+    <!-- preview -->
     {#if c_id === undefined}
         {#each cells as cell}
-            <rect x={cell.c} y={cell.r} width={1} height={1} stroke="none" fill="#5274eac0"/>
+            <rect x={cell.c} y={cell.r} width={1} height={1} stroke="none" fill="#5373ea80"/>
         {/each}
     {/if}
+    <!-- current constraint highlight -->
 	{#if c_id && c_id === currentConstraintId}
 		<path
 			d={arrowPathStr}
@@ -81,7 +83,11 @@
 			stroke-width={selectedOutlineShape.strokeWidth}
 			stroke-linecap="round"
 		/>
+        {#each cells as cell}
+            <rect x={cell.c} y={cell.r} width={1} height={1} stroke="none" fill="#5373ea66"/>
+        {/each}
 	{/if}
+    <!-- constraint -->
 	<path
 		d={arrowPathStr}
 		fill="none"
@@ -100,3 +106,10 @@
 		{getText(tool)}
 	</text>
 </g>
+
+<!-- <style>
+    rect {
+        fill: #5373ea66;
+    }
+</style> -->
+
