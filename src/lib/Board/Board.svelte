@@ -1,4 +1,5 @@
 <script lang="ts">
+	import SingleCellArrowRender from './Constraints/SingleCellArrowRender.svelte';
 	import type { GridShape } from './../Types/types.ts';
 	import type { Rectangle } from '$lib/Types/types.js';
 	import { cellsStore, gridStore, toolStore } from '$stores/BoardStore';
@@ -11,7 +12,15 @@
 	import BoardBackground from './BoardBackground.svelte';
 	import CellValuesRender from './CellRender/CellValuesRender.svelte';
 	import HighlightsRender from './CellRender/HighlightsRender.svelte';
-	import { isCornerTool, isEdgeTool, isOutsideDirectionTool, isSingleCellArrowTool, isSingleCellMultiArrowTool, type TOOLID } from '$lib/Puzzle/Tools';
+	import {
+		isCornerTool,
+		isEdgeTool,
+		isOutsideDirectionTool,
+		isSimpleSingleCellTool,
+		isSingleCellArrowTool,
+		isSingleCellMultiArrowTool,
+		type TOOLID
+	} from '$lib/Puzzle/Tools';
 	import type { OutsideDirectionToolI } from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
 	import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 	import PenToolRender from './PenToolRender/PenToolRender.svelte';
@@ -34,11 +43,11 @@
 		edgeToolsStore,
 		lineToolsStore,
 		outsideDirectionToolsStore,
+		simpleCellToolPreviewStore,
 		singleCellArrowPreviewStore,
 		singleCellMultiArrowPreviewStore,
 		singleCellToolsStore
 	} from '$stores/ElementsStore.js';
-	import EdgeToolRender from './Constraints/EdgeToolRender.svelte';
 	import CornerToolRender from './Constraints/CornerToolRender.svelte';
 	import CenterCornerOrEdgeToolRender from './Constraints/CenterCornerOrEdgeToolRender.svelte';
 	import LineToolRender from './Constraints/LineToolRender.svelte';
@@ -48,10 +57,9 @@
 	import CornerLineToolRender from './Constraints/CornerLineToolRender.svelte';
 	import SingleCellToolRender from './Constraints/SingleCellToolRender.svelte';
 	import ArrowToolRender from './Constraints/ArrowToolRender.svelte';
-	import SingleCellArrowPreviewRender from './Constraints/SingleCellArrowPreviewRender.svelte';
-	import SingleCellMultiArrowPreviewRender from './Constraints/SingleCellMultiArrowPreviewRender.svelte';
-	import EdgeToolPreviewRender from './Constraints/EdgeToolPreviewRender.svelte';
-	import CornerToolPreviewRender from './Constraints/CornerToolPreviewRender.svelte';
+	import EdgeToolRender from './Constraints/EdgeToolRender.svelte';
+	import SingleCellMultiArrowRender from './Constraints/SingleCellMultiArrowRender.svelte';
+	import SimpleSingleCellToolRender from './Constraints/SimpleSingleCellToolRender.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 
@@ -204,16 +212,19 @@
 
 	<ConflictsRender />
 
+	{#if isSimpleSingleCellTool($toolStore) && $simpleCellToolPreviewStore}
+		<SimpleSingleCellToolRender tool={$simpleCellToolPreviewStore} />
+	{/if}
 	{#if isSingleCellArrowTool($toolStore) && $singleCellArrowPreviewStore}
-		<SingleCellArrowPreviewRender tool={$singleCellArrowPreviewStore} />
+		<SingleCellArrowRender tool={$singleCellArrowPreviewStore} />
 	{/if}
 	{#if isSingleCellMultiArrowTool($toolStore) && $singleCellMultiArrowPreviewStore}
-		<SingleCellMultiArrowPreviewRender tool={$singleCellMultiArrowPreviewStore} />
+		<SingleCellMultiArrowRender tool={$singleCellMultiArrowPreviewStore} />
 	{/if}
 	{#if isEdgeTool($toolStore) && $edgeToolPreviewStore}
-		<EdgeToolPreviewRender tool={$edgeToolPreviewStore} />
+		<EdgeToolRender tool={$edgeToolPreviewStore} />
 	{/if}
 	{#if isCornerTool($toolStore) && $cornerToolPreviewStore}
-		<CornerToolPreviewRender tool={$cornerToolPreviewStore} />
+		<CornerToolRender tool={$cornerToolPreviewStore} />
 	{/if}
 </svg>

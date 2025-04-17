@@ -608,6 +608,11 @@ export function isLocalConstraint(toolId: TOOLID): boolean {
 	return enumValues.includes(toolId);
 }
 
+export function isSimpleSingleCellTool(toolId: TOOLID): boolean {
+	const enumValues = Object.values(SIMPLE_SINGLE_CELL_CONSTRAINTS) as string[];
+	return enumValues.includes(toolId) || toolId === TOOLS.COSMETIC_CELL_CENTER_SHAPE;
+}
+
 export function isSingleCellArrowTool(toolId: TOOLID): boolean {
 	const enumValues = Object.values(SINGLE_CELL_ARROW_CONSTRAINTS) as string[];
 	return enumValues.includes(toolId) || toolId === TOOLS.COSMETIC_CELL_ARROW;
@@ -619,14 +624,10 @@ export function isSingleCellMultiArrowTool(toolId: TOOLID): boolean {
 }
 
 export function isSingleCellTool(toolId: TOOLID): boolean {
-	const enumValues = Object.values(SIMPLE_SINGLE_CELL_CONSTRAINTS) as string[];
 	return (
-		enumValues.includes(toolId) ||
+		isSimpleSingleCellTool(toolId) ||
 		isSingleCellArrowTool(toolId) ||
-		isSingleCellMultiArrowTool(toolId) ||
-		toolId === TOOLS.COSMETIC_CELL_CENTER_SHAPE ||
-		toolId === TOOLS.COSMETIC_CELL_ARROW ||
-		toolId === TOOLS.COSMETIC_CELL_MULTI_ARROW
+		isSingleCellMultiArrowTool(toolId)
 	);
 }
 

@@ -53,8 +53,6 @@ export class CellPointerHandler {
 	}
 
 	pointerMove(event: PointerEvent, svgRef: SVGSVGElement): void {
-		if (!this._isDown) return;
-
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
@@ -68,8 +66,12 @@ export class CellPointerHandler {
 		this._prevPoint = point;
 		this._isTap = false;
 
-		const cellDragTapEvent: CellDragTapEvent = { event, cell, tapCount: this._tapCount };
-		if (this.onDrag) this.onDrag(cellDragTapEvent);
+		const dragTapEvent: CellDragTapEvent = { event, cell, tapCount: this._tapCount };
+
+		if (this.onMove) this.onMove(dragTapEvent);
+
+		if (this._isDown) this._isTap = false;
+		if (this._isDown && this.onDrag) this.onDrag(dragTapEvent);
 	}
 
 	pointerUp(event: PointerEvent, svgRef: SVGSVGElement): void {

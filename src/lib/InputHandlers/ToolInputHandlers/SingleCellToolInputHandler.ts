@@ -1,10 +1,7 @@
 import type { InputHandler } from '../InputHandler';
-import type { SingleCellToolOptions } from "./types";
+import type { SingleCellToolOptions } from './types';
 import type { TOOLID } from '$lib/Puzzle/Tools';
-import {
-	currentConstraintStore,
-	updateLocalConstraint
-} from '$stores/BoardStore';
+import { currentConstraintStore, currentShapeStore, updateLocalConstraint } from '$stores/BoardStore';
 import { localConstraintsStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
@@ -25,6 +22,7 @@ import {
 	type CellToolI
 } from '$lib/Puzzle/Constraints/SingleCellConstraints';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
+import { simpleCellToolPreviewStore } from '$stores/ElementsStore';
 
 export function getSingleCellToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -81,6 +79,22 @@ export function getSingleCellToolInputHandler(
 
 	pointerHandler.onDrag = (event: CellDragTapEvent): void => {
 		handle(event);
+	};
+
+	pointerHandler.onMove = (event: CellDragTapEvent): void => {
+		const onGrid = isCellOnGrid(event.cell, gridShape);
+		if (!onGrid) {
+			simpleCellToolPreviewStore.set(undefined);
+			return;
+		}
+
+		const constraint_preview = singleCellConstraint(tool, event.cell, options?.defaultValue);
+		const currentShape = get(currentShapeStore);
+		if (currentShape) {
+			constraint_preview.shape = { ...currentShape };
+		}
+
+		simpleCellToolPreviewStore.set(constraint_preview);
 	};
 
 	function onKeyDown(event: KeyboardEvent) {

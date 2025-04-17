@@ -22,6 +22,7 @@ import type { ArrowToolI } from '$lib/Puzzle/Constraints/ArrowConstraints';
 import type {
 	CellArrowToolI,
 	CellMultiArrowToolI,
+	CellToolI,
 	SingleCellTool
 } from '$lib/Puzzle/Constraints/SingleCellConstraints';
 import type { EdgeToolI } from '$lib/Puzzle/Constraints/EdgeConstraints';
@@ -85,6 +86,8 @@ export const cageToolsStore = getToolsStore<CageToolI>(isCageTool);
 export const cloneToolsStore = getToolsStore<CloneToolI>(isCloneTool);
 export const outsideDirectionToolsStore =
 	getToolsStore<OutsideDirectionToolI>(isOutsideDirectionTool);
+
+export const simpleCellToolPreviewStore = writable<undefined | CellToolI>(undefined);
 
 export const singleCellArrowPreviewStore = writable<undefined | CellArrowToolI>(undefined);
 
