@@ -42,6 +42,7 @@
 		edgeToolPreviewStore,
 		edgeToolsStore,
 		lineToolsStore,
+		outsideDirectionToolPreviewStore,
 		outsideDirectionToolsStore,
 		simpleCellToolPreviewStore,
 		singleCellArrowPreviewStore,
@@ -124,6 +125,13 @@
 
 	<SeenCellsRender />
 
+	<!-- OutsideDirectionToolsRender -->
+	<ToolsLayerRender
+		elements={$outsideDirectionToolsStore}
+		g_name={'outside-direction-tools-layer'}
+		Component={OutsideDirectionToolRender}
+	/>
+
 	<!-- <SingleCellToolsRender /> -->
 	<ToolsLayerRender
 		elements={$singleCellToolsStore}
@@ -168,13 +176,6 @@
 		elements={$cornerLineToolsStore}
 		g_name={'corner-line-tools-layer'}
 		Component={CornerLineToolRender}
-	/>
-
-	<!-- OutsideDirectionToolsRender -->
-	<ToolsLayerRender
-		elements={$outsideDirectionToolsStore}
-		g_name={'outside-direction-tools-layer'}
-		Component={OutsideDirectionToolRender}
 	/>
 
 	<SelectionRender {boundingBox} />
@@ -226,5 +227,8 @@
 	{/if}
 	{#if isCornerTool($toolStore) && $cornerToolPreviewStore}
 		<CornerToolRender tool={$cornerToolPreviewStore} />
+	{/if}
+	{#if isOutsideDirectionTool($toolStore) && $outsideDirectionToolPreviewStore}
+		<OutsideDirectionToolRender tool={$outsideDirectionToolPreviewStore} />
 	{/if}
 </svg>

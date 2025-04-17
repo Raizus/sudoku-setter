@@ -98,3 +98,5 @@ export const singleCellMultiArrowPreviewStore = writable<undefined | CellMultiAr
 export const edgeToolPreviewStore = writable<undefined | EdgeToolI>(undefined);
 
 export const cornerToolPreviewStore = writable<undefined | CornerToolI>(undefined);
+
+export const outsideDirectionToolPreviewStore = writable<undefined | OutsideDirectionToolI>(undefined);
