@@ -3,16 +3,18 @@
 	import SingleCellMultiArrowRender from './SingleCellMultiArrowRender.svelte';
 	import SimpleSingleCellToolRender from './SimpleSingleCellToolRender.svelte';
 	import type { SingleCellTool } from '$src/lib/Puzzle/Constraints/SingleCellConstraints';
+	import { TOOLS } from '$src/lib/Puzzle/Tools';
 
 	export let tool: SingleCellTool;
 	export let c_id: string;
 </script>
 
-
-{#if tool.type === 'ARROW'}
-    <SingleCellArrowRender {tool} {c_id}/>
-{:else if tool.type === 'MULTIARROW'}
-    <SingleCellMultiArrowRender {tool} {c_id}/>
-{:else if tool.type === 'SIMPLE'}
-    <SimpleSingleCellToolRender {tool} {c_id} />
+{#if tool.toolId !== TOOLS.FOG_LIGHTS}
+	{#if tool.type === 'ARROW'}
+		<SingleCellArrowRender {tool} {c_id} />
+	{:else if tool.type === 'MULTIARROW'}
+		<SingleCellMultiArrowRender {tool} {c_id} />
+	{:else if tool.type === 'SIMPLE'}
+		<SimpleSingleCellToolRender {tool} {c_id} />
+	{/if}
 {/if}

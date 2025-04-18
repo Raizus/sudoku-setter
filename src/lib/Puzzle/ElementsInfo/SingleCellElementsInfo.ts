@@ -352,7 +352,7 @@ export const indexingColumnInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.SQUARE,
 		strokeWidth: { editable: false, value: 0 },
 		fill: { editable: false, value: 'rgba(155, 40, 40, 0.7)' },
-		opacity: { editable: false, value: 0.7 },
+		opacity: { editable: false, value: 0.7 }
 	},
 
 	meta: {
@@ -1289,6 +1289,20 @@ export const shikakuRegionSumInfo: SquareCellElementInfo = {
 	meta: {
 		description:
 			'Each shikaku region contains exactly one clue, and each clue indicates the sum of the digits in its shikaku region.',
+		tags: [],
+		categories: singleCellShapeDefaultCategories
+	}
+};
+
+export const fogLighsInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+
+	toolId: TOOLS.FOG_LIGHTS,
+	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	meta: {
+		description:
+			'Place fog lights which clear the fog at the start. Fog: cover cells with fog that only clears when a correct digit is placed.',
 		tags: [],
 		categories: singleCellShapeDefaultCategories
 	}

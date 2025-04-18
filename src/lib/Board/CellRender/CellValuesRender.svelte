@@ -3,8 +3,7 @@
 	import { cellsSeenByCell } from '$lib/Puzzle/SeenCells';
 	import { TOOLS } from '$lib/Puzzle/Tools';
 	import { cellToCellCenterVector } from '$lib/utils/SquareCellGridRenderUtils';
-	import { gridStore, puzzleStore, toolStore } from '$stores/BoardStore';
-	import { globalConstraintsStore } from '$stores/BoardStore';
+	import { puzzleStore, toolStore } from '$stores/BoardStore';
 	import { settingsStore } from '$stores/SettingsStore';
 	import CenterMarksRender from './CenterMarksRender.svelte';
 	import CornerMarksRender from './CornerMarksRender.svelte';
@@ -54,20 +53,6 @@
 					font-weight={fontWeight}
 				>
 					{cell.region}
-				</text>
-			{/if}
-		{:else if $toolStore === TOOLS.FOG}
-			<!-- render fog values -->
-			{#if cell.fog !== null}
-				<text
-					class="cell-region"
-					x={center.x}
-					y={center.y}
-					dominant-baseline="central"
-					font-size={fontSize}
-					font-weight={fontWeight}
-				>
-					{getFogString(cell.fog)}
 				</text>
 			{/if}
 		{:else if value !== null}

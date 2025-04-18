@@ -22,7 +22,6 @@ import {
 	centerPMInfo,
 	cornerPMInfo,
 	digitInfo,
-	fogInfo,
 	givenInfo,
 	highlightsInfo,
 	outsideInfo,
@@ -317,7 +316,8 @@ import {
 	reverseCountingCirclesInfo,
 	cellKnightWhispersInfo,
 	shikakuRegionSizeInfo,
-	shikakuRegionSumInfo
+	shikakuRegionSumInfo,
+	fogLighsInfo
 } from './SingleCellElementsInfo';
 import {
 	coldArrowsInfo,
@@ -352,7 +352,6 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.CORNER_PM]: cornerPMInfo,
 	[TOOLS.CENTER_PM]: centerPMInfo,
 	[TOOLS.HIGHLIGHTS]: highlightsInfo,
-	[TOOLS.FOG]: fogInfo,
 	[TOOLS.PEN_TOOL]: penToolInfo,
 
 	//Global Constraints
@@ -475,6 +474,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 		connectFourAdjacentYellowsMinimumDifferenceAtLeast3Info,
 
 	// Single Cell Constraints
+	[TOOLS.FOG_LIGHTS]: fogLighsInfo,
+
 	[TOOLS.ODD]: oddInfo,
 	[TOOLS.EVEN]: evenInfo,
 	[TOOLS.MINIMUM]: minimumInfo,

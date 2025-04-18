@@ -13,5 +13,5 @@
 {:else}
 	<g class="single-cell-tool-preview" opacity={0.5}>
 		<SimpleSingleCellToolRenderAux {tool} />
-	</g>    
+	</g>
 {/if}

@@ -128,24 +128,6 @@ export const outsideInfo: SquareCellElementInfo = {
 	}
 };
 
-export const fogInfo: SquareCellElementInfo = {
-	inputOptions: { type: HANDLER_TOOL_TYPE.SELECTION },
-	toolId: TOOLS.FOG,
-	order: 0,
-
-	permanent: true,
-	menu: {
-		type: 'select',
-		name: 'Set Fog'
-	},
-
-	meta: {
-		description: 'Cells are covered by fog.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.CELL_INPUT_TOOL]
-	}
-};
-
 export const penToolInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.PEN },
 	toolId: TOOLS.PEN_TOOL,

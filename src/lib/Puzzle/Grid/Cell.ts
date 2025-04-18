@@ -6,7 +6,6 @@ export interface CellRecord {
 	outside?: boolean;
 	value?: number;
 	given?: boolean;
-	fog?: boolean;
 	centerMarks?: number[];
 	cornerMarks?: number[];
 	highlights?: number[];
@@ -52,7 +51,6 @@ export class Cell implements CellI {
 	centerMarks: number[] = [];
 	cornerMarks: number[] = [];
 	highlights: number[] = [];
-	fog: boolean = false;
 
 	constructor(r: number, c: number) {
 		this.r = r;
@@ -109,10 +107,6 @@ export class Cell implements CellI {
 		this.highlights = enterArray(this.highlights, value);
 	}
 
-	enterFog(value: boolean): void {
-		this.fog = value;
-	}
-
 	enterCell(value: number | null, tool: TOOLID, clear = false): void {
 		if (tool === TOOLS.GIVEN) {
 			this.enterGiven(value, clear);
@@ -141,10 +135,6 @@ export class Cell implements CellI {
 		}
 
 		if (this.region !== getRegionIndex(this.r, this.c, g_size)) cellRecord['region'] = this.region;
-
-		if (this.fog) {
-			cellRecord.fog = this.fog;
-		}
 
 		if (this.cornerMarks.length) {
 			cellRecord.cornerMarks = this.cornerMarks;

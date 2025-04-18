@@ -9,7 +9,7 @@
 
 <g class={g_name} mask="url(#fog-mask-fog)">
 	{#each elements as { toolId, element }}
-		<g class={`element-group`} data-toolId={toolId}>
+		<g class="element-group" data-toolId={toolId}>
 			{#each Object.entries(element) as entry (entry[0])}
 				<Component tool={entry[1]} c_id={entry[0]}/>
 			{/each}

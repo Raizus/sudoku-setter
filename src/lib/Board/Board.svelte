@@ -19,6 +19,7 @@
 		isSimpleSingleCellTool,
 		isSingleCellArrowTool,
 		isSingleCellMultiArrowTool,
+		TOOLS,
 		type TOOLID
 	} from '$lib/Puzzle/Tools';
 	import type { OutsideDirectionToolI } from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
@@ -41,6 +42,7 @@
 		cornerToolsStore,
 		edgeToolPreviewStore,
 		edgeToolsStore,
+		fogLightsStore,
 		lineToolsStore,
 		outsideDirectionToolPreviewStore,
 		outsideDirectionToolsStore,
@@ -61,6 +63,8 @@
 	import EdgeToolRender from './Constraints/EdgeToolRender.svelte';
 	import SingleCellMultiArrowRender from './Constraints/SingleCellMultiArrowRender.svelte';
 	import SimpleSingleCellToolRender from './Constraints/SimpleSingleCellToolRender.svelte';
+	import FogLightBulbDefs from './FogLightBulbDefs.svelte';
+	import FogLightsRender from './Constraints/FogLightsRender.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 
@@ -111,6 +115,7 @@
 	tabindex="-1"
 	viewBox={getViewbox(boundingBox)}
 >
+	<FogLightBulbDefs />
 	<FogDefs {boundingBox} {gridShape} />
 	<FogCover {gridShape} />
 
@@ -124,6 +129,8 @@
 	</g>
 
 	<SeenCellsRender />
+
+	<FogLightsRender element={$fogLightsStore} />
 
 	<!-- OutsideDirectionToolsRender -->
 	<ToolsLayerRender
@@ -213,7 +220,7 @@
 
 	<ConflictsRender />
 
-	{#if isSimpleSingleCellTool($toolStore) && $simpleCellToolPreviewStore}
+	{#if isSimpleSingleCellTool($toolStore) && $toolStore !== TOOLS.FOG_LIGHTS && $simpleCellToolPreviewStore}
 		<SimpleSingleCellToolRender tool={$simpleCellToolPreviewStore} />
 	{/if}
 	{#if isSingleCellArrowTool($toolStore) && $singleCellArrowPreviewStore}

@@ -53,7 +53,32 @@ function getToolsStore<T extends ConstraintType>(
 	return store;
 }
 
+export function getToolStore<T extends ConstraintType>(tool_id: TOOLID): Readable<Record<string, T>> {
+	const store = derived(localConstraintsStore, ($localConstraintsStore) => {
+		for (const [toolId, element] of $localConstraintsStore.entries()) {
+			if (toolId !== tool_id) continue;
+			const record = element as Record<string, T>;
+			return record;
+		}
+		const record: Record<string, T> = {};
+		return record;
+	});
+	return store;
+}
+
 export const singleCellToolsStore = getToolsStore<SingleCellTool>(isSingleCellTool);
+
+export const fogLightsStore = derived(singleCellToolsStore, ($singleCellToolsStore) => {
+	const target_element = $singleCellToolsStore.find(
+		(element) => element.toolId === TOOLS.FOG_LIGHTS
+	);
+	if (target_element) {
+		const record = target_element.element as Record<string, CellToolI>;
+		return record;
+	}
+	const record: Record<string, CellToolI> = {};
+	return record;
+});
 
 export const minimumConstraintsStore = derived(singleCellToolsStore, ($singleCellToolsStore) => {
 	const target_element = $singleCellToolsStore.find((element) => element.toolId === TOOLS.MINIMUM);
@@ -99,4 +124,6 @@ export const edgeToolPreviewStore = writable<undefined | EdgeToolI>(undefined);
 
 export const cornerToolPreviewStore = writable<undefined | CornerToolI>(undefined);
 
-export const outsideDirectionToolPreviewStore = writable<undefined | OutsideDirectionToolI>(undefined);
+export const outsideDirectionToolPreviewStore = writable<undefined | OutsideDirectionToolI>(
+	undefined
+);

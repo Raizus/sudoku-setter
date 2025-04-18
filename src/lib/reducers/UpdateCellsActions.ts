@@ -8,8 +8,6 @@ export enum UPDATE_CELLS_ACTIONS {
 	RESTORE_GIVENS = 'RESTORE_GIVENS',
 	SET_REGIONS = 'SET_REGIONS',
 	RESTORE_REGIONS = 'RESTORE_REGIONS',
-	SET_FOG = 'SET_FOG',
-	RESTORE_FOG = 'RESTORE_FOG',
 	SET_PENCILMARKS = 'SET_PENCILMARKS',
 	RESTORE_PENCILMARKS = 'RESTORE_PENCILMARKS',
 	SET_HIGHLIGHTS = 'SET_HIGHLIGHTS',
@@ -62,22 +60,6 @@ type RestoreCellsRegionsAction = {
 	payload: {
 		cells: Cell[];
 		values: Array<number | null>;
-	};
-};
-
-type SetCellsFogAction = {
-	type: UPDATE_CELLS_ACTIONS.SET_FOG;
-	payload: {
-		cells: Cell[];
-		value: boolean;
-	};
-};
-
-type RestoreCellsFogAction = {
-	type: UPDATE_CELLS_ACTIONS.RESTORE_FOG;
-	payload: {
-		cells: Cell[];
-		values: boolean[];
 	};
 };
 
@@ -186,29 +168,6 @@ export const restoreCellsRegionsAction = (
 	};
 };
 
-export const setCellsFogAction = (cells: Cell[], value: boolean): SetCellsFogAction => {
-	return {
-		type: UPDATE_CELLS_ACTIONS.SET_FOG,
-		payload: {
-			cells,
-			value
-		}
-	};
-};
-
-export const restoreCellsFogAction = (
-	cells: Cell[],
-	values: boolean[]
-): RestoreCellsFogAction => {
-	return {
-		type: UPDATE_CELLS_ACTIONS.RESTORE_FOG,
-		payload: {
-			cells,
-			values
-		}
-	};
-};
-
 export const setCellsPencilmarksAction = (
 	cells: Cell[],
 	value: number | null,
@@ -272,8 +231,6 @@ export type UpdateCellsAction =
 	| RestoreCellsGivenAction
 	| SetCellsRegionAction
 	| RestoreCellsRegionsAction
-	| SetCellsFogAction
-	| RestoreCellsFogAction
 	| SetCellsHighlightAction
 	| RestoreCellsHighlightsAction
 	| SetCellsPencilmarksAction

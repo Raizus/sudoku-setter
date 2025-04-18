@@ -7,8 +7,7 @@ export enum CELL_INPUT_TOOLS {
 	CENTER_PM = 'Center Pencilmarks',
 	HIGHLIGHTS = 'Highlights',
 	REGIONS = 'Regions',
-	OUTSIDE = 'Outside',
-	FOG = 'Fog'
+	OUTSIDE = 'Outside'
 }
 
 export enum SIMPLE_GLOBAL_CONSTRAINTS {
@@ -153,6 +152,8 @@ export enum GLOBAL_LOOP_CONSTRAINTS {
 }
 
 export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
+	FOG_LIGHTS = 'Fog Lights',
+
 	ODD = 'Odd',
 	EVEN = 'Even',
 	MAXIMUM = 'Maximum',

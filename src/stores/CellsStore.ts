@@ -1,13 +1,11 @@
 import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
 import { TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
 import {
-	restoreCellsFogAction,
 	restoreCellsGivenAction,
 	restoreCellsHighlightsAction,
 	restoreCellsPencilmarksAction,
 	restoreCellsRegionsAction,
 	restoreCellsValueAction,
-	setCellsFogAction,
 	setCellsGivenAction,
 	setCellsHighlightAction,
 	setCellsPencilmarksAction,
@@ -41,13 +39,6 @@ export function generateUpdateCellAction(
 		const prev_vals = cells.map((cell) => cell.region);
 		const action = setCellsRegionAction(cells, value);
 		const reverse_action = restoreCellsRegionsAction(cells, prev_vals);
-		return [action, reverse_action];
-	}
-	if (tool === TOOLS.FOG) {
-		const prev_vals = cells.map((cell) => cell.fog);
-		const aux_val = value === 1 ? true : false;
-		const action = setCellsFogAction(cells, aux_val);
-		const reverse_action = restoreCellsFogAction(cells, prev_vals);
 		return [action, reverse_action];
 	}
 	if (tool === TOOLS.HIGHLIGHTS && value !== null) {
@@ -173,28 +164,6 @@ export function executeUpdateCellsAction(action: UpdateCellsAction) {
 			for (let i = 0; i < cells.length; i++) {
 				if (tool === TOOLS.CENTER_PM) cells[i].centerMarks = values[i];
 				else if (tool === TOOLS.CORNER_PM) cells[i].cornerMarks = values[i];
-			}
-			cellsStore.update((_cells) => {
-				return _cells;
-			});
-			break;
-		}
-		case UPDATE_CELLS_ACTIONS.SET_FOG: {
-			const cells = action.payload.cells;
-			const value = action.payload.value;
-			cells.forEach((cell) => {
-				cell.fog = value;
-			});
-			cellsStore.update((_cells) => {
-				return _cells;
-			});
-			break;
-		}
-		case UPDATE_CELLS_ACTIONS.RESTORE_FOG: {
-			const cells = action.payload.cells;
-			const values = action.payload.values;
-			for (let i = 0; i < cells.length; i++) {
-				cells[i].fog = values[i];
 			}
 			cellsStore.update((_cells) => {
 				return _cells;

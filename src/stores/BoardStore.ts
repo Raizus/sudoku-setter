@@ -197,8 +197,8 @@ export const showFogStore = derived(
 	([$settingsStore, $toolStore, $gameModeStore]) => {
 		const hide_fog = $settingsStore.hideFog;
 		const tool = $toolStore;
-		const tools: TOOLID[] = [TOOLS.FOG, TOOLS.REGIONS];
-		const show_fog = !tools.includes(tool) && !hide_fog && $gameModeStore === GAME_MODE.SETTING;
+		const has_fog = tool === TOOLS.FOG_LIGHTS;
+		const show_fog = has_fog && (!hide_fog && $gameModeStore === GAME_MODE.SETTING);
 		return show_fog;
 	}
 );

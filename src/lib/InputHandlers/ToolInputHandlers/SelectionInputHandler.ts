@@ -121,18 +121,6 @@ function filterCellsByValue(
 			});
 			return filtered;
 		}
-		case TOOLS.FOG: {
-			const aux_val = value === 1 ? true : false;
-			const filtered = cells.filter((cell) => {
-				return (
-					(matchType === 'any' && cell.fog) ||
-					(matchType === 'empty' && !cell.fog) ||
-					(matchType === 'equal' && cell.fog === aux_val) ||
-					(matchType === 'different' && cell.fog !== aux_val)
-				);
-			});
-			return filtered;
-		}
 	}
 	return cells;
 }
@@ -170,27 +158,6 @@ function addUpdateCellsCommand(
 		const commands = [sel_command, command];
 		addCommands(commands);
 	}
-}
-
-function onKeyInputFog(value: number | null, cells: Cell[], selection: GridCoordI[]) {
-	const tool = TOOLS.FOG;
-	if (value !== null && ![0, 1].includes(value)) return false;
-
-	if (value === null) {
-		const affected = filterCellsByValue(cells, tool, 'any', -1, false);
-		if (affected.length) {
-			addUpdateCellsCommand(selection, affected, tool, value);
-			return true;
-		}
-	} else {
-		// if match different => change these cells fog value
-		const affected = filterCellsByValue(cells, tool, 'different', value, true);
-		if (affected.length) {
-			addUpdateCellsCommand(selection, affected, tool, value);
-			return true;
-		}
-	}
-	return false;
 }
 
 export function getSelectionInputHandler(
@@ -317,11 +284,7 @@ export function getSelectionInputHandler(
 			if (cell) cells.push(cell);
 		});
 
-		// handle input on fog
-		if (tool === TOOLS.FOG) {
-			const res = onKeyInputFog(value, cells, selection);
-			return res;
-		} else if (value === null) {
+		if (value === null) {
 			// handle deletion action
 			const { tool: targetTool, cells: affected } = enterModeOnDelete(cells, tool);
 			if (affected.length) {
