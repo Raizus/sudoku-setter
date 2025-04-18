@@ -702,6 +702,21 @@ export function isCellInputTool(toolId: TOOLID): boolean {
 	return enumValues.includes(toolId);
 }
 
+export function isUnderlayTool(toolId: TOOLID): boolean {
+	return (
+		isOutsideDirectionTool(toolId) ||
+		isSingleCellTool(toolId) ||
+		isLineTool(toolId) ||
+		isArrowTool(toolId) ||
+		isCageTool(toolId) ||
+		isCloneTool(toolId)
+	);
+}
+
+export function isOverlayTool(toolId: TOOLID): boolean {
+	return isEdgeTool(toolId) || isCornerTool(toolId) || isCenterEdgeCornerTool(toolId);
+}
+
 export const LOCAL_CONSTRAINTS_CATEGORIES = [
 	TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
 	TOOL_CATEGORIES.EDGE_CONSTRAINT,

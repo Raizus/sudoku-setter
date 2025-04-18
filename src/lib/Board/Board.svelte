@@ -32,42 +32,31 @@
 	import SolutionRender from './SolutionRender.svelte';
 	import ToolsLayerRender from './Constraints/ToolsLayerRender.svelte';
 	import {
-		arrowToolsStore,
-		cageToolsStore,
 		centerCornerOrEdgeToolsStore,
-		cloneToolsStore,
 		cornerLineToolsStore,
 		cornerToolPreviewStore,
 		cornerToolsStore,
 		edgeToolPreviewStore,
 		edgeToolsStore,
 		fogLightsStore,
-		lineToolsStore,
 		outsideDirectionToolPreviewStore,
-		outsideDirectionToolsStore,
 		simpleCellToolPreviewStore,
 		singleCellArrowPreviewStore,
 		singleCellMultiArrowPreviewStore,
-		singleCellToolsStore
 	} from '$stores/ElementsStore.js';
 	import CornerToolRender from './Constraints/CornerToolRender.svelte';
 	import CenterCornerOrEdgeToolRender from './Constraints/CenterCornerOrEdgeToolRender.svelte';
-	import LineToolRender from './Constraints/LineToolRender.svelte';
-	import CageToolRender from './Constraints/CageToolRender.svelte';
-	import CloneToolRender from './Constraints/CloneToolRender.svelte';
 	import OutsideDirectionToolRender from './Constraints/OutsideDirectionToolRender.svelte';
 	import CornerLineToolRender from './Constraints/CornerLineToolRender.svelte';
-	import SingleCellToolRender from './Constraints/SingleCellToolRender.svelte';
-	import ArrowToolRender from './Constraints/ArrowToolRender.svelte';
 	import EdgeToolRender from './Constraints/EdgeToolRender.svelte';
 	import SingleCellMultiArrowRender from './Constraints/SingleCellMultiArrowRender.svelte';
-	import SimpleSingleCellToolRender from './Constraints/SimpleSingleCellToolRender.svelte';
 	import FogLightBulbDefs from './FogLightBulbDefs.svelte';
 	import FogLightsRender from './Constraints/FogLightsRender.svelte';
 	import EdgeToolPreviewRender from './Constraints/EdgeToolPreviewRender.svelte';
 	import CornerToolPreviewRender from './Constraints/CornerToolPreviewRender.svelte';
 	import SingleCellArrowPreviewRender from './Constraints/SingleCellArrowPreviewRender.svelte';
 	import SimpleSingleCellToolPreviewRender from './Constraints/SimpleSingleCellToolPreviewRender.svelte';
+	import UnderlayRender from './UnderlayRender.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 
@@ -135,51 +124,14 @@
 
 	<FogLightsRender element={$fogLightsStore} />
 
-	<!-- OutsideDirectionToolsRender -->
-	<ToolsLayerRender
-		elements={$outsideDirectionToolsStore}
-		g_name={'outside-direction-tools-layer'}
-		Component={OutsideDirectionToolRender}
-	/>
-
-	<!-- <SingleCellToolsRender /> -->
-	<ToolsLayerRender
-		elements={$singleCellToolsStore}
-		g_name={'single-cell-tools-layer'}
-		Component={SingleCellToolRender}
-	/>
-
-	<!-- CageToolsRender -->
-	<ToolsLayerRender
-		elements={$cageToolsStore}
-		g_name={'cage-tools-layer'}
-		Component={CageToolRender}
-	/>
-
-	<!-- LineToolsRender -->
-	<ToolsLayerRender
-		elements={$lineToolsStore}
-		g_name={'line-tools-layer'}
-		Component={LineToolRender}
-	/>
-
-	<!-- CloneToolsRender -->
-	<ToolsLayerRender
-		elements={$cloneToolsStore}
-		g_name={'clone-tools-layer'}
-		Component={CloneToolRender}
-	/>
-
-	<!-- <ArrowToolsRender/> -->
-	<ToolsLayerRender
-		elements={$arrowToolsStore}
-		g_name={'arrow-tools-layer'}
-		Component={ArrowToolRender}
-	/>
+	<!-- underlay elements - below the grid lines -->
+	<UnderlayRender />
 
 	<GridLinesRender />
 	<DiagonalsRender />
 	<GridRegionsRender />
+
+	<!-- overlay elements - above the grid lines -->
 
 	<!-- CornerLineToolsRender -->
 	<ToolsLayerRender
