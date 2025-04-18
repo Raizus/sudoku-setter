@@ -25,10 +25,10 @@ export class CellPointerHandler {
 
 	private _lastTapPosition: Vector2D | null = null;
 	private _lastTapTime = 0;
-	private _margin: number | undefined = undefined;
+	private _drag_margin: number | undefined = undefined;
 
-	constructor(margin: number = 0.4) {
-		this._margin = margin;
+	constructor(drag_margin: number = 0.4) {
+		this._drag_margin = drag_margin;
 	}
 
 	pointerDown(event: PointerEvent, svgRef: SVGSVGElement): void {
@@ -40,7 +40,7 @@ export class CellPointerHandler {
 		if (!point) return;
 
 		this._prevPoint = point;
-		const margin = isFirstClick ? undefined : this._margin;
+		const margin = isFirstClick ? undefined : this._drag_margin;
 		const cellInfo = getClosestCell(point, margin);
 		if (!cellInfo) return;
 
@@ -56,7 +56,10 @@ export class CellPointerHandler {
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
-		const cellInfo = getClosestCell(point, this._margin);
+		let margin: number | undefined = undefined;
+		if (this._isDown) margin = this._drag_margin;
+
+		const cellInfo = getClosestCell(point, margin);
 		if (!cellInfo) return;
 
 		const cell = cellInfo.cell;
