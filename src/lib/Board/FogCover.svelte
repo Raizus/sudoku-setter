@@ -5,7 +5,6 @@
 	export let gridShape: GridShape;
 
 	$: show_fog = $showFogStore;
-	$: console.log(show_fog);
 </script>
 
 <g class="fog-fogcover" visibility={show_fog ? "visible" : "hidden"}>
