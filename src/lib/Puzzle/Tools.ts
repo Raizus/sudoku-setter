@@ -375,7 +375,7 @@ export enum ARROW_CONSTRAINTS {
 	BULBOUS_ARROW = 'Bulbous Arrow',
 	SQUARE_ROOT_ARROW = 'Square Root Arrow',
 
-	CHAOS_CONSTRUCTION_ARROW = 'Chaos Construction Arrow',
+	CHAOS_CONSTRUCTION_ARROW = 'Chaos Construction Arrow'
 }
 
 export enum CAGE_CONSTRAINTS {
@@ -562,6 +562,7 @@ export enum TOOL_CATEGORIES {
 
 	DIAGONAL_CONSTRAINT = 'Diagonal Constraint',
 
+	LOCAL_ELEMENT = 'Local Element',
 	LOCAL_CONSTRAINT = 'Local Constraint',
 	SINGLE_CELL_CONSTRAINT = 'Single Cell Constraint',
 	SINGLE_CELL_COLOR_TOOL = 'Single Cell Color Tool',
@@ -608,6 +609,15 @@ export function isLocalConstraint(toolId: TOOLID): boolean {
 	const enumValues = Object.values(LOCAL_CONSTRAINTS) as string[];
 	return enumValues.includes(toolId);
 }
+
+export function isCosmeticTool(toolId: TOOLID): boolean {
+	const enumValues = Object.values(COSMETIC_TOOLS) as string[];
+	return enumValues.includes(toolId);
+}
+
+export function isLocalElement(toolId: TOOLID): boolean {
+	return isLocalConstraint(toolId) || isCosmeticTool(toolId);
+};
 
 export function isSimpleSingleCellTool(toolId: TOOLID): boolean {
 	const enumValues = Object.values(SIMPLE_SINGLE_CELL_CONSTRAINTS) as string[];
@@ -692,11 +702,6 @@ export function isValuedGlobalConstraint(toolId: TOOLID): boolean {
 	return enumValues.includes(toolId);
 }
 
-export function isCosmeticTool(toolId: TOOLID): boolean {
-	const enumValues = Object.values(COSMETIC_TOOLS) as string[];
-	return enumValues.includes(toolId);
-}
-
 export function isCellInputTool(toolId: TOOLID): boolean {
 	const enumValues = Object.values(CELL_INPUT_TOOLS) as string[];
 	return enumValues.includes(toolId);
@@ -730,6 +735,11 @@ export const LOCAL_CONSTRAINTS_CATEGORIES = [
 	TOOL_CATEGORIES.OUTSIDE_CORNER_CONSTRAINT,
 	TOOL_CATEGORIES.CENTER_CORNER_EDGE_CONSTRAINT
 ];
+
+export const LOCAL_ELEMENTS_CATEGORIES = [
+	...LOCAL_CONSTRAINTS_CATEGORIES,
+	TOOL_CATEGORIES.COSMETIC_TOOL
+]
 
 export const GLOBAL_CONSTRAINT_CATEGORIES = [
 	TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT,

@@ -14,16 +14,25 @@ import {
 	type SingleCellToolOptions
 } from '$input/ToolInputHandlers/types';
 
-const singleCellShapeDefaultCategories = [
+const DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES = [
 	TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
 	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
-	TOOL_CATEGORIES.SINGLE_CELL_SHAPE_TOOL
+	TOOL_CATEGORIES.SINGLE_CELL_SHAPE_TOOL,
+	TOOL_CATEGORIES.LOCAL_ELEMENT
 ];
 
-const singleCellColorDefaultCategories = [
+const DEFAULT_SINGLE_CELL_COLOR_CATEGORIES = [
 	TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
 	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
-	TOOL_CATEGORIES.SINGLE_CELL_COLOR_TOOL
+	TOOL_CATEGORIES.SINGLE_CELL_COLOR_TOOL,
+	TOOL_CATEGORIES.LOCAL_ELEMENT
+];
+
+const DEFAULT_SINGLE_CELL_ARROW_CATEGORIES = [
+	TOOL_CATEGORIES.SINGLE_CELL_ARROW_TOOL,
+	TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
+	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
+	TOOL_CATEGORIES.LOCAL_ELEMENT
 ];
 
 const DEFAULT_SQUARE_SHAPE: EditableShapeI = {
@@ -99,7 +108,7 @@ export const oddInfo: SquareCellElementInfo = {
 	meta: {
 		description: 'Cell value is odd.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -120,7 +129,7 @@ export const evenInfo: SquareCellElementInfo = {
 	meta: {
 		description: 'Cell value is even.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -133,7 +142,7 @@ export const minimumInfo: SquareCellElementInfo = {
 	meta: {
 		description: 'Cell value is greater than orthogonally adjacent cells.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT, TOOL_CATEGORIES.LOCAL_CONSTRAINT]
+		categories: DEFAULT_SINGLE_CELL_COLOR_CATEGORIES
 	}
 };
 
@@ -146,7 +155,7 @@ export const maximumInfo: SquareCellElementInfo = {
 	meta: {
 		description: 'Cell value is lesser than orthogonally adjacent cells.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT, TOOL_CATEGORIES.LOCAL_CONSTRAINT]
+		categories: DEFAULT_SINGLE_CELL_COLOR_CATEGORIES
 	}
 };
 
@@ -159,7 +168,7 @@ export const primeCellInfo: SquareCellElementInfo = {
 	meta: {
 		description: 'Cell value is prime.',
 		tags: [],
-		categories: singleCellColorDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_COLOR_CATEGORIES
 	}
 };
 
@@ -181,7 +190,7 @@ export const oddMinesweeperInfo: SquareCellElementInfo = {
 		description:
 			'A digit in a cell with a red circle is the same as the number of the surrounding cells (not counting the cell itself) with odd numbers. (So a total of 8 possible surrounding cells).',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -203,7 +212,7 @@ export const evenMinesweeperInfo: SquareCellElementInfo = {
 		description:
 			'A digit in a cell with a red square is the same as the number of the surrounding cells (not counting the cell itself) with even numbers. (So a total of 8 possible surrounding cells).',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -225,7 +234,7 @@ export const countSameParityNeighborCellsInfo: SquareCellElementInfo = {
 		description:
 			"Cells marked with a blue circle show the number of digits with the same parity as that circled digit in that cell's neighborhood (including the digit in the cell itself, 9 total cells).",
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -247,7 +256,7 @@ export const watchtowerInfo: SquareCellElementInfo = {
 		description:
 			'Cells with blue circles are watchtowers. The value in a watchtower cell is equal to the number of cells it "sees" in each direction. Watchtowers cannot see values larger than their own height, nor past them.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -269,7 +278,7 @@ export const notWatchtowerInfo: SquareCellElementInfo = {
 		description:
 			'Cells with blue squares are NOT watchtowers. The value in a watchtower cell is equal to the number of cells it "sees" in each direction. Watchtowers cannot see values larger than their own height, nor past them.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -290,7 +299,7 @@ export const farsightInfo: SquareCellElementInfo = {
 		description:
 			'A digit in a blue cage sees one or more consecutive digits exactly N cells away from itself in the same row or column, where N = the digit in the caged cell. For example, a caged 4 must see a 3 or 5 exactly 4 cells away from itself.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -316,7 +325,7 @@ export const radarInfo: SquareCellElementInfo = {
 		description:
 			"Cells with grey cages are radars. Radars are cells that have a value indicating the distance to the closest 'X' on their row or column (default X = 9).",
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -338,7 +347,7 @@ export const orthogonalSumInfo: SquareCellElementInfo = {
 		description:
 			'Grey opaque circles with blue outline (without arrows) contain the sum of all their orthogonally adjacent cells.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -351,14 +360,14 @@ export const indexingColumnInfo: SquareCellElementInfo = {
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
 		strokeWidth: { editable: false, value: 0 },
-		fill: { editable: false, value: 'rgba(155, 40, 40, 0.3)' },
+		fill: { editable: false, value: 'rgba(155, 40, 40, 0.3)' }
 	},
 
 	meta: {
 		description:
 			'Numbers in red cells are indexing columns: Any number X appearing in the Yth column of a row indicates the column X where the number Y appears in that row. Example: if R5C1 is a 6, then R5C6 is a 1 as the 1 must appear in the 6th position.',
 		tags: [],
-		categories: singleCellColorDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_COLOR_CATEGORIES
 	}
 };
 
@@ -371,14 +380,14 @@ export const indexingRowInfo: SquareCellElementInfo = {
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
 		strokeWidth: { editable: false, value: 0 },
-		fill: { editable: false, value: 'rgba(40, 40, 155, 0.3)' },
+		fill: { editable: false, value: 'rgba(40, 40, 155, 0.3)' }
 	},
 
 	meta: {
 		description:
 			'Numbers in blue cells are indexing rows: Any number X appearing in the Yth row of a column indicates the row X where the number Y appears in that column. Example: if R1C5 is a 6, then R6C5 is a 1 as the 1 must appear in the 6th position.',
 		tags: [],
-		categories: singleCellColorDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_COLOR_CATEGORIES
 	}
 };
 
@@ -391,13 +400,13 @@ export const lowDigitInfo: SquareCellElementInfo = {
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
 		strokeWidth: { editable: false, value: 0 },
-		fill: { editable: false, value: 'rgba(40, 40, 155, 0.7)' }
+		fill: { editable: false, value: 'rgba(40, 40, 155, 0.3)' }
 	},
 
 	meta: {
 		description: 'Cells colored blue are a low digit (<5).',
 		tags: [],
-		categories: singleCellColorDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_COLOR_CATEGORIES
 	}
 };
 
@@ -410,13 +419,13 @@ export const highDigitInfo: SquareCellElementInfo = {
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
 		strokeWidth: { editable: false, value: 0 },
-		fill: { editable: false, value: 'rgba(155, 40, 40, 0.7)' }
+		fill: { editable: false, value: 'rgba(155, 40, 40, 0.3)' }
 	},
 
 	meta: {
 		description: 'Cells colored red are a high digit (>5).',
 		tags: [],
-		categories: singleCellColorDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_COLOR_CATEGORIES
 	}
 };
 
@@ -436,7 +445,7 @@ export const friendlyCellInfo: SquareCellElementInfo = {
 		description:
 			'Cells marked green are friendly cells, i.e., they contain their row, column or box number.',
 		tags: [],
-		categories: singleCellColorDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_COLOR_CATEGORIES
 	}
 };
 
@@ -457,7 +466,7 @@ export const diagonallyAdjacentSumInfo: SquareCellElementInfo = {
 	meta: {
 		description: 'Cells with circles contain the sum of all diagonally adjacent digits.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -479,7 +488,7 @@ export const adjacentCellsInDifferentDirectionsHaveOpositeParityInfo: SquareCell
 		description:
 			'For each cell marked with a green circle, the following is true: Either its two horizontally adjacent cells are both even and its two vertically adjacent cells both odd; or its two horizontally adjacent cells are both odd and its two vertically adjacent cells are both even.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -495,7 +504,7 @@ export const sandwichRowColCountInfo: SquareCellElementInfo = {
 		description:
 			"A number in a circled cell indicates the total number of cells sandwiched between the 1's and the 9's in the row and column containing the circle. If a cell is simultaneously in a row sandwich and column sandwich, it is only counted once.",
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -517,7 +526,7 @@ export const countingCirclesInfo: SquareCellElementInfo = {
 		description:
 			'A circled digit indicates exactly how many circles contain that digit. Note: This also includes all circles which are bounding the split pea lines. If, for example, a 3 appears in a circle, then there must be exactly 3 circles that contain a 3.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -539,7 +548,7 @@ export const reverseCountingCirclesInfo: SquareCellElementInfo = {
 		description:
 			'A number appearing in a circle indicates how many times that number appears *outside* of circles.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -561,7 +570,7 @@ export const coloredCountingCirclesInfo: SquareCellElementInfo = {
  - Orthogonally adjacent circles are different colors.
  - The digit inside a circle appears that many times in circles of that color.`,
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -583,7 +592,7 @@ export const uniqueCellsInfo: SquareCellElementInfo = {
 	meta: {
 		description: 'Digits do not repeat on cells with hexagons on them.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -599,7 +608,7 @@ export const seenEvenCountInfo: SquareCellElementInfo = {
 		description:
 			'Black squares count the number of even digits that can be seen in all orthogonal directions combined, including itself.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -620,7 +629,7 @@ export const cellKnightWhispersInfo: SquareCellElementInfo = {
 		description:
 			'Digits in a circle must differ in value by at least X (default X = 5) with every cell a (chess) knights move away.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -642,7 +651,7 @@ export const seenOddCountInfo: SquareCellElementInfo = {
 		description:
 			'Black circles count the number of odd digits that can be seen in all orthogonal directions combined, including itself.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -664,7 +673,7 @@ export const yinYangMinesweeperInfo: SquareCellElementInfo = {
 		description:
 			"Circles act as 'minesweeper' clues. Cells containing a circle are always unshaded, and their value is the number of shaded cells in the surrounding 3x3 area (i.e. the up to eight cells that touch the circle either orthogonally or diagonally).",
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -686,7 +695,7 @@ export const yinYangSeenUnshadedCellsInfo: SquareCellElementInfo = {
 		description:
 			'Black circles represent unshaded cells. A digit on a circle is equal to the number of consecutive unshaded cells (including itself) the circle sees in its row and column.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -708,7 +717,7 @@ export const yinYangSeenShadedCellsInfo: SquareCellElementInfo = {
 		description:
 			'Yellow circles represent shaded cells. A digit on a circle is equal to the number of consecutive shaded cells (including itself) the circle sees in its row and column.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -724,7 +733,7 @@ export const yinYangSeenSameShadeCellsInfo: SquareCellElementInfo = {
 		description:
 			'A digit on a black square is equal to the number of consecutive shaded cells (including itself) the circle sees in its row and column, where cells of the other color block vision.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -747,7 +756,7 @@ export const yinYangAdjacentSameShadeCountInfo: SquareCellElementInfo = {
 		description:
 			"Numbers in cells with yellow diamonds indicate how many of that cell's (up to four) orthogonal neighbours share the same shading as the cell.",
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -771,7 +780,7 @@ export const yinYangShadedNeighboursCountInfo: SquareCellElementInfo = {
 		description:
 			'Values in cells with ocatgons give the number of shaded cells in the (up to 8) surrounding cells.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -793,7 +802,7 @@ export const twoContiguousRegionsRowColumnOppositeSetCountInfo: SquareCellElemen
 		description:
 			'Digits in a circled cell indicate the number of cells in the corresponding row and column combined that are in the other set.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -815,7 +824,7 @@ export const seenRegionBordersCountInfo: SquareCellElementInfo = {
 		description:
 			'A digit in a circle indicates the number of borders between regions it sees in its row and column. Note that the edge of the grid does not count toward this total.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -837,7 +846,7 @@ export const nurimisakiUnshadedEndpointInfo: SquareCellElementInfo = {
 		description:
 			"Circles mark an instance of a cell which is unshaded and orthogonally adjacent to exactly one other unshaded cell (i.e. the circles mark 'endpoints' of the unshaded area). The digit in a circle indicates how many cells are in the straight line of unshaded cells coming out of the cell with the circle, including itself.",
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -859,7 +868,7 @@ export const sashiganeBendRegionCountInfo: SquareCellElementInfo = {
 		description:
 			'A circle in a cell means that cell is the bend in a region, and also the number in that cell is how many cells are in that region (this rule does not apply to regions without a circle).',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -879,11 +888,7 @@ export const sashiganeArrowPointsToBendInfo: SquareCellElementInfo = {
 		description:
 			'An arrow in a cell means that cell is an end of a region, the arrow points to the bend, and also the value in the cell counts the number of cells in that leg of the region, including the bend cell (this rule does not apply to end-cells without arrows).',
 		tags: [],
-		categories: [
-			TOOL_CATEGORIES.SINGLE_CELL_ARROW_TOOL,
-			TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT
-		]
+		categories: DEFAULT_SINGLE_CELL_ARROW_CATEGORIES
 	}
 };
 
@@ -903,11 +908,7 @@ export const thermoSightlineLoopArrowInfo: SquareCellElementInfo = {
 		description:
 			"Each cell with an arrow (called an 'arrow cell') lies on the loop. The digit in an arrow cell is the number of visible loop cells in the indicated direction, where non-loop cells obstruct vision. (The arrow cell is not included in this count). Additionally, digits increase along loop cells seen by an arrow, starting with the digit in the arrow cell.",
 		tags: [],
-		categories: [
-			TOOL_CATEGORIES.SINGLE_CELL_ARROW_TOOL,
-			TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT
-		]
+		categories: DEFAULT_SINGLE_CELL_ARROW_CATEGORIES
 	}
 };
 
@@ -928,7 +929,7 @@ export const sashiganeRegionSumInfo: SquareCellElementInfo = {
 		description:
 			"A small clue in the top left corner of a cell gives the sum of the cells in that cell's region. Corner clues do not need to be in the top left cell of a region.",
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -943,7 +944,7 @@ export const cellOnTheLoopInfo: SquareCellElementInfo = {
 	meta: {
 		description: 'A black square indicates the cell is on the loop.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -958,7 +959,7 @@ export const cellNotOnTheLoopInfo: SquareCellElementInfo = {
 	meta: {
 		description: 'A black circle indicates the cell is not on the loop.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -980,7 +981,7 @@ export const countLoopNeighbourCellsInfo: SquareCellElementInfo = {
 		description:
 			'An orange circle indicates how many cells up to 8 surrounding cells plus itself (9 maximum) are on the loop.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -1001,7 +1002,7 @@ export const twilightCaveFillominoClueInfo: SquareCellElementInfo = {
 		description:
 			'If a clued cell is unshaded, the clue indicates the sum of numbers seen orthogonally from that cell; region borders block vision. If a clued cell is shaded, the clue indicates the total sum of numbers in its group of orthogonally connected shaded cells (which could include more than one region).',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -1023,7 +1024,7 @@ export const caveClueInfo: SquareCellElementInfo = {
 		description:
 			'Light blue circled cells are cave clues. Cave clues must be a part of the cave, with each number indicating the total count of cells connected vertically and horizontally to the numbered cell including the cell itself.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -1049,7 +1050,7 @@ Clarifications:
  - Bishops can “see” past cells from other regions—cells from other regions do not block a bishop's vision.
  - Each Chess Sum is calculated separately. For example, a cell with a “2” clue that contains a 7 can see 4 and 3 by king's move, and can see 5 and 2 by knight's move—the king's move digits and the knight's move digits each sum to 7 separately.`,
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -1071,7 +1072,7 @@ export const chaosConstructionArrowKnotsInfo: SquareCellElementInfo = {
 		description: `From each circle, draw some arrows that travel in a straight line either horizontally only or vertically only. The number in the bottom right corner of a circle cell indicates the number of arrows that must be drawn from that circle. Digits along an arrow must sum to the digit in the attached circle.
 		Additionally, all cells along arrows must be part of the same region as the circle they originate from. If an arrow doesn't reach the edge of the grid, the cell directly after the tip must be in a different region than the arrow.`,
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -1086,7 +1087,7 @@ export const chaosConstructionSeenSameRegionCountInfo: SquareCellElementInfo = {
 	meta: {
 		description: `The number in the circle shows how many region cells it sees in its row and column (including the cell with the circle itself) until it reaches the borders of the region.`,
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -1108,7 +1109,7 @@ export const directedPathStartInfo: SquareCellElementInfo = {
 	meta: {
 		description: `A green triangle marks the start of a directed path.`,
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -1130,7 +1131,7 @@ export const directedPathEndInfo: SquareCellElementInfo = {
 	meta: {
 		description: `A red hexagon marks the end of a directed path.`,
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -1151,7 +1152,7 @@ export const teleportInfo: SquareCellElementInfo = {
 	meta: {
 		description: `Entering a yellow teleport will cause Finkz to be instantly transported to the other teleport. From there she can continue her journey. The teleports contain the same digit.`,
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -1171,7 +1172,7 @@ export const nurikabeIslandProductOfSumAndSizeInfo: SquareCellElementInfo = {
 	meta: {
 		description: `Each island contains exactly one numbered clue, which gives the product of the sum of the digits on the island and the size (number of cells) of the island, e.g. an island filled with 346 is would have a "39" clue (13x3). A "?" may represent any single, double, or triple-digit number.`,
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -1189,7 +1190,7 @@ export const nurikabeSeenWaterwayCellsInfo: SquareCellElementInfo = {
 	meta: {
 		description: `Caged cells are waterway cells. The digit in a caged cell indicates how many waterway cells are seen orthogonally from that position, including itself (island cells block vision).`,
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -1204,7 +1205,7 @@ export const nurikabeIslandSizeCellInfo: SquareCellElementInfo = {
 	meta: {
 		description: `Circled cells belong to an island; the digit in the circle indicates the number of cells making up the island.`,
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -1225,7 +1226,7 @@ export const connectFourYellowInfo: SquareCellElementInfo = {
 	meta: {
 		description: `A yellow circle represents a yellow disc in connect four.`,
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -1246,7 +1247,7 @@ export const connectFourRedInfo: SquareCellElementInfo = {
 	meta: {
 		description: `A red circle represents a red disc in connect four.`,
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -1262,7 +1263,7 @@ export const shikakuRegionSizeInfo: SquareCellElementInfo = {
 		description:
 			'Each shikaku region contains exactly one circle, and a digit in a circle indicates the number of cells in its region.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -1288,7 +1289,7 @@ export const shikakuRegionSumInfo: SquareCellElementInfo = {
 		description:
 			'Each shikaku region contains exactly one clue, and each clue indicates the sum of the digits in its shikaku region.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
 
@@ -1302,6 +1303,6 @@ export const fogLighsInfo: SquareCellElementInfo = {
 		description:
 			'Place fog lights which clear the fog at the start. Fog: cover cells with fog that only clears when a correct digit is placed.',
 		tags: [],
-		categories: singleCellShapeDefaultCategories
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };

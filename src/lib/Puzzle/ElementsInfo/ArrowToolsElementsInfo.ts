@@ -5,8 +5,15 @@ import { RENDER_ORDER } from '../RenderOrder';
 import { arrowUsage } from '../ToolUsage';
 import { HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
 
+const DEFAULT_ARROW_CATEGORIES = [
+	TOOL_CATEGORIES.ARROW_CONSTRAINT,
+	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
+	TOOL_CATEGORIES.ARROW_TOOL,
+	TOOL_CATEGORIES.LOCAL_ELEMENT
+];
+
 export const arrowInfo: SquareCellElementInfo = {
-	inputOptions: {type: HANDLER_TOOL_TYPE.ARROW},
+	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW },
 
 	toolId: TOOLS.ARROW,
 	order: RENDER_ORDER.ARROW_TOOLS,
@@ -27,11 +34,7 @@ export const arrowInfo: SquareCellElementInfo = {
 			'The digits along an arrow must sum to the number in the connecting pill (read left-to right or downwards) or circle. Digits may repeat on a arrow if allowed by other rules.',
 		usage: arrowUsage(),
 		tags: [],
-		categories: [
-			TOOL_CATEGORIES.ARROW_CONSTRAINT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
-			TOOL_CATEGORIES.ARROW_TOOL
-		]
+		categories: DEFAULT_ARROW_CATEGORIES
 	}
 };
 
@@ -56,11 +59,7 @@ export const averageArrowInfo: SquareCellElementInfo = {
 		description: 'The digits along an arrow must average to the number in the connecting circle.',
 		usage: arrowUsage(),
 		tags: [],
-		categories: [
-			TOOL_CATEGORIES.ARROW_CONSTRAINT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
-			TOOL_CATEGORIES.ARROW_TOOL
-		]
+		categories: DEFAULT_ARROW_CATEGORIES
 	}
 };
 
@@ -88,16 +87,12 @@ export const bulbousArrowInfo: SquareCellElementInfo = {
 			'The sum of the digits in white bulb equals the sum of the digits on each attached arrow.',
 		usage: arrowUsage(),
 		tags: [],
-		categories: [
-			TOOL_CATEGORIES.ARROW_CONSTRAINT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
-			TOOL_CATEGORIES.ARROW_TOOL
-		]
+		categories: DEFAULT_ARROW_CATEGORIES
 	}
 };
 
 export const squareRootArrowInfo: SquareCellElementInfo = {
-	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW},
+	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW },
 
 	toolId: TOOLS.SQUARE_ROOT_ARROW,
 	order: RENDER_ORDER.ARROW_TOOLS,
@@ -118,11 +113,7 @@ export const squareRootArrowInfo: SquareCellElementInfo = {
 			'The digits along an arrow must sum to the square of the number in the connecting diamond.',
 		usage: arrowUsage(),
 		tags: [],
-		categories: [
-			TOOL_CATEGORIES.ARROW_CONSTRAINT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
-			TOOL_CATEGORIES.ARROW_TOOL
-		]
+		categories: DEFAULT_ARROW_CATEGORIES
 	}
 };
 
@@ -148,10 +139,6 @@ export const chaosConstructionArrowInfo: SquareCellElementInfo = {
 			'Digits along an arrow must sum to the number in the attached circle. Additionally, each arrow must be contained within one region, and the circle cannot belong to the same region as its arrow.',
 		usage: arrowUsage(),
 		tags: [],
-		categories: [
-			TOOL_CATEGORIES.ARROW_CONSTRAINT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
-			TOOL_CATEGORIES.ARROW_TOOL
-		]
+		categories: DEFAULT_ARROW_CATEGORIES
 	}
 };

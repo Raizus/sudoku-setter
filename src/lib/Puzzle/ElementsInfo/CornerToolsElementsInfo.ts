@@ -10,6 +10,21 @@ import { RENDER_ORDER } from '../RenderOrder';
 import { cornerUsage, quadrupleUsage } from '../ToolUsage';
 import { HANDLER_TOOL_TYPE, type CornerToolOptions } from '$input/ToolInputHandlers/types';
 
+const DEFAULT_UNTYPABLE_CORNER_CATEGORIES = [
+	TOOL_CATEGORIES.CORNER_CONSTRAINT,
+	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
+	TOOL_CATEGORIES.CORNER_TOOL,
+	TOOL_CATEGORIES.LOCAL_ELEMENT
+];
+
+const DEFAULT_TYPABLE_CORNER_CATEGORIES = [
+	TOOL_CATEGORIES.CORNER_CONSTRAINT,
+	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
+	TOOL_CATEGORIES.TYPABLE_TOOL,
+	TOOL_CATEGORIES.CORNER_TOOL,
+	TOOL_CATEGORIES.LOCAL_ELEMENT
+];
+
 export function validateCornerValue(value: string, maxLength = 3): boolean {
 	const options: ValueValidatorOptions = {
 		maxLength: maxLength,
@@ -67,12 +82,7 @@ export const quadrupleInfo: SquareCellElementInfo = {
 		description: 'Digits in a circle appear at least once in the four surrounding cells.',
 		tags: [],
 		usage: quadrupleUsage(),
-		categories: [
-			TOOL_CATEGORIES.CORNER_CONSTRAINT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
-			TOOL_CATEGORIES.TYPABLE_TOOL,
-			TOOL_CATEGORIES.CORNER_TOOL
-		]
+		categories: DEFAULT_TYPABLE_CORNER_CATEGORIES
 	}
 };
 
@@ -95,12 +105,7 @@ export const cornerSumInfo: SquareCellElementInfo = {
 			'Cells separated by a transparent blue dot marked with an X have a fixed sum of X.',
 		tags: [],
 		usage: cornerUsage(),
-		categories: [
-			TOOL_CATEGORIES.CORNER_CONSTRAINT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
-			TOOL_CATEGORIES.TYPABLE_TOOL,
-			TOOL_CATEGORIES.CORNER_TOOL
-		]
+		categories: DEFAULT_TYPABLE_CORNER_CATEGORIES
 	}
 };
 
@@ -126,11 +131,7 @@ export const cornerSumOfThreeEqualsTheOtherInfo: SquareCellElementInfo = {
 			'For each set of four cells that share a corner with a circle, the sum of three of the cells must equal the fourth cell.',
 		tags: [],
 		usage: cornerUsage(),
-		categories: [
-			TOOL_CATEGORIES.CORNER_CONSTRAINT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
-			TOOL_CATEGORIES.CORNER_TOOL
-		]
+		categories: DEFAULT_UNTYPABLE_CORNER_CATEGORIES
 	}
 };
 
@@ -153,11 +154,7 @@ export const cornerEvenCountInfo: SquareCellElementInfo = {
 			'Numbers in circles show the amount of even numbers in the surrounding four cells.',
 		tags: [],
 		usage: cornerUsage(),
-		categories: [
-			TOOL_CATEGORIES.CORNER_CONSTRAINT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
-			TOOL_CATEGORIES.CORNER_TOOL
-		]
+		categories: DEFAULT_UNTYPABLE_CORNER_CATEGORIES
 	}
 };
 
@@ -180,12 +177,7 @@ export const cornerCellsBelongToExacltyThreeRegionsInfo: SquareCellElementInfo =
 			'Cells separated by a transparent blue dot marked with an X have a fixed sum of X.',
 		tags: [],
 		usage: cornerUsage(),
-		categories: [
-			TOOL_CATEGORIES.CORNER_CONSTRAINT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
-			TOOL_CATEGORIES.TYPABLE_TOOL,
-			TOOL_CATEGORIES.CORNER_TOOL
-		]
+		categories: DEFAULT_TYPABLE_CORNER_CATEGORIES
 	}
 };
 
@@ -212,11 +204,7 @@ export const productSquareInfo: SquareCellElementInfo = {
 			"An X in the center of a 2x2 region of cells, a “product square,” indicates that the two digits in the square's positive diagonal have the same product as the two digits in its negative diagonal. The product is not necessarily the same for different product squares. Not all product squares are necessarily indicated.",
 		tags: [],
 		usage: cornerUsage(),
-		categories: [
-			TOOL_CATEGORIES.CORNER_CONSTRAINT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
-			TOOL_CATEGORIES.CORNER_TOOL
-		]
+		categories: DEFAULT_UNTYPABLE_CORNER_CATEGORIES
 	}
 };
 
@@ -242,10 +230,6 @@ export const equalDiagonalDifferencesInfo: SquareCellElementInfo = {
 			'A dot in the centre of a 2x2 square indicates that the two digits in its positive diagonal have the same difference as the two digits in its negative diagonal. This difference is not necessarily the same for different 2x2 squares with dots.',
 		tags: [],
 		usage: cornerUsage(),
-		categories: [
-			TOOL_CATEGORIES.CORNER_CONSTRAINT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
-			TOOL_CATEGORIES.CORNER_TOOL
-		]
+		categories: DEFAULT_UNTYPABLE_CORNER_CATEGORIES
 	}
 };

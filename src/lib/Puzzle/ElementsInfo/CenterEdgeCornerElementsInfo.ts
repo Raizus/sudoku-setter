@@ -15,6 +15,12 @@ const DEFAULT_CLOSEST_OPTIONS: CenterCornerOrEdgeToolInputOptions = {
 	targets: CornerOrEdge.CLOSEST
 };
 
+const DEFAULT_CENTER_EDGE_CORNER_CATEGORIES = [
+	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
+	TOOL_CATEGORIES.CENTER_CORNER_EDGE_CONSTRAINT,
+	TOOL_CATEGORIES.LOCAL_ELEMENT
+];
+
 export const rotationallySymmetricGalaxyCenterInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CLOSEST_OPTIONS,
 
@@ -34,7 +40,7 @@ export const rotationallySymmetricGalaxyCenterInfo: SquareCellElementInfo = {
 			"The dots in the grid are centers of 180 degree rotationally symmetric 'galaxies' (non-overlapping set of orthogonally connected cells).",
 		usage: centerCornerOrEdgeUsage(),
 		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_CONSTRAINT, TOOL_CATEGORIES.CENTER_CORNER_EDGE_CONSTRAINT]
+		categories: DEFAULT_CENTER_EDGE_CORNER_CATEGORIES
 	}
 };
 
@@ -66,7 +72,7 @@ export const rotationallySymmetricGalaxyCenterSumInfo: SquareCellElementInfo = {
 			'Each circle is the center of a galaxy. The number in such a circle indicates the sum of the digits in that galaxy. (When a circle appears in the center of a cell, the corresponding number is given in the top left of the cell instead of in the circle so it can be seen after placing digits.)',
 		usage: centerCornerOrEdgeUsage(),
 		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_CONSTRAINT, TOOL_CATEGORIES.CENTER_CORNER_EDGE_CONSTRAINT]
+		categories: DEFAULT_CENTER_EDGE_CORNER_CATEGORIES
 	}
 };
 
@@ -98,6 +104,6 @@ export const yinYangSumOfAdjacentShadedEdgeOrCornerInfo: SquareCellElementInfo =
 			'Numbers in circles are the sum of the digits within shaded cells that touch the circle. Only shaded cells count toward the total.',
 		usage: centerCornerOrEdgeUsage(),
 		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_CONSTRAINT, TOOL_CATEGORIES.CENTER_CORNER_EDGE_CONSTRAINT]
+		categories: DEFAULT_CENTER_EDGE_CORNER_CATEGORIES
 	}
 };

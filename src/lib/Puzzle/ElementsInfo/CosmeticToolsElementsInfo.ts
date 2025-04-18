@@ -37,7 +37,7 @@ export const cosmeticCellShapeInfo: SquareCellElementInfo = {
 	meta: {
 		description: '',
 		tags: [],
-		categories: [TOOL_CATEGORIES.COSMETIC_TOOL]
+		categories: [TOOL_CATEGORIES.COSMETIC_TOOL, TOOL_CATEGORIES.LOCAL_ELEMENT]
 	}
 };
 
@@ -59,7 +59,7 @@ export const cosmeticCellArrowInfo: SquareCellElementInfo = {
 	meta: {
 		description: '',
 		tags: [],
-		categories: [TOOL_CATEGORIES.COSMETIC_TOOL]
+		categories: [TOOL_CATEGORIES.COSMETIC_TOOL, TOOL_CATEGORIES.LOCAL_ELEMENT]
 	}
 };
 
@@ -81,7 +81,7 @@ export const cosmeticCellMultiArrowInfo: SquareCellElementInfo = {
 	meta: {
 		description: '',
 		tags: [],
-		categories: [TOOL_CATEGORIES.COSMETIC_TOOL]
+		categories: [TOOL_CATEGORIES.COSMETIC_TOOL, TOOL_CATEGORIES.LOCAL_ELEMENT]
 	}
 };
 
@@ -89,7 +89,7 @@ export const cosmeticEdgeInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.EDGE,
 		valueUpdater: (oldValue: string | undefined, key: string) =>
-				defaultEdgeValueUpdater(oldValue, key, validateEdgeValue),
+			defaultEdgeValueUpdater(oldValue, key, validateEdgeValue),
 		defaultValue: ''
 	},
 
@@ -123,7 +123,11 @@ export const cosmeticEdgeInfo: SquareCellElementInfo = {
 	meta: {
 		description: '',
 		tags: [],
-		categories: [TOOL_CATEGORIES.COSMETIC_TOOL, TOOL_CATEGORIES.TYPABLE_TOOL]
+		categories: [
+			TOOL_CATEGORIES.COSMETIC_TOOL,
+			TOOL_CATEGORIES.TYPABLE_TOOL,
+			TOOL_CATEGORIES.LOCAL_ELEMENT
+		]
 	}
 };
 
@@ -132,7 +136,7 @@ export const cosmeticCornerInfo: SquareCellElementInfo = {
 		type: HANDLER_TOOL_TYPE.CORNER,
 		valueUpdater: (oldValue: string | undefined, key: string) =>
 			defaultCornerValueUpdater(oldValue, key, validateCornerValue),
-		defaultValue: ''		
+		defaultValue: ''
 	},
 
 	toolId: TOOLS.COSMETIC_CORNER,
@@ -165,7 +169,11 @@ export const cosmeticCornerInfo: SquareCellElementInfo = {
 	meta: {
 		description: '',
 		tags: [],
-		categories: [TOOL_CATEGORIES.COSMETIC_TOOL, TOOL_CATEGORIES.TYPABLE_TOOL]
+		categories: [
+			TOOL_CATEGORIES.COSMETIC_TOOL,
+			TOOL_CATEGORIES.TYPABLE_TOOL,
+			TOOL_CATEGORIES.LOCAL_ELEMENT
+		]
 	}
 };
 
@@ -200,7 +208,7 @@ export const cosmeticLineInfo: SquareCellElementInfo = {
 	meta: {
 		description: '',
 		tags: [],
-		categories: [TOOL_CATEGORIES.COSMETIC_TOOL]
+		categories: [TOOL_CATEGORIES.COSMETIC_TOOL, TOOL_CATEGORIES.LOCAL_ELEMENT]
 	}
 };
 
@@ -237,7 +245,7 @@ export const cosmeticLineWithCircleEndsInfo: SquareCellElementInfo = {
 	meta: {
 		description: '',
 		tags: [],
-		categories: [TOOL_CATEGORIES.COSMETIC_TOOL]
+		categories: [TOOL_CATEGORIES.COSMETIC_TOOL, TOOL_CATEGORIES.LOCAL_ELEMENT]
 	}
 };
 
@@ -275,7 +283,7 @@ export const cosmeticLineWithPolygonEndsInfo: SquareCellElementInfo = {
 	meta: {
 		description: '',
 		tags: [],
-		categories: [TOOL_CATEGORIES.COSMETIC_TOOL]
+		categories: [TOOL_CATEGORIES.COSMETIC_TOOL, TOOL_CATEGORIES.LOCAL_ELEMENT]
 	}
 };
 
@@ -285,7 +293,7 @@ export const cosmeticCageInfo: SquareCellElementInfo = {
 		valueUpdater: (oldValue: string | undefined, key: string) =>
 			defaultCageValueUpdater(oldValue, key, validateCageValue),
 		defaultValue: '',
-		allowDiagonallyAdjacent: true		
+		allowDiagonallyAdjacent: true
 	},
 
 	toolId: TOOLS.COSMETIC_CAGE,
@@ -307,13 +315,17 @@ export const cosmeticCageInfo: SquareCellElementInfo = {
 	meta: {
 		description: '',
 		tags: [],
-		categories: [TOOL_CATEGORIES.COSMETIC_TOOL, TOOL_CATEGORIES.TYPABLE_TOOL]
+		categories: [
+			TOOL_CATEGORIES.COSMETIC_TOOL,
+			TOOL_CATEGORIES.TYPABLE_TOOL,
+			TOOL_CATEGORIES.LOCAL_ELEMENT
+		]
 	}
 };
 
 export const cosmeticArrowInfo: SquareCellElementInfo = {
 	inputOptions: {
-		type: HANDLER_TOOL_TYPE.ARROW,
+		type: HANDLER_TOOL_TYPE.ARROW
 	},
 
 	toolId: TOOLS.COSMETIC_ARROW,
@@ -333,7 +345,11 @@ export const cosmeticArrowInfo: SquareCellElementInfo = {
 	meta: {
 		description: '',
 		tags: [],
-		categories: [TOOL_CATEGORIES.COSMETIC_TOOL, TOOL_CATEGORIES.LOCAL_CONSTRAINT]
+		categories: [
+			TOOL_CATEGORIES.COSMETIC_TOOL,
+			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
+			TOOL_CATEGORIES.LOCAL_ELEMENT
+		]
 	}
 };
 
@@ -343,7 +359,7 @@ export const cosmeticOutsideDirectionInfo: SquareCellElementInfo = {
 		valueUpdater: (oldValue: string | undefined, key: string) =>
 			defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
 		defaultValue: '',
-		cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE		
+		cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
 	},
 
 	toolId: TOOLS.COSMETIC_OUTSIDE_DIRECTION,
@@ -365,9 +381,9 @@ export const cosmeticOutsideDirectionInfo: SquareCellElementInfo = {
 		tags: [],
 		categories: [
 			TOOL_CATEGORIES.COSMETIC_TOOL,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT,
 			TOOL_CATEGORIES.TYPABLE_TOOL,
-			TOOL_CATEGORIES.OUTSIDE_DIRECTION_TOOL
+			TOOL_CATEGORIES.OUTSIDE_DIRECTION_TOOL,
+			TOOL_CATEGORIES.LOCAL_ELEMENT
 		]
 	}
 };
