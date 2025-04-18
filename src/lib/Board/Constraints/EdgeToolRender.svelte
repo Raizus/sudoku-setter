@@ -7,11 +7,7 @@
 </script>
 
 {#if c_id !== undefined}
-	<g class="edge-tool" data-id={`${c_id}`}>
+	<g class="edge-tool" id={`c-${c_id}`}>
 		<EdgeToolRenderAux {tool} {c_id} />
 	</g>
-{:else}
-	<g class="edge-tool-preview" opacity={0.5}>
-		<EdgeToolRenderAux {tool} />
-	</g>    
 {/if}

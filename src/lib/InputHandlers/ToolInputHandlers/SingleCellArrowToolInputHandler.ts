@@ -20,7 +20,7 @@ import { idxToDirection, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { findSingleCellConstraint } from '$lib/Puzzle/Constraints/LocalConstraints';
 import { DIRECTION } from '$lib/utils/directions';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
-import { singleCellArrowPreviewStore } from '$stores/ElementsStore';
+import { singleCellArrowPreviewStore, type ToolPreview } from '$stores/ElementsStore';
 
 export function getSingleCellArrowToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -98,6 +98,7 @@ export function getSingleCellArrowToolInputHandler(
 	pointerHandler.onDragStart = (event: CellEdgeCornerEvent): void => {
 		mode = MODE.DYNAMIC;
 		handle(event);
+		mode = MODE.DYNAMIC;
 	};
 
 	pointerHandler.onMove = (event: CellEdgeCornerEvent): void => {
@@ -110,7 +111,22 @@ export function getSingleCellArrowToolInputHandler(
 		const direction = idxToDirection(event.direction);
 		const constraint_preview = singleCellArrowConstraint(tool, event.cell, direction);
 
-		singleCellArrowPreviewStore.set(constraint_preview);
+		const localConstraints = get(localConstraintsStore);
+		const match = findSingleCellConstraint<CellArrowToolI>(localConstraints, tool, event.cell);
+		let preview_mode: 'add' | 'remove' = 'add';
+		let match_id: string | undefined = undefined;
+		if (match && match[1].direction === direction && mode === MODE.DYNAMIC) {
+			preview_mode = 'remove';
+			match_id = match[0];
+		}
+
+		const aux: ToolPreview<CellArrowToolI> = {
+			tool: constraint_preview,
+			match_id,
+			mode: preview_mode
+		};
+
+		singleCellArrowPreviewStore.set(aux);
 	};
 
 	const inputHandler: InputHandler = {

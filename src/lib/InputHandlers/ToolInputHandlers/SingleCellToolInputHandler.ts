@@ -1,7 +1,11 @@
 import type { InputHandler } from '../InputHandler';
 import type { SingleCellToolOptions } from './types';
 import type { TOOLID } from '$lib/Puzzle/Tools';
-import { currentConstraintStore, currentShapeStore, updateLocalConstraint } from '$stores/BoardStore';
+import {
+	currentConstraintStore,
+	currentShapeStore,
+	updateLocalConstraint
+} from '$stores/BoardStore';
 import { localConstraintsStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
@@ -22,7 +26,7 @@ import {
 	type CellToolI
 } from '$lib/Puzzle/Constraints/SingleCellConstraints';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
-import { simpleCellToolPreviewStore } from '$stores/ElementsStore';
+import { simpleCellToolPreviewStore, type ToolPreview } from '$stores/ElementsStore';
 
 export function getSingleCellToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -65,7 +69,7 @@ export function getSingleCellToolInputHandler(
 		if (match && mode === MODE.REMOVING) {
 			const [id, constraint] = match;
 			pushRemoveLocalConstraintCommand(id, constraint, tool);
-		} else if (mode === MODE.ADDING) {
+		} else if (!match && mode === MODE.ADDING) {
 			const newConstraint = singleCellConstraint(tool, coords, options?.defaultValue);
 			const id = uniqueId();
 			pushAddLocalConstraintCommand(id, newConstraint, tool, true);
@@ -81,6 +85,10 @@ export function getSingleCellToolInputHandler(
 		handle(event);
 	};
 
+	pointerHandler.onDragEnd = (): void => {
+		mode = MODE.DYNAMIC;
+	}
+
 	pointerHandler.onMove = (event: CellDragTapEvent): void => {
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) {
@@ -94,7 +102,21 @@ export function getSingleCellToolInputHandler(
 			constraint_preview.shape = { ...currentShape };
 		}
 
-		simpleCellToolPreviewStore.set(constraint_preview);
+		const localConstraints = get(localConstraintsStore);
+		const match = findSingleCellConstraint<CellToolI>(localConstraints, tool, event.cell);
+		let preview_mode: 'add' | 'remove' = 'add';
+		let match_id: string | undefined = undefined;
+		if (match && (mode === MODE.REMOVING || mode === MODE.DYNAMIC)) {
+			preview_mode = 'remove';
+			match_id = match[0];
+		}
+
+		const aux: ToolPreview<CellToolI> = {
+			tool: constraint_preview,
+			match_id,
+			mode: preview_mode
+		};
+		simpleCellToolPreviewStore.set(aux);
 	};
 
 	function onKeyDown(event: KeyboardEvent) {

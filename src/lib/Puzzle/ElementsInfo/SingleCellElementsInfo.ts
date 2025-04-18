@@ -351,8 +351,7 @@ export const indexingColumnInfo: SquareCellElementInfo = {
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
 		strokeWidth: { editable: false, value: 0 },
-		fill: { editable: false, value: 'rgba(155, 40, 40, 0.7)' },
-		opacity: { editable: false, value: 0.7 }
+		fill: { editable: false, value: 'rgba(155, 40, 40, 0.3)' },
 	},
 
 	meta: {
@@ -372,8 +371,7 @@ export const indexingRowInfo: SquareCellElementInfo = {
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
 		strokeWidth: { editable: false, value: 0 },
-		fill: { editable: false, value: 'rgba(40, 40, 155, 0.7)' },
-		opacity: { editable: false, value: 0.7 }
+		fill: { editable: false, value: 'rgba(40, 40, 155, 0.3)' },
 	},
 
 	meta: {

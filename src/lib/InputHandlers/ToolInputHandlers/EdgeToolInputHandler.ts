@@ -1,5 +1,5 @@
 import type { InputHandler } from '../InputHandler';
-import type { EdgeToolOptions } from "./types";
+import type { EdgeToolOptions } from './types';
 import {
 	currentConstraintStore,
 	currentShapeStore,
@@ -24,7 +24,7 @@ import {
 import { cellEdgeToCellCoords, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { edgeConstraint, type EdgeToolI } from '$lib/Puzzle/Constraints/EdgeConstraints';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
-import { edgeToolPreviewStore } from '$stores/ElementsStore';
+import { edgeToolPreviewStore, type ToolPreview } from '$stores/ElementsStore';
 
 export function getEdgeToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -62,13 +62,14 @@ export function getEdgeToolInputHandler(
 		if (match && mode === MODE.REMOVING) {
 			const id = match[0];
 			pushRemoveLocalConstraintCommand(id, match[1], tool);
-		}
-		else if (mode === MODE.ADDING) {
+		} else if (mode === MODE.ADDING) {
 			const defaultValue = options?.defaultValue ?? '';
 			const currentConstraint = edgeConstraint(tool, cellsCoords, defaultValue);
 			const id = uniqueId();
 			pushAddLocalConstraintCommand(id, currentConstraint, tool, true);
 		}
+
+		mode = MODE.DYNAMIC;
 	}
 
 	function onKeyDown(event: KeyboardEvent) {
@@ -108,8 +109,23 @@ export function getEdgeToolInputHandler(
 		if (currentShape) {
 			constraint_preview.shape = { ...currentShape };
 		}
+		
+		const localConstraints = get(localConstraintsStore);
+		const match = findEdgeConstraint(localConstraints, tool, cellsCoords);
+		let preview_mode: 'add' | 'remove' = 'add';
+		let match_id: string | undefined = undefined;
+		if (match && mode === MODE.DYNAMIC) {
+			preview_mode = 'remove';
+			match_id = match[0];
+		}
 
-		edgeToolPreviewStore.set(constraint_preview);
+		const aux: ToolPreview<EdgeToolI> = {
+			tool: constraint_preview,
+			match_id,
+			mode: preview_mode
+		};
+
+		edgeToolPreviewStore.set(aux);
 	};
 
 	const inputHandler: InputHandler = {

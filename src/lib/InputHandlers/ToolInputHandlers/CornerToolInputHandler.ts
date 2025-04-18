@@ -25,7 +25,7 @@ import {
 	type CellCornerTapEvent
 } from '$src/lib/InputHandlers/PointerHandlers/CellCornerPointerHandler';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
-import { cornerToolPreviewStore } from '$stores/ElementsStore';
+import { cornerToolPreviewStore, type ToolPreview } from '$stores/ElementsStore';
 
 export function getCornerToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -93,6 +93,7 @@ export function getCornerToolInputHandler(
 	pointerHandler.onDragStart = (event: CellCornerTapEvent): void => {
 		mode = MODE.DYNAMIC;
 		handle(event);
+		mode = MODE.DYNAMIC;
 	};
 
 	pointerHandler.onMove = (event: CellCornerTapEvent): void => {
@@ -109,7 +110,22 @@ export function getCornerToolInputHandler(
 			constraint_preview.shape = { ...currentShape };
 		}
 
-		cornerToolPreviewStore.set(constraint_preview);
+		const localConstraints = get(localConstraintsStore);
+		const match = findCornerConstraint(localConstraints, tool, event.coord);
+		let preview_mode: 'add' | 'remove' = 'add';
+		let match_id: string | undefined = undefined;
+		if (match && mode === MODE.DYNAMIC) {
+			preview_mode = 'remove';
+			match_id = match[0];
+		}
+
+		const aux: ToolPreview<CornerToolI> = {
+			tool: constraint_preview,
+			match_id,
+			mode: preview_mode
+		};
+
+		cornerToolPreviewStore.set(aux);
 	};
 
 	const inputHandler: InputHandler = {

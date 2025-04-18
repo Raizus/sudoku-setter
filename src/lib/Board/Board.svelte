@@ -1,5 +1,4 @@
 <script lang="ts">
-	import SingleCellArrowRender from './Constraints/SingleCellArrowRender.svelte';
 	import type { GridShape } from './../Types/types.ts';
 	import type { Rectangle } from '$lib/Types/types.js';
 	import { cellsStore, gridStore, toolStore } from '$stores/BoardStore';
@@ -65,6 +64,10 @@
 	import SimpleSingleCellToolRender from './Constraints/SimpleSingleCellToolRender.svelte';
 	import FogLightBulbDefs from './FogLightBulbDefs.svelte';
 	import FogLightsRender from './Constraints/FogLightsRender.svelte';
+	import EdgeToolPreviewRender from './Constraints/EdgeToolPreviewRender.svelte';
+	import CornerToolPreviewRender from './Constraints/CornerToolPreviewRender.svelte';
+	import SingleCellArrowPreviewRender from './Constraints/SingleCellArrowPreviewRender.svelte';
+	import SimpleSingleCellToolPreviewRender from './Constraints/SimpleSingleCellToolPreviewRender.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 
@@ -221,19 +224,19 @@
 	<ConflictsRender />
 
 	{#if isSimpleSingleCellTool($toolStore) && $toolStore !== TOOLS.FOG_LIGHTS && $simpleCellToolPreviewStore}
-		<SimpleSingleCellToolRender tool={$simpleCellToolPreviewStore} />
+		<SimpleSingleCellToolPreviewRender tool_preview={$simpleCellToolPreviewStore} />
 	{/if}
 	{#if isSingleCellArrowTool($toolStore) && $singleCellArrowPreviewStore}
-		<SingleCellArrowRender tool={$singleCellArrowPreviewStore} />
+		<SingleCellArrowPreviewRender tool_preview={$singleCellArrowPreviewStore} />
 	{/if}
 	{#if isSingleCellMultiArrowTool($toolStore) && $singleCellMultiArrowPreviewStore}
 		<SingleCellMultiArrowRender tool={$singleCellMultiArrowPreviewStore} />
 	{/if}
 	{#if isEdgeTool($toolStore) && $edgeToolPreviewStore}
-		<EdgeToolRender tool={$edgeToolPreviewStore} />
+		<EdgeToolPreviewRender tool_preview={$edgeToolPreviewStore} />
 	{/if}
 	{#if isCornerTool($toolStore) && $cornerToolPreviewStore}
-		<CornerToolRender tool={$cornerToolPreviewStore} />
+		<CornerToolPreviewRender tool_preview={$cornerToolPreviewStore} />
 	{/if}
 	{#if isOutsideDirectionTool($toolStore) && $outsideDirectionToolPreviewStore}
 		<OutsideDirectionToolRender tool={$outsideDirectionToolPreviewStore} />

@@ -53,7 +53,9 @@ function getToolsStore<T extends ConstraintType>(
 	return store;
 }
 
-export function getToolStore<T extends ConstraintType>(tool_id: TOOLID): Readable<Record<string, T>> {
+export function getToolStore<T extends ConstraintType>(
+	tool_id: TOOLID
+): Readable<Record<string, T>> {
 	const store = derived(localConstraintsStore, ($localConstraintsStore) => {
 		for (const [toolId, element] of $localConstraintsStore.entries()) {
 			if (toolId !== tool_id) continue;
@@ -112,17 +114,25 @@ export const cloneToolsStore = getToolsStore<CloneToolI>(isCloneTool);
 export const outsideDirectionToolsStore =
 	getToolsStore<OutsideDirectionToolI>(isOutsideDirectionTool);
 
-export const simpleCellToolPreviewStore = writable<undefined | CellToolI>(undefined);
+export interface ToolPreview<T extends ConstraintType> {
+	tool: T;
+	match_id?: string;
+	mode: 'add' | 'remove';
+}
 
-export const singleCellArrowPreviewStore = writable<undefined | CellArrowToolI>(undefined);
+export const simpleCellToolPreviewStore = writable<undefined | ToolPreview<CellToolI>>(undefined);
+
+export const singleCellArrowPreviewStore = writable<undefined | ToolPreview<CellArrowToolI>>(
+	undefined
+);
 
 export const singleCellMultiArrowPreviewStore = writable<undefined | CellMultiArrowToolI>(
 	undefined
 );
 
-export const edgeToolPreviewStore = writable<undefined | EdgeToolI>(undefined);
+export const edgeToolPreviewStore = writable<undefined | ToolPreview<EdgeToolI>>(undefined);
 
-export const cornerToolPreviewStore = writable<undefined | CornerToolI>(undefined);
+export const cornerToolPreviewStore = writable<undefined | ToolPreview<CornerToolI>>(undefined);
 
 export const outsideDirectionToolPreviewStore = writable<undefined | OutsideDirectionToolI>(
 	undefined

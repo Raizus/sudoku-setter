@@ -7,11 +7,7 @@
 </script>
 
 {#if c_id !== undefined}
-	<g class="corner-tool" data-id={`${c_id}`}>
+	<g class="corner-tool" id={`c-${c_id}`}>
 		<CornerToolRenderAux {tool} {c_id} />
 	</g>
-{:else}
-	<g class="corner-tool-preview" opacity={0.5}>
-		<CornerToolRenderAux {tool} />
-	</g>    
 {/if}
