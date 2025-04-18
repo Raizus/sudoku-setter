@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
-	import CosmeticToolsPanel from './CosmeticTools/CosmeticToolsPanel.svelte';
 	import GlobalConstraintsPanel from './GlobalConstraints/GlobalConstraintsPanel.svelte';
-	import LocalConstraintsPanel from './LocalConstraints/LocalConstraintsPanel.svelte';
+	import LocalElementsPanel from './LocalElements/LocalElementsPanel.svelte';
 	import ShapePanel from './ShapeEditor/ShapePanel.svelte';
 	import MenuPanel from './MenuPanel/MenuPanel.svelte';
 	import OthersPanel from './OthersPanel/OthersPanel.svelte';
@@ -14,8 +13,7 @@
 		<MenuPanel />
 		<SolverPanel />
 		<GlobalConstraintsPanel elementHandlers={squareCellElementHandlers} />
-		<LocalConstraintsPanel elementHandlers={squareCellElementHandlers} />
-		<CosmeticToolsPanel elementHandlers={squareCellElementHandlers} />
+		<LocalElementsPanel elementHandlers={squareCellElementHandlers} />
 		<ShapePanel elementHandlers={squareCellElementHandlers} />
 		<OthersPanel />
 	</div>

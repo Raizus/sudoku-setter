@@ -5,7 +5,7 @@
 	} from '$stores/BoardStore';
 	import { addGroupToLocalConstraint } from '$stores/LocalConstraintsStore';
 		import { localConstraintsStore } from '$stores/BoardStore';
-	import LocalConstraintSelectionButton from '../LocalConstraints/LocalConstraintSelectionButton.svelte';
+	import LocalConstraintSelectionButton from '../LocalElements/LocalConstraintSelectionButton.svelte';
 
 	import Shape from '$icons/Shape.svelte';
 	import ConstraintList from '../ToolButton/ConstraintList.svelte';
