@@ -49,19 +49,19 @@
 	<Board bind:svgRef={$svgRefStore} />
 </div>
 
-<style>
+<style lang="scss">
 	.board-container {
-		margin: 5px;
+		position: relative;
+		display: flex;
+		width: 100%;
+		height: 100%;
+		/* margin: 5px;
 		vertical-align: middle;
 		justify-content: space-around;
-		align-items: center;
-		/* background-color: red; */
-		max-width: 100%;
-		max-height: 100%;
-		aspect-ratio: 1/1;
-	}
+		align-items: center; */
 
-	.board-container:focus {
-		outline: none;
+		&:focus {
+			outline: none;
+		}
 	}
 </style>

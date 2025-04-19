@@ -26,14 +26,14 @@
 		display: flex;
 		flex-direction: column;
 		background-color: var(--background-color);
-		width: 100vw;
+		width: 100%;
+		height: 100%;
 	}
 
 	main {
-		flex: 1 1 auto;
-		display: flex;
-		flex-direction: column;
-		max-height: calc(100vh - vars.$header-height);
+		position: relative;
+		width: 100%;
+		height: 100%;
 
 		color: var(--text-primary-color);
 	}

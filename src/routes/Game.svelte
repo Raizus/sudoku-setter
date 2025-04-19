@@ -28,17 +28,15 @@
 	});
 </script>
 
-<div class="game-wrapper">
-	<div class="game">
-		{#if game_mode === GAME_MODE.SETTING}
-			<SettingPanel />
-		{/if}
-		<div class="central-panel">
-			<BoardContainer />
-		</div>
-		<div class="right-panel">
-			<EntryPanel />
-		</div>
+<div class="game">
+	{#if game_mode === GAME_MODE.SETTING}
+		<SettingPanel />
+	{/if}
+	<div class="center-panel">
+		<BoardContainer />
+	</div>
+	<div class="right-panel">
+		<EntryPanel />
 	</div>
 </div>
 
@@ -46,37 +44,49 @@
 	@use '$src/vars' as vars;
 
 	.game {
-		& .central-panel {
-			flex: 0 0 auto;
-
-			width: vars.$board-size-big;
-			height: vars.$board-size-big;
-
-			position: relative;
-		}
-
-		& .right-panel {
-			flex: 1 1 100%;
-			max-width: 30%;
-		}
-	}
-
-	.game-wrapper {
-		flex-grow: 1;
-		margin: 0 auto;
-	}
-
-	.game {
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
+		align-items: stretch;
 	}
+
+	.center-panel {
+		display: flex;
+		align-items: center;
+		flex: 1;
+		flex-basis: 25rem;
+	}
+
+	.left-panel,
+	.right-panel {
+		position: relative;
+		flex-grow: 1;
+		flex-shrink: 1;
+		flex-basis: 15rem;
+		max-width: 30rem;
+	}
+
+	// .game {
+	// 	& .center-panel {
+	// 		flex: 0 0 auto;
+
+	// 		width: vars.$board-size-big;
+	// 		height: vars.$board-size-big;
+
+	// 		position: relative;
+	// 	}
+
+	// 	& .right-panel {
+	// 		flex: 1 1 100%;
+	// 		max-width: 30%;
+	// 	}
+	// }
 
 	@include vars.breakpoint-mobile {
 		.game {
 			flex-direction: column;
 
-			& .central-panel {
+			& .center-panel {
 				align-self: center;
 
 				width: vars.$board-size-small;
