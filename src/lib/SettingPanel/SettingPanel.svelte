@@ -8,9 +8,9 @@
 	import SolverPanel from './SolverPanel/SolverPanel.svelte';
 </script>
 
-<div class="setting-panel-wrapper">
-	<div class="setting-panel">
-		<MenuPanel />
+<div class="setting-panel">
+	<MenuPanel />
+	<div class="container">
 		<SolverPanel />
 		<GlobalConstraintsPanel elementHandlers={squareCellElementHandlers} />
 		<LocalElementsPanel elementHandlers={squareCellElementHandlers} />
@@ -22,30 +22,32 @@
 <style lang="scss">
 	@use '$src/vars' as vars;
 
-	.setting-panel-wrapper {
+	.setting-panel {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		height: 100%;
+		width: 100%;
 		display: flex;
-		flex: 1 1 100%;
-		max-width: 25%;
 		flex-direction: column;
-		max-height: calc(100vh - vars.$header-height);
-		align-items: flex-start;
+		padding: 1rem;
+		gap: 5px;
+	}
+
+	.container {
+		flex: 1;
+		overflow-y: scroll;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		width: 100%;
+		gap: 5px;
+		padding-right: 0.5rem;
 	}
 
 	@include vars.breakpoint-mobile {
-		.setting-panel-wrapper {
+		.setting-panel {
 			display: none;
 		}
-	}
-
-	.setting-panel {
-		align-self: flex-end;
-		display: flex;
-		flex-direction: column;
-		gap: 5px;
-		min-width: 300px;
-		overflow-y: scroll;
-		margin-top: 2rem;
-		margin-bottom: 2rem;
-		padding: 0.5rem;
 	}
 </style>

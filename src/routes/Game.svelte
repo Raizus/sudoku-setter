@@ -30,7 +30,9 @@
 
 <div class="game">
 	{#if game_mode === GAME_MODE.SETTING}
+	<div class="left-panel">
 		<SettingPanel />
+	</div>
 	{/if}
 	<div class="center-panel">
 		<BoardContainer />
@@ -47,7 +49,7 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
-		align-items: stretch;
+		height: 100%;
 	}
 
 	.center-panel {
@@ -65,22 +67,6 @@
 		flex-basis: 15rem;
 		max-width: 30rem;
 	}
-
-	// .game {
-	// 	& .center-panel {
-	// 		flex: 0 0 auto;
-
-	// 		width: vars.$board-size-big;
-	// 		height: vars.$board-size-big;
-
-	// 		position: relative;
-	// 	}
-
-	// 	& .right-panel {
-	// 		flex: 1 1 100%;
-	// 		max-width: 30%;
-	// 	}
-	// }
 
 	@include vars.breakpoint-mobile {
 		.game {
