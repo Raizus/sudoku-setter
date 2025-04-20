@@ -20,6 +20,7 @@ import {
 import { isCellOnGrid, type GridCoordI, areCoordsEqual } from '$lib/utils/SquareCellGridCoords';
 import { findCloneConstraint, findUsedCloneLabels } from '$lib/Puzzle/Constraints/LocalConstraints';
 import { pushAddLocalConstraintCommand, pushUpdateLocalConstraintCommand } from './utils';
+import { CLONE_TOOL_MODE } from './types';
 
 function makeLabel(x: number) {
 	x++;
@@ -39,13 +40,6 @@ function getNewLabel(usedLabels: Set<string>): string {
 		const label = makeLabel(i);
 		if (!usedLabels.has(label)) return label;
 	}
-}
-
-enum CLONE_TOOL_MODE {
-	DYNAMIC = 'Dynamic',
-	SELECT = 'Select',
-	MOVE = 'Move',
-	DELETE = 'Delete'
 }
 
 export function getCloneToolInputHandler(

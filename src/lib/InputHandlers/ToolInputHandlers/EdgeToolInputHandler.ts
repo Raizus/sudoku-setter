@@ -1,5 +1,5 @@
 import type { InputHandler } from '../InputHandler';
-import type { EdgeToolOptions } from './types';
+import { BASIC_TOOL_MODE, type EdgeToolOptions } from './types';
 import {
 	currentConstraintStore,
 	currentShapeStore,
@@ -26,12 +26,6 @@ import { edgeConstraint, type EdgeToolI } from '$lib/Puzzle/Constraints/EdgeCons
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import { edgeToolPreviewStore, type ToolPreview } from '$stores/ElementsStore';
 
-enum EDGE_TOOL_MODE {
-	DYNAMIC = "Dynamic",
-	ADD_EDIT = "Add/Edit",
-	DELETE = "Delete"
-}
-
 export function getEdgeToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
@@ -42,7 +36,7 @@ export function getEdgeToolInputHandler(
 	const pointerHandler = new CellEdgePointerHandler();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
-	let mode = EDGE_TOOL_MODE.DYNAMIC;
+	let mode = BASIC_TOOL_MODE.DYNAMIC;
 
 	function handle(event: CellEdgeTapEvent) {
 		const localConstraints = get(localConstraintsStore);
@@ -55,22 +49,22 @@ export function getEdgeToolInputHandler(
 
 		// determine if adding or removing
 		let match: [string, ConstraintType] | null = null;
-		if (mode === EDGE_TOOL_MODE.DYNAMIC) {
+		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
 			match = findEdgeConstraint(localConstraints, tool, cellsCoords);
-			mode = match ? EDGE_TOOL_MODE.DELETE : EDGE_TOOL_MODE.ADD_EDIT;
+			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
 
-		if (match && mode === EDGE_TOOL_MODE.DELETE) {
+		if (match && mode === BASIC_TOOL_MODE.DELETE) {
 			const id = match[0];
 			pushRemoveLocalConstraintCommand(id, match[1], tool);
-		} else if (mode === EDGE_TOOL_MODE.ADD_EDIT) {
+		} else if (mode === BASIC_TOOL_MODE.ADD_EDIT) {
 			const defaultValue = options?.defaultValue ?? '';
 			const currentConstraint = edgeConstraint(tool, cellsCoords, defaultValue);
 			const id = uniqueId();
 			pushAddLocalConstraintCommand(id, currentConstraint, tool, true);
 		}
 
-		mode = EDGE_TOOL_MODE.DYNAMIC;
+		mode = BASIC_TOOL_MODE.DYNAMIC;
 	}
 
 	function onKeyDown(event: KeyboardEvent) {
@@ -92,7 +86,7 @@ export function getEdgeToolInputHandler(
 	}
 
 	pointerHandler.onDragStart = (event: CellEdgeTapEvent): void => {
-		mode = EDGE_TOOL_MODE.DYNAMIC;
+		mode = BASIC_TOOL_MODE.DYNAMIC;
 		handle(event);
 	};
 
@@ -115,7 +109,7 @@ export function getEdgeToolInputHandler(
 		const match = findEdgeConstraint(localConstraints, tool, cellsCoords);
 		let preview_mode: 'add' | 'remove' = 'add';
 		let match_id: string | undefined = undefined;
-		if (match && mode === EDGE_TOOL_MODE.DYNAMIC) {
+		if (match && mode === BASIC_TOOL_MODE.DYNAMIC) {
 			preview_mode = 'remove';
 			match_id = match[0];
 		}

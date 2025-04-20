@@ -11,7 +11,7 @@ import {
 	CellFeaturePointerHandler,
 	type CellEdgeCornerEvent
 } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
-import type { SingleCellMultiArrowToolOptions } from './types';
+import { CELL_MULTI_ARROW_TOOL_MODE, type SingleCellMultiArrowToolOptions } from './types';
 import {
 	singleCellMultiArrowConstraint,
 	type CellMultiArrowToolI
@@ -32,12 +32,6 @@ function updateDirections(directions: DIRECTION[], dir: DIRECTION): DIRECTION[] 
 	directions.push(dir);
 	directions.sort();
 	return directions;
-}
-
-enum CELL_MULTI_ARROW_TOOL_MODE {
-	DYNAMIC = 'Dynamic',
-	ADD_EDIT = 'Add/Edit',
-	DELETE = 'Delete'
 }
 
 export function getSingleCellMultiArrowToolInputHandler(

@@ -17,12 +17,6 @@ import { CellPointerHandler, type CellDragTapEvent } from '$input/PointerHandler
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import type { LineToolInputOptions } from './types';
 
-// enum LINE_TOOL_MODE {
-// 	DYNAMIC = 'Dynamic',
-// 	ADD_EDIT = 'Add/Edit',
-// 	DELETE = 'Delete'
-// }
-
 export function getLineToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,

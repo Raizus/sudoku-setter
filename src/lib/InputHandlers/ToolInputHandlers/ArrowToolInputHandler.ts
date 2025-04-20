@@ -31,14 +31,7 @@ import {
 	pushRemoveLocalConstraintCommand,
 	pushUpdateLocalConstraintCommand
 } from './utils';
-import type { ArrowToolInputOptions } from './types';
-
-enum ARROW_TOOL_MODE {
-	DYNAMIC = 'Dynamic',
-	EDIT_BULB = 'Edit Bulb',
-	EDIT_ARROWS = 'Edit Arrows',
-	DELETE = 'Delete'
-}
+import { ARROW_TOOL_MODE, type ArrowToolInputOptions } from './types';
 
 export function getArrowToolInputHandler(
 	svgRef: SVGSVGElement,

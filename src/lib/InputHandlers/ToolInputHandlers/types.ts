@@ -13,8 +13,8 @@ export enum HANDLER_TOOL_TYPE {
 	CLONE,
 	CORNER_LINE,
 	CENTER_CORNER_OR_EDGE,
-    OUTSIDE_DIRECTION,
-    PEN
+	OUTSIDE_DIRECTION,
+	PEN
 }
 
 export interface ToolOptionsI {
@@ -31,8 +31,8 @@ export interface ValueToolInputOptions extends ToolOptionsI {
 }
 
 export type SelectionInputOptions = {
-    type: HANDLER_TOOL_TYPE.SELECTION
-}
+	type: HANDLER_TOOL_TYPE.SELECTION;
+};
 
 export type SingleCellToolOptions = {
 	type: HANDLER_TOOL_TYPE.SINGLE_CELL;
@@ -71,7 +71,7 @@ export type ArrowToolInputOptions = {
 	type: HANDLER_TOOL_TYPE.ARROW;
 	allowSelfIntersection?: boolean; // allow arrow to intersect bulb
 	defaultValue?: string;
-}
+};
 
 export type CageToolInputOptions = {
 	type: HANDLER_TOOL_TYPE.CAGE;
@@ -81,8 +81,8 @@ export type CageToolInputOptions = {
 };
 
 export type CloneToolInputOptions = {
-    type: HANDLER_TOOL_TYPE.CLONE;
-}
+	type: HANDLER_TOOL_TYPE.CLONE;
+};
 
 export type CenterCornerOrEdgeToolInputOptions = {
 	type: HANDLER_TOOL_TYPE.CENTER_CORNER_OR_EDGE;
@@ -135,8 +135,52 @@ export type ToolHandlerOptions =
 	| CageToolInputOptions
 	| CloneToolInputOptions
 	| LineToolInputOptions
-    | ArrowToolInputOptions
-    | CornerLineToolInputOptions
+	| ArrowToolInputOptions
+	| CornerLineToolInputOptions
 	| CenterCornerOrEdgeToolInputOptions
-    | OutsideDirectionToolInputOptions
-    | PenToolInputOptions;
+	| OutsideDirectionToolInputOptions
+	| PenToolInputOptions;
+
+export enum ARROW_TOOL_MODE {
+	DYNAMIC = 'Dynamic',
+	EDIT_BULB = 'Edit Bulb',
+	EDIT_ARROWS = 'Edit Arrows',
+	DELETE = 'Delete'
+}
+
+export enum BASIC_TOOL_MODE {
+	DYNAMIC = 'Dynamic',
+	ADD_EDIT = 'Add/Edit',
+	DELETE = 'Delete'
+}
+
+export enum CENTER_CORNER_EDGE_TOOL_MODE {
+	DYNAMIC = 'Dynamic',
+	ADD_EDIT = 'Add/Edit',
+	DELETE = 'Delete'
+}
+
+export enum CLONE_TOOL_MODE {
+	DYNAMIC = 'Dynamic',
+	SELECT = 'Select',
+	MOVE = 'Move',
+	DELETE = 'Delete'
+}
+
+export enum CORNER_LINE_TOOL_MODE {
+	DYNAMIC = 'Dynamic',
+	ADD_EDIT = 'Add/Edit',
+	DELETE = 'Delete'
+}
+
+export enum CELL_ARROW_TOOL_MODE {
+	DYNAMIC = 'Dynamic',
+	ADD_EDIT = 'Add/Edit',
+	DELETE = 'Delete'
+}
+
+export enum CELL_MULTI_ARROW_TOOL_MODE {
+	DYNAMIC = 'Dynamic',
+	ADD_EDIT = 'Add/Edit',
+	DELETE = 'Delete'
+}

@@ -22,13 +22,7 @@ import {
 	CellCornerPointerHandler,
 	type CellCornerTapEvent
 } from '$input/PointerHandlers/CellCornerPointerHandler';
-import type { CornerLineToolInputOptions } from './types';
-
-enum CORNER_LINE_TOOL_MODE {
-	DYNAMIC = 'Dynamic',
-	ADD_EDIT = 'Add/Edit',
-	DELETE = 'Delete'
-}
+import { CORNER_LINE_TOOL_MODE, type CornerLineToolInputOptions } from './types';
 
 export function getCornerLineToolInputHandler(
 	svgRef: SVGSVGElement,

@@ -25,12 +25,6 @@ import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { centerCornerOrEdgeConstraint, type CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/Constraints/CenterCornerOrEdgeConstraints';
 import type { CenterCornerOrEdgeToolInputOptions } from './types';
 
-// enum CENTER_CORNER_EDGE_TOOL_MODE {
-// 	DYNAMIC = 'Dynamic',
-// 	ADD_EDIT = 'Add/Edit',
-// 	DELETE = 'Delete'
-// }
-
 export function getCenterCornerOrEdgeToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,

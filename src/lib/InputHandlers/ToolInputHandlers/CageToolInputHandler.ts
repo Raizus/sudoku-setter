@@ -25,13 +25,7 @@ import {
 	type CellDragTapEvent
 } from '$input/PointerHandlers/CellPointerHandler';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
-import type { CageToolInputOptions } from './types';
-
-enum CAGE_TOOL_MODE {
-	DYNAMIC = 'Dynamic',
-	ADD_EDIT = 'Add/Edit',
-	DELETE = 'Delete'
-}
+import { BASIC_TOOL_MODE, type CageToolInputOptions } from './types';
 
 export function getCageToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -45,7 +39,7 @@ export function getCageToolInputHandler(
 	let currentConstraint: CageToolI | null = null;
 	let id: string | null = null;
 
-	let mode = CAGE_TOOL_MODE.DYNAMIC;
+	let mode = BASIC_TOOL_MODE.DYNAMIC;
 
 	function handle(event: CellDragTapEvent) {
 		const localConstraints = get(localConstraintsStore);
@@ -61,14 +55,14 @@ export function getCageToolInputHandler(
 				id = match[0];
 				currentConstraint = match[1];
 				setCurrentConstraint({ id, constraint: currentConstraint });
-				mode = CAGE_TOOL_MODE.ADD_EDIT;
+				mode = BASIC_TOOL_MODE.ADD_EDIT;
 			}
 		}
 
 		// determine if adding or removing
-		if (mode === CAGE_TOOL_MODE.DYNAMIC) {
+		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
 			const match = findCageConstraint(localConstraints, tool, coords);
-			mode = match ? CAGE_TOOL_MODE.DELETE : CAGE_TOOL_MODE.ADD_EDIT;
+			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 
 			if (match) {
 				pushRemoveLocalConstraintCommand(match[0], match[1], tool);
@@ -77,14 +71,14 @@ export function getCageToolInputHandler(
 		}
 
 		// create new cage
-		if (!currentConstraint && mode === CAGE_TOOL_MODE.ADD_EDIT) {
+		if (!currentConstraint && mode === BASIC_TOOL_MODE.ADD_EDIT) {
 			currentConstraint = cageConstraint(tool, [coords]);
 			id = uniqueId();
 			addLocalConstraint(id, currentConstraint);
 			return;
 		}
 		// add to current cage
-		else if (currentConstraint && id && mode === CAGE_TOOL_MODE.ADD_EDIT) {
+		else if (currentConstraint && id && mode === BASIC_TOOL_MODE.ADD_EDIT) {
 			const allowDiagonallyAdjacent = options?.allowDiagonallyAdjacent ?? false;
 			currentConstraint = updateCageConstraintCells(
 				currentConstraint,
@@ -117,7 +111,7 @@ export function getCageToolInputHandler(
 	pointerHandler.onDragStart = (event: CellDragTapEvent): void => {
 		id = null;
 		currentConstraint = null;
-		mode = CAGE_TOOL_MODE.DYNAMIC;
+		mode = BASIC_TOOL_MODE.DYNAMIC;
 		handle(event);
 	};
 
