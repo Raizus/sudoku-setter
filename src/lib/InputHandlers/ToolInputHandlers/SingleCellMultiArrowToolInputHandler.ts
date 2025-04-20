@@ -34,6 +34,12 @@ function updateDirections(directions: DIRECTION[], dir: DIRECTION): DIRECTION[] 
 	return directions;
 }
 
+enum CELL_MULTI_ARROW_TOOL_MODE {
+	DYNAMIC = 'Dynamic',
+	ADD_EDIT = 'Add/Edit',
+	DELETE = 'Delete'
+}
+
 export function getSingleCellMultiArrowToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
@@ -47,12 +53,7 @@ export function getSingleCellMultiArrowToolInputHandler(
 	let currentConstraint: CellMultiArrowToolI | null = null;
 	let id: string | null = null;
 
-	enum MODE {
-		DYNAMIC,
-		ADDING,
-		REMOVING
-	}
-	let mode = MODE.DYNAMIC;
+	let mode = CELL_MULTI_ARROW_TOOL_MODE.DYNAMIC;
 
 	function handle(event: CellEdgeCornerEvent) {
 		const localConstraints = get(localConstraintsStore);
@@ -61,7 +62,7 @@ export function getSingleCellMultiArrowToolInputHandler(
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
 
-		if (event.event.altKey) mode = MODE.REMOVING;
+		if (event.event.altKey) mode = CELL_MULTI_ARROW_TOOL_MODE.DELETE;
 		// determine if adding or removing
 
 		const direction = idxToDirection(event.direction);
@@ -70,7 +71,7 @@ export function getSingleCellMultiArrowToolInputHandler(
 			id = match[0];
 			currentConstraint = match[1];
 
-			if (mode === MODE.REMOVING) {
+			if (mode === CELL_MULTI_ARROW_TOOL_MODE.DELETE) {
 				removeLocalConstraint(tool, match[0]);
 			} else {
 				//update directions (if empty remove constraint)
@@ -86,7 +87,7 @@ export function getSingleCellMultiArrowToolInputHandler(
 				}
 			}
 			return;
-		} else if (mode !== MODE.REMOVING) {
+		} else if (mode !== CELL_MULTI_ARROW_TOOL_MODE.DELETE) {
 			currentConstraint = singleCellMultiArrowConstraint(tool, coords, direction);
 			id = uniqueId();
 			addLocalConstraint(id, currentConstraint);
@@ -98,7 +99,7 @@ export function getSingleCellMultiArrowToolInputHandler(
 	}
 
 	pointerHandler.onDragStart = (event: CellEdgeCornerEvent): void => {
-		mode = MODE.DYNAMIC;
+		mode = CELL_MULTI_ARROW_TOOL_MODE.DYNAMIC;
 		handle(event);
 	};
 

@@ -24,6 +24,12 @@ import {
 } from '$input/PointerHandlers/CellCornerPointerHandler';
 import type { CornerLineToolInputOptions } from './types';
 
+enum CORNER_LINE_TOOL_MODE {
+	DYNAMIC = 'Dynamic',
+	ADD_EDIT = 'Add/Edit',
+	DELETE = 'Delete'
+}
+
 export function getCornerLineToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
@@ -37,12 +43,7 @@ export function getCornerLineToolInputHandler(
 	let currentConstraint: CornerLineToolI | null = null;
 	let id: string | null = null;
 
-	enum MODE {
-		DYNAMIC,
-		ADDING,
-		REMOVING
-	}
-	let mode = MODE.DYNAMIC;
+	let mode = CORNER_LINE_TOOL_MODE.DYNAMIC;
 
 	function handle(event: CellCornerTapEvent) {
 		const localConstraints = get(localConstraintsStore);
@@ -52,9 +53,9 @@ export function getCornerLineToolInputHandler(
 		if (!onGrid) return;
 
 		let match: [string, ConstraintType] | null = null;
-		if (mode === MODE.DYNAMIC) {
+		if (mode === CORNER_LINE_TOOL_MODE.DYNAMIC) {
 			match = findCornerLineConstraint(localConstraints, tool, coord);
-			mode = match ? MODE.REMOVING : MODE.ADDING;
+			mode = match ? CORNER_LINE_TOOL_MODE.DELETE : CORNER_LINE_TOOL_MODE.ADD_EDIT;
 		}
 		// remove constraint
 		if (match) {
@@ -63,14 +64,14 @@ export function getCornerLineToolInputHandler(
 			return;
 		}
 		// new constraint
-		if (!currentConstraint && mode === MODE.ADDING) {
+		if (!currentConstraint && mode === CORNER_LINE_TOOL_MODE.ADD_EDIT) {
 			id = uniqueId();
 			currentConstraint = cornerLineConstraint(tool, [coord], options?.defaultValue);
 			addLocalConstraint(id, currentConstraint);
 			return;
 		}
 		// add to current cage
-		else if (currentConstraint && id && mode === MODE.ADDING) {
+		else if (currentConstraint && id && mode === CORNER_LINE_TOOL_MODE.ADD_EDIT) {
 			currentConstraint = updateCornerLineConstraintCoords(currentConstraint, coord);
 			updateLocalConstraint(tool, id, currentConstraint);
 			return;
@@ -80,8 +81,8 @@ export function getCornerLineToolInputHandler(
 	pointerHandler.onDragStart = (event: CellCornerTapEvent): void => {
 		id = null;
 		currentConstraint = null;
-		mode = MODE.DYNAMIC;
-		if (event.event.shiftKey) mode = MODE.ADDING;
+		mode = CORNER_LINE_TOOL_MODE.DYNAMIC;
+		if (event.event.shiftKey) mode = CORNER_LINE_TOOL_MODE.ADD_EDIT;
 		handle(event);
 	};
 

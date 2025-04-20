@@ -22,6 +22,12 @@ import { DIRECTION } from '$lib/utils/directions';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import { singleCellArrowPreviewStore, type ToolPreview } from '$stores/ElementsStore';
 
+enum CELL_ARROW_TOOL_MODE {
+	DYNAMIC = 'Dynamic',
+	ADD_EDIT = 'Add/Edit',
+	DELETE = 'Delete'
+}
+
 export function getSingleCellArrowToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
@@ -46,12 +52,7 @@ export function getSingleCellArrowToolInputHandler(
 	let currentConstraint: CellArrowToolI | null = null;
 	let id: string | null = null;
 
-	enum MODE {
-		DYNAMIC,
-		ADDING,
-		REMOVING
-	}
-	let mode = MODE.DYNAMIC;
+	let mode = CELL_ARROW_TOOL_MODE.DYNAMIC;
 
 	function handle(event: CellEdgeCornerEvent) {
 		const localConstraints = get(localConstraintsStore);
@@ -59,7 +60,7 @@ export function getSingleCellArrowToolInputHandler(
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
 
-		if (event.event.altKey) mode = MODE.REMOVING;
+		if (event.event.altKey) mode = CELL_ARROW_TOOL_MODE.DELETE;
 		// determine if adding or removing
 
 		const match = findSingleCellConstraint<CellArrowToolI>(localConstraints, tool, coords);
@@ -67,7 +68,7 @@ export function getSingleCellArrowToolInputHandler(
 		if (match) {
 			[id, currentConstraint] = match;
 			// update arrow or remove
-			if (currentConstraint.direction === direction || mode === MODE.REMOVING) {
+			if (currentConstraint.direction === direction || mode === CELL_ARROW_TOOL_MODE.DELETE) {
 				//remove
 				pushRemoveLocalConstraintCommand(id, currentConstraint, tool);
 			} else {
@@ -76,7 +77,7 @@ export function getSingleCellArrowToolInputHandler(
 				updateLocalConstraint(tool, id, currentConstraint);
 			}
 			return;
-		} else if (mode !== MODE.REMOVING) {
+		} else if (mode !== CELL_ARROW_TOOL_MODE.DELETE) {
 			currentConstraint = singleCellArrowConstraint(tool, coords, direction);
 			id = uniqueId();
 			pushAddLocalConstraintCommand(id, currentConstraint, tool, true);
@@ -96,9 +97,9 @@ export function getSingleCellArrowToolInputHandler(
 	}
 
 	pointerHandler.onDragStart = (event: CellEdgeCornerEvent): void => {
-		mode = MODE.DYNAMIC;
+		mode = CELL_ARROW_TOOL_MODE.DYNAMIC;
 		handle(event);
-		mode = MODE.DYNAMIC;
+		mode = CELL_ARROW_TOOL_MODE.DYNAMIC;
 	};
 
 	pointerHandler.onMove = (event: CellEdgeCornerEvent): void => {
@@ -115,7 +116,7 @@ export function getSingleCellArrowToolInputHandler(
 		const match = findSingleCellConstraint<CellArrowToolI>(localConstraints, tool, event.cell);
 		let preview_mode: 'add' | 'remove' = 'add';
 		let match_id: string | undefined = undefined;
-		if (match && match[1].direction === direction && mode === MODE.DYNAMIC) {
+		if (match && match[1].direction === direction && mode === CELL_ARROW_TOOL_MODE.DYNAMIC) {
 			preview_mode = 'remove';
 			match_id = match[0];
 		}

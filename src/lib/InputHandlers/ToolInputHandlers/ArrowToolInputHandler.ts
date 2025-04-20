@@ -33,6 +33,13 @@ import {
 } from './utils';
 import type { ArrowToolInputOptions } from './types';
 
+enum ARROW_TOOL_MODE {
+	DYNAMIC = 'Dynamic',
+	EDIT_BULB = 'Edit Bulb',
+	EDIT_ARROWS = 'Edit Arrows',
+	DELETE = 'Delete'
+}
+
 export function getArrowToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
@@ -50,12 +57,7 @@ export function getArrowToolInputHandler(
 	let bypassTap = false;
 	let bypassDragEnd = false;
 
-	enum MODE {
-		DYNAMIC = 'DYNAMIC',
-		BULB = 'BULB',
-		BODY = 'BODY'
-	}
-	let mode = MODE.DYNAMIC;
+	let mode = ARROW_TOOL_MODE.DYNAMIC;
 
 	// pointer down and no match => new arrow (mode BULB)
 	// pointer down and match arrow and not shift => remove arrow
@@ -69,7 +71,7 @@ export function getArrowToolInputHandler(
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
 
-		if (mode === MODE.DYNAMIC) {
+		if (mode === ARROW_TOOL_MODE.DYNAMIC) {
 			const localConstraints = get(localConstraintsStore);
 
 			const matchLine = findArrowLineConstraint(localConstraints, tool, coords);
@@ -83,11 +85,11 @@ export function getArrowToolInputHandler(
 			const bulbMatch = findArrowBulbConstraint(localConstraints, tool, coords);
 			if (!bulbMatch) {
 				bypassTap = true;
-				mode = MODE.BULB;
+				mode = ARROW_TOOL_MODE.EDIT_BULB;
 				id = null;
 				currentConstraint = null;
 			} else {
-				mode = MODE.BODY;
+				mode = ARROW_TOOL_MODE.EDIT_ARROWS;
 				id = bulbMatch[0];
 				currentConstraint = bulbMatch[1];
 				currentConstraint = arrowAddToLines(currentConstraint, coords);
@@ -96,15 +98,15 @@ export function getArrowToolInputHandler(
 			}
 		}
 
-		if (mode === MODE.BULB && !id) {
+		if (mode === ARROW_TOOL_MODE.EDIT_BULB && !id) {
 			id = uniqueId();
 			currentConstraint = arrowConstraint(tool, [coords]);
 			addLocalConstraint(id, currentConstraint);
 			return;
-		} else if (mode === MODE.BULB && id && currentConstraint) {
+		} else if (mode === ARROW_TOOL_MODE.EDIT_BULB && id && currentConstraint) {
 			currentConstraint = arrowAddToBulb(currentConstraint, coords);
 			updateLocalConstraint(tool, id, currentConstraint);
-		} else if (mode === MODE.BODY && id && currentConstraint) {
+		} else if (mode === ARROW_TOOL_MODE.EDIT_ARROWS && id && currentConstraint) {
 			// add to arrow line
 			currentConstraint = arrowAddToLast(currentConstraint, coords, options?.allowSelfIntersection);
 			updateLocalConstraint(tool, id, currentConstraint);
@@ -112,7 +114,7 @@ export function getArrowToolInputHandler(
 	}
 
 	pointerHandler.onDragStart = (event: CellDragTapEvent): void => {
-		mode = MODE.DYNAMIC;
+		mode = ARROW_TOOL_MODE.DYNAMIC;
 		handle(event);
 	};
 
@@ -126,7 +128,7 @@ export function getArrowToolInputHandler(
 			return;
 		}
 
-		if (mode === MODE.BODY && id && currentConstraint) {
+		if (mode === ARROW_TOOL_MODE.EDIT_ARROWS && id && currentConstraint) {
 			// remove last line if last line length <= 1;
 			if (arrowShouldRemoveLastLine(currentConstraint)) {
 				currentConstraint = arrowRemoveLastLine(currentConstraint);
@@ -137,11 +139,11 @@ export function getArrowToolInputHandler(
 			}
 		}
 		// push command to history
-		else if (mode === MODE.BULB) {
+		else if (mode === ARROW_TOOL_MODE.EDIT_BULB) {
 			pushAddLocalConstraintCommand(id, currentConstraint, tool);
 			oldConstraint = currentConstraint;
 		}
-		mode = MODE.DYNAMIC;
+		mode = ARROW_TOOL_MODE.DYNAMIC;
 	};
 
 	pointerHandler.onTap = (event: CellDragTapEvent) => {

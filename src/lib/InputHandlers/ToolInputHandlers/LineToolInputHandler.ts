@@ -17,6 +17,12 @@ import { CellPointerHandler, type CellDragTapEvent } from '$input/PointerHandler
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import type { LineToolInputOptions } from './types';
 
+// enum LINE_TOOL_MODE {
+// 	DYNAMIC = 'Dynamic',
+// 	ADD_EDIT = 'Add/Edit',
+// 	DELETE = 'Delete'
+// }
+
 export function getLineToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
@@ -31,13 +37,6 @@ export function getLineToolInputHandler(
 
 	let newConstraint: LineToolI | null = null;
 	let id: string | null = null;
-
-	// enum MODE {
-	// 	DYNAMIC,
-	// 	ADDING,
-	// 	REMOVING
-	// }
-	// let mode = MODE.DYNAMIC;
 
 	function handle(event: CellDragTapEvent) {
 		if (!id || !newConstraint) throw 'UNREACHABLE';

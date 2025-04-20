@@ -27,6 +27,12 @@ import {
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import { cornerToolPreviewStore, type ToolPreview } from '$stores/ElementsStore';
 
+enum CORNER_TOOL_MODE {
+	DYNAMIC = 'Dynamic',
+	ADD_EDIT = 'Add/Edit',
+	DELETE = 'Delete'
+}
+
 export function getCornerToolInputHandler(
 	svgRef: SVGSVGElement,
 	grid: Grid,
@@ -37,12 +43,7 @@ export function getCornerToolInputHandler(
 	const pointerHandler = new CellCornerPointerHandler();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
-	enum MODE {
-		DYNAMIC,
-		ADDING,
-		REMOVING
-	}
-	let mode = MODE.DYNAMIC;
+	let mode = CORNER_TOOL_MODE.DYNAMIC;
 
 	function handle(event: CellCornerTapEvent) {
 		const localConstraints = get(localConstraintsStore);
@@ -54,18 +55,18 @@ export function getCornerToolInputHandler(
 		if (!onGrid) return;
 		// determine if adding or removing
 		let match: [string, ConstraintType] | null = null;
-		if (mode === MODE.DYNAMIC) {
+		if (mode === CORNER_TOOL_MODE.DYNAMIC) {
 			match = findCornerConstraint(localConstraints, tool, corner);
-			mode = match ? MODE.REMOVING : MODE.ADDING;
+			mode = match ? CORNER_TOOL_MODE.DELETE : CORNER_TOOL_MODE.ADD_EDIT;
 		}
 		// remove constraint
-		if (match && mode === MODE.REMOVING) {
+		if (match && mode === CORNER_TOOL_MODE.DELETE) {
 			const id = match[0];
 			pushRemoveLocalConstraintCommand(id, match[1], tool);
 			return;
 		}
 		// add constraint
-		else if (mode === MODE.ADDING) {
+		else if (mode === CORNER_TOOL_MODE.ADD_EDIT) {
 			const newConstraint = cornerConstraint(tool, cellsCoords, options?.defaultValue);
 			const id = uniqueId();
 			pushAddLocalConstraintCommand(id, newConstraint, tool, true);
@@ -91,9 +92,9 @@ export function getCornerToolInputHandler(
 	}
 
 	pointerHandler.onDragStart = (event: CellCornerTapEvent): void => {
-		mode = MODE.DYNAMIC;
+		mode = CORNER_TOOL_MODE.DYNAMIC;
 		handle(event);
-		mode = MODE.DYNAMIC;
+		mode = CORNER_TOOL_MODE.DYNAMIC;
 	};
 
 	pointerHandler.onMove = (event: CellCornerTapEvent): void => {
@@ -114,7 +115,7 @@ export function getCornerToolInputHandler(
 		const match = findCornerConstraint(localConstraints, tool, event.coord);
 		let preview_mode: 'add' | 'remove' = 'add';
 		let match_id: string | undefined = undefined;
-		if (match && mode === MODE.DYNAMIC) {
+		if (match && mode === CORNER_TOOL_MODE.DYNAMIC) {
 			preview_mode = 'remove';
 			match_id = match[0];
 		}
