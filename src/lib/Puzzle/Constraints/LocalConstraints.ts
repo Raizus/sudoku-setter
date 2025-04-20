@@ -103,10 +103,12 @@ export class LocalConstraintsDict extends Map<TOOLID, Record<string, ConstraintT
 	}
 
 	addConstraint<T extends ConstraintType>(toolId: TOOLID, constraintId: string, constraint: T) {
-		const element = this.get(toolId);
-		if (!element) return;
+		if (!this.get(toolId)) {
+			this.addToDict(toolId);
+		}
 
-		element[constraintId] = constraint;
+		const element = this.get(toolId);
+		if (element) element[constraintId] = constraint;
 	}
 
 	setConstraints<T extends ConstraintType>(toolId: TOOLID, constraints: Record<string, T>) {
