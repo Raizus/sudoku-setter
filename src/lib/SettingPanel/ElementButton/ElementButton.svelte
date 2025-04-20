@@ -1,12 +1,21 @@
 <script lang="ts">
 	import CaretDown from '$icons/CaretDown.svelte';
 	import CaretUp from '$icons/CaretUp.svelte';
+	import { TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
+	import { toolStore, updateToolAndCurrentConstraintStores } from '$stores/BoardStore';
 
+	export let tool_id: TOOLID;
 	let selected: boolean = false;
-
-	function clickCb() {
-		selected = !selected;
+	let constraint_name = tool_id;
+	function selectCb() {
+		if (selected) {
+			updateToolAndCurrentConstraintStores(TOOLS.DIGIT);
+		} else {
+			updateToolAndCurrentConstraintStores(tool_id);
+		}
 	}
+
+	$: selected = tool_id === $toolStore;
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -20,10 +29,10 @@
 			<CaretDown />
 		</button>
 	</div>
-	<div class="constraints-ui" class:clickable={true} class:selected on:click={clickCb}>
+	<div class="constraints-ui" class:clickable={true} class:selected on:click={selectCb}>
 		<div class="header">
 			<div class="icon-container"></div>
-			<div class="element-name">Test Constraint</div>
+			<div class="element-name">{constraint_name}</div>
 		</div>
 		{#if selected}
 			<div class="editor-wrapper">
@@ -73,13 +82,13 @@
 		&.move-up {
 			border-bottom-left-radius: 0;
 			border-bottom-right-radius: 0;
-            border-bottom: 0.05rem solid black;
+			border-bottom: 0.05rem solid black;
 		}
 
 		&.move-down {
 			border-top-left-radius: 0;
 			border-top-right-radius: 0;
-            border-top: 0.05rem solid black;
+			border-top: 0.05rem solid black;
 		}
 	}
 
