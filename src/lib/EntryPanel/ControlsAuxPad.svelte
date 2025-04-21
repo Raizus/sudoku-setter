@@ -69,9 +69,9 @@
 
 	.controls-aux-pad {
 		display: grid;
-		grid-auto-rows: $button-size;
-		grid-template-columns: repeat(4, $button-size);
-		grid-auto-flow: row;
+		grid-auto-columns: $button-size;
+		grid-template-rows: repeat(4, $button-size);
+		grid-auto-flow: column;
 		gap: $button-gap;
 	}
 

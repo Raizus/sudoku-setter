@@ -7,7 +7,7 @@
 
 </script>
 
-<div class="controls-extra-pad">
+<div class="info-settings-pad">
 	<SettingsButton />
 	<RulesButton />
 	<FullscreenButton />
@@ -19,7 +19,7 @@
 	$button-size: var(--entry-panel-button-size);
 	$button-gap: var(--entry-panel-button-gap);
 
-	.controls-extra-pad {
+	.info-settings-pad {
 		display: grid;
 		grid-auto-rows: $button-size;
 		grid-template-columns: repeat(5, $button-size);

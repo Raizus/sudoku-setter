@@ -3,7 +3,7 @@
 	import NumberPad from './NumberPad.svelte';
 	import ToolPad from './ToolPad.svelte';
 	import { puzzleMetaStore, svgRefStore, toolStore } from '$stores/BoardStore';
-	import ExtraControlsPad from './ExtraControls/ExtraControlsPad.svelte';
+	import InfoSettingsPad from './ExtraControls/InfoSettingsPad.svelte';
 	import { joinStrList } from '../utils/functionUtils';
 	import Markdown from '@magidoc/plugin-svelte-marked';
 
@@ -45,12 +45,12 @@
 			onClickCb();
 		}}
 	>
-		<ExtraControlsPad />
+		<InfoSettingsPad />
 		<div class="entry-subpanel1">
+			<ControlsAuxPad />
 			<NumberPad selectedTool={$toolStore} />
 			<ToolPad bind:selectedTool={$toolStore} />
 		</div>
-		<ControlsAuxPad />
 	</div>
 </div>
 
