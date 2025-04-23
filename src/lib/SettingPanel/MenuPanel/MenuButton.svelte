@@ -3,7 +3,7 @@
 	export let title: string;
 </script>
 
-<button class="menu-button" on:click|stopPropagation={clickCb} {title}>
+<button class="form-button icon menu-button" on:click|stopPropagation={clickCb} {title}>
 	<div class="icon-wrapper">
 		<slot />
 	</div>
@@ -11,21 +11,6 @@
 
 <style lang="scss">
 	.menu-button {
-		cursor: pointer;
-		border-radius: 0.2em;
-		background-color: var(--button-background-color);
-		border: 0;
-		height: 2rem;
-		width: 2rem;
-
-		display: flex;
-		justify-content: center;
-		align-items: center;
-
-		&:hover {
-			background-color: var(--panel-radio-background-hover);
-		}
-
 		&:focus {
 			outline: transparent;
 			box-shadow: var(--focus-shadow);

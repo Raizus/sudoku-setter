@@ -17,6 +17,7 @@
 	import Local from '$icons/Local.svelte';
 	import ConstraintList from '../ToolButton/ConstraintList.svelte';
 	import { addGroupToLocalConstraint } from '$stores/LocalConstraintsStore';
+	import ElementButton from '../ElementButton/ElementButton.svelte';
 	// import ConstraintList from '../ToolButton/ConstraintList.svelte';
 
 	export let elementHandlers: AbstractElementHandlers;
@@ -50,6 +51,8 @@
 	<svelte:fragment slot="panel-content">
 		<ToolSelectorButton elementInfo={getToolInfo(TOOLS.GIVEN, elementHandlers)} />
 		<ToolSelectorButton elementInfo={getToolInfo(TOOLS.REGIONS, elementHandlers)} />
+
+		<ElementButton tool_id={TOOLS.WHISPERS_LINE}></ElementButton>
 
 		{#each $localConstraintsStore.entries() as [toolId, value] (toolId)}
 			{#if isLocalElement(toolId)}

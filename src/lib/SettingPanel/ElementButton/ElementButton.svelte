@@ -1,18 +1,35 @@
 <script lang="ts">
 	import CaretDown from '$icons/CaretDown.svelte';
 	import CaretUp from '$icons/CaretUp.svelte';
+	import Trash from '$icons/Trash.svelte';
 	import { TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
-	import { toolStore, updateToolAndCurrentConstraintStores } from '$stores/BoardStore';
+	import { removeLocalConstraintGroupAction, restoreLocalConstraintGroupAction } from '$src/lib/reducers/LocalConstraintsActions';
+	import { localConstraintsStore, toolStore, updateToolAndCurrentConstraintStores, updateToolOnRemoveGroup } from '$stores/BoardStore';
+	import { addCommand } from '$stores/HistoryStore';
+	import { getLocalConstraintCommand } from '$stores/LocalConstraintsStore';
+	import ElementEditor from './ElementEditor.svelte';
 
 	export let tool_id: TOOLID;
 	let selected: boolean = false;
 	let constraint_name = tool_id;
+
 	function selectCb() {
 		if (selected) {
 			updateToolAndCurrentConstraintStores(TOOLS.DIGIT);
 		} else {
 			updateToolAndCurrentConstraintStores(tool_id);
 		}
+	}
+
+	function deleteElement() {
+		updateToolOnRemoveGroup(tool_id);
+
+		const constraints = $localConstraintsStore.get(tool_id);
+		if (!constraints) return;
+		const action = removeLocalConstraintGroupAction(tool_id);
+		const reverse_action = restoreLocalConstraintGroupAction(tool_id, constraints);
+		const command = getLocalConstraintCommand(action, reverse_action);
+		addCommand(command);
 	}
 
 	$: selected = tool_id === $toolStore;
@@ -29,15 +46,16 @@
 			<CaretDown />
 		</button>
 	</div>
-	<div class="constraints-ui" class:clickable={true} class:selected on:click={selectCb}>
-		<div class="header">
-			<div class="icon-container"></div>
+	<div class="constraints-ui" class:clickable={true} class:selected>
+		<div class="header" on:click={selectCb}>
+			<div class="element-icon-container"></div>
 			<div class="element-name">{constraint_name}</div>
+			<button class="form-button icon header-button" on:click|stopPropagation={() => {}}>
+				<Trash />
+			</button>
 		</div>
 		{#if selected}
-			<div class="editor-wrapper">
-				<div class="editor">Test</div>
-			</div>
+			<ElementEditor></ElementEditor>
 		{/if}
 	</div>
 </div>
@@ -52,27 +70,12 @@
 		min-width: 0;
 	}
 
-	.form-button {
-		// form button styling
+	.reorder-button {
 		color: #333;
 		background: #fff;
 		border: 0.125rem solid black;
-		border-radius: 0.15rem;
 		font-weight: 700;
 		line-height: 1;
-		min-height: 2em;
-		min-width: 6ch;
-		padding: 0 0.5em;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		transition: background 0.1s;
-		-webkit-user-select: none;
-		-moz-user-select: none;
-		user-select: none;
-	}
-
-	.reorder-button {
 		position: relative;
 		min-width: 0;
 		width: 2rem !important;
@@ -96,7 +99,7 @@
 		flex: 1;
 		min-width: 0;
 
-		border: 0.125rem solid;
+		border: 0.125rem solid black;
 		border-radius: 0.25rem;
 		transition: all 0.2s ease-in-out;
 
@@ -111,13 +114,14 @@
 		align-items: center;
 		position: relative;
 		gap: 0.5rem;
+		cursor: pointer;
 
 		-webkit-user-select: none;
 		-moz-user-select: none;
 		user-select: none;
 	}
 
-	.icon-container {
+	.element-icon-container {
 		width: 2.5rem;
 		height: 2.5rem;
 		overflow: hidden;
@@ -129,13 +133,11 @@
 		flex: 1;
 	}
 
-	.editor-wrapper {
-		height: auto;
-		margin: 0 0.5rem;
+	.form-button {
+		padding: 0 0.5em;
 	}
 
-	.editor {
-		border-top: 0.0625rem solid black;
-		padding: 0.5rem 0;
+	.header-button {
+		align-self: start;
 	}
 </style>

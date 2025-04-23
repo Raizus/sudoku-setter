@@ -27,26 +27,6 @@ textarea {
 	font-size: inherit;
 }
 
-.modal-button {
-	display: flex;
-	background: var(--button-background-color);
-	border-radius: 5px;
-	border: 0;
-	align-items: center;
-	justify-content: center;
-	height: 3rem;
-	cursor: pointer;
-
-	&:hover {
-		background: var(--button-hover-background-color);
-	}
-
-	&:focus {
-		outline: transparent;
-		box-shadow: var(--focus-shadow);
-	}
-}
-
 [data-theme='dark'] {
 	--text-primary-color: hsl(0, 0%, 82%);
 	--background-color: hsl(0, 0%, 8%);
@@ -143,4 +123,48 @@ main {
 	--cell-given-color: black;
 
 	--cell-digit-conflict-color: rgb(255, 41, 41);
+}
+
+.modal-button {
+	display: flex;
+	background: var(--button-background-color);
+	border-radius: 5px;
+	border: 0;
+	align-items: center;
+	justify-content: center;
+	height: 3rem;
+	cursor: pointer;
+
+	&:hover {
+		background: var(--button-hover-background-color);
+	}
+
+	&:focus {
+		outline: transparent;
+		box-shadow: var(--focus-shadow);
+	}
+}
+
+.form-button {
+	cursor: pointer;
+	border-radius: 0.15rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background 0.1s;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+
+	&.icon {
+		width: 2em;
+		height: 2em;
+		border: 0;
+		border-radius: 0.2em;
+		background-color: var(--button-background-color);
+
+		&:hover {
+			background-color: var(--panel-radio-background-hover);
+		}
+	}
 }
