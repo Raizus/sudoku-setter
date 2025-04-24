@@ -55,7 +55,7 @@
 			</button>
 		</div>
 		{#if selected}
-			<ElementEditor></ElementEditor>
+			<ElementEditor {tool_id}/>
 		{/if}
 	</div>
 </div>
