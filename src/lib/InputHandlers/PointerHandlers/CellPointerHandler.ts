@@ -39,10 +39,13 @@ export class CellPointerHandler {
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
+		
 		this._prevPoint = point;
 		const margin = isFirstClick ? undefined : this._drag_margin;
+		console.log("margin", margin);
 		const cellInfo = getClosestCell(point, margin);
 		if (!cellInfo) return;
+
 
 		const cell = cellInfo.cell;
 		this._prevCell = cell;
@@ -78,11 +81,12 @@ export class CellPointerHandler {
 	}
 
 	pointerUp(event: PointerEvent, svgRef: SVGSVGElement): void {
+		this._prevCell = null;
+		this._prevPoint = null;
+		
 		if (this._isDown) {
-			this._prevCell = null;
-			this._prevPoint = null;
-			this._isDown = false;
 			if (this.onDragEnd) this.onDragEnd();
+			this._isDown = false;
 		}
 
 		const point = pointerEventToVector2D(event, svgRef);
