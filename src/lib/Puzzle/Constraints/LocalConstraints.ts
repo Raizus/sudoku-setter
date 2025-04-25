@@ -348,7 +348,7 @@ export function findOutsideDirectionConstraint(
 	toolId: TOOLID,
 	cell: GridCoordI,
 	direction: DIRECTION
-) {
+): [string, OutsideDirectionToolI] | null {
 	const elements = localConstraints.get(toolId);
 	if (!elements) return null;
 
@@ -356,7 +356,7 @@ export function findOutsideDirectionConstraint(
 		const constraint = entry[1] as OutsideDirectionToolI;
 
 		const id = entry[0];
-		if (areCoordsEqual(cell, constraint.cell) && direction === constraint.direction) return id;
+		if (areCoordsEqual(cell, constraint.cell) && direction === constraint.direction) return [id, constraint];
 	}
 	return null;
 }

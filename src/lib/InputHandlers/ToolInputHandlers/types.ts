@@ -1,9 +1,13 @@
 import {
 	isArrowTool,
+	isCageTool,
 	isCloneTool,
 	isCornerTool,
 	isEdgeTool,
 	isLineTool,
+	isOutsideDirectionTool,
+	isSimpleSingleCellTool,
+	isSingleCellArrowTool,
 	type TOOLID
 } from '$src/lib/Puzzle/Tools';
 
@@ -195,7 +199,16 @@ export enum CELL_MULTI_ARROW_TOOL_MODE {
 export type ToolModeT = CLONE_TOOL_MODE | BASIC_TOOL_MODE | ARROW_TOOL_MODE | undefined;
 
 export function getToolModes(tool: TOOLID) {
-	if (isLineTool(tool) || isEdgeTool(tool) || isCornerTool(tool)) return BASIC_TOOL_MODE;
+	if (
+		isSimpleSingleCellTool(tool) ||
+		isSingleCellArrowTool(tool) ||
+		isLineTool(tool) ||
+		isEdgeTool(tool) ||
+		isCornerTool(tool) ||
+		isCageTool(tool) ||
+		isOutsideDirectionTool(tool)
+	)
+		return BASIC_TOOL_MODE;
 	if (isArrowTool(tool)) return ARROW_TOOL_MODE;
 	if (isCloneTool(tool)) return CLONE_TOOL_MODE;
 	return undefined;

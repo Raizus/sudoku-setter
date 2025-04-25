@@ -35,15 +35,11 @@ export class CellPointerHandler {
 		this._isDown = true;
 		this._isTap = true;
 
-		const isFirstClick = null === this._prevCell;
 		const point = pointerEventToVector2D(event, svgRef);
 		if (!point) return;
 
-		
 		this._prevPoint = point;
-		const margin = isFirstClick ? undefined : this._drag_margin;
-		console.log("margin", margin);
-		const cellInfo = getClosestCell(point, margin);
+		const cellInfo = getClosestCell(point);
 		if (!cellInfo) return;
 
 

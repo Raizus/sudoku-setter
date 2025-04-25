@@ -21,6 +21,7 @@ import { isCellOnGrid, type GridCoordI, areCoordsEqual } from '$lib/utils/Square
 import { findCloneConstraint, findUsedCloneLabels } from '$lib/Puzzle/Constraints/LocalConstraints';
 import { pushAddLocalConstraintCommand, pushUpdateLocalConstraintCommand } from './utils';
 import { CLONE_TOOL_MODE } from './types';
+import { toolModeStore } from '$stores/InputHandlerStore';
 
 function makeLabel(x: number) {
 	x++;
@@ -55,8 +56,7 @@ export function getCloneToolInputHandler(
 	let id: string | null = null;
 	let moveStart: GridCoordI | null = null;
 	let movingGroup: 'cells2' | 'cells' = 'cells2';
-
-	let mode = CLONE_TOOL_MODE.DYNAMIC;
+	let mode = get(toolModeStore);
 
 	function handle(event: CellDragTapEvent) {
 		const localConstraints = get(localConstraintsStore);
@@ -66,20 +66,41 @@ export function getCloneToolInputHandler(
 		if (!onGrid) return;
 
 		// if shift click on an existing cage, add cells to it
+		// const match = findCloneConstraint(localConstraints, tool, coords);
+		// if (mode === CLONE_TOOL_MODE.DYNAMIC) {
+		// 	if (match) {
+		// 		id = match[0];
+		// 		currentConstraint = match[1];
+		// 		mode = CLONE_TOOL_MODE.MOVE;
+		// 		moveStart = coords;
+
+		// 		// which group is moving, cells1 or cell2
+		// 		const match2 = currentConstraint.cells2.some((_cell) => areCoordsEqual(_cell, coords));
+		// 		movingGroup = match2 ? 'cells2' : 'cells';
+		// 	} else {
+		// 		mode = CLONE_TOOL_MODE.SELECT;
+		// 	}
+		// }
+
 		const match = findCloneConstraint(localConstraints, tool, coords);
-		if (mode === CLONE_TOOL_MODE.DYNAMIC) {
-			if (match) {
-				id = match[0];
-				currentConstraint = match[1];
+		if (match) {
+			id = match[0];
+			currentConstraint = match[1];
+
+			if (mode === CLONE_TOOL_MODE.DYNAMIC) {
+				mode = CLONE_TOOL_MODE.MOVE
+			}
+
+			if (mode === CLONE_TOOL_MODE.MOVE) {
 				mode = CLONE_TOOL_MODE.MOVE;
 				moveStart = coords;
 
 				// which group is moving, cells1 or cell2
 				const match2 = currentConstraint.cells2.some((_cell) => areCoordsEqual(_cell, coords));
 				movingGroup = match2 ? 'cells2' : 'cells';
-			} else {
-				mode = CLONE_TOOL_MODE.SELECT;
 			}
+		} else if (mode === CLONE_TOOL_MODE.DYNAMIC) {
+			mode = CLONE_TOOL_MODE.SELECT;
 		}
 
 		// create new clone or add to existing
@@ -114,9 +135,9 @@ export function getCloneToolInputHandler(
 	}
 
 	pointerHandler.onDragStart = (event: CellDragTapEvent): void => {
+		mode = get(toolModeStore);
 		id = null;
 		currentConstraint = null;
-		mode = CLONE_TOOL_MODE.DYNAMIC;
 		moveStart = null;
 		handle(event);
 	};

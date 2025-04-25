@@ -128,7 +128,6 @@ export function getEdgeToolInputHandler(
 			match_id,
 			mode: preview_mode
 		};
-
 		edgeToolPreviewStore.set(aux);
 	};
 

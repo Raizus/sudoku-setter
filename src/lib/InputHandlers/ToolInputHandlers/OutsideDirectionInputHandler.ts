@@ -1,8 +1,10 @@
 import type { InputHandler } from '../InputHandler';
-import { currentConstraintStore, updateLocalConstraint } from '$stores/BoardStore';
+import {
+	currentConstraintStore,
+	selectConstraint,
+	updateLocalConstraint
+} from '$stores/BoardStore';
 import { localConstraintsStore } from '$stores/BoardStore';
-import { removeLocalConstraint } from '$stores/LocalConstraintsStore';
-import { addLocalConstraint } from '$stores/LocalConstraintsStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
@@ -12,7 +14,7 @@ import {
 	CellFeaturePointerHandler,
 	type CellEdgeCornerEvent
 } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
-import { CornerOrEdge } from './types';
+import { BASIC_TOOL_MODE, CornerOrEdge } from './types';
 import type { GridShape } from '$lib/Types/types';
 import {
 	updateConstraintValue,
@@ -29,6 +31,8 @@ import {
 } from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
 import type { OutsideDirectionToolInputOptions } from './types';
 import { outsideDirectionToolPreviewStore } from '$stores/ElementsStore';
+import { toolModeStore } from '$stores/InputHandlerStore';
+import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 
 export function getOutsideDirectionToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -42,9 +46,6 @@ export function getOutsideDirectionToolInputHandler(
 	const pointerHandler = new CellFeaturePointerHandler(cornerOrEdge);
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
-	let currentConstraint: OutsideDirectionToolI | null = null;
-	let id: string | null = null;
-
 	function handle(event: CellEdgeCornerEvent) {
 		const localConstraints = get(localConstraintsStore);
 		const cell = event.cell;
@@ -53,19 +54,29 @@ export function getOutsideDirectionToolInputHandler(
 
 		const onGrid = isCellOnGrid(cell, gridShape);
 		if (onGrid) return;
+
 		const neighbour = gridCoordsNextInDirection(cell, direction);
 		const neighbourOnGrid = isCellOnGrid(neighbour, gridShape);
 		if (!neighbourOnGrid) return;
 
+		let mode = get(toolModeStore);
+
+		// determine if adding or removing
 		const match = findOutsideDirectionConstraint(localConstraints, tool, cell, direction);
-		if (match) {
-			removeLocalConstraint(tool, match);
-			return;
+		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
+			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
 
-		currentConstraint = outsideDirectionConstraint(tool, cell, direction, '');
-		id = uniqueId();
-		addLocalConstraint(id, currentConstraint);
+		if (match && mode === BASIC_TOOL_MODE.DELETE) {
+			const [id, constraint] = match;
+			pushRemoveLocalConstraintCommand(id, constraint, tool);
+		} else if (!match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
+			const newConstraint = outsideDirectionConstraint(tool, cell, direction, '');
+			const id = uniqueId();
+			pushAddLocalConstraintCommand(id, newConstraint, tool, true);
+		} else if (match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
+			selectConstraint(match[0], tool);
+		}
 	}
 
 	function onKeyDown(event: KeyboardEvent) {
@@ -96,11 +107,19 @@ export function getOutsideDirectionToolInputHandler(
 			outsideDirectionToolPreviewStore.set(undefined);
 			return;
 		}
-		
+
 		const direction = idxToDirection(event.direction);
 		const neighbour = gridCoordsNextInDirection(event.cell, direction);
 		const neighbourOnGrid = isCellOnGrid(neighbour, gridShape);
 		if (!neighbourOnGrid) {
+			outsideDirectionToolPreviewStore.set(undefined);
+			return;
+		}
+
+		const mode = get(toolModeStore);
+		const localConstraints = get(localConstraintsStore);
+		const match = findOutsideDirectionConstraint(localConstraints, tool, event.cell, direction);
+		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
 			outsideDirectionToolPreviewStore.set(undefined);
 			return;
 		}

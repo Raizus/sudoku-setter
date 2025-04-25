@@ -4,6 +4,7 @@ import type { TOOLID } from '$lib/Puzzle/Tools';
 import {
 	currentConstraintStore,
 	currentShapeStore,
+	selectConstraint,
 	updateLocalConstraint
 } from '$stores/BoardStore';
 import { localConstraintsStore } from '$stores/BoardStore';
@@ -27,6 +28,7 @@ import {
 } from '$lib/Puzzle/Constraints/SingleCellConstraints';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import { simpleCellToolPreviewStore, type ToolPreview } from '$stores/ElementsStore';
+import { toolModeStore } from '$stores/InputHandlerStore';
 
 export function getSingleCellToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -37,14 +39,14 @@ export function getSingleCellToolInputHandler(
 	const pointerHandler = new CellPointerHandler();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
-	let mode = BASIC_TOOL_MODE.DYNAMIC;
-
 	function handle(event: CellDragTapEvent) {
 		const localConstraints = get(localConstraintsStore);
 		const coords = event.cell;
 
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
+
+		let mode = get(toolModeStore);
 
 		// determine if adding or removing
 		const match = findSingleCellConstraint<CellToolI>(localConstraints, tool, coords);
@@ -68,11 +70,12 @@ export function getSingleCellToolInputHandler(
 			const newConstraint = singleCellConstraint(tool, coords, options?.defaultValue);
 			const id = uniqueId();
 			pushAddLocalConstraintCommand(id, newConstraint, tool, true);
+		} else if (match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
+			selectConstraint(match[0], tool);
 		}
 	}
 
 	pointerHandler.onDragStart = (event: CellDragTapEvent): void => {
-		mode = BASIC_TOOL_MODE.DYNAMIC;
 		handle(event);
 	};
 
@@ -80,9 +83,9 @@ export function getSingleCellToolInputHandler(
 		handle(event);
 	};
 
-	pointerHandler.onDragEnd = (): void => {
-		mode = BASIC_TOOL_MODE.DYNAMIC;
-	};
+	// pointerHandler.onDragEnd = (): void => {
+	// 	mode = BASIC_TOOL_MODE.DYNAMIC;
+	// };
 
 	pointerHandler.onMove = (event: CellDragTapEvent): void => {
 		const onGrid = isCellOnGrid(event.cell, gridShape);
@@ -97,8 +100,14 @@ export function getSingleCellToolInputHandler(
 			constraint_preview.shape = { ...currentShape };
 		}
 
+		const mode = get(toolModeStore);
 		const localConstraints = get(localConstraintsStore);
 		const match = findSingleCellConstraint<CellToolI>(localConstraints, tool, event.cell);
+		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
+			simpleCellToolPreviewStore.set(undefined);
+			return;
+		}
+
 		let preview_mode: 'add' | 'remove' = 'add';
 		let match_id: string | undefined = undefined;
 		if (match && (mode === BASIC_TOOL_MODE.DELETE || mode === BASIC_TOOL_MODE.DYNAMIC)) {
@@ -146,9 +155,7 @@ export function getSingleCellToolInputHandler(
 		keyDown: (event: KeyboardEvent): void => {
 			onKeyDown(event);
 		},
-		keyUp: (): void => {
-			return;
-		}
+		keyUp: (): void => {}
 	};
 
 	return inputHandler;
