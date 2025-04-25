@@ -2,7 +2,9 @@
 	import CaretDown from '$icons/CaretDown.svelte';
 	import CaretUp from '$icons/CaretUp.svelte';
 	import Trash from '$icons/Trash.svelte';
+	import { getToolInfo, type AbstractElementHandlers } from '$src/lib/Puzzle/ElementHandlersUtils';
 	import { TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
+	import { getUsageDescription } from '$src/lib/Puzzle/ToolUsage';
 	import { removeLocalConstraintGroupAction, restoreLocalConstraintGroupAction } from '$src/lib/reducers/LocalConstraintsActions';
 	import { localConstraintsStore, toolStore, updateToolAndCurrentConstraintStores, updateToolOnRemoveGroup } from '$stores/BoardStore';
 	import { addCommand } from '$stores/HistoryStore';
@@ -10,8 +12,12 @@
 	import ElementEditor from './ElementEditor.svelte';
 
 	export let tool_id: TOOLID;
+	export let elementHandlers: AbstractElementHandlers;
+
 	let selected: boolean = false;
 	let constraint_name = tool_id;
+
+	$: elementInfo = getToolInfo(tool_id, elementHandlers)
 
 	function selectCb() {
 		if (selected) {
@@ -32,25 +38,43 @@
 		addCommand(command);
 	}
 
+	function getDescription() {
+		const toolDescription = elementInfo.meta?.description;
+		const toolUsage = elementInfo.meta?.usage ?? getUsageDescription(tool_id);
+
+		let description: string | undefined = undefined;
+		if (toolDescription && toolDescription.length) {
+			description = toolDescription;
+		}
+		if (toolUsage.length) {
+			if (description) {
+				description = description + '\n\n' + toolUsage;
+			} else {
+				description = toolUsage;
+			}
+		}
+		return description;
+	}
+
 	$: selected = tool_id === $toolStore;
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <div class="element-button-wrapper">
-	<div class="reorder-buttons">
+	<!-- <div class="reorder-buttons">
 		<button class="form-button reorder-button move-up">
 			<CaretUp />
 		</button>
 		<button class="form-button reorder-button move-down">
 			<CaretDown />
 		</button>
-	</div>
+	</div> -->
 	<div class="constraints-ui" class:clickable={true} class:selected>
-		<div class="header" on:click={selectCb}>
+		<div class="header" title={getDescription()} on:click={selectCb}>
 			<div class="element-icon-container"></div>
 			<div class="element-name">{constraint_name}</div>
-			<button class="form-button icon header-button" on:click|stopPropagation={() => {}}>
+			<button class="form-button icon header-button" on:click|stopPropagation={deleteElement}>
 				<Trash />
 			</button>
 		</div>

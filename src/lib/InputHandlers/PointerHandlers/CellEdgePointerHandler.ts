@@ -18,6 +18,10 @@ export class CellEdgePointerHandler {
 	private _isTap = false;
 	private _margin: number | undefined = 0.35;
 
+	constructor(margin?: number) {
+		this._margin = margin;
+	}
+
 	pointerDown(event: PointerEvent, svgRef: SVGSVGElement): void {
 		this._isDown = true;
 		this._isTap = true;

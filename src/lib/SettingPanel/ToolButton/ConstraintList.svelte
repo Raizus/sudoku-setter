@@ -14,7 +14,7 @@
 	<CollapsibleDiv isOpen={toolId === $toolStore}>
 		<div class="constraint-list">
 			{#each Object.entries(constraintRecord) as entry (entry[0])}
-				<ConstraintSelectionButton constraintId={entry[0]} {toolId}/>
+				<ConstraintSelectionButton constraint_id={entry[0]} tool_id={toolId}/>
 			{/each}
 		</div>
 	</CollapsibleDiv>

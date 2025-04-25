@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { getToolModes, type ToolModeT } from '$input/ToolInputHandlers/types';
-	import { toolStore } from '$stores/BoardStore';
+	import type { TOOLID } from '$src/lib/Puzzle/Tools';
 	import { toolModeStore } from '$stores/InputHandlerStore';
 
-	$: tool = $toolStore;
-	$: modes = getToolModes(tool);
+	export let tool_id: TOOLID;
+
+	$: modes = getToolModes(tool_id);
 
 	$: currentMode = $toolModeStore;
 

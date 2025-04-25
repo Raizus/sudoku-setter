@@ -1,20 +1,16 @@
 <script lang="ts">
 	import type { TOOLID } from '$src/lib/Puzzle/Tools';
-	import { localConstraintsStore } from '$stores/BoardStore';
+	import ConstraintList from './ConstraintList.svelte';
 	import ToolModeButtons from './ToolModeButtons.svelte';
 
 	export let tool_id: TOOLID;
-
-	$: constraintRecord = $localConstraintsStore.get(tool_id);
 </script>
 
 <div class="editor-wrapper">
 	<div class="editor">
 		<div class="editor-layout">
-			<ToolModeButtons />
-		</div>
-		<div class="constraint-list">
-			
+			<ToolModeButtons {tool_id}/>
+			<ConstraintList {tool_id}/>
 		</div>
 	</div>
 </div>
@@ -33,14 +29,6 @@
 	.editor-layout {
 		display: flex;
 		flex-direction: column;
-	}
-
-	.constraint-list {
-		display: flex;
-		flex-direction: column;
-		margin-left: 1rem;
-		gap: 1px;
-		border-left: 1px solid var(--panel-radio-border-color);
-		padding-left: 1px;
+		gap: 0.5rem;
 	}
 </style>

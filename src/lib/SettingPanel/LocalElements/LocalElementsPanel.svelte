@@ -52,13 +52,18 @@
 		<ToolSelectorButton elementInfo={getToolInfo(TOOLS.GIVEN, elementHandlers)} />
 		<ToolSelectorButton elementInfo={getToolInfo(TOOLS.REGIONS, elementHandlers)} />
 
-		<ElementButton tool_id={TOOLS.WHISPERS_LINE} />
+		{#each $localConstraintsStore.entries() as [tool_id, value] (tool_id)}
+			{#if isLocalElement(tool_id)}
+				<ElementButton {tool_id} {elementHandlers}/>
+			{/if}
+		{/each}
 
-		{#each $localConstraintsStore.entries() as [toolId, value] (toolId)}
+
+		<!-- {#each $localConstraintsStore.entries() as [toolId, value] (toolId)}
 			{#if isLocalElement(toolId)}
 				<LocalConstraintSelectionButton {toolId} {elementHandlers} />
 				<ConstraintList {toolId} />
 			{/if}
-		{/each}
+		{/each} -->
 	</svelte:fragment>
 </SettingToolsPanel>

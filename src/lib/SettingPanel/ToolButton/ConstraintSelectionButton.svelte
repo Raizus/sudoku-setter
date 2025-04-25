@@ -11,21 +11,21 @@
 	} from '$src/lib/reducers/LocalConstraintsActions';
 	import { addCommand } from '$stores/HistoryStore';
 
-	export let constraintId: string;
-	export let toolId: TOOLID;
+	export let constraint_id: string;
+	export let tool_id: TOOLID;
 
-	function onClickCb() {
+	function selectConstraintCb() {
 		//update current constraint
-		selectConstraint(constraintId, toolId);
+		selectConstraint(constraint_id, tool_id);
 		if ($svgRefStore) $svgRefStore.focus();
 	}
 
 	function removeConstraint() {
 		// removeLocalConstraint(toolId, constraintId);
-		const constraint = $localConstraintsStore.getConstraint(toolId, constraintId);
+		const constraint = $localConstraintsStore.getConstraint(tool_id, constraint_id);
 		if (!constraint) return;
-		const action = removeLocalConstraintAction(constraintId, toolId);
-		const reverse_action = addLocalConstraintAction(constraintId, constraint);
+		const action = removeLocalConstraintAction(constraint_id, tool_id);
+		const reverse_action = addLocalConstraintAction(constraint_id, constraint);
 		const command = getLocalConstraintCommand(action, reverse_action);
 		addCommand(command);
 	}
@@ -37,11 +37,11 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
 	class="constraint-button"
-	on:click={onClickCb}
-	class:active={constraintId === currentConstraintId}
+	on:click={selectConstraintCb}
+	class:active={constraint_id === currentConstraintId}
 >
 	<div class="left-side">
-		ID: {constraintId}
+		ID: {constraint_id}
 	</div>
 	<div class="right-side">
 		<button class="remove-constraint-button" on:click|stopPropagation={removeConstraint}>
@@ -55,10 +55,10 @@
 		display: flex;
 		background-color: transparent;
 		text-align: start;
-		border: 1px solid var(--panel-radio-border-color);
-		/* border: 1px solid black; */
+		border: 0.1em solid black;
 		border-radius: 5px;
 		cursor: pointer;
+		padding-left: 0.4em;
 	}
 
 	.constraint-button:hover {
