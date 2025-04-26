@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getToolModes, type ToolModeT } from '$input/ToolInputHandlers/types';
+	import { getDefaultToolMode, getToolModes, type ToolModeT } from '$input/ToolInputHandlers/types';
 	import type { TOOLID } from '$src/lib/Puzzle/Tools';
 	import { toolModeStore } from '$stores/InputHandlerStore';
 
@@ -12,6 +12,8 @@
 	function clickCb(mode: ToolModeT) {
 		$toolModeStore = mode;
 	}
+
+	$toolModeStore = getDefaultToolMode(tool_id);
 </script>
 
 {#if modes}

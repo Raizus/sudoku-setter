@@ -1,6 +1,7 @@
 import {
 	isArrowTool,
 	isCageTool,
+	isCenterEdgeCornerTool,
 	isCloneTool,
 	isCornerTool,
 	isEdgeTool,
@@ -206,10 +207,28 @@ export function getToolModes(tool: TOOLID) {
 		isEdgeTool(tool) ||
 		isCornerTool(tool) ||
 		isCageTool(tool) ||
-		isOutsideDirectionTool(tool)
+		isOutsideDirectionTool(tool) ||
+		isCenterEdgeCornerTool(tool)
 	)
 		return BASIC_TOOL_MODE;
 	if (isArrowTool(tool)) return ARROW_TOOL_MODE;
 	if (isCloneTool(tool)) return CLONE_TOOL_MODE;
+	return undefined;
+}
+
+export function getDefaultToolMode(tool: TOOLID): ToolModeT {
+	if (
+		isSimpleSingleCellTool(tool) ||
+		isSingleCellArrowTool(tool) ||
+		isLineTool(tool) ||
+		isEdgeTool(tool) ||
+		isCornerTool(tool) ||
+		isCageTool(tool) ||
+		isOutsideDirectionTool(tool) ||
+		isCenterEdgeCornerTool(tool)
+	)
+		return BASIC_TOOL_MODE.DYNAMIC;
+	if (isArrowTool(tool)) return ARROW_TOOL_MODE.DYNAMIC;
+	if (isCloneTool(tool)) return CLONE_TOOL_MODE.DYNAMIC;
 	return undefined;
 }
