@@ -1,7 +1,5 @@
 import type { InputHandler } from '../InputHandler';
-import {
-	updateLocalConstraint
-} from '$stores/BoardStore';
+import { updateLocalConstraint } from '$stores/BoardStore';
 import { localConstraintsStore } from '$stores/BoardStore';
 import { removeLocalConstraint } from '$stores/LocalConstraintsStore';
 import { addLocalConstraint } from '$stores/LocalConstraintsStore';
@@ -11,11 +9,19 @@ import type { TOOLID } from '$lib/Puzzle/Tools';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import type { GridShape } from '$lib/Types/types';
 import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
-import { updateLineConstraintCells, type LineToolI, lineConstraint } from '$lib/Puzzle/Constraints/LineConstraints';
+import {
+	updateLineConstraintCells,
+	type LineToolI,
+	lineConstraint
+} from '$lib/Puzzle/Constraints/LineConstraints';
 import { findLineConstraint } from '$lib/Puzzle/Constraints/LocalConstraints';
-import { CellPointerHandler, type CellDragTapEvent } from '$input/PointerHandlers/CellPointerHandler';
+import {
+	CellPointerHandler,
+	type CellDragTapEvent
+} from '$input/PointerHandlers/CellPointerHandler';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
-import type { LineToolInputOptions } from './types';
+import { BASIC_TOOL_MODE, type LineToolInputOptions } from './types';
+import { toolModeStore } from '$stores/InputHandlerStore';
 
 export function getLineToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -32,23 +38,31 @@ export function getLineToolInputHandler(
 	let newConstraint: LineToolI | null = null;
 	let id: string | null = null;
 
+	function eventOnGrid(event: CellDragTapEvent) {
+		const onGrid = isCellOnGrid(event.cell, gridShape);
+		if (!onGrid) return false;
+		return true;
+	}
+
 	function handle(event: CellDragTapEvent) {
 		if (!id || !newConstraint) throw 'UNREACHABLE';
 
 		const coords = event.cell;
-		const onGrid = isCellOnGrid(event.cell, gridShape);
-		if (!onGrid) return;
+		if (!eventOnGrid(event)) return;
 
 		newConstraint = updateLineConstraintCells(newConstraint, coords, allowSelfIntersection);
 		updateLocalConstraint(tool, id, newConstraint);
 	}
 
 	pointerHandler.onDragStart = (event: CellDragTapEvent): void => {
-		id = uniqueId();
-		newConstraint = lineConstraint(tool, [], options?.defaultValue);
-		addLocalConstraint(id, newConstraint);
-		// mode = MODE.DYNAMIC;
-		handle(event);
+		const mode = get(toolModeStore);
+
+		if (mode !== BASIC_TOOL_MODE.DELETE) {
+			id = uniqueId();
+			newConstraint = lineConstraint(tool, [], options?.defaultValue);
+			addLocalConstraint(id, newConstraint);
+			handle(event);
+		}
 	};
 
 	pointerHandler.onDrag = (event: CellDragTapEvent): void => {
@@ -67,6 +81,9 @@ export function getLineToolInputHandler(
 	};
 
 	pointerHandler.onTap = (event: CellDragTapEvent) => {
+		const mode = get(toolModeStore);
+		if (mode === BASIC_TOOL_MODE.ADD_EDIT) return;
+
 		const coords = event.cell;
 		const localConstraints = get(localConstraintsStore);
 		const match = findLineConstraint(localConstraints, tool, coords);
@@ -87,12 +104,8 @@ export function getLineToolInputHandler(
 		pointerUp: (event: PointerEvent): void => {
 			pointerHandler.pointerUp(event, svgRef);
 		},
-		keyDown: (): void => {
-			return;
-		},
-		keyUp: (): void => {
-			return;
-		}
+		keyDown: (): void => {},
+		keyUp: (): void => {}
 	};
 
 	return inputHandler;
