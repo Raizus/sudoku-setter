@@ -365,7 +365,7 @@ export function findCenterCornerOrEdgeConstraint(
 	localConstraints: LocalConstraintsDict,
 	toolId: TOOLID,
 	cell: GridCoordI
-) {
+): [string, CenterCornerOrEdgeToolI] | null {
 	const elements = localConstraints.get(toolId);
 	if (!elements) return null;
 
@@ -373,7 +373,7 @@ export function findCenterCornerOrEdgeConstraint(
 		const constraint = entry[1] as CenterCornerOrEdgeToolI;
 
 		const id = entry[0];
-		if (areCoordsEqual(cell, constraint.cell)) return id;
+		if (areCoordsEqual(cell, constraint.cell)) return [id, constraint];
 	}
 	return null;
 }
