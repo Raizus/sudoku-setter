@@ -13,9 +13,6 @@
 
 	$: coords = tool.cells;
 	$: center = new Vector2D(coords[coords.length - 1].c, coords[coords.length - 1].r);
-
-    // $: console.log('mode', mode);
-    // $: console.log('c_id', c_id);
 </script>
 
 {#if mode === 'remove' && c_id}
