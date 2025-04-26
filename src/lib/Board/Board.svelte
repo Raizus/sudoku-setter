@@ -12,6 +12,7 @@
 	import CellValuesRender from './CellRender/CellValuesRender.svelte';
 	import HighlightsRender from './CellRender/HighlightsRender.svelte';
 	import {
+	isCenterEdgeCornerTool,
 		isCornerTool,
 		isEdgeTool,
 		isOutsideDirectionTool,
@@ -32,6 +33,7 @@
 	import SolutionRender from './SolutionRender.svelte';
 	import ToolsLayerRender from './Constraints/ToolsLayerRender.svelte';
 	import {
+	centerCornerOrEdgeToolPreviewStore,
 		centerCornerOrEdgeToolsStore,
 		cornerLineToolsStore,
 		cornerToolPreviewStore,
@@ -57,6 +59,7 @@
 	import SingleCellArrowPreviewRender from './Constraints/SingleCellArrowPreviewRender.svelte';
 	import SimpleSingleCellToolPreviewRender from './Constraints/SimpleSingleCellToolPreviewRender.svelte';
 	import UnderlayRender from './UnderlayRender.svelte';
+	import CenterCornerOrEdgeToolPreviewRender from './Constraints/CenterCornerOrEdgeToolPreviewRender.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 
@@ -175,6 +178,9 @@
 
 	<ConflictsRender />
 
+	{#if isOutsideDirectionTool($toolStore) && $outsideDirectionToolPreviewStore}
+		<OutsideDirectionToolRender tool={$outsideDirectionToolPreviewStore} />
+	{/if}
 	{#if isSimpleSingleCellTool($toolStore) && $toolStore !== TOOLS.FOG_LIGHTS && $simpleCellToolPreviewStore}
 		<SimpleSingleCellToolPreviewRender tool_preview={$simpleCellToolPreviewStore} />
 	{/if}
@@ -190,8 +196,8 @@
 	{#if isCornerTool($toolStore) && $cornerToolPreviewStore}
 		<CornerToolPreviewRender tool_preview={$cornerToolPreviewStore} />
 	{/if}
-	{#if isOutsideDirectionTool($toolStore) && $outsideDirectionToolPreviewStore}
-		<OutsideDirectionToolRender tool={$outsideDirectionToolPreviewStore} />
+	{#if isCenterEdgeCornerTool($toolStore) && $centerCornerOrEdgeToolPreviewStore}
+		<CenterCornerOrEdgeToolPreviewRender tool_preview={$centerCornerOrEdgeToolPreviewStore} />
 	{/if}
 </svg>
 

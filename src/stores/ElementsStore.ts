@@ -142,3 +142,7 @@ export const cornerToolPreviewStore = writable<undefined | ToolPreview<CornerToo
 export const outsideDirectionToolPreviewStore = writable<undefined | OutsideDirectionToolI>(
 	undefined
 );
+
+export const centerCornerOrEdgeToolPreviewStore = writable<undefined | ToolPreview<CenterCornerOrEdgeToolI>>(
+	undefined
+);
