@@ -9,6 +9,7 @@ import {
 	isOutsideDirectionTool,
 	isSimpleSingleCellTool,
 	isSingleCellArrowTool,
+	isSingleCellMultiArrowTool,
 	type TOOLID
 } from '$src/lib/Puzzle/Tools';
 
@@ -166,12 +167,6 @@ export enum BASIC_TOOL_MODE {
 	DELETE = 'Delete'
 }
 
-export enum CENTER_CORNER_EDGE_TOOL_MODE {
-	DYNAMIC = 'Dynamic',
-	ADD_EDIT = 'Add/Edit',
-	DELETE = 'Delete'
-}
-
 export enum CLONE_TOOL_MODE {
 	DYNAMIC = 'Dynamic',
 	SELECT = 'Select',
@@ -180,12 +175,6 @@ export enum CLONE_TOOL_MODE {
 }
 
 export enum CORNER_LINE_TOOL_MODE {
-	DYNAMIC = 'Dynamic',
-	ADD_EDIT = 'Add/Edit',
-	DELETE = 'Delete'
-}
-
-export enum CELL_ARROW_TOOL_MODE {
 	DYNAMIC = 'Dynamic',
 	ADD_EDIT = 'Add/Edit',
 	DELETE = 'Delete'
@@ -203,6 +192,7 @@ export function getToolModes(tool: TOOLID) {
 	if (
 		isSimpleSingleCellTool(tool) ||
 		isSingleCellArrowTool(tool) ||
+		isSingleCellMultiArrowTool(tool) ||
 		isLineTool(tool) ||
 		isEdgeTool(tool) ||
 		isCornerTool(tool) ||
@@ -220,6 +210,7 @@ export function getDefaultToolMode(tool: TOOLID): ToolModeT {
 	if (
 		isSimpleSingleCellTool(tool) ||
 		isSingleCellArrowTool(tool) ||
+		isSingleCellMultiArrowTool(tool) ||
 		isLineTool(tool) ||
 		isEdgeTool(tool) ||
 		isCornerTool(tool) ||

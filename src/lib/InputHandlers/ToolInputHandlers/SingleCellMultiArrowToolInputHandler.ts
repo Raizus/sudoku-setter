@@ -1,9 +1,7 @@
 import type { InputHandler } from '../InputHandler';
 import type { TOOLID } from '$lib/Puzzle/Tools';
-import { updateLocalConstraint } from '$stores/BoardStore';
+import { selectConstraint, updateLocalConstraint } from '$stores/BoardStore';
 import { localConstraintsStore } from '$stores/BoardStore';
-import { removeLocalConstraint } from '$stores/LocalConstraintsStore';
-import { addLocalConstraint } from '$stores/LocalConstraintsStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
@@ -11,7 +9,7 @@ import {
 	CellFeaturePointerHandler,
 	type CellEdgeCornerEvent
 } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
-import { CELL_MULTI_ARROW_TOOL_MODE, type SingleCellMultiArrowToolOptions } from './types';
+import { BASIC_TOOL_MODE, type SingleCellMultiArrowToolOptions } from './types';
 import {
 	singleCellMultiArrowConstraint,
 	type CellMultiArrowToolI
@@ -21,6 +19,8 @@ import { idxToDirection, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import type { GridShape } from '$lib/Types/types';
 import type { DIRECTION } from '$lib/utils/directions';
 import { singleCellMultiArrowPreviewStore } from '$stores/ElementsStore';
+import { toolModeStore } from '$stores/InputHandlerStore';
+import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 
 function updateDirections(directions: DIRECTION[], dir: DIRECTION): DIRECTION[] {
 	directions = [...directions];
@@ -47,8 +47,6 @@ export function getSingleCellMultiArrowToolInputHandler(
 	let currentConstraint: CellMultiArrowToolI | null = null;
 	let id: string | null = null;
 
-	let mode = CELL_MULTI_ARROW_TOOL_MODE.DYNAMIC;
-
 	function handle(event: CellEdgeCornerEvent) {
 		const localConstraints = get(localConstraintsStore);
 		const coords = event.cell;
@@ -56,44 +54,46 @@ export function getSingleCellMultiArrowToolInputHandler(
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
 
-		if (event.event.altKey) mode = CELL_MULTI_ARROW_TOOL_MODE.DELETE;
-		// determine if adding or removing
+		let mode = get(toolModeStore);
+
+		if (mode === BASIC_TOOL_MODE.DYNAMIC && event.event.altKey) mode = BASIC_TOOL_MODE.DELETE;
 
 		const direction = idxToDirection(event.direction);
 		const match = findSingleCellConstraint<CellMultiArrowToolI>(localConstraints, tool, coords);
-		if (match) {
-			id = match[0];
-			currentConstraint = match[1];
 
-			if (mode === CELL_MULTI_ARROW_TOOL_MODE.DELETE) {
-				removeLocalConstraint(tool, match[0]);
-			} else {
-				//update directions (if empty remove constraint)
-				const newDirections = updateDirections(currentConstraint.directions, direction);
-				if (newDirections.length) {
-					currentConstraint = {
-						...currentConstraint,
-						directions: newDirections
-					} as CellMultiArrowToolI;
-					updateLocalConstraint(tool, id, currentConstraint);
-				} else {
-					removeLocalConstraint(tool, id);
-				}
-			}
-			return;
-		} else if (mode !== CELL_MULTI_ARROW_TOOL_MODE.DELETE) {
+		// create new constraint
+		if (!match && mode !== BASIC_TOOL_MODE.DELETE) {
 			currentConstraint = singleCellMultiArrowConstraint(tool, coords, direction);
 			id = uniqueId();
-			addLocalConstraint(id, currentConstraint);
+			pushAddLocalConstraintCommand(id, currentConstraint, tool, true);
+		} else if (match) {
+			// select
+			if (match[1].directions.includes(direction) && mode !== BASIC_TOOL_MODE.DELETE) {
+				[id, currentConstraint] = match;
+				selectConstraint(match[0], tool);
+			}
+			// remove constraint
+			if (match && mode === BASIC_TOOL_MODE.DELETE) {
+				pushRemoveLocalConstraintCommand(match[0], match[1], tool);
+			}
+			// update directions, add/remove arrow (if empty remove constraint)
+			else {
+				const newDirections = updateDirections(match[1].directions, direction);
+				if (newDirections.length > 0) {
+					id = match[0];
+					currentConstraint = {
+						...match[1],
+						directions: newDirections
+					} as CellMultiArrowToolI;
+					updateLocalConstraint(tool, match[0], currentConstraint);
+				} else {
+					pushRemoveLocalConstraintCommand(match[0], match[1], tool);
+				}
+			}
 		}
 	}
 
-	function handleKeyDown(): void {
-		if (!currentConstraint || !id) return;
-	}
-
 	pointerHandler.onDragStart = (event: CellEdgeCornerEvent): void => {
-		mode = CELL_MULTI_ARROW_TOOL_MODE.DYNAMIC;
 		handle(event);
 	};
 
@@ -116,17 +116,10 @@ export function getSingleCellMultiArrowToolInputHandler(
 		},
 		pointerMove: (event: PointerEvent): void => {
 			pointerHandler.pointerMove(event, svgRef);
-			return;
 		},
-		pointerUp: (): void => {
-			return;
-		},
-		keyDown: (): void => {
-			handleKeyDown();
-		},
-		keyUp: (): void => {
-			return;
-		}
+		pointerUp: (): void => {},
+		keyDown: (): void => {},
+		keyUp: (): void => {}
 	};
 
 	return inputHandler;
