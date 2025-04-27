@@ -105,8 +105,17 @@ export function getSingleCellMultiArrowToolInputHandler(
 		}
 
 		const direction = idxToDirection(event.direction);
-		const phantom_constraint = singleCellMultiArrowConstraint(tool, event.cell, direction);
-		singleCellMultiArrowPreviewStore.set(phantom_constraint);
+		const constraint_preview = singleCellMultiArrowConstraint(tool, event.cell, direction);
+		
+		const mode = get(toolModeStore);
+		// const localConstraints = get(localConstraintsStore);
+		// const match = findSingleCellConstraint<CellMultiArrowToolI>(localConstraints, tool, event.cell);
+		if (mode === BASIC_TOOL_MODE.DELETE) {
+			singleCellMultiArrowPreviewStore.set(undefined);
+			return;
+		}
+
+		singleCellMultiArrowPreviewStore.set(constraint_preview);
 	};
 
 	const inputHandler: InputHandler = {
