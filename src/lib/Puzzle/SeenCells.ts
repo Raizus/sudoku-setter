@@ -2,7 +2,7 @@ import { type GridCoordI } from '$lib/utils/SquareCellGridCoords';
 import type { CageToolI } from './Constraints/CageConstraints';
 import type { GlobalConstraintsDict } from './Constraints/GlobalConstraints';
 import type { LineToolI } from './Constraints/LineConstraints';
-import type { LocalConstraintsDict } from './Constraints/LocalConstraints';
+import type { ElementsDict } from './Constraints/LocalConstraints';
 import type { Cell } from './Grid/Cell';
 import type { Grid } from './Grid/Grid';
 import type { PuzzleI } from './Puzzle';
@@ -202,12 +202,12 @@ export function cellsSeenByGlobalConstraints(
 
 function seenByCage(
 	grid: Grid,
-	local_constraints: LocalConstraintsDict,
+	elements_dict: ElementsDict,
 	cell: Cell,
 	tool: TOOLID,
 	seen: Set<Cell>
 ) {
-	const killer_cage_cs = local_constraints.get(tool);
+	const killer_cage_cs = elements_dict.get(tool);
 	if (killer_cage_cs) {
 		for (const entry of Object.entries(killer_cage_cs)) {
 			const constraint = entry[1] as CageToolI;
@@ -220,7 +220,7 @@ function seenByCage(
 
 export function cellsSeenByLocalConstraints(
 	grid: Grid,
-	local_constraints: LocalConstraintsDict,
+	elements_dict: ElementsDict,
 	coords: GridCoordI
 ) {
 	let seen: Set<Cell> = new Set();
@@ -230,7 +230,7 @@ export function cellsSeenByLocalConstraints(
 		return seen;
 	}
 
-	const between_line_cs = local_constraints.get(TOOLS.BETWEEN_LINE);
+	const between_line_cs = elements_dict.get(TOOLS.BETWEEN_LINE);
 	if (between_line_cs) {
 		for (const entry of Object.entries(between_line_cs)) {
 			const constraint = entry[1] as LineToolI;
@@ -239,7 +239,7 @@ export function cellsSeenByLocalConstraints(
 		}
 	}
 
-	const renban_cs = local_constraints.get(TOOLS.RENBAN_LINE);
+	const renban_cs = elements_dict.get(TOOLS.RENBAN_LINE);
 	if (renban_cs) {
 		for (const entry of Object.entries(renban_cs)) {
 			const constraint = entry[1] as LineToolI;
@@ -248,9 +248,9 @@ export function cellsSeenByLocalConstraints(
 		}
 	}
 
-	seen = seenByCage(grid, local_constraints, cell, TOOLS.KILLER_CAGE, seen);
-	seen = seenByCage(grid, local_constraints, cell, TOOLS.PARITY_BALANCE_CAGE, seen);
-	seen = seenByCage(grid, local_constraints, cell, TOOLS.SPOTLIGHT_CAGE, seen);
+	seen = seenByCage(grid, elements_dict, cell, TOOLS.KILLER_CAGE, seen);
+	seen = seenByCage(grid, elements_dict, cell, TOOLS.PARITY_BALANCE_CAGE, seen);
+	seen = seenByCage(grid, elements_dict, cell, TOOLS.SPOTLIGHT_CAGE, seen);
 
 	return seen;
 }
@@ -260,7 +260,7 @@ export function cellsSeenByCell(puzzle: PuzzleI, coords: GridCoordI) {
 
 	const global_constraints = puzzle.globalConstraints;
 	const grid = puzzle.grid;
-	const local_constraints = puzzle.localConstraints;
+	const elements_dict = puzzle.elementsDict;
 
 	if (!global_constraints) return seen;
 	if (!global_constraints.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY)) {
@@ -276,7 +276,7 @@ export function cellsSeenByCell(puzzle: PuzzleI, coords: GridCoordI) {
 		...cellsSeenByGlobalConstraints(grid, global_constraints, coords)
 	]);
 
-	seen = new Set<Cell>([...seen, ...cellsSeenByLocalConstraints(grid, local_constraints, coords)]);
+	seen = new Set<Cell>([...seen, ...cellsSeenByLocalConstraints(grid, elements_dict, coords)]);
 
 	const cell2 = grid.getCell(coords.r, coords.c);
 	if (cell2) seen.delete(cell2);

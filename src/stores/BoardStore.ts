@@ -1,6 +1,6 @@
 import { GlobalConstraintsDict } from '$lib/Puzzle/Constraints/GlobalConstraints';
 import {
-	LocalConstraintsDict,
+	ElementsDict,
 	type ConstraintType
 } from '$lib/Puzzle/Constraints/LocalConstraints';
 import type { Cell } from '$lib/Puzzle/Grid/Cell';
@@ -46,7 +46,7 @@ export const cellsStore = writable<Cell[]>(
 
 export const puzzleMetaStore = writable<PuzzleMetaI>({});
 export const globalConstraintsStore = writable<GlobalConstraintsDict>(new GlobalConstraintsDict());
-export const localConstraintsStore = writable<LocalConstraintsDict>(new LocalConstraintsDict());
+export const localConstraintsStore = writable<ElementsDict>(new ElementsDict());
 export const currentConstraintStore = writable<ConstraintAndId | null>(null);
 export const currentShapeStore = writable<ShapeI | undefined>(undefined);
 export const solutionStore = writable<Solution>(undefined);
@@ -150,7 +150,7 @@ export function createNewPuzzle(nRows: number, nCols: number, valid_digits: numb
 
 	gridStore.update(() => grid);
 	validDigitsStore.update(() => valid_digits);
-	localConstraintsStore.update(() => new LocalConstraintsDict());
+	localConstraintsStore.update(() => new ElementsDict());
 	globalConstraintsStore.update(() => new GlobalConstraintsDict());
 	puzzleMetaStore.update(() => {
 		return {};
@@ -164,7 +164,7 @@ export function setPuzzle(puzzle: PuzzleI) {
 	puzzleMetaStore.update(() => puzzle.puzzleMeta);
 	updateSolution(puzzle.solution);
 	validDigitsStore.update(() => puzzle.valid_digits);
-	localConstraintsStore.update(() => puzzle.localConstraints);
+	localConstraintsStore.update(() => puzzle.elementsDict);
 	globalConstraintsStore.update(() => puzzle.globalConstraints);
 
 	cellsStore.update(() => puzzle.grid.getAllCells());
@@ -226,7 +226,7 @@ export const puzzleStore = derived(
 			puzzleMeta: $puzzleMetaStore,
 			valid_digits: $validDigitsStore,
 			globalConstraints: $globalConstraintsStore,
-			localConstraints: $localConstraintsStore
+			elementsDict: $localConstraintsStore
 		};
 		return puzzle;
 	}

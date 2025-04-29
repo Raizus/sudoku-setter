@@ -259,7 +259,7 @@ function allOddDigitsOrthogonallyConnected(puzzle: PuzzleI, toolId: TOOLID): str
 
 function allXVGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
-	const local_constraints = puzzle.localConstraints;
+	const local_constraints = puzzle.elementsDict;
 	const xv_constraints = local_constraints.get(TOOLS.XV);
 
 	if (
@@ -329,7 +329,7 @@ function getEdgeConstraintCellPairs(
 
 function allXYDifferencesGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
-	const local_constraints = puzzle.localConstraints;
+	const local_constraints = puzzle.elementsDict;
 	const xy_diff_constraints = local_constraints.get(TOOLS.XY_DIFFERENCES);
 
 	const xy_diff_pairs: Set<Cell>[] = getEdgeConstraintCellPairs(grid, xy_diff_constraints);
@@ -365,7 +365,7 @@ function allXYDifferencesGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): strin
 
 function allDifferencesGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
-	const local_constraints = puzzle.localConstraints;
+	const local_constraints = puzzle.elementsDict;
 	const constraints = local_constraints.get(TOOLS.DIFFERENCE);
 	const ratio_constraints = local_constraints.get(TOOLS.RATIO);
 
@@ -402,7 +402,7 @@ function allDifferencesGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string 
 
 function allRatiosGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
-	const local_constraints = puzzle.localConstraints;
+	const local_constraints = puzzle.elementsDict;
 	const constraints = local_constraints.get(TOOLS.RATIO);
 	const differences_constraints = local_constraints.get(TOOLS.DIFFERENCE);
 
@@ -437,7 +437,7 @@ function allRatiosGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 
 function allYinYangKropkiGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
-	const local_constraints = puzzle.localConstraints;
+	const local_constraints = puzzle.elementsDict;
 	const constraints = local_constraints.get(TOOLS.YIN_YANG_KROPKI);
 
 	const cells_pairs: Set<Cell>[] = getEdgeConstraintCellPairs(grid, constraints);
@@ -464,7 +464,7 @@ function allYinYangKropkiGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): strin
 
 function allYinYangCountShadedCellsGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
-	const local_constraints = puzzle.localConstraints;
+	const local_constraints = puzzle.elementsDict;
 	const constraints_record = local_constraints.get(TOOLS.YIN_YANG_COUNT_SHADED_CELLS);
 	const constraints: CellMultiArrowToolI[] = constraints_record
 		? (Object.values(constraints_record) as CellMultiArrowToolI[])
@@ -514,7 +514,7 @@ function getSingleCellConstraintsCells(
 
 function allIndexingColumnGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
-	const local_constraints = puzzle.localConstraints;
+	const local_constraints = puzzle.elementsDict;
 	const constraints = local_constraints.get(TOOLS.INDEXING_COLUMN);
 
 	const cells: Set<Cell> = getSingleCellConstraintsCells(grid, constraints);
@@ -538,7 +538,7 @@ function allIndexingColumnGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): stri
 
 function allRadarsGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
-	const local_constraints = puzzle.localConstraints;
+	const local_constraints = puzzle.elementsDict;
 	const constraints = local_constraints.get(TOOLS.RADAR);
 
 	const cells: Set<Cell> = getSingleCellConstraintsCells(grid, constraints);
@@ -560,7 +560,7 @@ function allRadarsGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 
 function allNurimisakiUnshadedEndpointsGivenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
-	const local_constraints = puzzle.localConstraints;
+	const local_constraints = puzzle.elementsDict;
 	const constraints = local_constraints.get(TOOLS.NURIMISAKI_UNSHADED_ENDPOINTS);
 
 	const cells: Set<Cell> = getSingleCellConstraintsCells(grid, constraints);
@@ -604,7 +604,7 @@ function yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(
 	toolId: TOOLID
 ): string {
 	const grid = puzzle.grid;
-	const local_constraints = puzzle.localConstraints;
+	const local_constraints = puzzle.elementsDict;
 	const constraints = local_constraints.get(TOOLS.YIN_YANG_REGION_SUM_LINE);
 	if (!constraints) return '';
 

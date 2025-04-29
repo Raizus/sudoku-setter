@@ -757,7 +757,7 @@ function findWalledEdges(puzzle: PuzzleI) {
 
 	// find edges blocked by walls
 	const edges_rem: [s: number, t: number][] = [];
-	const lconstraints = puzzle.localConstraints;
+	const lconstraints = puzzle.elementsDict;
 	const wall_constraints = lconstraints.get(TOOLS.MAZE_WALL);
 	if (wall_constraints) {
 		for (const constraint of Object.values(wall_constraints) as CornerLineToolI[]) {
@@ -809,7 +809,7 @@ function findWalledEdges(puzzle: PuzzleI) {
 function findEdgesBlockedByOneWayDoors(puzzle: PuzzleI) {
 	const grid = puzzle.grid;
 	const edges_rem: [s: number, t: number][] = [];
-	const lconstraints = puzzle.localConstraints;
+	const lconstraints = puzzle.elementsDict;
 	const one_way_door_constraints = lconstraints.get(TOOLS.ONE_WAY_DOOR);
 	if (one_way_door_constraints) {
 		for (const constraint of Object.values(one_way_door_constraints) as EdgeToolI[]) {
@@ -855,7 +855,7 @@ function teleportConstraints(puzzle: PuzzleI): TpRes {
 	const grid = puzzle.grid;
 	const tp_edges: [s: number, t: number][] = [];
 	const tp_idxs: number[] = [];
-	const lconstraints = puzzle.localConstraints;
+	const lconstraints = puzzle.elementsDict;
 	const teleport_record = lconstraints.get(TOOLS.TELEPORT);
 	const tp_constraints = teleport_record ? (Object.values(teleport_record) as CellToolI[]) : [];
 	let tp_count: number = 0;
@@ -912,7 +912,7 @@ function mazeDirectedPathConstraint(model: PuzzleModel, tool: TOOLID) {
 	const door_edges = findEdgesBlockedByOneWayDoors(puzzle);
 	edges_rem.push(...door_edges);
 
-	const lconstraints = puzzle.localConstraints;
+	const lconstraints = puzzle.elementsDict;
 
 	edge_list = edge_list.filter(
 		(edge) => !edges_rem.some((edge2) => edge[0] === edge2[0] && edge[1] === edge2[1])

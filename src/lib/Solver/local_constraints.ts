@@ -40,7 +40,7 @@ const functions_list: ConstraintsF[] = [
 
 export function localConstraints(puzzle: PuzzleI, model: PuzzleModel): string {
 	let out_str = '';
-	const lconstraints = puzzle.localConstraints;
+	const lconstraints = puzzle.elementsDict;
 	const grid = puzzle.grid;
 
 	for (const [toolId, c_record] of lconstraints.entries()) {

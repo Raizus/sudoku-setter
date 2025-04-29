@@ -1,6 +1,6 @@
 import { range } from 'lodash';
 import { GlobalConstraintsDict } from './Constraints/GlobalConstraints';
-import { LocalConstraintsDict } from './Constraints/LocalConstraints';
+import { ElementsDict } from './Constraints/LocalConstraints';
 import type { CellRecord } from './Grid/Cell';
 import { Grid } from './Grid/Grid';
 import type { PuzzleMetaI } from './PuzzleMeta';
@@ -13,13 +13,13 @@ export interface PuzzleI {
 	solution?: Solution;
 	valid_digits: number[];
 	puzzleMeta: PuzzleMetaI;
-	localConstraints: LocalConstraintsDict;
+	elementsDict: ElementsDict;
 	globalConstraints: GlobalConstraintsDict;
 }
 
 export function puzzleToJson(puzzle: PuzzleI) {
 	const grid = puzzle.grid;
-	const localConstraints = puzzle.localConstraints;
+	const localConstraints = puzzle.elementsDict;
 	const globalConstraints = puzzle.globalConstraints;
 	const puzzleRecord: Record<string, unknown> = {};
 	puzzleRecord['puzzleInfo'] = puzzle.puzzleMeta;
@@ -69,7 +69,7 @@ export function puzzleFromJson(puzzleJson: Record<string, unknown>) {
 	// const grid = new Grid(nRows, nCols);
 
 	const local_constraints_data = puzzleJson['local_constraints'] as Record<string, unknown>;
-	const local_constraints = LocalConstraintsDict.fromJson(local_constraints_data);
+	const elements_dict = ElementsDict.fromJson(local_constraints_data);
 
 	const global_constraints_data = puzzleJson['bool_constraints'] as Record<string, unknown>;
 	const global_constraints = GlobalConstraintsDict.fromJson(global_constraints_data);
@@ -79,7 +79,7 @@ export function puzzleFromJson(puzzleJson: Record<string, unknown>) {
 		solution: solution,
 		grid: grid,
 		valid_digits: valid_digits,
-		localConstraints: local_constraints,
+		elementsDict: elements_dict,
 		globalConstraints: global_constraints
 	};
 
@@ -88,14 +88,14 @@ export function puzzleFromJson(puzzleJson: Record<string, unknown>) {
 
 export function blankPuzzle(): PuzzleI {
 	const grid = new Grid(9, 9);
-	const local_constraints = new LocalConstraintsDict();
+	const elements_dict = new ElementsDict();
 	const global_constraints = new GlobalConstraintsDict();
 	const puzzle: PuzzleI = {
 		grid,
 		solution: undefined,
 		valid_digits: range(1, 10),
 		puzzleMeta: {},
-		localConstraints: local_constraints,
+		elementsDict: elements_dict,
 		globalConstraints: global_constraints,
 	}
 	return puzzle;

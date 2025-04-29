@@ -66,13 +66,13 @@ export function updateConstraintValue<T extends ConstraintType>(constraint: T, v
 	return { ...constraint, value } as T;
 }
 
-interface ConstraintGroupT {
-	// record mapping constraint id's to constraints
-	constraints: Record<string, ConstraintType>;
-	negative_constraints: string[];
+export interface ConstraintsElement {
+	toolId: TOOLID;
+	constraints?: Record<string, ConstraintType>;
+	enabled?: boolean;
 }
 
-export class LocalConstraintsDict extends Map<TOOLID, Record<string, ConstraintType>> {
+export class ElementsDict extends Map<TOOLID, Record<string, ConstraintType>> {
 	addToDict(toolId: TOOLID) {
 		if (this.has(toolId)) {
 			return;
@@ -149,7 +149,7 @@ export class LocalConstraintsDict extends Map<TOOLID, Record<string, ConstraintT
 	}
 
 	static fromJson(data: Record<string, unknown> | undefined) {
-		const local_constraints = new LocalConstraintsDict();
+		const local_constraints = new ElementsDict();
 		if (!data) return local_constraints;
 		for (const [key, constraint_list_data] of Object.entries(data)) {
 			const tool = toolKeyFromString(key);
@@ -200,11 +200,11 @@ export class LocalConstraintsDict extends Map<TOOLID, Record<string, ConstraintT
 }
 
 export function findSingleCellConstraint<T extends SingleCellTool>(
-	localConstraints: LocalConstraintsDict,
+	elementsDict: ElementsDict,
 	toolId: TOOLID,
 	coords: GridCoordI
 ): [id: string, cellTool: T] | null {
-	const elements = localConstraints.get(toolId);
+	const elements = elementsDict.get(toolId);
 	if (!elements) return null;
 
 	for (const entry of Object.entries(elements)) {
@@ -216,11 +216,11 @@ export function findSingleCellConstraint<T extends SingleCellTool>(
 }
 
 export function findEdgeConstraint(
-	localConstraints: LocalConstraintsDict,
+	elementsDict: ElementsDict,
 	toolId: TOOLID,
 	cells: GridCoordI[]
 ) {
-	const elements = localConstraints.get(toolId);
+	const elements = elementsDict.get(toolId);
 	if (!elements) return null;
 
 	for (const entry of Object.entries(elements)) {
@@ -235,11 +235,11 @@ export function findEdgeConstraint(
 }
 
 export function findCornerConstraint(
-	localConstraints: LocalConstraintsDict,
+	elementsDict: ElementsDict,
 	toolId: TOOLID,
 	corner: GridCoordI
 ) {
-	const elements = localConstraints.get(toolId);
+	const elements = elementsDict.get(toolId);
 	if (!elements) return null;
 
 	for (const entry of Object.entries(elements)) {
@@ -252,11 +252,11 @@ export function findCornerConstraint(
 }
 
 export function findCageConstraint(
-	localConstraints: LocalConstraintsDict,
+	elementsDict: ElementsDict,
 	toolId: TOOLID,
 	cell: GridCoordI
 ): [id: string, cageTool: CageToolI] | null {
-	const elements = localConstraints.get(toolId);
+	const elements = elementsDict.get(toolId);
 	if (!elements) return null;
 
 	for (const entry of Object.entries(elements)) {
@@ -269,11 +269,11 @@ export function findCageConstraint(
 }
 
 export function findLineConstraint(
-	localConstraints: LocalConstraintsDict,
+	elementsDict: ElementsDict,
 	toolId: TOOLID,
 	cell: GridCoordI
 ) {
-	const elements = localConstraints.get(toolId);
+	const elements = elementsDict.get(toolId);
 	if (!elements) return null;
 
 	for (const entry of Object.entries(elements)) {
@@ -286,11 +286,11 @@ export function findLineConstraint(
 }
 
 export function findCornerLineConstraint(
-	localConstraints: LocalConstraintsDict,
+	elementsDict: ElementsDict,
 	toolId: TOOLID,
 	coord: GridCoordI
 ) {
-	const elements = localConstraints.get(toolId);
+	const elements = elementsDict.get(toolId);
 	if (!elements) return null;
 
 	for (const entry of Object.entries(elements)) {
@@ -303,11 +303,11 @@ export function findCornerLineConstraint(
 }
 
 export function findArrowBulbConstraint(
-	localConstraints: LocalConstraintsDict,
+	elementsDict: ElementsDict,
 	toolId: TOOLID,
 	cell: GridCoordI
 ): [id: string, arrowTool: ArrowToolI] | null {
-	const elements = localConstraints.get(toolId);
+	const elements = elementsDict.get(toolId);
 	if (!elements) return null;
 
 	for (const entry of Object.entries(elements)) {
@@ -320,11 +320,11 @@ export function findArrowBulbConstraint(
 }
 
 export function findArrowLineConstraint(
-	localConstraints: LocalConstraintsDict,
+	elementsDict: ElementsDict,
 	toolId: TOOLID,
 	cell: GridCoordI
 ): { id: string; arrow: ArrowToolI; matchLineIdx: number } | null {
-	const elements = localConstraints.get(toolId);
+	const elements = elementsDict.get(toolId);
 	if (!elements) return null;
 
 	for (const [id, constraint] of Object.entries(elements)) {
@@ -344,12 +344,12 @@ export function findArrowLineConstraint(
 }
 
 export function findOutsideDirectionConstraint(
-	localConstraints: LocalConstraintsDict,
+	elementsDict: ElementsDict,
 	toolId: TOOLID,
 	cell: GridCoordI,
 	direction: DIRECTION
 ): [string, OutsideDirectionToolI] | null {
-	const elements = localConstraints.get(toolId);
+	const elements = elementsDict.get(toolId);
 	if (!elements) return null;
 
 	for (const entry of Object.entries(elements)) {
@@ -362,11 +362,11 @@ export function findOutsideDirectionConstraint(
 }
 
 export function findCenterCornerOrEdgeConstraint(
-	localConstraints: LocalConstraintsDict,
+	elementsDict: ElementsDict,
 	toolId: TOOLID,
 	cell: GridCoordI
 ): [string, CenterCornerOrEdgeToolI] | null {
-	const elements = localConstraints.get(toolId);
+	const elements = elementsDict.get(toolId);
 	if (!elements) return null;
 
 	for (const entry of Object.entries(elements)) {
@@ -379,11 +379,11 @@ export function findCenterCornerOrEdgeConstraint(
 }
 
 export function findCloneConstraint(
-	localConstraints: LocalConstraintsDict,
+	elementsDict: ElementsDict,
 	toolId: TOOLID,
 	cell: GridCoordI
 ): [id: string, cloneTool: CloneToolI] | null {
-	const elements = localConstraints.get(toolId);
+	const elements = elementsDict.get(toolId);
 	if (!elements) return null;
 
 	for (const entry of Object.entries(elements)) {
@@ -396,8 +396,8 @@ export function findCloneConstraint(
 	return null;
 }
 
-export function findUsedCloneLabels(localConstraints: LocalConstraintsDict, toolId: TOOLID) {
-	const elements = localConstraints.get(toolId);
+export function findUsedCloneLabels(elementsDict: ElementsDict, toolId: TOOLID) {
+	const elements = elementsDict.get(toolId);
 	const usedLabels: Set<string> = new Set();
 
 	if (!elements) return usedLabels;
