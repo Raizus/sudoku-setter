@@ -38,7 +38,7 @@
 		addCommand(command);
 	}
 
-	function getDescription() {
+	function getTooltip() {
 		const toolDescription = elementInfo.meta?.description;
 		const toolUsage = elementInfo.meta?.usage ?? getUsageDescription(tool_id);
 
@@ -71,7 +71,7 @@
 		</button>
 	</div> -->
 	<div class="constraints-ui" class:clickable={true} class:selected>
-		<div class="header" title={getDescription()} on:click={selectCb}>
+		<div class="header" title={getTooltip()} on:click={selectCb}>
 			<div class="element-icon-container"></div>
 			<div class="element-name">{constraint_name}</div>
 			<button class="form-button icon header-button" on:click|stopPropagation={deleteElement}>
@@ -89,35 +89,35 @@
 		display: flex;
 	}
 
-	.reorder-buttons {
-		flex-grow: 0;
-		min-width: 0;
-	}
+	// .reorder-buttons {
+	// 	flex-grow: 0;
+	// 	min-width: 0;
+	// }
 
-	.reorder-button {
-		color: #333;
-		background: #fff;
-		border: 0.125rem solid black;
-		font-weight: 700;
-		line-height: 1;
-		position: relative;
-		min-width: 0;
-		width: 2rem !important;
-		min-height: 0;
-		height: 1.5rem;
+	// .reorder-button {
+	// 	color: #333;
+	// 	background: #fff;
+	// 	border: 0.125rem solid black;
+	// 	font-weight: 700;
+	// 	line-height: 1;
+	// 	position: relative;
+	// 	min-width: 0;
+	// 	width: 2rem !important;
+	// 	min-height: 0;
+	// 	height: 1.5rem;
 
-		&.move-up {
-			border-bottom-left-radius: 0;
-			border-bottom-right-radius: 0;
-			border-bottom: 0.05rem solid black;
-		}
+	// 	&.move-up {
+	// 		border-bottom-left-radius: 0;
+	// 		border-bottom-right-radius: 0;
+	// 		border-bottom: 0.05rem solid black;
+	// 	}
 
-		&.move-down {
-			border-top-left-radius: 0;
-			border-top-right-radius: 0;
-			border-top: 0.05rem solid black;
-		}
-	}
+	// 	&.move-down {
+	// 		border-top-left-radius: 0;
+	// 		border-top-right-radius: 0;
+	// 		border-top: 0.05rem solid black;
+	// 	}
+	// }
 
 	.constraints-ui {
 		flex: 1;
@@ -129,7 +129,7 @@
 
 		&.selected {
 			box-shadow: 0 0.1em 0.2em -0.1em #333;
-			outline: var(--input-outline-color) solid 0.3rem;
+			outline: var(--input-outline-color) solid 0.15rem;
 		}
 	}
 
