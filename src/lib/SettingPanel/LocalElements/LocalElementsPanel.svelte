@@ -57,13 +57,5 @@
 				<ElementButton {tool_id} {elementHandlers}/>
 			{/if}
 		{/each}
-
-
-		<!-- {#each $localConstraintsStore.entries() as [toolId, value] (toolId)}
-			{#if isLocalElement(toolId)}
-				<LocalConstraintSelectionButton {toolId} {elementHandlers} />
-				<ConstraintList {toolId} />
-			{/if}
-		{/each} -->
 	</svelte:fragment>
 </SettingToolsPanel>
