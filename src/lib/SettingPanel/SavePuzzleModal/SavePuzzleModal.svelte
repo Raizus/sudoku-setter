@@ -121,9 +121,9 @@
 		URL.revokeObjectURL(url);
 	}
 
-	const puzzleToJsonAux = () => {
+	const puzzleToJsonAux = (space?: string|number) => {
 		const data = puzzleToJson($puzzleStore);
-		const jsonData = JSON.stringify(data, null, 2);
+		const jsonData = JSON.stringify(data, null, space);
 		return jsonData;
 	};
 
@@ -138,7 +138,7 @@
 			URL.revokeObjectURL(a.href);
 		}
 
-		const jsonData = puzzleToJsonAux();
+		const jsonData = puzzleToJsonAux(2);
 		const fileName = getPuzzleFilename($puzzleMetaStore);
 		download(jsonData, `${fileName}.json`, 'text/plain');
 	};
@@ -146,8 +146,9 @@
 	const copyCompressedLink = () => {
 		const jsonData = puzzleToJsonAux();
 		const jsonStr = JSON.stringify(jsonData);
+		console.log('jsonStr', jsonStr);
 		const compressedStr = encodeToBase64UrlSafe(jsonStr);
-		const url = `${window.location.host}/?load=${compressedStr}`;
+		const url = `${window.location.host}/?puzzle=${compressedStr}`;
 		navigator.clipboard.writeText(url);
 
 		// const decompressedStr = decodeFromBase64UrlSafe(compressedStr);
