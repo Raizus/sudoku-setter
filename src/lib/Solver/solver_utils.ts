@@ -1,4 +1,4 @@
-import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
+import type { ConstraintsElement, ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import type { PuzzleI } from '../Puzzle/Puzzle';
@@ -124,6 +124,23 @@ export function getDirectionsVars(
 }
 
 type ConstraintF<T extends ConstraintType> = (grid: Grid, constraint: T) => string;
+
+export type ElementF = (model: PuzzleModel, grid: Grid, element: ConstraintsElement) => string;
+
+export function simpleElementFunction<T extends ConstraintType>(
+	model: PuzzleModel,
+	grid: Grid,
+	element: ConstraintsElement,
+	func: (model: PuzzleModel, grid: Grid, c_id: string, constraint: T) => string
+) {
+	const constraints = element.constraints;
+	let out_str = '';
+	for (const [c_id, constraint] of Object.entries(constraints)) {
+		const constraint_str = func(model, grid, c_id, constraint as T);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
 
 export function constraintsBuilder<T extends ConstraintType>(
 	grid: Grid,

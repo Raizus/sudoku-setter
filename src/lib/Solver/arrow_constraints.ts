@@ -1,9 +1,9 @@
 import type { ArrowToolI } from '../Puzzle/Constraints/ArrowConstraints';
-import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
+import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
-import { TOOLS, type TOOLID } from '../Puzzle/Tools';
+import { TOOLS } from '../Puzzle/Tools';
 import type { GridCoordI } from '../utils/SquareCellGridCoords';
-import { cellsToGridVarsStr, cellsToVarsName, PuzzleModel, VAR_2D_NAMES } from './solver_utils';
+import { cellsToGridVarsStr, cellsToVarsName, PuzzleModel, simpleElementFunction, VAR_2D_NAMES, type ElementF } from './solver_utils';
 
 function getArrowPillVars(grid: Grid, constraint: ArrowToolI) {
 	const cells_coords = constraint.cells;
@@ -21,38 +21,36 @@ function lineToVarsStr(grid: Grid, line: GridCoordI[]) {
 	return line_vars_str;
 }
 
-function arrowConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: ArrowToolI) {
+function simpleArrowConstraint(grid: Grid, constraint: ArrowToolI, predicate: string) {
 	let out_str = '';
-	const vars = getArrowPillVars(grid, constraint);
-	const pill_vars_str = '[' + vars.join(',') + ']';
+	const bulb_vars = getArrowPillVars(grid, constraint);
+	const bulb_str = '[' + bulb_vars.join(',') + ']';
 
 	for (const line of constraint.lines) {
 		const line_vars_str = lineToVarsStr(grid, line);
-		out_str += `constraint arrow_p(${pill_vars_str}, ${line_vars_str});\n`;
+		out_str += `constraint ${predicate}(${bulb_str}, ${line_vars_str});\n`;
 	}
 
-	// const sum_var_name = `arrow_${c_id}`;
-	// out_str += `var int: ${sum_var_name};\n`;
+	return out_str;
+}
 
-	// out_str += '% arrow pill\n';
-	// if (vars.length === 1) {
-	// 	const circ_var = vars[0];
-	// 	out_str += `constraint ${sum_var_name} == ${circ_var};\n`;
-	// } else if (vars.length > 1) {
-	// 	const aux = vars
-	// 		.toReversed()
-	// 		.map((_var, i) => `${Math.pow(10, i)}*${_var}`)
-	// 		.join(' + ');
-	// 	out_str += `constraint ${sum_var_name} == ${aux};\n`;
-	// } else return '';
+function simpleArrowElement(grid: Grid, element: ConstraintsElement, predicate: string) {
+	const constraints = element.constraints;
+	let out_str = '';
+	for (const constraint of Object.values(constraints)) {
+		const constraint_str = simpleArrowConstraint(grid, constraint as ArrowToolI, predicate);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
 
-	// const lines = constraint.lines;
-	// out_str += '% arrow lines\n';
-	// for (const line of lines) {
-	// 	const line_vars_str = lineToVarsStr(grid, line);
-	// 	const constraint_str = `constraint sum(${line_vars_str}) == ${sum_var_name};\n`;
-	// 	out_str += constraint_str;
-	// }
+function arrowElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+	const out_str = simpleArrowElement(grid, element, 'arrow_p');
+	return out_str;
+}
+
+function bulbousArrowElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+	const out_str = simpleArrowElement(grid, element, 'bulbous_arrow_p');
 	return out_str;
 }
 
@@ -74,6 +72,11 @@ function averageArrowConstraint(
 			out_str += constraint_str;
 		}
 	}
+	return out_str;
+}
+
+function averageArrowElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, grid, element, averageArrowConstraint);
 	return out_str;
 }
 
@@ -99,53 +102,34 @@ function chaosConstructionArrowConstraint(
 		out_str += `constraint chaos_construction_arrow_p(${circle_region_vars}, ${arrow_vars});\n`;
 	}
 
-	out_str += arrowConstraint(model, grid, c_id, constraint);
+	out_str += simpleArrowConstraint(grid, constraint, 'arrow_p');
 
 	return out_str;
 }
 
-function bulbousArrowConstraint(
+function chaosConstructionArrowElement(
 	model: PuzzleModel,
 	grid: Grid,
-	c_id: string,
-	constraint: ArrowToolI
+	element: ConstraintsElement
 ) {
-	let out_str = '';
-	const vars = getArrowPillVars(grid, constraint);
-
-	const bulb_str = '[' + vars.join(',') + ']';
-	const lines = constraint.lines;
-	for (const line of lines) {
-		const line_vars_str = lineToVarsStr(grid, line);
-		const constraint_str = `constraint bulbous_arrow_p(${bulb_str}, ${line_vars_str});\n`;
-		out_str += constraint_str;
-	}
-
+	const out_str = simpleElementFunction(model, grid, element, chaosConstructionArrowConstraint);
 	return out_str;
 }
 
-type ConstraintF = (model: PuzzleModel, grid: Grid, c_id: string, constraint: ArrowToolI) => string;
-
-const tool_map = new Map<string, ConstraintF>([
-	[TOOLS.ARROW, arrowConstraint],
-	[TOOLS.AVERAGE_ARROW, averageArrowConstraint],
-	[TOOLS.BULBOUS_ARROW, bulbousArrowConstraint],
-	[TOOLS.CHAOS_CONSTRUCTION_ARROW, chaosConstructionArrowConstraint]
+const tool_map = new Map<string, ElementF>([
+	[TOOLS.ARROW, arrowElement],
+	[TOOLS.AVERAGE_ARROW, averageArrowElement],
+	[TOOLS.BULBOUS_ARROW, bulbousArrowElement],
+	[TOOLS.CHAOS_CONSTRUCTION_ARROW, chaosConstructionArrowElement]
 ]);
 
-export function arrowConstraints(
-	model: PuzzleModel,
-	grid: Grid,
-	toolId: TOOLID,
-	constraints: Record<string, ConstraintType>
-) {
+export function arrowConstraints(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
 	let out_str = '';
-	const constraintF = tool_map.get(toolId);
-	if (constraintF) {
-		for (const [c_id, constraint] of Object.entries(constraints)) {
-			const constraint_str = constraintF(model, grid, c_id, constraint as ArrowToolI);
-			out_str += constraint_str;
-		}
+	const tool_id = element.tool_id;
+	const elementF = tool_map.get(tool_id);
+	if (elementF) {
+		const element_str = elementF(model, grid, element);
+		out_str += element_str;
 	}
 
 	return out_str;
