@@ -1,11 +1,11 @@
-import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
+import type { ConstraintsElement, ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
 import type { TOOLID } from '../Puzzle/Tools';
 
 export enum LOCAL_CONSTRAINTS_ACTIONS {
 	ADD_LOCAL_CONSTRAINT = 'ADD_LOCAL_CONSTRAINT',
 	REMOVE_LOCAL_CONSTRAINT = 'REMOVE_LOCAL_CONSTRAINT',
 	REMOVE_LOCAL_CONSTRAINT_GROUP = 'REMOVE_LOCAL_CONSTRAINT_GROUP',
-	RESTORE_LOCAL_CONSTRAINT_GROUP = 'RESTORE_LOCAL_CONSTRAINT_GROUP',
+	RESTORE_ELEMENT = 'RESTORE_ELEMENT',
 	UPDATE_LOCAL_CONSTRAINT = 'UPDATE_LOCAL_CONSTRAINT'
 }
 
@@ -32,11 +32,11 @@ type RemoveLocalConstraintGroupAction = {
 	};
 };
 
-type RestoreLocalConstraintGroupAction = {
-	type: LOCAL_CONSTRAINTS_ACTIONS.RESTORE_LOCAL_CONSTRAINT_GROUP;
+type RestoreElementAction = {
+	type: LOCAL_CONSTRAINTS_ACTIONS.RESTORE_ELEMENT;
 	payload: {
 		tool: TOOLID;
-		constraints: Record<string, ConstraintType>;
+		constraints: ConstraintsElement;
 	};
 };
 
@@ -53,7 +53,7 @@ export type LocalConstraintAction =
 	| AddLocalConstraintAction
 	| RemoveLocalConstraintAction
 	| RemoveLocalConstraintGroupAction
-	| RestoreLocalConstraintGroupAction
+	| RestoreElementAction
 	| UpdateLocalConstraintAction;
 
 export const addLocalConstraintAction = (
@@ -93,15 +93,15 @@ export const removeLocalConstraintGroupAction = (
 	};
 };
 
-export const restoreLocalConstraintGroupAction = (
+export const restoreElementAction = (
 	tool: TOOLID,
-	constraints: Record<string, ConstraintType>
-): RestoreLocalConstraintGroupAction => {
+	element: ConstraintsElement
+): RestoreElementAction => {
 	return {
-		type: LOCAL_CONSTRAINTS_ACTIONS.RESTORE_LOCAL_CONSTRAINT_GROUP,
+		type: LOCAL_CONSTRAINTS_ACTIONS.RESTORE_ELEMENT,
 		payload: {
 			tool,
-			constraints
+			constraints: element
 		}
 	};
 };

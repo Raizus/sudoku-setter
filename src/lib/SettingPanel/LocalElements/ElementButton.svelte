@@ -5,7 +5,7 @@
 	import { getToolInfo, type AbstractElementHandlers } from '$src/lib/Puzzle/ElementHandlersUtils';
 	import { TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
 	import { getUsageDescription } from '$src/lib/Puzzle/ToolUsage';
-	import { removeLocalConstraintGroupAction, restoreLocalConstraintGroupAction } from '$src/lib/reducers/LocalConstraintsActions';
+	import { removeLocalConstraintGroupAction, restoreElementAction } from '$src/lib/reducers/LocalConstraintsActions';
 	import { localConstraintsStore, toolStore, updateToolAndCurrentConstraintStores, updateToolOnRemoveGroup } from '$stores/BoardStore';
 	import { addCommand } from '$stores/HistoryStore';
 	import { getLocalConstraintCommand } from '$stores/LocalConstraintsStore';
@@ -33,7 +33,7 @@
 		const constraints = $localConstraintsStore.get(tool_id);
 		if (!constraints) return;
 		const action = removeLocalConstraintGroupAction(tool_id);
-		const reverse_action = restoreLocalConstraintGroupAction(tool_id, constraints);
+		const reverse_action = restoreElementAction(tool_id, constraints);
 		const command = getLocalConstraintCommand(action, reverse_action);
 		addCommand(command);
 	}

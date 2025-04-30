@@ -1,6 +1,6 @@
 import { range } from 'lodash';
 import { GlobalConstraintsDict } from './Constraints/GlobalConstraints';
-import { ElementsDict } from './Constraints/LocalConstraints';
+import { ElementsDict, type ElementData } from './Constraints/LocalConstraints';
 import type { CellRecord } from './Grid/Cell';
 import { Grid } from './Grid/Grid';
 import type { PuzzleMetaI } from './PuzzleMeta';
@@ -68,7 +68,7 @@ export function puzzleFromJson(puzzleJson: Record<string, unknown>) {
 	const solution = puzzleJson['solution'] as Solution;
 	// const grid = new Grid(nRows, nCols);
 
-	const local_constraints_data = puzzleJson['local_constraints'] as Record<string, unknown>;
+	const local_constraints_data = puzzleJson['local_constraints'] as Record<string, ElementData>;
 	const elements_dict = ElementsDict.fromJson(local_constraints_data);
 
 	const global_constraints_data = puzzleJson['bool_constraints'] as Record<string, unknown>;

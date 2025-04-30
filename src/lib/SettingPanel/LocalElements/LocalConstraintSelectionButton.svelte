@@ -3,7 +3,7 @@
 	import type { TOOLID } from '$lib/Puzzle/Tools';
 	import {
 		removeLocalConstraintGroupAction,
-		restoreLocalConstraintGroupAction
+		restoreElementAction
 	} from '$src/lib/reducers/LocalConstraintsActions';
 	import { removeGroupFromLocalConstraint, updateToolOnRemoveGroup } from '$stores/BoardStore';
 		import { localConstraintsStore } from '$stores/BoardStore';
@@ -20,7 +20,7 @@
 		const constraints = $localConstraintsStore.get(toolId);
 		if (!constraints) return;
 		const action = removeLocalConstraintGroupAction(toolId);
-		const reverse_action = restoreLocalConstraintGroupAction(toolId, constraints);
+		const reverse_action = restoreElementAction(toolId, constraints);
 		const command = getLocalConstraintCommand(action, reverse_action);
 		addCommand(command);
 	};

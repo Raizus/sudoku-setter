@@ -2,7 +2,7 @@ import { type GridCoordI } from '$lib/utils/SquareCellGridCoords';
 import type { CageToolI } from './Constraints/CageConstraints';
 import type { GlobalConstraintsDict } from './Constraints/GlobalConstraints';
 import type { LineToolI } from './Constraints/LineConstraints';
-import type { ElementsDict } from './Constraints/LocalConstraints';
+import type { ConstraintsElement, ElementsDict } from './Constraints/LocalConstraints';
 import type { Cell } from './Grid/Cell';
 import type { Grid } from './Grid/Grid';
 import type { PuzzleI } from './Puzzle';
@@ -202,16 +202,14 @@ export function cellsSeenByGlobalConstraints(
 
 function seenByCage(
 	grid: Grid,
-	elements_dict: ElementsDict,
+	element: ConstraintsElement,
 	cell: Cell,
 	tool: TOOLID,
 	seen: Set<Cell>
 ) {
-	const killer_cage_cs = elements_dict.get(tool);
-	if (killer_cage_cs) {
-		for (const entry of Object.entries(killer_cage_cs)) {
-			const constraint = entry[1] as CageToolI;
-			const seen_by_c = seenByKillerCage(grid, cell, constraint);
+	if (element.tool_id === tool) {
+		for (const constraint of Object.values(element.constraints)) { 
+			const seen_by_c = seenByKillerCage(grid, cell, constraint as CageToolI);
 			seen = new Set([...seen, ...seen_by_c]);
 		}
 	}
@@ -230,27 +228,24 @@ export function cellsSeenByLocalConstraints(
 		return seen;
 	}
 
-	const between_line_cs = elements_dict.get(TOOLS.BETWEEN_LINE);
-	if (between_line_cs) {
-		for (const entry of Object.entries(between_line_cs)) {
-			const constraint = entry[1] as LineToolI;
-			const seen_by_c = seenByBetweenLines(grid, cell, constraint);
-			seen = new Set([...seen, ...seen_by_c]);
+	for (const element of elements_dict.values()) {
+		const tool_id = element.tool_id;
+		if (tool_id === TOOLS.BETWEEN_LINE) {
+			for (const constraint of Object.values(element.constraints)) {
+				const seen_by_c = seenByBetweenLines(grid, cell, constraint as LineToolI);
+				seen = new Set([...seen, ...seen_by_c]);
+			}
+		} else if (tool_id === TOOLS.RENBAN_LINE) {
+			for (const constraint of Object.values(element.constraints)) {
+				const seen_by_c = seenByRenban(grid, cell, constraint as LineToolI);
+				seen = new Set([...seen, ...seen_by_c]);
+			}
 		}
+		seen = seenByCage(grid, element, cell, TOOLS.KILLER_CAGE, seen);
+		seen = seenByCage(grid, element, cell, TOOLS.PARITY_BALANCE_CAGE, seen);
+		seen = seenByCage(grid, element, cell, TOOLS.SPOTLIGHT_CAGE, seen);
 	}
 
-	const renban_cs = elements_dict.get(TOOLS.RENBAN_LINE);
-	if (renban_cs) {
-		for (const entry of Object.entries(renban_cs)) {
-			const constraint = entry[1] as LineToolI;
-			const seen_by_c = seenByRenban(grid, cell, constraint);
-			seen = new Set([...seen, ...seen_by_c]);
-		}
-	}
-
-	seen = seenByCage(grid, elements_dict, cell, TOOLS.KILLER_CAGE, seen);
-	seen = seenByCage(grid, elements_dict, cell, TOOLS.PARITY_BALANCE_CAGE, seen);
-	seen = seenByCage(grid, elements_dict, cell, TOOLS.SPOTLIGHT_CAGE, seen);
 
 	return seen;
 }

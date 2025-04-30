@@ -4,13 +4,13 @@
 	import ConstraintSelectionButton from '../ToolButton/ConstraintSelectionButton.svelte';
 
 	export let tool_id: TOOLID;
-	$: constraintRecord = $localConstraintsStore.get(tool_id);
+	$: constraints_element = $localConstraintsStore.get(tool_id);
 </script>
 
-{#if constraintRecord && Object.entries(constraintRecord).length}
+{#if constraints_element && Object.entries(constraints_element.constraints).length}
 	<div class="constraint-list-wrapper">
 		<div class="constraint-list">
-			{#each Object.entries(constraintRecord) as entry (entry[0])}
+			{#each Object.entries(constraints_element.constraints) as entry (entry[0])}
 				<ConstraintSelectionButton constraint_id={entry[0]} {tool_id} />
 			{/each}
 		</div>

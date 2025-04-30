@@ -34,7 +34,7 @@ export const underlayElementsStore = derived(localConstraintsStore, ($localConst
 		if (!isUnderlayTool(toolId)) continue;
 		elements.push({
 			toolId,
-			constraints: element as Record<string, ConstraintType>
+			constraints: element.constraints as Record<string, ConstraintType>
 		});
 	}
 	return elements;
@@ -49,7 +49,7 @@ function getToolsStore<T extends ConstraintType>(
 			if (!filter_f(toolId)) continue;
 			elements.push({
 				toolId,
-				constraints: element as Record<string, T>
+				constraints: element.constraints as Record<string, T>
 			});
 		}
 		return elements;
@@ -63,7 +63,7 @@ export function getToolStore<T extends ConstraintType>(
 	const store = derived(localConstraintsStore, ($localConstraintsStore) => {
 		for (const [toolId, element] of $localConstraintsStore.entries()) {
 			if (toolId !== tool_id) continue;
-			const record = element as Record<string, T>;
+			const record = element.constraints as Record<string, T>;
 			return record;
 		}
 		const record: Record<string, T> = {};
@@ -113,11 +113,6 @@ export const cornerToolsStore = getToolsStore<CornerToolI>(isCornerTool);
 export const cornerLineToolsStore = getToolsStore<CornerLineToolI>(isCornerLineTool);
 
 // export const lineToolsStore = getToolsStore<LineToolI>(isLineTool);
-// export const arrowToolsStore = getToolsStore<ArrowToolI>(isArrowTool);
-// export const cageToolsStore = getToolsStore<CageToolI>(isCageTool);
-// export const cloneToolsStore = getToolsStore<CloneToolI>(isCloneTool);
-// export const outsideDirectionToolsStore =
-// 	getToolsStore<OutsideDirectionToolI>(isOutsideDirectionTool);
 
 export interface ToolPreview<T extends ConstraintType> {
 	tool: T;
