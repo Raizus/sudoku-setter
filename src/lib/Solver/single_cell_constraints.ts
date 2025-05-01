@@ -11,6 +11,7 @@ import {
 	cellToGridVarName,
 	cellToVarName,
 	constraintsBuilder,
+	findSingleCellConstraintMatch,
 	getDirectionCells,
 	getDirectionsVars,
 	groupConstraintsByValue,
@@ -291,7 +292,27 @@ function indexingColumnConstraint(
 }
 
 function indexingColumnElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, indexingColumnConstraint);
+	let out_str = simpleElementFunction(model, grid, element, indexingColumnConstraint);
+
+	if (!element.negative_constraints) return out_str;
+
+	// negative constraint
+	const all_given = !!element.negative_constraints[TOOLS.ALL_INDEXING_COLUMN_GIVEN];
+	if (!all_given) return out_str;
+	const constraints = element.constraints as Record<string, CellToolI>;
+
+	out_str += `\n% ${TOOLS.ALL_INDEXING_COLUMN_GIVEN}\n`;
+	for (const cell of grid.getAllCells()) {
+		const match = findSingleCellConstraintMatch(constraints, cell);
+		if (match) continue;
+
+		const row_cells = grid.getRow(cell.r);
+		const row_vars = cellsToGridVarsStr(row_cells, VAR_2D_NAMES.BOARD);
+		const col = cell.c + 1;
+		const constraint_str = `constraint not indexing_column_p(${row_vars}, ${col});\n`;
+		out_str += constraint_str;
+	}
+
 	return out_str;
 }
 
@@ -314,7 +335,27 @@ function indexingRowConstraint(
 }
 
 function indexingRowElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, indexingRowConstraint);
+	let out_str = simpleElementFunction(model, grid, element, indexingRowConstraint);
+
+	if (!element.negative_constraints) return out_str;
+
+	// negative constraint
+	const all_given = !!element.negative_constraints[TOOLS.ALL_INDEXING_ROW_GIVEN];
+	if (!all_given) return out_str;
+	const constraints = element.constraints as Record<string, CellToolI>;
+
+	out_str += `\n% ${TOOLS.ALL_INDEXING_ROW_GIVEN}\n`;
+	for (const cell of grid.getAllCells()) {
+		const match = findSingleCellConstraintMatch(constraints, cell);
+		if (match) continue;
+
+		const col_cells = grid.getCol(cell.c);
+		const col_vars = cellsToGridVarsStr(col_cells, VAR_2D_NAMES.BOARD);
+		const row = cell.r + 1;
+		const constraint_str = `constraint not indexing_column_p(${col_vars}, ${row});\n`;
+		out_str += constraint_str;
+	}
+
 	return out_str;
 }
 
@@ -434,7 +475,26 @@ function radarConstraint(model: PuzzleModel, grid: Grid, c_id: string, constrain
 }
 
 function radarElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, radarConstraint);
+	let out_str = simpleElementFunction(model, grid, element, radarConstraint);
+
+	if (!element.negative_constraints) return out_str;
+
+	// negative constraint
+	const all_given = !!element.negative_constraints[TOOLS.ALL_RADARS_GIVEN];
+	if (!all_given) return out_str;
+	const constraints = element.constraints as Record<string, CellToolI>;
+
+	out_str += `\n% ${TOOLS.ALL_RADARS_GIVEN}\n`;
+	for (const cell of grid.getAllCells()) {
+		const match = findSingleCellConstraintMatch(constraints, cell);
+		if (match) continue;
+
+		const var0 = cellToVarName(cell);
+		const [up_vars, down_vars, left_vars, right_vars] = getDirectionsVars(grid, cell);
+		const constraint_str = `constraint not radar_p(${var0}, ${up_vars}, ${down_vars}, ${left_vars}, ${right_vars}, 9);\n`;
+		out_str += constraint_str;
+	}
+
 	return out_str;
 }
 
@@ -871,12 +931,12 @@ function nurimisakiUnshadedEndpointsConstraint(
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
-	const cell_nurimisaki = `nurimisaki[${cell.r},${cell.c}]`;
 
+	const nurimisaki_var = cellToGridVarName(cell, VAR_2D_NAMES.NURIMISAKI);
 	const adj_cells = grid.getOrthogonallyAdjacentCells(cell);
 	const adj_nurimisaki_vars = cellsToGridVarsStr(adj_cells, VAR_2D_NAMES.NURIMISAKI);
 
-	let out_str = `constraint nurimisaki_unshaded_endpoint_p(${adj_nurimisaki_vars}, ${cell_nurimisaki});\n`;
+	let out_str = `constraint nurimisaki_unshaded_endpoint_p(${adj_nurimisaki_vars}, ${nurimisaki_var});\n`;
 
 	out_str += orthogonalRegionSeenCountConstraint(
 		grid,
@@ -893,12 +953,29 @@ function nurimisakiUnshadedEndpointsElement(
 	grid: Grid,
 	element: ConstraintsElement
 ) {
-	const out_str = simpleElementFunction(
-		model,
-		grid,
-		element,
-		nurimisakiUnshadedEndpointsConstraint
-	);
+	let out_str = simpleElementFunction(model, grid, element, nurimisakiUnshadedEndpointsConstraint);
+
+	if (!element.negative_constraints) return out_str;
+
+	// negative constraint
+	const all_given = !!element.negative_constraints[TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN];
+	if (!all_given) return out_str;
+	const constraints = element.constraints as Record<string, CellToolI>;
+
+	out_str += `\n% ${TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN}\n`;
+	for (const cell of grid.getAllCells()) {
+		const match = findSingleCellConstraintMatch(constraints, cell);
+		if (match) continue;
+
+		const nurimisaki_var = cellToGridVarName(cell, VAR_2D_NAMES.NURIMISAKI);
+
+		const adj_cells = grid.getOrthogonallyAdjacentCells(cell);
+		const adj_nurimisaki_vars = cellsToGridVarsStr(adj_cells, VAR_2D_NAMES.NURIMISAKI);
+
+		const constraint_str = `constraint not nurimisaki_unshaded_endpoint_p(${adj_nurimisaki_vars}, ${nurimisaki_var});\n`;
+		out_str += constraint_str;
+	}
+
 	return out_str;
 }
 

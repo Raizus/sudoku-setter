@@ -1017,7 +1017,10 @@ predicate edge_modulo_p(var int: a, var int: b, var int: rem) =
     larger mod smaller == rem;
 
 predicate edge_factor_p(var int: a, var int: b) =
-    multiples_p(a, b);\n\n`;
+    multiples_p(a, b);
+    
+predicate xy_differences_p(var int: cell1, var int: cell2, var int: first_cell) =
+    abs(cell1 - cell2) == first_cell;\n\n`;
 
 	const corner_constraints = `predicate quadruple_p(
     array[int] of var int: arr,

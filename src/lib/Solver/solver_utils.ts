@@ -1,4 +1,5 @@
 import type { ConstraintsElement, ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
+import type { SingleCellTool } from '../Puzzle/Constraints/SingleCellConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import type { PuzzleI } from '../Puzzle/Puzzle';
@@ -518,4 +519,15 @@ export function* adjCellPairGen(grid: Grid) {
 			yield [cell, cell2];
 		}
 	}
+}
+export function findSingleCellConstraintMatch<T extends SingleCellTool>(
+	constraints: Record<string, T>,
+	cell: Cell
+) {
+	const clist = [...Object.values(constraints)];
+	const match = clist.find((constraint) => {
+		const coord = constraint.cell;
+		if (cell.c === coord.c && cell.r === coord.r) return constraint;
+	});
+	return match;
 }

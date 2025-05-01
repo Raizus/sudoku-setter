@@ -90,6 +90,14 @@ export const yinYangCountShadedCellsInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.YIN_YANG_COUNT_SHADED_CELLS,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN,
+			description:
+				'Values in cells with arrows give the number of shaded cells in the indicated direction. All possible arrows are given.'
+		}
+	],
+
 	shape: defaultShape,
 
 	meta: {

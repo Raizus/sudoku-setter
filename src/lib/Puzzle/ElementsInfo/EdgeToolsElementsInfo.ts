@@ -121,6 +121,13 @@ export const ratioInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.RATIO,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_RATIOS_GIVEN,
+			description: 'All Ratios are given.'
+		}
+	],
+
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
 		r: { editable: false, value: EDGE_R_1 },
@@ -142,6 +149,13 @@ export const differenceInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_EDGE_OPTIONS,
 
 	toolId: TOOLS.DIFFERENCE,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_DIFFERENCES_GIVEN,
+			description: 'All Differences are given.'
+		}
+	],
 
 	shape: DEFAULT_WHITE_CIRCLE,
 
@@ -188,6 +202,10 @@ export const xvInfo: SquareCellElementInfo = {
 		{
 			toolId: TOOLS.NEGATIVE_X_CONSTRAINT,
 			description: 'All pairs of adjacent cells not joined with an X cannot sum to 10.'
+		},
+		{
+			toolId: TOOLS.NEGATIVE_XV_CONSTRAINT,
+			description: 'All pairs of adjacent cells not joined with an V or X cannot sum to 5 or 10.'
 		}
 	],
 
@@ -293,6 +311,14 @@ export const xyDifferencesInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.XY_DIFFERENCES,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_XY_DIFFERENCES_GIVEN,
+			description:
+				'If two cells are separated by a diamond, the digits must exhibit a difference equal to the leftmost or topmost digit sharing a row or column with them. For example, the difference between R9C34 = R9C1, and the difference between R23C1 = R1C1. Not all possible diamonds are necessarily given. All XY differences are given.'
+		}
+	],
 
 	shape: {
 		type: SHAPE_TYPES.POLYGON,

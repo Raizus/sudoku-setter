@@ -301,6 +301,14 @@ export const radarInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.RADAR,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_RADARS_GIVEN,
+			description:
+				"Cells with grey cages are radars. Radars are cells that have a value indicating the distance to the closest 'X' on their row or column (default X = 9). All radars are given."
+		}
+	],
+
 	shape: {
 		type: SHAPE_TYPES.CAGE,
 		strokeWidth: { editable: false, value: 0.04 },
@@ -342,6 +350,14 @@ export const indexingColumnInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.INDEXING_COLUMN,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_INDEXING_COLUMN_GIVEN,
+			description:
+				'Any number X in a red cell appearing in column Y index (ie give) the column X in which the number Y appears in their respective row. All possible indexing column cells in the given columns are given.'
+		}
+	],
+
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
 		strokeWidth: { editable: false, value: 0 },
@@ -360,6 +376,14 @@ export const indexingRowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.INDEXING_ROW,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_INDEXING_ROW_GIVEN,
+			description:
+				'Any number X in a blue cell appearing in the Yth row of a column indicates the row X where the number Y appears in that column. All possible indexing column cells in the given columns are given.'
+		}
+	],
 
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
@@ -795,6 +819,14 @@ export const nurimisakiUnshadedEndpointInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.NURIMISAKI_UNSHADED_ENDPOINTS,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN,
+			description:
+				"Circles mark every instance of a cell which is unshaded and orthogonally adjacent to exactly one other unshaded cell (i.e. the circles are the only 'endpoints' of the unshaded area)."
+		}
+	],
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,

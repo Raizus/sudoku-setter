@@ -3,12 +3,14 @@ import type { CellMultiArrowToolI } from '../Puzzle/Constraints/SingleCellConstr
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS } from '../Puzzle/Tools';
+import { DIRECTION } from '../utils/directions';
 import {
 	cellsToGridVarsStr,
 	cellsToVarsName,
 	cellToGridVarName,
 	cellToVarName,
 	constraintsBuilder,
+	findSingleCellConstraintMatch,
 	PuzzleModel,
 	VAR_2D_NAMES,
 	type ElementF
@@ -120,12 +122,36 @@ function yinYangCountShadedCellsElement(
 	grid: Grid,
 	element: ConstraintsElement
 ) {
-	const out_str = singleCellMultiArrowElementFunction(
+	let out_str = singleCellMultiArrowElementFunction(
 		model,
 		grid,
 		element,
 		yinYangCountShadedCellsConstraint
 	);
+
+	if (!element.negative_constraints) return out_str;
+
+	// negative constraint
+	const all_given = !!element.negative_constraints[TOOLS.ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN];
+	if (!all_given) return out_str;
+	const constraints = element.constraints as Record<string, CellMultiArrowToolI>;
+
+	out_str += `\n% ${TOOLS.ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN}\n`;
+	for (const cell of grid.getAllCells()) {
+		// check if cell pair is not in xv pairs
+		const match = findSingleCellConstraintMatch(constraints, cell);
+		const used_dirs = match ? match.directions : [];
+
+		const cell_var = cellToVarName(cell);
+		const directions: DIRECTION[] = [DIRECTION.E, DIRECTION.N, DIRECTION.S, DIRECTION.W];
+		for (const direction of directions) {
+			if (used_dirs.includes(direction)) continue;
+			const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
+			const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
+			out_str += `constraint count(${yin_yang_vars_str}, 1) != ${cell_var};\n`;
+		}
+	}
+
 	return out_str;
 }
 

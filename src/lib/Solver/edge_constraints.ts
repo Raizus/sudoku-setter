@@ -184,12 +184,80 @@ function xvElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) 
 }
 
 function ratioElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedEdgeElement(model, grid, element, 'ratio_p', '2');
+	let out_str = valuedEdgeElement(model, grid, element, 'ratio_p', '2');
+
+	if (!element.negative_constraints) return out_str;
+
+	// negative constraint
+	const all_given = !!element.negative_constraints[TOOLS.ALL_RATIOS_GIVEN];
+	if (!all_given) return out_str;
+	const constraints = element.constraints as Record<string, EdgeToolI>;
+
+	let used_vals: string[] = [];
+	if (constraints) {
+		used_vals = Object.values(constraints)
+			.map((constraint) => constraint.value)
+			.map((val) => (!val ? '2' : val));
+	}
+	if (used_vals.length === 0) used_vals.push('2');
+
+	const values = [...new Set(used_vals)];
+
+	console.log('values', values);
+
+	out_str += `\n% ${TOOLS.ALL_RATIOS_GIVEN}\n`;
+	for (const [cell1, cell2] of adjCellPairGen(grid)) {
+		// check if cell pair is not in xv pairs
+		const match = findEdgeConstraintMatch(constraints, cell1, cell2);
+		if (match) continue;
+
+		const var1 = cellToVarName(cell1);
+		const var2 = cellToVarName(cell2);
+		for (const value of values) {
+			const val = parseInt(value);
+			const constraint_str = `constraint not ratio_p(${var1}, ${var2}, ${val});\n`;
+			out_str += constraint_str;
+		}
+	}
+
 	return out_str;
 }
 
 function differenceElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedEdgeElement(model, grid, element, 'abs_difference', '1');
+	let out_str = valuedEdgeElement(model, grid, element, 'abs_difference', '1');
+
+	if (!element.negative_constraints) return out_str;
+
+	// negative constraint
+	const all_given = !!element.negative_constraints[TOOLS.ALL_DIFFERENCES_GIVEN];
+	if (!all_given) return out_str;
+	const constraints = element.constraints as Record<string, EdgeToolI>;
+
+	let used_vals: string[] = [];
+	if (constraints) {
+		used_vals = Object.values(constraints)
+			.map((constraint) => constraint.value)
+			.map((val) => (!val ? '1' : val));
+	}
+	if (used_vals.length === 0) used_vals.push('1');
+
+	const values = [...new Set(used_vals)];
+
+	out_str += `\n% ${TOOLS.ALL_DIFFERENCES_GIVEN}\n`;
+	for (const [cell1, cell2] of adjCellPairGen(grid)) {
+		// check if cell pair is not in xv pairs
+		const match = findEdgeConstraintMatch(constraints, cell1, cell2);
+		if (match) continue;
+
+		const var1 = cellToVarName(cell1);
+		const var2 = cellToVarName(cell2);
+		for (const value of values) {
+			const val = parseInt(value);
+			const constraint_str = `constraint abs(${var1} - ${var2}) != ${val};\n`;
+			out_str += constraint_str;
+		}
+	}
+
 	return out_str;
 }
 
@@ -233,10 +301,9 @@ function edgeFactorElement(model: PuzzleModel, grid: Grid, element: ConstraintsE
 	return out_str;
 }
 
-function xyDifferencesConstraint(grid: Grid, constraint: EdgeToolI) {
-	const cells = cellsFromCoords(grid, constraint.cells);
-	const [var1, var2] = cellsToVarsName(cells);
-	const [cell1, cell2] = cells;
+function xyDiffHelper(grid: Grid, cell1: Cell, cell2: Cell) {
+	const var1 = cellToVarName(cell1);
+	const var2 = cellToVarName(cell2);
 
 	let var3: string = '';
 	if (cell1.r == cell2.r) {
@@ -250,17 +317,48 @@ function xyDifferencesConstraint(grid: Grid, constraint: EdgeToolI) {
 	}
 	if (!var3) return '';
 
-	const constraint_str = `constraint abs(${var1} - ${var2}) == ${var3};\n`;
+	const out_str = `xy_differences_p(${var1}, ${var2}, ${var3});\n`;
+	return out_str;
+}
+
+function xyDifferencesConstraint(grid: Grid, constraint: EdgeToolI) {
+	const cells = cellsFromCoords(grid, constraint.cells);
+	const [cell1, cell2] = cells;
+
+	const aux_str = xyDiffHelper(grid, cell1, cell2);
+	if (aux_str.length === 0) return '';
+
+	const constraint_str = `constraint ${aux_str}`;
 	return constraint_str;
 }
 
 function xyDifferencesElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const constraints = element.constraints;
+	const constraints = element.constraints as Record<string, EdgeToolI>;
 	let out_str = '';
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = xyDifferencesConstraint(grid, constraint as EdgeToolI);
 		out_str += constraint_str;
 	}
+
+	if (!element.negative_constraints) return out_str;
+
+	// negative constraint
+	const all_given = !!element.negative_constraints[TOOLS.ALL_XY_DIFFERENCES_GIVEN];
+	if (!all_given) return out_str;
+
+	out_str += `\n% ${TOOLS.ALL_XY_DIFFERENCES_GIVEN}\n`;
+	for (const [cell1, cell2] of adjCellPairGen(grid)) {
+		// check if cell pair is not in xv pairs
+		const match = findEdgeConstraintMatch(constraints, cell1, cell2);
+		if (match) continue;
+
+		const aux_str = xyDiffHelper(grid, cell1, cell2);
+		if (aux_str.length === 0) continue;
+
+		const constraint_str = `constraint not ${aux_str}`;
+		out_str += constraint_str;
+	}
+
 	return out_str;
 }
 
