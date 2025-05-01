@@ -180,6 +180,17 @@ export const xvInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.XV,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.NEGATIVE_V_CONSTRAINT,
+			description: 'All pairs of adjacent cells not joined with an V cannot sum to 5.'
+		},
+		{
+			toolId: TOOLS.NEGATIVE_X_CONSTRAINT,
+			description: 'All pairs of adjacent cells not joined with an X cannot sum to 10.'
+		}
+	],
+
 	shape: {
 		type: SHAPE_TYPES.TEXT_ONLY,
 		r: { editable: false, value: EDGE_R_1 },

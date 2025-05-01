@@ -22,6 +22,8 @@ export interface AbstractElementInfo {
 	permanent?: boolean;
 	menu?: null | SelectMenuComponent;
 
+	negative_constraints?: { toolId: TOOLID; description: string }[];
+
 	meta?: {
 		description: string;
 		usage?: string; // how to use the tool with the user inputs
