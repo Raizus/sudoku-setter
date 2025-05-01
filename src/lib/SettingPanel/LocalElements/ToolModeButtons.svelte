@@ -35,6 +35,7 @@
 <style lang="scss">
 	.tool-buttons {
 		display: flex;
+		gap: 0.2em;
 	}
 
 	button {
