@@ -1,8 +1,7 @@
-import { HANDLER_TOOL_TYPE } from "$input/ToolInputHandlers/types";
-import type { SquareCellElementInfo } from "../ElementInfo";
-import { RENDER_ORDER } from "../RenderOrder";
-import { SHAPE_TYPES } from "../Shape/Shape";
-import { TOOL_CATEGORIES, TOOLS } from "../Tools";
+import { HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
+import type { SquareCellElementInfo } from '../ElementInfo';
+import { SHAPE_TYPES } from '../Shape/Shape';
+import { TOOL_CATEGORIES, TOOLS } from '../Tools';
 
 const cornerLineDefaultCategories = [
 	TOOL_CATEGORIES.CORNER_LINE_CONSTRAINT,
@@ -13,11 +12,10 @@ const cornerLineDefaultCategories = [
 
 export const mazeWallInfo: SquareCellElementInfo = {
 	inputOptions: {
-		type: HANDLER_TOOL_TYPE.CORNER_LINE,
+		type: HANDLER_TOOL_TYPE.CORNER_LINE
 	},
 
 	toolId: TOOLS.MAZE_WALL,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.MAZE_WALL,

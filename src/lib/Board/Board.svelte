@@ -12,7 +12,7 @@
 	import CellValuesRender from './CellRender/CellValuesRender.svelte';
 	import HighlightsRender from './CellRender/HighlightsRender.svelte';
 	import {
-	isCenterEdgeCornerTool,
+		isCenterEdgeCornerTool,
 		isCornerTool,
 		isEdgeTool,
 		isOutsideDirectionTool,
@@ -33,7 +33,7 @@
 	import SolutionRender from './SolutionRender.svelte';
 	import ToolsLayerRender from './Constraints/ToolsLayerRender.svelte';
 	import {
-	centerCornerOrEdgeToolPreviewStore,
+		centerCornerOrEdgeToolPreviewStore,
 		centerCornerOrEdgeToolsStore,
 		cornerLineToolsStore,
 		cornerToolPreviewStore,
@@ -44,7 +44,7 @@
 		outsideDirectionToolPreviewStore,
 		simpleCellToolPreviewStore,
 		singleCellArrowPreviewStore,
-		singleCellMultiArrowPreviewStore,
+		singleCellMultiArrowPreviewStore
 	} from '$stores/ElementsStore.js';
 	import CornerToolRender from './Constraints/CornerToolRender.svelte';
 	import CenterCornerOrEdgeToolRender from './Constraints/CenterCornerOrEdgeToolRender.svelte';
@@ -71,7 +71,7 @@
 			if (!isOutsideDirectionTool(toolId)) continue;
 
 			const hasCellOffGrid = Object.entries(
-				elementGroup as Record<string, OutsideDirectionToolI>
+				elementGroup.constraints as Record<string, OutsideDirectionToolI>
 			).some(([id, constraint]) => {
 				return !isCellOnGrid(constraint.cell, gridShape);
 			});

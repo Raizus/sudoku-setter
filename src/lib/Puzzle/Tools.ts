@@ -47,22 +47,25 @@ export enum SIMPLE_GLOBAL_CONSTRAINTS {
 }
 
 export enum NEGATIVE_CONSTRAINTS {
-	ALL_GIVEN = 'All Given',
-	ALL_CAGE_TOTALS_DIFFERENT = 'All Cage Totals Different',
-	ADJACENT_CAGE_TOTALS_DIFFERENT = 'Adjacent Cage Totals Different',
-
-	ALL_RATIOS_GIVEN = 'All Ratios Given',
-	ALL_DIFFERENCES_GIVEN = 'All Differences Given',
-	ALL_X_GIVEN = "All X's Given",
-	ALL_V_GIVEN = "All V's Given",
-	ALL_XV_GIVEN = "All XV's Given",
-	ALL_RADARS_GIVEN = 'All Radars Given',
+	NEGATIVE_CONSTRAINT = 'Negative Constraint',
+	NEGATIVE_V_CONSTRAINT = 'Negative V Constraint',
+	NEGATIVE_X_CONSTRAINT = 'Negative X Constraint',
+	NEGATIVE_XV_CONSTRAINT = 'Negative XV Constraint',
 	ALL_XY_DIFFERENCES_GIVEN = 'All XY Differences Given',
 	ALL_INDEXING_COLUMN_GIVEN = 'All Indexing Column Given',
 	ALL_INDEXING_ROW_GIVEN = 'All Indexing Row Given',
+	ALL_RATIOS_GIVEN = 'All Ratios Given',
+	ALL_DIFFERENCES_GIVEN = 'All Differences Given',
+
+	ALL_RADARS_GIVEN = 'All Radars Given',
 	ALL_YIN_YANG_KROPKI_GIVEN = 'All Yin Yang Kropki Given',
 	ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN = 'All Nurimisaki Unshaded Endpoints Given',
 	ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN = 'All Yin Yang Count Shaded Cells Given',
+
+	// ALL_GIVEN = 'All Given',
+	// ALL_CAGE_TOTALS_DIFFERENT = 'All Cage Totals Different',
+	// ADJACENT_CAGE_TOTALS_DIFFERENT = 'Adjacent Cage Totals Different',
+
 
 	SHIKAKU_EACH_REGION_CONTAINS_ONE_SIZE_CIRCLE = 'Shikaku Each Regions Contains One Size Circle',
 	SHIKAKU_EACH_REGION_CONTAINS_ONE_REGION_SUM_CLUE = 'Shikaku Each Regions Contains One Region Sum Clue'

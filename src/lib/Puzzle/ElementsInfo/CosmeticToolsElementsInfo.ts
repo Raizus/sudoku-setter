@@ -1,7 +1,6 @@
 import { SHAPE_TYPES } from '../Shape/Shape';
 import { TOOLS, TOOL_CATEGORIES } from '../Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
-import { RENDER_ORDER } from '../RenderOrder';
 import { defaultCageValueUpdater, validateCageValue } from './CageToolsElementsInfo';
 import { defaultEdgeValueUpdater, validateEdgeValue } from './EdgeToolsElementsInfo';
 import { defaultCornerValueUpdater, validateCornerValue } from './CornerToolsElementsInfo';
@@ -15,7 +14,6 @@ export const cosmeticCellShapeInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.COSMETIC_CELL_CENTER_SHAPE,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -48,7 +46,6 @@ export const cosmeticCellArrowInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.COSMETIC_CELL_ARROW,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CELL_ARROW,
@@ -70,7 +67,6 @@ export const cosmeticCellMultiArrowInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.COSMETIC_CELL_MULTI_ARROW,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CELL_ARROW,
@@ -94,7 +90,6 @@ export const cosmeticEdgeInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.COSMETIC_EDGE,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -140,7 +135,6 @@ export const cosmeticCornerInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.COSMETIC_CORNER,
-	order: RENDER_ORDER.CORNER_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -184,7 +178,6 @@ export const cosmeticLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.COSMETIC_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -219,7 +212,6 @@ export const cosmeticLineWithCircleEndsInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.COSMETIC_LINE_WITH_CIRCLE_ENDS,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
@@ -256,7 +248,6 @@ export const cosmeticLineWithPolygonEndsInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.COSMETIC_LINE_WITH_POLYGON_ENDS,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE_WITH_POLYGON_ENDS,
@@ -297,7 +288,6 @@ export const cosmeticCageInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.COSMETIC_CAGE,
-	order: RENDER_ORDER.CAGE_TOOLS,
 
 	shape: {
 		strokeWidth: { editable: true, value: 0.03, lb: 0, ub: 0.5, step: 0.01 },
@@ -329,7 +319,6 @@ export const cosmeticArrowInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.COSMETIC_ARROW,
-	order: RENDER_ORDER.ARROW_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -363,7 +352,6 @@ export const cosmeticOutsideDirectionInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.COSMETIC_OUTSIDE_DIRECTION,
-	order: RENDER_ORDER.ARROW_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,

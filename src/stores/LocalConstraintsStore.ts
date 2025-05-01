@@ -1,4 +1,5 @@
 import {
+	type ConstraintsElement,
 	type ConstraintType
 } from '$src/lib/Puzzle/Constraints/LocalConstraints';
 import {
@@ -50,12 +51,9 @@ export function removeLocalConstraint(toolId: TOOLID, id: string | null) {
 	});
 }
 
-export function restoreLocalConstraintGroup(
-	toolId: TOOLID,
-	constraints: Record<string, ConstraintType>
-) {
+export function restoreElement(toolId: TOOLID, element: ConstraintsElement) {
 	localConstraintsStore.update((localConstraintsDict) => {
-		localConstraintsDict.setConstraints(toolId, constraints);
+		localConstraintsDict.setElement(toolId, element);
 		return localConstraintsDict;
 	});
 }
@@ -67,8 +65,8 @@ export function updateLocalConstraints(action: LocalConstraintAction): void {
 		removeLocalConstraint(action.payload.tool, action.payload.id);
 	} else if (action.type === LOCAL_CONSTRAINTS_ACTIONS.REMOVE_LOCAL_CONSTRAINT_GROUP) {
 		removeGroupFromLocalConstraint(action.payload.tool);
-	} else if (action.type === LOCAL_CONSTRAINTS_ACTIONS.RESTORE_LOCAL_CONSTRAINT_GROUP) {
-		restoreLocalConstraintGroup(action.payload.tool, action.payload.constraints);
+	} else if (action.type === LOCAL_CONSTRAINTS_ACTIONS.RESTORE_ELEMENT) {
+		restoreElement(action.payload.tool, action.payload.constraints);
 	} else if (action.type === LOCAL_CONSTRAINTS_ACTIONS.UPDATE_LOCAL_CONSTRAINT) {
 		updateLocalConstraint(
 			action.payload.tool,

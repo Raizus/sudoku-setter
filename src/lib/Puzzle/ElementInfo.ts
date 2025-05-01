@@ -14,10 +14,6 @@ export interface SelectMenuComponent extends AbstractMenuComponent {
 
 export interface AbstractElementInfo {
 	toolId: TOOLID;
-	/** Render order. */
-	order: number;
-
-	// getInputHandler?: (svgRef: SVGSVGElement, hexGrid: Grid<CustomHex>, tool: TOOLID) => InputHandler;
 
 	// describes how to draw the the element
 	shape?: EditableShapeI;
@@ -25,6 +21,8 @@ export interface AbstractElementInfo {
 	/** If this element CANNOT be deleted. */
 	permanent?: boolean;
 	menu?: null | SelectMenuComponent;
+
+	negative_constraints?: { toolId: TOOLID; description: string }[];
 
 	meta?: {
 		description: string;

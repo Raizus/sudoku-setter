@@ -5,7 +5,6 @@ import {
 	type CenterCornerOrEdgeToolInputOptions
 } from '$input/ToolInputHandlers/types';
 import type { SquareCellElementInfo } from '../ElementInfo';
-import { RENDER_ORDER } from '../RenderOrder';
 import { SHAPE_TYPES } from '../Shape/Shape';
 import { TOOL_CATEGORIES, TOOLS } from '../Tools';
 import { centerCornerOrEdgeUsage } from '../ToolUsage';
@@ -25,7 +24,6 @@ export const rotationallySymmetricGalaxyCenterInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CLOSEST_OPTIONS,
 
 	toolId: TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -57,7 +55,6 @@ export const rotationallySymmetricGalaxyCenterSumInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER_SUM,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -89,7 +86,6 @@ export const yinYangSumOfAdjacentShadedEdgeOrCornerInfo: SquareCellElementInfo =
 	},
 
 	toolId: TOOLS.YIN_YANG_SUM_OF_ADJACENT_SHADED_EDGE_CORNER,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,

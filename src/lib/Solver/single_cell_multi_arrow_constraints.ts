@@ -1,17 +1,35 @@
-import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
+import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
 import type { CellMultiArrowToolI } from '../Puzzle/Constraints/SingleCellConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
-import { TOOLS, type TOOLID } from '../Puzzle/Tools';
+import { TOOLS } from '../Puzzle/Tools';
+import { DIRECTION } from '../utils/directions';
 import {
 	cellsToGridVarsStr,
 	cellsToVarsName,
 	cellToGridVarName,
 	cellToVarName,
 	constraintsBuilder,
+	findSingleCellConstraintMatch,
 	PuzzleModel,
-	VAR_2D_NAMES
+	VAR_2D_NAMES,
+	type ElementF
 } from './solver_utils';
+
+export function singleCellMultiArrowElementFunction(
+	model: PuzzleModel,
+	grid: Grid,
+	element: ConstraintsElement,
+	func: (grid: Grid, constraint: CellMultiArrowToolI) => string
+) {
+	const constraints = element.constraints;
+	let out_str = '';
+	for (const constraint of Object.values(constraints)) {
+		const constraint_str = func(grid, constraint as CellMultiArrowToolI);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
 
 function countCellsNotInTheSameRegionConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	const coords = constraint.cell;
@@ -31,6 +49,20 @@ function countCellsNotInTheSameRegionConstraint(grid: Grid, constraint: CellMult
 	const aux = vars_list.map((vars) => `count_different(${vars}, ${region_var})`).join(' + ');
 	const constraint_str = `constraint ${aux} == ${cell_var};\n`;
 	return constraint_str;
+}
+
+function countCellsNotInTheSameRegionElement(
+	model: PuzzleModel,
+	grid: Grid,
+	element: ConstraintsElement
+) {
+	const out_str = singleCellMultiArrowElementFunction(
+		model,
+		grid,
+		element,
+		countCellsNotInTheSameRegionConstraint
+	);
+	return out_str;
 }
 
 function yinYangSumOfCellsOfOppositeColorConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
@@ -53,6 +85,20 @@ function yinYangSumOfCellsOfOppositeColorConstraint(grid: Grid, constraint: Cell
 	return out_str;
 }
 
+function yinYangSumOfCellsOfOppositeColorElement(
+	model: PuzzleModel,
+	grid: Grid,
+	element: ConstraintsElement
+) {
+	const out_str = singleCellMultiArrowElementFunction(
+		model,
+		grid,
+		element,
+		yinYangSumOfCellsOfOppositeColorConstraint
+	);
+	return out_str;
+}
+
 function yinYangCountShadedCellsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
@@ -66,6 +112,44 @@ function yinYangCountShadedCellsConstraint(grid: Grid, constraint: CellMultiArro
 
 		const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
 		out_str += `constraint count(${yin_yang_vars_str}, 1) == ${cell_var};\n`;
+	}
+
+	return out_str;
+}
+
+function yinYangCountShadedCellsElement(
+	model: PuzzleModel,
+	grid: Grid,
+	element: ConstraintsElement
+) {
+	let out_str = singleCellMultiArrowElementFunction(
+		model,
+		grid,
+		element,
+		yinYangCountShadedCellsConstraint
+	);
+
+	if (!element.negative_constraints) return out_str;
+
+	// negative constraint
+	const all_given = !!element.negative_constraints[TOOLS.ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN];
+	if (!all_given) return out_str;
+	const constraints = element.constraints as Record<string, CellMultiArrowToolI>;
+
+	out_str += `\n% ${TOOLS.ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN}\n`;
+	for (const cell of grid.getAllCells()) {
+		// check if cell pair is not in xv pairs
+		const match = findSingleCellConstraintMatch(constraints, cell);
+		const used_dirs = match ? match.directions : [];
+
+		const cell_var = cellToVarName(cell);
+		const directions: DIRECTION[] = [DIRECTION.E, DIRECTION.N, DIRECTION.S, DIRECTION.W];
+		for (const direction of directions) {
+			if (used_dirs.includes(direction)) continue;
+			const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
+			const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
+			out_str += `constraint count(${yin_yang_vars_str}, 1) != ${cell_var};\n`;
+		}
 	}
 
 	return out_str;
@@ -98,6 +182,20 @@ function yinYangCountUniqueFillominoSameShadingConstraint(
 	return out_str;
 }
 
+function yinYangCountUniqueFillominoSameShadingElement(
+	model: PuzzleModel,
+	grid: Grid,
+	element: ConstraintsElement
+) {
+	const out_str = singleCellMultiArrowElementFunction(
+		model,
+		grid,
+		element,
+		yinYangCountUniqueFillominoSameShadingConstraint
+	);
+	return out_str;
+}
+
 function nurikabeCountIslandCellsArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
@@ -119,6 +217,20 @@ function nurikabeCountIslandCellsArrowsConstraint(grid: Grid, constraint: CellMu
 	return out_str;
 }
 
+function nurikabeCountIslandCellsArrowsElement(
+	model: PuzzleModel,
+	grid: Grid,
+	element: ConstraintsElement
+) {
+	const out_str = singleCellMultiArrowElementFunction(
+		model,
+		grid,
+		element,
+		nurikabeCountIslandCellsArrowsConstraint
+	);
+	return out_str;
+}
+
 function loopCellsCountArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
@@ -137,6 +249,16 @@ function loopCellsCountArrowsConstraint(grid: Grid, constraint: CellMultiArrowTo
 	if (!str_list.length) return '';
 
 	const out_str = `constraint ${str_list.join(' + ')} = ${cell_var};\n`;
+	return out_str;
+}
+
+function loopCellsCountArrowsElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+	const out_str = singleCellMultiArrowElementFunction(
+		model,
+		grid,
+		element,
+		loopCellsCountArrowsConstraint
+	);
 	return out_str;
 }
 
@@ -162,6 +284,20 @@ function sameGalaxyUnobstructedCountArrowsConstraint(grid: Grid, constraint: Cel
 	return out_str;
 }
 
+function sameGalaxyUnobstructedCountArrowsElement(
+	model: PuzzleModel,
+	grid: Grid,
+	element: ConstraintsElement
+) {
+	const out_str = singleCellMultiArrowElementFunction(
+		model,
+		grid,
+		element,
+		sameGalaxyUnobstructedCountArrowsConstraint
+	);
+	return out_str;
+}
+
 function hotArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
@@ -181,6 +317,11 @@ function hotArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	return out_str;
 }
 
+function hotArrowsElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+	const out_str = singleCellMultiArrowElementFunction(model, grid, element, hotArrowsConstraint);
+	return out_str;
+}
+
 function coldArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
@@ -196,6 +337,11 @@ function coldArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 		out_str += `constraint cold_arrows_p(${cells_vars_str}, ${cell_var});\n`;
 	}
 
+	return out_str;
+}
+
+function coldArrowsElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+	const out_str = singleCellMultiArrowElementFunction(model, grid, element, coldArrowsConstraint);
 	return out_str;
 }
 
@@ -219,6 +365,20 @@ function connectFourCountCellsOfSameColorConstraint(grid: Grid, constraint: Cell
 	return out_str;
 }
 
+function connectFourCountCellsOfSameColorElement(
+	model: PuzzleModel,
+	grid: Grid,
+	element: ConstraintsElement
+) {
+	const out_str = singleCellMultiArrowElementFunction(
+		model,
+		grid,
+		element,
+		connectFourCountCellsOfSameColorConstraint
+	);
+	return out_str;
+}
+
 function nextNumberedRegionDistanceArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
@@ -238,31 +398,42 @@ function nextNumberedRegionDistanceArrowsConstraint(grid: Grid, constraint: Cell
 	return out_str;
 }
 
-type ConstraintF = (grid: Grid, constraint: CellMultiArrowToolI) => string;
+function nextNumberedRegionDistanceArrowsElement(
+	model: PuzzleModel,
+	grid: Grid,
+	element: ConstraintsElement
+) {
+	const out_str = singleCellMultiArrowElementFunction(
+		model,
+		grid,
+		element,
+		nextNumberedRegionDistanceArrowsConstraint
+	);
+	return out_str;
+}
 
-const tool_map = new Map<string, ConstraintF>([
-	[TOOLS.HOT_ARROWS, hotArrowsConstraint],
-	[TOOLS.COLD_ARROWS, coldArrowsConstraint],
-	[TOOLS.COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS, countCellsNotInTheSameRegionConstraint],
-	[TOOLS.YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR, yinYangSumOfCellsOfOppositeColorConstraint],
-	[TOOLS.LOOP_CELL_COUNT_ARROWS, loopCellsCountArrowsConstraint],
+const tool_map = new Map<string, ElementF>([
+	[TOOLS.HOT_ARROWS, hotArrowsElement],
+	[TOOLS.COLD_ARROWS, coldArrowsElement],
+	[TOOLS.COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS, countCellsNotInTheSameRegionElement],
+	[TOOLS.YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR, yinYangSumOfCellsOfOppositeColorElement],
+	[TOOLS.LOOP_CELL_COUNT_ARROWS, loopCellsCountArrowsElement],
 	[
 		TOOLS.YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS,
-		yinYangCountUniqueFillominoSameShadingConstraint
+		yinYangCountUniqueFillominoSameShadingElement
 	],
-	[TOOLS.YIN_YANG_COUNT_SHADED_CELLS, yinYangCountShadedCellsConstraint],
-	[TOOLS.SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS, sameGalaxyUnobstructedCountArrowsConstraint],
-	[TOOLS.NURIKABE_COUNT_ISLAND_CELLS_ARROWS, nurikabeCountIslandCellsArrowsConstraint],
-	[TOOLS.CONNECT_FOUR_COUNT_CELLS_OF_SAME_COLOR, connectFourCountCellsOfSameColorConstraint],
-	[TOOLS.NEXT_NUMBERED_REGION_DISTANCE_ARROWS, nextNumberedRegionDistanceArrowsConstraint]
+	[TOOLS.YIN_YANG_COUNT_SHADED_CELLS, yinYangCountShadedCellsElement],
+	[TOOLS.SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS, sameGalaxyUnobstructedCountArrowsElement],
+	[TOOLS.NURIKABE_COUNT_ISLAND_CELLS_ARROWS, nurikabeCountIslandCellsArrowsElement],
+	[TOOLS.CONNECT_FOUR_COUNT_CELLS_OF_SAME_COLOR, connectFourCountCellsOfSameColorElement],
+	[TOOLS.NEXT_NUMBERED_REGION_DISTANCE_ARROWS, nextNumberedRegionDistanceArrowsElement]
 ]);
 
 export function singleCellMultiArrowConstraints(
 	model: PuzzleModel,
 	grid: Grid,
-	toolId: TOOLID,
-	constraints: Record<string, ConstraintType>
+	element: ConstraintsElement
 ) {
-	const out_str = constraintsBuilder(grid, toolId, constraints, tool_map);
+	const out_str = constraintsBuilder(model, grid, element, tool_map);
 	return out_str;
 }

@@ -9,7 +9,6 @@ import {
 	type OutsideDirectionToolInputOptions
 } from '$input/ToolInputHandlers/types';
 import type { SquareCellElementInfo } from '../ElementInfo';
-import { RENDER_ORDER } from '../RenderOrder';
 import type { EditableShapeI } from '../Shape/Shape';
 import { outsideCornerUsage } from '../ToolUsage';
 import { TOOL_CATEGORIES, TOOLS } from '../Tools';
@@ -59,7 +58,7 @@ export const littleKillerSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
 
 	toolId: TOOLS.LITTLE_KILLER_SUM,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -75,7 +74,7 @@ export const littleKillerProductInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
 
 	toolId: TOOLS.LITTLE_KILLER_PRODUCT,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -91,7 +90,7 @@ export const littleKillerLookAndSayInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
 
 	toolId: TOOLS.LITTLE_KILLER_LOOK_AND_SAY,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -107,7 +106,7 @@ export const xOmitLittleKillerSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
 
 	toolId: TOOLS.X_OMIT_LITTLE_KILLER_SUM,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -123,7 +122,7 @@ export const littleKillerRegionSumProductInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
 
 	toolId: TOOLS.LITTLE_KILLER_REGION_SUM_PRODUCT,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -139,7 +138,7 @@ export const negatorsLittleKillerSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
 
 	toolId: TOOLS.NEGATORS_LITTLE_KILLER_SUM,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {

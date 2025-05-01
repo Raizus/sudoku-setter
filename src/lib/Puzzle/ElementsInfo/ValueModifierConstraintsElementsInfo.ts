@@ -3,7 +3,6 @@ import { TOOLS, TOOL_CATEGORIES } from '../Tools';
 
 export const vampireAndPreyInfo: AbstractElementInfo = {
 	toolId: TOOLS.VAMPIRE_AND_PREY,
-	order: 0,
 
 	meta: {
 		description:
@@ -15,7 +14,6 @@ export const vampireAndPreyInfo: AbstractElementInfo = {
 
 export const markedCellsInfo: AbstractElementInfo = {
 	toolId: TOOLS.MARKED_CELLS,
-	order: 0,
 
 	meta: {
 		description:
@@ -27,7 +25,6 @@ export const markedCellsInfo: AbstractElementInfo = {
 
 export const doublersInfo: AbstractElementInfo = {
 	toolId: TOOLS.DOUBLERS,
-	order: 0,
 
 	meta: {
 		description:
@@ -39,7 +36,6 @@ export const doublersInfo: AbstractElementInfo = {
 
 export const negatorsInfo: AbstractElementInfo = {
 	toolId: TOOLS.NEGATORS,
-	order: 0,
 
 	meta: {
 		description:
@@ -51,7 +47,6 @@ export const negatorsInfo: AbstractElementInfo = {
 
 export const hotCellsInfo: AbstractElementInfo = {
 	toolId: TOOLS.HOT_CELLS,
-	order: 0,
 
 	meta: {
 		description:
@@ -63,7 +58,6 @@ export const hotCellsInfo: AbstractElementInfo = {
 
 export const coldCellsInfo: AbstractElementInfo = {
 	toolId: TOOLS.COLD_CELLS,
-	order: 0,
 
 	meta: {
 		description:
@@ -75,7 +69,6 @@ export const coldCellsInfo: AbstractElementInfo = {
 
 export const decrementFountainInfo: AbstractElementInfo = {
 	toolId: TOOLS.DECREMENT_FOUNTAIN,
-	order: 0,
 
 	meta: {
 		description:
@@ -87,7 +80,6 @@ export const decrementFountainInfo: AbstractElementInfo = {
 
 export const nexusInfo: AbstractElementInfo = {
 	toolId: TOOLS.NEXUS,
-	order: 0,
 
 	meta: {
 		description:
@@ -99,7 +91,6 @@ export const nexusInfo: AbstractElementInfo = {
 
 export const indexerCellsInfo: AbstractElementInfo = {
 	toolId: TOOLS.INDEXER_CELLS,
-	order: 0,
 
 	meta: {
 		description:

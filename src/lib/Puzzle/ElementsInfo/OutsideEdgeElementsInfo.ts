@@ -10,7 +10,6 @@ import {
 } from '$input/ToolInputHandlers/types';
 import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
-import { RENDER_ORDER } from '../RenderOrder';
 import { outsideEdgeUsage } from '../ToolUsage';
 import type { EditableShapeI } from '../Shape/Shape';
 
@@ -59,7 +58,7 @@ export const sandwichSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.SANDWICH_SUM,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -78,7 +77,7 @@ export const mysterySandwichSumInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.MYSTERY_SANDWICH_SUM,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -94,7 +93,7 @@ export const sandwichSumXorXSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.SANDWICH_SUM_XOR_X_SUM,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -110,7 +109,7 @@ export const xSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.X_SUM,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -126,7 +125,7 @@ export const shortsightedXSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.SHORTSIGHTED_X_SUM,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -142,7 +141,7 @@ export const shiftedXSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.SHIFTED_X_SUM,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -158,7 +157,7 @@ export const brokenXSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.BROKEN_X_SUM,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -174,7 +173,7 @@ export const xSumSkyscrapersInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.X_SUM_SKYSCRAPERS,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -190,7 +189,7 @@ export const battlefieldInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.BATTLEFIELD,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -206,7 +205,7 @@ export const skyscrapersInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.SKYSCRAPERS,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -221,7 +220,7 @@ export const xIndexInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.X_INDEX,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -237,7 +236,7 @@ export const risingStreakInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.RISING_STREAK,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -253,7 +252,7 @@ export const rowOrColumnRankInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.ROW_OR_COLUMN_RANK,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -269,7 +268,7 @@ export const outsideEdgeYinYangSumOfShadedInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -291,7 +290,7 @@ export const outsideConsecutiveSumInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.OUTSIDE_CONSECUTIVE_SUM,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -313,7 +312,7 @@ export const loopwhichesInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.LOOPWICHES,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -335,7 +334,7 @@ export const chaosConstructionSumOfFirstEachRegionInfo: SquareCellElementInfo = 
 	},
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
@@ -357,7 +356,7 @@ export const pentominoBorderCountInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.PENTOMINO_BORDER_COUNT,
-	order: RENDER_ORDER.OUTSIDE_TOOLS,
+
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {

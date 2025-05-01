@@ -9,7 +9,6 @@ const diagonalConstraintsDefaultCategories = [
 
 export const sudokuRulesDoNotApplyInfo: AbstractElementInfo = {
 	toolId: TOOLS.SUDOKU_RULES_DO_NOT_APPLY,
-	order: 0,
 
 	meta: {
 		description: 'Sudoku rules do not apply.',
@@ -20,10 +19,10 @@ export const sudokuRulesDoNotApplyInfo: AbstractElementInfo = {
 
 export const leaveEmptyCellsEmptyInfo: AbstractElementInfo = {
 	toolId: TOOLS.LEAVE_EMPTY_CELLS_EMPTY,
-	order: 0,
 
 	meta: {
-		description: 'This is for the solver and solution display purposes only. It will fill empty cells with all zeros when solving a puzzle, and leave those cells empty on the display.',
+		description:
+			'This is for the solver and solution display purposes only. It will fill empty cells with all zeros when solving a puzzle, and leave those cells empty on the display.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
 	}
@@ -31,7 +30,6 @@ export const leaveEmptyCellsEmptyInfo: AbstractElementInfo = {
 
 export const hexedSudokuInfo: AbstractElementInfo = {
 	toolId: TOOLS.HEXED_SUDOKU,
-	order: 0,
 
 	meta: {
 		description:
@@ -43,7 +41,6 @@ export const hexedSudokuInfo: AbstractElementInfo = {
 
 export const fillominoInfo: AbstractElementInfo = {
 	toolId: TOOLS.FILLOMINO,
-	order: 0,
 
 	meta: {
 		description:
@@ -55,7 +52,6 @@ export const fillominoInfo: AbstractElementInfo = {
 
 export const LITSInfo: AbstractElementInfo = {
 	toolId: TOOLS.LITS,
-	order: 0,
 
 	meta: {
 		description:
@@ -67,7 +63,6 @@ export const LITSInfo: AbstractElementInfo = {
 
 export const antiknightInfo: AbstractElementInfo = {
 	toolId: TOOLS.ANTIKNIGHT,
-	order: 0,
 
 	meta: {
 		description: "Cells that are a chess knight's move apart must not contain the same number.",
@@ -78,7 +73,6 @@ export const antiknightInfo: AbstractElementInfo = {
 
 export const antiGiraffeInfo: AbstractElementInfo = {
 	toolId: TOOLS.ANTI_GIRAFFE,
-	order: 0,
 
 	meta: {
 		description:
@@ -90,7 +84,6 @@ export const antiGiraffeInfo: AbstractElementInfo = {
 
 export const antiLongKnightInfo: AbstractElementInfo = {
 	toolId: TOOLS.ANTI_LONG_KNIGHT,
-	order: 0,
 
 	meta: {
 		description:
@@ -102,7 +95,6 @@ export const antiLongKnightInfo: AbstractElementInfo = {
 
 export const antikingInfo: AbstractElementInfo = {
 	toolId: TOOLS.ANTIKING,
-	order: 0,
 
 	meta: {
 		description: "Cells that are a chess king's move apart must not contain the same number.",
@@ -113,7 +105,6 @@ export const antikingInfo: AbstractElementInfo = {
 
 export const disjointGroupsInfo: AbstractElementInfo = {
 	toolId: TOOLS.DISJOINT_GROUPS,
-	order: 0,
 
 	meta: {
 		description:
@@ -125,7 +116,6 @@ export const disjointGroupsInfo: AbstractElementInfo = {
 
 export const tangoInfo: AbstractElementInfo = {
 	toolId: TOOLS.TANGO,
-	order: 0,
 
 	meta: {
 		description:
@@ -137,7 +127,6 @@ export const tangoInfo: AbstractElementInfo = {
 
 export const nonconsecutiveInfo: AbstractElementInfo = {
 	toolId: TOOLS.NONCONSECUTIVE,
-	order: 0,
 
 	meta: {
 		description: 'Orthogonally adjacent cells must not contain consecutive numbers.',
@@ -148,7 +137,6 @@ export const nonconsecutiveInfo: AbstractElementInfo = {
 
 export const nonratioInfo: AbstractElementInfo = {
 	toolId: TOOLS.NONRATIO,
-	order: 0,
 
 	meta: {
 		description: 'Orthogonally adjacent cells cannot be in 1:2 ratio.',
@@ -159,7 +147,6 @@ export const nonratioInfo: AbstractElementInfo = {
 
 export const negativeDiagonalInfo: AbstractElementInfo = {
 	toolId: TOOLS.NEGATIVE_DIAGONAL,
-	order: 0,
 
 	meta: {
 		description: 'Numbers must not repeat on the negative diagonal.',
@@ -170,7 +157,6 @@ export const negativeDiagonalInfo: AbstractElementInfo = {
 
 export const positiveDiagonalInfo: AbstractElementInfo = {
 	toolId: TOOLS.POSITIVE_DIAGONAL,
-	order: 0,
 
 	meta: {
 		description: 'Numbers must not repeat on the positive diagonal.',
@@ -181,7 +167,6 @@ export const positiveDiagonalInfo: AbstractElementInfo = {
 
 export const negativeAntidiagonalInfo: AbstractElementInfo = {
 	toolId: TOOLS.NEGATIVE_ANTIDIAGONAL,
-	order: 0,
 
 	meta: {
 		description: 'The negative diagonal containts only 3 different numbers.',
@@ -192,7 +177,6 @@ export const negativeAntidiagonalInfo: AbstractElementInfo = {
 
 export const positiveAntidiagonalInfo: AbstractElementInfo = {
 	toolId: TOOLS.POSITIVE_ANTIDIAGONAL,
-	order: 0,
 
 	meta: {
 		description: 'The positive diagonal containts only 3 different numbers.',
@@ -203,7 +187,6 @@ export const positiveAntidiagonalInfo: AbstractElementInfo = {
 
 export const oddEvenParityMirrorAlongNegativeDiagonalInfo: AbstractElementInfo = {
 	toolId: TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_NEGATIVE_DIAGONAL,
-	order: 0,
 
 	meta: {
 		description: 'Odd/Even parity is reflected across the purple negative diagonal.',
@@ -214,7 +197,6 @@ export const oddEvenParityMirrorAlongNegativeDiagonalInfo: AbstractElementInfo =
 
 export const oddEvenParityMirrorAlongPositiveDiagonalInfo: AbstractElementInfo = {
 	toolId: TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_POSITIVE_DIAGONAL,
-	order: 0,
 
 	meta: {
 		description: 'Odd/Even parity is reflected across the purple positive diagonal.',
@@ -225,7 +207,6 @@ export const oddEvenParityMirrorAlongPositiveDiagonalInfo: AbstractElementInfo =
 
 export const boxRowsAndColumnsFormModularityAndEntropySetInfo: AbstractElementInfo = {
 	toolId: TOOLS.BOX_ROWS_AND_COLUMNS_FORM_MODULARITY_AND_ENTROPY_SETS,
-	order: 0,
 
 	meta: {
 		description:
@@ -237,7 +218,6 @@ export const boxRowsAndColumnsFormModularityAndEntropySetInfo: AbstractElementIn
 
 export const antiEntropyInfo: AbstractElementInfo = {
 	toolId: TOOLS.ANTI_ENTROPY,
-	order: 0,
 
 	meta: {
 		description:
@@ -249,7 +229,6 @@ export const antiEntropyInfo: AbstractElementInfo = {
 
 export const globalIndexingColumnInfo: AbstractElementInfo = {
 	toolId: TOOLS.GLOBAL_INDEXING_COLUMN,
-	order: 0,
 
 	meta: {
 		description:
@@ -261,7 +240,6 @@ export const globalIndexingColumnInfo: AbstractElementInfo = {
 
 export const allOddDigitsAreOrthogonallyConnectedInfo: AbstractElementInfo = {
 	toolId: TOOLS.ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED,
-	order: 0,
 
 	meta: {
 		description: 'All odd numbers must form an othogonally connected region at the end.',
@@ -272,136 +250,8 @@ export const allOddDigitsAreOrthogonallyConnectedInfo: AbstractElementInfo = {
 
 /* --------------------------------------------------------------------------------------------------- */
 
-export const allRatiosGivenInfo: AbstractElementInfo = {
-	toolId: TOOLS.ALL_RATIOS_GIVEN,
-	order: 0,
-
-	meta: {
-		description: 'All Ratios are given.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
-	}
-};
-
-export const allDifferencesGivenInfo: AbstractElementInfo = {
-	toolId: TOOLS.ALL_DIFFERENCES_GIVEN,
-	order: 0,
-
-	meta: {
-		description: 'All Differences are given.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
-	}
-};
-
-export const allXGivenInfo: AbstractElementInfo = {
-	toolId: TOOLS.ALL_X_GIVEN,
-	order: 0,
-
-	meta: {
-		description: "All X's are given.",
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
-	}
-};
-
-export const allVGivenInfo: AbstractElementInfo = {
-	toolId: TOOLS.ALL_V_GIVEN,
-	order: 0,
-
-	meta: {
-		description: "All V's are given.",
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
-	}
-};
-
-export const allXVGivenInfo: AbstractElementInfo = {
-	toolId: TOOLS.ALL_XV_GIVEN,
-	order: 0,
-
-	meta: {
-		description: "All XV's are given.",
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
-	}
-};
-
-export const allRadarsGivenInfo: AbstractElementInfo = {
-	toolId: TOOLS.ALL_RADARS_GIVEN,
-	order: 0,
-
-	meta: {
-		description:
-			"Cells with grey cages are radars. Radars are cells that have a value indicating the distance to the closest 'X' on their row or column (default X = 9). All radars are given.",
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
-	}
-};
-
-export const allXYDifferencesGivenInfo: AbstractElementInfo = {
-	toolId: TOOLS.ALL_XY_DIFFERENCES_GIVEN,
-	order: 0,
-
-	meta: {
-		description:
-			'If two cells are separated by a diamond, the digits must exhibit a difference equal to the leftmost or topmost digit sharing a row or column with them. For example, the difference between R9C34 = R9C1, and the difference between R23C1 = R1C1. Not all possible diamonds are necessarily given. All XY differences are given.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
-	}
-};
-
-export const allIndexingColumnGivenInfo: AbstractElementInfo = {
-	toolId: TOOLS.ALL_INDEXING_COLUMN_GIVEN,
-	order: 0,
-
-	meta: {
-		description:
-			'Any number X in a red cell appearing in column Y index (ie give) the column X in which the number Y appears in their respective row. All possible indexing column cells in the given columns are given.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
-	}
-};
-
-export const allIndexingRowGivenInfo: AbstractElementInfo = {
-	toolId: TOOLS.ALL_INDEXING_ROW_GIVEN,
-	order: 0,
-
-	meta: {
-		description:
-			'Any number X in a blue cell appearing in the Yth row of a column indicates the row X where the number Y appears in that column. All possible indexing column cells in the given columns are given.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
-	}
-};
-
-export const allYinYangKropkiGivenInfo: AbstractElementInfo = {
-	toolId: TOOLS.ALL_YIN_YANG_KROPKI_GIVEN,
-	order: 0,
-
-	meta: {
-		description:
-			'Cells separated by a a light blue transparent dot indicate that the two connected cells have the same Yin Yang shading. If a grey dot is between two unshaded cells their digits are in a 1:2 ratio; if a grey dot is between two shaded cells, their digits are consecutive. All such dots are given.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
-	}
-};
-
-export const allYinYangCountShadedCellsGivenInfo: AbstractElementInfo = {
-	toolId: TOOLS.ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN,
-	order: 0,
-
-	meta: {
-		description:
-			'Values in cells with arrows give the number of shaded cells in the indicated direction. All possible arrows are given',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
-	}
-};
-
 export const shikakuEachRegionContainsOneSizeCircleInfo: AbstractElementInfo = {
 	toolId: TOOLS.SHIKAKU_EACH_REGION_CONTAINS_ONE_SIZE_CIRCLE,
-	order: 0,
 
 	meta: {
 		description:
@@ -413,7 +263,6 @@ export const shikakuEachRegionContainsOneSizeCircleInfo: AbstractElementInfo = {
 
 export const shikakuEachRegionContainsOneRegionSumClueInfo: AbstractElementInfo = {
 	toolId: TOOLS.SHIKAKU_EACH_REGION_CONTAINS_ONE_REGION_SUM_CLUE,
-	order: 0,
 
 	meta: {
 		description:
@@ -425,7 +274,6 @@ export const shikakuEachRegionContainsOneRegionSumClueInfo: AbstractElementInfo 
 
 export const nurimisakiPathGermanWhispersInfo: AbstractElementInfo = {
 	toolId: TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS,
-	order: 0,
 
 	meta: {
 		description: 'Cells Along Nurimisaki Path Have A Difference Of At Least 5.',
@@ -434,21 +282,8 @@ export const nurimisakiPathGermanWhispersInfo: AbstractElementInfo = {
 	}
 };
 
-export const allNurimisakiUnshadedEndpointsGivenInfo: AbstractElementInfo = {
-	toolId: TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN,
-	order: 0,
-
-	meta: {
-		description:
-			"Circles mark every instance of a cell which is unshaded and orthogonally adjacent to exactly one other unshaded cell (i.e. the circles are the only 'endpoints' of the unshaded area).",
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
-	}
-};
-
 export const yinYangRegionSumLinesMustCrossColorsAtLeastOnceInfo: AbstractElementInfo = {
 	toolId: TOOLS.YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE,
-	order: 0,
 
 	meta: {
 		description:
@@ -457,4 +292,3 @@ export const yinYangRegionSumLinesMustCrossColorsAtLeastOnceInfo: AbstractElemen
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
 	}
 };
-

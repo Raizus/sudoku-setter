@@ -1,12 +1,20 @@
 <script lang="ts">
-	import CaretDown from '$icons/CaretDown.svelte';
-	import CaretUp from '$icons/CaretUp.svelte';
+	// import CaretDown from '$icons/CaretDown.svelte';
+	// import CaretUp from '$icons/CaretUp.svelte';
 	import Trash from '$icons/Trash.svelte';
 	import { getToolInfo, type AbstractElementHandlers } from '$src/lib/Puzzle/ElementHandlersUtils';
 	import { TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
 	import { getUsageDescription } from '$src/lib/Puzzle/ToolUsage';
-	import { removeLocalConstraintGroupAction, restoreLocalConstraintGroupAction } from '$src/lib/reducers/LocalConstraintsActions';
-	import { localConstraintsStore, toolStore, updateToolAndCurrentConstraintStores, updateToolOnRemoveGroup } from '$stores/BoardStore';
+	import {
+		removeLocalConstraintGroupAction,
+		restoreElementAction
+	} from '$src/lib/reducers/LocalConstraintsActions';
+	import {
+		localConstraintsStore,
+		toolStore,
+		updateToolAndCurrentConstraintStores,
+		updateToolOnRemoveGroup
+	} from '$stores/BoardStore';
 	import { addCommand } from '$stores/HistoryStore';
 	import { getLocalConstraintCommand } from '$stores/LocalConstraintsStore';
 	import ElementEditor from './ElementEditor.svelte';
@@ -17,7 +25,7 @@
 	let selected: boolean = false;
 	let constraint_name = tool_id;
 
-	$: elementInfo = getToolInfo(tool_id, elementHandlers)
+	$: elementInfo = getToolInfo(tool_id, elementHandlers);
 
 	function selectCb() {
 		if (selected) {
@@ -33,7 +41,7 @@
 		const constraints = $localConstraintsStore.get(tool_id);
 		if (!constraints) return;
 		const action = removeLocalConstraintGroupAction(tool_id);
-		const reverse_action = restoreLocalConstraintGroupAction(tool_id, constraints);
+		const reverse_action = restoreElementAction(tool_id, constraints);
 		const command = getLocalConstraintCommand(action, reverse_action);
 		addCommand(command);
 	}
@@ -79,7 +87,7 @@
 			</button>
 		</div>
 		{#if selected}
-			<ElementEditor {tool_id}/>
+			<ElementEditor {tool_id} />
 		{/if}
 	</div>
 </div>

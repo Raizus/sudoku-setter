@@ -4,7 +4,6 @@ import {
 	type SingleCellMultiArrowToolOptions
 } from '$input/ToolInputHandlers/types';
 import type { SquareCellElementInfo } from '../ElementInfo';
-import { RENDER_ORDER } from '../RenderOrder';
 import { SHAPE_TYPES, type EditableShapeI } from '../Shape/Shape';
 import { TOOLS, TOOL_CATEGORIES } from '../Tools';
 
@@ -30,7 +29,6 @@ export const sameGalaxyUnobstructedCountArrowsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: defaultShape,
 
@@ -46,7 +44,6 @@ export const yinYangCountUniqueFillominoSameShadingInfo: SquareCellElementInfo =
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: defaultShape,
 
@@ -62,7 +59,6 @@ export const loopCellCountArrowsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.LOOP_CELL_COUNT_ARROWS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: defaultShape,
 
@@ -78,7 +74,6 @@ export const yinYangSumOfCellsOfOppositeColorInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: defaultShape,
 
@@ -94,7 +89,14 @@ export const yinYangCountShadedCellsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_COUNT_SHADED_CELLS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN,
+			description:
+				'Values in cells with arrows give the number of shaded cells in the indicated direction. All possible arrows are given.'
+		}
+	],
 
 	shape: defaultShape,
 
@@ -110,7 +112,6 @@ export const countCellsNotInTheSameRegionArrowsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: defaultShape,
 
@@ -126,7 +127,6 @@ export const coldArrowsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.COLD_ARROWS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CELL_ARROW,
@@ -146,7 +146,6 @@ export const hotArrowsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.HOT_ARROWS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CELL_ARROW,
@@ -166,7 +165,6 @@ export const nurikabeCountIslandCellsArrowsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.NURIKABE_COUNT_ISLAND_CELLS_ARROWS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: defaultShape,
 
@@ -182,7 +180,6 @@ export const connectFourCountCellsOfSameColorInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.CONNECT_FOUR_COUNT_CELLS_OF_SAME_COLOR,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: defaultShape,
 
@@ -198,7 +195,6 @@ export const nextNumberedRegionDistanceArrowsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
 	toolId: TOOLS.NEXT_NUMBERED_REGION_DISTANCE_ARROWS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: defaultShape,
 

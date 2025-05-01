@@ -4,7 +4,6 @@ import {
 	defaultValueUpdater,
 	type ValueValidatorOptions
 } from '$src/lib/InputHandlers/InputHandler';
-import { RENDER_ORDER } from '../RenderOrder';
 import { SHAPE_TYPES, type EditableShapeI } from '../Shape/Shape';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import {
@@ -95,7 +94,6 @@ export const oddInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.ODD,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -116,7 +114,6 @@ export const evenInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.EVEN,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
@@ -137,7 +134,6 @@ export const minimumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.MINIMUM,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	meta: {
 		description: 'Cell value is greater than orthogonally adjacent cells.',
@@ -150,7 +146,6 @@ export const maximumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.MAXIMUM,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	meta: {
 		description: 'Cell value is lesser than orthogonally adjacent cells.',
@@ -163,7 +158,6 @@ export const primeCellInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.PRIME_CELL,
-	order: RENDER_ORDER.CELL_COLOR_TOOL,
 
 	meta: {
 		description: 'Cell value is prime.',
@@ -176,7 +170,6 @@ export const oddMinesweeperInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.ODD_MINESWEEPER,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -198,7 +191,6 @@ export const evenMinesweeperInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.EVEN_MINESWEEPER,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
@@ -220,7 +212,6 @@ export const countSameParityNeighborCellsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.COUNT_SAME_PARITY_NEIGHBOUR_CELLS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -242,7 +233,6 @@ export const watchtowerInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.WATCHTOWER,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -264,7 +254,6 @@ export const notWatchtowerInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.NOT_WATCHTOWER,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
@@ -286,7 +275,6 @@ export const farsightInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.FARSIGHT,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CAGE,
@@ -312,7 +300,14 @@ export const radarInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.RADAR,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_RADARS_GIVEN,
+			description:
+				"Cells with grey cages are radars. Radars are cells that have a value indicating the distance to the closest 'X' on their row or column (default X = 9). All radars are given."
+		}
+	],
 
 	shape: {
 		type: SHAPE_TYPES.CAGE,
@@ -333,7 +328,6 @@ export const orthogonalSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.ORTHOGONAL_SUM,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -355,7 +349,14 @@ export const indexingColumnInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.INDEXING_COLUMN,
-	order: RENDER_ORDER.CELL_COLOR_TOOL,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_INDEXING_COLUMN_GIVEN,
+			description:
+				'Any number X in a red cell appearing in column Y index (ie give) the column X in which the number Y appears in their respective row. All possible indexing column cells in the given columns are given.'
+		}
+	],
 
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
@@ -375,7 +376,14 @@ export const indexingRowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.INDEXING_ROW,
-	order: RENDER_ORDER.CELL_COLOR_TOOL,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_INDEXING_ROW_GIVEN,
+			description:
+				'Any number X in a blue cell appearing in the Yth row of a column indicates the row X where the number Y appears in that column. All possible indexing column cells in the given columns are given.'
+		}
+	],
 
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
@@ -395,7 +403,6 @@ export const lowDigitInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.LOW_DIGIT,
-	order: RENDER_ORDER.CELL_COLOR_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
@@ -414,7 +421,6 @@ export const highDigitInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.HIGH_DIGIT,
-	order: RENDER_ORDER.CELL_COLOR_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
@@ -433,7 +439,6 @@ export const friendlyCellInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.FRIENDLY_CELL,
-	order: RENDER_ORDER.CELL_COLOR_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
@@ -453,7 +458,6 @@ export const diagonallyAdjacentSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.DIAGONALLY_ADJACENT_SUM,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -474,7 +478,6 @@ export const adjacentCellsInDifferentDirectionsHaveOpositeParityInfo: SquareCell
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.ADJACENT_CELLS_IN_DIFFERENT_DIRECTIONS_HAVE_OPPOSITE_PARITY,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -496,7 +499,6 @@ export const sandwichRowColCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.SANDWICH_ROW_COL_COUNT,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: DEFAULT_CIRCLE_SHAPE,
 
@@ -512,7 +514,6 @@ export const countingCirclesInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.COUNTING_CIRCLES,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -534,7 +535,6 @@ export const reverseCountingCirclesInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.REVERSE_COUNTING_CIRCLES,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -561,7 +561,6 @@ export const coloredCountingCirclesInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.COLORED_COUNTING_CIRCLES,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: DEFAULT_CIRCLE_SHAPE,
 
@@ -578,7 +577,6 @@ export const uniqueCellsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.UNIQUE_CELLS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.POLYGON,
@@ -600,7 +598,6 @@ export const seenEvenCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.SEEN_EVEN_COUNT,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: DEFAULT_SQUARE_SHAPE,
 
@@ -621,7 +618,6 @@ export const cellKnightWhispersInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.CELL_KNIGHT_WHISPERS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: DEFAULT_CIRCLE_SHAPE,
 
@@ -637,7 +633,6 @@ export const seenOddCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.SEEN_ODD_COUNT,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -659,7 +654,6 @@ export const yinYangMinesweeperInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_MINESWEEPER,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -681,7 +675,6 @@ export const yinYangSeenUnshadedCellsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_SEEN_UNSHADED_CELLS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -703,7 +696,6 @@ export const yinYangSeenShadedCellsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_SEEN_SHADED_CELLS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -725,7 +717,6 @@ export const yinYangSeenSameShadeCellsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_SEEN_SAME_SHADE_CELLS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: DEFAULT_SQUARE_SHAPE,
 
@@ -741,7 +732,6 @@ export const yinYangAdjacentSameShadeCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_ADJACENT_SAME_SHADE_COUNT,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
@@ -764,7 +754,6 @@ export const yinYangShadedNeighboursCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_SHADED_NEIGHBOURS_COUNT,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.POLYGON,
@@ -788,7 +777,6 @@ export const twoContiguousRegionsRowColumnOppositeSetCountInfo: SquareCellElemen
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.TWO_CONTIGUOUS_REGIONS_ROW_COLUMN_OPPOSITE_SET_COUNT,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -810,7 +798,6 @@ export const seenRegionBordersCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.SEEN_REGION_BORDERS_COUNT,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -832,7 +819,14 @@ export const nurimisakiUnshadedEndpointInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.NURIMISAKI_UNSHADED_ENDPOINTS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN,
+			description:
+				"Circles mark every instance of a cell which is unshaded and orthogonally adjacent to exactly one other unshaded cell (i.e. the circles are the only 'endpoints' of the unshaded area)."
+		}
+	],
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -854,7 +848,6 @@ export const sashiganeBendRegionCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.SASHIGANE_BEND_REGION_COUNT,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -876,7 +869,6 @@ export const sashiganeArrowPointsToBendInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
 
 	toolId: TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CELL_ARROW,
@@ -896,7 +888,6 @@ export const thermoSightlineLoopArrowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
 
 	toolId: TOOLS.THERMO_SIGHTLINE_LOOP_ARROW,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CELL_ARROW,
@@ -916,7 +907,6 @@ export const sashiganeRegionSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.SASHIGANE_REGION_SUM,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CAGE,
@@ -937,7 +927,6 @@ export const cellOnTheLoopInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.CELL_ON_THE_LOOP,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: DEFAULT_SQUARE_SHAPE,
 
@@ -952,7 +941,6 @@ export const cellNotOnTheLoopInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.CELL_NOT_ON_THE_LOOP,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: DEFAULT_CIRCLE_SHAPE,
 
@@ -967,7 +955,6 @@ export const countLoopNeighbourCellsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.COUNT_LOOP_NEIGHBOUR_CELLS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -989,7 +976,6 @@ export const twilightCaveFillominoClueInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.TWILIGHT_CAVE_FILLOMINO_CLUE,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CAGE,
@@ -1010,7 +996,6 @@ export const caveClueInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.CAVE_CLUE,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -1032,7 +1017,6 @@ export const chaosConstructionChessSumsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CAGE,
@@ -1058,7 +1042,6 @@ export const chaosConstructionArrowKnotsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -1080,7 +1063,6 @@ export const chaosConstructionSeenSameRegionCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: DEFAULT_CIRCLE_SHAPE,
 
@@ -1095,7 +1077,6 @@ export const directedPathStartInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.DIRECTED_PATH_START,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.POLYGON,
@@ -1117,7 +1098,6 @@ export const directedPathEndInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.DIRECTED_PATH_END,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.POLYGON,
@@ -1139,7 +1119,6 @@ export const teleportInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.TELEPORT,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -1160,7 +1139,6 @@ export const nurikabeIslandProductOfSumAndSizeInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CAGE,
@@ -1180,7 +1158,6 @@ export const nurikabeSeenWaterwayCellsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.NURIKABE_SEEN_WATERWAY_CELLS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		...DEFAULT_SQUARE_SHAPE,
@@ -1198,7 +1175,6 @@ export const nurikabeIslandSizeCellInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.NURIKABE_ISLAND_SIZE_CELL,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: DEFAULT_CIRCLE_SHAPE,
 
@@ -1213,7 +1189,6 @@ export const connectFourYellowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.CONNECT_FOUR_YELLOW,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -1234,7 +1209,6 @@ export const connectFourRedInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.CONENCT_FOUR_RED,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -1255,7 +1229,6 @@ export const shikakuRegionSizeInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.SHIKAKU_REGION_SIZE,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: DEFAULT_CIRCLE_SHAPE,
 
@@ -1276,7 +1249,6 @@ export const shikakuRegionSumInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.SHIKAKU_REGION_SUM,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	shape: {
 		type: SHAPE_TYPES.CAGE,
@@ -1297,7 +1269,6 @@ export const fogLighsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.FOG_LIGHTS,
-	order: RENDER_ORDER.CELL_SHAPE_TOOL,
 
 	meta: {
 		description:

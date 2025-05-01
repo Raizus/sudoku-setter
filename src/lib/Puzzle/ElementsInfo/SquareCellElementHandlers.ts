@@ -70,19 +70,7 @@ import {
 	yinYangWhiteKropkiInfo
 } from './EdgeToolsElementsInfo';
 import {
-	allDifferencesGivenInfo,
-	allIndexingColumnGivenInfo,
-	allIndexingRowGivenInfo,
-	allNurimisakiUnshadedEndpointsGivenInfo,
 	allOddDigitsAreOrthogonallyConnectedInfo,
-	allRadarsGivenInfo,
-	allRatiosGivenInfo,
-	allVGivenInfo,
-	allXGivenInfo,
-	allXVGivenInfo,
-	allXYDifferencesGivenInfo,
-	allYinYangCountShadedCellsGivenInfo,
-	allYinYangKropkiGivenInfo,
 	antiEntropyInfo,
 	antiGiraffeInfo,
 	antikingInfo,
@@ -383,19 +371,6 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_POSITIVE_DIAGONAL]:
 		oddEvenParityMirrorAlongPositiveDiagonalInfo,
 
-	[TOOLS.ALL_RATIOS_GIVEN]: allRatiosGivenInfo,
-	[TOOLS.ALL_DIFFERENCES_GIVEN]: allDifferencesGivenInfo,
-	[TOOLS.ALL_X_GIVEN]: allXGivenInfo,
-	[TOOLS.ALL_V_GIVEN]: allVGivenInfo,
-	[TOOLS.ALL_XV_GIVEN]: allXVGivenInfo,
-	[TOOLS.ALL_RADARS_GIVEN]: allRadarsGivenInfo,
-	[TOOLS.ALL_XY_DIFFERENCES_GIVEN]: allXYDifferencesGivenInfo,
-	[TOOLS.ALL_INDEXING_COLUMN_GIVEN]: allIndexingColumnGivenInfo,
-	[TOOLS.ALL_INDEXING_ROW_GIVEN]: allIndexingRowGivenInfo,
-	[TOOLS.ALL_YIN_YANG_KROPKI_GIVEN]: allYinYangKropkiGivenInfo,
-	[TOOLS.ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN]: allYinYangCountShadedCellsGivenInfo,
-
-	[TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN]: allNurimisakiUnshadedEndpointsGivenInfo,
 	[TOOLS.YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE]:
 		yinYangRegionSumLinesMustCrossColorsAtLeastOnceInfo,
 	[TOOLS.CAVE_CELLS_ARE_ODD]: caveCellsAreOddInfo,

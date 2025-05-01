@@ -3,7 +3,6 @@ import { TOOLS, TOOL_CATEGORIES } from '../Tools';
 
 export const chaosConstructionInfo: AbstractElementInfo = {
 	toolId: TOOLS.CHAOS_CONSTRUCTION,
-	order: 0,
 
 	meta: {
 		description:
@@ -15,7 +14,6 @@ export const chaosConstructionInfo: AbstractElementInfo = {
 
 export const numberedChaosConstructionInfo: AbstractElementInfo = {
 	toolId: TOOLS.NUMBERED_CHAOS_CONSTRUCTION,
-	order: 0,
 
 	meta: {
 		description:
@@ -27,7 +25,6 @@ export const numberedChaosConstructionInfo: AbstractElementInfo = {
 
 export const chaosConstructionSuguruInfo: AbstractElementInfo = {
 	toolId: TOOLS.CHAOS_CONSTRUCTION_SUGURU,
-	order: 0,
 
 	meta: {
 		description:
@@ -39,7 +36,6 @@ export const chaosConstructionSuguruInfo: AbstractElementInfo = {
 
 export const yinYangInfo: AbstractElementInfo = {
 	toolId: TOOLS.YIN_YANG,
-	order: 0,
 
 	meta: {
 		description:
@@ -51,7 +47,6 @@ export const yinYangInfo: AbstractElementInfo = {
 
 export const yinYangNeighbourGreaterThanOneWithinRegionShadedInfo: AbstractElementInfo = {
 	toolId: TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED,
-	order: 0,
 
 	meta: {
 		description:
@@ -63,7 +58,6 @@ export const yinYangNeighbourGreaterThanOneWithinRegionShadedInfo: AbstractEleme
 
 export const yinYangShadedCellsAreGermanWhispersInfo: AbstractElementInfo = {
 	toolId: TOOLS.YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS,
-	order: 0,
 
 	meta: {
 		description:
@@ -75,7 +69,6 @@ export const yinYangShadedCellsAreGermanWhispersInfo: AbstractElementInfo = {
 
 export const nurimisakiInfo: AbstractElementInfo = {
 	toolId: TOOLS.NURIMISAKI,
-	order: 0,
 
 	meta: {
 		description:
@@ -87,7 +80,6 @@ export const nurimisakiInfo: AbstractElementInfo = {
 
 export const nurikabeInfo: AbstractElementInfo = {
 	toolId: TOOLS.NURIKABE,
-	order: 0,
 
 	meta: {
 		description:
@@ -99,11 +91,9 @@ export const nurikabeInfo: AbstractElementInfo = {
 
 export const nurikabeNoRepeatsInIslandsInfo: AbstractElementInfo = {
 	toolId: TOOLS.NURIKABE_NO_REPEATS_IN_ISLANDS,
-	order: 0,
 
 	meta: {
-		description:
-			'Digits may not repeat within a nurikabe island.',
+		description: 'Digits may not repeat within a nurikabe island.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
@@ -111,7 +101,6 @@ export const nurikabeNoRepeatsInIslandsInfo: AbstractElementInfo = {
 
 export const twoContiguousRegionsInfo: AbstractElementInfo = {
 	toolId: TOOLS.TWO_CONTIGUOUS_REGIONS,
-	order: 0,
 
 	meta: {
 		description: 'Divide the grid into two sets of contiguous cells.',
@@ -122,7 +111,6 @@ export const twoContiguousRegionsInfo: AbstractElementInfo = {
 
 export const sashiganeRegionsInfo: AbstractElementInfo = {
 	toolId: TOOLS.SASHIGANE,
-	order: 0,
 
 	meta: {
 		description:
@@ -134,7 +122,6 @@ export const sashiganeRegionsInfo: AbstractElementInfo = {
 
 export const norinoriInfo: AbstractElementInfo = {
 	toolId: TOOLS.NORINORI,
-	order: 0,
 
 	meta: {
 		description:
@@ -146,7 +133,6 @@ export const norinoriInfo: AbstractElementInfo = {
 
 export const shikakuInfo: AbstractElementInfo = {
 	toolId: TOOLS.SHIKAKU,
-	order: 0,
 
 	meta: {
 		description:
@@ -158,7 +144,6 @@ export const shikakuInfo: AbstractElementInfo = {
 
 export const shikakuNoRepeatsInRegionInfo: AbstractElementInfo = {
 	toolId: TOOLS.SHIKAKU_NO_REPEATS_IN_REGION,
-	order: 0,
 
 	meta: {
 		description: 'Digits cannot repeat within a shikaku region.',
@@ -169,7 +154,6 @@ export const shikakuNoRepeatsInRegionInfo: AbstractElementInfo = {
 
 export const norinoriStarBattleInfo: AbstractElementInfo = {
 	toolId: TOOLS.NORINORI_STAR_BATTLE,
-	order: 0,
 
 	meta: {
 		description:
@@ -181,7 +165,6 @@ export const norinoriStarBattleInfo: AbstractElementInfo = {
 
 export const goldilocksZoneInfo: AbstractElementInfo = {
 	toolId: TOOLS.GOLDILOCKS_ZONE,
-	order: 0,
 
 	meta: {
 		description:
@@ -193,7 +176,6 @@ export const goldilocksZoneInfo: AbstractElementInfo = {
 
 export const cellCenterLoopNoTouchingInfo: AbstractElementInfo = {
 	toolId: TOOLS.CELL_CENTER_LOOP_NO_TOUCHING,
-	order: 0,
 
 	meta: {
 		description:
@@ -205,7 +187,6 @@ export const cellCenterLoopNoTouchingInfo: AbstractElementInfo = {
 
 export const cellCenterCanTouchDiagonallyInfo: AbstractElementInfo = {
 	toolId: TOOLS.CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY,
-	order: 0,
 
 	meta: {
 		description:
@@ -217,7 +198,6 @@ export const cellCenterCanTouchDiagonallyInfo: AbstractElementInfo = {
 
 export const adjacentCellsAlongLoopAreMultiplesInfo: AbstractElementInfo = {
 	toolId: TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES,
-	order: 0,
 
 	meta: {
 		description:
@@ -229,7 +209,6 @@ export const adjacentCellsAlongLoopAreMultiplesInfo: AbstractElementInfo = {
 
 export const adjacentCellsAlongLoopAreGermanWhispersInfo: AbstractElementInfo = {
 	toolId: TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS,
-	order: 0,
 
 	meta: {
 		description: 'Adjacent cells along a loop differ by 5 or more.',
@@ -240,7 +219,6 @@ export const adjacentCellsAlongLoopAreGermanWhispersInfo: AbstractElementInfo = 
 
 export const notLoopSizedRegionsInfo: AbstractElementInfo = {
 	toolId: TOOLS.NOT_LOOP_SIZED_REGIONS,
-	order: 0,
 
 	meta: {
 		description:
@@ -252,7 +230,6 @@ export const notLoopSizedRegionsInfo: AbstractElementInfo = {
 
 export const modularLoopInfo: AbstractElementInfo = {
 	toolId: TOOLS.MODULAR_LOOP,
-	order: 0,
 
 	meta: {
 		description:
@@ -264,102 +241,117 @@ export const modularLoopInfo: AbstractElementInfo = {
 
 export const mazeDirectedPathInfo: AbstractElementInfo = {
 	toolId: TOOLS.MAZE_DIRECTED_PATH,
-	order: 0,
 
 	meta: {
 		description:
 			"Draw a directect path in the grid. The path will be a snaking line that passes through the centres of cells, without visiting any cell more than once, crossing itself or passing through any thick maze walls. As well as moving orthogonally, the path may move diagonally if there's a 2x2 space in which to do so, but may never pass diagonally through the rounded end / corner of a wall.",
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS]
+		categories: [
+			TOOL_CATEGORIES.GLOBAL_CONSTRAINT,
+			TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS
+		]
 	}
 };
 
 export const directedPathAdjacentCellsSumIsPrimeInfo: AbstractElementInfo = {
 	toolId: TOOLS.DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME,
-	order: 0,
 
 	meta: {
 		description: 'Any two adjacent cells along the correct path must sum to a prime number.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS]
+		categories: [
+			TOOL_CATEGORIES.GLOBAL_CONSTRAINT,
+			TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS
+		]
 	}
 };
 
 export const directedPathAdjacentCellsDutchWhispersInfo: AbstractElementInfo = {
 	toolId: TOOLS.DIRECTED_PATH_ADJACENT_CELLS_DUTCH_WHISPERS,
-	order: 0,
 
 	meta: {
 		description:
 			'The correct path will be a valid Dutch Whisper line - adjacent digits along the path must have a difference of at least 4.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS]
+		categories: [
+			TOOL_CATEGORIES.GLOBAL_CONSTRAINT,
+			TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS
+		]
 	}
 };
 
 export const directedPathIsParityLineInfo: AbstractElementInfo = {
 	toolId: TOOLS.DIRECTED_PATH_IS_PARITY_LINE,
-	order: 0,
 
 	meta: {
 		description:
 			'the correct path will be a valid alternating parity line - ie: any pair of adjacent cells along the path must contain one even digit and one odd digit.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS]
+		categories: [
+			TOOL_CATEGORIES.GLOBAL_CONSTRAINT,
+			TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS
+		]
 	}
 };
 
 export const directedPathIsRegionSumLineInfo: AbstractElementInfo = {
 	toolId: TOOLS.DIRECTED_PATH_IS_REGION_SUM_LINE,
-	order: 0,
 
 	meta: {
 		description:
 			'The correct path will be a valid Region Sum line - box borders (dotted lines) will divide the path into segments which each have the same sum.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS]
+		categories: [
+			TOOL_CATEGORIES.GLOBAL_CONSTRAINT,
+			TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS
+		]
 	}
 };
 
 export const directedPathSumOfCellsPerRegionIsPrimeInfo: AbstractElementInfo = {
 	toolId: TOOLS.DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME,
-	order: 0,
 
 	meta: {
 		description:
 			'All digits within a marked sudoku box that lie anywhere on the correct path must sum to a prime number.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS]
+		categories: [
+			TOOL_CATEGORIES.GLOBAL_CONSTRAINT,
+			TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS
+		]
 	}
 };
 
 export const directedPathTeleportSegmentsSumInfo: AbstractElementInfo = {
 	toolId: TOOLS.DIRECTED_PATH_TELEPORT_SEGMENTS_SUM,
-	order: 0,
 
 	meta: {
 		description:
 			'The sum of the digits on the path before teleporting must equal the sum of the digits on the path after teleporting.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS]
+		categories: [
+			TOOL_CATEGORIES.GLOBAL_CONSTRAINT,
+			TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS
+		]
 	}
 };
 
 export const directedPathTeleportRenbanSegmentsInfo: AbstractElementInfo = {
 	toolId: TOOLS.DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS,
-	order: 0,
 
 	meta: {
 		description:
 			'The directed path is formed of one or more segments. Any uses of teleports will divide the path up into physically separate segments, ie; if a teleport is used, the current path segment ends at the entry teleport, and a new separate path segment begins at the matching exit teleport. Any path segment must function as a renban; it must consist entirely of a set of non-repeating, consecutive digits, which can be arranged in any order along the path segment.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS]
+		categories: [
+			TOOL_CATEGORIES.GLOBAL_CONSTRAINT,
+			TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS
+		]
 	}
 };
 
 export const caveInfo: AbstractElementInfo = {
 	toolId: TOOLS.CAVE,
-	order: 0,
 
 	meta: {
 		description:
@@ -371,7 +363,6 @@ export const caveInfo: AbstractElementInfo = {
 
 export const twilightCaveFillominoRegionShadingInfo: AbstractElementInfo = {
 	toolId: TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING,
-	order: 0,
 
 	meta: {
 		description:
@@ -383,7 +374,6 @@ export const twilightCaveFillominoRegionShadingInfo: AbstractElementInfo = {
 
 export const cave2x2NotFullyShadedOrUnshadedInfo: AbstractElementInfo = {
 	toolId: TOOLS.CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED,
-	order: 0,
 
 	meta: {
 		description:
@@ -395,7 +385,6 @@ export const cave2x2NotFullyShadedOrUnshadedInfo: AbstractElementInfo = {
 
 export const oneDigitDoesNotAppearInTheCaveInfo: AbstractElementInfo = {
 	toolId: TOOLS.ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE,
-	order: 0,
 
 	meta: {
 		description: 'There is exactly one digit that does not appear anywhere in the cave.',
@@ -406,7 +395,6 @@ export const oneDigitDoesNotAppearInTheCaveInfo: AbstractElementInfo = {
 
 export const caveWallsAreEvenInfo: AbstractElementInfo = {
 	toolId: TOOLS.CAVE_WALLS_ARE_EVEN,
-	order: 0,
 
 	meta: {
 		description: 'Cave walls must contain even digits.',
@@ -417,7 +405,6 @@ export const caveWallsAreEvenInfo: AbstractElementInfo = {
 
 export const caveCellsAreOddInfo: AbstractElementInfo = {
 	toolId: TOOLS.CAVE_CELLS_ARE_ODD,
-	order: 0,
 
 	meta: {
 		description: 'Cave cells must contain odd digits.',
@@ -428,7 +415,6 @@ export const caveCellsAreOddInfo: AbstractElementInfo = {
 
 export const caveLITSInfo: AbstractElementInfo = {
 	toolId: TOOLS.CAVE_LITS,
-	order: 0,
 
 	meta: {
 		description:
@@ -440,7 +426,6 @@ export const caveLITSInfo: AbstractElementInfo = {
 
 export const renbanCavesInfo: AbstractElementInfo = {
 	toolId: TOOLS.RENBAN_CAVES,
-	order: 0,
 
 	meta: {
 		description:
@@ -452,7 +437,6 @@ export const renbanCavesInfo: AbstractElementInfo = {
 
 export const yinYangFillominoParityInfo: AbstractElementInfo = {
 	toolId: TOOLS.YIN_YANG_FILLOMINO_PARITY,
-	order: 0,
 
 	meta: {
 		description: 'All odd polyominoes are shaded, while all even polyominoes are unshaded.',
@@ -463,7 +447,6 @@ export const yinYangFillominoParityInfo: AbstractElementInfo = {
 
 export const galaxiesInfo: AbstractElementInfo = {
 	toolId: TOOLS.GALAXIES,
-	order: 0,
 
 	meta: {
 		description:
@@ -475,7 +458,6 @@ export const galaxiesInfo: AbstractElementInfo = {
 
 export const everyCellBelongsToAGalaxyInfo: AbstractElementInfo = {
 	toolId: TOOLS.EVERY_CELL_BELONGS_TO_A_GALAXY,
-	order: 0,
 
 	meta: {
 		description: 'Every cell in the grid belongs to a galaxy.',
@@ -486,7 +468,6 @@ export const everyCellBelongsToAGalaxyInfo: AbstractElementInfo = {
 
 export const galaxy2x2DoesNotBelongToOneGalaxyInfo: AbstractElementInfo = {
 	toolId: TOOLS.GALAXY_2X2_DOES_NOT_BELONG_TO_ONE_GALAXY,
-	order: 0,
 
 	meta: {
 		description: 'No 2x2 area may belong entirely to one galaxy.',
@@ -497,7 +478,6 @@ export const galaxy2x2DoesNotBelongToOneGalaxyInfo: AbstractElementInfo = {
 
 export const twoSymmetricGalaxiesInfo: AbstractElementInfo = {
 	toolId: TOOLS.TWO_SYMMETRIC_GALAXIES,
-	order: 0,
 
 	meta: {
 		description:
@@ -509,7 +489,6 @@ export const twoSymmetricGalaxiesInfo: AbstractElementInfo = {
 
 export const oneGalaxyIsAGermanWhispersInfo: AbstractElementInfo = {
 	toolId: TOOLS.ONE_GALAXY_IS_A_GERMAN_WHISPERS,
-	order: 0,
 
 	meta: {
 		description:
@@ -521,7 +500,6 @@ export const oneGalaxyIsAGermanWhispersInfo: AbstractElementInfo = {
 
 export const pentominoTillingInfo: AbstractElementInfo = {
 	toolId: TOOLS.PENTOMINO_TILLING,
-	order: 0,
 
 	meta: {
 		description:
@@ -533,7 +511,6 @@ export const pentominoTillingInfo: AbstractElementInfo = {
 
 export const tillingNoEmptyCellsInfo: AbstractElementInfo = {
 	toolId: TOOLS.TILLING_NO_EMPTY_CELLS,
-	order: 0,
 
 	meta: {
 		description: 'Every cell in the grid belongs to a tile.',
@@ -544,7 +521,6 @@ export const tillingNoEmptyCellsInfo: AbstractElementInfo = {
 
 export const litsBlackAndWhiteStarBattleInfo: AbstractElementInfo = {
 	toolId: TOOLS.LITS_BLACK_WHITE_STAR_BATTLE,
-	order: 0,
 
 	meta: {
 		description:
@@ -556,7 +532,6 @@ export const litsBlackAndWhiteStarBattleInfo: AbstractElementInfo = {
 
 export const connectFourInfo: AbstractElementInfo = {
 	toolId: TOOLS.CONNECT_FOUR,
-	order: 0,
 
 	meta: {
 		description:
@@ -568,7 +543,6 @@ export const connectFourInfo: AbstractElementInfo = {
 
 export const connectFourDrawInfo: AbstractElementInfo = {
 	toolId: TOOLS.CONNECT_FOUR_DRAW,
-	order: 0,
 
 	meta: {
 		description:
@@ -580,7 +554,6 @@ export const connectFourDrawInfo: AbstractElementInfo = {
 
 export const connectFourAdjacentRedsDifferentParityInfo: AbstractElementInfo = {
 	toolId: TOOLS.CONNECT_FOUR_ADJACENT_REDS_DIFFERENT_PARITY,
-	order: 0,
 
 	meta: {
 		description:
@@ -592,7 +565,6 @@ export const connectFourAdjacentRedsDifferentParityInfo: AbstractElementInfo = {
 
 export const connectFourAdjacentYellowsMinimumDifferenceAtLeast3Info: AbstractElementInfo = {
 	toolId: TOOLS.CONNECT_FOUR_ADJACENT_YELLOWS_MINIMUM_DIFFERENCE_AT_LEAST_3,
-	order: 0,
 
 	meta: {
 		description: 'Two orthogonally adjacent yellow discs must have a difference of at least 3.',

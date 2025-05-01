@@ -1,12 +1,21 @@
-import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
+import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
 import type { ValuedGlobalToolI } from '../Puzzle/Constraints/ValuedGlobalConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
-import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { constraintsBuilder, PuzzleModel, VAR_2D_NAMES } from './solver_utils';
+import { TOOLS } from '../Puzzle/Tools';
+import {
+	constraintsBuilder,
+	PuzzleModel,
+	simpleElementFunction,
+	VAR_2D_NAMES,
+	type ElementF
+} from './solver_utils';
 
-type ConstraintF = (grid: Grid, constraint: ValuedGlobalToolI) => string;
-
-function forbiddenAdjacentSumConstraint(grid: Grid, constraint: ValuedGlobalToolI) {
+function forbiddenAdjacentSumConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: ValuedGlobalToolI
+) {
 	const value = constraint.value;
 	if (!value) return '';
 
@@ -15,7 +24,17 @@ function forbiddenAdjacentSumConstraint(grid: Grid, constraint: ValuedGlobalTool
 	return constraint_str;
 }
 
-function minimumDiagonallyAdjacentDifferenceConstraint(grid: Grid, constraint: ValuedGlobalToolI) {
+function forbiddenAdjacentSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, grid, element, forbiddenAdjacentSumConstraint);
+	return out_str;
+}
+
+function minimumDiagonallyAdjacentDifferenceConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: ValuedGlobalToolI
+) {
 	const value = constraint.value;
 	if (!value) return '';
 
@@ -24,7 +43,26 @@ function minimumDiagonallyAdjacentDifferenceConstraint(grid: Grid, constraint: V
 	return constraint_str;
 }
 
-function forbiddenKnightSumConstraint(grid: Grid, constraint: ValuedGlobalToolI) {
+function minimumDiagonallyAdjacentDifferenceElement(
+	model: PuzzleModel,
+	grid: Grid,
+	element: ConstraintsElement
+) {
+	const out_str = simpleElementFunction(
+		model,
+		grid,
+		element,
+		minimumDiagonallyAdjacentDifferenceConstraint
+	);
+	return out_str;
+}
+
+function forbiddenKnightSumConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: ValuedGlobalToolI
+) {
 	const value = constraint.value;
 	if (!value) return '';
 
@@ -33,7 +71,17 @@ function forbiddenKnightSumConstraint(grid: Grid, constraint: ValuedGlobalToolI)
 	return constraint_str;
 }
 
-function litsMaxTetrominoSumConstraint(grid: Grid, constraint: ValuedGlobalToolI) {
+function forbiddenKnightSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, grid, element, forbiddenKnightSumConstraint);
+	return out_str;
+}
+
+function litsMaxTetrominoSumConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: ValuedGlobalToolI
+) {
 	const value = constraint.value;
 	if (!value) return '';
 
@@ -46,19 +94,23 @@ function litsMaxTetrominoSumConstraint(grid: Grid, constraint: ValuedGlobalToolI
 	return constraint_str;
 }
 
-const tool_map = new Map<string, ConstraintF>([
-	[TOOLS.FORBIDDEN_ORTHOGONALLY_ADJACENT_SUM, forbiddenAdjacentSumConstraint],
-	[TOOLS.MINIMUM_DIAGONALLY_ADJACENT_DIFFERENCE, minimumDiagonallyAdjacentDifferenceConstraint],
-	[TOOLS.FORBIDDEN_KNIGHT_SUM, forbiddenKnightSumConstraint],
-	[TOOLS.LITS_MAX_TETROMINO_SUM, litsMaxTetrominoSumConstraint]
+function litsMaxTetrominoSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, grid, element, litsMaxTetrominoSumConstraint);
+	return out_str;
+}
+
+const tool_map = new Map<string, ElementF>([
+	[TOOLS.FORBIDDEN_ORTHOGONALLY_ADJACENT_SUM, forbiddenAdjacentSumElement],
+	[TOOLS.MINIMUM_DIAGONALLY_ADJACENT_DIFFERENCE, minimumDiagonallyAdjacentDifferenceElement],
+	[TOOLS.FORBIDDEN_KNIGHT_SUM, forbiddenKnightSumElement],
+	[TOOLS.LITS_MAX_TETROMINO_SUM, litsMaxTetrominoSumElement]
 ]);
 
 export function valuedGlobalConstraints(
 	model: PuzzleModel,
 	grid: Grid,
-	toolId: TOOLID,
-	constraints: Record<string, ConstraintType>
+	element: ConstraintsElement
 ) {
-	const out_str = constraintsBuilder(grid, toolId, constraints, tool_map);
+	const out_str = constraintsBuilder(model, grid, element, tool_map);
 	return out_str;
 }

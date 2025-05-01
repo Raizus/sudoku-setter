@@ -6,7 +6,6 @@ import {
 import { SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
 import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
-import { RENDER_ORDER } from '../RenderOrder';
 import { cornerUsage, quadrupleUsage } from '../ToolUsage';
 import { HANDLER_TOOL_TYPE, type CornerToolOptions } from '$input/ToolInputHandlers/types';
 
@@ -68,7 +67,6 @@ export const quadrupleInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.QUADRUPLE,
-	order: RENDER_ORDER.CORNER_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -90,7 +88,6 @@ export const cornerSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CORNER_OPTIONS,
 
 	toolId: TOOLS.CORNER_SUM,
-	order: RENDER_ORDER.CORNER_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -116,7 +113,6 @@ export const cornerSumOfThreeEqualsTheOtherInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.CORNER_SUM_OF_THREE_EQUALS_THE_OTHER,
-	order: RENDER_ORDER.CORNER_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -139,7 +135,6 @@ export const cornerEvenCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CORNER_OPTIONS,
 
 	toolId: TOOLS.CORNER_EVEN_COUNT,
-	order: RENDER_ORDER.CORNER_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -162,7 +157,6 @@ export const cornerCellsBelongToExacltyThreeRegionsInfo: SquareCellElementInfo =
 	inputOptions: DEFAULT_CORNER_OPTIONS,
 
 	toolId: TOOLS.CORNER_CELLS_BELONG_TO_EXACTLY_THREE_REGIONS,
-	order: RENDER_ORDER.CORNER_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -188,7 +182,6 @@ export const productSquareInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.PRODUCT_SQUARE,
-	order: RENDER_ORDER.CORNER_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -215,7 +208,6 @@ export const equalDiagonalDifferencesInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.EQUAL_DIAGONAL_DIFFERENCES,
-	order: RENDER_ORDER.CORNER_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,

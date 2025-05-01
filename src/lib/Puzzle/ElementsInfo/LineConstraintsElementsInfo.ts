@@ -1,7 +1,6 @@
 import { SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
 import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '$lib/Puzzle/ElementInfo';
-import { RENDER_ORDER } from '$lib/Puzzle/RenderOrder';
 import { lineUsage } from '../ToolUsage';
 import { HANDLER_TOOL_TYPE, type LineToolInputOptions } from '$input/ToolInputHandlers/types';
 
@@ -41,7 +40,6 @@ export const thermometerInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.THERMOMETER,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
@@ -71,7 +69,6 @@ export const customThermometerInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.CUSTOM_THERMOMETER,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
@@ -98,7 +95,6 @@ export const fuzzyThermometerInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.FUZZY_THERMOMETER,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -124,7 +120,6 @@ export const slowThermometerInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.SLOW_THERMOMETER,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
@@ -150,7 +145,6 @@ export const rowCyclethermometerInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.ROW_CYCLE_THERMOMETER,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
@@ -177,7 +171,6 @@ export const palindromeInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.PALINDROME,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -197,7 +190,6 @@ export const renbanLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.RENBAN_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -224,7 +216,6 @@ export const doubleRenbanLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.DOUBLE_RENBAN_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -251,7 +242,6 @@ export const renrenbanbanLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.RENRENBANBAN_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -282,7 +272,6 @@ export const nConsecutiveRenbanLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.N_CONSECUTIVE_RENBAN_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -308,7 +297,6 @@ export const nabnerLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.NABNER_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -339,7 +327,6 @@ export const whispersLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.WHISPERS_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -369,7 +356,6 @@ export const dutchWhispersInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.DUTCH_WHISPERS,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -399,7 +385,6 @@ export const maximumAdjacentDifferenceLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.MAXIMUM_ADJACENT_DIFFERENCE_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -430,7 +415,6 @@ export const renbanOrWhispersLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.RENBAN_OR_WHISPERS_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -461,7 +445,6 @@ export const renbanOrNabnerLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.RENBAN_OR_NABNER_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -488,7 +471,6 @@ export const outOfOrderConsecutiveLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.OUT_OF_ORDER_CONSECUTIVE_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -515,7 +497,6 @@ export const indexLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.INDEX_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.THERMO_WITH_POLYGON,
@@ -545,7 +526,6 @@ export const uniqueValuesLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.UNIQUE_VALUES_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -565,7 +545,6 @@ export const regionSumLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.REGION_SUM_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -596,7 +575,6 @@ export const sumLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.SUM_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -622,7 +600,6 @@ export const arithmeticSequenceLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.ARITHMETIC_SEQUENCE_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -649,7 +626,6 @@ export const sameParityLineLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.SAME_PARITY_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -679,7 +655,6 @@ export const modularLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.MODULAR_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -710,7 +685,6 @@ export const unimodularLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.UNIMODULAR_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -741,7 +715,6 @@ export const modularOrUnimodularLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.MODULAR_OR_UNIMODULAR_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -768,7 +741,6 @@ export const oddEvenOscilatorLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.ODD_EVEN_OSCILLATOR_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -798,7 +770,6 @@ export const highLowOscilatorLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.HIGH_LOW_OSCILLATOR_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -825,7 +796,6 @@ export const entropicLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.ENTROPIC_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -852,7 +822,6 @@ export const entropicOrModularLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.ENTROPIC_OR_MODULAR_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -883,7 +852,6 @@ export const indexingColumnIsXLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.INDEXING_COLUMN_IS_X_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -914,7 +882,6 @@ export const indexingRowIsXLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.INDEXING_ROW_IS_X_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -941,7 +908,6 @@ export const repeatedDigitsLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.REPEATED_DIGITS_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -968,7 +934,6 @@ export const superfuzzyArrowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.SUPERFUZZY_ARROW,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -995,7 +960,6 @@ export const ambiguousArrowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.AMBIGUOUS_ARROW,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1022,7 +986,6 @@ export const headlessArrowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.HEADLESS_ARROW,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1048,7 +1011,6 @@ export const xvLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.XV_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1074,7 +1036,6 @@ export const rowSumLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.ROW_SUM_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1104,7 +1065,6 @@ export const atLeastXLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.AT_LEAST_X_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1134,7 +1094,6 @@ export const nConsecutiveFuzzySumLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.N_CONSECUTIVE_FUZZY_SUM_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1161,7 +1120,6 @@ export const adjacentCellSumIsPrimeLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.ADJACENT_CELL_SUM_IS_PRIME_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1191,7 +1149,6 @@ export const productLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.PRODUCT_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1217,7 +1174,6 @@ export const adjacentMultiplesLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.ADJACENT_MULTIPLES_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1244,7 +1200,6 @@ export const adjacentDifferencesCountLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.ADJACENT_DIFFERENCES_COUNT_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1271,7 +1226,6 @@ export const lookandSayLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.LOOK_AND_SAY_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1298,7 +1252,6 @@ export const ZipperLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.ZIPPER_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1329,7 +1282,6 @@ export const segmentedSumLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.SEGMENTED_SUM_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1360,7 +1312,6 @@ export const segmentedSumAndRenbanLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.SEGMENTED_SUM_AND_RENBAN_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1391,7 +1342,6 @@ export const adjacentCellsAreMultiplesOfDifferenceLineInfo: SquareCellElementInf
 	},
 
 	toolId: TOOLS.ADJACENT_CELLS_ARE_MULTIPLES_OF_DIFFERENCE_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1418,7 +1368,6 @@ export const thermoOrAverageArrowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.THERMO_OR_AVERAGE_ARROW,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
@@ -1447,7 +1396,6 @@ export const indexerCellsRegionSubsetLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.INDEXER_CELLS_REGION_SUBSET_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1468,7 +1416,6 @@ export const peapodsLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.PEAPODS,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
@@ -1498,7 +1445,6 @@ export const yinYangShadedWhispersLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.YIN_YANG_SHADED_WHISPERS_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1525,7 +1471,6 @@ export const yinYangUnshadedEntropicLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.YIN_YANG_UNSHADED_ENTROPIC_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1556,7 +1501,6 @@ export const yinYangUnshadedModularLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.YIN_YANG_UNSHADED_MODULAR_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1583,7 +1527,6 @@ export const yinYangRegionSumLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.YIN_YANG_REGION_SUM_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1610,7 +1553,6 @@ export const yinYangIndexingLineColoringInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.YIN_YANG_INDEXING_LINE_COLORING,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.THERMO_WITH_POLYGON,
@@ -1642,7 +1584,6 @@ export const goldilocksZoneRegionSumLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.GOLDILOCKS_ZONE_REGION_SUM,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1671,7 +1612,6 @@ export const betweenLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.BETWEEN_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
@@ -1700,7 +1640,6 @@ export const lockoutLineInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.LOCKOUT_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE_WITH_POLYGON_ENDS,
@@ -1726,7 +1665,6 @@ export const tightropeLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.TIGHTROPE_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
@@ -1751,7 +1689,6 @@ export const parityCountLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.PARITY_COUNT_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
@@ -1776,7 +1713,6 @@ export const doubleArrowLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.DOUBLE_ARROW_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
@@ -1801,7 +1737,6 @@ export const productOfEndsEqualsSumOfLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.PRODUCT_OF_ENDS_EQUALS_SUM_OF_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE_WITH_POLYGON_ENDS,
@@ -1827,7 +1762,6 @@ export const splitPeasLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.SPLIT_PEAS,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
@@ -1852,7 +1786,6 @@ export const doublersThermometerInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.DOUBLERS_THERMOMETER,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
@@ -1881,7 +1814,6 @@ export const doublersBetweenLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.DOUBLERS_BETWEEN_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
@@ -1906,7 +1838,6 @@ export const doublersDoubleArrowLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.DOUBLERS_DOUBLE_ARROW_LINE,
-	order: RENDER_ORDER.LINE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
