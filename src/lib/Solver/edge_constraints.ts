@@ -7,6 +7,7 @@ import {
 	cellsToGridVarsName,
 	cellsToVarsName,
 	cellToVarName,
+	constraintsBuilder,
 	PuzzleModel,
 	VAR_2D_NAMES,
 	type ElementF
@@ -204,11 +205,7 @@ function yinYangEdgeConstraint(grid: Grid, constraint: EdgeToolI, predicate: str
 	return constraint_str;
 }
 
-function yinYangEdgeElement(
-	grid: Grid,
-	element: ConstraintsElement,
-	predicate: string
-) {
+function yinYangEdgeElement(grid: Grid, element: ConstraintsElement, predicate: string) {
 	const constraints = element.constraints;
 	let out_str = '';
 	for (const constraint of Object.values(constraints)) {
@@ -294,13 +291,6 @@ const tool_map = new Map<string, ElementF>([
 ]);
 
 export function edgeElements(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	let out_str = '';
-	const tool_id = element.tool_id;
-	const elementF = tool_map.get(tool_id);
-	if (elementF) {
-		const element_str = elementF(model, grid, element);
-		out_str += element_str;
-	}
-
+	const out_str = constraintsBuilder(model, grid, element, tool_map);
 	return out_str;
 }

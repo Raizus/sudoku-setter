@@ -3,7 +3,15 @@ import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints'
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS } from '../Puzzle/Tools';
 import type { GridCoordI } from '../utils/SquareCellGridCoords';
-import { cellsToGridVarsStr, cellsToVarsName, PuzzleModel, simpleElementFunction, VAR_2D_NAMES, type ElementF } from './solver_utils';
+import {
+	cellsToGridVarsStr,
+	cellsToVarsName,
+	constraintsBuilder,
+	PuzzleModel,
+	simpleElementFunction,
+	VAR_2D_NAMES,
+	type ElementF
+} from './solver_utils';
 
 function getArrowPillVars(grid: Grid, constraint: ArrowToolI) {
 	const cells_coords = constraint.cells;
@@ -124,13 +132,6 @@ const tool_map = new Map<string, ElementF>([
 ]);
 
 export function arrowConstraints(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	let out_str = '';
-	const tool_id = element.tool_id;
-	const elementF = tool_map.get(tool_id);
-	if (elementF) {
-		const element_str = elementF(model, grid, element);
-		out_str += element_str;
-	}
-
+	const out_str = constraintsBuilder(model, grid, element, tool_map);
 	return out_str;
 }

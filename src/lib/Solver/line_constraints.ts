@@ -7,6 +7,7 @@ import {
 	cellsFromCoords,
 	cellsToGridVarsStr,
 	cellsToVarsName,
+	constraintsBuilder,
 	PuzzleModel,
 	simpleElementFunction,
 	VAR_2D_NAMES,
@@ -883,12 +884,6 @@ const tool_map = new Map<string, ElementF>([
 ]);
 
 export function lineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	let out_str = '';
-	const tool_id = element.tool_id;
-	const elementF = tool_map.get(tool_id);
-	if (elementF) {
-		const element_str = elementF(model, grid, element);
-		out_str += element_str;
-	}
+	const out_str = constraintsBuilder(model, grid, element, tool_map);
 	return out_str;
 }

@@ -2,7 +2,13 @@ import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints'
 import type { ValuedGlobalToolI } from '../Puzzle/Constraints/ValuedGlobalConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS } from '../Puzzle/Tools';
-import { PuzzleModel, simpleElementFunction, VAR_2D_NAMES, type ElementF } from './solver_utils';
+import {
+	constraintsBuilder,
+	PuzzleModel,
+	simpleElementFunction,
+	VAR_2D_NAMES,
+	type ElementF
+} from './solver_utils';
 
 function forbiddenAdjacentSumConstraint(
 	model: PuzzleModel,
@@ -105,13 +111,6 @@ export function valuedGlobalConstraints(
 	grid: Grid,
 	element: ConstraintsElement
 ) {
-	let out_str = '';
-	const tool_id = element.tool_id;
-	const elementF = tool_map.get(tool_id);
-	if (elementF) {
-		const element_str = elementF(model, grid, element);
-		out_str += element_str;
-	}
-
+	const out_str = constraintsBuilder(model, grid, element, tool_map);
 	return out_str;
 }

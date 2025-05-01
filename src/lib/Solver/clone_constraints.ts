@@ -1,10 +1,9 @@
-
 import type { CloneToolI } from '../Puzzle/Constraints/CloneConstraints';
 import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS } from '../Puzzle/Tools';
 import type { GridCoordI } from '../utils/SquareCellGridCoords';
-import { cellsToVarsName, PuzzleModel, type ElementF } from './solver_utils';
+import { cellsToVarsName, constraintsBuilder, PuzzleModel, type ElementF } from './solver_utils';
 
 function coordsToVarsStr(grid: Grid, coords: GridCoordI[]) {
 	const cells = coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell);
@@ -35,13 +34,6 @@ function cloneRegionElement(model: PuzzleModel, grid: Grid, element: Constraints
 const tool_map = new Map<string, ElementF>([[TOOLS.CLONE_REGION, cloneRegionElement]]);
 
 export function cloneConstraints(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	let out_str = '';
-	const tool_id = element.tool_id;
-	const elementF = tool_map.get(tool_id);
-	if (elementF) {
-		const element_str = elementF(model, grid, element);
-		out_str += element_str;
-	}
-
+	const out_str = constraintsBuilder(model, grid, element, tool_map);
 	return out_str;
 }

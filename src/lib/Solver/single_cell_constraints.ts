@@ -10,6 +10,7 @@ import {
 	cellsToVarsName,
 	cellToGridVarName,
 	cellToVarName,
+	constraintsBuilder,
 	getDirectionCells,
 	getDirectionsVars,
 	groupConstraintsByValue,
@@ -1535,13 +1536,6 @@ const tool_map = new Map<string, ElementF>([
 ]);
 
 export function singleCellConstraints(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	let out_str = '';
-	const tool_id = element.tool_id;
-	const elementF = tool_map.get(tool_id);
-	if (elementF) {
-		const element_str = elementF(model, grid, element);
-		out_str += element_str;
-	}
-
+	const out_str = constraintsBuilder(model, grid, element, tool_map);
 	return out_str;
 }

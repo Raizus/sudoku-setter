@@ -2,7 +2,6 @@ import type { ConstraintsElement, ConstraintType } from '../Puzzle/Constraints/L
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import type { PuzzleI } from '../Puzzle/Puzzle';
-import type { TOOLID } from '../Puzzle/Tools';
 import { DIRECTION } from '../utils/directions';
 import type { GridCoordI } from '../utils/SquareCellGridCoords';
 import { type ParseOptions, default_parse_opts, parseValue } from './value_parsing';
@@ -123,8 +122,6 @@ export function getDirectionsVars(
 	return vars_arr;
 }
 
-type ConstraintF<T extends ConstraintType> = (grid: Grid, constraint: T) => string;
-
 export type ElementF = (model: PuzzleModel, grid: Grid, element: ConstraintsElement) => string;
 
 export function simpleElementFunction<T extends ConstraintType>(
@@ -142,20 +139,20 @@ export function simpleElementFunction<T extends ConstraintType>(
 	return out_str;
 }
 
-export function constraintsBuilder<T extends ConstraintType>(
+export function constraintsBuilder(
+	model: PuzzleModel,
 	grid: Grid,
-	toolId: TOOLID,
-	constraints: Record<string, ConstraintType>,
-	constraints_func_map: Map<string, ConstraintF<T>>
+	element: ConstraintsElement,
+	tool_map: Map<string, ElementF>
 ) {
 	let out_str = '';
-	const constraintF = constraints_func_map.get(toolId);
-	if (constraintF) {
-		for (const constraint of Object.values(constraints)) {
-			const constraint_str = constraintF(grid, constraint as T);
-			out_str += constraint_str;
-		}
+	const tool_id = element.tool_id;
+	const elementF = tool_map.get(tool_id);
+	if (elementF) {
+		const element_str = elementF(model, grid, element);
+		out_str += element_str;
 	}
+
 	return out_str;
 }
 
@@ -372,9 +369,8 @@ function _pruneMinizincModel(model: string): string {
 		const testMatch = line.match(testStartRegex);
 
 		for (const defName of Object.keys(definitions)) {
-			
 			const deftype = definitions[defName].type;
-			
+
 			// Look for the function/predicate name followed by an opening parenthesis
 			// Make sure we're not inside a function/predicate declaration
 			if (deftype === 'function' || deftype === 'test' || deftype === 'predicate') {

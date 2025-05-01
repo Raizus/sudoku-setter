@@ -10,7 +10,8 @@ import {
 	VAR_2D_NAMES,
 	cellsToGridVarsStr,
 	cellToGridVarName,
-	type ElementF
+	type ElementF,
+	constraintsBuilder
 } from './solver_utils';
 
 function simpleCellArrowElement(
@@ -52,11 +53,7 @@ function sashiganeArrowPointsToBendElement(
 	grid: Grid,
 	element: ConstraintsElement
 ) {
-	const out_str = simpleCellArrowElement(
-		grid,
-		element,
-		sashiganeArrowPointsToBendConstraint
-	);
+	const out_str = simpleCellArrowElement(grid, element, sashiganeArrowPointsToBendConstraint);
 	return out_str;
 }
 
@@ -97,13 +94,6 @@ export function singleCellArrowConstraints(
 	grid: Grid,
 	element: ConstraintsElement
 ) {
-	let out_str = '';
-	const tool_id = element.tool_id;
-	const elementF = tool_map.get(tool_id);
-	if (elementF) {
-		const element_str = elementF(model, grid, element);
-		out_str += element_str;
-	}
-
+	const out_str = constraintsBuilder(model, grid, element, tool_map);
 	return out_str;
 }

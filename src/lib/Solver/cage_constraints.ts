@@ -12,7 +12,8 @@ import {
 	groupConstraintsByValue,
 	cellsFromCoords,
 	type ElementF,
-	simpleElementFunction
+	simpleElementFunction,
+	constraintsBuilder
 } from './solver_utils';
 import type { ParseOptions } from './value_parsing';
 
@@ -402,13 +403,6 @@ const tool_map = new Map<string, ElementF>([
 ]);
 
 export function cageConstraints(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	let out_str = '';
-	const tool_id = element.tool_id;
-	const elementF = tool_map.get(tool_id);
-	if (elementF) {
-		const element_str = elementF(model, grid, element);
-		out_str += element_str;
-	}
-
+	const out_str = constraintsBuilder(model, grid, element, tool_map);
 	return out_str;
 }

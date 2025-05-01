@@ -4,7 +4,7 @@ import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS } from '../Puzzle/Tools';
 import type { GridCoordI } from '../utils/SquareCellGridCoords';
-import { cellsToGridVarsStr, cellsToVarsName, PuzzleModel, simpleElementFunction, VAR_2D_NAMES, type ElementF } from './solver_utils';
+import { cellsToGridVarsStr, cellsToVarsName, constraintsBuilder, PuzzleModel, simpleElementFunction, VAR_2D_NAMES, type ElementF } from './solver_utils';
 import type { ParseOptions } from './value_parsing';
 
 function getOutsideDirectionConstraintVars(grid: Grid, constraint: OutsideDirectionToolI) {
@@ -488,13 +488,6 @@ export function outsideDirectionConstraints(
 	grid: Grid,
 	element: ConstraintsElement
 ) {
-	let out_str = '';
-	const tool_id = element.tool_id;
-	const elementF = tool_map.get(tool_id);
-	if (elementF) {
-		const element_str = elementF(model, grid, element);
-		out_str += element_str;
-	}
-
+	const out_str = constraintsBuilder(model, grid, element, tool_map);
 	return out_str;
 }

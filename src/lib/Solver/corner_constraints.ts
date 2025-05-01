@@ -2,7 +2,13 @@ import type { CornerToolI } from '../Puzzle/Constraints/CornerConstraints';
 import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS } from '../Puzzle/Tools';
-import { cellsFromCoords, cellsToVarsName, PuzzleModel, type ElementF } from './solver_utils';
+import {
+	cellsFromCoords,
+	cellsToVarsName,
+	constraintsBuilder,
+	PuzzleModel,
+	type ElementF
+} from './solver_utils';
 import { parseVarList } from './value_parsing';
 
 function getCornerVars(grid: Grid, constraint: CornerToolI) {
@@ -155,12 +161,6 @@ const tool_map = new Map<string, ElementF>([
 ]);
 
 export function cornerConstraints(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	let out_str = '';
-	const tool_id = element.tool_id;
-	const elementF = tool_map.get(tool_id);
-	if (elementF) {
-		const element_str = elementF(model, grid, element);
-		out_str += element_str;
-	}
+	const out_str = constraintsBuilder(model, grid, element, tool_map);
 	return out_str;
 }

@@ -8,6 +8,7 @@ import {
 	cellsToVarsName,
 	cellToGridVarName,
 	cellToVarName,
+	constraintsBuilder,
 	PuzzleModel,
 	VAR_2D_NAMES,
 	type ElementF
@@ -407,13 +408,6 @@ export function singleCellMultiArrowConstraints(
 	grid: Grid,
 	element: ConstraintsElement
 ) {
-	let out_str = '';
-	const tool_id = element.tool_id;
-	const elementF = tool_map.get(tool_id);
-	if (elementF) {
-		const element_str = elementF(model, grid, element);
-		out_str += element_str;
-	}
-
+	const out_str = constraintsBuilder(model, grid, element, tool_map);
 	return out_str;
 }

@@ -1,5 +1,3 @@
-import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
-import type { Grid } from '../Puzzle/Grid/Grid';
 import type { PuzzleI } from '../Puzzle/Puzzle';
 import { arrowConstraints } from './arrow_constraints';
 import { cageConstraints } from './cage_constraints';
@@ -12,12 +10,10 @@ import { outsideDirectionConstraints } from './outside_direction_constraints';
 import { singleCellArrowConstraints } from './single_cell_arrow_constraints';
 import { singleCellConstraints } from './single_cell_constraints';
 import { singleCellMultiArrowConstraints } from './single_cell_multi_arrow_constraints';
-import { addHeader, PuzzleModel } from './solver_utils';
+import { addHeader, PuzzleModel, type ElementF } from './solver_utils';
 import { valuedGlobalConstraints } from './valued_global_constraints';
 
-type ConstraintsF = (model: PuzzleModel, grid: Grid, element: ConstraintsElement) => string;
-
-const functions_list: ConstraintsF[] = [
+const functions_list: ElementF[] = [
 	centerCornerOrEdgeConstraints,
 	singleCellConstraints,
 	singleCellArrowConstraints,
