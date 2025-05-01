@@ -1,79 +1,238 @@
 {
-	"puzzleInfo": {
-		"title": "No RePEAts!",
-		"authors": ["sujoyku"],
-		"ruleset": "Sudoku rules apply.\n\n**Split Peas**: The sum of the digits on a line strictly between two circles is equal to a concatenation of the two values in the circles, in some order. For instance, 3_346_1 could be a valid split pea line, as 3+4+6=13, which is 1 concatenated with 3.\n\n**Unique Cells**: Digits do not repeat on cells with hexagons on them.",
-		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=nrfbkezAzTs",
-		"ctcUrl": "https://sudokupad.app/ww029llseg"
-	},
-	"nRows": 9,
-	"nCols": 9,
-	"grid": [
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}]
-	],
-	"local_constraints": {
-		"Split Peas": [
-			{
-				"cells": ["R1C1", "R1C2", "R1C3", "R1C4", "R2C4"]
-			},
-			{
-				"cells": ["R4C2", "R4C1", "R3C1", "R2C1", "R1C1"]
-			},
-			{
-				"cells": ["R8C1", "R7C1", "R7C2", "R6C2", "R6C3", "R5C3", "R4C3", "R4C2"]
-			},
-			{
-				"cells": ["R9C1", "R9C2", "R9C3", "R8C3", "R8C4", "R7C4", "R7C5", "R6C6"]
-			},
-			{
-				"cells": ["R9C7", "R9C6", "R8C6", "R7C6", "R6C6"]
-			},
-			{
-				"cells": ["R7C9", "R6C9", "R6C8", "R6C7", "R6C6"]
-			},
-			{
-				"cells": ["R1C9", "R2C9", "R3C9", "R4C9", "R4C8", "R4C7", "R5C7", "R6C6"]
-			},
-			{
-				"cells": ["R9C1", "R8C2", "R7C3", "R6C4", "R5C5", "R4C6", "R3C7", "R2C8", "R1C9"]
-			}
-		],
-		"Unique Cells": [
-			{
-				"cell": "R1C1"
-			},
-			{
-				"cell": "R2C4"
-			},
-			{
-				"cell": "R4C2"
-			},
-			{
-				"cell": "R8C1"
-			},
-			{
-				"cell": "R9C1"
-			},
-			{
-				"cell": "R9C7"
-			},
-			{
-				"cell": "R6C6"
-			},
-			{
-				"cell": "R7C9"
-			},
-			{
-				"cell": "R1C9"
-			}
-		]
-	}
+    "puzzleInfo": {
+        "title": "No RePEAts!",
+        "authors": [
+            "sujoyku"
+        ],
+        "ruleset": "Sudoku rules apply.\n\n**Split Peas**: The sum of the digits on a line strictly between two circles is equal to a concatenation of the two values in the circles, in some order. For instance, 3_346_1 could be a valid split pea line, as 3+4+6=13, which is 1 concatenated with 3.\n\n**Unique Cells**: Digits do not repeat on cells with hexagons on them.",
+        "ctcYoutubeUrl": "https://www.youtube.com/watch?v=nrfbkezAzTs",
+        "ctcUrl": "https://sudokupad.app/ww029llseg"
+    },
+    "nRows": 9,
+    "nCols": 9,
+    "grid": [
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ]
+    ],
+    "local_constraints": {
+        "Split Peas": {
+            "tool_id": "Split Peas",
+            "constraints": [
+                {
+                    "cells": [
+                        "R1C1",
+                        "R1C2",
+                        "R1C3",
+                        "R1C4",
+                        "R2C4"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R4C2",
+                        "R4C1",
+                        "R3C1",
+                        "R2C1",
+                        "R1C1"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R8C1",
+                        "R7C1",
+                        "R7C2",
+                        "R6C2",
+                        "R6C3",
+                        "R5C3",
+                        "R4C3",
+                        "R4C2"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R9C1",
+                        "R9C2",
+                        "R9C3",
+                        "R8C3",
+                        "R8C4",
+                        "R7C4",
+                        "R7C5",
+                        "R6C6"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R9C7",
+                        "R9C6",
+                        "R8C6",
+                        "R7C6",
+                        "R6C6"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R7C9",
+                        "R6C9",
+                        "R6C8",
+                        "R6C7",
+                        "R6C6"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R1C9",
+                        "R2C9",
+                        "R3C9",
+                        "R4C9",
+                        "R4C8",
+                        "R4C7",
+                        "R5C7",
+                        "R6C6"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R9C1",
+                        "R8C2",
+                        "R7C3",
+                        "R6C4",
+                        "R5C5",
+                        "R4C6",
+                        "R3C7",
+                        "R2C8",
+                        "R1C9"
+                    ]
+                }
+            ]
+        },
+        "Unique Cells": {
+            "tool_id": "Unique Cells",
+            "constraints": [
+                {
+                    "cell": "R1C1"
+                },
+                {
+                    "cell": "R2C4"
+                },
+                {
+                    "cell": "R4C2"
+                },
+                {
+                    "cell": "R8C1"
+                },
+                {
+                    "cell": "R9C1"
+                },
+                {
+                    "cell": "R9C7"
+                },
+                {
+                    "cell": "R6C6"
+                },
+                {
+                    "cell": "R7C9"
+                },
+                {
+                    "cell": "R1C9"
+                }
+            ]
+        }
+    }
 }

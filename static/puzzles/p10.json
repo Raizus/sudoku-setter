@@ -1,297 +1,303 @@
 {
-  "puzzleInfo": {
-    "title": "Equilibrium",
-    "authors": [
-      "SneakySteve"
+    "puzzleInfo": {
+        "title": "Equilibrium",
+        "authors": [
+            "SneakySteve"
+        ],
+        "ruleset": "Sudoku rules apply.\n\n**Positive Diagonal**: Numbers must not repeat on the positive diagonal.\n\n**Cold Arrows**: A blue arrow points toward a cell N distance away that has a value less than N, where N is the digit in the arrow's cell. (For example, if r9c8 is 5, then r4c8 is less than 5.)\n\n**Hot Arrows**: An orange arrow points toward a cell N distance away that has a value greater than N, where N is the digit in the arrow's cell. (For example, if r1c2 is 5, then r6c2 is greater than 5.)",
+        "ctcYoutubeUrl": "https://www.youtube.com/watch?v=AYUKq0XaOlk",
+        "ctcUrl": "https://sudokupad.app/aw4ctbznsl"
+    },
+    "nRows": 9,
+    "nCols": 9,
+    "grid": [
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ]
     ],
-    "ruleset": "Sudoku rules apply.\n\n**Positive Diagonal**: Numbers must not repeat on the positive diagonal.\n\n**Cold Arrows**: A blue arrow points toward a cell N distance away that has a value less than N, where N is the digit in the arrow's cell. (For example, if r9c8 is 5, then r4c8 is less than 5.)\n\n**Hot Arrows**: An orange arrow points toward a cell N distance away that has a value greater than N, where N is the digit in the arrow's cell. (For example, if r1c2 is 5, then r6c2 is greater than 5.)",
-    "ctcYoutubeUrl": "https://www.youtube.com/watch?v=AYUKq0XaOlk",
-    "ctcUrl": "https://sudokupad.app/aw4ctbznsl"
-  },
-  "nRows": 9,
-  "nCols": 9,
-  "grid": [
-    [
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {}
-    ],
-    [
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {}
-    ],
-    [
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {}
-    ],
-    [
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {}
-    ],
-    [
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {}
-    ],
-    [
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {}
-    ],
-    [
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {}
-    ],
-    [
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {}
-    ],
-    [
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {},
-      {}
-    ]
-  ],
-  "bool_constraints": {
-    "Positive Diagonal": true
-  },
-  "local_constraints": {
-    "Cold Arrows": [
-      {
-        "cell": "R5C5",
-        "directions": [
-          "E",
-          "S"
-        ]
-      },
-      {
-        "cell": "R4C6",
-        "directions": [
-          "S"
-        ]
-      },
-      {
-        "cell": "R6C6",
-        "directions": [
-          "E",
-          "S"
-        ]
-      },
-      {
-        "cell": "R8C2",
-        "directions": [
-          "E"
-        ]
-      },
-      {
-        "cell": "R9C3",
-        "directions": [
-          "N"
-        ]
-      },
-      {
-        "cell": "R8C4",
-        "directions": [
-          "N"
-        ]
-      },
-      {
-        "cell": "R8C5",
-        "directions": [
-          "N"
-        ]
-      },
-      {
-        "cell": "R7C5",
-        "directions": [
-          "W"
-        ]
-      },
-      {
-        "cell": "R8C8",
-        "directions": [
-          "N",
-          "W"
-        ]
-      },
-      {
-        "cell": "R9C8",
-        "directions": [
-          "N"
-        ]
-      },
-      {
-        "cell": "R6C8",
-        "directions": [
-          "W"
-        ]
-      },
-      {
-        "cell": "R3C8",
-        "directions": [
-          "S"
-        ]
-      },
-      {
-        "cell": "R3C9",
-        "directions": [
-          "W"
-        ]
-      },
-      {
-        "cell": "R2C8",
-        "directions": [
-          "S"
-        ]
-      }
-    ],
-    "Hot Arrows": [
-      {
-        "cell": "R2C8",
-        "directions": [
-          "W"
-        ]
-      },
-      {
-        "cell": "R1C7",
-        "directions": [
-          "S"
-        ]
-      },
-      {
-        "cell": "R2C6",
-        "directions": [
-          "S"
-        ]
-      },
-      {
-        "cell": "R2C5",
-        "directions": [
-          "S"
-        ]
-      },
-      {
-        "cell": "R3C5",
-        "directions": [
-          "E"
-        ]
-      },
-      {
-        "cell": "R1C2",
-        "directions": [
-          "S"
-        ]
-      },
-      {
-        "cell": "R2C2",
-        "directions": [
-          "E",
-          "S"
-        ]
-      },
-      {
-        "cell": "R4C2",
-        "directions": [
-          "E"
-        ]
-      },
-      {
-        "cell": "R4C4",
-        "directions": [
-          "N",
-          "W"
-        ]
-      },
-      {
-        "cell": "R5C5",
-        "directions": [
-          "N",
-          "W"
-        ]
-      },
-      {
-        "cell": "R6C4",
-        "directions": [
-          "N"
-        ]
-      },
-      {
-        "cell": "R7C1",
-        "directions": [
-          "E"
-        ]
-      },
-      {
-        "cell": "R7C2",
-        "directions": [
-          "N"
-        ]
-      },
-      {
-        "cell": "R8C2",
-        "directions": [
-          "N"
-        ]
-      }
-    ]
-  }
+    "bool_constraints": {
+        "Positive Diagonal": true
+    },
+    "local_constraints": {
+        "Cold Arrows": {
+            "tool_id": "Cold Arrows",
+            "constraints": [
+                {
+                    "cell": "R5C5",
+                    "directions": [
+                        "E",
+                        "S"
+                    ]
+                },
+                {
+                    "cell": "R4C6",
+                    "directions": [
+                        "S"
+                    ]
+                },
+                {
+                    "cell": "R6C6",
+                    "directions": [
+                        "E",
+                        "S"
+                    ]
+                },
+                {
+                    "cell": "R8C2",
+                    "directions": [
+                        "E"
+                    ]
+                },
+                {
+                    "cell": "R9C3",
+                    "directions": [
+                        "N"
+                    ]
+                },
+                {
+                    "cell": "R8C4",
+                    "directions": [
+                        "N"
+                    ]
+                },
+                {
+                    "cell": "R8C5",
+                    "directions": [
+                        "N"
+                    ]
+                },
+                {
+                    "cell": "R7C5",
+                    "directions": [
+                        "W"
+                    ]
+                },
+                {
+                    "cell": "R8C8",
+                    "directions": [
+                        "N",
+                        "W"
+                    ]
+                },
+                {
+                    "cell": "R9C8",
+                    "directions": [
+                        "N"
+                    ]
+                },
+                {
+                    "cell": "R6C8",
+                    "directions": [
+                        "W"
+                    ]
+                },
+                {
+                    "cell": "R3C8",
+                    "directions": [
+                        "S"
+                    ]
+                },
+                {
+                    "cell": "R3C9",
+                    "directions": [
+                        "W"
+                    ]
+                },
+                {
+                    "cell": "R2C8",
+                    "directions": [
+                        "S"
+                    ]
+                }
+            ]
+        },
+        "Hot Arrows": {
+            "tool_id": "Hot Arrows",
+            "constraints": [
+                {
+                    "cell": "R2C8",
+                    "directions": [
+                        "W"
+                    ]
+                },
+                {
+                    "cell": "R1C7",
+                    "directions": [
+                        "S"
+                    ]
+                },
+                {
+                    "cell": "R2C6",
+                    "directions": [
+                        "S"
+                    ]
+                },
+                {
+                    "cell": "R2C5",
+                    "directions": [
+                        "S"
+                    ]
+                },
+                {
+                    "cell": "R3C5",
+                    "directions": [
+                        "E"
+                    ]
+                },
+                {
+                    "cell": "R1C2",
+                    "directions": [
+                        "S"
+                    ]
+                },
+                {
+                    "cell": "R2C2",
+                    "directions": [
+                        "E",
+                        "S"
+                    ]
+                },
+                {
+                    "cell": "R4C2",
+                    "directions": [
+                        "E"
+                    ]
+                },
+                {
+                    "cell": "R4C4",
+                    "directions": [
+                        "N",
+                        "W"
+                    ]
+                },
+                {
+                    "cell": "R5C5",
+                    "directions": [
+                        "N",
+                        "W"
+                    ]
+                },
+                {
+                    "cell": "R6C4",
+                    "directions": [
+                        "N"
+                    ]
+                },
+                {
+                    "cell": "R7C1",
+                    "directions": [
+                        "E"
+                    ]
+                },
+                {
+                    "cell": "R7C2",
+                    "directions": [
+                        "N"
+                    ]
+                },
+                {
+                    "cell": "R8C2",
+                    "directions": [
+                        "N"
+                    ]
+                }
+            ]
+        }
+    }
 }
