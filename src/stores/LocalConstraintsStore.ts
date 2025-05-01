@@ -51,10 +51,7 @@ export function removeLocalConstraint(toolId: TOOLID, id: string | null) {
 	});
 }
 
-export function restoreElement(
-	toolId: TOOLID,
-	element: ConstraintsElement
-) {
+export function restoreElement(toolId: TOOLID, element: ConstraintsElement) {
 	localConstraintsStore.update((localConstraintsDict) => {
 		localConstraintsDict.setElement(toolId, element);
 		return localConstraintsDict;

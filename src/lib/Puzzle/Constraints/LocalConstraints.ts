@@ -70,6 +70,7 @@ export interface ConstraintsElement {
 	tool_id: TOOLID;
 	name?: string;
 	constraints: Record<string, ConstraintType>;
+	negative_constraints?: Record<string, boolean>;
 	disabled?: boolean;
 }
 
@@ -77,6 +78,7 @@ export interface ElementData {
 	tool_id: TOOLID;
 	name?: string;
 	constraints: Record<string, unknown>[];
+	negative_constraints?: Record<string, boolean>;
 	disabled?: boolean;
 }
 
@@ -146,17 +148,24 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 	}
 
 	toJSON() {
-		const local_elements: Record<string, unknown> = {};
+		const local_elements: Record<string, ElementData> = {};
 
 		for (const [toolId, element] of this.entries()) {
 			const constraints: Record<string, unknown>[] = [];
 			for (const constraint of Object.values(element.constraints)) {
 				constraints.push(constraintToJson(constraint));
 			}
-			const element_data = {
+			const element_data: ElementData = {
 				tool_id: toolId,
 				constraints
 			};
+			if (element.negative_constraints) {
+				for (const [neg_tool_id, value] of Object.entries(element.negative_constraints)) {
+					if (!value) continue;
+					if (!element_data.negative_constraints) element_data.negative_constraints = {};
+					element_data.negative_constraints[neg_tool_id] = value;
+				}
+			}
 			if (element_data.constraints.length) {
 				local_elements[toolId] = element_data;
 			}
@@ -175,8 +184,21 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 			if (tool === undefined) continue;
 			if (!Object.keys(squareCellElementHandlers).includes(tool)) continue;
 
-			// parse constraints
+			// add element
+			local_constraints.addToDict(tool);
+			const element = local_constraints.get(tool);
+			if (!element) continue;
 
+			// parse negative constraints
+			const neg_constraints_data = element_data['negative_constraints'];
+			if (neg_constraints_data) {
+				element.negative_constraints = {};
+				for (const [neg_const_id, value] of Object.entries(neg_constraints_data)) {
+					element.negative_constraints[neg_const_id] = value;
+				}
+			}
+
+			// parse constraints
 			const constraints_data = element_data['constraints'];
 			for (const constraint_data of constraints_data) {
 				let constraint: ConstraintType | null = null;
@@ -207,7 +229,6 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 				}
 
 				if (constraint !== null) {
-					local_constraints.addToDict(tool);
 					const id = uniqueId();
 					const shape = parseShape(constraint_data, tool);
 					constraint.shape = shape;

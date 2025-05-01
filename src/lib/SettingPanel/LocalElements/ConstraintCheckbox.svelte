@@ -1,10 +1,24 @@
 <script lang="ts">
-	export let tool_id: string;
+	import type { TOOLID } from '$src/lib/Puzzle/Tools';
+	import { localConstraintsStore } from '$stores/BoardStore';
+	import { restoreElement } from '$stores/LocalConstraintsStore';
+
+	export let tool_id: TOOLID;
+	export let neg_tool_id: string;
 	export let description: string;
 
-	let value = false;
+	$: element = $localConstraintsStore.get(tool_id);
+	$: value = element?.negative_constraints ? !!element.negative_constraints[neg_tool_id] : false;
 
 	function clickCb() {
+		if (!element) return;
+		if (!element.negative_constraints) element.negative_constraints = {};
+		element.negative_constraints[neg_tool_id] = !value;
+		restoreElement(tool_id, element);
+
+		// update current element negative constraint
+
+		// update element (with history?)
 		value = !value;
 	}
 </script>
@@ -14,12 +28,12 @@
 		<input type="checkbox" class:checked={value} on:click={clickCb} />
 		<div class="check-container">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="currentColor">
-				<path d="M378-222 130-470l68-68 180 180 383-383 68 68-451 451Z" />
+				<path d="M378-225 133-470l66-66 179 180 382-382 66 65-448 448Z" />
 			</svg>
 		</div>
 	</span>
 	<span>
-		{tool_id}
+		{neg_tool_id}
 	</span>
 </label>
 
@@ -39,9 +53,8 @@
 	.checkbox {
 		display: inline-block;
 		position: relative;
-		top: 0.05em;
-		height: 1em;
-		width: 1em;
+		height: 1.2em;
+		width: 1.2em;
 		cursor: pointer;
 		border: 0.1em solid;
 		background: #fff;

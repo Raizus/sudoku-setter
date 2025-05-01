@@ -9,7 +9,7 @@ import {
 	type TOOLID
 } from '$lib/Puzzle/Tools';
 import { derived, writable, type Readable } from 'svelte/store';
-import { localConstraintsStore } from './BoardStore';
+import { localConstraintsStore, toolStore } from './BoardStore';
 import type { CornerToolI } from '$lib/Puzzle/Constraints/CornerConstraints';
 import type {
 	CellArrowToolI,
@@ -20,7 +20,10 @@ import type {
 import type { EdgeToolI } from '$lib/Puzzle/Constraints/EdgeConstraints';
 import type { OutsideDirectionToolI } from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
 import type { CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/Constraints/CenterCornerOrEdgeConstraints';
-import type { ConstraintType } from '$src/lib/Puzzle/Constraints/LocalConstraints';
+import type {
+	ConstraintsElement,
+	ConstraintType
+} from '$src/lib/Puzzle/Constraints/LocalConstraints';
 import type { CornerLineToolI } from '$src/lib/Puzzle/Constraints/CornerLineConstraints';
 
 export type Element<T extends ConstraintType> = {
@@ -29,18 +32,16 @@ export type Element<T extends ConstraintType> = {
 };
 
 export const underlayElementsStore = derived(localConstraintsStore, ($localConstraintsStore) => {
-	const elements: Element<ConstraintType>[] = [];
+	const elements: ConstraintsElement[] = [];
 	for (const [toolId, element] of $localConstraintsStore.entries()) {
 		if (!isUnderlayTool(toolId)) continue;
-		elements.push({
-			toolId,
-			constraints: element.constraints as Record<string, ConstraintType>
-		});
+
+		elements.push(element);
 	}
 	return elements;
 });
 
-function getToolsStore<T extends ConstraintType>(
+function getElementsStore<T extends ConstraintType>(
 	filter_f: (tool: TOOLID) => boolean
 ): Readable<Element<T>[]> {
 	const store = derived(localConstraintsStore, ($localConstraintsStore) => {
@@ -72,7 +73,7 @@ export function getToolStore<T extends ConstraintType>(
 	return store;
 }
 
-export const singleCellToolsStore = getToolsStore<SingleCellTool>(isSingleCellTool);
+export const singleCellToolsStore = getElementsStore<SingleCellTool>(isSingleCellTool);
 
 export const fogLightsStore = derived(singleCellToolsStore, ($singleCellToolsStore) => {
 	const target_element = $singleCellToolsStore.find(
@@ -106,11 +107,11 @@ export const maximumConstraintsStore = derived(singleCellToolsStore, ($singleCel
 	return record;
 });
 
-export const edgeToolsStore = getToolsStore<EdgeToolI>(isEdgeTool);
+export const edgeToolsStore = getElementsStore<EdgeToolI>(isEdgeTool);
 export const centerCornerOrEdgeToolsStore =
-	getToolsStore<CenterCornerOrEdgeToolI>(isCenterEdgeCornerTool);
-export const cornerToolsStore = getToolsStore<CornerToolI>(isCornerTool);
-export const cornerLineToolsStore = getToolsStore<CornerLineToolI>(isCornerLineTool);
+	getElementsStore<CenterCornerOrEdgeToolI>(isCenterEdgeCornerTool);
+export const cornerToolsStore = getElementsStore<CornerToolI>(isCornerTool);
+export const cornerLineToolsStore = getElementsStore<CornerLineToolI>(isCornerLineTool);
 
 // export const lineToolsStore = getToolsStore<LineToolI>(isLineTool);
 
@@ -138,6 +139,15 @@ export const outsideDirectionToolPreviewStore = writable<undefined | OutsideDire
 	undefined
 );
 
-export const centerCornerOrEdgeToolPreviewStore = writable<undefined | ToolPreview<CenterCornerOrEdgeToolI>>(
-	undefined
+export const centerCornerOrEdgeToolPreviewStore = writable<
+	undefined | ToolPreview<CenterCornerOrEdgeToolI>
+>(undefined);
+
+export const currentElementStore: Readable<ConstraintsElement | undefined> = derived(
+	[localConstraintsStore, toolStore],
+	([$localConstraintsStore, $toolStore]) => {
+		const tool_id = $toolStore;
+		const element = $localConstraintsStore.get(tool_id);
+		return element;
+	}
 );
