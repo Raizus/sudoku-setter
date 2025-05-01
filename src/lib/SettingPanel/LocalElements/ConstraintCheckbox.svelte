@@ -23,7 +23,7 @@
 	}
 </script>
 
-<label class="checkbox-label">
+<label class="checkbox-label" title={description}>
 	<span class="checkbox" class:checked={value}>
 		<input type="checkbox" class:checked={value} on:click={clickCb} />
 		<div class="check-container">
