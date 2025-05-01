@@ -1,6 +1,6 @@
 <script lang="ts">
-	import CaretDown from '$icons/CaretDown.svelte';
-	import CaretUp from '$icons/CaretUp.svelte';
+	// import CaretDown from '$icons/CaretDown.svelte';
+	// import CaretUp from '$icons/CaretUp.svelte';
 	import Trash from '$icons/Trash.svelte';
 	import { getToolInfo, type AbstractElementHandlers } from '$src/lib/Puzzle/ElementHandlersUtils';
 	import { TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
