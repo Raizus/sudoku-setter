@@ -1,57 +1,172 @@
 {
-	"puzzleInfo": {
-		"title": "Galaxies Collide",
-		"authors": ["Marty Sears", "Dorlir"],
-		"ruleset": "Sudoku rules apply.\n\n**Galaxies**: Each galaxy must consist of a region of orthogonally connected cells, and must have 180 degree rotational symmetry.\n\n**Two Symmetric Galaxies**: Divide the grid into two galaxies. Each galaxy must consist of a region of orthogonally connected cells, and must have 180 degree rotational symmetry. (The central point around which a galaxy is symmetrical doesn't need to actually belong to that galaxy.)\n\n**Every Cell Belongs To A Galaxy**: Every cell in the grid belongs to a galaxy.\n\n**Galaxy 2x2 Does Not Belong To One Galaxy**: No 2x2 area may belong entirely to one galaxy.\n\n**One Galaxy Is A German Whispers**: One of the two galaxies behaves like a German whisper; orthogonally adjacent cells in this galaxy must have a difference of at least 5.\n\n**Same Galaxy Unobstructed Count Arrows**: An arrow cell counts how many cells in its own galaxy are being pointed at altogether by its arrow(s), and this combined total is displayed on the arrow cell (the arrow cell itself is not included in the count.) Vision is not obscured by the other galaxy's cells.",
-		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=pLFvTaV8Vcc",
-		"ctcUrl": "https://sudokupad.app/2susajautc"
-	},
-	"nRows": 9,
-	"nCols": 9,
-	"grid": [
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}]
-	],
-	"bool_constraints": {
-		"Galaxies": true,
-		"Two Symmetric Galaxies": true,
-		"Every Cell Belongs To A Galaxy": true,
-		"Galaxy 2x2 Does Not Belong To One Galaxy": true,
-		"One Galaxy Is A German Whispers": true
-	},
-	"local_constraints": {
-		"Same Galaxy Unobstructed Count Arrows": [
-			{
-				"cell": "R4C5",
-				"directions": ["E", "N", "S"]
-			},
-			{
-				"cell": "R2C8",
-				"directions": ["S"]
-			},
-			{
-				"cell": "R5C5",
-				"directions": ["E", "N", "W"]
-			},
-			{
-				"cell": "R5C4",
-				"directions": ["E"]
-			},
-			{
-				"cell": "R6C4",
-				"directions": ["E", "N", "S"]
-			},
-			{
-				"cell": "R4C2",
-				"directions": ["N", "S"]
-			}
-		]
-	}
+    "puzzleInfo": {
+        "title": "Galaxies Collide",
+        "authors": [
+            "Marty Sears",
+            "Dorlir"
+        ],
+        "ruleset": "Sudoku rules apply.\n\n**Galaxies**: Each galaxy must consist of a region of orthogonally connected cells, and must have 180 degree rotational symmetry.\n\n**Two Symmetric Galaxies**: Divide the grid into two galaxies. Each galaxy must consist of a region of orthogonally connected cells, and must have 180 degree rotational symmetry. (The central point around which a galaxy is symmetrical doesn't need to actually belong to that galaxy.)\n\n**Every Cell Belongs To A Galaxy**: Every cell in the grid belongs to a galaxy.\n\n**Galaxy 2x2 Does Not Belong To One Galaxy**: No 2x2 area may belong entirely to one galaxy.\n\n**One Galaxy Is A German Whispers**: One of the two galaxies behaves like a German whisper; orthogonally adjacent cells in this galaxy must have a difference of at least 5.\n\n**Same Galaxy Unobstructed Count Arrows**: An arrow cell counts how many cells in its own galaxy are being pointed at altogether by its arrow(s), and this combined total is displayed on the arrow cell (the arrow cell itself is not included in the count.) Vision is not obscured by the other galaxy's cells.",
+        "ctcYoutubeUrl": "https://www.youtube.com/watch?v=pLFvTaV8Vcc",
+        "ctcUrl": "https://sudokupad.app/2susajautc"
+    },
+    "nRows": 9,
+    "nCols": 9,
+    "grid": [
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ]
+    ],
+    "bool_constraints": {
+        "Galaxies": true,
+        "Two Symmetric Galaxies": true,
+        "Every Cell Belongs To A Galaxy": true,
+        "Galaxy 2x2 Does Not Belong To One Galaxy": true,
+        "One Galaxy Is A German Whispers": true
+    },
+    "local_constraints": {
+        "Same Galaxy Unobstructed Count Arrows": {
+            "tool_id": "Same Galaxy Unobstructed Count Arrows",
+            "constraints": [
+                {
+                    "cell": "R4C5",
+                    "directions": [
+                        "E",
+                        "N",
+                        "S"
+                    ]
+                },
+                {
+                    "cell": "R2C8",
+                    "directions": [
+                        "S"
+                    ]
+                },
+                {
+                    "cell": "R5C5",
+                    "directions": [
+                        "E",
+                        "N",
+                        "W"
+                    ]
+                },
+                {
+                    "cell": "R5C4",
+                    "directions": [
+                        "E"
+                    ]
+                },
+                {
+                    "cell": "R6C4",
+                    "directions": [
+                        "E",
+                        "N",
+                        "S"
+                    ]
+                },
+                {
+                    "cell": "R4C2",
+                    "directions": [
+                        "N",
+                        "S"
+                    ]
+                }
+            ]
+        }
+    }
 }
