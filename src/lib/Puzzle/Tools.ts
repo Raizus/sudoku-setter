@@ -50,6 +50,7 @@ export enum NEGATIVE_CONSTRAINTS {
 	NEGATIVE_CONSTRAINT = 'Negative Constraint',
 	NEGATIVE_V_CONSTRAINT = 'Negative V Constraint',
 	NEGATIVE_X_CONSTRAINT = 'Negative X Constraint',
+	NEGATIVE_XV_CONSTRAINT = 'Negative XV Constraint',
 
 	ALL_GIVEN = 'All Given',
 	ALL_CAGE_TOTALS_DIFFERENT = 'All Cage Totals Different',

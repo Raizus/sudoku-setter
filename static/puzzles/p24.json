@@ -33,8 +33,7 @@
 		[{}, {}, {}, {}, {}, {}, {}, {}, {}]
 	],
 	"bool_constraints": {
-		"Yin Yang": true,
-		"All Yin Yang Kropki Given": true
+		"Yin Yang": true
 	},
 	"local_constraints": {
 		"Yin Yang Kropki": {
@@ -97,7 +96,8 @@
 				{
 					"cells": ["R6C1", "R6C2"]
 				}
-			]
+			],
+			"negative_constraints": { "All Yin Yang Kropki Given": true }
 		}
 	}
 }

@@ -509,3 +509,13 @@ export function cellsFromCoords(grid: Grid, coords: GridCoordI[]): Cell[] {
 	const cells = coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell);
 	return cells;
 }
+export function* adjCellPairGen(grid: Grid) {
+	for (const cell of grid.getAllCells()) {
+		const adj_cells = grid
+			.getOrthogonallyAdjacentCells(cell)
+			.filter((cell2) => cell2.r >= cell.r || cell2.c >= cell.c);
+		for (const cell2 of adj_cells) {
+			yield [cell, cell2];
+		}
+	}
+}

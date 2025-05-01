@@ -335,6 +335,14 @@ export const yinYangKropkiInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.YIN_YANG_KROPKI,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_YIN_YANG_KROPKI_GIVEN,
+			description:
+				'Cells separated by a a light blue transparent dot indicate that the two connected cells have the same Yin Yang shading. If a grey dot is between two unshaded cells their digits are in a 1:2 ratio; if a grey dot is between two shaded cells, their digits are consecutive. All such dots are given.'
+		}
+	],
+
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
 		r: { editable: false, value: EDGE_R_1 },
