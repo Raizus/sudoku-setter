@@ -5,7 +5,6 @@ import {
 	type ValueValidatorOptions
 } from '$src/lib/InputHandlers/InputHandler';
 import type { SquareCellElementInfo } from '../ElementInfo';
-import { RENDER_ORDER } from '../RenderOrder';
 import { SHAPE_TYPES, type EditableShapeI } from '../Shape/Shape';
 import { cageUsage, typableCageUsage } from '../ToolUsage';
 import { TOOL_CATEGORIES, TOOLS } from '../Tools';
@@ -56,7 +55,7 @@ const DEFAULT_CAGE_SHAPE: EditableShapeI = {
 const DEFAULT_UNVALUED_CAGE_OPTIONS: CageToolInputOptions = {
 	type: HANDLER_TOOL_TYPE.CAGE,
 	defaultValue: '',
-	allowDiagonallyAdjacent: true,
+	allowDiagonallyAdjacent: true
 };
 
 const DEFAULT_CAGE_OPTIONS: CageToolInputOptions = {
@@ -69,7 +68,7 @@ export const killerCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.KILLER_CAGE,
-	order: RENDER_ORDER.CAGE_TOOLS,
+
 	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
@@ -85,7 +84,6 @@ export const uniqueDigitsCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.UNIQUE_DIGITS_CAGE,
-	order: RENDER_ORDER.CAGE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.CAGE,
@@ -109,7 +107,7 @@ export const invertedKillerCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.INVERTED_KILLER_CAGE,
-	order: RENDER_ORDER.CAGE_TOOLS,
+
 	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
@@ -125,7 +123,7 @@ export const sumCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.SUM_CAGE,
-	order: RENDER_ORDER.CAGE_TOOLS,
+
 	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
@@ -141,7 +139,7 @@ export const sumCageLookAndSayInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_UNVALUED_CAGE_OPTIONS,
 
 	toolId: TOOLS.SUM_CAGE_LOOK_AND_SAY,
-	order: RENDER_ORDER.CAGE_TOOLS,
+
 	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
@@ -157,7 +155,7 @@ export const parityBalanceCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_UNVALUED_CAGE_OPTIONS,
 
 	toolId: TOOLS.PARITY_BALANCE_CAGE,
-	order: RENDER_ORDER.CAGE_TOOLS,
+
 	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
@@ -173,7 +171,7 @@ export const divisibleKillerCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.DIVISIBLE_KILLER_CAGE,
-	order: RENDER_ORDER.CAGE_TOOLS,
+
 	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
@@ -189,7 +187,7 @@ export const spotlightCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.SPOTLIGHT_CAGE,
-	order: RENDER_ORDER.CAGE_TOOLS,
+
 	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
@@ -205,7 +203,7 @@ export const putteriaCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_UNVALUED_CAGE_OPTIONS,
 
 	toolId: TOOLS.PUTTERIA_CAGE,
-	order: RENDER_ORDER.CAGE_TOOLS,
+
 	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
@@ -221,7 +219,7 @@ export const killerCageLookAndSayInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.KILLER_CAGE_LOOK_AND_SAY,
-	order: RENDER_ORDER.CAGE_TOOLS,
+
 	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
@@ -237,7 +235,6 @@ export const multisetCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.MULTISET_CAGE,
-	order: RENDER_ORDER.CAGE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.CAGE,
@@ -260,7 +257,7 @@ export const vaultedCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.VAULTED_CAGE,
-	order: RENDER_ORDER.CAGE_TOOLS,
+
 	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
@@ -276,7 +273,7 @@ export const aquariumCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.AQUARIUM_CAGE,
-	order: RENDER_ORDER.CAGE_TOOLS,
+
 	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
@@ -292,7 +289,7 @@ export const yinYangAntithesisKillerCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_ANTITHESIS_KILLER_CAGE,
-	order: RENDER_ORDER.CAGE_TOOLS,
+
 	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
@@ -308,7 +305,7 @@ export const yinYangBreakevenKillerCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.YIN_YANG_BREAKEVEN_KILLER_CAGE,
-	order: RENDER_ORDER.CAGE_TOOLS,
+
 	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
@@ -324,7 +321,7 @@ export const doublersKillerCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.DOUBLERS_KILLER_CAGE,
-	order: RENDER_ORDER.CAGE_TOOLS,
+
 	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {
@@ -340,7 +337,7 @@ export const negatorsKillerCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
 	toolId: TOOLS.NEGATORS_KILLER_CAGE,
-	order: RENDER_ORDER.CAGE_TOOLS,
+
 	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {

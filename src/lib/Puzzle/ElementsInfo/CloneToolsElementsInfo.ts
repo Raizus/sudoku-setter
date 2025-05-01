@@ -1,6 +1,5 @@
 import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
-import { RENDER_ORDER } from '../RenderOrder';
 import { SHAPE_TYPES } from '../Shape/Shape';
 import { HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
 
@@ -10,7 +9,6 @@ export const cloneRegionInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.CLONE_REGION,
-	order: RENDER_ORDER.CAGE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.CAGE,

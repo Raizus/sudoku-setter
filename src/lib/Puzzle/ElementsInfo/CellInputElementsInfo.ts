@@ -3,9 +3,8 @@ import type { SquareCellElementInfo } from '../ElementInfo';
 import { HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
 
 export const givenInfo: SquareCellElementInfo = {
-	inputOptions: {type: HANDLER_TOOL_TYPE.SELECTION},
+	inputOptions: { type: HANDLER_TOOL_TYPE.SELECTION },
 	toolId: TOOLS.GIVEN,
-	order: 0,
 
 	permanent: true,
 	menu: {
@@ -23,7 +22,6 @@ export const givenInfo: SquareCellElementInfo = {
 export const digitInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.SELECTION },
 	toolId: TOOLS.DIGIT,
-	order: 0,
 
 	permanent: true,
 	menu: {
@@ -41,7 +39,6 @@ export const digitInfo: SquareCellElementInfo = {
 export const regionsInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.SELECTION },
 	toolId: TOOLS.REGIONS,
-	order: 0,
 
 	permanent: true,
 	menu: {
@@ -59,7 +56,6 @@ export const regionsInfo: SquareCellElementInfo = {
 export const cornerPMInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.SELECTION },
 	toolId: TOOLS.CORNER_PM,
-	order: 0,
 
 	permanent: true,
 	menu: {
@@ -77,7 +73,6 @@ export const cornerPMInfo: SquareCellElementInfo = {
 export const centerPMInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.SELECTION },
 	toolId: TOOLS.CENTER_PM,
-	order: 0,
 
 	permanent: true,
 	menu: {
@@ -95,7 +90,6 @@ export const centerPMInfo: SquareCellElementInfo = {
 export const highlightsInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.SELECTION },
 	toolId: TOOLS.HIGHLIGHTS,
-	order: 0,
 
 	permanent: true,
 	menu: {
@@ -113,7 +107,6 @@ export const highlightsInfo: SquareCellElementInfo = {
 export const outsideInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.SELECTION },
 	toolId: TOOLS.OUTSIDE,
-	order: 0,
 
 	permanent: true,
 	menu: {
@@ -131,7 +124,6 @@ export const outsideInfo: SquareCellElementInfo = {
 export const penToolInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.PEN },
 	toolId: TOOLS.PEN_TOOL,
-	order: 0,
 
 	permanent: true,
 	menu: {

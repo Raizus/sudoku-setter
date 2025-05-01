@@ -1,7 +1,6 @@
 import { SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
 import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
-import { RENDER_ORDER } from '../RenderOrder';
 import { arrowUsage } from '../ToolUsage';
 import { HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
 
@@ -16,7 +15,6 @@ export const arrowInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW },
 
 	toolId: TOOLS.ARROW,
-	order: RENDER_ORDER.ARROW_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -42,7 +40,6 @@ export const averageArrowInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW },
 
 	toolId: TOOLS.AVERAGE_ARROW,
-	order: RENDER_ORDER.ARROW_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -67,7 +64,6 @@ export const bulbousArrowInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW, allowSelfIntersection: true },
 
 	toolId: TOOLS.BULBOUS_ARROW,
-	order: RENDER_ORDER.ARROW_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.BULBOUS_ARROW,
@@ -95,7 +91,6 @@ export const squareRootArrowInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW },
 
 	toolId: TOOLS.SQUARE_ROOT_ARROW,
-	order: RENDER_ORDER.ARROW_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -121,7 +116,6 @@ export const chaosConstructionArrowInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW },
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_ARROW,
-	order: RENDER_ORDER.ARROW_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.LINE,

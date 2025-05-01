@@ -5,7 +5,6 @@ import {
 	defaultValueUpdater,
 	type ValueValidatorOptions
 } from '$src/lib/InputHandlers/InputHandler';
-import { RENDER_ORDER } from '../RenderOrder';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { HANDLER_TOOL_TYPE, type EdgeToolOptions } from '$input/ToolInputHandlers/types';
 
@@ -121,7 +120,6 @@ export const ratioInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.RATIO,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -144,7 +142,6 @@ export const differenceInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_EDGE_OPTIONS,
 
 	toolId: TOOLS.DIFFERENCE,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: DEFAULT_WHITE_CIRCLE,
 
@@ -160,7 +157,6 @@ export const edgeSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_EDGE_OPTIONS,
 
 	toolId: TOOLS.EDGE_SUM,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
 		...DEFAULT_WHITE_CIRCLE,
@@ -183,7 +179,6 @@ export const xvInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.XV,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.TEXT_ONLY,
@@ -209,7 +204,6 @@ export const edgeInequalityInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.EDGE_INEQUALITY,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.TEXT_ONLY,
@@ -232,7 +226,6 @@ export const edgeProductInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_EDGE_OPTIONS,
 
 	toolId: TOOLS.EDGE_PRODUCT,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
 		...DEFAULT_WHITE_CIRCLE,
@@ -251,7 +244,6 @@ export const edgeModuloInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_EDGE_OPTIONS,
 
 	toolId: TOOLS.EDGE_MODULO,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
 		...DEFAULT_WHITE_CIRCLE,
@@ -270,7 +262,6 @@ export const edgeFactorInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_EDGE_OPTIONS,
 
 	toolId: TOOLS.EDGE_FACTOR,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
 		...DEFAULT_WHITE_CIRCLE,
@@ -291,7 +282,6 @@ export const xyDifferencesInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.XY_DIFFERENCES,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.POLYGON,
@@ -316,7 +306,6 @@ export const yinYangWhiteKropkiInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.YIN_YANG_WHITE_KROPKI,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: DEFAULT_WHITE_CIRCLE,
 
@@ -334,7 +323,6 @@ export const yinYangKropkiInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.YIN_YANG_KROPKI,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -360,7 +348,6 @@ export const fillominoRegionBorderInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.FILLOMINO_REGION_BORDER,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: DEFAULT_BORDER_LINE,
 
@@ -377,7 +364,6 @@ export const unknownRegionBorderInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.UNKNOWN_REGION_BORDER,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: DEFAULT_BORDER_LINE,
 
@@ -394,7 +380,6 @@ export const chaosConstructionSuguruBorderInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_SUGURU_BORDER,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: DEFAULT_BORDER_LINE,
 
@@ -411,7 +396,6 @@ export const edgeCaveOneOfEachInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.EDGE_CAVE_ONE_OF_EACH,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: DEFAULT_WHITE_CIRCLE,
 
@@ -431,7 +415,6 @@ export const oneWayDoorInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.ONE_WAY_DOOR,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: {
 		type: SHAPE_TYPES.TEXT_ONLY,
@@ -455,7 +438,6 @@ export const customEdgeConstraintInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_EDGE_OPTIONS,
 
 	toolId: TOOLS.CUSTOM_EDGE_CONSTRAINT,
-	order: RENDER_ORDER.EDGE_TOOLS,
 
 	shape: DEFAULT_WHITE_CIRCLE,
 
