@@ -1,17 +1,31 @@
-import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
+import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
 import type { CellArrowToolI } from '../Puzzle/Constraints/SingleCellConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
-import { TOOLS, type TOOLID } from '../Puzzle/Tools';
+import { TOOLS } from '../Puzzle/Tools';
 import {
 	cellToVarName,
 	cellsToVarsName,
 	PuzzleModel,
-	constraintsBuilder,
 	VAR_2D_NAMES,
 	cellsToGridVarsStr,
-	cellToGridVarName
+	cellToGridVarName,
+	type ElementF
 } from './solver_utils';
+
+function simpleCellArrowElement(
+	grid: Grid,
+	element: ConstraintsElement,
+	func: (grid: Grid, constraint: CellArrowToolI) => string
+) {
+	const constraints = element.constraints;
+	let out_str = '';
+	for (const constraint of Object.values(constraints)) {
+		const constraint_str = func(grid, constraint as CellArrowToolI);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
 
 export function sashiganeArrowPointsToBendConstraint(grid: Grid, constraint: CellArrowToolI) {
 	const coords = constraint.cell;
@@ -22,7 +36,7 @@ export function sashiganeArrowPointsToBendConstraint(grid: Grid, constraint: Cel
 	let cells: Cell[] = grid.getCellsInDirection(cell.r, cell.c, direction);
 	cells = [cell, ...cells];
 
-	const sashigane_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.SASHIGANE)
+	const sashigane_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.SASHIGANE);
 	const sashigane_bend_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.SASHIGANE_BENDS);
 
 	const cell_var = cellToVarName(cell);
@@ -30,6 +44,19 @@ export function sashiganeArrowPointsToBendConstraint(grid: Grid, constraint: Cel
 
 	let out_str = `constraint sashigane_arrow_points_to_bend_p(${cell_var}, ${sashigane_var}, ${sashigane_vars_str}, ${sashigane_bend_vars_str});\n`;
 	out_str += `constraint count_same_adjacent(sashigane, ${cell.r}, ${cell.c}) == 1;\n`;
+	return out_str;
+}
+
+function sashiganeArrowPointsToBendElement(
+	model: PuzzleModel,
+	grid: Grid,
+	element: ConstraintsElement
+) {
+	const out_str = simpleCellArrowElement(
+		grid,
+		element,
+		sashiganeArrowPointsToBendConstraint
+	);
 	return out_str;
 }
 
@@ -51,19 +78,32 @@ export function thermoSightlineLoopArrowConstraint(grid: Grid, constraint: CellA
 	return constraint_str;
 }
 
-export type ConstraintF3 = (grid: Grid, constraint: CellArrowToolI) => string;
+function thermoSightlineLoopArrowElement(
+	model: PuzzleModel,
+	grid: Grid,
+	element: ConstraintsElement
+) {
+	const out_str = simpleCellArrowElement(grid, element, thermoSightlineLoopArrowConstraint);
+	return out_str;
+}
 
-export const cell_arrow_tool_map = new Map<string, ConstraintF3>([
-	[TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND, sashiganeArrowPointsToBendConstraint],
-	[TOOLS.THERMO_SIGHTLINE_LOOP_ARROW, thermoSightlineLoopArrowConstraint]
+export const tool_map = new Map<string, ElementF>([
+	[TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND, sashiganeArrowPointsToBendElement],
+	[TOOLS.THERMO_SIGHTLINE_LOOP_ARROW, thermoSightlineLoopArrowElement]
 ]);
 
 export function singleCellArrowConstraints(
 	model: PuzzleModel,
 	grid: Grid,
-	toolId: TOOLID,
-	constraints: Record<string, ConstraintType>
+	element: ConstraintsElement
 ) {
-	const out_str = constraintsBuilder(grid, toolId, constraints, cell_arrow_tool_map);
+	let out_str = '';
+	const tool_id = element.tool_id;
+	const elementF = tool_map.get(tool_id);
+	if (elementF) {
+		const element_str = elementF(model, grid, element);
+		out_str += element_str;
+	}
+
 	return out_str;
 }

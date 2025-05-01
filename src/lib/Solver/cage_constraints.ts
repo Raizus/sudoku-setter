@@ -331,6 +331,11 @@ function doublersKillerCageConstraint(
 	return '';
 }
 
+function doublersKillerCageElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, grid, element, doublersKillerCageConstraint);
+	return out_str;
+}
+
 function negatorsKillerCageConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -350,11 +355,17 @@ function negatorsKillerCageConstraint(
 	return '';
 }
 
-function multisetCageConstraint(grid: Grid, constraints: CageToolI[]) {
+function negatorsKillerCageElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, grid, element, negatorsKillerCageConstraint);
+	return out_str;
+}
+
+function multisetCageElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
 	let out_str = '';
+	const constraints = element.constraints as Record<string, CageToolI>;
 
 	// group cells by value
-	const groups = groupConstraintsByValue(constraints);
+	const groups = groupConstraintsByValue(Object.values(constraints));
 
 	for (const group of groups.values()) {
 		if (group.length <= 1) continue;
@@ -382,10 +393,12 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.UNIQUE_DIGITS_CAGE, uniqueDigitsCageElement],
 	[TOOLS.VAULTED_CAGE, vaultedCageElement],
 	[TOOLS.YIN_YANG_ANTITHESIS_KILLER_CAGE, yinYangAntithesisKillerCageElement],
-	[TOOLS.YIN_YANG_BREAKEVEN_KILLER_CAGE, yinYangBreakevenKillerCageElement]
+	[TOOLS.YIN_YANG_BREAKEVEN_KILLER_CAGE, yinYangBreakevenKillerCageElement],
 
-	// [TOOLS.DOUBLERS_KILLER_CAGE, doublersKillerCageConstraint],
-	// [TOOLS.NEGATORS_KILLER_CAGE, negatorsKillerCageConstraint]
+	[TOOLS.DOUBLERS_KILLER_CAGE, doublersKillerCageElement],
+	[TOOLS.NEGATORS_KILLER_CAGE, negatorsKillerCageElement],
+
+	[TOOLS.MULTISET_CAGE, multisetCageElement]
 ]);
 
 export function cageConstraints(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {

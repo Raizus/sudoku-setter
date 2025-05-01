@@ -18,18 +18,18 @@ import { valuedGlobalConstraints } from './valued_global_constraints';
 type ConstraintsF = (model: PuzzleModel, grid: Grid, element: ConstraintsElement) => string;
 
 const functions_list: ConstraintsF[] = [
-	// centerCornerOrEdgeConstraints,
-	// singleCellConstraints,
-	// singleCellArrowConstraints,
+	centerCornerOrEdgeConstraints,
+	singleCellConstraints,
+	singleCellArrowConstraints,
 	singleCellMultiArrowConstraints,
 	edgeElements,
 	cornerConstraints,
 	lineElement,
 	arrowConstraints,
 	cageConstraints,
-	outsideDirectionConstraints
-	// cloneConstraints,
-	// valuedGlobalConstraints
+	outsideDirectionConstraints,
+	cloneConstraints,
+	valuedGlobalConstraints
 ];
 
 export function localConstraints(puzzle: PuzzleI, model: PuzzleModel): string {

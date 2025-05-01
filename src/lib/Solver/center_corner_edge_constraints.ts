@@ -1,10 +1,20 @@
 import type { CenterCornerOrEdgeToolI } from '../Puzzle/Constraints/CenterCornerOrEdgeConstraints';
-import type { ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
+import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
-import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import { cellEdgeToCellCoords, cornerCoordToAdjCellCoords, type GridCoordI } from '../utils/SquareCellGridCoords';
-import { cellsToGridVarsStr, VAR_2D_NAMES, type PuzzleModel } from './solver_utils';
+import { TOOLS } from '../Puzzle/Tools';
+import {
+	cellEdgeToCellCoords,
+	cornerCoordToAdjCellCoords,
+	type GridCoordI
+} from '../utils/SquareCellGridCoords';
+import {
+	cellsToGridVarsStr,
+	simpleElementFunction,
+	VAR_2D_NAMES,
+	type ElementF,
+	type PuzzleModel
+} from './solver_utils';
 import type { ParseOptions } from './value_parsing';
 
 function getCellRot180(grid: Grid, cell: Cell, r: number, c: number) {
@@ -43,11 +53,14 @@ function possibleGalaxyCells(
 function rotationallySymmetricGalaxyCenterSumConstraints(
 	model: PuzzleModel,
 	grid: Grid,
-	constraints: CenterCornerOrEdgeToolI[]
+	element: ConstraintsElement
 ) {
 	let out_str = '';
-	for (let i = 0; i < constraints.length; i++) {
-		const constraint = constraints[i];
+	const constraints = element.constraints as Record<string, CenterCornerOrEdgeToolI>;
+	const constraints_list = [...Object.values(constraints)];
+
+	for (let i = 0; i < constraints_list.length; i++) {
+		const constraint = constraints_list[i];
 		const coord = constraint.cell;
 		const gal_id = i + 1;
 
@@ -64,10 +77,10 @@ function rotationallySymmetricGalaxyCenterSumConstraints(
 
 		out_str += `constraint galaxy_sum_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.GALAXY_REGIONS}, ${val}, ${gal_id});\n`;
 	}
-	if (!constraints.length) return out_str;
+	if (!constraints_list.length) return out_str;
 
 	const max_galaxies = grid.nCols * grid.nRows;
-	const given_galaxies = constraints.length;
+	const given_galaxies = constraints_list.length;
 	const reg_idxs = `${given_galaxies + 1}..${max_galaxies}`;
 	out_str += `\nconstraint order_remaining_galaxies_p(${VAR_2D_NAMES.GALAXY_REGIONS}, ${reg_idxs});\n`;
 	return out_str;
@@ -103,14 +116,10 @@ function yinYangSumOfAdjacentShadedEdgeOrCornerConstraints(
 	let cells: Cell[] = [];
 	if (r % 1 === 0 && c % 1 === 0) {
 		const coords = cornerCoordToAdjCellCoords(coord);
-		cells = coords
-			.map((_c) => grid.getCell(_c.r, _c.c))
-			.filter((cell) => cell !== undefined);
+		cells = coords.map((_c) => grid.getCell(_c.r, _c.c)).filter((cell) => cell !== undefined);
 	} else if ((r % 1 === 0.5 && c % 1 === 0) || (r % 1 === 0 && c % 1 === 0.5)) {
 		const coords = cellEdgeToCellCoords(coord);
-		cells = coords
-			.map((_c) => grid.getCell(_c.r, _c.c))
-			.filter((cell) => cell !== undefined);
+		cells = coords.map((_c) => grid.getCell(_c.r, _c.c)).filter((cell) => cell !== undefined);
 	}
 	if (!cells.length) return '';
 
@@ -121,48 +130,39 @@ function yinYangSumOfAdjacentShadedEdgeOrCornerConstraints(
 	return out_str;
 }
 
-type ConstraintF = (
+function yinYangSumOfAdjacentShadedEdgeOrCornerElement(
 	model: PuzzleModel,
 	grid: Grid,
-	c_id: string,
-	constraint: CenterCornerOrEdgeToolI
-) => string;
+	element: ConstraintsElement
+) {
+	const out_str = simpleElementFunction(
+		model,
+		grid,
+		element,
+		yinYangSumOfAdjacentShadedEdgeOrCornerConstraints
+	);
+	return out_str;
+}
 
-type ConstraintF2 = (
-	model: PuzzleModel,
-	grid: Grid,
-	constraints: CenterCornerOrEdgeToolI[]
-) => string;
-
-const tool_map = new Map<string, ConstraintF>([
+const tool_map = new Map<string, ElementF>([
 	[
 		TOOLS.YIN_YANG_SUM_OF_ADJACENT_SHADED_EDGE_CORNER,
-		yinYangSumOfAdjacentShadedEdgeOrCornerConstraints
-	]
-]);
-
-const tool_map2 = new Map<string, ConstraintF2>([
+		yinYangSumOfAdjacentShadedEdgeOrCornerElement
+	],
 	[TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER_SUM, rotationallySymmetricGalaxyCenterSumConstraints]
 ]);
 
 export function centerCornerOrEdgeConstraints(
 	model: PuzzleModel,
 	grid: Grid,
-	toolId: TOOLID,
-	constraints: Record<string, ConstraintType>
+	element: ConstraintsElement
 ) {
 	let out_str = '';
-	const constraintF2 = tool_map2.get(toolId);
-	const constraintF = tool_map.get(toolId);
-	if (constraintF) {
-		for (const [c_id, constraint] of Object.entries(constraints)) {
-			const constraint_str = constraintF(model, grid, c_id, constraint as CenterCornerOrEdgeToolI);
-			out_str += constraint_str;
-		}
-	} else if (constraintF2) {
-		const constl = Object.values(constraints) as CenterCornerOrEdgeToolI[];
-		const constraint_str = constraintF2(model, grid, constl);
-		out_str += constraint_str;
+	const tool_id = element.tool_id;
+	const elementF = tool_map.get(tool_id);
+	if (elementF) {
+		const element_str = elementF(model, grid, element);
+		out_str += element_str;
 	}
 
 	return out_str;

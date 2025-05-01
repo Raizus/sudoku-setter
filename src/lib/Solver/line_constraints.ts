@@ -106,7 +106,12 @@ function valuedLineElement(
 	return out_str;
 }
 
-function circularValuedLineConstraint(grid: Grid, constraint: LineToolI, predicate: string) {
+function circularValuedLineConstraint(
+	grid: Grid,
+	constraint: LineToolI,
+	predicate: string,
+	default_value: string = ''
+) {
 	const cells_coords = constraint.cells;
 	let cells = cells_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell);
 	let circular = false;
@@ -117,8 +122,8 @@ function circularValuedLineConstraint(grid: Grid, constraint: LineToolI, predica
 	const vars = cellsToVarsName(cells);
 	const vars_str = `[${vars.join(',')}]`;
 
-	const value = constraint.value;
-	if (!value) return '';
+	let value = constraint.value;
+	if (!value) value = default_value;
 
 	const val = parseInt(value);
 	const constraint_str: string = `constraint ${predicate}(${vars_str}, ${val}, ${circular});\n`;
@@ -134,7 +139,12 @@ function circularValuedLineElement(
 	const constraints = element.constraints;
 	let out_str = '';
 	for (const [c_id, constraint] of Object.entries(constraints)) {
-		const constraint_str = circularValuedLineConstraint(grid, constraint as LineToolI, predicate);
+		const constraint_str = circularValuedLineConstraint(
+			grid,
+			constraint as LineToolI,
+			predicate,
+			default_value
+		);
 		out_str += constraint_str;
 	}
 	return out_str;
@@ -180,10 +190,8 @@ function whispersElement(model: PuzzleModel, grid: Grid, element: ConstraintsEle
 }
 
 function dutchWhispersElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const vars = getLineVars(grid, constraint);
-	const vars_str = `[${vars.join(',')}]`;
-	const constraint_str: string = `constraint whispers(${vars_str}, 4);\n`;
-	return constraint_str;
+	const out_str = valuedLineElement(model, grid, element, 'whispers', '4');
+	return out_str;
 }
 
 function thermoElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
@@ -704,7 +712,8 @@ function yinYangRegionSumLineElement(model: PuzzleModel, grid: Grid, element: Co
 function goldilocksZoneRegionSumLineConstraint(
 	model: PuzzleModel,
 	grid: Grid,
-	element: ConstraintsElement
+	c_id: string,
+	constraint: LineToolI
 ) {
 	const cells = cellsFromCoords(grid, constraint.cells);
 
@@ -723,37 +732,44 @@ function simpleMultipliersLineConstraint(grid: Grid, constraint: LineToolI, pred
 	return constraint_str;
 }
 
-function doublersBetweenLineConstraint(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const constraint_str = simpleMultipliersLineConstraint(grid, constraint, 'between_line_p');
-	return constraint_str;
+function simpleMultipliersLineElement(grid: Grid, element: ConstraintsElement, predicate: string) {
+	const constraints = element.constraints;
+	let out_str = '';
+	for (const constraint of Object.values(constraints)) {
+		const constraint_str = simpleMultipliersLineConstraint(
+			grid,
+			constraint as LineToolI,
+			predicate
+		);
+		out_str += constraint_str;
+	}
+	return out_str;
 }
 
-function doublersDoubleArrowLineConstraint(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const constraint_str = simpleMultipliersLineConstraint(grid, constraint, 'double_arrow_p');
-	return constraint_str;
+function doublersBetweenLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+	const out_str = simpleMultipliersLineElement(grid, element, 'between_line_p');
+	return out_str;
 }
 
-function doublersThermometerConstraint(
+function doublersDoubleArrowLineElement(
 	model: PuzzleModel,
 	grid: Grid,
 	element: ConstraintsElement
 ) {
-	const constraint_str = simpleMultipliersLineConstraint(grid, constraint, 'strictly_increasing');
-	return constraint_str;
+	const out_str = simpleMultipliersLineElement(grid, element, 'double_arrow_p');
+	return out_str;
+}
+
+function doublersThermometerElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+	const out_str = simpleMultipliersLineElement(grid, element, 'strictly_increasing');
+	return out_str;
 }
 
 function indexerCellsRegionSubsetLineConstraint(
 	model: PuzzleModel,
 	grid: Grid,
-	element: ConstraintsElement
+	c_id: string,
+	constraint: LineToolI
 ) {
 	const cells = cellsFromCoords(grid, constraint.cells);
 
@@ -774,7 +790,19 @@ function indexerCellsRegionSubsetLineConstraint(
 	return out_str;
 }
 
-type ConstraintF = (model: PuzzleModel, grid: Grid, c_id: string, constraint: LineToolI) => string;
+function indexerCellsRegionSubsetLineElement(
+	model: PuzzleModel,
+	grid: Grid,
+	element: ConstraintsElement
+) {
+	const out_str = simpleElementFunction(
+		model,
+		grid,
+		element,
+		indexerCellsRegionSubsetLineConstraint
+	);
+	return out_str;
+}
 
 const tool_map = new Map<string, ElementF>([
 	[TOOLS.THERMOMETER, thermoElement],
@@ -838,11 +866,11 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.PARITY_COUNT_LINE, parityCountLineElement],
 	[TOOLS.PRODUCT_OF_ENDS_EQUALS_SUM_OF_LINE, productOfEndsEqualsSumOfLineElement],
 
-	[TOOLS.DOUBLERS_THERMOMETER, doublersThermometerConstraint],
-	[TOOLS.DOUBLERS_BETWEEN_LINE, doublersBetweenLineConstraint],
-	[TOOLS.DOUBLERS_DOUBLE_ARROW_LINE, doublersDoubleArrowLineConstraint],
+	[TOOLS.DOUBLERS_BETWEEN_LINE, doublersBetweenLineElement],
+	[TOOLS.DOUBLERS_DOUBLE_ARROW_LINE, doublersDoubleArrowLineElement],
+	[TOOLS.DOUBLERS_THERMOMETER, doublersThermometerElement],
 
-	[TOOLS.INDEXER_CELLS_REGION_SUBSET_LINE, indexerCellsRegionSubsetLineConstraint],
+	[TOOLS.INDEXER_CELLS_REGION_SUBSET_LINE, indexerCellsRegionSubsetLineElement],
 
 	// yin_yang_lines
 	[TOOLS.YIN_YANG_SHADED_WHISPERS_LINE, yinYangShadedWhispersLineElement],
@@ -851,7 +879,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.YIN_YANG_REGION_SUM_LINE, yinYangRegionSumLineElement],
 	[TOOLS.YIN_YANG_INDEXING_LINE_COLORING, yinYangIndexingLineColoringElement],
 
-	[TOOLS.GOLDILOCKS_ZONE_REGION_SUM, goldilocksZoneRegionSumLineConstraint]
+	// [TOOLS.GOLDILOCKS_ZONE_REGION_SUM, goldilocksZoneRegionSumLineConstraint]
 ]);
 
 export function lineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
