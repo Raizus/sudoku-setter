@@ -5,8 +5,16 @@
 	import { getToolInfo, type AbstractElementHandlers } from '$src/lib/Puzzle/ElementHandlersUtils';
 	import { TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
 	import { getUsageDescription } from '$src/lib/Puzzle/ToolUsage';
-	import { removeLocalConstraintGroupAction, restoreElementAction } from '$src/lib/reducers/LocalConstraintsActions';
-	import { localConstraintsStore, toolStore, updateToolAndCurrentConstraintStores, updateToolOnRemoveGroup } from '$stores/BoardStore';
+	import {
+		removeLocalConstraintGroupAction,
+		restoreElementAction
+	} from '$src/lib/reducers/LocalConstraintsActions';
+	import {
+		localConstraintsStore,
+		toolStore,
+		updateToolAndCurrentConstraintStores,
+		updateToolOnRemoveGroup
+	} from '$stores/BoardStore';
 	import { addCommand } from '$stores/HistoryStore';
 	import { getLocalConstraintCommand } from '$stores/LocalConstraintsStore';
 	import ElementEditor from './ElementEditor.svelte';
@@ -17,7 +25,7 @@
 	let selected: boolean = false;
 	let constraint_name = tool_id;
 
-	$: elementInfo = getToolInfo(tool_id, elementHandlers)
+	$: elementInfo = getToolInfo(tool_id, elementHandlers);
 
 	function selectCb() {
 		if (selected) {
@@ -79,7 +87,7 @@
 			</button>
 		</div>
 		{#if selected}
-			<ElementEditor {tool_id}/>
+			<ElementEditor {tool_id} />
 		{/if}
 	</div>
 </div>
