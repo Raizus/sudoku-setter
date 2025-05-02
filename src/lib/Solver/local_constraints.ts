@@ -1,6 +1,7 @@
 import type { PuzzleI } from '../Puzzle/Puzzle';
 import { arrowElements } from './arrow_constraints';
 import { cageElements } from './cage_constraints';
+import { otherElements } from './cave_constraints';
 import { centerCornerOrEdgeElements } from './center_corner_edge_constraints';
 import { cloneElements } from './clone_constraints';
 import { cornerElements } from './corner_constraints';
@@ -39,6 +40,10 @@ export function localConstraints(puzzle: PuzzleI, model: PuzzleModel): string {
 			constraint_str = addHeader(constraint_str, `${tool_id}`);
 			out_str += constraint_str;
 		}
+	}
+
+	for (const [tool_id, element] of elements.entries()) {
+		out_str += otherElements(model, element)
 	}
 
 	return out_str;

@@ -429,49 +429,6 @@ function shikakuNoRepeatsInRegionConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
-function caveConstraint(model: PuzzleModel, tool: TOOLID) {
-	const puzzle = model.puzzle;
-	const grid = puzzle.grid;
-
-	const all_cells = grid.getAllCells();
-	if (all_cells.some((cell) => cell.outside)) {
-		console.warn(`${tool} not implemented when there are cells outside the grid.`);
-		return '';
-	}
-
-	const grid_name1 = VAR_2D_NAMES.CAVE_SHADING;
-	const grid_name2 = VAR_2D_NAMES.CAVE_REGIONS;
-
-	let out_str: string = '';
-	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name1};\n`;
-	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name2};\n`;
-	out_str += `constraint cave_p(${grid_name1}, ${grid_name2});\n`;
-
-	return out_str;
-}
-
-function renbanCavesConstraint(model: PuzzleModel, tool: TOOLID) {
-	const puzzle = model.puzzle;
-	const grid = puzzle.grid;
-
-	const all_cells = grid.getAllCells();
-	if (all_cells.some((cell) => cell.outside)) {
-		console.warn(`${tool} not implemented when there are cells outside the grid.`);
-		return '';
-	}
-
-	const grid_name1 = VAR_2D_NAMES.CAVE_SHADING;
-	const grid_name2 = VAR_2D_NAMES.BOARD_REGIONS;
-	const grid_name3 = 'renban_cave_regions';
-
-	let out_str: string = '';
-	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name3};\n`;
-	out_str += `constraint renban_cave_regions_p(${grid_name1}, ${grid_name2}, ${grid_name3});\n`;
-	out_str += `constraint renban_caves_p(${VAR_2D_NAMES.BOARD}, ${grid_name3});\n`;
-
-	return out_str;
-}
-
 function galaxiesConstraint(model: PuzzleModel, tool: TOOLID) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
@@ -614,41 +571,6 @@ function norinoriConstraint(model: PuzzleModel, tool: TOOLID) {
 	const regions = grid.getUsedRegions();
 	if (regions.size) out_str += `\n% Exactly 2 shaded cells per region (known regions)\n`;
 	out_str += exactlyNPerRegion(puzzle, 2, 1, VAR_2D_NAMES.NORINORI_SHADING);
-
-	return out_str;
-}
-
-function caveLitsConstraint(model: PuzzleModel, tool: TOOLID) {
-	const puzzle = model.puzzle;
-	const grid = puzzle.grid;
-
-	const all_cells = grid.getAllCells();
-	if (all_cells.some((cell) => cell.outside)) {
-		console.warn(`${tool} not implemented when there are cells outside the grid.`);
-		return '';
-	}
-
-	const grid_name1 = VAR_2D_NAMES.LITS_SHADING;
-	const grid_name2 = VAR_2D_NAMES.LITS_REGIONS;
-	const grid_name3 = VAR_2D_NAMES.CAVE_REGIONS;
-
-	let out_str: string = '';
-	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name1};\n`;
-	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..4: ${grid_name2};\n`;
-	out_str += `constraint lits_shading_p(${grid_name1});\n`;
-	out_str += `constraint lits_shading_ids_p(${grid_name1}, ${grid_name2});\n`;
-	out_str += `constraint lits_region_and_ids_p(${grid_name3}, ${grid_name2});\n`;
-	out_str += `constraint lits_4_per_region_p(${grid_name3}, ${grid_name1});\n`;
-	out_str += `constraint lits_tetromino_shapes_p(${grid_name2});\n`;
-
-	const regions = grid.getUsedRegions();
-	if (regions.size) out_str += `\n% Exactly 4 shaded cells per region (known regions)\n`;
-	for (const region of regions) {
-		const region_cells = grid.getRegion(region);
-		const shading_vars = cellsToGridVarsStr(region_cells, VAR_2D_NAMES.LITS_SHADING);
-		const constraint = `constraint count_eq(${shading_vars}, 1, 4);\n`;
-		out_str += constraint;
-	}
 
 	return out_str;
 }
@@ -1074,7 +996,6 @@ type ConstraintF = (model: PuzzleModel, tool: TOOLID) => string;
 
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.FILLOMINO, fillominoConstraint],
-	[TOOLS.CAVE, caveConstraint],
 	[TOOLS.GALAXIES, galaxiesConstraint],
 	[TOOLS.YIN_YANG, yinYangConstraint],
 	[TOOLS.SHIKAKU, shikakuConstraint],
@@ -1100,11 +1021,9 @@ const tool_map = new Map<string, ConstraintF>([
 
 	[TOOLS.PENTOMINO_TILLING, pentominoTillingConstraint],
 	[TOOLS.LITS, litsConstraint],
-	[TOOLS.CAVE_LITS, caveLitsConstraint],
 	[TOOLS.LITS_BLACK_WHITE_STAR_BATTLE, litsBlackAndWhiteStarBattleConstraint],
 	[TOOLS.NORINORI_STAR_BATTLE, norinoriStarBattleConstraint],
 
-	[TOOLS.RENBAN_CAVES, renbanCavesConstraint],
 	[TOOLS.MAZE_DIRECTED_PATH, mazeDirectedPathConstraint],
 
 	[TOOLS.CHAOS_CONSTRUCTION_SUGURU, chaosConstructionSuguruConstraint],

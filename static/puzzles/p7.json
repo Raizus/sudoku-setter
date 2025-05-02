@@ -19,12 +19,6 @@
 		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
 		[{}, {}, {}, {}, {}, {}, {}, {}, {}]
 	],
-	"bool_constraints": {
-		"Cave": true,
-		"Cave Cells Are Odd": true,
-		"Cave Walls Are Even": true,
-		"Cave 2x2 Not Fully Shaded or Unshaded": true
-	},
 	"local_constraints": {
 		"Parity Balance Cage": {
 			"tool_id": "Parity Balance Cage",
@@ -66,6 +60,15 @@
 					"cells": ["R7C7", "R7C8", "R7C9", "R8C7"]
 				}
 			]
+		},
+		"Cave": {
+			"tool_id": "Cave",
+			"constraints": [],
+			"negative_constraints": {
+				"Cave 2x2 Not Fully Shaded or Unshaded": true,
+				"Cave Walls Are Even": true,
+				"Cave Cells Are Odd": true
+			}
 		}
 	}
 }

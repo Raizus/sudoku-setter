@@ -309,34 +309,6 @@ function yinYangFillominoParityConstraint(puzzle: PuzzleI, toolId: TOOLID): stri
 	return out_str;
 }
 
-function caveCellsAreOddConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	let out_str: string = '';
-	out_str += `constraint cave_cells_are_odd_p(board, cave_shading);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
-	return out_str;
-}
-
-function caveWallsAreEvenConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	let out_str: string = '';
-	out_str += `constraint cave_walls_are_even_p(board, cave_shading);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
-	return out_str;
-}
-
-function cave2x2NotFullyShadedOrUnshadedConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	let out_str: string = '';
-	out_str += `constraint shading_2x2_allowed_p(cave_shading, 1..3);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
-	return out_str;
-}
-
-function oneDigitDoesNotAppearInTheCaveConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	let out_str: string = '';
-	out_str += `constraint one_digit_does_not_appear_in_cave_p(board, cave_shading, ALLOWED_DIGITS);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
-	return out_str;
-}
-
 function everyCellBelongsToAGalaxyConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	let out_str: string = '';
 	out_str += `constraint every_cell_is_in_a_galaxy_p(galaxy_regions);\n`;
@@ -565,10 +537,6 @@ const tool_map = new Map<string, ConstraintF>([
 		adjacentLoopCellsAreGermanWhispersConstraint
 	],
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING, twilightCaveFillominoRegionsShading],
-	[TOOLS.CAVE_CELLS_ARE_ODD, caveCellsAreOddConstraint],
-	[TOOLS.CAVE_WALLS_ARE_EVEN, caveWallsAreEvenConstraint],
-	[TOOLS.CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED, cave2x2NotFullyShadedOrUnshadedConstraint],
-	[TOOLS.ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE, oneDigitDoesNotAppearInTheCaveConstraint],
 	[TOOLS.YIN_YANG_FILLOMINO_PARITY, yinYangFillominoParityConstraint],
 
 	[TOOLS.TWO_SYMMETRIC_GALAXIES, twoSymmetricGalaxiesConstraint],

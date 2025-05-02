@@ -99,7 +99,6 @@ import {
 import {
 	adjacentCellsAlongLoopAreGermanWhispersInfo,
 	adjacentCellsAlongLoopAreMultiplesInfo,
-	caveLITSInfo,
 	chaosConstructionSuguruInfo,
 	connectFourAdjacentRedsDifferentParityInfo,
 	connectFourAdjacentYellowsMinimumDifferenceAtLeast3Info,
@@ -125,7 +124,6 @@ import {
 	nurikabeNoRepeatsInIslandsInfo,
 	oneGalaxyIsAGermanWhispersInfo,
 	pentominoTillingInfo,
-	renbanCavesInfo,
 	shikakuInfo,
 	shikakuNoRepeatsInRegionInfo,
 	tillingNoEmptyCellsInfo,
@@ -134,12 +132,8 @@ import {
 	yinYangShadedCellsAreGermanWhispersInfo
 } from './UndeterminedRegionsElementsInfo';
 import {
-	caveCellsAreOddInfo,
-	caveWallsAreEvenInfo,
-	cave2x2NotFullyShadedOrUnshadedInfo,
 	cellCenterCanTouchDiagonallyInfo,
 	notLoopSizedRegionsInfo,
-	oneDigitDoesNotAppearInTheCaveInfo,
 	yinYangFillominoParityInfo,
 	twilightCaveFillominoRegionShadingInfo,
 	caveInfo,
@@ -373,10 +367,6 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	[TOOLS.YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE]:
 		yinYangRegionSumLinesMustCrossColorsAtLeastOnceInfo,
-	[TOOLS.CAVE_CELLS_ARE_ODD]: caveCellsAreOddInfo,
-	[TOOLS.CAVE_WALLS_ARE_EVEN]: caveWallsAreEvenInfo,
-	[TOOLS.CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED]: cave2x2NotFullyShadedOrUnshadedInfo,
-	[TOOLS.ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE]: oneDigitDoesNotAppearInTheCaveInfo,
 
 	[TOOLS.DOUBLERS]: doublersInfo,
 	[TOOLS.NEGATORS]: negatorsInfo,
@@ -411,8 +401,6 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.NOT_LOOP_SIZED_REGIONS]: notLoopSizedRegionsInfo,
 	[TOOLS.MODULAR_LOOP]: modularLoopInfo,
 	[TOOLS.CAVE]: caveInfo,
-	[TOOLS.CAVE_LITS]: caveLITSInfo,
-	[TOOLS.RENBAN_CAVES]: renbanCavesInfo,
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING]: twilightCaveFillominoRegionShadingInfo,
 
 	[TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS]: nurimisakiPathGermanWhispersInfo,

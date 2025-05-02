@@ -353,11 +353,41 @@ export const directedPathTeleportRenbanSegmentsInfo: AbstractElementInfo = {
 export const caveInfo: AbstractElementInfo = {
 	toolId: TOOLS.CAVE,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED,
+			description:
+				'No 2x2 cave region may be completely filled with cave cells or completely filled with wall cells.'
+		},
+		{
+			toolId: TOOLS.CAVE_WALLS_ARE_EVEN,
+			description: 'Cave walls must contain even digits.'
+		},
+		{
+			toolId: TOOLS.CAVE_CELLS_ARE_ODD,
+			description: 'Cave cells must contain odd digits.'
+		},
+		{
+			toolId: TOOLS.ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE,
+			description: 'There is exactly one digit that does not appear anywhere in the cave.'
+		},
+		{
+			toolId: TOOLS.RENBAN_CAVES,
+			description:
+				'Every set of orthogonally connected unshaded cells within a 3x3 Sudoku region acts as a Renban line: that is, those cells must contain a nonrepeating set of consecutive digits in any order. Note that a 3x3 region may have more than one such set of cells. Also note that such a set may consist of just one cell.'
+		},
+		{
+			toolId: TOOLS.CAVE_LITS,
+			description:
+				"The cave and each wall section is a separate region for the purposes of a 'LITS puzzle'. In a LITS puzzle, solvers must place one tetromino into each region. No two tetrominoes of the same shape may share an edge - reflections/rotations count as the same shape. All tetrominoes must form a single orthogonally connected area. No 2x2 area of the grid can be completely covered in tetrominoes."
+		}
+	],
+
 	meta: {
 		description:
 			'Shade some cells in the grid such that all unshaded cells are orthogonally connected, and all shaded cells are orthogonally connected by other shaded cells to an edge of the grid.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CAVE_CONSTRAINTS]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.GLOBAL_CAVE_CONSTRAINTS]
 	}
 };
 
@@ -369,69 +399,6 @@ export const twilightCaveFillominoRegionShadingInfo: AbstractElementInfo = {
 			'Each fillomino region must either be entirely shaded or entirely unshaded, according to cave shading.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
-export const cave2x2NotFullyShadedOrUnshadedInfo: AbstractElementInfo = {
-	toolId: TOOLS.CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED,
-
-	meta: {
-		description:
-			'No 2x2 cave region may be completely filled with cave cells or completely filled with wall cells.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CAVE_CONSTRAINTS]
-	}
-};
-
-export const oneDigitDoesNotAppearInTheCaveInfo: AbstractElementInfo = {
-	toolId: TOOLS.ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE,
-
-	meta: {
-		description: 'There is exactly one digit that does not appear anywhere in the cave.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CAVE_CONSTRAINTS]
-	}
-};
-
-export const caveWallsAreEvenInfo: AbstractElementInfo = {
-	toolId: TOOLS.CAVE_WALLS_ARE_EVEN,
-
-	meta: {
-		description: 'Cave walls must contain even digits.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CAVE_CONSTRAINTS]
-	}
-};
-
-export const caveCellsAreOddInfo: AbstractElementInfo = {
-	toolId: TOOLS.CAVE_CELLS_ARE_ODD,
-
-	meta: {
-		description: 'Cave cells must contain odd digits.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CAVE_CONSTRAINTS]
-	}
-};
-
-export const caveLITSInfo: AbstractElementInfo = {
-	toolId: TOOLS.CAVE_LITS,
-
-	meta: {
-		description:
-			"The cave and each wall section is a separate region for the purposes of a 'LITS puzzle'. In a LITS puzzle, solvers must place one tetromino into each region. No two tetrominoes of the same shape may share an edge - reflections/rotations count as the same shape. All tetrominoes must form a single orthogonally connected area. No 2x2 area of the grid can be completely covered in tetrominoes.",
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CAVE_CONSTRAINTS]
-	}
-};
-
-export const renbanCavesInfo: AbstractElementInfo = {
-	toolId: TOOLS.RENBAN_CAVES,
-
-	meta: {
-		description:
-			'Every set of orthogonally connected unshaded cells within a 3x3 Sudoku region acts as a Renban line: that is, those cells must contain a nonrepeating set of consecutive digits in any order. Note that a 3x3 region may have more than one such set of cells. Also note that such a set may consist of just one cell.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CAVE_CONSTRAINTS]
 	}
 };
 
