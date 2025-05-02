@@ -378,7 +378,6 @@ function _pruneMinizincModel(model: string): string {
 				if (funcMatch || predMatch || testMatch) continue;
 				const regex = new RegExp(`\\b${defName}\\s*\\(`, 'g');
 				if (regex.test(line)) {
-					// console.log('reference', defName);
 					references.push(defName);
 				}
 			} else if (deftype === 'variable') {
@@ -404,8 +403,6 @@ function _pruneMinizincModel(model: string): string {
 		const references = findReferences(line);
 		references.forEach((call) => usedDefinitions.add(call));
 	}
-
-	console.log('usedDefinitions', usedDefinitions);
 
 	// Create the pruned model by removing unused definitions
 	const unusedRanges = Object.values(definitions)
