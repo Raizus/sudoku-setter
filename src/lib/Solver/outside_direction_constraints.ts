@@ -487,7 +487,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.NEGATORS_LITTLE_KILLER_SUM, negatorsLittleKillerSumElement]
 ]);
 
-export function outsideDirectionConstraints(
+export function outsideDirectionElements(
 	model: PuzzleModel,
 	grid: Grid,
 	element: ConstraintsElement

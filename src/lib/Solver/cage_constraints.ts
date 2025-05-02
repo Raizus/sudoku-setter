@@ -409,7 +409,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.MULTISET_CAGE, multisetCageElement]
 ]);
 
-export function cageConstraints(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+export function cageElements(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
 	const out_str = constraintsBuilder(model, grid, element, tool_map);
 	return out_str;
 }

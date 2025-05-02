@@ -35,7 +35,7 @@ function cloneRegionElement(model: PuzzleModel, grid: Grid, element: Constraints
 
 const tool_map = new Map<string, ElementF>([[TOOLS.CLONE_REGION, cloneRegionElement]]);
 
-export function cloneConstraints(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+export function cloneElements(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
 	const out_str = constraintsBuilder(model, grid, element, tool_map);
 	return out_str;
 }

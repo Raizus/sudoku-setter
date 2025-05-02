@@ -133,7 +133,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.CHAOS_CONSTRUCTION_ARROW, chaosConstructionArrowElement]
 ]);
 
-export function arrowConstraints(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+export function arrowElements(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
 	const out_str = constraintsBuilder(model, grid, element, tool_map);
 	return out_str;
 }

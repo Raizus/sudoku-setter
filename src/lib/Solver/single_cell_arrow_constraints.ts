@@ -91,7 +91,7 @@ export const tool_map = new Map<string, ElementF>([
 	[TOOLS.THERMO_SIGHTLINE_LOOP_ARROW, thermoSightlineLoopArrowElement]
 ]);
 
-export function singleCellArrowConstraints(
+export function singleCellArrowElements(
 	model: PuzzleModel,
 	grid: Grid,
 	element: ConstraintsElement

@@ -431,7 +431,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.NEXT_NUMBERED_REGION_DISTANCE_ARROWS, nextNumberedRegionDistanceArrowsElement]
 ]);
 
-export function singleCellMultiArrowConstraints(
+export function singleCellMultiArrowElements(
 	model: PuzzleModel,
 	grid: Grid,
 	element: ConstraintsElement

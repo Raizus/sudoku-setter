@@ -155,7 +155,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER_SUM, rotationallySymmetricGalaxyCenterSumConstraints]
 ]);
 
-export function centerCornerOrEdgeConstraints(
+export function centerCornerOrEdgeElements(
 	model: PuzzleModel,
 	grid: Grid,
 	element: ConstraintsElement

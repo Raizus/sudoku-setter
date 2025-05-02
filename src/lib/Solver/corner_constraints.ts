@@ -166,7 +166,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.EQUAL_DIAGONAL_DIFFERENCES, equalDiagonalDifferencesElement]
 ]);
 
-export function cornerConstraints(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+export function cornerElements(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
 	const out_str = constraintsBuilder(model, grid, element, tool_map);
 	return out_str;
 }

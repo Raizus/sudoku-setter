@@ -1624,7 +1624,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.TELEPORT, teleportElement]
 ]);
 
-export function singleCellConstraints(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+export function singleCellElements(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
 	const out_str = constraintsBuilder(model, grid, element, tool_map);
 	return out_str;
 }

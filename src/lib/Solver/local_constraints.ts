@@ -1,31 +1,31 @@
 import type { PuzzleI } from '../Puzzle/Puzzle';
-import { arrowConstraints } from './arrow_constraints';
-import { cageConstraints } from './cage_constraints';
-import { centerCornerOrEdgeConstraints } from './center_corner_edge_constraints';
-import { cloneConstraints } from './clone_constraints';
-import { cornerConstraints } from './corner_constraints';
+import { arrowElements } from './arrow_constraints';
+import { cageElements } from './cage_constraints';
+import { centerCornerOrEdgeElements } from './center_corner_edge_constraints';
+import { cloneElements } from './clone_constraints';
+import { cornerElements } from './corner_constraints';
 import { edgeElements } from './edge_constraints';
 import { lineElement } from './line_constraints';
-import { outsideDirectionConstraints } from './outside_direction_constraints';
-import { singleCellArrowConstraints } from './single_cell_arrow_constraints';
-import { singleCellConstraints } from './single_cell_constraints';
-import { singleCellMultiArrowConstraints } from './single_cell_multi_arrow_constraints';
+import { outsideDirectionElements } from './outside_direction_constraints';
+import { singleCellArrowElements } from './single_cell_arrow_constraints';
+import { singleCellElements } from './single_cell_constraints';
+import { singleCellMultiArrowElements } from './single_cell_multi_arrow_constraints';
 import { addHeader, PuzzleModel, type ElementF } from './solver_utils';
-import { valuedGlobalConstraints } from './valued_global_constraints';
+import { valuedGlobalConstraints as valuedGlobalElements } from './valued_global_constraints';
 
 const functions_list: ElementF[] = [
-	centerCornerOrEdgeConstraints,
-	singleCellConstraints,
-	singleCellArrowConstraints,
-	singleCellMultiArrowConstraints,
+	centerCornerOrEdgeElements,
+	singleCellElements,
+	singleCellArrowElements,
+	singleCellMultiArrowElements,
 	edgeElements,
-	cornerConstraints,
+	cornerElements,
 	lineElement,
-	arrowConstraints,
-	cageConstraints,
-	outsideDirectionConstraints,
-	cloneConstraints,
-	valuedGlobalConstraints
+	arrowElements,
+	cageElements,
+	outsideDirectionElements,
+	cloneElements,
+	valuedGlobalElements
 ];
 
 export function localConstraints(puzzle: PuzzleI, model: PuzzleModel): string {
