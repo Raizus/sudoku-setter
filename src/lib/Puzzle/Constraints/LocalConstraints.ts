@@ -171,9 +171,7 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 					element_data.negative_constraints[neg_tool_id] = value;
 				}
 			}
-			if (element_data.constraints.length) {
-				local_elements[toolId] = element_data;
-			}
+			local_elements[toolId] = element_data;
 		}
 		return local_elements;
 	}
