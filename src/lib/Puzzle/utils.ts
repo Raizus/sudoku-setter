@@ -1,4 +1,4 @@
-import { strToGridCoord, type GridCoordI } from '$lib/utils/SquareCellGridCoords';
+import { strToCellCoord, strToGridCoord, type GridCoordI } from '$lib/utils/SquareCellGridCoords';
 import { stringToDirection, type DIRECTION } from '$lib/utils/directions';
 import { getDefaultShape } from './ElementHandlersUtils';
 import { squareCellElementHandlers } from './ElementsInfo/SquareCellElementHandlers';
@@ -7,6 +7,16 @@ import type { TOOLID } from './Tools';
 // import type { ShapeI } from './Shape/Shape';
 
 export function parseCell(data: Record<string, unknown>): GridCoordI {
+	const cell = data['cell'];
+	if (typeof cell != 'string') {
+		throw Error('cell entry must be a string.');
+	}
+
+	const coords = strToCellCoord(cell);
+	return coords;
+}
+
+export function parseCell2(data: Record<string, unknown>): GridCoordI {
 	const cell = data['cell'];
 	if (typeof cell != 'string') {
 		throw Error('cell entry must be a string.');
@@ -36,7 +46,7 @@ export function parseCells(data: Record<string, unknown>, key: string): GridCoor
 		if (typeof cell != 'string') {
 			throw Error('cell must be string.');
 		}
-		return strToGridCoord(cell);
+		return strToCellCoord(cell);
 	});
 
 	return coords;
@@ -56,7 +66,7 @@ export function parseLines(data: Record<string, unknown>): GridCoordI[][] {
 			if (typeof cell != 'string') {
 				throw Error('cell must be string.');
 			}
-			return strToGridCoord(cell);
+			return strToCellCoord(cell);
 		});
 		return line;
 	});

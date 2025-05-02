@@ -255,10 +255,18 @@ export function gridCoordToStr(gridCoord: GridCoordI): string {
 	return coordStr;
 }
 
-export function strToGridCoord(coordStr: string): GridCoordI {
+export function strToCellCoord(coordStr: string): GridCoordI {
 	const res = coordStr.split('R')[1].split('C');
 	const row = parseInt(res[0]) - 1;
 	const col = parseInt(res[1]) - 1;
+
+	return { r: row, c: col };
+}
+
+export function strToGridCoord(coordStr: string): GridCoordI {
+	const res = coordStr.split('R')[1].split('C');
+	const row = parseFloat(res[0]) - 1;
+	const col = parseFloat(res[1]) - 1;
 
 	return { r: row, c: col };
 }
