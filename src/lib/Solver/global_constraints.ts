@@ -309,34 +309,6 @@ function yinYangFillominoParityConstraint(puzzle: PuzzleI, toolId: TOOLID): stri
 	return out_str;
 }
 
-function everyCellBelongsToAGalaxyConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	let out_str: string = '';
-	out_str += `constraint every_cell_is_in_a_galaxy_p(galaxy_regions);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
-	return out_str;
-}
-
-function galaxy2x2DoesNotBelongToOneGalaxyConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	let out_str: string = '';
-	out_str += `constraint no_2x2_belongs_to_one_galaxy_p(galaxy_regions);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
-	return out_str;
-}
-
-function twoSymmetricGalaxiesConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	let out_str: string = '';
-	out_str += `constraint two_symmetric_galaxies_p(galaxy_regions);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
-	return out_str;
-}
-
-function oneGalaxyIsAGermanWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	let out_str: string = '';
-	out_str += `constraint one_galaxy_is_german_whispers(board, galaxy_regions);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
-	return out_str;
-}
-
 function yinYangNeighbourGreaterThanOneWithinRegionShadedConstraint(
 	puzzle: PuzzleI,
 	toolId: TOOLID
@@ -538,11 +510,6 @@ const tool_map = new Map<string, ConstraintF>([
 	],
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING, twilightCaveFillominoRegionsShading],
 	[TOOLS.YIN_YANG_FILLOMINO_PARITY, yinYangFillominoParityConstraint],
-
-	[TOOLS.TWO_SYMMETRIC_GALAXIES, twoSymmetricGalaxiesConstraint],
-	[TOOLS.EVERY_CELL_BELONGS_TO_A_GALAXY, everyCellBelongsToAGalaxyConstraint],
-	[TOOLS.GALAXY_2X2_DOES_NOT_BELONG_TO_ONE_GALAXY, galaxy2x2DoesNotBelongToOneGalaxyConstraint],
-	[TOOLS.ONE_GALAXY_IS_A_GERMAN_WHISPERS, oneGalaxyIsAGermanWhispersConstraint],
 
 	[
 		TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED,

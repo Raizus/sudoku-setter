@@ -100,9 +100,6 @@ import {
 	adjacentCellsAlongLoopAreGermanWhispersInfo,
 	adjacentCellsAlongLoopAreMultiplesInfo,
 	chaosConstructionSuguruInfo,
-	connectFourAdjacentRedsDifferentParityInfo,
-	connectFourAdjacentYellowsMinimumDifferenceAtLeast3Info,
-	connectFourDrawInfo,
 	connectFourInfo,
 	directedPathAdjacentCellsDutchWhispersInfo,
 	directedPathAdjacentCellsSumIsPrimeInfo,
@@ -111,9 +108,7 @@ import {
 	directedPathSumOfCellsPerRegionIsPrimeInfo,
 	directedPathTeleportRenbanSegmentsInfo,
 	directedPathTeleportSegmentsSumInfo,
-	everyCellBelongsToAGalaxyInfo,
 	galaxiesInfo,
-	galaxy2x2DoesNotBelongToOneGalaxyInfo,
 	goldilocksZoneInfo,
 	litsBlackAndWhiteStarBattleInfo,
 	mazeDirectedPathInfo,
@@ -122,12 +117,10 @@ import {
 	numberedChaosConstructionInfo,
 	nurikabeInfo,
 	nurikabeNoRepeatsInIslandsInfo,
-	oneGalaxyIsAGermanWhispersInfo,
 	pentominoTillingInfo,
 	shikakuInfo,
 	shikakuNoRepeatsInRegionInfo,
 	tillingNoEmptyCellsInfo,
-	twoSymmetricGalaxiesInfo,
 	yinYangNeighbourGreaterThanOneWithinRegionShadedInfo,
 	yinYangShadedCellsAreGermanWhispersInfo
 } from './UndeterminedRegionsElementsInfo';
@@ -409,10 +402,6 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 		adjacentCellsAlongLoopAreGermanWhispersInfo,
 
 	[TOOLS.GALAXIES]: galaxiesInfo,
-	[TOOLS.TWO_SYMMETRIC_GALAXIES]: twoSymmetricGalaxiesInfo,
-	[TOOLS.EVERY_CELL_BELONGS_TO_A_GALAXY]: everyCellBelongsToAGalaxyInfo,
-	[TOOLS.GALAXY_2X2_DOES_NOT_BELONG_TO_ONE_GALAXY]: galaxy2x2DoesNotBelongToOneGalaxyInfo,
-	[TOOLS.ONE_GALAXY_IS_A_GERMAN_WHISPERS]: oneGalaxyIsAGermanWhispersInfo,
 
 	[TOOLS.PENTOMINO_TILLING]: pentominoTillingInfo,
 	[TOOLS.TILLING_NO_EMPTY_CELLS]: tillingNoEmptyCellsInfo,
@@ -431,10 +420,6 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.DIRECTED_PATH_IS_PARITY_LINE]: directedPathIsParityLineInfo,
 
 	[TOOLS.CONNECT_FOUR]: connectFourInfo,
-	[TOOLS.CONNECT_FOUR_DRAW]: connectFourDrawInfo,
-	[TOOLS.CONNECT_FOUR_ADJACENT_REDS_DIFFERENT_PARITY]: connectFourAdjacentRedsDifferentParityInfo,
-	[TOOLS.CONNECT_FOUR_ADJACENT_YELLOWS_MINIMUM_DIFFERENCE_AT_LEAST_3]:
-		connectFourAdjacentYellowsMinimumDifferenceAtLeast3Info,
 
 	// Single Cell Constraints
 	[TOOLS.FOG_LIGHTS]: fogLighsInfo,

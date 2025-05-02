@@ -243,11 +243,7 @@ function modularLoopConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
-function exactlyNPerRow(
-	n: number,
-	target: boolean | number,
-	grid_name: string
-) {
+function exactlyNPerRow(n: number, target: boolean | number, grid_name: string) {
 	let out_str: string = '';
 	out_str += `% Exactly ${n} per row \n`;
 	out_str += `constraint exactly_n_per_row_p(${grid_name}, ${target}, ${n});\n`;
@@ -255,11 +251,7 @@ function exactlyNPerRow(
 	return out_str;
 }
 
-function exactlyNPerColumn(
-	n: number,
-	target: boolean | number,
-	grid_name: string
-) {
+function exactlyNPerColumn(n: number, target: boolean | number, grid_name: string) {
 	let out_str: string = '';
 	out_str += `\n% Exactly ${n} per column \n`;
 	out_str += `constraint exactly_n_per_column_p(${grid_name}, ${target}, ${n});\n`;
@@ -426,31 +418,6 @@ function shikakuNoRepeatsInRegionConstraint(model: PuzzleModel, tool: TOOLID) {
 	let out_str: string = '';
 	out_str += `constraint shikaku_no_repeats_in_regions_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.SHIKAKU_REGIONS});\n`;
 
-	return out_str;
-}
-
-function galaxiesConstraint(model: PuzzleModel, tool: TOOLID) {
-	const puzzle = model.puzzle;
-	const grid = puzzle.grid;
-
-	const all_cells = grid.getAllCells();
-	if (all_cells.some((cell) => cell.outside)) {
-		console.warn(`${tool} not implemented when there are cells outside the grid.`);
-		return '';
-	}
-
-	const grid_name1 = VAR_2D_NAMES.GALAXY_REGIONS;
-	const grid_name2 = VAR_2D_NAMES.GALAXY_SIZES;
-	const max_galaxies = grid.nCols * grid.nRows;
-
-	let out_str: string = '';
-	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${max_galaxies}: ${grid_name1};\n`;
-	out_str += `constraint galaxy_restrict_numbering_p(${grid_name1});\n`;
-	out_str += `array[0..${max_galaxies}] of var 0..${max_galaxies}: ${grid_name2};\n`;
-	out_str += `constraint galaxy_sizes_p(${grid_name1}, ${grid_name2});\n`;
-	out_str += `constraint adjacent_galaxies_not_size_leq_3_p(${grid_name1}, ${grid_name2});\n`;
-	out_str += `constraint gallaxy_connected_regions_p(${grid_name1});\n`;
-	// out_str += `constraint galaxy_180_symmetry_p(${grid_name1}, ${grid_name2});\n`;
 	return out_str;
 }
 
@@ -951,52 +918,10 @@ function chaosConstructionSuguruConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
-function connectFourConstraint(model: PuzzleModel, tool: TOOLID) {
-	const puzzle = model.puzzle;
-	const grid = puzzle.grid;
-
-	const all_cells = grid.getAllCells();
-	if (all_cells.some((cell) => cell.outside)) {
-		console.warn(`${tool} not implemented when there are cells outside the grid.`);
-		return '';
-	}
-
-	const grid_name = 'connect_four';
-	let out_str: string = '% 1 - Red, 2 - Yellow\n';
-	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..2: ${grid_name};\n`;
-
-	return out_str;
-}
-
-function connectFourDrawConstraint(model: PuzzleModel, tool: TOOLID) {
-	let out_str: string = '';
-	out_str += `constraint connect_four_draw_p(${VAR_2D_NAMES.CONNECT_FOUR});\n`;
-
-	return out_str;
-}
-
-function connectFourAdjacentRedsDifferentParityConstraint(model: PuzzleModel, tool: TOOLID) {
-	let out_str: string = '';
-	out_str += `constraint connect_four_adjacent_reds_different_parity_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.CONNECT_FOUR});\n`;
-
-	return out_str;
-}
-
-function connectFourAdjacentYellowsMinimumDifferenceAtLeast3Constraint(
-	model: PuzzleModel,
-	tool: TOOLID
-) {
-	let out_str: string = '';
-	out_str += `constraint connect_four_adjacent_yellows_difference_at_least_x_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.CONNECT_FOUR}, 3);\n`;
-
-	return out_str;
-}
-
 type ConstraintF = (model: PuzzleModel, tool: TOOLID) => string;
 
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.FILLOMINO, fillominoConstraint],
-	[TOOLS.GALAXIES, galaxiesConstraint],
 	[TOOLS.YIN_YANG, yinYangConstraint],
 	[TOOLS.SHIKAKU, shikakuConstraint],
 	[TOOLS.SHIKAKU_NO_REPEATS_IN_REGION, shikakuNoRepeatsInRegionConstraint],
@@ -1026,18 +951,7 @@ const tool_map = new Map<string, ConstraintF>([
 
 	[TOOLS.MAZE_DIRECTED_PATH, mazeDirectedPathConstraint],
 
-	[TOOLS.CHAOS_CONSTRUCTION_SUGURU, chaosConstructionSuguruConstraint],
-
-	[TOOLS.CONNECT_FOUR, connectFourConstraint],
-	[TOOLS.CONNECT_FOUR_DRAW, connectFourDrawConstraint],
-	[
-		TOOLS.CONNECT_FOUR_ADJACENT_REDS_DIFFERENT_PARITY,
-		connectFourAdjacentRedsDifferentParityConstraint
-	],
-	[
-		TOOLS.CONNECT_FOUR_ADJACENT_YELLOWS_MINIMUM_DIFFERENCE_AT_LEAST_3,
-		connectFourAdjacentYellowsMinimumDifferenceAtLeast3Constraint
-	]
+	[TOOLS.CHAOS_CONSTRUCTION_SUGURU, chaosConstructionSuguruConstraint]
 ]);
 
 export function undeterminedRegionsConstraints(model: PuzzleModel): string {

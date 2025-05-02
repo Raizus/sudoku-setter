@@ -23,6 +23,13 @@ function cave2x2NotFullyShadedOrUnshadedConstraint(toolId: TOOLID): string {
 	return out_str;
 }
 
+function oneDigitDoesNotAppearInTheCaveConstraint(toolId: TOOLID): string {
+	let out_str: string = '';
+	out_str += `constraint one_digit_does_not_appear_in_cave_p(board, cave_shading, ALLOWED_DIGITS);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
 function caveLitsConstraint(model: PuzzleModel, tool: TOOLID) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
@@ -80,7 +87,7 @@ function renbanCavesConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
-function caveConstraint(model: PuzzleModel, element: ConstraintsElement) {
+export function caveConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 	const tool = element.tool_id;
@@ -105,6 +112,8 @@ function caveConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const cave_walls_even = !!element.negative_constraints[TOOLS.CAVE_WALLS_ARE_EVEN];
 	const cave_lits = !!element.negative_constraints[TOOLS.CAVE_LITS];
 	const renban_caves = !!element.negative_constraints[TOOLS.RENBAN_CAVES];
+	const digit_not_in_cave =
+		!!element.negative_constraints[TOOLS.ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE];
 
 	if (cave_2x2) {
 		out_str += cave2x2NotFullyShadedOrUnshadedConstraint(
@@ -123,21 +132,10 @@ function caveConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	if (renban_caves) {
 		out_str += renbanCavesConstraint(model, TOOLS.RENBAN_CAVES);
 	}
-
-	return out_str;
-}
-
-type ElementF = (model: PuzzleModel, element: ConstraintsElement) => string;
-
-const tool_map = new Map<string, ElementF>([[TOOLS.CAVE, caveConstraint]]);
-
-export function otherElements(model: PuzzleModel, element: ConstraintsElement) {
-	let out_str = '';
-	const tool_id = element.tool_id;
-	const elementF = tool_map.get(tool_id);
-	if (elementF) {
-		const element_str = elementF(model, element);
-		out_str += element_str;
+	if (digit_not_in_cave) {
+		out_str += oneDigitDoesNotAppearInTheCaveConstraint(
+			TOOLS.ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE
+		);
 	}
 
 	return out_str;

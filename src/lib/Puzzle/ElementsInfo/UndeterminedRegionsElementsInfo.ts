@@ -415,53 +415,32 @@ export const yinYangFillominoParityInfo: AbstractElementInfo = {
 export const galaxiesInfo: AbstractElementInfo = {
 	toolId: TOOLS.GALAXIES,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.EVERY_CELL_BELONGS_TO_A_GALAXY,
+			description: 'Every cell in the grid belongs to a galaxy.'
+		},
+		{
+			toolId: TOOLS.GALAXY_2X2_DOES_NOT_BELONG_TO_ONE_GALAXY,
+			description: 'No 2x2 area may belong entirely to one galaxy.'
+		},
+		{
+			toolId: TOOLS.TWO_SYMMETRIC_GALAXIES,
+			description:
+				"Divide the grid into two galaxies. Each galaxy must consist of a region of orthogonally connected cells, and must have 180 degree rotational symmetry. (The central point around which a galaxy is symmetrical doesn't need to actually belong to that galaxy.)"
+		},
+		{
+			toolId: TOOLS.ONE_GALAXY_IS_A_GERMAN_WHISPERS,
+			description:
+				'One of the two galaxies behaves like a German whisper; orthogonally adjacent cells in this galaxy must have a difference of at least 5.'
+		}
+	],
+
 	meta: {
 		description:
 			'Each galaxy must consist of a region of orthogonally connected cells, and must have 180 degree rotational symmetry.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_GALAXY_CONSTRAINTS]
-	}
-};
-
-export const everyCellBelongsToAGalaxyInfo: AbstractElementInfo = {
-	toolId: TOOLS.EVERY_CELL_BELONGS_TO_A_GALAXY,
-
-	meta: {
-		description: 'Every cell in the grid belongs to a galaxy.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_GALAXY_CONSTRAINTS]
-	}
-};
-
-export const galaxy2x2DoesNotBelongToOneGalaxyInfo: AbstractElementInfo = {
-	toolId: TOOLS.GALAXY_2X2_DOES_NOT_BELONG_TO_ONE_GALAXY,
-
-	meta: {
-		description: 'No 2x2 area may belong entirely to one galaxy.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_GALAXY_CONSTRAINTS]
-	}
-};
-
-export const twoSymmetricGalaxiesInfo: AbstractElementInfo = {
-	toolId: TOOLS.TWO_SYMMETRIC_GALAXIES,
-
-	meta: {
-		description:
-			"Divide the grid into two galaxies. Each galaxy must consist of a region of orthogonally connected cells, and must have 180 degree rotational symmetry. (The central point around which a galaxy is symmetrical doesn't need to actually belong to that galaxy.)",
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_GALAXY_CONSTRAINTS]
-	}
-};
-
-export const oneGalaxyIsAGermanWhispersInfo: AbstractElementInfo = {
-	toolId: TOOLS.ONE_GALAXY_IS_A_GERMAN_WHISPERS,
-
-	meta: {
-		description:
-			'One of the two galaxies behaves like a German whisper; orthogonally adjacent cells in this galaxy must have a difference of at least 5.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_GALAXY_CONSTRAINTS]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.GLOBAL_GALAXY_CONSTRAINTS]
 	}
 };
 
@@ -500,42 +479,27 @@ export const litsBlackAndWhiteStarBattleInfo: AbstractElementInfo = {
 export const connectFourInfo: AbstractElementInfo = {
 	toolId: TOOLS.CONNECT_FOUR,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.CONNECT_FOUR_DRAW,
+			description:
+				'The board represents a game of Connect 4 ended in a draw. And so it resulted in a draw; the board became full of an equal number of red and yellow discs without either of them managing to get any horizontal, vertical or diagonal connected line of 4 discs of their colour. Recreate the end board state by colouring the holes red and yellow.'
+		},
+		{
+			toolId: TOOLS.CONNECT_FOUR_ADJACENT_REDS_DIFFERENT_PARITY,
+			description:
+				'Two orthogonally adjacent red discs must be of different parity (one odd digit and one even digit).'
+		},
+		{
+			toolId: TOOLS.CONNECT_FOUR_ADJACENT_YELLOWS_MINIMUM_DIFFERENCE_AT_LEAST_3,
+			description: 'Two orthogonally adjacent yellow discs must have a difference of at least 3.'
+		}
+	],
+
 	meta: {
 		description:
 			'The board represents a game of Connect 4. And so it resulted in a draw; the board became full of an equal number of red and yellow discs without either of them managing to get any horizontal, vertical or diagonal connected line of 4 discs of their colour. Recreate the end board state by colouring the holes red and yellow. The first two moves have been shown.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CONNECT_FOUR_CONSTRAINTS]
-	}
-};
-
-export const connectFourDrawInfo: AbstractElementInfo = {
-	toolId: TOOLS.CONNECT_FOUR_DRAW,
-
-	meta: {
-		description:
-			'The board represents a game of Connect 4 ended in a draw. And so it resulted in a draw; the board became full of an equal number of red and yellow discs without either of them managing to get any horizontal, vertical or diagonal connected line of 4 discs of their colour. Recreate the end board state by colouring the holes red and yellow.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CONNECT_FOUR_CONSTRAINTS]
-	}
-};
-
-export const connectFourAdjacentRedsDifferentParityInfo: AbstractElementInfo = {
-	toolId: TOOLS.CONNECT_FOUR_ADJACENT_REDS_DIFFERENT_PARITY,
-
-	meta: {
-		description:
-			'Two orthogonally adjacent red discs must be of different parity (one odd digit and one even digit.)',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CONNECT_FOUR_CONSTRAINTS]
-	}
-};
-
-export const connectFourAdjacentYellowsMinimumDifferenceAtLeast3Info: AbstractElementInfo = {
-	toolId: TOOLS.CONNECT_FOUR_ADJACENT_YELLOWS_MINIMUM_DIFFERENCE_AT_LEAST_3,
-
-	meta: {
-		description: 'Two orthogonally adjacent yellow discs must have a difference of at least 3.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_CONNECT_FOUR_CONSTRAINTS]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.GLOBAL_CONNECT_FOUR_CONSTRAINTS]
 	}
 };
