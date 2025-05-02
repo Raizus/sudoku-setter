@@ -93,19 +93,11 @@ import {
 	positiveAntidiagonalInfo,
 	positiveDiagonalInfo,
 	sudokuRulesDoNotApplyInfo,
-	tangoInfo,
-	yinYangRegionSumLinesMustCrossColorsAtLeastOnceInfo
+	tangoInfo
 } from './GlobalConstraintsElementsInfo';
 import {
-	adjacentCellsAlongLoopAreGermanWhispersInfo,
-	adjacentCellsAlongLoopAreMultiplesInfo,
 	chaosConstructionSuguruInfo,
 	connectFourInfo,
-	directedPathAdjacentCellsDutchWhispersInfo,
-	directedPathAdjacentCellsSumIsPrimeInfo,
-	directedPathIsParityLineInfo,
-	directedPathIsRegionSumLineInfo,
-	directedPathSumOfCellsPerRegionIsPrimeInfo,
 	directedPathTeleportRenbanSegmentsInfo,
 	directedPathTeleportSegmentsSumInfo,
 	galaxiesInfo,
@@ -125,12 +117,9 @@ import {
 	yinYangShadedCellsAreGermanWhispersInfo
 } from './UndeterminedRegionsElementsInfo';
 import {
-	cellCenterCanTouchDiagonallyInfo,
-	notLoopSizedRegionsInfo,
 	yinYangFillominoParityInfo,
 	twilightCaveFillominoRegionShadingInfo,
 	caveInfo,
-	modularLoopInfo,
 	cellCenterLoopNoTouchingInfo,
 	sashiganeRegionsInfo,
 	twoContiguousRegionsInfo,
@@ -154,7 +143,7 @@ import {
 	highLowOscilatorLineInfo,
 	indexingColumnIsXLineInfo,
 	indexingRowIsXLineInfo,
-	nabnerLineInfo as nabnerLineInfo,
+	nabnerLineInfo,
 	lockoutLineInfo,
 	maximumAdjacentDifferenceLineInfo,
 	modularLineInfo,
@@ -358,9 +347,6 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_POSITIVE_DIAGONAL]:
 		oddEvenParityMirrorAlongPositiveDiagonalInfo,
 
-	[TOOLS.YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE]:
-		yinYangRegionSumLinesMustCrossColorsAtLeastOnceInfo,
-
 	[TOOLS.DOUBLERS]: doublersInfo,
 	[TOOLS.NEGATORS]: negatorsInfo,
 	[TOOLS.NEXUS]: nexusInfo,
@@ -390,16 +376,10 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.SHIKAKU_NO_REPEATS_IN_REGION]: shikakuNoRepeatsInRegionInfo,
 	[TOOLS.GOLDILOCKS_ZONE]: goldilocksZoneInfo,
 	[TOOLS.CELL_CENTER_LOOP_NO_TOUCHING]: cellCenterLoopNoTouchingInfo,
-	[TOOLS.CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY]: cellCenterCanTouchDiagonallyInfo,
-	[TOOLS.NOT_LOOP_SIZED_REGIONS]: notLoopSizedRegionsInfo,
-	[TOOLS.MODULAR_LOOP]: modularLoopInfo,
 	[TOOLS.CAVE]: caveInfo,
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING]: twilightCaveFillominoRegionShadingInfo,
 
 	[TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS]: nurimisakiPathGermanWhispersInfo,
-	[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES]: adjacentCellsAlongLoopAreMultiplesInfo,
-	[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS]:
-		adjacentCellsAlongLoopAreGermanWhispersInfo,
 
 	[TOOLS.GALAXIES]: galaxiesInfo,
 
@@ -410,14 +390,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.NORINORI_STAR_BATTLE]: norinoriStarBattleInfo,
 
 	[TOOLS.MAZE_DIRECTED_PATH]: mazeDirectedPathInfo,
-	[TOOLS.DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME]: directedPathAdjacentCellsSumIsPrimeInfo,
-	[TOOLS.DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME]:
-		directedPathSumOfCellsPerRegionIsPrimeInfo,
-	[TOOLS.DIRECTED_PATH_ADJACENT_CELLS_DUTCH_WHISPERS]: directedPathAdjacentCellsDutchWhispersInfo,
-	[TOOLS.DIRECTED_PATH_IS_REGION_SUM_LINE]: directedPathIsRegionSumLineInfo,
 	[TOOLS.DIRECTED_PATH_TELEPORT_SEGMENTS_SUM]: directedPathTeleportSegmentsSumInfo,
 	[TOOLS.DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS]: directedPathTeleportRenbanSegmentsInfo,
-	[TOOLS.DIRECTED_PATH_IS_PARITY_LINE]: directedPathIsParityLineInfo,
 
 	[TOOLS.CONNECT_FOUR]: connectFourInfo,
 

@@ -177,146 +177,77 @@ export const goldilocksZoneInfo: AbstractElementInfo = {
 export const cellCenterLoopNoTouchingInfo: AbstractElementInfo = {
 	toolId: TOOLS.CELL_CENTER_LOOP_NO_TOUCHING,
 
-	meta: {
-		description:
-			'Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself, even diagonally.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_LOOP_CONSTRAINTS]
-	}
-};
-
-export const cellCenterCanTouchDiagonallyInfo: AbstractElementInfo = {
-	toolId: TOOLS.CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY,
-
-	meta: {
-		description:
-			'Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself orthogonally, but can touch itself diagonally.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_LOOP_CONSTRAINTS]
-	}
-};
-
-export const adjacentCellsAlongLoopAreMultiplesInfo: AbstractElementInfo = {
-	toolId: TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES,
-
-	meta: {
-		description:
-			'For each pair of adjacent cells along the loop, the larger digit is an integer multiple of the smaller digit.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_LOOP_CONSTRAINTS]
-	}
-};
-
-export const adjacentCellsAlongLoopAreGermanWhispersInfo: AbstractElementInfo = {
-	toolId: TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS,
-
-	meta: {
-		description: 'Adjacent cells along a loop differ by 5 or more.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_LOOP_CONSTRAINTS]
-	}
-};
-
-export const notLoopSizedRegionsInfo: AbstractElementInfo = {
-	toolId: TOOLS.NOT_LOOP_SIZED_REGIONS,
+	negative_constraints: [
+		{
+			toolId: TOOLS.CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY,
+			description:
+				'Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself orthogonally, but can touch itself diagonally.'
+		},
+		{
+			toolId: TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES,
+			description:
+				'For each pair of adjacent cells along the loop, the larger digit is an integer multiple of the smaller digit.'
+		},
+		{
+			toolId: TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS,
+			description: 'Adjacent cells along a loop differ by 5 or more.'
+		},
+		{
+			toolId: TOOLS.NOT_LOOP_SIZED_REGIONS,
+			description:
+				'Non-loop cells form several orthogonally connected groups. Such a group of size N contains exactly the digits from 1 to N.'
+		},
+		{
+			toolId: TOOLS.MODULAR_LOOP,
+			description:
+				'Along the loop, any three consecutive cells must contain numbers congruent to 0 mod 3, 1 mod 3, and 2 mod 3. (In other words, one of the numbers is from the set {3, 6, 9, 12, …}, one is from {1, 4, 7, 10, …}, and one from {2, 5, 8, 11, …}.'
+		}
+	],
 
 	meta: {
 		description:
-			'Non-loop cells form several orthogonally connected groups. Such a group of size N contains exactly the digits from 1 to N.',
+			'Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself orthogonally.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_LOOP_CONSTRAINTS]
-	}
-};
-
-export const modularLoopInfo: AbstractElementInfo = {
-	toolId: TOOLS.MODULAR_LOOP,
-
-	meta: {
-		description:
-			'Draw an orthogonal loop through the grid. The loop must not touch itself orthogonally; however, it can touch diagonally. Along the loop, any three consecutive cells must contain numbers congruent to 0 mod 3, 1 mod 3, and 2 mod 3. (In other words, one of the numbers is from the set {3, 6, 9, 12, …}, one is from {1, 4, 7, 10, …}, and one from {2, 5, 8, 11, …}.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_LOOP_CONSTRAINTS]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.GLOBAL_LOOP_CONSTRAINTS]
 	}
 };
 
 export const mazeDirectedPathInfo: AbstractElementInfo = {
 	toolId: TOOLS.MAZE_DIRECTED_PATH,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME,
+			description: 'Any two adjacent cells along the correct path must sum to a prime number.'
+		},
+		{
+			toolId: TOOLS.DIRECTED_PATH_ADJACENT_CELLS_DUTCH_WHISPERS,
+			description:
+				'The correct path will be a valid Dutch Whisper line - adjacent digits along the path must have a difference of at least 4.'
+		},
+		{
+			toolId: TOOLS.DIRECTED_PATH_IS_PARITY_LINE,
+			description:
+				'The correct path will be a valid alternating parity line - ie: any pair of adjacent cells along the path must contain one even digit and one odd digit.'
+		},
+		{
+			toolId: TOOLS.DIRECTED_PATH_IS_REGION_SUM_LINE,
+			description:
+				'The correct path will be a valid Region Sum line - box borders (dotted lines) will divide the path into segments which each have the same sum.'
+		},
+		{
+			toolId: TOOLS.DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME,
+			description:
+				'All digits within a marked sudoku box that lie anywhere on the correct path must sum to a prime number.'
+		}
+	],
+
 	meta: {
 		description:
 			"Draw a directect path in the grid. The path will be a snaking line that passes through the centres of cells, without visiting any cell more than once, crossing itself or passing through any thick maze walls. As well as moving orthogonally, the path may move diagonally if there's a 2x2 space in which to do so, but may never pass diagonally through the rounded end / corner of a wall.",
 		tags: [],
 		categories: [
-			TOOL_CATEGORIES.GLOBAL_CONSTRAINT,
-			TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS
-		]
-	}
-};
-
-export const directedPathAdjacentCellsSumIsPrimeInfo: AbstractElementInfo = {
-	toolId: TOOLS.DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME,
-
-	meta: {
-		description: 'Any two adjacent cells along the correct path must sum to a prime number.',
-		tags: [],
-		categories: [
-			TOOL_CATEGORIES.GLOBAL_CONSTRAINT,
-			TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS
-		]
-	}
-};
-
-export const directedPathAdjacentCellsDutchWhispersInfo: AbstractElementInfo = {
-	toolId: TOOLS.DIRECTED_PATH_ADJACENT_CELLS_DUTCH_WHISPERS,
-
-	meta: {
-		description:
-			'The correct path will be a valid Dutch Whisper line - adjacent digits along the path must have a difference of at least 4.',
-		tags: [],
-		categories: [
-			TOOL_CATEGORIES.GLOBAL_CONSTRAINT,
-			TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS
-		]
-	}
-};
-
-export const directedPathIsParityLineInfo: AbstractElementInfo = {
-	toolId: TOOLS.DIRECTED_PATH_IS_PARITY_LINE,
-
-	meta: {
-		description:
-			'the correct path will be a valid alternating parity line - ie: any pair of adjacent cells along the path must contain one even digit and one odd digit.',
-		tags: [],
-		categories: [
-			TOOL_CATEGORIES.GLOBAL_CONSTRAINT,
-			TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS
-		]
-	}
-};
-
-export const directedPathIsRegionSumLineInfo: AbstractElementInfo = {
-	toolId: TOOLS.DIRECTED_PATH_IS_REGION_SUM_LINE,
-
-	meta: {
-		description:
-			'The correct path will be a valid Region Sum line - box borders (dotted lines) will divide the path into segments which each have the same sum.',
-		tags: [],
-		categories: [
-			TOOL_CATEGORIES.GLOBAL_CONSTRAINT,
-			TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS
-		]
-	}
-};
-
-export const directedPathSumOfCellsPerRegionIsPrimeInfo: AbstractElementInfo = {
-	toolId: TOOLS.DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME,
-
-	meta: {
-		description:
-			'All digits within a marked sudoku box that lie anywhere on the correct path must sum to a prime number.',
-		tags: [],
-		categories: [
-			TOOL_CATEGORIES.GLOBAL_CONSTRAINT,
+			TOOL_CATEGORIES.LOCAL_ELEMENT,
 			TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS
 		]
 	}

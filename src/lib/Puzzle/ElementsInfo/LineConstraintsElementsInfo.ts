@@ -1528,6 +1528,13 @@ export const yinYangRegionSumLineInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.YIN_YANG_REGION_SUM_LINE,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE,
+			description: 'All lines must cross colours at least once.'
+		}
+	],
+
 	shape: {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.15 },

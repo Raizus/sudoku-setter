@@ -1,4 +1,3 @@
-import type { LineToolI } from '../Puzzle/Constraints/LineConstraints';
 import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
@@ -218,18 +217,6 @@ function globalIndexingColumnConstraint(puzzle: PuzzleI, toolId: TOOLID): string
 	return out_str;
 }
 
-function adjacentLoopCellsAreMultiplesConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	let out_str = `\n% ${toolId}\n`;
-	out_str += `constraint adjacent_loop_cells_are_multiples_p(board, cell_center_loop);\n`;
-	return out_str;
-}
-
-function adjacentLoopCellsAreGermanWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	let out_str = `\n% ${toolId}\n`;
-	out_str += `constraint adjacent_loop_cells_are_german_whispers_p(board, cell_center_loop);\n`;
-	return out_str;
-}
-
 function allOddDigitsOrthogonallyConnected(puzzle: PuzzleI, toolId: TOOLID): string {
 	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: even_odd_grid;\n`;
@@ -252,27 +239,6 @@ function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID)
 
 		const constraint_str = `constraint (${nurimisaki1} == 0 /\\ ${nurimisaki2} == 0) -> abs(${var1} - ${var2}) >= 5;\n`;
 		out_str += constraint_str;
-	}
-	return out_str;
-}
-
-function yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(
-	puzzle: PuzzleI,
-	toolId: TOOLID
-): string {
-	const grid = puzzle.grid;
-	const local_constraints = puzzle.elementsDict;
-	const constraints = local_constraints.get(TOOLS.YIN_YANG_REGION_SUM_LINE);
-	if (!constraints) return '';
-
-	let out_str: string = `\n% ${toolId}\n`;
-	for (const constraint of Object.values(constraints)) {
-		const cells_coords = (constraint as LineToolI).cells;
-		const cells = cells_coords
-			.map((coord) => grid.getCell(coord.r, coord.c))
-			.filter((cell) => !!cell);
-		const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
-		out_str += `constraint count_unique_values(${yin_yang_vars_str}) >= 2;\n`;
 	}
 	return out_str;
 }
@@ -324,65 +290,6 @@ function yinYangNeighbourGreaterThanOneWithinRegionShadedConstraint(
 		const cells_vars = cellsToGridVarsStr(neighbours, VAR_2D_NAMES.BOARD);
 		out_str += `constraint yin_yang_neighbour_greater_than_one_within_region_shaded(${cell_var}, ${shading_var}, ${cells_vars});\n`;
 	}
-	out_str = addHeader(out_str, `${toolId}`);
-	return out_str;
-}
-
-function directedPathAdjacentCellsSumIsPrimeConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	let out_str: string = '';
-	out_str += `constraint direct_path_adjacent_sum_is_prime(board, dpath_from, dpath_to, dpath_es);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
-	return out_str;
-}
-
-function directedPathAdjacentCellsDutchWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	let out_str: string = '';
-	out_str += `constraint direct_path_adjacent_dutch_whispers(board, dpath_from, dpath_to, dpath_es);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
-	return out_str;
-}
-
-function directedPathIsRegionSumLineConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	let out_str: string = '';
-	out_str += `constraint directed_path_is_region_sum_line_p(board, board_regions, dpath_from, dpath_to, dpath_ns, dpath_es, dpath_source);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
-	return out_str;
-}
-
-function directedPathTeleportSegmentsSumConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	let out_str: string = '';
-	out_str += `constraint directed_path_teleport_segments_sum_p(board, teleports, dpath_from, dpath_to, dpath_ns, dpath_es, dpath_source);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
-	return out_str;
-}
-
-function directedPathTeleportRenbanSegmentsConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	let out_str: string = '';
-	const grid = puzzle.grid;
-	const used_regions = puzzle.grid.getUsedRegions();
-	const reg_sizes = [...used_regions].map((reg) => puzzle.grid.getRegion(reg).length);
-	const max_reg_size = reg_sizes.length ? Math.max(...reg_sizes) : grid.nCols * grid.nRows;
-	out_str += `constraint directed_path_teleport_renban_segments_p(board, teleports, dpath_from, dpath_to, dpath_ns, dpath_es, dpath_source, ${max_reg_size});\n`;
-
-	out_str = addHeader(out_str, `${toolId}`);
-	return out_str;
-}
-
-function directedPathIsParityLineConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	let out_str: string = '';
-	out_str += `constraint directed_path_is_parity_line_p(board, dpath_from, dpath_to, dpath_es);\n`;
-
-	out_str = addHeader(out_str, `${toolId}`);
-	return out_str;
-}
-
-function directedPathSumOfCellsPerRegionIsPrimeConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	let out_str: string = '';
-
-	const grid = puzzle.grid;
-	const regions = [...grid.getUsedRegions()];
-	const used_regions = '{' + regions.join(',') + '}';
-	out_str += `constraint directed_path_sum_path_cells_in_region_is_prime_p(board, board_regions, dpath_ns, ${used_regions});\n`;
 	out_str = addHeader(out_str, `${toolId}`);
 	return out_str;
 }
@@ -498,16 +405,8 @@ const tool_map = new Map<string, ConstraintF>([
 
 	[TOOLS.GLOBAL_INDEXING_COLUMN, globalIndexingColumnConstraint],
 	[TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS, nurimisakiPathGermanWhispersConstraint],
-	[
-		TOOLS.YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE,
-		yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint
-	],
 	[TOOLS.ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED, allOddDigitsOrthogonallyConnected],
-	[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES, adjacentLoopCellsAreMultiplesConstraint],
-	[
-		TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS,
-		adjacentLoopCellsAreGermanWhispersConstraint
-	],
+
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING, twilightCaveFillominoRegionsShading],
 	[TOOLS.YIN_YANG_FILLOMINO_PARITY, yinYangFillominoParityConstraint],
 
@@ -515,20 +414,7 @@ const tool_map = new Map<string, ConstraintF>([
 		TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED,
 		yinYangNeighbourGreaterThanOneWithinRegionShadedConstraint
 	],
-	[TOOLS.YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS, yinYangShadedCellsAreGermanWhispersConstraint],
-	[TOOLS.DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME, directedPathAdjacentCellsSumIsPrimeConstraint],
-	[
-		TOOLS.DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME,
-		directedPathSumOfCellsPerRegionIsPrimeConstraint
-	],
-	[
-		TOOLS.DIRECTED_PATH_ADJACENT_CELLS_DUTCH_WHISPERS,
-		directedPathAdjacentCellsDutchWhispersConstraint
-	],
-	[TOOLS.DIRECTED_PATH_IS_REGION_SUM_LINE, directedPathIsRegionSumLineConstraint],
-	[TOOLS.DIRECTED_PATH_TELEPORT_SEGMENTS_SUM, directedPathTeleportSegmentsSumConstraint],
-	[TOOLS.DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS, directedPathTeleportRenbanSegmentsConstraint],
-	[TOOLS.DIRECTED_PATH_IS_PARITY_LINE, directedPathIsParityLineConstraint]
+	[TOOLS.YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS, yinYangShadedCellsAreGermanWhispersConstraint]
 ]);
 
 export function globalConstraints(puzzle: PuzzleI): string {

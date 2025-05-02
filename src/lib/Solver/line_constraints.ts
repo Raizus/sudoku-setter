@@ -2,7 +2,8 @@ import type { LineToolI } from '../Puzzle/Constraints/LineConstraints';
 import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
-import { TOOLS } from '../Puzzle/Tools';
+import type { PuzzleI } from '../Puzzle/Puzzle';
+import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
 	cellsFromCoords,
 	cellsToGridVarsStr,
@@ -719,8 +720,42 @@ function yinYangIndexingLineColoringElement(
 	return out_str;
 }
 
+function yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(
+	puzzle: PuzzleI,
+	toolId: TOOLID
+): string {
+	const grid = puzzle.grid;
+	const local_constraints = puzzle.elementsDict;
+	const element = local_constraints.get(TOOLS.YIN_YANG_REGION_SUM_LINE);
+	if (!element || !element.constraints) return '';
+
+	let out_str: string = `\n% ${toolId}\n`;
+	for (const constraint of Object.values(element.constraints)) {
+		const cells_coords = (constraint as LineToolI).cells;
+		const cells = cells_coords
+			.map((coord) => grid.getCell(coord.r, coord.c))
+			.filter((cell) => !!cell);
+		const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
+		out_str += `constraint count_unique_values(${yin_yang_vars_str}) >= 2;\n`;
+	}
+	return out_str;
+}
+
 function yinYangRegionSumLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = yinYangSimpleLineElement(grid, element, 'yin_yang_region_sum_line_p');
+	let out_str = yinYangSimpleLineElement(grid, element, 'yin_yang_region_sum_line_p');
+
+	// negative constraints
+	if (!element.negative_constraints) return out_str;
+	const lines_must_cross_colors =
+		!!element.negative_constraints[TOOLS.YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE];
+
+	if (lines_must_cross_colors) {
+		out_str += yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(
+			model.puzzle,
+			TOOLS.YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE
+		);
+	}
+
 	return out_str;
 }
 
@@ -751,7 +786,7 @@ function simpleMultipliersLineElement(grid: Grid, element: ConstraintsElement, p
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
-	
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = simpleMultipliersLineConstraint(
 			grid,
@@ -894,7 +929,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.YIN_YANG_UNSHADED_ENTROPIC_LINE, yinYangUnshadedEntropicLineElement],
 	[TOOLS.YIN_YANG_UNSHADED_MODULAR_LINE, yinYangUnshadedModularLineElement],
 	[TOOLS.YIN_YANG_REGION_SUM_LINE, yinYangRegionSumLineElement],
-	[TOOLS.YIN_YANG_INDEXING_LINE_COLORING, yinYangIndexingLineColoringElement],
+	[TOOLS.YIN_YANG_INDEXING_LINE_COLORING, yinYangIndexingLineColoringElement]
 
 	// [TOOLS.GOLDILOCKS_ZONE_REGION_SUM, goldilocksZoneRegionSumLineConstraint]
 ]);

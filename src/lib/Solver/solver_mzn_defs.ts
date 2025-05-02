@@ -2099,8 +2099,10 @@ predicate yin_yang_unshaded_modular_line_p(
 
 predicate yin_yang_region_sum_line_p(
     array[int] of var int: arr,
-    array[int] of var 0..1: labels) =
-    unknown_regions_region_sum_line_p(arr, labels);
+    array[int] of var 0..1: labels
+) = (
+    unknown_regions_region_sum_line_p(arr, labels)
+);
 
 function var int: yin_yang_sum_of_opposite_color_f(
     var int: yin_yang_var, 
@@ -3072,17 +3074,17 @@ predicate renban_caves_p(
     );
 
 % draw a 1-cell wide loop of orthogonally connected cells which does not branch or touch itself, even diagonally
-predicate cell_center_loop_p(array[int, int] of var 0..1: grid, bool: no_diag_touch) =
+predicate cell_center_loop_p(array[int, int] of var 0..1: grid, bool: diag_touch) =
     let {
         set of int: rows = index_set_1of2(grid);
         set of int: cols = index_set_2of2(grid);
     } in (
         connected_region(grid, 1) /\\
         % no diagonal touching
-        (if no_diag_touch then
-            cell_center_loop_no_diagonal_touching_p(grid)
-        else
+        (if diag_touch then
             true
+        else
+            cell_center_loop_no_diagonal_touching_p(grid)
         endif) /\\
         % If cell is on the loop then then there are exactly two edges attached to it
         % Count orthogonally adjacent 1s (must be exactly 2)

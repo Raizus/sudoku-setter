@@ -8,9 +8,11 @@ import { centerCornerOrEdgeElements } from './center_corner_edge_constraints';
 import { cloneElements } from './clone_constraints';
 import { connectFourConstraint } from './connect_four_constraints';
 import { cornerElements } from './corner_constraints';
+import { mazeDirectedPathConstraint } from './directed_path_constraints';
 import { edgeElements } from './edge_constraints';
 import { galaxiesConstraint } from './galaxy_constraints';
 import { lineElement } from './line_constraints';
+import { cellCenterLoopNoTouchingConstraint } from './loop_constraints';
 import { outsideDirectionElements } from './outside_direction_constraints';
 import { singleCellArrowElements } from './single_cell_arrow_constraints';
 import { singleCellElements } from './single_cell_constraints';
@@ -38,7 +40,9 @@ type ElementF2 = (model: PuzzleModel, element: ConstraintsElement) => string;
 const other_tool_map = new Map<string, ElementF2>([
 	[TOOLS.CAVE, caveConstraint],
 	[TOOLS.CONNECT_FOUR, connectFourConstraint],
-	[TOOLS.GALAXIES, galaxiesConstraint]
+	[TOOLS.GALAXIES, galaxiesConstraint],
+	[TOOLS.CELL_CENTER_LOOP_NO_TOUCHING, cellCenterLoopNoTouchingConstraint],
+	[TOOLS.MAZE_DIRECTED_PATH, mazeDirectedPathConstraint]
 ]);
 
 export function otherElements(model: PuzzleModel, element: ConstraintsElement) {
