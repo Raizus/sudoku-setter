@@ -72,8 +72,10 @@ function simpleEdgeConstraint(grid: Grid, constraint: EdgeToolI, predicate: stri
 }
 
 function simpleEdgeElement(grid: Grid, element: ConstraintsElement, predicate: string) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = simpleEdgeConstraint(grid, constraint as EdgeToolI, predicate);
 		out_str += constraint_str;
@@ -120,8 +122,10 @@ function valuedEdgeElement(
 	predicate: string,
 	default_value: string = ''
 ) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = valuedEdgeConstraint(
 			model,
@@ -148,8 +152,9 @@ function xvConstraint(grid: Grid, constraint: EdgeToolI) {
 }
 
 function xvElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const constraints = element.constraints as Record<string, EdgeToolI>;
 	let out_str = '';
+	const constraints = element.constraints as Record<string, EdgeToolI>;
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = xvConstraint(grid, constraint as EdgeToolI);
 		out_str += constraint_str;
@@ -277,8 +282,10 @@ function edgeInequalityConstraint(grid: Grid, constraint: EdgeToolI) {
 }
 
 function edgeInequalityElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = edgeInequalityConstraint(grid, constraint as EdgeToolI);
 		out_str += constraint_str;
@@ -373,8 +380,10 @@ function yinYangEdgeConstraint(grid: Grid, constraint: EdgeToolI, predicate: str
 }
 
 function yinYangEdgeElement(grid: Grid, element: ConstraintsElement, predicate: string) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = yinYangEdgeConstraint(grid, constraint as EdgeToolI, predicate);
 		out_str += constraint_str;
@@ -430,8 +439,10 @@ function regionBorderElement(
 	element: ConstraintsElement,
 	regions_var_name: VAR_2D_NAMES
 ) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+	
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = regionBorderConstraint(grid, constraint as EdgeToolI, regions_var_name);
 		out_str += constraint_str;

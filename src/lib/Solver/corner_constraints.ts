@@ -26,8 +26,10 @@ function simpleCornerConstraint(grid: Grid, constraint: CornerToolI, predicate: 
 }
 
 function simpleCornerElement(grid: Grid, element: ConstraintsElement, predicate: string) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = simpleCornerConstraint(grid, constraint as CornerToolI, predicate);
 		out_str += constraint_str;
@@ -64,8 +66,10 @@ function valuedCornerElement(
 	predicate: string,
 	default_value: string = ''
 ) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = valuedCornerConstraint(
 			model,
@@ -109,8 +113,10 @@ function quadrupleConstraint(
 }
 
 function quadrupleElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+	
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = quadrupleConstraint(model, grid, c_id, constraint as CornerToolI);
 		out_str += constraint_str;

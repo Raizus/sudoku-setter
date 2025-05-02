@@ -58,6 +58,8 @@ function rotationallySymmetricGalaxyCenterSumConstraints(
 ) {
 	let out_str = '';
 	const constraints = element.constraints as Record<string, CenterCornerOrEdgeToolI>;
+	if (!constraints) return out_str;
+
 	const constraints_list = [...Object.values(constraints)];
 
 	for (let i = 0; i < constraints_list.length; i++) {

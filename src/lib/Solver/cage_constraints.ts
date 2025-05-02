@@ -37,8 +37,10 @@ function simpleCageElement(
 	element: ConstraintsElement,
 	predicate: string
 ) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = simpleCageConstraint(grid, constraint as CageToolI, predicate);
 		out_str += constraint_str;
@@ -83,8 +85,10 @@ function valuedCageElement(
 	element: ConstraintsElement,
 	predicate: string
 ) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = valuedCageConstraint(
 			model,
@@ -267,8 +271,10 @@ function yinYangValuedCageElement(
 	element: ConstraintsElement,
 	predicate: string
 ) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = yinYangValuedCageConstraint(
 			model,
@@ -364,7 +370,8 @@ function negatorsKillerCageElement(model: PuzzleModel, grid: Grid, element: Cons
 function multisetCageElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
 	let out_str = '';
 	const constraints = element.constraints as Record<string, CageToolI>;
-
+	if (!constraints) return out_str;
+	
 	// group cells by value
 	const groups = groupConstraintsByValue(Object.values(constraints));
 

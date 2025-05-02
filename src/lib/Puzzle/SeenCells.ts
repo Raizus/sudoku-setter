@@ -207,12 +207,14 @@ function seenByCage(
 	tool: TOOLID,
 	seen: Set<Cell>
 ) {
-	if (element.tool_id === tool) {
-		for (const constraint of Object.values(element.constraints)) { 
-			const seen_by_c = seenByKillerCage(grid, cell, constraint as CageToolI);
-			seen = new Set([...seen, ...seen_by_c]);
-		}
+	if (element.tool_id !== tool) return seen;
+	if (!element.constraints) return seen;
+
+	for (const constraint of Object.values(element.constraints)) { 
+		const seen_by_c = seenByKillerCage(grid, cell, constraint as CageToolI);
+		seen = new Set([...seen, ...seen_by_c]);
 	}
+
 	return seen;
 }
 
@@ -230,6 +232,8 @@ export function cellsSeenByLocalConstraints(
 
 	for (const element of elements_dict.values()) {
 		const tool_id = element.tool_id;
+		if (!element.constraints) continue;
+		
 		if (tool_id === TOOLS.BETWEEN_LINE) {
 			for (const constraint of Object.values(element.constraints)) {
 				const seen_by_c = seenByBetweenLines(grid, cell, constraint as LineToolI);

@@ -19,8 +19,10 @@ function simpleCellArrowElement(
 	element: ConstraintsElement,
 	func: (grid: Grid, constraint: CellArrowToolI) => string
 ) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+	
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = func(grid, constraint as CellArrowToolI);
 		out_str += constraint_str;

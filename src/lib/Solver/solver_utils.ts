@@ -131,8 +131,10 @@ export function simpleElementFunction<T extends ConstraintType>(
 	element: ConstraintsElement,
 	func: (model: PuzzleModel, grid: Grid, c_id: string, constraint: T) => string
 ) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+	
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = func(model, grid, c_id, constraint as T);
 		out_str += constraint_str;

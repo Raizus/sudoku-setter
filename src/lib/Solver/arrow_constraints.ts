@@ -43,8 +43,10 @@ function simpleArrowConstraint(grid: Grid, constraint: ArrowToolI, predicate: st
 }
 
 function simpleArrowElement(grid: Grid, element: ConstraintsElement, predicate: string) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = simpleArrowConstraint(grid, constraint as ArrowToolI, predicate);
 		out_str += constraint_str;

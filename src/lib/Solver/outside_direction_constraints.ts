@@ -67,8 +67,10 @@ function simpleOutsideDirectionElement(
 	element: ConstraintsElement,
 	predicate: string
 ) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = simpleOutsideDirectionPredicate(
 			model,
@@ -287,8 +289,10 @@ function chaosConstructionSumOfFirstEachRegionElement(
 	grid: Grid,
 	element: ConstraintsElement
 ) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+	
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = chaosConstructionSumOfFirstEachRegionConstraint(
 			model,

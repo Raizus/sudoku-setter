@@ -22,8 +22,10 @@ function cloneRegionConstraint(grid: Grid, constraint: CloneToolI) {
 }
 
 function cloneRegionElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+	
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = cloneRegionConstraint(grid, constraint as CloneToolI);
 		out_str += constraint_str;

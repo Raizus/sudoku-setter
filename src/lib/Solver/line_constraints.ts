@@ -53,8 +53,10 @@ function simpleLineElement(
 	predicate: string,
 	use_set: boolean = false
 ) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = simpleLineConstraint(grid, constraint as LineToolI, predicate, use_set);
 		out_str += constraint_str;
@@ -91,8 +93,10 @@ function valuedLineElement(
 	predicate: string,
 	default_value: string = ''
 ) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = valuedLineConstraint(
 			model,
@@ -137,8 +141,10 @@ function circularValuedLineElement(
 	predicate: string,
 	default_value: string = ''
 ) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = circularValuedLineConstraint(
 			grid,
@@ -323,8 +329,10 @@ function rowCycleThermoConstraint(grid: Grid, c_id: string, constraint: LineTool
 }
 
 function rowCycleThermoElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = rowCycleThermoConstraint(grid, c_id, constraint as LineToolI);
 		out_str += constraint_str;
@@ -467,8 +475,10 @@ function rowSumLineConstraint(grid: Grid, constraint: LineToolI) {
 }
 
 function rowSumLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = rowSumLineConstraint(grid, constraint as LineToolI);
 		out_str += constraint_str;
@@ -622,8 +632,10 @@ export function yinYangValuedLineElement(
 	predicate: string,
 	default_value: string = ''
 ) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = yinYangValuedLineConstraint(
 			model,
@@ -678,8 +690,10 @@ function yinYangSimpleLineConstraint(grid: Grid, constraint: LineToolI, predicat
 }
 
 function yinYangSimpleLineElement(grid: Grid, element: ConstraintsElement, predicate: string) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = yinYangSimpleLineConstraint(grid, constraint as LineToolI, predicate);
 		out_str += constraint_str;
@@ -734,8 +748,10 @@ function simpleMultipliersLineConstraint(grid: Grid, constraint: LineToolI, pred
 }
 
 function simpleMultipliersLineElement(grid: Grid, element: ConstraintsElement, predicate: string) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+	
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = simpleMultipliersLineConstraint(
 			grid,

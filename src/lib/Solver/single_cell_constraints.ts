@@ -37,8 +37,10 @@ function simpleSingleCellElement(
 	element: ConstraintsElement,
 	predicate: string
 ) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = simpleSingleCellConstraint(grid, constraint as CellToolI, predicate);
 		out_str += constraint_str;
@@ -90,8 +92,10 @@ function valuedSingleCellElement(
 	predicate: string,
 	default_value: string = ''
 ) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = valuedSingleCellConstraint(
 			grid,
@@ -130,8 +134,10 @@ function orthogonalRegionSeenCountElement(
 	region_var_name: VAR_2D_NAMES,
 	predicate: string
 ) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = orthogonalRegionSeenCountConstraint(
 			grid,
@@ -179,8 +185,10 @@ function minesweeperConstraint(grid: Grid, constraint: CellToolI, predicate: str
 }
 
 function minesweeperElement(grid: Grid, element: ConstraintsElement, predicate: string) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = minesweeperConstraint(grid, constraint as CellToolI, predicate);
 		out_str += constraint_str;
@@ -439,8 +447,10 @@ function watchtowerFarsightElementHelper(
 	element: ConstraintsElement,
 	predicate: string
 ) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = watchtowerFarsightHelper(grid, constraint as CellToolI, predicate);
 		out_str += constraint_str;
@@ -689,8 +699,10 @@ function seenOddEvenCountConstraint(grid: Grid, constraint: CellToolI, predicate
 }
 
 function seenOddEvenCountElement(grid: Grid, element: ConstraintsElement, predicate: string) {
-	const constraints = element.constraints;
 	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+	
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = seenOddEvenCountConstraint(grid, constraint as CellToolI, predicate);
 		out_str += constraint_str;

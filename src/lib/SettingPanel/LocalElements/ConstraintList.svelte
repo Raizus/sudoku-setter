@@ -7,7 +7,7 @@
 	$: constraints_element = $localConstraintsStore.get(tool_id);
 </script>
 
-{#if constraints_element && Object.entries(constraints_element.constraints).length}
+{#if constraints_element && constraints_element.constraints && Object.entries(constraints_element.constraints).length}
 	<div class="constraint-list-wrapper">
 		<div class="constraint-list">
 			{#each Object.entries(constraints_element.constraints) as entry (entry[0])}
@@ -27,6 +27,6 @@
 		flex-direction: column;
 		gap: 0.25em;
 		background: #2f2f2f;
-        padding: 0.5em;
+		padding: 0.5em;
 	}
 </style>

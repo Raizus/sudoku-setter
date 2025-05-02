@@ -138,7 +138,7 @@ export function updateCurrentConstraintShape(newShape: ShapeI | undefined) {
 export function selectConstraint(id: string, toolId: TOOLID) {
 	const localConstraintsDict = get(localConstraintsStore);
 	const element = localConstraintsDict.get(toolId);
-	if (!element) return;
+	if (!element || !element.constraints) return;
 
 	const constraint = element.constraints[id];
 	if (!constraint) return;
