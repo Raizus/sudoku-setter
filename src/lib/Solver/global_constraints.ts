@@ -1,3 +1,4 @@
+import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
 import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
@@ -7,54 +8,73 @@ import {
 	addHeader,
 	cellsToGridVarsStr,
 	VAR_2D_NAMES,
-	adjCellPairGen
+	adjCellPairGen,
+	PuzzleModel
 } from './solver_utils';
 
-function positiveDiagonalConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+export function positiveDiagonalConstraint(model: PuzzleModel, element: ConstraintsElement): string {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
 	const diag_cells = grid.getPositiveDiagonal();
 	const diag_vars = cellsToVarsName(diag_cells);
-	let constraint = allDifferentConstraint(diag_vars);
-	constraint = '\n% Positive Diagonal Constraint\n' + constraint;
-	return constraint;
+	let out_str = `\n% ${tool}\n`;
+	out_str += allDifferentConstraint(diag_vars);
+	return out_str;
 }
 
-function negativeDiagonalConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+export function negativeDiagonalConstraint(model: PuzzleModel, element: ConstraintsElement): string {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
 	const diag_cells = grid.getNegativeDiagonal();
 	const diag_vars = cellsToVarsName(diag_cells);
-	let constraint = allDifferentConstraint(diag_vars);
-	constraint = '\n% Negative Diagonal Constraint\n' + constraint;
-	return constraint;
+	let out_str = `\n% ${tool}\n`;
+	out_str += allDifferentConstraint(diag_vars);
+	return out_str;
 }
 
-function positiveAntidiagonalConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+export function positiveAntidiagonalConstraint(model: PuzzleModel, element: ConstraintsElement): string {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
 	const diag_cells = grid.getPositiveDiagonal();
 	const diag_vars = cellsToVarsName(diag_cells);
 	const vars_str = '[' + diag_vars.join(',') + ']';
-	let out_str: string = `\n% ${toolId}\n`;
+	let out_str = `\n% ${tool}\n`;
 	out_str += `constraint count_unique_values(${vars_str}) == 3;\n`;
 	return out_str;
 }
 
-function negativeAntidiagonalConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+export function negativeAntidiagonalConstraint(model: PuzzleModel, element: ConstraintsElement): string {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
 	const diag_cells = grid.getNegativeDiagonal();
 	const diag_vars = cellsToVarsName(diag_cells);
 	const vars_str = '[' + diag_vars.join(',') + ']';
-	let out_str: string = `\n% ${toolId}\n`;
+	let out_str = `\n% ${tool}\n`;
 	out_str += `constraint count_unique_values(${vars_str}) == 3;\n`;
 	return out_str;
 }
 
-function oddEvenMirrorPositiveDiagonalConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+export function oddEvenMirrorPositiveDiagonalConstraint(
+	model: PuzzleModel,
+	element: ConstraintsElement
+): string {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
 	const [n_rows, n_cols] = [grid.nRows, grid.nCols];
 
 	if (n_rows !== n_cols) return '';
 
-	let out_str: string = '';
+	let out_str = `\n% ${tool}\n`;
 	const diag_cells = grid.getPositiveDiagonal();
 	for (const dcell of diag_cells) {
 		const [dr, dc] = [dcell.r, dcell.c];
@@ -74,13 +94,19 @@ function oddEvenMirrorPositiveDiagonalConstraint(puzzle: PuzzleI, toolId: TOOLID
 	return out_str;
 }
 
-function oddEvenMirrorNegativeDiagonalConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+export function oddEvenMirrorNegativeDiagonalConstraint(
+	model: PuzzleModel,
+	element: ConstraintsElement
+): string {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
 	const [n_rows, n_cols] = [grid.nRows, grid.nCols];
 
 	if (n_rows !== n_cols) return '';
 
-	let out_str: string = '';
+	let out_str = `\n% ${tool}\n`;
 	const diag_cells = grid.getNegativeDiagonal();
 	for (const dcell of diag_cells) {
 		const [dr, dc] = [dcell.r, dcell.c];
@@ -328,13 +354,6 @@ export function hexedSudokuConstraint(puzzle: PuzzleI) {
 type ConstraintF = (puzzle: PuzzleI, tool: TOOLID) => string;
 
 const tool_map = new Map<string, ConstraintF>([
-	[TOOLS.POSITIVE_DIAGONAL, positiveDiagonalConstraint],
-	[TOOLS.NEGATIVE_DIAGONAL, negativeDiagonalConstraint],
-	[TOOLS.POSITIVE_ANTIDIAGONAL, positiveAntidiagonalConstraint],
-	[TOOLS.NEGATIVE_ANTIDIAGONAL, negativeAntidiagonalConstraint],
-	[TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_POSITIVE_DIAGONAL, oddEvenMirrorPositiveDiagonalConstraint],
-	[TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_NEGATIVE_DIAGONAL, oddEvenMirrorNegativeDiagonalConstraint],
-
 	[TOOLS.ANTIKING, antikingConstraint],
 	[TOOLS.ANTIKNIGHT, antiknightConstraint],
 	[TOOLS.ANTI_LONG_KNIGHT, antiLongKnightConstraint],

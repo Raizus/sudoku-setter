@@ -7,6 +7,10 @@ import {
 	cellsToGridVarsStr,
 	cellToGridVarName,
 	cellToVarName,
+	exactlyNPerColumn,
+	exactlyNPerRegion,
+	exactlyNPerRow,
+	exactlyNPerRowColumnRegion,
 	PuzzleModel,
 	VAR_2D_NAMES
 } from './solver_utils';
@@ -183,104 +187,6 @@ function sashiganeConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
-function exactlyNPerRow(n: number, target: boolean | number, grid_name: string) {
-	let out_str: string = '';
-	out_str += `% Exactly ${n} per row \n`;
-	out_str += `constraint exactly_n_per_row_p(${grid_name}, ${target}, ${n});\n`;
-
-	return out_str;
-}
-
-function exactlyNPerColumn(n: number, target: boolean | number, grid_name: string) {
-	let out_str: string = '';
-	out_str += `\n% Exactly ${n} per column \n`;
-	out_str += `constraint exactly_n_per_column_p(${grid_name}, ${target}, ${n});\n`;
-
-	return out_str;
-}
-
-function exactlyNPerRegion(
-	puzzle: PuzzleI,
-	n: number,
-	target: boolean | number,
-	grid_name: string
-) {
-	const grid = puzzle.grid;
-
-	let out_str: string = '';
-	const gconstraints = puzzle.globalConstraints;
-	const chaos_construction = gconstraints.get(TOOLS.CHAOS_CONSTRUCTION);
-	if (!chaos_construction) {
-		out_str += `\n% Exactly ${n} per region \n`;
-		const regions = grid.getUsedRegions();
-		for (const region of regions) {
-			const region_cells = grid.getRegion(region);
-			const vars_str = cellsToGridVarsStr(region_cells, grid_name);
-			out_str += `constraint count_eq(${vars_str}, ${target}, ${n});\n`;
-		}
-	}
-
-	return out_str;
-}
-
-function exactlyNPerRowColumnRegion(
-	puzzle: PuzzleI,
-	n: number,
-	target: boolean | number,
-	grid_name: string
-) {
-	let out_str: string = exactlyNPerRow(n, target, grid_name);
-	out_str += exactlyNPerColumn(n, target, grid_name);
-	out_str += exactlyNPerRegion(puzzle, n, target, grid_name);
-
-	return out_str;
-}
-
-function doublersConstraint(model: PuzzleModel, tool: TOOLID) {
-	const puzzle = model.puzzle;
-	const grid = puzzle.grid;
-
-	const all_cells = grid.getAllCells();
-	if (all_cells.some((cell) => cell.outside)) {
-		console.warn(`${tool} not implemented when there are cells outside the grid.`);
-		return '';
-	}
-
-	let out_str: string = '';
-	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: doublers_grid;\n`;
-	out_str += exactlyNPerRowColumnRegion(puzzle, 1, true, VAR_2D_NAMES.DOUBLERS);
-	// only one of each digit
-	out_str += `\nconstraint one_of_each_digit_p(board, doublers_grid, ALLOWED_DIGITS);\n`;
-	// values grid
-	out_str += `array[int, int] of var int: values_grid = doublers_value_grid_f(board, doublers_grid);\n`;
-
-	return out_str;
-}
-
-function negatorsConstraint(model: PuzzleModel, tool: TOOLID) {
-	const puzzle = model.puzzle;
-	const grid = puzzle.grid;
-
-	const all_cells = grid.getAllCells();
-	if (all_cells.some((cell) => cell.outside)) {
-		console.warn(`${tool} not implemented when there are cells outside the grid.`);
-		return '';
-	}
-
-	const grid_name = 'negators_grid';
-
-	let out_str: string = '';
-	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: ${grid_name};\n`;
-
-	out_str += exactlyNPerRowColumnRegion(puzzle, 1, true, VAR_2D_NAMES.NEGATORS);
-	// only one of each digit
-	out_str += `\nconstraint one_of_each_digit_p(board, ${grid_name}, ALLOWED_DIGITS);\n`;
-	// values grid
-	out_str += `array[int, int] of var int: values_grid = negators_value_grid_f(board, ${grid_name});\n`;
-
-	return out_str;
-}
-
 function fillominoConstraint(model: PuzzleModel, tool: TOOLID) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
@@ -295,29 +201,6 @@ function fillominoConstraint(model: PuzzleModel, tool: TOOLID) {
 	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name};\n`;
 	out_str += `constraint fillomino_p(board, ${grid_name});\n`;
-
-	return out_str;
-}
-
-function indexerCellsConstraint(model: PuzzleModel, tool: TOOLID) {
-	const puzzle = model.puzzle;
-	const grid = puzzle.grid;
-
-	const all_cells = grid.getAllCells();
-	if (all_cells.some((cell) => cell.outside)) {
-		console.warn(`${tool} not implemented when there are cells outside the grid.`);
-		return '';
-	}
-
-	const name1 = VAR_2D_NAMES.INDEXER_CELLS_GRID;
-
-	let out_str: string = '';
-	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: ${name1};\n`;
-	out_str += exactlyNPerRowColumnRegion(puzzle, 2, true, name1);
-
-	// values grid
-	out_str += `array[ROW_IDXS, COL_IDXS] of var int: values_grid;\n`;
-	out_str += `constraint indexer_cells_p(board, ${name1}, values_grid);\n`;
 
 	return out_str;
 }
@@ -361,9 +244,10 @@ function shikakuNoRepeatsInRegionConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
-function nexusConstraint(model: PuzzleModel, tool: TOOLID) {
+export function nexusConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
 
 	const all_cells = grid.getAllCells();
 	if (all_cells.some((cell) => cell.outside)) {
@@ -371,7 +255,7 @@ function nexusConstraint(model: PuzzleModel, tool: TOOLID) {
 		return '';
 	}
 
-	let out_str: string = '';
+	let out_str: string = `\n% ${tool}\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: nexus_grid;\n`;
 	out_str += `\nconstraint nexus_p(board, nexus_grid, ALLOWED_DIGITS);\n`;
 
@@ -587,11 +471,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.CHAOS_CONSTRUCTION_SUGURU, chaosConstructionSuguruConstraint],
 	[TOOLS.SASHIGANE, sashiganeConstraint],
 
-	[TOOLS.DOUBLERS, doublersConstraint],
-	[TOOLS.NEGATORS, negatorsConstraint],
 	[TOOLS.GOLDILOCKS_ZONE, goldilocksConstraint],
-	[TOOLS.NEXUS, nexusConstraint],
-	[TOOLS.INDEXER_CELLS, indexerCellsConstraint],
 
 	[TOOLS.PENTOMINO_TILLING, pentominoTillingConstraint],
 	[TOOLS.LITS, litsConstraint],

@@ -2,9 +2,9 @@ import type { AbstractElementInfo } from '../ElementInfo';
 import { TOOLS, TOOL_CATEGORIES } from '../Tools';
 
 const diagonalConstraintsDefaultCategories = [
-	TOOL_CATEGORIES.GLOBAL_CONSTRAINT,
+	TOOL_CATEGORIES.LOCAL_ELEMENT,
 	TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT,
-	TOOL_CATEGORIES.DIAGONAL_CONSTRAINT
+	TOOL_CATEGORIES.DIAGONAL_CONSTRAINTS
 ];
 
 export const sudokuRulesDoNotApplyInfo: AbstractElementInfo = {

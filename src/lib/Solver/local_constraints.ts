@@ -11,6 +11,7 @@ import { cornerElements } from './corner_constraints';
 import { mazeDirectedPathConstraint } from './directed_path_constraints';
 import { edgeElements } from './edge_constraints';
 import { galaxiesConstraint } from './galaxy_constraints';
+import { negativeAntidiagonalConstraint, negativeDiagonalConstraint, oddEvenMirrorNegativeDiagonalConstraint, oddEvenMirrorPositiveDiagonalConstraint, positiveAntidiagonalConstraint, positiveDiagonalConstraint } from './global_constraints';
 import { lineElement } from './line_constraints';
 import { cellCenterLoopNoTouchingConstraint } from './loop_constraints';
 import { outsideDirectionElements } from './outside_direction_constraints';
@@ -18,7 +19,16 @@ import { singleCellArrowElements } from './single_cell_arrow_constraints';
 import { singleCellElements } from './single_cell_constraints';
 import { singleCellMultiArrowElements } from './single_cell_multi_arrow_constraints';
 import { addHeader, PuzzleModel, type ElementF } from './solver_utils';
-import { nurikabeConstraint, nurimisakiConstraint } from './undetermined_regions_constraints';
+import {
+	nexusConstraint,
+	nurikabeConstraint,
+	nurimisakiConstraint
+} from './undetermined_regions_constraints';
+import {
+	doublersConstraint,
+	indexerCellsConstraint,
+	negatorsConstraint
+} from './value_modifier_constraints';
 import { valuedGlobalConstraints as valuedGlobalElements } from './valued_global_constraints';
 import { yinYangConstraint } from './yin_yang_constraints';
 
@@ -47,7 +57,21 @@ const other_tool_map = new Map<string, ElementF2>([
 	[TOOLS.MAZE_DIRECTED_PATH, mazeDirectedPathConstraint],
 	[TOOLS.YIN_YANG, yinYangConstraint],
 	[TOOLS.NURIMISAKI, nurimisakiConstraint],
-	[TOOLS.NURIKABE, nurikabeConstraint]
+	[TOOLS.NURIKABE, nurikabeConstraint],
+
+	[TOOLS.NEXUS, nexusConstraint],
+
+	// value modifiers
+	[TOOLS.DOUBLERS, doublersConstraint],
+	[TOOLS.NEGATORS, negatorsConstraint],
+	[TOOLS.INDEXER_CELLS, indexerCellsConstraint],
+
+	[TOOLS.POSITIVE_DIAGONAL, positiveDiagonalConstraint],
+	[TOOLS.NEGATIVE_DIAGONAL, negativeDiagonalConstraint],
+	[TOOLS.POSITIVE_ANTIDIAGONAL, positiveAntidiagonalConstraint],
+	[TOOLS.NEGATIVE_ANTIDIAGONAL, negativeAntidiagonalConstraint],
+	[TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_POSITIVE_DIAGONAL, oddEvenMirrorPositiveDiagonalConstraint],
+	[TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_NEGATIVE_DIAGONAL, oddEvenMirrorNegativeDiagonalConstraint]
 ]);
 
 export function otherElements(model: PuzzleModel, element: ConstraintsElement) {

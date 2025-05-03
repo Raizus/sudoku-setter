@@ -3,6 +3,7 @@ import type { SingleCellTool } from '../Puzzle/Constraints/SingleCellConstraints
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import type { PuzzleI } from '../Puzzle/Puzzle';
+import { TOOLS } from '../Puzzle/Tools';
 import { DIRECTION } from '../utils/directions';
 import type { GridCoordI } from '../utils/SquareCellGridCoords';
 import { type ParseOptions, default_parse_opts, parseValue } from './value_parsing';
@@ -134,7 +135,7 @@ export function simpleElementFunction<T extends ConstraintType>(
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
-	
+
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = func(model, grid, c_id, constraint as T);
 		out_str += constraint_str;
@@ -529,4 +530,57 @@ export function findSingleCellConstraintMatch<T extends SingleCellTool>(
 		if (cell.c === coord.c && cell.r === coord.r) return constraint;
 	});
 	return match;
+}
+
+export function exactlyNPerRow(n: number, target: boolean | number, grid_name: string) {
+	let out_str: string = '';
+	out_str += `% Exactly ${n} per row \n`;
+	out_str += `constraint exactly_n_per_row_p(${grid_name}, ${target}, ${n});\n`;
+
+	return out_str;
+}
+
+export function exactlyNPerColumn(n: number, target: boolean | number, grid_name: string) {
+	let out_str: string = '';
+	out_str += `\n% Exactly ${n} per column \n`;
+	out_str += `constraint exactly_n_per_column_p(${grid_name}, ${target}, ${n});\n`;
+
+	return out_str;
+}
+
+export function exactlyNPerRegion(
+	puzzle: PuzzleI,
+	n: number,
+	target: boolean | number,
+	grid_name: string
+) {
+	const grid = puzzle.grid;
+
+	let out_str: string = '';
+	const gconstraints = puzzle.globalConstraints;
+	const chaos_construction = gconstraints.get(TOOLS.CHAOS_CONSTRUCTION);
+	if (!chaos_construction) {
+		out_str += `\n% Exactly ${n} per region \n`;
+		const regions = grid.getUsedRegions();
+		for (const region of regions) {
+			const region_cells = grid.getRegion(region);
+			const vars_str = cellsToGridVarsStr(region_cells, grid_name);
+			out_str += `constraint count_eq(${vars_str}, ${target}, ${n});\n`;
+		}
+	}
+
+	return out_str;
+}
+
+export function exactlyNPerRowColumnRegion(
+	puzzle: PuzzleI,
+	n: number,
+	target: boolean | number,
+	grid_name: string
+) {
+	let out_str: string = exactlyNPerRow(n, target, grid_name);
+	out_str += exactlyNPerColumn(n, target, grid_name);
+	out_str += exactlyNPerRegion(puzzle, n, target, grid_name);
+
+	return out_str;
 }
