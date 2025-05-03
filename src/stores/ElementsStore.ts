@@ -2,6 +2,7 @@ import {
 	isCenterEdgeCornerTool,
 	isCornerLineTool,
 	isCornerTool,
+	isDiagonalConstraint,
 	isEdgeTool,
 	isSingleCellTool,
 	isUnderlayTool,
@@ -24,7 +25,6 @@ import type {
 	ConstraintsElement,
 	ConstraintType
 } from '$src/lib/Puzzle/Constraints/LocalConstraints';
-import type { CornerLineToolI } from '$src/lib/Puzzle/Constraints/CornerLineConstraints';
 
 export type Element<T extends ConstraintType> = {
 	toolId: TOOLID;
@@ -41,17 +41,12 @@ export const underlayElementsStore = derived(localConstraintsStore, ($localConst
 	return elements;
 });
 
-function getElementsStore<T extends ConstraintType>(
-	filter_f: (tool: TOOLID) => boolean
-): Readable<Element<T>[]> {
+function getElementsStore(filter_f: (tool: TOOLID) => boolean): Readable<ConstraintsElement[]> {
 	const store = derived(localConstraintsStore, ($localConstraintsStore) => {
-		const elements: Element<T>[] = [];
+		const elements: ConstraintsElement[] = [];
 		for (const [toolId, element] of $localConstraintsStore.entries()) {
 			if (!filter_f(toolId)) continue;
-			elements.push({
-				toolId,
-				constraints: element.constraints as Record<string, T>
-			});
+			elements.push(element);
 		}
 		return elements;
 	});
@@ -73,11 +68,11 @@ export function getToolStore<T extends ConstraintType>(
 	return store;
 }
 
-export const singleCellToolsStore = getElementsStore<SingleCellTool>(isSingleCellTool);
+export const singleCellToolsStore = getElementsStore(isSingleCellTool);
 
 export const fogLightsStore = derived(singleCellToolsStore, ($singleCellToolsStore) => {
 	const target_element = $singleCellToolsStore.find(
-		(element) => element.toolId === TOOLS.FOG_LIGHTS
+		(element) => element.tool_id === TOOLS.FOG_LIGHTS
 	);
 	if (target_element) {
 		const record = target_element.constraints as Record<string, CellToolI>;
@@ -88,7 +83,7 @@ export const fogLightsStore = derived(singleCellToolsStore, ($singleCellToolsSto
 });
 
 export const minimumConstraintsStore = derived(singleCellToolsStore, ($singleCellToolsStore) => {
-	const target_element = $singleCellToolsStore.find((element) => element.toolId === TOOLS.MINIMUM);
+	const target_element = $singleCellToolsStore.find((element) => element.tool_id === TOOLS.MINIMUM);
 	if (target_element) {
 		const record = target_element.constraints;
 		return record;
@@ -98,7 +93,7 @@ export const minimumConstraintsStore = derived(singleCellToolsStore, ($singleCel
 });
 
 export const maximumConstraintsStore = derived(singleCellToolsStore, ($singleCellToolsStore) => {
-	const target_element = $singleCellToolsStore.find((element) => element.toolId === TOOLS.MAXIMUM);
+	const target_element = $singleCellToolsStore.find((element) => element.tool_id === TOOLS.MAXIMUM);
 	if (target_element) {
 		const record = target_element.constraints;
 		return record;
@@ -107,11 +102,11 @@ export const maximumConstraintsStore = derived(singleCellToolsStore, ($singleCel
 	return record;
 });
 
-export const edgeToolsStore = getElementsStore<EdgeToolI>(isEdgeTool);
-export const centerCornerOrEdgeToolsStore =
-	getElementsStore<CenterCornerOrEdgeToolI>(isCenterEdgeCornerTool);
-export const cornerToolsStore = getElementsStore<CornerToolI>(isCornerTool);
-export const cornerLineToolsStore = getElementsStore<CornerLineToolI>(isCornerLineTool);
+export const edgeToolsStore = getElementsStore(isEdgeTool);
+export const centerCornerOrEdgeToolsStore = getElementsStore(isCenterEdgeCornerTool);
+export const cornerToolsStore = getElementsStore(isCornerTool);
+export const cornerLineToolsStore = getElementsStore(isCornerLineTool);
+export const diagonalElementsStore = getElementsStore(isDiagonalConstraint);
 
 // export const lineToolsStore = getToolsStore<LineToolI>(isLineTool);
 

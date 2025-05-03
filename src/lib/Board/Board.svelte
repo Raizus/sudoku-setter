@@ -27,7 +27,6 @@
 	import PenToolRender from './PenToolRender/PenToolRender.svelte';
 	import SeenCellsRender from './SeenCellsRender.svelte';
 	import ConflictsRender from './ConflictsRender.svelte';
-	import DiagonalsRender from './Constraints/DiagonalsRender.svelte';
 	import FogDefs from './FogDefs.svelte';
 	import FogCover from './FogCover.svelte';
 	import SolutionRender from './SolutionRender.svelte';
@@ -60,6 +59,7 @@
 	import SimpleSingleCellToolPreviewRender from './Constraints/SimpleSingleCellToolPreviewRender.svelte';
 	import UnderlayRender from './UnderlayRender.svelte';
 	import CenterCornerOrEdgeToolPreviewRender from './Constraints/CenterCornerOrEdgeToolPreviewRender.svelte';
+	import DIagonalElementsRender from './Constraints/DIagonalElementsRender.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 
@@ -131,7 +131,7 @@
 	<UnderlayRender />
 
 	<GridLinesRender />
-	<DiagonalsRender />
+	<DIagonalElementsRender />
 	<GridRegionsRender />
 
 	<!-- overlay elements - above the grid lines -->

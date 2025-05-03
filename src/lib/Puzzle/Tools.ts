@@ -628,6 +628,11 @@ export enum TOOL_CATEGORIES {
 	OUTSIDE_DIRECTION_TOOL = 'Outside Direction Tool'
 }
 
+export function isDiagonalConstraint(toolId: TOOLID): boolean {
+	const enumValues = Object.values(DIAGONAL_CONSTRAINTS) as string[];
+	return enumValues.includes(toolId);
+}
+
 export function isGlobalConstraint(toolId: TOOLID): boolean {
 	const enumValues = Object.values(GLOBAL_CONSTRAINTS) as string[];
 	return enumValues.includes(toolId);
