@@ -32,10 +32,11 @@
 		],
 		[{}, {}, {}, {}, {}, {}, {}, {}, {}]
 	],
-	"bool_constraints": {
-		"Yin Yang": true
-	},
 	"local_constraints": {
+		"Yin Yang": {
+			"tool_id": "Yin Yang",
+			"constraints": []
+		},
 		"Yin Yang Kropki": {
 			"tool_id": "Yin Yang Kropki",
 			"constraints": [

@@ -7,7 +7,6 @@ import {
 	addHeader,
 	cellsToGridVarsStr,
 	VAR_2D_NAMES,
-	cellToGridVarName,
 	adjCellPairGen
 } from './solver_utils';
 
@@ -227,40 +226,6 @@ function allOddDigitsOrthogonallyConnected(puzzle: PuzzleI, toolId: TOOLID): str
 	return out_str;
 }
 
-function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	const grid = puzzle.grid;
-	let out_str: string = `\n% ${toolId}\n`;
-	for (const [cell1, cell2] of adjCellPairGen(grid)) {
-		const var1 = cellToVarName(cell1);
-		const var2 = cellToVarName(cell2);
-
-		const nurimisaki1 = `nurimisaki[${cell1.r},${cell1.c}]`;
-		const nurimisaki2 = `nurimisaki[${cell2.r},${cell2.c}]`;
-
-		const constraint_str = `constraint (${nurimisaki1} == 0 /\\ ${nurimisaki2} == 0) -> abs(${var1} - ${var2}) >= 5;\n`;
-		out_str += constraint_str;
-	}
-	return out_str;
-}
-
-function yinYangShadedCellsAreGermanWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
-	const grid = puzzle.grid;
-	let out_str: string = `\n% ${toolId}\n`;
-	const name = VAR_2D_NAMES.YIN_YANG;
-
-	for (const [cell1, cell2] of adjCellPairGen(grid)) {
-		const var1 = cellToVarName(cell1);
-		const var2 = cellToVarName(cell2);
-
-		const yinyang1 = `${name}[${cell1.r},${cell1.c}]`;
-		const yinyang2 = `${name}[${cell2.r},${cell2.c}]`;
-
-		const constraint_str = `constraint (${yinyang1} == 1 /\\ ${yinyang2} == 1) -> abs(${var1} - ${var2}) >= 5;\n`;
-		out_str += constraint_str;
-	}
-	return out_str;
-}
-
 function twilightCaveFillominoRegionsShading(puzzle: PuzzleI, toolId: TOOLID): string {
 	let out_str: string = '';
 	out_str += `constraint twilight_cave_fillomino_region_shading(cave_shading, fillomino_area);\n`;
@@ -271,25 +236,6 @@ function twilightCaveFillominoRegionsShading(puzzle: PuzzleI, toolId: TOOLID): s
 function yinYangFillominoParityConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	let out_str: string = '';
 	out_str += `constraint yin_yang_fillomino_parity_p(board, yin_yang);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
-	return out_str;
-}
-
-function yinYangNeighbourGreaterThanOneWithinRegionShadedConstraint(
-	puzzle: PuzzleI,
-	toolId: TOOLID
-): string {
-	let out_str: string = '';
-	const grid = puzzle.grid;
-	for (const cell of grid.getAllCells()) {
-		const neighbours = grid
-			.getNeighboorCells(cell)
-			.filter((_cell) => cell.region !== null && _cell.region === cell.region);
-		const cell_var = cellToGridVarName(cell, VAR_2D_NAMES.BOARD);
-		const shading_var = cellToGridVarName(cell, VAR_2D_NAMES.YIN_YANG);
-		const cells_vars = cellsToGridVarsStr(neighbours, VAR_2D_NAMES.BOARD);
-		out_str += `constraint yin_yang_neighbour_greater_than_one_within_region_shaded(${cell_var}, ${shading_var}, ${cells_vars});\n`;
-	}
 	out_str = addHeader(out_str, `${toolId}`);
 	return out_str;
 }
@@ -404,17 +350,10 @@ const tool_map = new Map<string, ConstraintF>([
 	],
 
 	[TOOLS.GLOBAL_INDEXING_COLUMN, globalIndexingColumnConstraint],
-	[TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS, nurimisakiPathGermanWhispersConstraint],
 	[TOOLS.ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED, allOddDigitsOrthogonallyConnected],
 
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING, twilightCaveFillominoRegionsShading],
-	[TOOLS.YIN_YANG_FILLOMINO_PARITY, yinYangFillominoParityConstraint],
-
-	[
-		TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED,
-		yinYangNeighbourGreaterThanOneWithinRegionShadedConstraint
-	],
-	[TOOLS.YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS, yinYangShadedCellsAreGermanWhispersConstraint]
+	[TOOLS.YIN_YANG_FILLOMINO_PARITY, yinYangFillominoParityConstraint]
 ]);
 
 export function globalConstraints(puzzle: PuzzleI): string {

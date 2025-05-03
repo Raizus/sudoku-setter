@@ -3,31 +3,35 @@ import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
 	addHeader,
+	adjCellPairGen,
 	cellsToGridVarsStr,
+	cellToGridVarName,
+	cellToVarName,
 	PuzzleModel,
 	VAR_2D_NAMES
 } from './solver_utils';
+import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
 
-function yinYangConstraint(model: PuzzleModel, tool: TOOLID) {
-	const puzzle = model.puzzle;
+function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
+	let out_str: string = `\n% ${toolId}\n`;
+	for (const [cell1, cell2] of adjCellPairGen(grid)) {
+		const var1 = cellToVarName(cell1);
+		const var2 = cellToVarName(cell2);
 
-	const all_cells = grid.getAllCells();
-	if (all_cells.some((cell) => cell.outside)) {
-		console.warn(`${tool} not implemented when there are cells outisde the grid.`);
-		return '';
+		const nurimisaki1 = cellToGridVarName(cell1, VAR_2D_NAMES.NURIMISAKI);
+		const nurimisaki2 = cellToGridVarName(cell2, VAR_2D_NAMES.NURIMISAKI);
+
+		const constraint_str = `constraint (${nurimisaki1} == 0 /\\ ${nurimisaki2} == 0) -> abs(${var1} - ${var2}) >= 5;\n`;
+		out_str += constraint_str;
 	}
-
-	let out_str: string = '';
-	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: yin_yang;\n`;
-	out_str += `constraint yin_yang_p(yin_yang);\n`;
-
 	return out_str;
 }
 
-function nurimisakiConstraint(model: PuzzleModel, tool: TOOLID) {
+export function nurimisakiConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
 
 	const all_cells = grid.getAllCells();
 	if (all_cells.some((cell) => cell.outside)) {
@@ -35,27 +39,20 @@ function nurimisakiConstraint(model: PuzzleModel, tool: TOOLID) {
 		return '';
 	}
 
-	let out_str: string = '';
+	let out_str: string = `\n% ${tool}\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: nurimisaki;\n`;
 	out_str += `constraint nurimisaki_p(nurimisaki);\n`;
 
-	return out_str;
-}
+	if (!element.negative_constraints) return out_str;
+	const nurimisaki_path_german_whispers =
+		!!element.negative_constraints[TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS];
 
-function nurikabeConstraint(model: PuzzleModel, tool: TOOLID) {
-	const puzzle = model.puzzle;
-	const grid = puzzle.grid;
-
-	const all_cells = grid.getAllCells();
-	if (all_cells.some((cell) => cell.outside)) {
-		console.warn(`${tool} not implemented when there are cells outisde the grid.`);
-		return '';
+	if (nurimisaki_path_german_whispers) {
+		out_str += nurimisakiPathGermanWhispersConstraint(
+			puzzle,
+			TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS
+		);
 	}
-
-	let out_str: string = '';
-	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: nurikabe_shading;\n`;
-	out_str += `array[ROW_IDXS, COL_IDXS] of var int: nurikabe_regions;\n`;
-	out_str += `constraint nurikabe_p(nurikabe_shading, nurikabe_regions);\n`;
 
 	return out_str;
 }
@@ -72,6 +69,33 @@ function nurikabeNoRepeatsInIslandsConstraint(model: PuzzleModel, tool: TOOLID) 
 
 	let out_str: string = '';
 	out_str += `constraint nurikabe_no_repeats_in_islands_p(board, nurikabe_regions);\n`;
+
+	return out_str;
+}
+
+export function nurikabeConstraint(model: PuzzleModel, element: ConstraintsElement) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outisde the grid.`);
+		return '';
+	}
+
+	let out_str: string = `\n% ${tool}\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: nurikabe_shading;\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var int: nurikabe_regions;\n`;
+	out_str += `constraint nurikabe_p(nurikabe_shading, nurikabe_regions);\n`;
+
+	if (!element.negative_constraints) return out_str;
+	const nurikabe_no_repeats_in_islands =
+		!!element.negative_constraints[TOOLS.NURIKABE_NO_REPEATS_IN_ISLANDS];
+
+	if (nurikabe_no_repeats_in_islands) {
+		out_str += nurikabeNoRepeatsInIslandsConstraint(model, TOOLS.NURIKABE_NO_REPEATS_IN_ISLANDS);
+	}
 
 	return out_str;
 }
@@ -554,16 +578,13 @@ type ConstraintF = (model: PuzzleModel, tool: TOOLID) => string;
 
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.FILLOMINO, fillominoConstraint],
-	[TOOLS.YIN_YANG, yinYangConstraint],
 	[TOOLS.SHIKAKU, shikakuConstraint],
 	[TOOLS.SHIKAKU_NO_REPEATS_IN_REGION, shikakuNoRepeatsInRegionConstraint],
 	[TOOLS.NORINORI, norinoriConstraint],
-	[TOOLS.NURIMISAKI, nurimisakiConstraint],
-	[TOOLS.NURIKABE, nurikabeConstraint],
-	[TOOLS.NURIKABE_NO_REPEATS_IN_ISLANDS, nurikabeNoRepeatsInIslandsConstraint],
 	[TOOLS.TWO_CONTIGUOUS_REGIONS, twoContiguousRegionsConstraint],
 	[TOOLS.CHAOS_CONSTRUCTION, chaosConstructionConstraint],
 	[TOOLS.NUMBERED_CHAOS_CONSTRUCTION, numberedChaosConstructionConstraint],
+	[TOOLS.CHAOS_CONSTRUCTION_SUGURU, chaosConstructionSuguruConstraint],
 	[TOOLS.SASHIGANE, sashiganeConstraint],
 
 	[TOOLS.DOUBLERS, doublersConstraint],
@@ -575,9 +596,7 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.PENTOMINO_TILLING, pentominoTillingConstraint],
 	[TOOLS.LITS, litsConstraint],
 	[TOOLS.LITS_BLACK_WHITE_STAR_BATTLE, litsBlackAndWhiteStarBattleConstraint],
-	[TOOLS.NORINORI_STAR_BATTLE, norinoriStarBattleConstraint],
-
-	[TOOLS.CHAOS_CONSTRUCTION_SUGURU, chaosConstructionSuguruConstraint]
+	[TOOLS.NORINORI_STAR_BATTLE, norinoriStarBattleConstraint]
 ]);
 
 export function undeterminedRegionsConstraints(model: PuzzleModel): string {

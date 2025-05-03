@@ -87,7 +87,6 @@ import {
 	negativeDiagonalInfo,
 	nonconsecutiveInfo,
 	nonratioInfo,
-	nurimisakiPathGermanWhispersInfo,
 	oddEvenParityMirrorAlongNegativeDiagonalInfo,
 	oddEvenParityMirrorAlongPositiveDiagonalInfo,
 	positiveAntidiagonalInfo,
@@ -108,13 +107,10 @@ import {
 	norinoriStarBattleInfo,
 	numberedChaosConstructionInfo,
 	nurikabeInfo,
-	nurikabeNoRepeatsInIslandsInfo,
 	pentominoTillingInfo,
 	shikakuInfo,
 	shikakuNoRepeatsInRegionInfo,
-	tillingNoEmptyCellsInfo,
-	yinYangNeighbourGreaterThanOneWithinRegionShadedInfo,
-	yinYangShadedCellsAreGermanWhispersInfo
+	tillingNoEmptyCellsInfo
 } from './UndeterminedRegionsElementsInfo';
 import {
 	yinYangFillominoParityInfo,
@@ -362,12 +358,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.NUMBERED_CHAOS_CONSTRUCTION]: numberedChaosConstructionInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_SUGURU]: chaosConstructionSuguruInfo,
 	[TOOLS.YIN_YANG]: yinYangInfo,
-	[TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED]:
-		yinYangNeighbourGreaterThanOneWithinRegionShadedInfo,
-	[TOOLS.YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS]: yinYangShadedCellsAreGermanWhispersInfo,
 	[TOOLS.NURIMISAKI]: nurimisakiInfo,
 	[TOOLS.NURIKABE]: nurikabeInfo,
-	[TOOLS.NURIKABE_NO_REPEATS_IN_ISLANDS]: nurikabeNoRepeatsInIslandsInfo,
 
 	[TOOLS.TWO_CONTIGUOUS_REGIONS]: twoContiguousRegionsInfo,
 	[TOOLS.SASHIGANE]: sashiganeRegionsInfo,
@@ -378,8 +370,6 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.CELL_CENTER_LOOP_NO_TOUCHING]: cellCenterLoopNoTouchingInfo,
 	[TOOLS.CAVE]: caveInfo,
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING]: twilightCaveFillominoRegionShadingInfo,
-
-	[TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS]: nurimisakiPathGermanWhispersInfo,
 
 	[TOOLS.GALAXIES]: galaxiesInfo,
 

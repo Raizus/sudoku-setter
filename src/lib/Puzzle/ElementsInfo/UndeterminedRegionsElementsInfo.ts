@@ -37,65 +37,60 @@ export const chaosConstructionSuguruInfo: AbstractElementInfo = {
 export const yinYangInfo: AbstractElementInfo = {
 	toolId: TOOLS.YIN_YANG,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED,
+			description:
+				'In the completed grid, cells containing numbers exactly one greater than an immediate neighbour (diagonal or orthogonal) within their box are shaded (and otherwise unshaded).'
+		},
+		{
+			toolId: TOOLS.YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS,
+			description:
+				'The yin yang shaded cells act as a German Whispers line: if two orthogonally connected cells are both shaded, then the digits in those cells must have a difference of at least 5.'
+		}
+	],
+
 	meta: {
 		description:
 			'Shade some cells in the grid such that all shaded cells are orthogonally connected and all unshaded cells are orthogonally connected, and no 2x2 area is fully shaded or fully unshaded.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
-export const yinYangNeighbourGreaterThanOneWithinRegionShadedInfo: AbstractElementInfo = {
-	toolId: TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED,
-
-	meta: {
-		description:
-			'In the completed grid, cells containing numbers exactly one greater than an immediate neighbour (diagonal or orthogonal) within their box are shaded (and otherwise unshaded).',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
-export const yinYangShadedCellsAreGermanWhispersInfo: AbstractElementInfo = {
-	toolId: TOOLS.YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS,
-
-	meta: {
-		description:
-			'The yin yang shaded cells act as a German Whispers line: if two orthogonally connected cells are both shaded, then the digits in those cells must have a difference of at least 5.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.GLOBAL_YIN_YANG_CONSTRAINTS]
 	}
 };
 
 export const nurimisakiInfo: AbstractElementInfo = {
 	toolId: TOOLS.NURIMISAKI,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS,
+			description: 'Cells Along Nurimisaki Path Have A Difference Of At Least 5.'
+		}
+	],
+
 	meta: {
 		description:
 			'Shade some cells so that the remaining unshaded cells form one orthogonally connected area. No 2x2 region may be entirely shaded or unshaded.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.GLOBAL_NURIMISAKI_CONSTRAINTS]
 	}
 };
 
 export const nurikabeInfo: AbstractElementInfo = {
 	toolId: TOOLS.NURIKABE,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.NURIKABE_NO_REPEATS_IN_ISLANDS,
+			description: 'Digits may not repeat within a nurikabe island.'
+		}
+	],
+
 	meta: {
 		description:
 			'Shade some cells blue (representing water), such that all water cells are orthogonally connected, but water may not fully cover a 2x2 area. Shade the remaining cells green, which represent islands.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
-export const nurikabeNoRepeatsInIslandsInfo: AbstractElementInfo = {
-	toolId: TOOLS.NURIKABE_NO_REPEATS_IN_ISLANDS,
-
-	meta: {
-		description: 'Digits may not repeat within a nurikabe island.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.GLOBAL_NURIKABE_CONSTRAINTS]
 	}
 };
 
@@ -246,10 +241,7 @@ export const mazeDirectedPathInfo: AbstractElementInfo = {
 		description:
 			"Draw a directect path in the grid. The path will be a snaking line that passes through the centres of cells, without visiting any cell more than once, crossing itself or passing through any thick maze walls. As well as moving orthogonally, the path may move diagonally if there's a 2x2 space in which to do so, but may never pass diagonally through the rounded end / corner of a wall.",
 		tags: [],
-		categories: [
-			TOOL_CATEGORIES.LOCAL_ELEMENT,
-			TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS
-		]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS]
 	}
 };
 

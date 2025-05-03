@@ -18,7 +18,9 @@ import { singleCellArrowElements } from './single_cell_arrow_constraints';
 import { singleCellElements } from './single_cell_constraints';
 import { singleCellMultiArrowElements } from './single_cell_multi_arrow_constraints';
 import { addHeader, PuzzleModel, type ElementF } from './solver_utils';
+import { nurikabeConstraint, nurimisakiConstraint } from './undetermined_regions_constraints';
 import { valuedGlobalConstraints as valuedGlobalElements } from './valued_global_constraints';
+import { yinYangConstraint } from './yin_yang_constraints';
 
 const functions_list: ElementF[] = [
 	centerCornerOrEdgeElements,
@@ -42,7 +44,10 @@ const other_tool_map = new Map<string, ElementF2>([
 	[TOOLS.CONNECT_FOUR, connectFourConstraint],
 	[TOOLS.GALAXIES, galaxiesConstraint],
 	[TOOLS.CELL_CENTER_LOOP_NO_TOUCHING, cellCenterLoopNoTouchingConstraint],
-	[TOOLS.MAZE_DIRECTED_PATH, mazeDirectedPathConstraint]
+	[TOOLS.MAZE_DIRECTED_PATH, mazeDirectedPathConstraint],
+	[TOOLS.YIN_YANG, yinYangConstraint],
+	[TOOLS.NURIMISAKI, nurimisakiConstraint],
+	[TOOLS.NURIKABE, nurikabeConstraint]
 ]);
 
 export function otherElements(model: PuzzleModel, element: ConstraintsElement) {

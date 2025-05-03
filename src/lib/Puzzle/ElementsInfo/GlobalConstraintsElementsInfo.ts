@@ -272,12 +272,3 @@ export const shikakuEachRegionContainsOneRegionSumClueInfo: AbstractElementInfo 
 	}
 };
 
-export const nurimisakiPathGermanWhispersInfo: AbstractElementInfo = {
-	toolId: TOOLS.NURIMISAKI_PATH_GERMAN_WHISPERS,
-
-	meta: {
-		description: 'Cells Along Nurimisaki Path Have A Difference Of At Least 5.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
-	}
-};
