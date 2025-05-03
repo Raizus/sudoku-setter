@@ -148,6 +148,11 @@ export const nonratioInfo: AbstractElementInfo = {
 export const negativeDiagonalInfo: AbstractElementInfo = {
 	toolId: TOOLS.NEGATIVE_DIAGONAL,
 
+	shape: {
+		strokeWidth: { editable: false, value: 0.02 },
+		stroke: { editable: false, value: 'black' }
+	},
+
 	meta: {
 		description: 'Numbers must not repeat on the negative diagonal.',
 		tags: [],
@@ -157,6 +162,11 @@ export const negativeDiagonalInfo: AbstractElementInfo = {
 
 export const positiveDiagonalInfo: AbstractElementInfo = {
 	toolId: TOOLS.POSITIVE_DIAGONAL,
+
+	shape: {
+		strokeWidth: { editable: false, value: 0.02 },
+		stroke: { editable: false, value: 'black' }
+	},
 
 	meta: {
 		description: 'Numbers must not repeat on the positive diagonal.',
@@ -168,6 +178,11 @@ export const positiveDiagonalInfo: AbstractElementInfo = {
 export const negativeAntidiagonalInfo: AbstractElementInfo = {
 	toolId: TOOLS.NEGATIVE_ANTIDIAGONAL,
 
+	shape: {
+		strokeWidth: { editable: false, value: 0.02 },
+		stroke: { editable: false, value: 'rgb(169, 0, 169)' }
+	},
+
 	meta: {
 		description: 'The negative diagonal containts only 3 different numbers.',
 		tags: [],
@@ -177,6 +192,11 @@ export const negativeAntidiagonalInfo: AbstractElementInfo = {
 
 export const positiveAntidiagonalInfo: AbstractElementInfo = {
 	toolId: TOOLS.POSITIVE_ANTIDIAGONAL,
+
+	shape: {
+		strokeWidth: { editable: false, value: 0.02 },
+		stroke: { editable: false, value: 'rgb(169, 0, 169)' }
+	},
 
 	meta: {
 		description: 'The positive diagonal containts only 3 different numbers.',
@@ -188,6 +208,11 @@ export const positiveAntidiagonalInfo: AbstractElementInfo = {
 export const oddEvenParityMirrorAlongNegativeDiagonalInfo: AbstractElementInfo = {
 	toolId: TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_NEGATIVE_DIAGONAL,
 
+	shape: {
+		strokeWidth: { editable: false, value: 0.02 },
+		stroke: { editable: false, value: 'orange' }
+	},
+
 	meta: {
 		description: 'Odd/Even parity is reflected across the purple negative diagonal.',
 		tags: [],
@@ -197,6 +222,11 @@ export const oddEvenParityMirrorAlongNegativeDiagonalInfo: AbstractElementInfo =
 
 export const oddEvenParityMirrorAlongPositiveDiagonalInfo: AbstractElementInfo = {
 	toolId: TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_POSITIVE_DIAGONAL,
+
+	shape: {
+		strokeWidth: { editable: false, value: 0.02 },
+		stroke: { editable: false, value: 'orange' }
+	},
 
 	meta: {
 		description: 'Odd/Even parity is reflected across the purple positive diagonal.',
@@ -271,4 +301,3 @@ export const shikakuEachRegionContainsOneRegionSumClueInfo: AbstractElementInfo 
 		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
 	}
 };
-

@@ -254,3 +254,8 @@ export const defaultOutsideShape: ShapeI = {
 	fontColor: 'var(--text-primary-color)',
 	stroke: 'var(--text-primary-color)'
 } as const;
+
+export const defaultDiagonalShape: ShapeI = {
+	strokeWidth: 0.02,
+	stroke: 'black'
+};
