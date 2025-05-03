@@ -129,21 +129,18 @@ export const norinoriInfo: AbstractElementInfo = {
 export const shikakuInfo: AbstractElementInfo = {
 	toolId: TOOLS.SHIKAKU,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.SHIKAKU_NO_REPEATS_IN_REGION,
+			description: 'Digits cannot repeat within a shikaku region.'
+		}
+	],
+
 	meta: {
 		description:
 			'Divide the grid into rectangular regions of orthogonally connected cells, so that every cell is in a region and regions do not overlap.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
-export const shikakuNoRepeatsInRegionInfo: AbstractElementInfo = {
-	toolId: TOOLS.SHIKAKU_NO_REPEATS_IN_REGION,
-
-	meta: {
-		description: 'Digits cannot repeat within a shikaku region.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.LOCAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_SHIKAKU_CONSTRAINTS]
 	}
 };
 

@@ -109,7 +109,6 @@ import {
 	nurikabeInfo,
 	pentominoTillingInfo,
 	shikakuInfo,
-	shikakuNoRepeatsInRegionInfo,
 	tillingNoEmptyCellsInfo
 } from './UndeterminedRegionsElementsInfo';
 import {
@@ -365,7 +364,6 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.SASHIGANE]: sashiganeRegionsInfo,
 	[TOOLS.NORINORI]: norinoriInfo,
 	[TOOLS.SHIKAKU]: shikakuInfo,
-	[TOOLS.SHIKAKU_NO_REPEATS_IN_REGION]: shikakuNoRepeatsInRegionInfo,
 	[TOOLS.GOLDILOCKS_ZONE]: goldilocksZoneInfo,
 	[TOOLS.CELL_CENTER_LOOP_NO_TOUCHING]: cellCenterLoopNoTouchingInfo,
 	[TOOLS.CAVE]: caveInfo,

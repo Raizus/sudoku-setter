@@ -205,29 +205,6 @@ function fillominoConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
-function shikakuConstraint(model: PuzzleModel, tool: TOOLID) {
-	const puzzle = model.puzzle;
-	const grid = puzzle.grid;
-
-	const all_cells = grid.getAllCells();
-	if (all_cells.some((cell) => cell.outside)) {
-		console.warn(`${tool} not implemented when there are cells outside the grid.`);
-		return '';
-	}
-
-	const grid_name1 = VAR_2D_NAMES.SHIKAKU_REGIONS;
-
-	let out_str: string = '';
-	const n_rows = grid.nRows;
-	const n_cols = grid.nCols;
-	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name1};\n`;
-	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${n_rows}: ${VAR_2D_NAMES.SHIKAKU_HEIGHT};\n`;
-	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${n_cols}: ${VAR_2D_NAMES.SHIKAKU_WIDTH};\n`;
-	out_str += `constraint shikaku_p(${grid_name1}, ${VAR_2D_NAMES.SHIKAKU_WIDTH}, ${VAR_2D_NAMES.SHIKAKU_HEIGHT});\n`;
-
-	return out_str;
-}
-
 function shikakuNoRepeatsInRegionConstraint(model: PuzzleModel, tool: TOOLID) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
@@ -240,6 +217,38 @@ function shikakuNoRepeatsInRegionConstraint(model: PuzzleModel, tool: TOOLID) {
 
 	let out_str: string = '';
 	out_str += `constraint shikaku_no_repeats_in_regions_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.SHIKAKU_REGIONS});\n`;
+
+	return out_str;
+}
+
+export function shikakuConstraint(model: PuzzleModel, element: ConstraintsElement) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name1 = VAR_2D_NAMES.SHIKAKU_REGIONS;
+
+	let out_str: string = `\n% ${tool}\n`;
+	const n_rows = grid.nRows;
+	const n_cols = grid.nCols;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name1};\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${n_rows}: ${VAR_2D_NAMES.SHIKAKU_HEIGHT};\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${n_cols}: ${VAR_2D_NAMES.SHIKAKU_WIDTH};\n`;
+	out_str += `constraint shikaku_p(${grid_name1}, ${VAR_2D_NAMES.SHIKAKU_WIDTH}, ${VAR_2D_NAMES.SHIKAKU_HEIGHT});\n`;
+
+	if (!element.negative_constraints) return out_str;
+	const shikaku_no_repeats_in_islands =
+		!!element.negative_constraints[TOOLS.SHIKAKU_NO_REPEATS_IN_REGION];
+
+	if (shikaku_no_repeats_in_islands) {
+		out_str += shikakuNoRepeatsInRegionConstraint(model, TOOLS.SHIKAKU_NO_REPEATS_IN_REGION);
+	}
 
 	return out_str;
 }
@@ -462,8 +471,6 @@ type ConstraintF = (model: PuzzleModel, tool: TOOLID) => string;
 
 const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.FILLOMINO, fillominoConstraint],
-	[TOOLS.SHIKAKU, shikakuConstraint],
-	[TOOLS.SHIKAKU_NO_REPEATS_IN_REGION, shikakuNoRepeatsInRegionConstraint],
 	[TOOLS.NORINORI, norinoriConstraint],
 	[TOOLS.TWO_CONTIGUOUS_REGIONS, twoContiguousRegionsConstraint],
 	[TOOLS.CHAOS_CONSTRUCTION, chaosConstructionConstraint],

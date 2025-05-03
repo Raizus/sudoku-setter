@@ -22,7 +22,8 @@ import { addHeader, PuzzleModel, type ElementF } from './solver_utils';
 import {
 	nexusConstraint,
 	nurikabeConstraint,
-	nurimisakiConstraint
+	nurimisakiConstraint,
+	shikakuConstraint
 } from './undetermined_regions_constraints';
 import {
 	doublersConstraint,
@@ -58,6 +59,7 @@ const other_tool_map = new Map<string, ElementF2>([
 	[TOOLS.YIN_YANG, yinYangConstraint],
 	[TOOLS.NURIMISAKI, nurimisakiConstraint],
 	[TOOLS.NURIKABE, nurikabeConstraint],
+	[TOOLS.SHIKAKU, shikakuConstraint],
 
 	[TOOLS.NEXUS, nexusConstraint],
 
