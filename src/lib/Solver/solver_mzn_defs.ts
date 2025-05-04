@@ -2563,45 +2563,42 @@ predicate sashigane_links_to_bends_aux_p(
 predicate sashigane_links_to_bends(
     array[int, int] of var int: regions,
     array[int, int] of var bool: bends
-) =
-    assert(index_set_1of2(regions) = index_set_1of2(bends) /\\
-       index_set_2of2(regions) = index_set_2of2(bends),
-       "regions and bends must have same dimensions") /\\
-    forall(i in index_set_1of2(regions)) (
-        forall(j in index_set_2of2(regions)) (
-            not bends[i,j] -> 
-                let {
-                    % Up direction arrays (decreasing range)
-                    array[int] of var int: up_regions = 
-                        [regions[k,j] | k in reverse(min(index_set_1of2(regions))..i)];
-                    array[int] of var bool: up_bends = 
-                        [bends[k,j] | k in reverse(min(index_set_1of2(regions))..i)];
-                    
-                    % Down direction arrays
-                    array[int] of var int: down_regions = 
-                        [regions[k,j] | k in i..max(index_set_1of2(regions))];
-                    array[int] of var bool: down_bends = 
-                        [bends[k,j] | k in i..max(index_set_1of2(regions))];
-                    
-                    % Left direction arrays (decreasing range)
-                    array[int] of var int: left_regions = 
-                        [regions[i,k] | k in reverse(min(index_set_2of2(regions))..j)];
-                    array[int] of var bool: left_bends = 
-                        [bends[i,k] | k in reverse(min(index_set_2of2(regions))..j)];
-                    
-                    % Right direction arrays
-                    array[int] of var int: right_regions = 
-                        [regions[i,k] | k in j..max(index_set_2of2(regions))];
-                    array[int] of var bool: right_bends = 
-                        [bends[i,k] | k in j..max(index_set_2of2(regions))];
-                } in
-                % Exactly one direction should satisfy the auxiliary predicate
-                bool2int(sashigane_links_to_bends_aux_p(up_regions, up_bends)) +
-                bool2int(sashigane_links_to_bends_aux_p(down_regions, down_bends)) +
-                bool2int(sashigane_links_to_bends_aux_p(left_regions, left_bends)) +
-                bool2int(sashigane_links_to_bends_aux_p(right_regions, right_bends)) = 1
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);  
+} in (
+    assert(index_sets_agree(regions, bends), "regions and bends must have same dimensions") /\\
+    forall(i in rows, j in cols) (
+        not bends[i,j] -> (
+            let {
+                % Up direction arrays (decreasing range)
+                array[int] of int: idxs_up = [i-k | k in 0..(i-min(rows))];
+                array[int] of var int: up_regions = [regions[k,j] | k in idxs_up];
+                array[int] of var bool: up_bends = [bends[k,j] | k in idxs_up];
+                
+                % Down direction arrays
+                array[int] of int: idxs_down = [k | k in i..max(rows)];
+                array[int] of var int: down_regions = [regions[k,j] | k in idxs_down];
+                array[int] of var bool: down_bends = [bends[k,j] | k in idxs_down];
+                
+                % Left direction arrays (decreasing range)
+                array[int] of int: idxs_left = [j-k | k in 0..(j-min(cols))];
+                array[int] of var int: left_regions = [regions[i,k] | k in idxs_left];
+                array[int] of var bool: left_bends = [bends[i,k] | k in idxs_left];
+                
+                % Right direction arrays
+                array[int] of int: idxs_right = [k | k in j..max(cols)];
+                array[int] of var int: right_regions = [regions[i,k] | k in idxs_right];
+                array[int] of var bool: right_bends = [bends[i,k] | k in idxs_right];
+            } in
+            % Exactly one direction should satisfy the auxiliary predicate
+            bool2int(sashigane_links_to_bends_aux_p(up_regions, up_bends)) +
+            bool2int(sashigane_links_to_bends_aux_p(down_regions, down_bends)) +
+            bool2int(sashigane_links_to_bends_aux_p(left_regions, left_bends)) +
+            bool2int(sashigane_links_to_bends_aux_p(right_regions, right_bends)) = 1
         )
-    );
+    )
+);
 
 
 predicate sashigane_no_repeats_in_each_region_p(
