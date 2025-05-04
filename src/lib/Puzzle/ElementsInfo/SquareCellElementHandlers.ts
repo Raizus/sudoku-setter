@@ -1,6 +1,11 @@
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { TOOLS } from '../Tools';
-import { arrowInfo, averageArrowInfo, bulbousArrowInfo, chaosConstructionArrowInfo } from './ArrowToolsElementsInfo';
+import {
+	arrowInfo,
+	averageArrowInfo,
+	bulbousArrowInfo,
+	chaosConstructionArrowInfo
+} from './ArrowToolsElementsInfo';
 import {
 	divisibleKillerCageInfo,
 	doublersKillerCageInfo,
@@ -28,7 +33,10 @@ import {
 	penToolInfo,
 	regionsInfo
 } from './CellInputElementsInfo';
-import { rotationallySymmetricGalaxyCenterSumInfo, yinYangSumOfAdjacentShadedEdgeOrCornerInfo } from './CenterEdgeCornerElementsInfo';
+import {
+	rotationallySymmetricGalaxyCenterSumInfo,
+	yinYangSumOfAdjacentShadedEdgeOrCornerInfo
+} from './CenterEdgeCornerElementsInfo';
 import { cloneRegionInfo } from './CloneToolsElementsInfo';
 import {
 	cornerEvenCountInfo,
@@ -78,11 +86,9 @@ import {
 	antiLongKnightInfo,
 	boxRowsAndColumnsFormModularityAndEntropySetInfo,
 	disjointGroupsInfo,
-	fillominoInfo,
 	globalIndexingColumnInfo,
 	hexedSudokuInfo,
 	leaveEmptyCellsEmptyInfo,
-	LITSInfo,
 	negativeAntidiagonalInfo,
 	negativeDiagonalInfo,
 	nonconsecutiveInfo,
@@ -109,7 +115,8 @@ import {
 	nurikabeInfo,
 	pentominoTillingInfo,
 	shikakuInfo,
-	tillingNoEmptyCellsInfo
+	LITSInfo,
+	fillominoInfo
 } from './UndeterminedRegionsElementsInfo';
 import {
 	yinYangFillominoParityInfo,
@@ -299,7 +306,12 @@ import {
 	litsMaxTetrominoSumInfo,
 	minimumDiagonallyAdjacentDifferenceInfo
 } from './ValuedGlobalConstraintsElementsInfo';
-import { doublersInfo, indexerCellsInfo, negatorsInfo, nexusInfo } from './ValueModifierConstraintsElementsInfo';
+import {
+	doublersInfo,
+	indexerCellsInfo,
+	negatorsInfo,
+	nexusInfo
+} from './ValueModifierConstraintsElementsInfo';
 import { mazeWallInfo } from './CornerLineToolsElementsInfo';
 
 export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = {
@@ -370,9 +382,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING]: twilightCaveFillominoRegionShadingInfo,
 
 	[TOOLS.GALAXIES]: galaxiesInfo,
-
 	[TOOLS.PENTOMINO_TILLING]: pentominoTillingInfo,
-	[TOOLS.TILLING_NO_EMPTY_CELLS]: tillingNoEmptyCellsInfo,
 
 	[TOOLS.LITS_BLACK_WHITE_STAR_BATTLE]: litsBlackAndWhiteStarBattleInfo,
 	[TOOLS.NORINORI_STAR_BATTLE]: norinoriStarBattleInfo,

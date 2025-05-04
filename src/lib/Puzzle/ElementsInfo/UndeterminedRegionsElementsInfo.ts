@@ -8,7 +8,7 @@ export const chaosConstructionInfo: AbstractElementInfo = {
 		description:
 			'The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -19,7 +19,7 @@ export const numberedChaosConstructionInfo: AbstractElementInfo = {
 		description:
 			'The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells. The digit in the top-left cell of a region (the leftmost cell in its highest row) is its region number. All region numbers are different.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -30,7 +30,7 @@ export const chaosConstructionSuguruInfo: AbstractElementInfo = {
 		description:
 			'In each region of the grid, insert the numbers 1 to N, where N is the size of that region. Orthogonally adjacent and diagonally adjacent cells cannot contain the same digit. For this puzzle, the regions must be determined by the solver.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -54,7 +54,7 @@ export const yinYangInfo: AbstractElementInfo = {
 		description:
 			'Shade some cells in the grid such that all shaded cells are orthogonally connected and all unshaded cells are orthogonally connected, and no 2x2 area is fully shaded or fully unshaded.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.GLOBAL_YIN_YANG_CONSTRAINTS]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -72,7 +72,7 @@ export const nurimisakiInfo: AbstractElementInfo = {
 		description:
 			'Shade some cells so that the remaining unshaded cells form one orthogonally connected area. No 2x2 region may be entirely shaded or unshaded.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.GLOBAL_NURIMISAKI_CONSTRAINTS]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -90,7 +90,7 @@ export const nurikabeInfo: AbstractElementInfo = {
 		description:
 			'Shade some cells blue (representing water), such that all water cells are orthogonally connected, but water may not fully cover a 2x2 area. Shade the remaining cells green, which represent islands.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.GLOBAL_NURIKABE_CONSTRAINTS]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -100,7 +100,7 @@ export const twoContiguousRegionsInfo: AbstractElementInfo = {
 	meta: {
 		description: 'Divide the grid into two sets of contiguous cells.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -111,7 +111,7 @@ export const sashiganeRegionsInfo: AbstractElementInfo = {
 		description:
 			'Divide the grid into 1-cell wide L-shaped regions. Digits may not repeat in a region.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -122,7 +122,7 @@ export const norinoriInfo: AbstractElementInfo = {
 		description:
 			'Shade two cells in each region such that all shaded cells are part of dominoes and no two dominoes touch each other orthogonally (but may touch diagonally).',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -140,7 +140,7 @@ export const shikakuInfo: AbstractElementInfo = {
 		description:
 			'Divide the grid into rectangular regions of orthogonally connected cells, so that every cell is in a region and regions do not overlap.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_CONSTRAINT, TOOL_CATEGORIES.GLOBAL_SHIKAKU_CONSTRAINTS]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -151,7 +151,7 @@ export const norinoriStarBattleInfo: AbstractElementInfo = {
 		description:
 			'Place one star in each region such that there are exactly two in each row and column. Stars cannot touch each other, even diagonally. Stars cannot be placed on shaded Norinori cells.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -162,7 +162,7 @@ export const goldilocksZoneInfo: AbstractElementInfo = {
 		description:
 			"Divide the grid into 3 zones. Each zone consists of a single group of orthogonally connected cells. No 2x2 area may be entirely within one zone. The first zone is 'too hot'. Any cell in the hot zone has a value one greater than its digit. The second zone is 'too cold'. Any cell in the cold zone has a value one less than its digit. The third zone is 'just right'; this is the Goldilocks Zone. In this zone, a cell's value equals its digit, like normal.",
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -200,7 +200,7 @@ export const cellCenterLoopNoTouchingInfo: AbstractElementInfo = {
 		description:
 			'Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself orthogonally.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.GLOBAL_LOOP_CONSTRAINTS]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -238,7 +238,7 @@ export const mazeDirectedPathInfo: AbstractElementInfo = {
 		description:
 			"Draw a directect path in the grid. The path will be a snaking line that passes through the centres of cells, without visiting any cell more than once, crossing itself or passing through any thick maze walls. As well as moving orthogonally, the path may move diagonally if there's a 2x2 space in which to do so, but may never pass diagonally through the rounded end / corner of a wall.",
 		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -307,7 +307,7 @@ export const caveInfo: AbstractElementInfo = {
 		description:
 			'Shade some cells in the grid such that all unshaded cells are orthogonally connected, and all shaded cells are orthogonally connected by other shaded cells to an edge of the grid.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.GLOBAL_CAVE_CONSTRAINTS]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -318,7 +318,7 @@ export const twilightCaveFillominoRegionShadingInfo: AbstractElementInfo = {
 		description:
 			'Each fillomino region must either be entirely shaded or entirely unshaded, according to cave shading.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -328,7 +328,7 @@ export const yinYangFillominoParityInfo: AbstractElementInfo = {
 	meta: {
 		description: 'All odd polyominoes are shaded, while all even polyominoes are unshaded.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -360,28 +360,25 @@ export const galaxiesInfo: AbstractElementInfo = {
 		description:
 			'Each galaxy must consist of a region of orthogonally connected cells, and must have 180 degree rotational symmetry.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.GLOBAL_GALAXY_CONSTRAINTS]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
 export const pentominoTillingInfo: AbstractElementInfo = {
 	toolId: TOOLS.PENTOMINO_TILLING,
 
+	// negative_constraints: [
+	// 	{
+	// 		toolId: TOOLS.PENTOMINO_TILLING_NO_EMPTY_CELLS,
+	// 		description: 'Every cell in the grid belongs to a pentomino.'
+	// 	}
+	// ],
+
 	meta: {
 		description:
 			'Divide the grid into pentominoes, such that no two pentominoes of the same shape (including rotations and reflections) touch orthogonally.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
-export const tillingNoEmptyCellsInfo: AbstractElementInfo = {
-	toolId: TOOLS.TILLING_NO_EMPTY_CELLS,
-
-	meta: {
-		description: 'Every cell in the grid belongs to a tile.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -392,7 +389,7 @@ export const litsBlackAndWhiteStarBattleInfo: AbstractElementInfo = {
 		description:
 			'Each row, column and region must contain exactly one white star and one black star. Black stars must be located on tetrominoes, and white stars must not. Regardless of colour, stars may not touch each other - not even diagonally.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.GLOBAL_CONSTRAINT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
 
@@ -420,6 +417,28 @@ export const connectFourInfo: AbstractElementInfo = {
 		description:
 			'The board represents a game of Connect 4. And so it resulted in a draw; the board became full of an equal number of red and yellow discs without either of them managing to get any horizontal, vertical or diagonal connected line of 4 discs of their colour. Recreate the end board state by colouring the holes red and yellow. The first two moves have been shown.',
 		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.GLOBAL_CONNECT_FOUR_CONSTRAINTS]
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const fillominoInfo: AbstractElementInfo = {
+	toolId: TOOLS.FILLOMINO,
+
+	meta: {
+		description:
+			'Fillomino rules apply. Divide the grid into orthogonally connected regions such that no two regions of the same size share an edge, and enter a number into each cell equal to the size of its region.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const LITSInfo: AbstractElementInfo = {
+	toolId: TOOLS.LITS,
+
+	meta: {
+		description:
+			'Shade one tetromino in each region. (A tetromino is a shape of four orthogonally-connected cells.) No two tetrominoes of the same shape may share an edge - reflections/rotations count as the same shape. All tetrominoes must form a single orthogonally connected area. No 2x2 area of the grid can be completely shaded.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };

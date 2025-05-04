@@ -1,8 +1,8 @@
 import type { Grid } from './Grid/Grid';
 import type { Cell } from './Grid/Cell';
 import { counter } from '$lib/utils/functionUtils';
-import type { GlobalConstraintsDict } from './Constraints/GlobalConstraints';
 import { TOOLS } from './Tools';
+import type { ElementsDict } from './Constraints/LocalConstraints';
 
 function findCellsWithRepeatedValues(cells: Cell[]): Cell[] {
 	const result: Cell[] = [];
@@ -118,10 +118,10 @@ export function disjointGroupsConflicts(grid: Grid) {
 	return new Set(cells);
 }
 
-export function globalConstraintsConflicts(grid: Grid, global_constraints: GlobalConstraintsDict) {
+export function globalConstraintsConflicts(grid: Grid, element_dict: ElementsDict) {
 	let conflicts: Set<Cell> = new Set();
 
-	const sudoku = !global_constraints.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY);
+	const sudoku = !element_dict.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY);
 	if (sudoku) {
 		const aux = new Set<Cell>([
 			...rowConflicts(grid),
@@ -131,26 +131,28 @@ export function globalConstraintsConflicts(grid: Grid, global_constraints: Globa
 		conflicts = conflicts.union(aux);
 	}
 
-	if (global_constraints.get(TOOLS.ANTIKNIGHT)) {
+	const antiknight = !!element_dict.get(TOOLS.ANTIKNIGHT);
+	if (antiknight) {
 		conflicts = conflicts.union(knightsMoveConflicts(grid));
 	}
-	if (global_constraints.get(TOOLS.ANTIKING)) {
+	const antiking = !!element_dict.get(TOOLS.ANTIKING);
+	if (antiking) {
 		conflicts = conflicts.union(kingsMoveConflicts(grid));
 	}
-	if (global_constraints.get(TOOLS.NONCONSECUTIVE)) {
+	const nonconsecutive = !!element_dict.get(TOOLS.NONCONSECUTIVE);
+	if (nonconsecutive) {
 		conflicts = conflicts.union(nonconsecutiveConflicts(grid));
 	}
-	if (global_constraints.get(TOOLS.DISJOINT_GROUPS)) {
+	const disjoint_groups = !!element_dict.get(TOOLS.DISJOINT_GROUPS);
+	if (disjoint_groups) {
 		conflicts = conflicts.union(disjointGroupsConflicts(grid));
 	}
 
 	return conflicts;
 }
 
-export function findConflicts(grid: Grid, global_constraints: GlobalConstraintsDict) {
-	const conflicts = new Set<Cell>([
-		...globalConstraintsConflicts(grid, global_constraints)
-	]);
+export function findConflicts(grid: Grid, element_dict: ElementsDict) {
+	const conflicts = new Set<Cell>([...globalConstraintsConflicts(grid, element_dict)]);
 
 	const cells = [...conflicts];
 	return cells;

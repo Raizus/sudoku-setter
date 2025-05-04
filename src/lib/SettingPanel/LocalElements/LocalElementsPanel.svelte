@@ -6,7 +6,7 @@
 		type TOOLID,
 		TOOL_CATEGORIES,
 		isLocalElement,
-		LOCAL_ELEMENTS_CATEGORIES
+		ELEMENTS_CATEGORIES
 	} from '$lib/Puzzle/Tools';
 	import { localConstraintsStore, updateToolAndCurrentConstraintStores } from '$stores/BoardStore';
 
@@ -22,7 +22,7 @@
 
 	export let elementHandlers: AbstractElementHandlers;
 
-	const categories = LOCAL_ELEMENTS_CATEGORIES;
+	const categories = ELEMENTS_CATEGORIES;
 
 	const onAddTool = (toolId: TOOLID): void => {
 		addGroupToLocalConstraint(toolId);

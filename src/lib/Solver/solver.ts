@@ -1,8 +1,7 @@
 import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS } from '../Puzzle/Tools';
-import { globalConstraints, hexedSudokuConstraint, sudokuConstraints } from './global_constraints';
-import { localConstraints } from './local_constraints';
-import { undeterminedRegionsConstraints } from './undetermined_regions_constraints';
+import { hexedSudokuConstraint, sudokuConstraints } from './global_constraints';
+import { localAndGlobalConstraints } from './local_constraints';
 import { cellToVarName, PuzzleModel, set_board_regions } from './solver_utils';
 import { defineFunctionsPredicates } from './solver_mzn_defs';
 import { range } from 'lodash';
@@ -36,10 +35,14 @@ export function createMinizincModel(puzzle: PuzzleI, randomize_search: boolean =
 
 	const max_val = Math.max(nrows, ncols);
 	let allowed_digits_str = `1..${max_val}`;
-	const fillomino = !!puzzle.globalConstraints.get(TOOLS.FILLOMINO);
+	const elements_dict = puzzle.elementsDict;
+
+	const fillomino = !!elements_dict.get(TOOLS.FILLOMINO);
+	const hexed_sudoku = !!elements_dict.get(TOOLS.HEXED_SUDOKU);
+
 	if (fillomino) {
 		allowed_digits_str = `1..${grid_size}`;
-	} else if (puzzle.globalConstraints.get(TOOLS.HEXED_SUDOKU)) {
+	} else if (hexed_sudoku) {
 		valid_digits = [...range(1, 16)];
 	} else if (valid_digits) {
 		allowed_digits_str = '{' + valid_digits.join(',') + '}';
@@ -57,14 +60,10 @@ export function createMinizincModel(puzzle: PuzzleI, randomize_search: boolean =
 	model.add(sudokuConstraints(puzzle));
 	model.add(hexedSudokuConstraint(puzzle));
 
-	model.add(undeterminedRegionsConstraints(model));
-	model.add(localConstraints(puzzle, model));
-	model.add(globalConstraints(puzzle));
+	model.add(localAndGlobalConstraints(puzzle, model));
 
 	if (randomize_search) {
-		model.add(
-			`\nsolve :: int_search(array1d(board), first_fail, indomain_random) satisfy;`
-		);
+		model.add(`\nsolve :: int_search(array1d(board), first_fail, indomain_random) satisfy;`);
 	} else {
 		model.add('\nsolve satisfy;');
 	}

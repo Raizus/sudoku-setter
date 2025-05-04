@@ -1,6 +1,6 @@
 import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
 import type { PuzzleI } from '../Puzzle/Puzzle';
-import { TOOLS, type TOOLID } from '../Puzzle/Tools';
+import { TOOLS } from '../Puzzle/Tools';
 import {
 	cellsToVarsName,
 	allDifferentConstraint,
@@ -12,7 +12,10 @@ import {
 	PuzzleModel
 } from './solver_utils';
 
-export function positiveDiagonalConstraint(model: PuzzleModel, element: ConstraintsElement): string {
+export function positiveDiagonalConstraint(
+	model: PuzzleModel,
+	element: ConstraintsElement
+): string {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 	const tool = element.tool_id;
@@ -24,7 +27,10 @@ export function positiveDiagonalConstraint(model: PuzzleModel, element: Constrai
 	return out_str;
 }
 
-export function negativeDiagonalConstraint(model: PuzzleModel, element: ConstraintsElement): string {
+export function negativeDiagonalConstraint(
+	model: PuzzleModel,
+	element: ConstraintsElement
+): string {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 	const tool = element.tool_id;
@@ -36,7 +42,10 @@ export function negativeDiagonalConstraint(model: PuzzleModel, element: Constrai
 	return out_str;
 }
 
-export function positiveAntidiagonalConstraint(model: PuzzleModel, element: ConstraintsElement): string {
+export function positiveAntidiagonalConstraint(
+	model: PuzzleModel,
+	element: ConstraintsElement
+): string {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 	const tool = element.tool_id;
@@ -49,7 +58,10 @@ export function positiveAntidiagonalConstraint(model: PuzzleModel, element: Cons
 	return out_str;
 }
 
-export function negativeAntidiagonalConstraint(model: PuzzleModel, element: ConstraintsElement): string {
+export function negativeAntidiagonalConstraint(
+	model: PuzzleModel,
+	element: ConstraintsElement
+): string {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 	const tool = element.tool_id;
@@ -126,10 +138,12 @@ export function oddEvenMirrorNegativeDiagonalConstraint(
 	return out_str;
 }
 
-function disjointGroupsConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+function disjointGroupsConstraint(model: PuzzleModel, element: ConstraintsElement): string {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
 
-	let out_str: string = `\n% ${toolId}\n`;
+	let out_str: string = `\n% ${tool}\n`;
 	const num_regions = [...grid.getUsedRegions()].length;
 	for (let group_idx = 0; group_idx < num_regions; group_idx++) {
 		const disjoint_group = grid.getDisjointGroup(group_idx);
@@ -141,10 +155,12 @@ function disjointGroupsConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	return out_str;
 }
 
-function antikingConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+function antikingConstraint(model: PuzzleModel, element: ConstraintsElement): string {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
 
-	let out_str: string = `\n% ${toolId}\n`;
+	let out_str: string = `\n% ${tool}\n`;
 	for (const cell of grid.getAllCells()) {
 		const kings_move_cells = grid.getNeighboorCells(cell);
 		const filtered = kings_move_cells.filter((cell2) => cell2.r + cell2.c >= cell.r + cell.c);
@@ -157,10 +173,12 @@ function antikingConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	return out_str;
 }
 
-function antiknightConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+function antiknightConstraint(model: PuzzleModel, element: ConstraintsElement): string {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
 
-	let out_str: string = `\n% ${toolId}\n`;
+	let out_str: string = `\n% ${tool}\n`;
 	for (const cell of grid.getAllCells()) {
 		const knight_move_cells = grid.getCellsByKnightMove(cell);
 		const filtered = knight_move_cells.filter((cell2) => cell2.r >= cell.r || cell2.c >= cell.c);
@@ -173,37 +191,48 @@ function antiknightConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	return out_str;
 }
 
-function antiGiraffeConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+function antiGiraffeConstraint(model: PuzzleModel, element: ConstraintsElement): string {
+	const tool = element.tool_id;
+
 	let out_str: string = '';
 	out_str += `constraint anti_giraffe_p(board);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
+	out_str = addHeader(out_str, `${tool}`);
 	return out_str;
 }
 
-function antiLongKnightConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+function antiLongKnightConstraint(model: PuzzleModel, element: ConstraintsElement): string {
+	const tool = element.tool_id;
+
 	let out_str: string = '';
 	out_str += `constraint anti_long_knight_p(board);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
+	out_str = addHeader(out_str, `${tool}`);
 	return out_str;
 }
 
-function tangoConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+function tangoConstraint(model: PuzzleModel, element: ConstraintsElement): string {
+	const tool = element.tool_id;
+
 	let out_str: string = '';
 	out_str += `constraint tango_p(board);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
+	out_str = addHeader(out_str, `${tool}`);
 	return out_str;
 }
 
-function antiEntropyConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+function antiEntropyConstraint(model: PuzzleModel, element: ConstraintsElement): string {
+	const tool = element.tool_id;
+
 	let out_str: string = '';
 	out_str += `constraint anti_entropy_p(board);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
+	out_str = addHeader(out_str, `${tool}`);
 	return out_str;
 }
 
-function nonconsecutiveConstraint(puzzle: PuzzleI, toolId: TOOLID) {
+function nonconsecutiveConstraint(model: PuzzleModel, element: ConstraintsElement) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
-	let out_str: string = `\n% ${toolId}\n`;
+	const tool = element.tool_id;
+
+	let out_str: string = `\n% ${tool}\n`;
 	for (const [cell1, cell2] of adjCellPairGen(grid)) {
 		const var1 = cellToVarName(cell1);
 		const var2 = cellToVarName(cell2);
@@ -214,9 +243,12 @@ function nonconsecutiveConstraint(puzzle: PuzzleI, toolId: TOOLID) {
 	return out_str;
 }
 
-function nonratioConstraint(puzzle: PuzzleI, toolId: TOOLID) {
+function nonratioConstraint(model: PuzzleModel, element: ConstraintsElement) {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
-	let out_str: string = `\n% ${toolId}\n`;
+	const tool = element.tool_id;
+
+	let out_str: string = `\n% ${tool}\n`;
 	for (const [cell1, cell2] of adjCellPairGen(grid)) {
 		const var1 = cellToVarName(cell1);
 		const var2 = cellToVarName(cell2);
@@ -227,10 +259,12 @@ function nonratioConstraint(puzzle: PuzzleI, toolId: TOOLID) {
 	return out_str;
 }
 
-function globalIndexingColumnConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+function globalIndexingColumnConstraint(model: PuzzleModel, element: ConstraintsElement): string {
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
 
-	let out_str = `\n% ${toolId}\n`;
+	let out_str = `\n% ${tool}\n`;
 	for (const cell of grid.getAllCells()) {
 		const row_cells = grid.getRow(cell.r);
 		const vars = cellsToVarsName(row_cells);
@@ -242,36 +276,51 @@ function globalIndexingColumnConstraint(puzzle: PuzzleI, toolId: TOOLID): string
 	return out_str;
 }
 
-function allOddDigitsOrthogonallyConnected(puzzle: PuzzleI, toolId: TOOLID): string {
+function allOddDigitsOrthogonallyConnected(
+	model: PuzzleModel,
+	element: ConstraintsElement
+): string {
+	const tool = element.tool_id;
+
 	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: even_odd_grid;\n`;
 	out_str += `constraint odd_even_grid_p(board, even_odd_grid);\n`;
 	out_str += `constraint connected_region(even_odd_grid, 1);\n`;
 
-	out_str = addHeader(out_str, `${toolId}`);
+	out_str = addHeader(out_str, `${tool}`);
 	return out_str;
 }
 
-function twilightCaveFillominoRegionsShading(puzzle: PuzzleI, toolId: TOOLID): string {
+function twilightCaveFillominoRegionsShading(
+	model: PuzzleModel,
+	element: ConstraintsElement
+): string {
+	const tool = element.tool_id;
+
 	let out_str: string = '';
 	out_str += `constraint twilight_cave_fillomino_region_shading(cave_shading, fillomino_area);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
+	out_str = addHeader(out_str, `${tool}`);
 	return out_str;
 }
 
-function yinYangFillominoParityConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+function yinYangFillominoParityConstraint(model: PuzzleModel, element: ConstraintsElement): string {
+	const tool = element.tool_id;
+
 	let out_str: string = '';
 	out_str += `constraint yin_yang_fillomino_parity_p(board, yin_yang);\n`;
-	out_str = addHeader(out_str, `${toolId}`);
+	out_str = addHeader(out_str, `${tool}`);
 	return out_str;
 }
 
 function boxRowsAndColumnsFormModularityAndEntropySetConstraint(
-	puzzle: PuzzleI,
-	toolId: TOOLID
+	model: PuzzleModel,
+	element: ConstraintsElement
 ): string {
-	let out_str: string = '';
+	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
+	let out_str: string = '';
 	const used_regions = puzzle.grid.getUsedRegions();
 	for (const region of used_regions) {
 		const region_cells = grid.getRegion(region);
@@ -291,15 +340,15 @@ function boxRowsAndColumnsFormModularityAndEntropySetConstraint(
 		}
 	}
 
-	out_str = addHeader(out_str, `${toolId}`);
+	out_str = addHeader(out_str, `${tool}`);
 	return out_str;
 }
 
 export function sudokuConstraints(puzzle: PuzzleI) {
-	const gconstraints = puzzle.globalConstraints;
-	if (gconstraints.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY)) {
-		return '';
-	}
+	const elements_dict = puzzle.elementsDict;
+	const not_sudoku = !!elements_dict.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY);
+
+	if (not_sudoku) return '';
 
 	const grid = puzzle.grid;
 
@@ -325,7 +374,7 @@ export function sudokuConstraints(puzzle: PuzzleI) {
 	}
 
 	// region constraints (digits do not repeat on regions)
-	const chaos_construction = gconstraints.get(TOOLS.CHAOS_CONSTRUCTION);
+	const chaos_construction = !!elements_dict.get(TOOLS.CHAOS_CONSTRUCTION);
 	if (!chaos_construction) {
 		out_str += '\n% region constraints (digits do not repeat on regions)\n';
 		const regions = grid.getUsedRegions();
@@ -341,19 +390,26 @@ export function sudokuConstraints(puzzle: PuzzleI) {
 }
 
 export function hexedSudokuConstraint(puzzle: PuzzleI) {
+	const elements_dict = puzzle.elementsDict;
+
 	const tool = TOOLS.HEXED_SUDOKU;
-	const gconstraints = puzzle.globalConstraints;
-	const constraint = gconstraints.get(tool);
-	if (!constraint) return '';
+	const hexed_sudoku = !!elements_dict.get(tool);
+	if (!hexed_sudoku) return '';
 
 	let out_str = `\n% ${tool}\n`;
 	out_str += `constraint hexed_sudoku_p(board, ALLOWED_DIGITS);\n`;
 	return out_str;
 }
 
-type ConstraintF = (puzzle: PuzzleI, tool: TOOLID) => string;
+type ElementF2 = (model: PuzzleModel, element: ConstraintsElement) => string;
 
-const tool_map = new Map<string, ConstraintF>([
+const tool_map = new Map<string, ElementF2>([
+	[TOOLS.POSITIVE_DIAGONAL, positiveDiagonalConstraint],
+	[TOOLS.NEGATIVE_DIAGONAL, negativeDiagonalConstraint],
+	[TOOLS.POSITIVE_ANTIDIAGONAL, positiveAntidiagonalConstraint],
+	[TOOLS.NEGATIVE_ANTIDIAGONAL, negativeAntidiagonalConstraint],
+	[TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_POSITIVE_DIAGONAL, oddEvenMirrorPositiveDiagonalConstraint],
+	[TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_NEGATIVE_DIAGONAL, oddEvenMirrorNegativeDiagonalConstraint],
 	[TOOLS.ANTIKING, antikingConstraint],
 	[TOOLS.ANTIKNIGHT, antiknightConstraint],
 	[TOOLS.ANTI_LONG_KNIGHT, antiLongKnightConstraint],
@@ -375,18 +431,13 @@ const tool_map = new Map<string, ConstraintF>([
 	[TOOLS.YIN_YANG_FILLOMINO_PARITY, yinYangFillominoParityConstraint]
 ]);
 
-export function globalConstraints(puzzle: PuzzleI): string {
+export function globalConstraints(model: PuzzleModel, element: ConstraintsElement) {
 	let out_str = '';
-
-	const gconstraints = puzzle.globalConstraints;
-	for (const [toolId, value] of gconstraints.entries()) {
-		if (!value) continue;
-		const constraintF = tool_map.get(toolId);
-		if (!constraintF) continue;
-
-		const constraint_str = constraintF(puzzle, toolId);
-
-		out_str += constraint_str;
+	const tool_id = element.tool_id;
+	const elementF = tool_map.get(tool_id);
+	if (elementF) {
+		const element_str = elementF(model, element);
+		out_str += element_str;
 	}
 
 	return out_str;

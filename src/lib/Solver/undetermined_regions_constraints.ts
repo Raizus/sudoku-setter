@@ -2,7 +2,6 @@ import { range } from 'lodash';
 import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
-	addHeader,
 	adjCellPairGen,
 	cellsToGridVarsStr,
 	cellToGridVarName,
@@ -15,6 +14,12 @@ import {
 	VAR_2D_NAMES
 } from './solver_utils';
 import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
+import { caveConstraint } from './cave_constraints';
+import { connectFourConstraint } from './connect_four_constraints';
+import { galaxiesConstraint } from './galaxy_constraints';
+import { cellCenterLoopNoTouchingConstraint } from './loop_constraints';
+import { mazeDirectedPathConstraint } from './directed_path_constraints';
+import { yinYangConstraint } from './yin_yang_constraints';
 
 function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
@@ -32,7 +37,7 @@ function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID)
 	return out_str;
 }
 
-export function nurimisakiConstraint(model: PuzzleModel, element: ConstraintsElement) {
+function nurimisakiConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 	const tool = element.tool_id;
@@ -77,7 +82,7 @@ function nurikabeNoRepeatsInIslandsConstraint(model: PuzzleModel, tool: TOOLID) 
 	return out_str;
 }
 
-export function nurikabeConstraint(model: PuzzleModel, element: ConstraintsElement) {
+function nurikabeConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 	const tool = element.tool_id;
@@ -104,9 +109,10 @@ export function nurikabeConstraint(model: PuzzleModel, element: ConstraintsEleme
 	return out_str;
 }
 
-function twoContiguousRegionsConstraint(model: PuzzleModel, tool: TOOLID) {
+function twoContiguousRegionsConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
 
 	const all_cells = grid.getAllCells();
 	if (all_cells.some((cell) => cell.outside)) {
@@ -114,17 +120,17 @@ function twoContiguousRegionsConstraint(model: PuzzleModel, tool: TOOLID) {
 		return '';
 	}
 
-	let out_str: string = '';
-	out_str += `\n% Two Contiguous Regions\n`;
+	let out_str: string = `\n% ${tool}\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: two_contiguous_regions;\n`;
 	out_str += `constraint two_contiguous_regions_p(two_contiguous_regions);\n`;
 
 	return out_str;
 }
 
-function chaosConstructionConstraint(model: PuzzleModel, tool: TOOLID) {
+function chaosConstructionConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
 
 	const all_cells = grid.getAllCells();
 	if (all_cells.some((cell) => cell.outside)) {
@@ -134,8 +140,9 @@ function chaosConstructionConstraint(model: PuzzleModel, tool: TOOLID) {
 
 	const n_regions = Math.max(grid.nCols, grid.nRows);
 	const reg_idxs = range(1, n_regions + 1);
-	let out_str: string = '';
 	const reg_idxs_str = '[' + reg_idxs.join(',') + ']';
+
+	let out_str: string = `\n% ${tool}\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var ${1}..${n_regions}: unknown_regions;\n`;
 	out_str += `constraint chaos_construction_p(unknown_regions, ${reg_idxs_str}, ${n_regions});\n`;
 	out_str += `constraint no_repeats_in_unknown_regions_p(board, unknown_regions, ALLOWED_DIGITS, ${reg_idxs_str});\n`;
@@ -143,9 +150,10 @@ function chaosConstructionConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
-function numberedChaosConstructionConstraint(model: PuzzleModel, tool: TOOLID) {
+function numberedChaosConstructionConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
 
 	const all_cells = grid.getAllCells();
 	if (all_cells.some((cell) => cell.outside)) {
@@ -157,8 +165,8 @@ function numberedChaosConstructionConstraint(model: PuzzleModel, tool: TOOLID) {
 
 	const n_regions = Math.max(grid.nCols, grid.nRows);
 	const reg_idxs = range(1, n_regions + 1);
-	let out_str: string = '';
 	const reg_idxs_str = '[' + reg_idxs.join(',') + ']';
+	let out_str: string = `\n% ${tool}\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var ${1}..${n_regions}: ${grid_name};\n`;
 	out_str += `constraint numbered_chaos_construction_p(${VAR_2D_NAMES.BOARD}, ${grid_name}, ${reg_idxs_str}, ${n_regions});\n`;
 	out_str += `constraint no_repeats_in_unknown_regions_p(${VAR_2D_NAMES.BOARD}, ${grid_name}, ALLOWED_DIGITS, ${reg_idxs_str});\n`;
@@ -166,9 +174,10 @@ function numberedChaosConstructionConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
-function sashiganeConstraint(model: PuzzleModel, tool: TOOLID) {
+function sashiganeConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
 
 	const all_cells = grid.getAllCells();
 	if (all_cells.some((cell) => cell.outside)) {
@@ -176,7 +185,7 @@ function sashiganeConstraint(model: PuzzleModel, tool: TOOLID) {
 		return '';
 	}
 
-	let out_str: string = '';
+	let out_str: string = `\n% ${tool}\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: sashigane;\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: sashigane_bends;\n`;
 	out_str += `constraint sashigane_adjacency_p(sashigane);\n`;
@@ -187,9 +196,10 @@ function sashiganeConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
-function fillominoConstraint(model: PuzzleModel, tool: TOOLID) {
+function fillominoConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
 
 	const all_cells = grid.getAllCells();
 	if (all_cells.some((cell) => cell.outside)) {
@@ -197,8 +207,8 @@ function fillominoConstraint(model: PuzzleModel, tool: TOOLID) {
 		return '';
 	}
 
-	const grid_name = 'fillomino_area';
-	let out_str: string = '';
+	const grid_name = VAR_2D_NAMES.FILLOMINO_REGIONS;
+	let out_str: string = `\n% ${tool}\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name};\n`;
 	out_str += `constraint fillomino_p(board, ${grid_name});\n`;
 
@@ -221,7 +231,7 @@ function shikakuNoRepeatsInRegionConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
-export function shikakuConstraint(model: PuzzleModel, element: ConstraintsElement) {
+function shikakuConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 	const tool = element.tool_id;
@@ -253,7 +263,7 @@ export function shikakuConstraint(model: PuzzleModel, element: ConstraintsElemen
 	return out_str;
 }
 
-export function nexusConstraint(model: PuzzleModel, element: ConstraintsElement) {
+function nexusConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 	const tool = element.tool_id;
@@ -271,9 +281,10 @@ export function nexusConstraint(model: PuzzleModel, element: ConstraintsElement)
 	return out_str;
 }
 
-function goldilocksConstraint(model: PuzzleModel, tool: TOOLID) {
+function goldilocksConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
 
 	const all_cells = grid.getAllCells();
 	if (all_cells.some((cell) => cell.outside)) {
@@ -281,7 +292,7 @@ function goldilocksConstraint(model: PuzzleModel, tool: TOOLID) {
 		return '';
 	}
 
-	let out_str: string = '';
+	let out_str: string = `\n% ${tool}\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..2: goldilocks_regions;\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: values_grid;\n`;
 	out_str += `constraint goldilocks_zone_p(goldilocks_regions);\n`;
@@ -290,9 +301,10 @@ function goldilocksConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
-function pentominoTillingConstraint(model: PuzzleModel, tool: TOOLID) {
+function pentominoTillingConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
 
 	const all_cells = grid.getAllCells();
 	if (all_cells.some((cell) => cell.outside)) {
@@ -303,16 +315,17 @@ function pentominoTillingConstraint(model: PuzzleModel, tool: TOOLID) {
 	const num_pentominoes = 12;
 	const grid_name = VAR_2D_NAMES.PENTOMINO_REGIONS;
 
-	let out_str: string = '';
+	let out_str: string = `\n% ${tool}\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${num_pentominoes}: ${grid_name};\n`;
 	out_str += `constraint pentomino_tilling_p(${grid_name});\n`;
 
 	return out_str;
 }
 
-function litsConstraint(model: PuzzleModel, tool: TOOLID) {
+function litsConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
 
 	const all_cells = grid.getAllCells();
 	if (all_cells.some((cell) => cell.outside)) {
@@ -330,7 +343,7 @@ function litsConstraint(model: PuzzleModel, tool: TOOLID) {
 	const min_region = Math.min(...regions);
 	const max_region = Math.max(...regions);
 
-	let out_str: string = '';
+	let out_str: string = `\n% ${tool}\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${lits_shading};\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..4: ${lits_region};\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${regions.length}: ${lits_grid};\n`;
@@ -351,9 +364,10 @@ function litsConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
-function norinoriConstraint(model: PuzzleModel, tool: TOOLID) {
+function norinoriConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
 
 	const all_cells = grid.getAllCells();
 	if (all_cells.some((cell) => cell.outside)) {
@@ -363,8 +377,7 @@ function norinoriConstraint(model: PuzzleModel, tool: TOOLID) {
 
 	const grid_name1 = VAR_2D_NAMES.NORINORI_SHADING;
 
-	let out_str: string = '';
-
+	let out_str: string = `\n% ${tool}\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name1};\n`;
 	out_str += `constraint norinori_p(${VAR_2D_NAMES.BOARD_REGIONS}, ${grid_name1});\n`;
 
@@ -375,9 +388,46 @@ function norinoriConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
-function litsBlackAndWhiteStarBattleConstraint(model: PuzzleModel, tool: TOOLID) {
+function norinoriStarBattleConstraint(model: PuzzleModel, element: ConstraintsElement) {
+	// Place one star in each region such that there are exactly two in each row and column.
+	// Stars cannot touch each other, even diagonally.
+	// Stars cannot be placed on shaded Norinori cells.
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name1 = VAR_2D_NAMES.NORINORI_SHADING;
+	const grid_name2 = VAR_2D_NAMES.STAR_BATTLE;
+
+	let out_str: string = `\n% ${tool}\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name2};\n`;
+
+	// 2 stars per column, row, 1 per region
+	out_str += exactlyNPerColumn(2, 1, grid_name2);
+	out_str += exactlyNPerRow(2, 1, grid_name2);
+	out_str += exactlyNPerRegion(puzzle, 1, 1, grid_name2);
+
+	// no touching diagonally or orthogonally
+	out_str += `\n% Star battle stars can't touch orthogonally or diagonally\n`;
+	out_str += `constraint star_battle_no_touching_p(${grid_name2});\n`;
+
+	// Stars cannot be placed on shaded Norinori cells.
+	out_str += `\n% Stars cannot be placed on shaded Norinori cells\n`;
+	out_str += `constraint norinori_star_battle_not_on_shaded_p(${grid_name1}, ${grid_name2});\n`;
+
+	return out_str;
+}
+
+function litsBlackAndWhiteStarBattleConstraint(model: PuzzleModel, element: ConstraintsElement) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+	const tool = element.tool_id;
 
 	const all_cells = grid.getAllCells();
 	if (all_cells.some((cell) => cell.outside)) {
@@ -389,7 +439,7 @@ function litsBlackAndWhiteStarBattleConstraint(model: PuzzleModel, tool: TOOLID)
 	const grid_name2 = VAR_2D_NAMES.STAR_BATTLE;
 	const grid_name3 = VAR_2D_NAMES.LITS_WHITE_BLACK_STAR_BATTLE;
 
-	let out_str: string = '';
+	let out_str: string = `\n% ${tool}\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name2};\n`;
 
 	// 2 stars per column, row, region
@@ -413,12 +463,10 @@ function litsBlackAndWhiteStarBattleConstraint(model: PuzzleModel, tool: TOOLID)
 	return out_str;
 }
 
-function norinoriStarBattleConstraint(model: PuzzleModel, tool: TOOLID) {
-	// Place one star in each region such that there are exactly two in each row and column.
-	// Stars cannot touch each other, even diagonally.
-	// Stars cannot be placed on shaded Norinori cells.
+function chaosConstructionSuguruConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
+	const tool = element.tool_id;
 
 	const all_cells = grid.getAllCells();
 	if (all_cells.some((cell) => cell.outside)) {
@@ -426,40 +474,8 @@ function norinoriStarBattleConstraint(model: PuzzleModel, tool: TOOLID) {
 		return '';
 	}
 
-	const grid_name1 = VAR_2D_NAMES.NORINORI_SHADING;
-	const grid_name2 = VAR_2D_NAMES.STAR_BATTLE;
-
-	let out_str: string = '';
-	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name2};\n`;
-
-	// 2 stars per column, row, 1 per region
-	out_str += exactlyNPerColumn(2, 1, grid_name2);
-	out_str += exactlyNPerRow(2, 1, grid_name2);
-	out_str += exactlyNPerRegion(puzzle, 1, 1, grid_name2);
-
-	// no touching diagonally or orthogonally
-	out_str += `\n% Star battle stars can't touch orthogonally or diagonally\n`;
-	out_str += `constraint star_battle_no_touching_p(${grid_name2});\n`;
-
-	// Stars cannot be placed on shaded Norinori cells.
-	out_str += `\n% Stars cannot be placed on shaded Norinori cells\n`;
-	out_str += `constraint norinori_star_battle_not_on_shaded_p(${grid_name1}, ${grid_name2});\n`;
-
-	return out_str;
-}
-
-function chaosConstructionSuguruConstraint(model: PuzzleModel, tool: TOOLID) {
-	const puzzle = model.puzzle;
-	const grid = puzzle.grid;
-
-	const all_cells = grid.getAllCells();
-	if (all_cells.some((cell) => cell.outside)) {
-		console.warn(`${tool} not implemented when there are cells outside the grid.`);
-		return '';
-	}
-
-	const grid_name = 'suguru_regions';
-	let out_str: string = '';
+	const grid_name = VAR_2D_NAMES.SUGURU_REGIONS;
+	let out_str: string = `\n% ${tool}\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name};\n`;
 	out_str += `constraint chaos_construction_suguru_p(board, ${grid_name});\n`;
 	// out_str += `constraint max_grid_val_p(board, 4);\n`;
@@ -467,38 +483,40 @@ function chaosConstructionSuguruConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
-type ConstraintF = (model: PuzzleModel, tool: TOOLID) => string;
+type ElementF2 = (model: PuzzleModel, element: ConstraintsElement) => string;
 
-const tool_map = new Map<string, ConstraintF>([
-	[TOOLS.FILLOMINO, fillominoConstraint],
-	[TOOLS.NORINORI, norinoriConstraint],
-	[TOOLS.TWO_CONTIGUOUS_REGIONS, twoContiguousRegionsConstraint],
+const tool_map = new Map<string, ElementF2>([
+	[TOOLS.CAVE, caveConstraint],
+	[TOOLS.CONNECT_FOUR, connectFourConstraint],
+	[TOOLS.GALAXIES, galaxiesConstraint],
+	[TOOLS.CELL_CENTER_LOOP_NO_TOUCHING, cellCenterLoopNoTouchingConstraint],
+	[TOOLS.MAZE_DIRECTED_PATH, mazeDirectedPathConstraint],
+	[TOOLS.YIN_YANG, yinYangConstraint],
+	[TOOLS.NURIMISAKI, nurimisakiConstraint],
+	[TOOLS.NURIKABE, nurikabeConstraint],
+	[TOOLS.SHIKAKU, shikakuConstraint],
+	[TOOLS.PENTOMINO_TILLING, pentominoTillingConstraint],
 	[TOOLS.CHAOS_CONSTRUCTION, chaosConstructionConstraint],
 	[TOOLS.NUMBERED_CHAOS_CONSTRUCTION, numberedChaosConstructionConstraint],
 	[TOOLS.CHAOS_CONSTRUCTION_SUGURU, chaosConstructionSuguruConstraint],
+	[TOOLS.TWO_CONTIGUOUS_REGIONS, twoContiguousRegionsConstraint],
+	[TOOLS.NORINORI, norinoriConstraint],
+	[TOOLS.NORINORI_STAR_BATTLE, norinoriStarBattleConstraint],
 	[TOOLS.SASHIGANE, sashiganeConstraint],
-
-	[TOOLS.GOLDILOCKS_ZONE, goldilocksConstraint],
-
-	[TOOLS.PENTOMINO_TILLING, pentominoTillingConstraint],
 	[TOOLS.LITS, litsConstraint],
 	[TOOLS.LITS_BLACK_WHITE_STAR_BATTLE, litsBlackAndWhiteStarBattleConstraint],
-	[TOOLS.NORINORI_STAR_BATTLE, norinoriStarBattleConstraint]
+	[TOOLS.FILLOMINO, fillominoConstraint],
+	[TOOLS.NEXUS, nexusConstraint],
+	[TOOLS.GOLDILOCKS_ZONE, goldilocksConstraint]
 ]);
 
-export function undeterminedRegionsConstraints(model: PuzzleModel): string {
+export function undeterminedRegionsElements(model: PuzzleModel, element: ConstraintsElement) {
 	let out_str = '';
-
-	const puzzle = model.puzzle;
-	const gconstraints = puzzle.globalConstraints;
-	for (const [toolId, value] of gconstraints.entries()) {
-		if (!value) continue;
-		const constraintF = tool_map.get(toolId);
-		if (!constraintF) continue;
-
-		let constraint_str = constraintF(model, toolId);
-		constraint_str = addHeader(constraint_str, `${toolId}`);
-		out_str += constraint_str;
+	const tool_id = element.tool_id;
+	const elementF = tool_map.get(tool_id);
+	if (elementF) {
+		const element_str = elementF(model, element);
+		out_str += element_str;
 	}
 
 	return out_str;
