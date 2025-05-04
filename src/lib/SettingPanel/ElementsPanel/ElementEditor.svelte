@@ -20,15 +20,17 @@
 	<div class="editor-wrapper">
 		<div class="editor">
 			<div class="editor-layout">
-				{#if negative_constraints}
-					{#each negative_constraints as neg_const}
-						<ConstraintCheckbox
-							{tool_id}
-							neg_tool_id={neg_const.toolId}
-							description={neg_const.description}
-						/>
-					{/each}
-				{/if}
+				<div class="bool-constraints-container">
+					{#if negative_constraints}
+						{#each negative_constraints as neg_const}
+							<ConstraintCheckbox
+								{tool_id}
+								neg_tool_id={neg_const.toolId}
+								description={neg_const.description}
+							/>
+						{/each}
+					{/if}
+				</div>
 				<ToolModeButtons {tool_id} />
 				<ConstraintList {tool_id} />
 			</div>
@@ -51,5 +53,10 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
+	}
+
+	.bool-constraints-container {
+		display: flex;
+		flex-direction: column;
 	}
 </style>
