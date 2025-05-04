@@ -1,14 +1,13 @@
 <script lang="ts">
 	import { findConflicts } from '$lib/Puzzle/conflicts';
 	import { SHAPE_TYPES, type ShapeI } from '$lib/Puzzle/Shape/Shape';
-	import { cellsStore, gridStore } from '$stores/BoardStore';
-		import { globalConstraintsStore } from '$stores/BoardStore';
+	import { cellsStore, gridStore, localConstraintsStore } from '$stores/BoardStore';
 	import { settingsStore } from '$stores/SettingsStore';
 	import type { Cell } from '$lib/Puzzle/Grid/Cell';
 
 	$: showConflicts = $settingsStore.checkConflicts;
 	$: grid = $gridStore;
-    $: global_constraints = $globalConstraintsStore;
+    $: element_dict = $localConstraintsStore;
 	$: all_cells = $cellsStore;
 
 	const shape: ShapeI = {
@@ -20,7 +19,7 @@
 	};
 
 	function getConflicts(cells: Cell[]) {
-		const conflict_cells = findConflicts(grid, global_constraints);
+		const conflict_cells = findConflicts(grid, element_dict);
 		const coords = conflict_cells.map(cell => cell.toCoords())
 		return coords;
 	}
