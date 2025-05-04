@@ -49,7 +49,7 @@ function simpleLineConstraint(
 }
 
 function simpleLineElement(
-	grid: Grid,
+	model: PuzzleModel,
 	element: ConstraintsElement,
 	predicate: string,
 	use_set: boolean = false
@@ -58,6 +58,7 @@ function simpleLineElement(
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = simpleLineConstraint(grid, constraint as LineToolI, predicate, use_set);
 		out_str += constraint_str;
@@ -89,7 +90,6 @@ function valuedLineConstraint(
 
 function valuedLineElement(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement,
 	predicate: string,
 	default_value: string = ''
@@ -98,6 +98,7 @@ function valuedLineElement(
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const grid = model.puzzle.grid;
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = valuedLineConstraint(
 			model,
@@ -137,7 +138,7 @@ function circularValuedLineConstraint(
 }
 
 function circularValuedLineElement(
-	grid: Grid,
+	model: PuzzleModel,
 	element: ConstraintsElement,
 	predicate: string,
 	default_value: string = ''
@@ -146,6 +147,7 @@ function circularValuedLineElement(
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const grid = model.puzzle.grid;
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = circularValuedLineConstraint(
 			grid,
@@ -158,154 +160,128 @@ function circularValuedLineElement(
 	return out_str;
 }
 
-function renbanElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'renban', true);
+function renbanElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'renban', true);
 	return out_str;
 }
 
-function doubleRenbanElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'double_renban_p', true);
+function doubleRenbanElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'double_renban_p', true);
 	return out_str;
 }
 
-function renrenbanbanElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'renrenbanban_p', true);
+function renrenbanbanElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'renrenbanban_p', true);
 	return out_str;
 }
 
-function nabnerConstraint(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'knabner_p', true);
+function nabnerConstraint(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'knabner_p', true);
 	return out_str;
 }
 
-function renbanOrNabnerElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'renban_or_nabner_line_p', true);
+function renbanOrNabnerElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'renban_or_nabner_line_p', true);
 	return out_str;
 }
 
-function outOfOrderConsecutiveLineElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleLineElement(grid, element, 'out_of_order_consecutive_line_p');
+function outOfOrderConsecutiveLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'out_of_order_consecutive_line_p');
 	return out_str;
 }
 
-function whispersElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, grid, element, 'whispers', '5');
+function whispersElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'whispers', '5');
 	return out_str;
 }
 
-function dutchWhispersElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, grid, element, 'whispers', '4');
+function dutchWhispersElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'whispers', '4');
 	return out_str;
 }
 
-function thermoElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'strictly_increasing');
+function thermoElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'strictly_increasing');
 	return out_str;
 }
 
-function fuzzyThermoElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'fuzzy_thermo_p');
+function fuzzyThermoElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'fuzzy_thermo_p');
 	return out_str;
 }
 
-function slowThermoElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'increasing');
+function slowThermoElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'increasing');
 	return out_str;
 }
 
-function customThermoElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, grid, element, 'custom_thermo_p');
+function customThermoElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'custom_thermo_p');
 	return out_str;
 }
 
-function palindromeElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'palindrome');
+function palindromeElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'palindrome');
 	return out_str;
 }
 
-function sumLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, grid, element, 'sum_line_p');
+function sumLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'sum_line_p');
 	return out_str;
 }
 
-function xvLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'xv_line_p');
+function xvLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'xv_line_p');
 	return out_str;
 }
 
-function atLeastXLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, grid, element, 'at_least_x_line_p', '10');
+function atLeastXLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'at_least_x_line_p', '10');
 	return out_str;
 }
 
-function productLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, grid, element, 'product_line_p');
+function productLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'product_line_p');
 	return out_str;
 }
 
-function maximumAdjacentDifferenceLineElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = valuedLineElement(
-		model,
-		grid,
-		element,
-		'maximum_adjacent_difference_line_p',
-		'2'
-	);
+function maximumAdjacentDifferenceLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'maximum_adjacent_difference_line_p', '2');
 	return out_str;
 }
 
-function adjacentMultiplesLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'adjacent_multiples_line_p');
+function adjacentMultiplesLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'adjacent_multiples_line_p');
 	return out_str;
 }
 
-function indexLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'index_line_p');
+function indexLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'index_line_p');
 	return out_str;
 }
 
-function zipperLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'zipper_line_p');
+function zipperLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'zipper_line_p');
 	return out_str;
 }
 
-function segmentedSumLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = circularValuedLineElement(grid, element, 'segmented_sum_line_p');
+function segmentedSumLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = circularValuedLineElement(model, element, 'segmented_sum_line_p');
 	return out_str;
 }
 
-function segmentedSumAndRenbanLineElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleLineElement(grid, element, 'segmented_sum_and_renban_line_p');
+function segmentedSumAndRenbanLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'segmented_sum_and_renban_line_p');
 	return out_str;
 }
 
-function nConsecutiveRenbanLineElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = circularValuedLineElement(grid, element, 'n_consecutive_renban_line_p');
+function nConsecutiveRenbanLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = circularValuedLineElement(model, element, 'n_consecutive_renban_line_p');
 	return out_str;
 }
 
-function nConsecutiveFuzzySumLineElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = circularValuedLineElement(grid, element, 'n_consecutive_fuzzy_sum_line_p');
+function nConsecutiveFuzzySumLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = circularValuedLineElement(model, element, 'n_consecutive_fuzzy_sum_line_p');
 	return out_str;
 }
 
@@ -329,11 +305,12 @@ function rowCycleThermoConstraint(grid: Grid, c_id: string, constraint: LineTool
 	return out_str;
 }
 
-function rowCycleThermoElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function rowCycleThermoElement(model: PuzzleModel, element: ConstraintsElement) {
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const grid = model.puzzle.grid;
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = rowCycleThermoConstraint(grid, c_id, constraint as LineToolI);
 		out_str += constraint_str;
@@ -341,95 +318,82 @@ function rowCycleThermoElement(model: PuzzleModel, grid: Grid, element: Constrai
 	return out_str;
 }
 
-function adjacentDifferencesCountLineElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleLineElement(grid, element, 'adjacent_differences_count_line_p');
+function adjacentDifferencesCountLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'adjacent_differences_count_line_p');
 	return out_str;
 }
 
-function sameParityLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'same_parity_line_p');
+function sameParityLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'same_parity_line_p');
 	return out_str;
 }
 
-function renbanOrWhispersLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, grid, element, 'renban_or_whispers_p', '5');
+function renbanOrWhispersLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'renban_or_whispers_p', '5');
 	return out_str;
 }
 
-function uniqueValuesLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'alldifferent', true);
+function uniqueValuesLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'alldifferent', true);
 	return out_str;
 }
 
-function repeatedDigitsLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'repeated_digits_line_p');
+function repeatedDigitsLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'repeated_digits_line_p');
 	return out_str;
 }
 
-function superfuzzyArrowElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'superfuzzy_arrow_p');
+function superfuzzyArrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'superfuzzy_arrow_p');
 	return out_str;
 }
 
-function ambiguousArrowElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'ambiguous_arrow_p', true);
+function ambiguousArrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'ambiguous_arrow_p', true);
 	return out_str;
 }
 
-function headlessArrowElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'headless_arrow_p');
+function headlessArrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'headless_arrow_p');
 	return out_str;
 }
 
-function unimodularLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, grid, element, 'unimodular_line_p', '3');
+function unimodularLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'unimodular_line_p', '3');
 	return out_str;
 }
 
-function modularLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, grid, element, 'modular_line_p', '3');
+function modularLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'modular_line_p', '3');
 	return out_str;
 }
 
-function modularOrUnimodularLineElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = valuedLineElement(model, grid, element, 'modular_or_unimodular_line_p', '3');
+function modularOrUnimodularLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'modular_or_unimodular_line_p', '3');
 	return out_str;
 }
 
-function arithmeticSequenceLineElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleLineElement(grid, element, 'arithmetic_sequence_line_p');
+function arithmeticSequenceLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'arithmetic_sequence_line_p');
 	return out_str;
 }
 
-function oddEvenOscillatorLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'odd_even_oscillator_line_p');
+function oddEvenOscillatorLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'odd_even_oscillator_line_p');
 	return out_str;
 }
 
-function highLowOscillatorLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, grid, element, 'high_low_oscillator_line_p', '5');
+function highLowOscillatorLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'high_low_oscillator_line_p', '5');
 	return out_str;
 }
 
 function adjacentCellsAreMultiplesOfDifferenceLineElement(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement
 ) {
 	const out_str = simpleLineElement(
-		grid,
+		model,
 		element,
 		'adjacent_cells_are_multiples_of_difference_line_p',
 		false
@@ -437,8 +401,8 @@ function adjacentCellsAreMultiplesOfDifferenceLineElement(
 	return out_str;
 }
 
-function lookAndSayLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'look_and_say_line_p', true);
+function lookAndSayLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'look_and_say_line_p', true);
 	return out_str;
 }
 
@@ -475,11 +439,12 @@ function rowSumLineConstraint(grid: Grid, constraint: LineToolI) {
 	return out_str;
 }
 
-function rowSumLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function rowSumLineElement(model: PuzzleModel, element: ConstraintsElement) {
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = rowSumLineConstraint(grid, constraint as LineToolI);
 		out_str += constraint_str;
@@ -487,37 +452,33 @@ function rowSumLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsE
 	return out_str;
 }
 
-function betweenLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'between_line_p');
+function betweenLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'between_line_p');
 	return out_str;
 }
 
-function tightropeLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'tightrope_line_p');
+function tightropeLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'tightrope_line_p');
 	return out_str;
 }
 
-function doubleArrowElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'double_arrow_p');
+function doubleArrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'double_arrow_p');
 	return out_str;
 }
 
-function splitPeasElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'split_peas_p');
+function splitPeasElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'split_peas_p');
 	return out_str;
 }
 
-function parityCountLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'parity_count_line_p');
+function parityCountLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'parity_count_line_p');
 	return out_str;
 }
 
-function productOfEndsEqualsSumOfLineElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleLineElement(grid, element, 'product_of_ends_equals_sum_of_line_p');
+function productOfEndsEqualsSumOfLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'product_of_ends_equals_sum_of_line_p');
 	return out_str;
 }
 
@@ -562,8 +523,8 @@ function regionSumLineConstraint(
 	return out_str;
 }
 
-function regionSumLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, regionSumLineConstraint);
+function regionSumLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, regionSumLineConstraint);
 	return out_str;
 }
 
@@ -579,8 +540,8 @@ function entropicLineConstraint(
 	return constraint_str;
 }
 
-function entropicLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, entropicLineConstraint);
+function entropicLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, entropicLineConstraint);
 	return out_str;
 }
 
@@ -596,24 +557,24 @@ function entropicOrModularLineConstraint(
 	return constraint_str;
 }
 
-function entropicOrModularLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, entropicOrModularLineConstraint);
+function entropicOrModularLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, entropicOrModularLineConstraint);
 	return out_str;
 }
 
-function peapodsLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleLineElement(grid, element, 'peapods_p');
+function peapodsLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'peapods_p');
 	return out_str;
 }
 
 function yinYangValuedLineConstraint(
 	model: PuzzleModel,
-	grid: Grid,
 	c_id: string,
 	constraint: LineToolI,
 	predicate: string,
 	default_value: string = ''
 ) {
+	const grid = model.puzzle.grid;
 	const cells = cellsFromCoords(grid, constraint.cells);
 	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
 	const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
@@ -628,7 +589,6 @@ function yinYangValuedLineConstraint(
 
 export function yinYangValuedLineElement(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement,
 	predicate: string,
 	default_value: string = ''
@@ -640,7 +600,6 @@ export function yinYangValuedLineElement(
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = yinYangValuedLineConstraint(
 			model,
-			grid,
 			c_id,
 			constraint as LineToolI,
 			predicate,
@@ -651,33 +610,13 @@ export function yinYangValuedLineElement(
 	return out_str;
 }
 
-function yinYangShadedWhispersLineElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = yinYangValuedLineElement(
-		model,
-		grid,
-		element,
-		'yin_yang_shaded_whispers_line_p',
-		'5'
-	);
+function yinYangShadedWhispersLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = yinYangValuedLineElement(model, element, 'yin_yang_shaded_whispers_line_p', '5');
 	return out_str;
 }
 
-function yinYangUnshadedModularLineElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = yinYangValuedLineElement(
-		model,
-		grid,
-		element,
-		'yin_yang_unshaded_modular_line_p',
-		'3'
-	);
+function yinYangUnshadedModularLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = yinYangValuedLineElement(model, element, 'yin_yang_unshaded_modular_line_p', '3');
 	return out_str;
 }
 
@@ -690,11 +629,16 @@ function yinYangSimpleLineConstraint(grid: Grid, constraint: LineToolI, predicat
 	return constraint_str;
 }
 
-function yinYangSimpleLineElement(grid: Grid, element: ConstraintsElement, predicate: string) {
+function yinYangSimpleLineElement(
+	model: PuzzleModel,
+	element: ConstraintsElement,
+	predicate: string
+) {
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = yinYangSimpleLineConstraint(grid, constraint as LineToolI, predicate);
 		out_str += constraint_str;
@@ -702,21 +646,13 @@ function yinYangSimpleLineElement(grid: Grid, element: ConstraintsElement, predi
 	return out_str;
 }
 
-function yinYangUnshadedEntropicLineElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = yinYangSimpleLineElement(grid, element, 'yin_yang_unshaded_entropic_line_p');
+function yinYangUnshadedEntropicLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = yinYangSimpleLineElement(model, element, 'yin_yang_unshaded_entropic_line_p');
 	return out_str;
 }
 
-function yinYangIndexingLineColoringElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = yinYangSimpleLineElement(grid, element, 'yin_yang_indexing_line_coloring_p');
+function yinYangIndexingLineColoringElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = yinYangSimpleLineElement(model, element, 'yin_yang_indexing_line_coloring_p');
 	return out_str;
 }
 
@@ -741,8 +677,8 @@ function yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(
 	return out_str;
 }
 
-function yinYangRegionSumLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	let out_str = yinYangSimpleLineElement(grid, element, 'yin_yang_region_sum_line_p');
+function yinYangRegionSumLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	let out_str = yinYangSimpleLineElement(model, element, 'yin_yang_region_sum_line_p');
 
 	// negative constraints
 	if (!element.negative_constraints) return out_str;
@@ -774,7 +710,12 @@ function goldilocksZoneRegionSumLineConstraint(
 	return constraint_str;
 }
 
-function simpleMultipliersLineConstraint(grid: Grid, constraint: LineToolI, predicate: string) {
+function simpleMultipliersLineConstraint(
+	model: PuzzleModel,
+	constraint: LineToolI,
+	predicate: string
+) {
+	const grid = model.puzzle.grid;
 	const cells = cellsFromCoords(grid, constraint.cells);
 	const values_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.VALUES_GRID);
 
@@ -782,14 +723,18 @@ function simpleMultipliersLineConstraint(grid: Grid, constraint: LineToolI, pred
 	return constraint_str;
 }
 
-function simpleMultipliersLineElement(grid: Grid, element: ConstraintsElement, predicate: string) {
+function simpleMultipliersLineElement(
+	model: PuzzleModel,
+	element: ConstraintsElement,
+	predicate: string
+) {
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = simpleMultipliersLineConstraint(
-			grid,
+			model,
 			constraint as LineToolI,
 			predicate
 		);
@@ -798,22 +743,18 @@ function simpleMultipliersLineElement(grid: Grid, element: ConstraintsElement, p
 	return out_str;
 }
 
-function doublersBetweenLineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleMultipliersLineElement(grid, element, 'between_line_p');
+function doublersBetweenLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleMultipliersLineElement(model, element, 'between_line_p');
 	return out_str;
 }
 
-function doublersDoubleArrowLineElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleMultipliersLineElement(grid, element, 'double_arrow_p');
+function doublersDoubleArrowLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleMultipliersLineElement(model, element, 'double_arrow_p');
 	return out_str;
 }
 
-function doublersThermometerElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleMultipliersLineElement(grid, element, 'strictly_increasing');
+function doublersThermometerElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleMultipliersLineElement(model, element, 'strictly_increasing');
 	return out_str;
 }
 
@@ -842,17 +783,8 @@ function indexerCellsRegionSubsetLineConstraint(
 	return out_str;
 }
 
-function indexerCellsRegionSubsetLineElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(
-		model,
-		grid,
-		element,
-		indexerCellsRegionSubsetLineConstraint
-	);
+function indexerCellsRegionSubsetLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, indexerCellsRegionSubsetLineConstraint);
 	return out_str;
 }
 
@@ -934,7 +866,7 @@ const tool_map = new Map<string, ElementF>([
 	// [TOOLS.GOLDILOCKS_ZONE_REGION_SUM, goldilocksZoneRegionSumLineConstraint]
 ]);
 
-export function lineElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = constraintsBuilder(model, grid, element, tool_map);
+export function lineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = constraintsBuilder(model, element, tool_map);
 	return out_str;
 }

@@ -13,7 +13,7 @@ import { outsideDirectionElements } from './outside_direction_constraints';
 import { singleCellArrowElements } from './single_cell_arrow_constraints';
 import { singleCellElements } from './single_cell_constraints';
 import { singleCellMultiArrowElements } from './single_cell_multi_arrow_constraints';
-import { addHeader, PuzzleModel, type ElementF } from './solver_utils';
+import { addHeader, constraintsBuilder, PuzzleModel, type ElementF } from './solver_utils';
 import { undeterminedRegionsElements } from './undetermined_regions_constraints';
 import {
 	doublersConstraint,
@@ -22,7 +22,16 @@ import {
 } from './value_modifier_constraints';
 import { valuedGlobalConstraints as valuedGlobalElements } from './valued_global_constraints';
 
+const other_tool_map = new Map<string, ElementF>([
+	// value modifiers
+	[TOOLS.DOUBLERS, doublersConstraint],
+	[TOOLS.NEGATORS, negatorsConstraint],
+	[TOOLS.INDEXER_CELLS, indexerCellsConstraint]
+]);
+
 const functions_list: ElementF[] = [
+	undeterminedRegionsElements,
+	otherElements,
 	centerCornerOrEdgeElements,
 	singleCellElements,
 	singleCellArrowElements,
@@ -34,53 +43,25 @@ const functions_list: ElementF[] = [
 	cageElements,
 	outsideDirectionElements,
 	cloneElements,
-	valuedGlobalElements
+	valuedGlobalElements,
+	globalConstraints
 ];
 
-type ElementF2 = (model: PuzzleModel, element: ConstraintsElement) => string;
-
-const other_tool_map = new Map<string, ElementF2>([
-	// value modifiers
-	[TOOLS.DOUBLERS, doublersConstraint],
-	[TOOLS.NEGATORS, negatorsConstraint],
-	[TOOLS.INDEXER_CELLS, indexerCellsConstraint]
-]);
-
 export function otherElements(model: PuzzleModel, element: ConstraintsElement) {
-	let out_str = '';
-	const tool_id = element.tool_id;
-	const elementF = other_tool_map.get(tool_id);
-	if (elementF) {
-		const element_str = elementF(model, element);
-		out_str += element_str;
-	}
-
+	const out_str = constraintsBuilder(model, element, other_tool_map);
 	return out_str;
 }
 
 export function localAndGlobalConstraints(puzzle: PuzzleI, model: PuzzleModel): string {
 	let out_str = '';
 	const elements = puzzle.elementsDict;
-	const grid = puzzle.grid;
-
-	for (const element of elements.values()) {
-		out_str += undeterminedRegionsElements(model, element);
-	}
-
-	for (const element of elements.values()) {
-		out_str += otherElements(model, element);
-	}
 
 	for (const [tool_id, element] of elements.entries()) {
 		for (const constraintF of functions_list) {
-			let constraint_str: string = constraintF(model, grid, element);
+			let constraint_str: string = constraintF(model, element);
 			constraint_str = addHeader(constraint_str, `${tool_id}`);
 			out_str += constraint_str;
 		}
-	}
-
-	for (const element of elements.values()) {
-		out_str += globalConstraints(model, element);
 	}
 
 	return out_str;

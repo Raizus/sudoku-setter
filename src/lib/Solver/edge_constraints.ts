@@ -117,7 +117,6 @@ function valuedEdgeConstraint(
 
 function valuedEdgeElement(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement,
 	predicate: string,
 	default_value: string = ''
@@ -126,6 +125,7 @@ function valuedEdgeElement(
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const grid = model.puzzle.grid;
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = valuedEdgeConstraint(
 			model,
@@ -151,10 +151,11 @@ function xvConstraint(grid: Grid, constraint: EdgeToolI) {
 	return constraint_str;
 }
 
-function xvElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function xvElement(model: PuzzleModel, element: ConstraintsElement) {
 	let out_str = '';
 	const constraints = element.constraints as Record<string, EdgeToolI>;
 
+	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = xvConstraint(grid, constraint as EdgeToolI);
 		out_str += constraint_str;
@@ -188,8 +189,9 @@ function xvElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) 
 	return out_str;
 }
 
-function ratioElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	let out_str = valuedEdgeElement(model, grid, element, 'ratio_p', '2');
+function ratioElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	let out_str = valuedEdgeElement(model, element, 'ratio_p', '2');
 
 	if (!element.negative_constraints) return out_str;
 
@@ -228,8 +230,9 @@ function ratioElement(model: PuzzleModel, grid: Grid, element: ConstraintsElemen
 	return out_str;
 }
 
-function differenceElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	let out_str = valuedEdgeElement(model, grid, element, 'abs_difference', '1');
+function differenceElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	let out_str = valuedEdgeElement(model, element, 'abs_difference', '1');
 
 	if (!element.negative_constraints) return out_str;
 
@@ -281,11 +284,12 @@ function edgeInequalityConstraint(grid: Grid, constraint: EdgeToolI) {
 	return '';
 }
 
-function edgeInequalityElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function edgeInequalityElement(model: PuzzleModel, element: ConstraintsElement) {
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = edgeInequalityConstraint(grid, constraint as EdgeToolI);
 		out_str += constraint_str;
@@ -293,17 +297,18 @@ function edgeInequalityElement(model: PuzzleModel, grid: Grid, element: Constrai
 	return out_str;
 }
 
-function edgeSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedEdgeElement(model, grid, element, 'edge_sum_p');
+function edgeSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedEdgeElement(model, element, 'edge_sum_p');
 	return out_str;
 }
 
-function edgeModuloElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedEdgeElement(model, grid, element, 'edge_modulo_p');
+function edgeModuloElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedEdgeElement(model, element, 'edge_modulo_p');
 	return out_str;
 }
 
-function edgeFactorElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function edgeFactorElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const out_str = simpleEdgeElement(grid, element, 'edge_factor_p');
 	return out_str;
 }
@@ -339,9 +344,11 @@ function xyDifferencesConstraint(grid: Grid, constraint: EdgeToolI) {
 	return constraint_str;
 }
 
-function xyDifferencesElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function xyDifferencesElement(model: PuzzleModel, element: ConstraintsElement) {
 	const constraints = element.constraints as Record<string, EdgeToolI>;
+	const grid = model.puzzle.grid;
 	let out_str = '';
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = xyDifferencesConstraint(grid, constraint as EdgeToolI);
 		out_str += constraint_str;
@@ -391,9 +398,9 @@ function yinYangEdgeElement(grid: Grid, element: ConstraintsElement, predicate: 
 	return out_str;
 }
 
-function yinYangKropkiElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement): string {
+function yinYangKropkiElement(model: PuzzleModel, element: ConstraintsElement): string {
+	const grid = model.puzzle.grid;
 	let out_str = yinYangEdgeElement(grid, element, 'yin_yang_kropki_p');
-
 	if (!element.negative_constraints) return out_str;
 
 	// negative constraint
@@ -420,7 +427,8 @@ function yinYangKropkiElement(model: PuzzleModel, grid: Grid, element: Constrain
 	return out_str;
 }
 
-function yinYangWhiteKropkiElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function yinYangWhiteKropkiElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const out_str = yinYangEdgeElement(grid, element, 'yin_yang_white_kropki_p');
 	return out_str;
 }
@@ -442,7 +450,7 @@ function regionBorderElement(
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
-	
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = regionBorderConstraint(grid, constraint as EdgeToolI, regions_var_name);
 		out_str += constraint_str;
@@ -450,26 +458,26 @@ function regionBorderElement(
 	return out_str;
 }
 
-function unknownRegionBorderElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function unknownRegionBorderElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const out_str = regionBorderElement(grid, element, VAR_2D_NAMES.UNKNOWN_REGIONS);
 	return out_str;
 }
 
-function fillominoRegionBorderElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function fillominoRegionBorderElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const out_str = regionBorderElement(grid, element, VAR_2D_NAMES.FILLOMINO_REGIONS);
 	return out_str;
 }
 
-function chaosConstructionSuguruBorderElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
+function chaosConstructionSuguruBorderElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const out_str = regionBorderElement(grid, element, VAR_2D_NAMES.SUGURU_REGIONS);
 	return out_str;
 }
 
-function edgeCaveOneOfEachElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function edgeCaveOneOfEachElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const out_str = regionBorderElement(grid, element, VAR_2D_NAMES.CAVE_SHADING);
 	return out_str;
 }
@@ -492,7 +500,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.EDGE_CAVE_ONE_OF_EACH, edgeCaveOneOfEachElement]
 ]);
 
-export function edgeElements(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = constraintsBuilder(model, grid, element, tool_map);
+export function edgeElements(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = constraintsBuilder(model, element, tool_map);
 	return out_str;
 }

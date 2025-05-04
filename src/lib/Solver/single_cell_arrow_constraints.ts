@@ -10,19 +10,20 @@ import {
 	VAR_2D_NAMES,
 	cellsToGridVarsStr,
 	cellToGridVarName,
-	type ElementF,
-	constraintsBuilder
+	constraintsBuilder,
+	type ElementF
 } from './solver_utils';
 
 function simpleCellArrowElement(
-	grid: Grid,
+	model: PuzzleModel,
 	element: ConstraintsElement,
 	func: (grid: Grid, constraint: CellArrowToolI) => string
 ) {
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
-	
+
+	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = func(grid, constraint as CellArrowToolI);
 		out_str += constraint_str;
@@ -50,12 +51,8 @@ export function sashiganeArrowPointsToBendConstraint(grid: Grid, constraint: Cel
 	return out_str;
 }
 
-function sashiganeArrowPointsToBendElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleCellArrowElement(grid, element, sashiganeArrowPointsToBendConstraint);
+function sashiganeArrowPointsToBendElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleCellArrowElement(model, element, sashiganeArrowPointsToBendConstraint);
 	return out_str;
 }
 
@@ -77,12 +74,8 @@ export function thermoSightlineLoopArrowConstraint(grid: Grid, constraint: CellA
 	return constraint_str;
 }
 
-function thermoSightlineLoopArrowElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleCellArrowElement(grid, element, thermoSightlineLoopArrowConstraint);
+function thermoSightlineLoopArrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleCellArrowElement(model, element, thermoSightlineLoopArrowConstraint);
 	return out_str;
 }
 
@@ -91,11 +84,7 @@ export const tool_map = new Map<string, ElementF>([
 	[TOOLS.THERMO_SIGHTLINE_LOOP_ARROW, thermoSightlineLoopArrowElement]
 ]);
 
-export function singleCellArrowElements(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = constraintsBuilder(model, grid, element, tool_map);
+export function singleCellArrowElements(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = constraintsBuilder(model, element, tool_map);
 	return out_str;
 }

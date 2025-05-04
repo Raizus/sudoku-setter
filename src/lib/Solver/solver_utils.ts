@@ -124,11 +124,10 @@ export function getDirectionsVars(
 	return vars_arr;
 }
 
-export type ElementF = (model: PuzzleModel, grid: Grid, element: ConstraintsElement) => string;
+export type ElementF = (model: PuzzleModel, element: ConstraintsElement) => string;
 
 export function simpleElementFunction<T extends ConstraintType>(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement,
 	func: (model: PuzzleModel, grid: Grid, c_id: string, constraint: T) => string
 ) {
@@ -136,6 +135,7 @@ export function simpleElementFunction<T extends ConstraintType>(
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const grid = model.puzzle.grid;
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = func(model, grid, c_id, constraint as T);
 		out_str += constraint_str;
@@ -145,7 +145,6 @@ export function simpleElementFunction<T extends ConstraintType>(
 
 export function constraintsBuilder(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement,
 	tool_map: Map<string, ElementF>
 ) {
@@ -153,7 +152,7 @@ export function constraintsBuilder(
 	const tool_id = element.tool_id;
 	const elementF = tool_map.get(tool_id);
 	if (elementF) {
-		const element_str = elementF(model, grid, element);
+		const element_str = elementF(model, element);
 		out_str += element_str;
 	}
 

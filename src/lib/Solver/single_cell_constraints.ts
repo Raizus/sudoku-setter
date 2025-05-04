@@ -33,7 +33,6 @@ function simpleSingleCellConstraint(grid: Grid, constraint: CellToolI, predicate
 
 function simpleSingleCellElement(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement,
 	predicate: string
 ) {
@@ -41,6 +40,7 @@ function simpleSingleCellElement(
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = simpleSingleCellConstraint(grid, constraint as CellToolI, predicate);
 		out_str += constraint_str;
@@ -87,7 +87,6 @@ function valuedSingleCellConstraint(
 
 function valuedSingleCellElement(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement,
 	predicate: string,
 	default_value: string = ''
@@ -96,6 +95,7 @@ function valuedSingleCellElement(
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = valuedSingleCellConstraint(
 			grid,
@@ -129,7 +129,7 @@ function orthogonalRegionSeenCountConstraint(
 }
 
 function orthogonalRegionSeenCountElement(
-	grid: Grid,
+	model: PuzzleModel,
 	element: ConstraintsElement,
 	region_var_name: VAR_2D_NAMES,
 	predicate: string
@@ -138,6 +138,7 @@ function orthogonalRegionSeenCountElement(
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = orthogonalRegionSeenCountConstraint(
 			grid,
@@ -150,23 +151,23 @@ function orthogonalRegionSeenCountElement(
 	return out_str;
 }
 
-function oddElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleSingleCellElement(model, grid, element, 'odd_p');
+function oddElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleSingleCellElement(model, element, 'odd_p');
 	return out_str;
 }
 
-function evenElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleSingleCellElement(model, grid, element, 'even_p');
+function evenElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleSingleCellElement(model, element, 'even_p');
 	return out_str;
 }
 
-function lowDigitElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedSingleCellElement(model, grid, element, 'low_digit_p', '5');
+function lowDigitElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedSingleCellElement(model, element, 'low_digit_p', '5');
 	return out_str;
 }
 
-function highDigitElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedSingleCellElement(model, grid, element, 'high_digit_p', '5');
+function highDigitElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedSingleCellElement(model, element, 'high_digit_p', '5');
 	return out_str;
 }
 
@@ -184,11 +185,12 @@ function minesweeperConstraint(grid: Grid, constraint: CellToolI, predicate: str
 	return constraint_str;
 }
 
-function minesweeperElement(grid: Grid, element: ConstraintsElement, predicate: string) {
+function minesweeperElement(model: PuzzleModel, element: ConstraintsElement, predicate: string) {
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = minesweeperConstraint(grid, constraint as CellToolI, predicate);
 		out_str += constraint_str;
@@ -196,14 +198,14 @@ function minesweeperElement(grid: Grid, element: ConstraintsElement, predicate: 
 	return out_str;
 }
 
-function oddMinesweeperElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = minesweeperElement(grid, element, 'odd_count');
+function oddMinesweeperElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = minesweeperElement(model, element, 'odd_count');
 	return out_str;
 }
 
-function evenMinesweeperElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function evenMinesweeperElement(model: PuzzleModel, element: ConstraintsElement) {
 	// A digit in a cell with a red square is the same as the number of the surrounding cells (not counting the cell itself) with even numbers. (So a total of 8 possible surrounding cells).
-	const out_str = minesweeperElement(grid, element, 'even_count');
+	const out_str = minesweeperElement(model, element, 'even_count');
 	return out_str;
 }
 
@@ -226,12 +228,8 @@ function countSameParityNeighbourConstraint(
 	return constraint_str;
 }
 
-function countSameParityNeighbourElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(model, grid, element, countSameParityNeighbourConstraint);
+function countSameParityNeighbourElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, countSameParityNeighbourConstraint);
 	return out_str;
 }
 
@@ -253,8 +251,8 @@ function orthogonalSumConstraint(
 	return constraint_str;
 }
 
-function orthogonalSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, orthogonalSumConstraint);
+function orthogonalSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, orthogonalSumConstraint);
 	return out_str;
 }
 
@@ -276,8 +274,8 @@ function diagonallyAdjacentSumConstraint(
 	return constraint_str;
 }
 
-function diagonallyAdjacentSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, diagonallyAdjacentSumConstraint);
+function diagonallyAdjacentSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, diagonallyAdjacentSumConstraint);
 	return out_str;
 }
 
@@ -299,8 +297,8 @@ function indexingColumnConstraint(
 	return constraint_str;
 }
 
-function indexingColumnElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	let out_str = simpleElementFunction(model, grid, element, indexingColumnConstraint);
+function indexingColumnElement(model: PuzzleModel, element: ConstraintsElement) {
+	let out_str = simpleElementFunction(model, element, indexingColumnConstraint);
 
 	if (!element.negative_constraints) return out_str;
 
@@ -308,6 +306,7 @@ function indexingColumnElement(model: PuzzleModel, grid: Grid, element: Constrai
 	const all_given = !!element.negative_constraints[TOOLS.ALL_INDEXING_COLUMN_GIVEN];
 	if (!all_given) return out_str;
 	const constraints = element.constraints as Record<string, CellToolI>;
+	const grid = model.puzzle.grid;
 
 	out_str += `\n% ${TOOLS.ALL_INDEXING_COLUMN_GIVEN}\n`;
 	for (const cell of grid.getAllCells()) {
@@ -342,8 +341,8 @@ function indexingRowConstraint(
 	return constraint_str;
 }
 
-function indexingRowElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	let out_str = simpleElementFunction(model, grid, element, indexingRowConstraint);
+function indexingRowElement(model: PuzzleModel, element: ConstraintsElement) {
+	let out_str = simpleElementFunction(model, element, indexingRowConstraint);
 
 	if (!element.negative_constraints) return out_str;
 
@@ -351,6 +350,7 @@ function indexingRowElement(model: PuzzleModel, grid: Grid, element: Constraints
 	const all_given = !!element.negative_constraints[TOOLS.ALL_INDEXING_ROW_GIVEN];
 	if (!all_given) return out_str;
 	const constraints = element.constraints as Record<string, CellToolI>;
+	const grid = model.puzzle.grid;
 
 	out_str += `\n% ${TOOLS.ALL_INDEXING_ROW_GIVEN}\n`;
 	for (const cell of grid.getAllCells()) {
@@ -389,8 +389,8 @@ function friendlyCellConstraint(
 	return constraint_str;
 }
 
-function friendlyCellElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, friendlyCellConstraint);
+function friendlyCellElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, friendlyCellConstraint);
 	return out_str;
 }
 
@@ -417,14 +417,9 @@ function adjCellsOppositeDirOppositeParityConstraint(
 	return constraint_str;
 }
 
-function adjCellsOppositeDirOppositeParityElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
+function adjCellsOppositeDirOppositeParityElement(model: PuzzleModel, element: ConstraintsElement) {
 	const out_str = simpleElementFunction(
 		model,
-		grid,
 		element,
 		adjCellsOppositeDirOppositeParityConstraint
 	);
@@ -443,7 +438,7 @@ function watchtowerFarsightHelper(grid: Grid, constraint: CellToolI, predicate: 
 }
 
 function watchtowerFarsightElementHelper(
-	grid: Grid,
+	model: PuzzleModel,
 	element: ConstraintsElement,
 	predicate: string
 ) {
@@ -451,6 +446,7 @@ function watchtowerFarsightElementHelper(
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = watchtowerFarsightHelper(grid, constraint as CellToolI, predicate);
 		out_str += constraint_str;
@@ -458,18 +454,18 @@ function watchtowerFarsightElementHelper(
 	return out_str;
 }
 
-function watchtowerElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = watchtowerFarsightElementHelper(grid, element, 'is_watchtower_p');
+function watchtowerElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = watchtowerFarsightElementHelper(model, element, 'is_watchtower_p');
 	return out_str;
 }
 
-function notWatchtowerElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = watchtowerFarsightElementHelper(grid, element, 'is_not_watchtower_p');
+function notWatchtowerElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = watchtowerFarsightElementHelper(model, element, 'is_not_watchtower_p');
 	return out_str;
 }
 
-function farsightElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = watchtowerFarsightElementHelper(grid, element, 'farsight_p');
+function farsightElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = watchtowerFarsightElementHelper(model, element, 'farsight_p');
 	return out_str;
 }
 
@@ -484,8 +480,8 @@ function radarConstraint(model: PuzzleModel, grid: Grid, c_id: string, constrain
 	return constraint_str;
 }
 
-function radarElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	let out_str = simpleElementFunction(model, grid, element, radarConstraint);
+function radarElement(model: PuzzleModel, element: ConstraintsElement) {
+	let out_str = simpleElementFunction(model, element, radarConstraint);
 
 	if (!element.negative_constraints) return out_str;
 
@@ -493,6 +489,7 @@ function radarElement(model: PuzzleModel, grid: Grid, element: ConstraintsElemen
 	const all_given = !!element.negative_constraints[TOOLS.ALL_RADARS_GIVEN];
 	if (!all_given) return out_str;
 	const constraints = element.constraints as Record<string, CellToolI>;
+	const grid = model.puzzle.grid;
 
 	out_str += `\n% ${TOOLS.ALL_RADARS_GIVEN}\n`;
 	for (const cell of grid.getAllCells()) {
@@ -529,8 +526,8 @@ function sandwichRowColCountConstraint(
 	return constraint_str;
 }
 
-function sandwichRowColCountElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, sandwichRowColCountConstraint);
+function sandwichRowColCountElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, sandwichRowColCountConstraint);
 	return out_str;
 }
 
@@ -560,17 +557,20 @@ function minMaxConstraint(grid: Grid, element: ConstraintsElement, predicate: st
 	return out_str;
 }
 
-function maximumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function maximumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const out_str = minMaxConstraint(grid, element, 'maximum_p');
 	return out_str;
 }
 
-function minimumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function minimumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const out_str = minMaxConstraint(grid, element, 'minimum_p');
 	return out_str;
 }
 
-function countingCirclesElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function countingCirclesElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const constraints = element.constraints as Record<string, CellToolI>;
 	const constl = Object.values(constraints);
 
@@ -588,11 +588,8 @@ function countingCirclesElement(model: PuzzleModel, grid: Grid, element: Constra
 	return out_str;
 }
 
-function reverseCountingCirclesElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
+function reverseCountingCirclesElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const constraints = element.constraints as Record<string, CellToolI>;
 	const constl = Object.values(constraints);
 
@@ -617,11 +614,8 @@ function reverseCountingCirclesElement(
 	return out_str;
 }
 
-function coloredCountingCirclesElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
+function coloredCountingCirclesElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const constraints = element.constraints as Record<string, CellToolI>;
 	const constl = Object.values(constraints);
 
@@ -668,7 +662,8 @@ function coloredCountingCirclesElement(
 	return out_str;
 }
 
-function uniqueCellsElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function uniqueCellsElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const constraints = element.constraints as Record<string, CellToolI>;
 	const constl = Object.values(constraints);
 
@@ -702,7 +697,7 @@ function seenOddEvenCountElement(grid: Grid, element: ConstraintsElement, predic
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
-	
+
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = seenOddEvenCountConstraint(grid, constraint as CellToolI, predicate);
 		out_str += constraint_str;
@@ -710,12 +705,14 @@ function seenOddEvenCountElement(grid: Grid, element: ConstraintsElement, predic
 	return out_str;
 }
 
-function seenEvenCountElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function seenEvenCountElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const out_str = seenOddEvenCountElement(grid, element, 'seen_even_count_p');
 	return out_str;
 }
 
-function seenOddCountElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function seenOddCountElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const out_str = seenOddEvenCountElement(grid, element, 'seen_odd_count_p');
 	return out_str;
 }
@@ -746,8 +743,8 @@ function cellKnightWhispersConstraint(
 	return out_str;
 }
 
-function cellKnightWhispersElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, cellKnightWhispersConstraint);
+function cellKnightWhispersElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, cellKnightWhispersConstraint);
 	return out_str;
 }
 
@@ -770,14 +767,14 @@ function yinYangMinesweeperConstraint(
 	return constraint_str;
 }
 
-function yinYangMinesweeperElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, yinYangMinesweeperConstraint);
+function yinYangMinesweeperElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, yinYangMinesweeperConstraint);
 	return out_str;
 }
 
-function yinYangSeenUnshadedElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function yinYangSeenUnshadedElement(model: PuzzleModel, element: ConstraintsElement) {
 	const out_str = orthogonalRegionSeenCountElement(
-		grid,
+		model,
 		element,
 		VAR_2D_NAMES.YIN_YANG,
 		'yin_yang_seen_unshaded_p'
@@ -785,9 +782,9 @@ function yinYangSeenUnshadedElement(model: PuzzleModel, grid: Grid, element: Con
 	return out_str;
 }
 
-function yinYangSeenShadedElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function yinYangSeenShadedElement(model: PuzzleModel, element: ConstraintsElement) {
 	const out_str = orthogonalRegionSeenCountElement(
-		grid,
+		model,
 		element,
 		VAR_2D_NAMES.YIN_YANG,
 		'yin_yang_seen_shaded_p'
@@ -795,9 +792,9 @@ function yinYangSeenShadedElement(model: PuzzleModel, grid: Grid, element: Const
 	return out_str;
 }
 
-function yinYangSeenSameShadeElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function yinYangSeenSameShadeElement(model: PuzzleModel, element: ConstraintsElement) {
 	const out_str = orthogonalRegionSeenCountElement(
-		grid,
+		model,
 		element,
 		VAR_2D_NAMES.YIN_YANG,
 		'yin_yang_seen_same_shade_p'
@@ -824,17 +821,8 @@ function yinYangAdjacentSameShadeCountConstraint(
 	return constraint_str;
 }
 
-function yinYangAdjacentSameShadeCountElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(
-		model,
-		grid,
-		element,
-		yinYangAdjacentSameShadeCountConstraint
-	);
+function yinYangAdjacentSameShadeCountElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, yinYangAdjacentSameShadeCountConstraint);
 	return out_str;
 }
 
@@ -856,17 +844,8 @@ function yinYangShadedNeighboursCountConstraint(
 	return constraint_str;
 }
 
-function yinYangShadedNeighboursCountElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(
-		model,
-		grid,
-		element,
-		yinYangShadedNeighboursCountConstraint
-	);
+function yinYangShadedNeighboursCountElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, yinYangShadedNeighboursCountConstraint);
 	return out_str;
 }
 
@@ -893,12 +872,10 @@ function twoConstiguousRegionsRowColumnOppositeSetCountConstraint(
 
 function twoConstiguousRegionsRowColumnOppositeSetCountElement(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement
 ) {
 	const out_str = simpleElementFunction(
 		model,
-		grid,
 		element,
 		twoConstiguousRegionsRowColumnOppositeSetCountConstraint
 	);
@@ -925,12 +902,8 @@ function seenRegionBordersCountConstraint(
 	return constraint_str;
 }
 
-function seenRegionBordersCountElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(model, grid, element, seenRegionBordersCountConstraint);
+function seenRegionBordersCountElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, seenRegionBordersCountConstraint);
 	return out_str;
 }
 
@@ -960,12 +933,8 @@ function nurimisakiUnshadedEndpointsConstraint(
 	return out_str;
 }
 
-function nurimisakiUnshadedEndpointsElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	let out_str = simpleElementFunction(model, grid, element, nurimisakiUnshadedEndpointsConstraint);
+function nurimisakiUnshadedEndpointsElement(model: PuzzleModel, element: ConstraintsElement) {
+	let out_str = simpleElementFunction(model, element, nurimisakiUnshadedEndpointsConstraint);
 
 	if (!element.negative_constraints) return out_str;
 
@@ -973,6 +942,7 @@ function nurimisakiUnshadedEndpointsElement(
 	const all_given = !!element.negative_constraints[TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN];
 	if (!all_given) return out_str;
 	const constraints = element.constraints as Record<string, CellToolI>;
+	const grid = model.puzzle.grid;
 
 	out_str += `\n% ${TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN}\n`;
 	for (const cell of grid.getAllCells()) {
@@ -1010,12 +980,8 @@ function sashiganeBendRegionCountConstraint(
 	return out_str;
 }
 
-function sashiganeBendRegionCountElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(model, grid, element, sashiganeBendRegionCountConstraint);
+function sashiganeBendRegionCountElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, sashiganeBendRegionCountConstraint);
 	return out_str;
 }
 
@@ -1038,8 +1004,8 @@ function sashiganeRegionSumConstraint(
 	return constraint_str;
 }
 
-function sashiganeRegionSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, sashiganeRegionSumConstraint);
+function sashiganeRegionSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, sashiganeRegionSumConstraint);
 	return out_str;
 }
 
@@ -1054,8 +1020,8 @@ function cellOnLoopConstraint(model: PuzzleModel, grid: Grid, c_id: string, cons
 	return constraint_str;
 }
 
-function cellOnLoopElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, cellOnLoopConstraint);
+function cellOnLoopElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, cellOnLoopConstraint);
 	return out_str;
 }
 
@@ -1075,8 +1041,8 @@ function cellNotOnLoopConstraint(
 	return constraint_str;
 }
 
-function cellNotOnLoopElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, cellNotOnLoopConstraint);
+function cellNotOnLoopElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, cellNotOnLoopConstraint);
 	return out_str;
 }
 
@@ -1100,12 +1066,8 @@ function countLoopNeighbourCellsConstraint(
 	return constraint_str;
 }
 
-function countLoopNeighbourCellsElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(model, grid, element, countLoopNeighbourCellsConstraint);
+function countLoopNeighbourCellsElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, countLoopNeighbourCellsConstraint);
 	return out_str;
 }
 
@@ -1127,8 +1089,8 @@ function caveCluesConstraint(model: PuzzleModel, grid: Grid, c_id: string, const
 	return constraint_str;
 }
 
-function caveCluesElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, caveCluesConstraint);
+function caveCluesElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, caveCluesConstraint);
 	return out_str;
 }
 
@@ -1188,12 +1150,8 @@ function chaosConstructionChessSumsConstraint(
 	return out_str;
 }
 
-function chaosConstructionChessSumsElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(model, grid, element, chaosConstructionChessSumsConstraint);
+function chaosConstructionChessSumsElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, chaosConstructionChessSumsConstraint);
 	return out_str;
 }
 
@@ -1237,17 +1195,8 @@ function chaosConstructionArrowKnotsConstraint(
 	return out_str;
 }
 
-function chaosConstructionArrowKnotsElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(
-		model,
-		grid,
-		element,
-		chaosConstructionArrowKnotsConstraint
-	);
+function chaosConstructionArrowKnotsElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, chaosConstructionArrowKnotsConstraint);
 	return out_str;
 }
 
@@ -1268,12 +1217,10 @@ function chaosConstructionSeenSameRegionCountConstraint(
 
 function chaosConstructionSeenSameRegionCountElement(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement
 ) {
 	const out_str = simpleElementFunction(
 		model,
-		grid,
 		element,
 		chaosConstructionSeenSameRegionCountConstraint
 	);
@@ -1296,8 +1243,8 @@ function directedPathStartConstraint(
 	return constraint_str;
 }
 
-function directedPathStartElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, directedPathStartConstraint);
+function directedPathStartElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, directedPathStartConstraint);
 	return out_str;
 }
 
@@ -1317,8 +1264,8 @@ function directedPathEndConstraint(
 	return constraint_str;
 }
 
-function directedPathEndElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, directedPathEndConstraint);
+function directedPathEndElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, directedPathEndConstraint);
 	return out_str;
 }
 
@@ -1337,8 +1284,8 @@ function connectFourRedConstraint(
 	return constraint_str;
 }
 
-function connectFourRedElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, connectFourRedConstraint);
+function connectFourRedElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, connectFourRedConstraint);
 	return out_str;
 }
 
@@ -1357,19 +1304,17 @@ function connectFourYellowConstraint(
 	return constraint_str;
 }
 
-function connectFourYellowElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, connectFourYellowConstraint);
+function connectFourYellowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, connectFourYellowConstraint);
 	return out_str;
 }
 
-function nurikabeIslandProductOfSumAndSizeElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
+function nurikabeIslandProductOfSumAndSizeElement(model: PuzzleModel, element: ConstraintsElement) {
 	let out_str: string = '';
 	let count = 0;
 	const constraints = element.constraints as Record<string, CellToolI>;
+	const grid = model.puzzle.grid;
+
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const coords = constraint.cell;
 		const cell = grid.getCell(coords.r, coords.c);
@@ -1408,12 +1353,8 @@ function nurikabeSeenWaterwayCellsConstraint(
 	return constraint_str;
 }
 
-function nurikabeSeenWaterwayCellsElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(model, grid, element, nurikabeSeenWaterwayCellsConstraint);
+function nurikabeSeenWaterwayCellsElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, nurikabeSeenWaterwayCellsConstraint);
 	return out_str;
 }
 
@@ -1434,20 +1375,17 @@ function nurikabeIslandSizeCellConstraint(
 	return constraint_str;
 }
 
-function nurikabeIslandSizeCellElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(model, grid, element, nurikabeIslandSizeCellConstraint);
+function nurikabeIslandSizeCellElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, nurikabeIslandSizeCellConstraint);
 	return out_str;
 }
 
-function teleportElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function teleportElement(model: PuzzleModel, element: ConstraintsElement) {
 	let out_str = '';
 
 	const constraints = element.constraints as Record<string, CellToolI>;
 	const groups = groupConstraintsByValue(Object.values(constraints));
+	const grid = model.puzzle.grid;
 
 	for (const group of groups.values()) {
 		if (group.length <= 1) continue;
@@ -1475,7 +1413,8 @@ function teleportElement(model: PuzzleModel, grid: Grid, element: ConstraintsEle
 	return out_str;
 }
 
-function shikakuRegionSizeElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function shikakuRegionSizeElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const constraints = element.constraints as Record<string, CellToolI>;
 	const constl = Object.values(constraints);
 
@@ -1505,7 +1444,8 @@ function shikakuRegionSizeElement(model: PuzzleModel, grid: Grid, element: Const
 	return out_str;
 }
 
-function shikakuRegionSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function shikakuRegionSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const constraints = element.constraints as Record<string, CellToolI>;
 	const constl = Object.values(constraints);
 
@@ -1624,7 +1564,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.TELEPORT, teleportElement]
 ]);
 
-export function singleCellElements(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = constraintsBuilder(model, grid, element, tool_map);
+export function singleCellElements(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = constraintsBuilder(model, element, tool_map);
 	return out_str;
 }

@@ -112,11 +112,12 @@ function quadrupleConstraint(
 	return out_str;
 }
 
-function quadrupleElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function quadrupleElement(model: PuzzleModel, element: ConstraintsElement) {
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
-	
+
+	const grid = model.puzzle.grid;
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = quadrupleConstraint(model, grid, c_id, constraint as CornerToolI);
 		out_str += constraint_str;
@@ -124,35 +125,35 @@ function quadrupleElement(model: PuzzleModel, grid: Grid, element: ConstraintsEl
 	return out_str;
 }
 
-function cornerSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function cornerSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const out_str = valuedCornerElement(model, grid, element, 'corner_sum_p');
 	return out_str;
 }
 
-function cornerEvenCountElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function cornerEvenCountElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const out_str = valuedCornerElement(model, grid, element, 'corner_even_count_p');
 	return out_str;
 }
 
-function cornerSumOfThreeEqualsTheOtherElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
+function cornerSumOfThreeEqualsTheOtherElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const out_str = simpleCornerElement(grid, element, 'corner_sum_of_three_equals_the_other_p');
 	return out_str;
 }
 
 function equalDiagonalDifferencesElement(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement
 ) {
+	const grid = model.puzzle.grid;
 	const out_str = simpleCornerElement(grid, element, 'equal_diagonal_differences_p');
 	return out_str;
 }
 
-function productSquareElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function productSquareElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const out_str = simpleCornerElement(grid, element, 'product_square_p');
 	return out_str;
 }
@@ -166,7 +167,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.EQUAL_DIAGONAL_DIFFERENCES, equalDiagonalDifferencesElement]
 ]);
 
-export function cornerElements(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = constraintsBuilder(model, grid, element, tool_map);
+export function cornerElements(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = constraintsBuilder(model, element, tool_map);
 	return out_str;
 }

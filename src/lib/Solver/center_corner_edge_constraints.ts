@@ -53,7 +53,6 @@ function possibleGalaxyCells(
 
 function rotationallySymmetricGalaxyCenterSumConstraints(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement
 ) {
 	let out_str = '';
@@ -61,6 +60,7 @@ function rotationallySymmetricGalaxyCenterSumConstraints(
 	if (!constraints) return out_str;
 
 	const constraints_list = [...Object.values(constraints)];
+	const grid = model.puzzle.grid;
 
 	for (let i = 0; i < constraints_list.length; i++) {
 		const constraint = constraints_list[i];
@@ -135,12 +135,10 @@ function yinYangSumOfAdjacentShadedEdgeOrCornerConstraints(
 
 function yinYangSumOfAdjacentShadedEdgeOrCornerElement(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement
 ) {
 	const out_str = simpleElementFunction(
 		model,
-		grid,
 		element,
 		yinYangSumOfAdjacentShadedEdgeOrCornerConstraints
 	);
@@ -155,11 +153,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER_SUM, rotationallySymmetricGalaxyCenterSumConstraints]
 ]);
 
-export function centerCornerOrEdgeElements(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = constraintsBuilder(model, grid, element, tool_map);
+export function centerCornerOrEdgeElements(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = constraintsBuilder(model, element, tool_map);
 	return out_str;
 }

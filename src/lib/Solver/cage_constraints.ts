@@ -11,9 +11,9 @@ import {
 	VAR_2D_NAMES,
 	groupConstraintsByValue,
 	cellsFromCoords,
-	type ElementF,
 	simpleElementFunction,
-	constraintsBuilder
+	constraintsBuilder,
+	type ElementF
 } from './solver_utils';
 import type { ParseOptions } from './value_parsing';
 
@@ -31,16 +31,12 @@ function simpleCageConstraint(grid: Grid, constraint: CageToolI, predicate: stri
 	return constraint_str;
 }
 
-function simpleCageElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement,
-	predicate: string
-) {
+function simpleCageElement(model: PuzzleModel, element: ConstraintsElement, predicate: string) {
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = simpleCageConstraint(grid, constraint as CageToolI, predicate);
 		out_str += constraint_str;
@@ -61,11 +57,11 @@ export function getParsingResult(model: PuzzleModel, value: string, c_id: string
 
 function valuedCageConstraint(
 	model: PuzzleModel,
-	grid: Grid,
 	c_id: string,
 	constraint: CageToolI,
 	predicate: string
 ) {
+	const grid = model.puzzle.grid;
 	const vars = getCageVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
 
@@ -79,24 +75,13 @@ function valuedCageConstraint(
 	return out_str;
 }
 
-function valuedCageElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement,
-	predicate: string
-) {
+function valuedCageElement(model: PuzzleModel, element: ConstraintsElement, predicate: string) {
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
 	for (const [c_id, constraint] of Object.entries(constraints)) {
-		const constraint_str = valuedCageConstraint(
-			model,
-			grid,
-			c_id,
-			constraint as CageToolI,
-			predicate
-		);
+		const constraint_str = valuedCageConstraint(model, c_id, constraint as CageToolI, predicate);
 		out_str += constraint_str;
 	}
 	return out_str;
@@ -121,8 +106,8 @@ function killerCageConstraint(model: PuzzleModel, grid: Grid, c_id: string, cons
 	return out_str;
 }
 
-function killerCageElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, killerCageConstraint);
+function killerCageElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, killerCageConstraint);
 	return out_str;
 }
 
@@ -151,33 +136,33 @@ function invertedKillerCageConstraint(
 	return out_str;
 }
 
-function invertedKillerCageElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, invertedKillerCageConstraint);
+function invertedKillerCageElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, invertedKillerCageConstraint);
 	return out_str;
 }
 
-function sumCageElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedCageElement(model, grid, element, 'sum_cage_p');
+function sumCageElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedCageElement(model, element, 'sum_cage_p');
 	return out_str;
 }
 
-function parityBalanceCageElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleCageElement(model, grid, element, 'parity_balance_cage_p');
+function parityBalanceCageElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleCageElement(model, element, 'parity_balance_cage_p');
 	return out_str;
 }
 
-function sumCageLookAndSayElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleCageElement(model, grid, element, 'sum_cage_look_and_say_p');
+function sumCageLookAndSayElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleCageElement(model, element, 'sum_cage_look_and_say_p');
 	return out_str;
 }
 
-function divisibleKillerCageElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedCageElement(model, grid, element, 'divisible_killer_cage_p');
+function divisibleKillerCageElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedCageElement(model, element, 'divisible_killer_cage_p');
 	return out_str;
 }
 
-function spotlightCageElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = valuedCageElement(model, grid, element, 'spotlight_cage_p');
+function spotlightCageElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedCageElement(model, element, 'spotlight_cage_p');
 	return out_str;
 }
 
@@ -199,8 +184,8 @@ function uniqueDigitsCageConstraint(
 	return '';
 }
 
-function uniqueDigitsCageElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, uniqueDigitsCageConstraint);
+function uniqueDigitsCageElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, uniqueDigitsCageConstraint);
 	return out_str;
 }
 
@@ -239,8 +224,8 @@ function vaultedCageConstraint(
 	return out_str;
 }
 
-function vaultedCageElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, vaultedCageConstraint);
+function vaultedCageElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, vaultedCageConstraint);
 	return out_str;
 }
 
@@ -290,10 +275,10 @@ function yinYangValuedCageElement(
 
 function yinYangAntithesisKillerCageElement(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement
 ) {
 	// Digits in cages cannot repeat and must sum to the small clue in the top left corner of the cage. However, shaded cells are treated as negative. In other words, the cage total is the sum of unshaded cells minus the sum of shaded cells.
+	const grid = model.puzzle.grid;
 	const out_str = yinYangValuedCageElement(
 		model,
 		grid,
@@ -305,11 +290,10 @@ function yinYangAntithesisKillerCageElement(
 
 function yinYangBreakevenKillerCageElement(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement
 ) {
 	// Digits in cages cannot repeat and must sum to the small clue in the top left corner of the cage. However, shaded cells are treated as negative. In other words, the cage total is the sum of unshaded cells minus the sum of shaded cells.
-
+	const grid = model.puzzle.grid;
 	const out_str = yinYangValuedCageElement(
 		model,
 		grid,
@@ -338,8 +322,8 @@ function doublersKillerCageConstraint(
 	return '';
 }
 
-function doublersKillerCageElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, doublersKillerCageConstraint);
+function doublersKillerCageElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, doublersKillerCageConstraint);
 	return out_str;
 }
 
@@ -362,19 +346,19 @@ function negatorsKillerCageConstraint(
 	return '';
 }
 
-function negatorsKillerCageElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, negatorsKillerCageConstraint);
+function negatorsKillerCageElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, negatorsKillerCageConstraint);
 	return out_str;
 }
 
-function multisetCageElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function multisetCageElement(model: PuzzleModel, element: ConstraintsElement) {
 	let out_str = '';
 	const constraints = element.constraints as Record<string, CageToolI>;
 	if (!constraints) return out_str;
-	
+
 	// group cells by value
 	const groups = groupConstraintsByValue(Object.values(constraints));
-
+	const grid = model.puzzle.grid;
 	for (const group of groups.values()) {
 		if (group.length <= 1) continue;
 		// for each combination of 2
@@ -409,7 +393,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.MULTISET_CAGE, multisetCageElement]
 ]);
 
-export function cageElements(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = constraintsBuilder(model, grid, element, tool_map);
+export function cageElements(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = constraintsBuilder(model, element, tool_map);
 	return out_str;
 }

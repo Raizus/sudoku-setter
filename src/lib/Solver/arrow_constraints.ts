@@ -54,12 +54,14 @@ function simpleArrowElement(grid: Grid, element: ConstraintsElement, predicate: 
 	return out_str;
 }
 
-function arrowElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function arrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const out_str = simpleArrowElement(grid, element, 'arrow_p');
 	return out_str;
 }
 
-function bulbousArrowElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function bulbousArrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
 	const out_str = simpleArrowElement(grid, element, 'bulbous_arrow_p');
 	return out_str;
 }
@@ -85,8 +87,8 @@ function averageArrowConstraint(
 	return out_str;
 }
 
-function averageArrowElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, averageArrowConstraint);
+function averageArrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, averageArrowConstraint);
 	return out_str;
 }
 
@@ -117,12 +119,8 @@ function chaosConstructionArrowConstraint(
 	return out_str;
 }
 
-function chaosConstructionArrowElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(model, grid, element, chaosConstructionArrowConstraint);
+function chaosConstructionArrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, chaosConstructionArrowConstraint);
 	return out_str;
 }
 
@@ -133,7 +131,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.CHAOS_CONSTRUCTION_ARROW, chaosConstructionArrowElement]
 ]);
 
-export function arrowElements(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = constraintsBuilder(model, grid, element, tool_map);
+export function arrowElements(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = constraintsBuilder(model, element, tool_map);
 	return out_str;
 }

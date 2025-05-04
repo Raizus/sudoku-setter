@@ -24,8 +24,8 @@ function forbiddenAdjacentSumConstraint(
 	return constraint_str;
 }
 
-function forbiddenAdjacentSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, forbiddenAdjacentSumConstraint);
+function forbiddenAdjacentSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, forbiddenAdjacentSumConstraint);
 	return out_str;
 }
 
@@ -45,12 +45,10 @@ function minimumDiagonallyAdjacentDifferenceConstraint(
 
 function minimumDiagonallyAdjacentDifferenceElement(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement
 ) {
 	const out_str = simpleElementFunction(
 		model,
-		grid,
 		element,
 		minimumDiagonallyAdjacentDifferenceConstraint
 	);
@@ -71,8 +69,8 @@ function forbiddenKnightSumConstraint(
 	return constraint_str;
 }
 
-function forbiddenKnightSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, forbiddenKnightSumConstraint);
+function forbiddenKnightSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, forbiddenKnightSumConstraint);
 	return out_str;
 }
 
@@ -94,8 +92,8 @@ function litsMaxTetrominoSumConstraint(
 	return constraint_str;
 }
 
-function litsMaxTetrominoSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, litsMaxTetrominoSumConstraint);
+function litsMaxTetrominoSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, litsMaxTetrominoSumConstraint);
 	return out_str;
 }
 
@@ -106,11 +104,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.LITS_MAX_TETROMINO_SUM, litsMaxTetrominoSumElement]
 ]);
 
-export function valuedGlobalConstraints(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = constraintsBuilder(model, grid, element, tool_map);
+export function valuedGlobalConstraints(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = constraintsBuilder(model, element, tool_map);
 	return out_str;
 }

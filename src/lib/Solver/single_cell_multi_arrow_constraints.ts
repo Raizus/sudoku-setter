@@ -18,14 +18,14 @@ import {
 
 export function singleCellMultiArrowElementFunction(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement,
 	func: (grid: Grid, constraint: CellMultiArrowToolI) => string
 ) {
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
-	
+
+	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = func(grid, constraint as CellMultiArrowToolI);
 		out_str += constraint_str;
@@ -53,14 +53,9 @@ function countCellsNotInTheSameRegionConstraint(grid: Grid, constraint: CellMult
 	return constraint_str;
 }
 
-function countCellsNotInTheSameRegionElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
+function countCellsNotInTheSameRegionElement(model: PuzzleModel, element: ConstraintsElement) {
 	const out_str = singleCellMultiArrowElementFunction(
 		model,
-		grid,
 		element,
 		countCellsNotInTheSameRegionConstraint
 	);
@@ -87,14 +82,9 @@ function yinYangSumOfCellsOfOppositeColorConstraint(grid: Grid, constraint: Cell
 	return out_str;
 }
 
-function yinYangSumOfCellsOfOppositeColorElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
+function yinYangSumOfCellsOfOppositeColorElement(model: PuzzleModel, element: ConstraintsElement) {
 	const out_str = singleCellMultiArrowElementFunction(
 		model,
-		grid,
 		element,
 		yinYangSumOfCellsOfOppositeColorConstraint
 	);
@@ -119,14 +109,9 @@ function yinYangCountShadedCellsConstraint(grid: Grid, constraint: CellMultiArro
 	return out_str;
 }
 
-function yinYangCountShadedCellsElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
+function yinYangCountShadedCellsElement(model: PuzzleModel, element: ConstraintsElement) {
 	let out_str = singleCellMultiArrowElementFunction(
 		model,
-		grid,
 		element,
 		yinYangCountShadedCellsConstraint
 	);
@@ -137,6 +122,7 @@ function yinYangCountShadedCellsElement(
 	const all_given = !!element.negative_constraints[TOOLS.ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN];
 	if (!all_given) return out_str;
 	const constraints = element.constraints as Record<string, CellMultiArrowToolI>;
+	const grid = model.puzzle.grid;
 
 	out_str += `\n% ${TOOLS.ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN}\n`;
 	for (const cell of grid.getAllCells()) {
@@ -186,12 +172,10 @@ function yinYangCountUniqueFillominoSameShadingConstraint(
 
 function yinYangCountUniqueFillominoSameShadingElement(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement
 ) {
 	const out_str = singleCellMultiArrowElementFunction(
 		model,
-		grid,
 		element,
 		yinYangCountUniqueFillominoSameShadingConstraint
 	);
@@ -219,14 +203,9 @@ function nurikabeCountIslandCellsArrowsConstraint(grid: Grid, constraint: CellMu
 	return out_str;
 }
 
-function nurikabeCountIslandCellsArrowsElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
+function nurikabeCountIslandCellsArrowsElement(model: PuzzleModel, element: ConstraintsElement) {
 	const out_str = singleCellMultiArrowElementFunction(
 		model,
-		grid,
 		element,
 		nurikabeCountIslandCellsArrowsConstraint
 	);
@@ -254,10 +233,9 @@ function loopCellsCountArrowsConstraint(grid: Grid, constraint: CellMultiArrowTo
 	return out_str;
 }
 
-function loopCellsCountArrowsElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
+function loopCellsCountArrowsElement(model: PuzzleModel, element: ConstraintsElement) {
 	const out_str = singleCellMultiArrowElementFunction(
 		model,
-		grid,
 		element,
 		loopCellsCountArrowsConstraint
 	);
@@ -286,14 +264,9 @@ function sameGalaxyUnobstructedCountArrowsConstraint(grid: Grid, constraint: Cel
 	return out_str;
 }
 
-function sameGalaxyUnobstructedCountArrowsElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
+function sameGalaxyUnobstructedCountArrowsElement(model: PuzzleModel, element: ConstraintsElement) {
 	const out_str = singleCellMultiArrowElementFunction(
 		model,
-		grid,
 		element,
 		sameGalaxyUnobstructedCountArrowsConstraint
 	);
@@ -319,8 +292,8 @@ function hotArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	return out_str;
 }
 
-function hotArrowsElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = singleCellMultiArrowElementFunction(model, grid, element, hotArrowsConstraint);
+function hotArrowsElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = singleCellMultiArrowElementFunction(model, element, hotArrowsConstraint);
 	return out_str;
 }
 
@@ -342,8 +315,8 @@ function coldArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	return out_str;
 }
 
-function coldArrowsElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = singleCellMultiArrowElementFunction(model, grid, element, coldArrowsConstraint);
+function coldArrowsElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = singleCellMultiArrowElementFunction(model, element, coldArrowsConstraint);
 	return out_str;
 }
 
@@ -367,14 +340,9 @@ function connectFourCountCellsOfSameColorConstraint(grid: Grid, constraint: Cell
 	return out_str;
 }
 
-function connectFourCountCellsOfSameColorElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
+function connectFourCountCellsOfSameColorElement(model: PuzzleModel, element: ConstraintsElement) {
 	const out_str = singleCellMultiArrowElementFunction(
 		model,
-		grid,
 		element,
 		connectFourCountCellsOfSameColorConstraint
 	);
@@ -400,14 +368,9 @@ function nextNumberedRegionDistanceArrowsConstraint(grid: Grid, constraint: Cell
 	return out_str;
 }
 
-function nextNumberedRegionDistanceArrowsElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
+function nextNumberedRegionDistanceArrowsElement(model: PuzzleModel, element: ConstraintsElement) {
 	const out_str = singleCellMultiArrowElementFunction(
 		model,
-		grid,
 		element,
 		nextNumberedRegionDistanceArrowsConstraint
 	);
@@ -431,11 +394,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.NEXT_NUMBERED_REGION_DISTANCE_ARROWS, nextNumberedRegionDistanceArrowsElement]
 ]);
 
-export function singleCellMultiArrowElements(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = constraintsBuilder(model, grid, element, tool_map);
+export function singleCellMultiArrowElements(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = constraintsBuilder(model, element, tool_map);
 	return out_str;
 }

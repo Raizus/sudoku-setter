@@ -4,7 +4,15 @@ import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS } from '../Puzzle/Tools';
 import type { GridCoordI } from '../utils/SquareCellGridCoords';
-import { cellsToGridVarsStr, cellsToVarsName, constraintsBuilder, PuzzleModel, simpleElementFunction, VAR_2D_NAMES, type ElementF } from './solver_utils';
+import {
+	cellsToGridVarsStr,
+	cellsToVarsName,
+	constraintsBuilder,
+	PuzzleModel,
+	simpleElementFunction,
+	VAR_2D_NAMES,
+	type ElementF
+} from './solver_utils';
 import type { ParseOptions } from './value_parsing';
 
 function getOutsideDirectionConstraintVars(grid: Grid, constraint: OutsideDirectionToolI) {
@@ -63,7 +71,6 @@ function simpleOutsideDirectionPredicate(
 
 function simpleOutsideDirectionElement(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement,
 	predicate: string
 ) {
@@ -71,6 +78,7 @@ function simpleOutsideDirectionElement(
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = simpleOutsideDirectionPredicate(
 			model,
@@ -108,8 +116,8 @@ function sandwichSumConstraint(
 	return out_str;
 }
 
-function sandwichSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, sandwichSumConstraint);
+function sandwichSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, sandwichSumConstraint);
 	return out_str;
 }
 
@@ -142,13 +150,8 @@ function sandwichSumXorXSumConstraint(
 	return out_str;
 }
 
-function sandwichSumXorXSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(
-		model,
-		grid,
-		element,
-		sandwichSumXorXSumConstraint
-	);
+function sandwichSumXorXSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, sandwichSumXorXSumConstraint);
 	return out_str;
 }
 
@@ -175,53 +178,53 @@ function xIndexConstraint(
 	return out_str;
 }
 
-function xIndexElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, grid, element, xIndexConstraint);
+function xIndexElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, xIndexConstraint);
 	return out_str;
 }
 
-function xSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, grid, element, 'x_sum_p');
+function xSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleOutsideDirectionElement(model, element, 'x_sum_p');
 	return out_str;
 }
 
-function shortsightedXSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, grid, element, 'shortsighted_x_sum_p');
+function shortsightedXSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleOutsideDirectionElement(model, element, 'shortsighted_x_sum_p');
 	return out_str;
 }
 
-function brokenXSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, grid, element, 'broken_x_sum_p');
+function brokenXSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleOutsideDirectionElement(model, element, 'broken_x_sum_p');
 	return out_str;
 }
 
-function shiftedXSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, grid, element, 'shifted_x_sum_p');
+function shiftedXSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleOutsideDirectionElement(model, element, 'shifted_x_sum_p');
 	return out_str;
 }
 
-function skyscrapersElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, grid, element, 'skyscrapers_p');
+function skyscrapersElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleOutsideDirectionElement(model, element, 'skyscrapers_p');
 	return out_str;
 }
 
-function xSumSkyscrapersElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, grid, element, 'x_sum_skyscrapers_p');
+function xSumSkyscrapersElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleOutsideDirectionElement(model, element, 'x_sum_skyscrapers_p');
 	return out_str;
 }
 
-function battlefieldElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, grid, element, 'battlefield_p');
+function battlefieldElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleOutsideDirectionElement(model, element, 'battlefield_p');
 	return out_str;
 }
 
-function risingStreakElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, grid, element, 'rising_streak_p');
+function risingStreakElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleOutsideDirectionElement(model, element, 'rising_streak_p');
 	return out_str;
 }
 
-function outsideConsecutiveSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, grid, element, 'outside_consecutive_sum_p');
+function outsideConsecutiveSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleOutsideDirectionElement(model, element, 'outside_consecutive_sum_p');
 	return out_str;
 }
 
@@ -247,13 +250,8 @@ function loopwhichesConstraint(
 	return '';
 }
 
-function loopwhichesElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(
-		model,
-		grid,
-		element,
-		loopwhichesConstraint
-	);
+function loopwhichesElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, loopwhichesConstraint);
 	return out_str;
 }
 
@@ -286,13 +284,13 @@ function chaosConstructionSumOfFirstEachRegionConstraint(
 
 function chaosConstructionSumOfFirstEachRegionElement(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement
 ) {
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
-	
+
+	const grid = model.puzzle.grid;
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = chaosConstructionSumOfFirstEachRegionConstraint(
 			model,
@@ -305,18 +303,18 @@ function chaosConstructionSumOfFirstEachRegionElement(
 	return out_str;
 }
 
-function littleKillerSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, grid, element, 'little_killer_sum_p');
+function littleKillerSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleOutsideDirectionElement(model, element, 'little_killer_sum_p');
 	return out_str;
 }
 
-function littleKillerProductElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, grid, element, 'little_killer_product_p');
+function littleKillerProductElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleOutsideDirectionElement(model, element, 'little_killer_product_p');
 	return out_str;
 }
 
-function xOmitlittleKillerSumElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, grid, element, 'x_omit_little_killer_sum_p');
+function xOmitlittleKillerSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleOutsideDirectionElement(model, element, 'x_omit_little_killer_sum_p');
 	return out_str;
 }
 
@@ -344,12 +342,10 @@ function outsideEdgeYinYangAdjacentSumOfShadedConstraint(
 
 function outsideEdgeYinYangAdjacentSumOfShadedElement(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement
 ) {
 	const out_str = simpleElementFunction(
 		model,
-		grid,
 		element,
 		outsideEdgeYinYangAdjacentSumOfShadedConstraint
 	);
@@ -377,17 +373,8 @@ function negatorsLittleKillerSumConstraint(
 	return '';
 }
 
-function negatorsLittleKillerSumElement(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(
-		model,
-		grid,
-		element,
-		negatorsLittleKillerSumConstraint
-	);
+function negatorsLittleKillerSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, negatorsLittleKillerSumConstraint);
 	return out_str;
 }
 
@@ -416,23 +403,18 @@ function pentominoBorderCountConstraint(
 	return out_str;
 }
 
-function pentominoBorderCountElement(model: PuzzleModel, grid: Grid, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(
-		model,
-		grid,
-		element,
-		pentominoBorderCountConstraint
-	);
+function pentominoBorderCountElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, pentominoBorderCountConstraint);
 	return out_str;
 }
 
 function mysterySandwichSumConstraint(
 	model: PuzzleModel,
-	grid: Grid,
 	constraints: Record<string, OutsideDirectionToolI>
 ) {
 	let out_str = '';
 
+	const grid = model.puzzle.grid;
 	const var_a = 'mystery_sandwich_a';
 	const var_b = 'mystery_sandwich_b';
 
@@ -487,11 +469,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.NEGATORS_LITTLE_KILLER_SUM, negatorsLittleKillerSumElement]
 ]);
 
-export function outsideDirectionElements(
-	model: PuzzleModel,
-	grid: Grid,
-	element: ConstraintsElement
-) {
-	const out_str = constraintsBuilder(model, grid, element, tool_map);
+export function outsideDirectionElements(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = constraintsBuilder(model, element, tool_map);
 	return out_str;
 }
