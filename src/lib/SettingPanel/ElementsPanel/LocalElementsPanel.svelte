@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getToolInfo, type AbstractElementHandlers } from '$lib/Puzzle/ElementHandlersUtils';
+	import { type AbstractElementHandlers } from '$lib/Puzzle/ElementHandlersUtils';
 	import type { AbstractElementInfo } from '$lib/Puzzle/ElementInfo';
 	import {
 		TOOLS,
@@ -11,14 +11,10 @@
 	import { elementsDictStore, updateToolAndCurrentConstraintStores } from '$stores/BoardStore';
 
 	import SettingToolsPanel from '../Subpanel/SettingToolsPanel.svelte';
-	import ToolSelectorButton from '../ToolButton/ToolSelectorButton.svelte';
-	import LocalConstraintSelectionButton from './LocalConstraintSelectionButton.svelte';
 
 	import Local from '$icons/Local.svelte';
-	import ConstraintList from '../ToolButton/ConstraintList.svelte';
 	import { addGroupToLocalConstraint } from '$stores/LocalConstraintsStore';
 	import ElementButton from './ElementButton.svelte';
-	// import ConstraintList from '../ToolButton/ConstraintList.svelte';
 
 	export let elementHandlers: AbstractElementHandlers;
 
@@ -49,12 +45,12 @@
 >
 	<Local slot="title-icon" />
 	<svelte:fragment slot="panel-content">
-		<ToolSelectorButton elementInfo={getToolInfo(TOOLS.GIVEN, elementHandlers)} />
-		<ToolSelectorButton elementInfo={getToolInfo(TOOLS.REGIONS, elementHandlers)} />
+		<ElementButton tool_id={TOOLS.GIVEN} {elementHandlers} />
+		<ElementButton tool_id={TOOLS.REGIONS} {elementHandlers} />
 
 		{#each $elementsDictStore.entries() as [tool_id, value] (tool_id)}
 			{#if isElement(tool_id)}
-				<ElementButton {tool_id} {elementHandlers}/>
+				<ElementButton {tool_id} {elementHandlers} />
 			{/if}
 		{/each}
 	</svelte:fragment>
