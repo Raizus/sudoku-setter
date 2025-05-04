@@ -1,6 +1,6 @@
 import type { InputHandler } from '../InputHandler';
 import { updateLocalConstraint } from '$stores/BoardStore';
-import { localConstraintsStore } from '$stores/BoardStore';
+import { elementsDictStore } from '$stores/BoardStore';
 import { removeLocalConstraint } from '$stores/LocalConstraintsStore';
 import { addLocalConstraint } from '$stores/LocalConstraintsStore';
 import { get } from 'svelte/store';
@@ -59,7 +59,7 @@ export function getCloneToolInputHandler(
 	let mode = get(toolModeStore);
 
 	function handle(event: CellDragTapEvent) {
-		const localConstraints = get(localConstraintsStore);
+		const localConstraints = get(elementsDictStore);
 		const coords = event.cell;
 
 		const onGrid = isCellOnGrid(event.cell, gridShape);

@@ -6,7 +6,7 @@ import { BASIC_TOOL_MODE, type CornerToolOptions } from './types';
 import {
 	currentConstraintStore,
 	updateLocalConstraint,
-	localConstraintsStore,
+	elementsDictStore,
 	currentShapeStore,
 	selectConstraint
 } from '$stores/BoardStore';
@@ -40,7 +40,7 @@ export function getCornerToolInputHandler(
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	function handle(event: CellCornerTapEvent) {
-		const localConstraints = get(localConstraintsStore);
+		const localConstraints = get(elementsDictStore);
 		const corner = event.coord;
 
 		let mode = get(toolModeStore);
@@ -109,7 +109,7 @@ export function getCornerToolInputHandler(
 			constraint_preview.shape = { ...currentShape };
 		}
 
-		const localConstraints = get(localConstraintsStore);
+		const localConstraints = get(elementsDictStore);
 		const match = findCornerConstraint(localConstraints, tool, event.coord);
 		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
 			cornerToolPreviewStore.set(undefined);

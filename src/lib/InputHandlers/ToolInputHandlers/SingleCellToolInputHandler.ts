@@ -7,7 +7,7 @@ import {
 	selectConstraint,
 	updateLocalConstraint
 } from '$stores/BoardStore';
-import { localConstraintsStore } from '$stores/BoardStore';
+import { elementsDictStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import { keyboardInputDefaultValidator } from '$src/lib/InputHandlers/KeyboardEventUtils';
@@ -40,7 +40,7 @@ export function getSingleCellToolInputHandler(
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	function handle(event: CellDragTapEvent) {
-		const localConstraints = get(localConstraintsStore);
+		const localConstraints = get(elementsDictStore);
 		const coords = event.cell;
 
 		const onGrid = isCellOnGrid(event.cell, gridShape);
@@ -101,7 +101,7 @@ export function getSingleCellToolInputHandler(
 		}
 
 		const mode = get(toolModeStore);
-		const localConstraints = get(localConstraintsStore);
+		const localConstraints = get(elementsDictStore);
 		const match = findSingleCellConstraint<CellToolI>(localConstraints, tool, event.cell);
 		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
 			simpleCellToolPreviewStore.set(undefined);

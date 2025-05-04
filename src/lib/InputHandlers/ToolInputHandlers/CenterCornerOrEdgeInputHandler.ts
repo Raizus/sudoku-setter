@@ -5,7 +5,7 @@ import {
 	selectConstraint,
 	updateLocalConstraint
 } from '$stores/BoardStore';
-import { localConstraintsStore } from '$stores/BoardStore';
+import { elementsDictStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
@@ -45,7 +45,7 @@ export function getCenterCornerOrEdgeToolInputHandler(
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	function handle(event: CellEdgeCornerEvent) {
-		const localConstraints = get(localConstraintsStore);
+		const localConstraints = get(elementsDictStore);
 		const cell = event.cell;
 		const coords = event.closest;
 
@@ -112,7 +112,7 @@ export function getCenterCornerOrEdgeToolInputHandler(
 			constraint_preview.shape = { ...currentShape };
 		}
 
-		const localConstraints = get(localConstraintsStore);
+		const localConstraints = get(elementsDictStore);
 		const match = findCenterCornerOrEdgeConstraint(localConstraints, tool, event.closest);
 		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
 			centerCornerOrEdgeToolPreviewStore.set(undefined);

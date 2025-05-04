@@ -10,7 +10,7 @@ import type { CommandI } from '$src/lib/Types/types';
 import { get } from 'svelte/store';
 import {
 	currentShapeStore,
-	localConstraintsStore,
+	elementsDictStore,
 	removeGroupFromLocalConstraint,
 	setCurrentConstraint,
 	updateLocalConstraint
@@ -18,7 +18,7 @@ import {
 import type { TOOLID } from '$src/lib/Puzzle/Tools';
 
 export function addGroupToLocalConstraint(toolId: TOOLID) {
-	localConstraintsStore.update((localConstraintsDict) => {
+	elementsDictStore.update((localConstraintsDict) => {
 		localConstraintsDict.addToDict(toolId);
 		return localConstraintsDict;
 	});
@@ -30,7 +30,7 @@ export function addLocalConstraint(id: string, constraint: ConstraintType) {
 		constraint.shape = { ...currentShape };
 	}
 
-	localConstraintsStore.update((localConstraintsDict) => {
+	elementsDictStore.update((localConstraintsDict) => {
 		localConstraintsDict.addConstraint(constraint.toolId, id, constraint);
 		return localConstraintsDict;
 	});
@@ -45,14 +45,14 @@ export function addLocalConstraint(id: string, constraint: ConstraintType) {
  */
 export function removeLocalConstraint(toolId: TOOLID, id: string | null) {
 	if (!id) return;
-	localConstraintsStore.update((localConstraintsDict) => {
+	elementsDictStore.update((localConstraintsDict) => {
 		localConstraintsDict.removeConstraint(toolId, id);
 		return localConstraintsDict;
 	});
 }
 
 export function restoreElement(toolId: TOOLID, element: ConstraintsElement) {
-	localConstraintsStore.update((localConstraintsDict) => {
+	elementsDictStore.update((localConstraintsDict) => {
 		localConstraintsDict.setElement(toolId, element);
 		return localConstraintsDict;
 	});

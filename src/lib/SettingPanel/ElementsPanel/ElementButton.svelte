@@ -10,7 +10,7 @@
 		restoreElementAction
 	} from '$src/lib/reducers/LocalConstraintsActions';
 	import {
-		localConstraintsStore,
+		elementsDictStore,
 		toolStore,
 		updateToolAndCurrentConstraintStores,
 		updateToolOnRemoveGroup
@@ -38,7 +38,7 @@
 	function deleteElement() {
 		updateToolOnRemoveGroup(tool_id);
 
-		const constraints = $localConstraintsStore.get(tool_id);
+		const constraints = $elementsDictStore.get(tool_id);
 		if (!constraints) return;
 		const action = removeLocalConstraintGroupAction(tool_id);
 		const reverse_action = restoreElementAction(tool_id, constraints);

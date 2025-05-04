@@ -6,7 +6,7 @@
 		restoreElementAction
 	} from '$src/lib/reducers/LocalConstraintsActions';
 	import { removeGroupFromLocalConstraint, updateToolOnRemoveGroup } from '$stores/BoardStore';
-		import { localConstraintsStore } from '$stores/BoardStore';
+		import { elementsDictStore } from '$stores/BoardStore';
 	import { addCommand } from '$stores/HistoryStore';
 	import { getLocalConstraintCommand } from '$stores/LocalConstraintsStore';
 	import ToolSelectorButton from '../ToolButton/ToolSelectorButton.svelte';
@@ -17,7 +17,7 @@
 	const onTrash = () => {
 		updateToolOnRemoveGroup(toolId);
 
-		const constraints = $localConstraintsStore.get(toolId);
+		const constraints = $elementsDictStore.get(toolId);
 		if (!constraints) return;
 		const action = removeLocalConstraintGroupAction(toolId);
 		const reverse_action = restoreElementAction(toolId, constraints);

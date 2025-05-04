@@ -1,7 +1,7 @@
 import { get } from 'svelte/store';
 import type { InputHandler } from '../InputHandler';
 import { updateLocalConstraint } from '$stores/BoardStore';
-import { localConstraintsStore } from '$stores/BoardStore';
+import { elementsDictStore } from '$stores/BoardStore';
 import { addLocalConstraint } from '$stores/LocalConstraintsStore';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
@@ -65,7 +65,7 @@ export function getArrowToolInputHandler(
 		if (!onGrid) return;
 
 		if (mode === ARROW_TOOL_MODE.DYNAMIC) {
-			const localConstraints = get(localConstraintsStore);
+			const localConstraints = get(elementsDictStore);
 
 			const matchLine = findArrowLineConstraint(localConstraints, tool, coords);
 			if (matchLine) {
@@ -143,7 +143,7 @@ export function getArrowToolInputHandler(
 		if (bypassTap) return;
 
 		const coords = event.cell;
-		const localConstraints = get(localConstraintsStore);
+		const localConstraints = get(elementsDictStore);
 
 		// on bulb tap remove Arrow
 		const matchBulb = findArrowBulbConstraint(localConstraints, tool, coords);

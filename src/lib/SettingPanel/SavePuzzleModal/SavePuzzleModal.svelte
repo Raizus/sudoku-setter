@@ -122,6 +122,7 @@
 	}
 
 	const puzzleToJsonAux = (space?: string|number) => {
+		// console.log("puzzle", $puzzleStore);
 		const data = puzzleToJson($puzzleStore);
 		const jsonData = JSON.stringify(data, null, space);
 		return jsonData;

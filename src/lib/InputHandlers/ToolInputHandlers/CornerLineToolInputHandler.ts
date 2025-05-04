@@ -1,6 +1,6 @@
 import type { InputHandler } from '../InputHandler';
 import { updateLocalConstraint } from '$stores/BoardStore';
-import { localConstraintsStore } from '$stores/BoardStore';
+import { elementsDictStore } from '$stores/BoardStore';
 import { addLocalConstraint } from '$stores/LocalConstraintsStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
@@ -40,7 +40,7 @@ export function getCornerLineToolInputHandler(
 	let mode = CORNER_LINE_TOOL_MODE.DYNAMIC;
 
 	function handle(event: CellCornerTapEvent) {
-		const localConstraints = get(localConstraintsStore);
+		const localConstraints = get(elementsDictStore);
 
 		const coord = event.coord;
 		const onGrid = areCoordsOnGrid(coord, gridShape);

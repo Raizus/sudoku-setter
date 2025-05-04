@@ -1,7 +1,7 @@
 import type { InputHandler } from '../InputHandler';
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import { selectConstraint, updateLocalConstraint } from '$stores/BoardStore';
-import { localConstraintsStore } from '$stores/BoardStore';
+import { elementsDictStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
@@ -48,7 +48,7 @@ export function getSingleCellMultiArrowToolInputHandler(
 	let id: string | null = null;
 
 	function handle(event: CellEdgeCornerEvent) {
-		const localConstraints = get(localConstraintsStore);
+		const localConstraints = get(elementsDictStore);
 		const coords = event.cell;
 
 		const onGrid = isCellOnGrid(event.cell, gridShape);

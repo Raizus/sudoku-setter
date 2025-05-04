@@ -8,7 +8,7 @@
 		isElement,
 		ELEMENTS_CATEGORIES
 	} from '$lib/Puzzle/Tools';
-	import { localConstraintsStore, updateToolAndCurrentConstraintStores } from '$stores/BoardStore';
+	import { elementsDictStore, updateToolAndCurrentConstraintStores } from '$stores/BoardStore';
 
 	import SettingToolsPanel from '../Subpanel/SettingToolsPanel.svelte';
 	import ToolSelectorButton from '../ToolButton/ToolSelectorButton.svelte';
@@ -32,7 +32,7 @@
 
 	// force the filter to update when a new constraint is added
 	$: localCFilterFun = (key: TOOLID, elementInfo: AbstractElementInfo): boolean => {
-		const exists = $localConstraintsStore.has(key);
+		const exists = $elementsDictStore.has(key);
 		const isLocal = elementInfo.meta?.categories.includes(TOOL_CATEGORIES.LOCAL_ELEMENT)
 			? true
 			: false;
@@ -52,7 +52,7 @@
 		<ToolSelectorButton elementInfo={getToolInfo(TOOLS.GIVEN, elementHandlers)} />
 		<ToolSelectorButton elementInfo={getToolInfo(TOOLS.REGIONS, elementHandlers)} />
 
-		{#each $localConstraintsStore.entries() as [tool_id, value] (tool_id)}
+		{#each $elementsDictStore.entries() as [tool_id, value] (tool_id)}
 			{#if isElement(tool_id)}
 				<ElementButton {tool_id} {elementHandlers}/>
 			{/if}

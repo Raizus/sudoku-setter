@@ -4,7 +4,7 @@ import {
 	setCurrentConstraint,
 	updateLocalConstraint
 } from '$stores/BoardStore';
-import { localConstraintsStore } from '$stores/BoardStore';
+import { elementsDictStore } from '$stores/BoardStore';
 import { addLocalConstraint } from '$stores/LocalConstraintsStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
@@ -41,7 +41,7 @@ export function getCageToolInputHandler(
 	let id: string | null = null;
 
 	function handle(event: CellDragTapEvent) {
-		const localConstraints = get(localConstraintsStore);
+		const localConstraints = get(elementsDictStore);
 		const coords = event.cell;
 
 		const onGrid = isCellOnGrid(event.cell, gridShape);

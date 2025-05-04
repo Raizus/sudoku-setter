@@ -4,7 +4,7 @@ import {
 	selectConstraint,
 	updateLocalConstraint
 } from '$stores/BoardStore';
-import { localConstraintsStore } from '$stores/BoardStore';
+import { elementsDictStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
@@ -47,7 +47,7 @@ export function getOutsideDirectionToolInputHandler(
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	function handle(event: CellEdgeCornerEvent) {
-		const localConstraints = get(localConstraintsStore);
+		const localConstraints = get(elementsDictStore);
 		const cell = event.cell;
 		const direction_idx = event.direction;
 		const direction = idxToDirection(direction_idx);
@@ -117,7 +117,7 @@ export function getOutsideDirectionToolInputHandler(
 		}
 
 		const mode = get(toolModeStore);
-		const localConstraints = get(localConstraintsStore);
+		const localConstraints = get(elementsDictStore);
 		const match = findOutsideDirectionConstraint(localConstraints, tool, event.cell, direction);
 		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
 			outsideDirectionToolPreviewStore.set(undefined);

@@ -44,7 +44,7 @@ export const cellsStore = writable<Cell[]>(
 );
 
 export const puzzleMetaStore = writable<PuzzleMetaI>({});
-export const localConstraintsStore = writable<ElementsDict>(new ElementsDict());
+export const elementsDictStore = writable<ElementsDict>(new ElementsDict());
 export const currentConstraintStore = writable<ConstraintAndId | null>(null);
 export const currentShapeStore = writable<ShapeI | undefined>(undefined);
 export const solutionStore = writable<Solution>(undefined);
@@ -94,7 +94,7 @@ export function updateToolOnRemoveGroup(toolId: TOOLID) {
  * @param toolId
  */
 export function removeGroupFromLocalConstraint(toolId: TOOLID) {
-	localConstraintsStore.update((localConstraintsDict) => {
+	elementsDictStore.update((localConstraintsDict) => {
 		localConstraintsDict.removeFromDict(toolId);
 		return localConstraintsDict;
 	});
@@ -113,7 +113,7 @@ export function updateLocalConstraint<T extends ConstraintType>(
 	id: string,
 	newConstraint: T
 ) {
-	localConstraintsStore.update((localConstraintsDict) => {
+	elementsDictStore.update((localConstraintsDict) => {
 		localConstraintsDict.updateConstraint(toolId, id, newConstraint);
 		return localConstraintsDict;
 	});
@@ -134,7 +134,7 @@ export function updateCurrentConstraintShape(newShape: ShapeI | undefined) {
 }
 
 export function selectConstraint(id: string, toolId: TOOLID) {
-	const localConstraintsDict = get(localConstraintsStore);
+	const localConstraintsDict = get(elementsDictStore);
 	const element = localConstraintsDict.get(toolId);
 	if (!element || !element.constraints) return;
 
@@ -148,7 +148,7 @@ export function createNewPuzzle(nRows: number, nCols: number, valid_digits: numb
 
 	gridStore.update(() => grid);
 	validDigitsStore.update(() => valid_digits);
-	localConstraintsStore.update(() => new ElementsDict());
+	elementsDictStore.update(() => new ElementsDict());
 	puzzleMetaStore.update(() => {
 		return {};
 	});
@@ -161,7 +161,7 @@ export function setPuzzle(puzzle: PuzzleI) {
 	puzzleMetaStore.update(() => puzzle.puzzleMeta);
 	updateSolution(puzzle.solution);
 	validDigitsStore.update(() => puzzle.valid_digits);
-	localConstraintsStore.update(() => puzzle.elementsDict);
+	elementsDictStore.update(() => puzzle.elementsDict);
 
 	cellsStore.update(() => puzzle.grid.getAllCells());
 }
@@ -203,7 +203,7 @@ export const puzzleStore = derived(
 	[
 		gridStore,
 		puzzleMetaStore,
-		localConstraintsStore,
+		elementsDictStore,
 		solutionStore,
 		validDigitsStore
 	],

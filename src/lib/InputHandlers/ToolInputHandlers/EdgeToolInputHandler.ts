@@ -6,7 +6,7 @@ import {
 	selectConstraint,
 	updateLocalConstraint
 } from '$stores/BoardStore';
-import { localConstraintsStore } from '$stores/BoardStore';
+import { elementsDictStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
@@ -39,7 +39,7 @@ export function getEdgeToolInputHandler(
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	function handle(event: CellEdgeTapEvent) {
-		const localConstraints = get(localConstraintsStore);
+		const localConstraints = get(elementsDictStore);
 		const edge = event.coord;
 
 		let mode = get(toolModeStore);
@@ -108,7 +108,7 @@ export function getEdgeToolInputHandler(
 			constraint_preview.shape = { ...currentShape };
 		}
 
-		const localConstraints = get(localConstraintsStore);
+		const localConstraints = get(elementsDictStore);
 		const match = findEdgeConstraint(localConstraints, tool, cellsCoords);
 		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
 			edgeToolPreviewStore.set(undefined);

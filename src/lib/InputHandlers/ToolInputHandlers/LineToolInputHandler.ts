@@ -1,6 +1,6 @@
 import type { InputHandler } from '../InputHandler';
 import { updateLocalConstraint } from '$stores/BoardStore';
-import { localConstraintsStore } from '$stores/BoardStore';
+import { elementsDictStore } from '$stores/BoardStore';
 import { removeLocalConstraint } from '$stores/LocalConstraintsStore';
 import { addLocalConstraint } from '$stores/LocalConstraintsStore';
 import { get } from 'svelte/store';
@@ -85,7 +85,7 @@ export function getLineToolInputHandler(
 		if (mode === BASIC_TOOL_MODE.ADD_EDIT) return;
 
 		const coords = event.cell;
-		const localConstraints = get(localConstraintsStore);
+		const localConstraints = get(elementsDictStore);
 		const match = findLineConstraint(localConstraints, tool, coords);
 		if (match) {
 			const [id, constraint] = match;

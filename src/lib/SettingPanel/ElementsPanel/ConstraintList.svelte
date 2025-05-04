@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { TOOLID } from '$src/lib/Puzzle/Tools';
-	import { localConstraintsStore } from '$stores/BoardStore';
+	import { elementsDictStore } from '$stores/BoardStore';
 	import ConstraintSelectionButton from '../ToolButton/ConstraintSelectionButton.svelte';
 
 	export let tool_id: TOOLID;
-	$: constraints_element = $localConstraintsStore.get(tool_id);
+	$: constraints_element = $elementsDictStore.get(tool_id);
 </script>
 
 {#if constraints_element && constraints_element.constraints && Object.entries(constraints_element.constraints).length}

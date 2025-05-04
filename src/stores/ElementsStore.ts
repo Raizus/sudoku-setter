@@ -10,7 +10,7 @@ import {
 	type TOOLID
 } from '$lib/Puzzle/Tools';
 import { derived, writable, type Readable } from 'svelte/store';
-import { localConstraintsStore, toolStore } from './BoardStore';
+import { elementsDictStore, toolStore } from './BoardStore';
 import type { CornerToolI } from '$lib/Puzzle/Constraints/CornerConstraints';
 import type {
 	CellArrowToolI,
@@ -31,7 +31,7 @@ export type Element<T extends ConstraintType> = {
 	constraints: Record<string, T>;
 };
 
-export const underlayElementsStore = derived(localConstraintsStore, ($localConstraintsStore) => {
+export const underlayElementsStore = derived(elementsDictStore, ($localConstraintsStore) => {
 	const elements: ConstraintsElement[] = [];
 	for (const [toolId, element] of $localConstraintsStore.entries()) {
 		if (!isUnderlayTool(toolId)) continue;
@@ -42,7 +42,7 @@ export const underlayElementsStore = derived(localConstraintsStore, ($localConst
 });
 
 function getElementsStore(filter_f: (tool: TOOLID) => boolean): Readable<ConstraintsElement[]> {
-	const store = derived(localConstraintsStore, ($localConstraintsStore) => {
+	const store = derived(elementsDictStore, ($localConstraintsStore) => {
 		const elements: ConstraintsElement[] = [];
 		for (const [toolId, element] of $localConstraintsStore.entries()) {
 			if (!filter_f(toolId)) continue;
@@ -56,7 +56,7 @@ function getElementsStore(filter_f: (tool: TOOLID) => boolean): Readable<Constra
 export function getToolStore<T extends ConstraintType>(
 	tool_id: TOOLID
 ): Readable<Record<string, T>> {
-	const store = derived(localConstraintsStore, ($localConstraintsStore) => {
+	const store = derived(elementsDictStore, ($localConstraintsStore) => {
 		for (const [toolId, element] of $localConstraintsStore.entries()) {
 			if (toolId !== tool_id) continue;
 			const record = element.constraints as Record<string, T>;
@@ -139,7 +139,7 @@ export const centerCornerOrEdgeToolPreviewStore = writable<
 >(undefined);
 
 export const currentElementStore: Readable<ConstraintsElement | undefined> = derived(
-	[localConstraintsStore, toolStore],
+	[elementsDictStore, toolStore],
 	([$localConstraintsStore, $toolStore]) => {
 		const tool_id = $toolStore;
 		const element = $localConstraintsStore.get(tool_id);

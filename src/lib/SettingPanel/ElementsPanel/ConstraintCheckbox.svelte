@@ -1,13 +1,13 @@
 <script lang="ts">
 	import type { TOOLID } from '$src/lib/Puzzle/Tools';
-	import { localConstraintsStore } from '$stores/BoardStore';
+	import { elementsDictStore } from '$stores/BoardStore';
 	import { restoreElement } from '$stores/LocalConstraintsStore';
 
 	export let tool_id: TOOLID;
 	export let neg_tool_id: string;
 	export let description: string;
 
-	$: element = $localConstraintsStore.get(tool_id);
+	$: element = $elementsDictStore.get(tool_id);
 	$: value = element?.negative_constraints ? !!element.negative_constraints[neg_tool_id] : false;
 
 	function clickCb() {

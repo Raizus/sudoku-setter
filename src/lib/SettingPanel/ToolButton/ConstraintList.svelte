@@ -2,12 +2,12 @@
 	import CollapsibleDiv from '$lib/Components/CollapsibleDiv.svelte';
 	import type { TOOLID } from '$lib/Puzzle/Tools';
 	import { toolStore } from '$stores/BoardStore';
-		import { localConstraintsStore } from '$stores/BoardStore';
+		import { elementsDictStore } from '$stores/BoardStore';
 	import ConstraintSelectionButton from './ConstraintSelectionButton.svelte';
 
 	export let toolId: TOOLID;
 
-	$: constraintRecord = $localConstraintsStore.get(toolId);
+	$: constraintRecord = $elementsDictStore.get(toolId);
 </script>
 
 {#if constraintRecord && Object.entries(constraintRecord).length}

@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { findConflicts } from '$lib/Puzzle/conflicts';
 	import { SHAPE_TYPES, type ShapeI } from '$lib/Puzzle/Shape/Shape';
-	import { cellsStore, gridStore, localConstraintsStore } from '$stores/BoardStore';
+	import { cellsStore, gridStore, elementsDictStore } from '$stores/BoardStore';
 	import { settingsStore } from '$stores/SettingsStore';
 	import type { Cell } from '$lib/Puzzle/Grid/Cell';
 
 	$: showConflicts = $settingsStore.checkConflicts;
 	$: grid = $gridStore;
-    $: element_dict = $localConstraintsStore;
+    $: element_dict = $elementsDictStore;
 	$: all_cells = $cellsStore;
 
 	const shape: ShapeI = {

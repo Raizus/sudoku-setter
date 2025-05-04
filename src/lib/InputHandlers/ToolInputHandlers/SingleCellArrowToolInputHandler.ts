@@ -5,7 +5,7 @@ import {
 	selectConstraint,
 	updateLocalConstraint
 } from '$stores/BoardStore';
-import { localConstraintsStore } from '$stores/BoardStore';
+import { elementsDictStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import { eventIsAltR } from '$src/lib/InputHandlers/KeyboardEventUtils';
@@ -52,7 +52,7 @@ export function getSingleCellArrowToolInputHandler(
 	let id: string | null = null;
 
 	function handle(event: CellEdgeCornerEvent) {
-		const localConstraints = get(localConstraintsStore);
+		const localConstraints = get(elementsDictStore);
 		const coords = event.cell;
 
 		const onGrid = isCellOnGrid(event.cell, gridShape);
@@ -126,7 +126,7 @@ export function getSingleCellArrowToolInputHandler(
 		const constraint_preview = singleCellArrowConstraint(tool, event.cell, direction);
 
 		const mode = get(toolModeStore);
-		const localConstraints = get(localConstraintsStore);
+		const localConstraints = get(elementsDictStore);
 		const match = findSingleCellConstraint<CellArrowToolI>(localConstraints, tool, event.cell);
 		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
 			singleCellArrowPreviewStore.set(undefined);

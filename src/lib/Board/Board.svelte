@@ -2,7 +2,7 @@
 	import type { GridShape } from './../Types/types.ts';
 	import type { Rectangle } from '$lib/Types/types.js';
 	import { cellsStore, gridStore, toolStore } from '$stores/BoardStore';
-	import { localConstraintsStore } from '$stores/BoardStore.js';
+	import { elementsDictStore } from '$stores/BoardStore.js';
 	import CursorRender from './CursorRender.svelte';
 	import GridBorderRender from './GridLines/GridBorderRender.svelte';
 	import GridLinesRender from './GridLines/GridLinesRender.svelte';
@@ -67,7 +67,7 @@
 	$: gridShape = { nRows: grid.nRows, nCols: grid.nCols } as GridShape;
 
 	function hasOutsideCells(): boolean {
-		for (const [toolId, elementGroup] of $localConstraintsStore.entries()) {
+		for (const [toolId, elementGroup] of $elementsDictStore.entries()) {
 			if (!isOutsideDirectionTool(toolId)) continue;
 
 			const hasCellOffGrid = Object.entries(

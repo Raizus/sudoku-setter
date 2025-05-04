@@ -6,7 +6,7 @@
 	import type { PuzzleMetaI } from '$lib/Puzzle/PuzzleMeta';
 	import { joinStrList } from '$lib/utils/functionUtils';
 	import { puzzleMetaStore, updatePuzzleMeta } from '$stores/BoardStore';
-	import { localConstraintsStore } from '$stores/BoardStore';
+	import { elementsDictStore } from '$stores/BoardStore';
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 
 	export let showModal = false;
@@ -53,7 +53,7 @@
 	function generateDescription(): string {
 		let description: string = '';
 		const elementHandlers = squareCellElementHandlers;
-		const elements_dict = $localConstraintsStore;
+		const elements_dict = $elementsDictStore;
 
 		// is sudoku?
 		const sudoku = !elements_dict.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY);
