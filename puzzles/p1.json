@@ -111,10 +111,11 @@
             {}
         ]
     ],
-    "bool_constraints": {
-        "Yin Yang": true
-    },
     "local_constraints": {
+        "Yin Yang": {
+            "tool_id": "Yin Yang",
+            "constraints": []
+        },
         "Yin Yang Indexing Line Coloring": {
             "tool_id": "Yin Yang Indexing Line Coloring",
             "constraints": [

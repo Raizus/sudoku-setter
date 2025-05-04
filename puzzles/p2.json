@@ -277,10 +277,11 @@
             }
         ]
     ],
-    "bool_constraints": {
-        "Chaos Construction": true
-    },
     "local_constraints": {
+        "Chaos Construction": {
+            "tool_id": "Chaos Construction",
+            "constraints": []
+        },
         "Chaos Construction Sum Of First Each Region": {
             "tool_id": "Chaos Construction Sum Of First Each Region",
             "constraints": [

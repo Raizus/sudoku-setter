@@ -111,12 +111,18 @@
             {}
         ]
     ],
-    "bool_constraints": {
-        "Positive Diagonal": true,
-        "Shikaku": true,
-        "Shikaku No Repeats In Region": true
-    },
     "local_constraints": {
+        "Positive Diagonal": {
+            "tool_id": "Positive Diagonal",
+            "constraints": []
+        },
+        "Shikaku": {
+            "tool_id": "Shikaku",
+            "constraints": [],
+            "negative_constraints": {
+                "Shikaku No Repeats In Region": true
+            }
+        },
         "Killer Cage": {
             "tool_id": "Killer Cage",
             "constraints": [

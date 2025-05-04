@@ -111,10 +111,11 @@
             {}
         ]
     ],
-    "bool_constraints": {
-        "Disjoint Groups": true
-    },
     "local_constraints": {
+        "Disjoint Groups": {
+            "tool_id": "Disjoint Groups",
+            "constraints": []
+        },
         "Quadruple": {
             "tool_id": "Quadruple",
             "constraints": [

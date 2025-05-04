@@ -335,12 +335,19 @@
             }
         ]
     ],
-    "bool_constraints": {
-        "Sudoku rules do not apply": true,
-        "Pentomino Tilling": true,
-        "Leave Empty Cells Empty": true
-    },
     "local_constraints": {
+        "Sudoku rules do not apply": {
+            "tool_id": "Sudoku rules do not apply",
+            "constraints": []
+        },
+        "Leave Empty Cells Empty": {
+            "tool_id": "Leave Empty Cells Empty",
+            "constraints": []
+        },
+        "Pentomino Tilling": {
+            "tool_id": "Pentomino Tilling",
+            "constraints": []
+        },
         "Pentomino Border Count": {
             "tool_id": "Pentomino Border Count",
             "constraints": [

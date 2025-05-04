@@ -273,10 +273,11 @@
             }
         ]
     ],
-    "bool_constraints": {
-        "Chaos Construction": true
-    },
     "local_constraints": {
+        "Chaos Construction": {
+            "tool_id": "Chaos Construction",
+            "constraints": []
+        },
         "Renban Line": {
             "tool_id": "Renban Line",
             "constraints": [

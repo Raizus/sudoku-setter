@@ -112,14 +112,17 @@
             {}
         ]
     ],
-    "bool_constraints": {
-        "Galaxies": true,
-        "Two Symmetric Galaxies": true,
-        "Every Cell Belongs To A Galaxy": true,
-        "Galaxy 2x2 Does Not Belong To One Galaxy": true,
-        "One Galaxy Is A German Whispers": true
-    },
     "local_constraints": {
+        "Galaxies": {
+            "tool_id": "Galaxies",
+            "constraints": [],
+            "negative_constraints": {
+                "Two Symmetric Galaxies": true,
+                "Every Cell Belongs To A Galaxy": true,
+                "Galaxy 2x2 Does Not Belong To One Galaxy": true,
+                "One Galaxy Is A German Whispers": true
+            }
+        },
         "Same Galaxy Unobstructed Count Arrows": {
             "tool_id": "Same Galaxy Unobstructed Count Arrows",
             "constraints": [

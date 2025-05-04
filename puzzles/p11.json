@@ -111,10 +111,11 @@
             {}
         ]
     ],
-    "bool_constraints": {
-        "Doublers": true
-    },
     "local_constraints": {
+        "Doublers": {
+            "tool_id": "Doublers",
+            "constraints": []
+        },
         "Doublers Thermometer": {
             "tool_id": "Doublers Thermometer",
             "constraints": [

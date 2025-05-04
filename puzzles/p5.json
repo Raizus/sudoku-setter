@@ -111,10 +111,11 @@
             {}
         ]
     ],
-    "bool_constraints": {
-        "Indexer Cells": true
-    },
     "local_constraints": {
+        "Indexer Cells": {
+            "tool_id": "Indexer Cells",
+            "constraints": []
+        },
         "Indexer Cells Region Subset Line": {
             "tool_id": "Indexer Cells Region Subset Line",
             "constraints": [

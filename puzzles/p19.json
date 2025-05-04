@@ -114,11 +114,14 @@
             {}
         ]
     ],
-    "bool_constraints": {
-        "Cave": true,
-        "One Digit Does Not Appear In The Cave": true
-    },
     "local_constraints": {
+        "Cave": {
+            "tool_id": "Cave",
+            "constraints": [],
+            "negative_constraints": {
+                "One Digit Does Not Appear In The Cave": true
+            }
+        },
         "Killer Cage": {
             "tool_id": "Killer Cage",
             "constraints": [

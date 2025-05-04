@@ -117,11 +117,14 @@
             {}
         ]
     ],
-    "bool_constraints": {
-        "Cell Center Loop No Touching": true,
-        "Adjacent Cells Along Loop Are German Whispers": true
-    },
     "local_constraints": {
+        "Cell Center Loop No Touching": {
+            "tool_id": "Cell Center Loop No Touching",
+            "constraints": [],
+            "negative_constraints": {
+                "Adjacent Cells Along Loop Are German Whispers": true
+            }
+        },
         "Cell Not On The Loop": {
             "tool_id": "Cell Not On The Loop",
             "constraints": [

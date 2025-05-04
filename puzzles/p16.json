@@ -123,11 +123,15 @@
             {}
         ]
     ],
-    "bool_constraints": {
-        "Cell Center Loop Can Touch Diagonally": true,
-        "Not Loop Sized Regions": true
-    },
     "local_constraints": {
+        "Cell Center Loop No Touching": {
+            "tool_id": "Cell Center Loop No Touching",
+            "constraints": [],
+            "negative_constraints": {
+                "Cell Center Loop Can Touch Diagonally": true,
+                "Not Loop Sized Regions": true
+            }
+        },
         "Thermo Sightline Loop Arrow": {
             "tool_id": "Thermo Sightline Loop Arrow",
             "constraints": [
