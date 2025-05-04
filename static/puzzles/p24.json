@@ -1,104 +1,245 @@
 {
-	"puzzleInfo": {
-		"title": "Yin Yang Kropki Sudoku",
-		"authors": ["Phistomefel"],
-		"ruleset": "Sudoku rules apply.\n\n**Yin Yang**: Shade some cells in the grid such that all shaded cells are orthogonally connected and all unshaded cells are orthogonally connected, and no 2x2 area is fully shaded or fully unshaded.\n\n**Yin Yang Kropki**: Cells separated by a a light blue transparent dot indicate that the two connected cells have the same Yin Yang shading. If a grey dot is between two unshaded cells their digits are in a 1:2 ratio; if a grey dot is between two shaded cells, their digits are consecutive.\n\n**All Yin Yang Kropki Given**: Cells separated by a a light blue transparent dot indicate that the two connected cells have the same Yin Yang shading. If a grey dot is between two unshaded cells their digits are in a 1:2 ratio; if a grey dot is between two shaded cells, their digits are consecutive. All such dots are given.",
-		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=uZhwZ27yHV4",
-		"ctcUrl": "https://app.crackingthecryptic.com/sudoku/92LftNNtD4"
-	},
-	"nRows": 9,
-	"nCols": 9,
-	"grid": [
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[
-			{},
-			{},
-			{},
-			{},
-			{},
-			{
-				"given": true,
-				"value": 2
-			},
-			{},
-			{},
-			{}
-		],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}]
-	],
-	"local_constraints": {
-		"Yin Yang": {
-			"tool_id": "Yin Yang",
-			"constraints": []
-		},
-		"Yin Yang Kropki": {
-			"tool_id": "Yin Yang Kropki",
-			"constraints": [
-				{
-					"cells": ["R1C1", "R2C1"]
-				},
-				{
-					"cells": ["R1C3", "R2C3"]
-				},
-				{
-					"cells": ["R1C4", "R1C5"]
-				},
-				{
-					"cells": ["R3C4", "R3C5"]
-				},
-				{
-					"cells": ["R3C5", "R3C6"]
-				},
-				{
-					"cells": ["R3C1", "R3C2"]
-				},
-				{
-					"cells": ["R3C3", "R4C3"]
-				},
-				{
-					"cells": ["R4C4", "R4C5"]
-				},
-				{
-					"cells": ["R5C4", "R6C4"]
-				},
-				{
-					"cells": ["R6C5", "R6C6"]
-				},
-				{
-					"cells": ["R4C6", "R5C6"]
-				},
-				{
-					"cells": ["R5C7", "R6C7"]
-				},
-				{
-					"cells": ["R4C7", "R4C8"]
-				},
-				{
-					"cells": ["R4C8", "R4C9"]
-				},
-				{
-					"cells": ["R7C8", "R7C9"]
-				},
-				{
-					"cells": ["R7C7", "R8C7"]
-				},
-				{
-					"cells": ["R7C4", "R8C4"]
-				},
-				{
-					"cells": ["R9C2", "R9C3"]
-				},
-				{
-					"cells": ["R6C1", "R6C2"]
-				}
-			],
-			"negative_constraints": { "All Yin Yang Kropki Given": true }
-		}
-	}
+    "puzzleInfo": {
+        "title": "Yin Yang Kropki Sudoku",
+        "authors": [
+            "Phistomefel"
+        ],
+        "ruleset": "Sudoku rules apply.\n\n**Yin Yang**: Shade some cells in the grid such that all shaded cells are orthogonally connected and all unshaded cells are orthogonally connected, and no 2x2 area is fully shaded or fully unshaded.\n\n**Yin Yang Kropki**: Cells separated by a a light blue transparent dot indicate that the two connected cells have the same Yin Yang shading. If a grey dot is between two unshaded cells their digits are in a 1:2 ratio; if a grey dot is between two shaded cells, their digits are consecutive.\n\n**All Yin Yang Kropki Given**: Cells separated by a a light blue transparent dot indicate that the two connected cells have the same Yin Yang shading. If a grey dot is between two unshaded cells their digits are in a 1:2 ratio; if a grey dot is between two shaded cells, their digits are consecutive. All such dots are given.",
+        "ctcYoutubeUrl": "https://www.youtube.com/watch?v=uZhwZ27yHV4",
+        "ctcUrl": "https://app.crackingthecryptic.com/sudoku/92LftNNtD4"
+    },
+    "nRows": 9,
+    "nCols": 9,
+    "grid": [
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+                "given": true,
+                "value": 2
+            },
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ]
+    ],
+    "local_constraints": {
+        "Yin Yang": {
+            "tool_id": "Yin Yang",
+            "constraints": []
+        },
+        "Yin Yang Kropki": {
+            "tool_id": "Yin Yang Kropki",
+            "constraints": [
+                {
+                    "cells": [
+                        "R1C1",
+                        "R2C1"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R1C3",
+                        "R2C3"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R1C4",
+                        "R1C5"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R3C4",
+                        "R3C5"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R3C5",
+                        "R3C6"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R3C1",
+                        "R3C2"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R3C3",
+                        "R4C3"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R4C4",
+                        "R4C5"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R5C4",
+                        "R6C4"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R6C5",
+                        "R6C6"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R4C6",
+                        "R5C6"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R5C7",
+                        "R6C7"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R4C7",
+                        "R4C8"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R4C8",
+                        "R4C9"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R7C8",
+                        "R7C9"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R7C7",
+                        "R8C7"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R7C4",
+                        "R8C4"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R9C2",
+                        "R9C3"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R6C1",
+                        "R6C2"
+                    ]
+                }
+            ],
+            "negative_constraints": {
+                "All Yin Yang Kropki Given": true
+            }
+        }
+    }
 }

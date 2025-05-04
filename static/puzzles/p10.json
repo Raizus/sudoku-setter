@@ -111,10 +111,11 @@
             {}
         ]
     ],
-    "bool_constraints": {
-        "Positive Diagonal": true
-    },
     "local_constraints": {
+        "Positive Diagonal": {
+            "tool_id": "Positive Diagonal",
+            "constraints": []
+        },
         "Cold Arrows": {
             "tool_id": "Cold Arrows",
             "constraints": [

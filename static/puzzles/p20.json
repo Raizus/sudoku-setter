@@ -273,10 +273,11 @@
             }
         ]
     ],
-    "bool_constraints": {
-        "Numbered Chaos Construction": true
-    },
     "local_constraints": {
+        "Numbered Chaos Construction": {
+            "tool_id": "Numbered Chaos Construction",
+            "constraints": []
+        },
         "Next Numbered Region Distance Arrows": {
             "tool_id": "Next Numbered Region Distance Arrows",
             "constraints": [

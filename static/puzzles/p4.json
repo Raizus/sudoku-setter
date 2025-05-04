@@ -429,10 +429,22 @@
             }
         ]
     ],
-    "bool_constraints": {
-        "Sudoku rules do not apply": true,
-        "LITS": true,
-        "LITS Black And White Star Battle": true,
-        "Leave Empty Cells Empty": true
+    "local_constraints": {
+        "Sudoku rules do not apply": {
+            "tool_id": "Sudoku rules do not apply",
+            "constraints": []
+        },
+        "Leave Empty Cells Empty": {
+            "tool_id": "Leave Empty Cells Empty",
+            "constraints": []
+        },
+        "LITS": {
+            "tool_id": "LITS",
+            "constraints": []
+        },
+        "LITS Black And White Star Battle": {
+            "tool_id": "LITS Black And White Star Battle",
+            "constraints": []
+        }
     }
 }

@@ -1,74 +1,223 @@
 {
-	"puzzleInfo": {
-		"title": "Uneven Terrain",
-		"authors": ["Nordy"],
-		"ruleset": "Sudoku rules apply.\n\n**Cave**: Shade some cells in the grid such that all unshaded cells are orthogonally connected, and all shaded cells are orthogonally connected by other shaded cells to an edge of the grid.\n\n**Cave Cells Are Odd**: Cave cells must contain odd digits.\n\n**Cave Walls Are Even**: Cave walls must contain even digits.\n\n**Cave 2x2 Not Fully Shaded or Unshaded**: No 2x2 cave region may be completely filled with cave cells or completely filled with wall cells.\n\n**Parity Balance Cage**: The sum of the even digits equals the sum of the odd digits. Digits cannot repeat within a cage.",
-		"ctcYoutubeUrl": "",
-		"ctcUrl": "https://logic-masters.de/Raetselportal/Raetsel/zeigen.php?chlang=en&id=0008YQ"
-	},
-	"nRows": 9,
-	"nCols": 9,
-	"grid": [
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}]
-	],
-	"local_constraints": {
-		"Parity Balance Cage": {
-			"tool_id": "Parity Balance Cage",
-			"constraints": [
-				{
-					"cells": ["R1C2", "R1C3", "R1C4"]
-				},
-				{
-					"cells": ["R1C5", "R1C6", "R1C7", "R1C8", "R1C9"]
-				},
-				{
-					"cells": ["R3C1", "R3C2", "R3C3"]
-				},
-				{
-					"cells": ["R2C4", "R2C5", "R2C6", "R3C4", "R3C6"]
-				},
-				{
-					"cells": ["R3C9", "R4C9", "R5C9", "R6C9"]
-				},
-				{
-					"cells": ["R5C7", "R5C8", "R6C8"]
-				},
-				{
-					"cells": ["R4C1", "R4C2", "R5C2", "R6C2", "R6C3"]
-				},
-				{
-					"cells": ["R4C4", "R5C3", "R5C4"]
-				},
-				{
-					"cells": ["R5C1", "R6C1", "R7C1"]
-				},
-				{
-					"cells": ["R7C2", "R8C1", "R8C2", "R9C2"]
-				},
-				{
-					"cells": ["R7C3", "R8C3", "R9C3"]
-				},
-				{
-					"cells": ["R7C7", "R7C8", "R7C9", "R8C7"]
-				}
-			]
-		},
-		"Cave": {
-			"tool_id": "Cave",
-			"constraints": [],
-			"negative_constraints": {
-				"Cave 2x2 Not Fully Shaded or Unshaded": true,
-				"Cave Walls Are Even": true,
-				"Cave Cells Are Odd": true
-			}
-		}
-	}
+    "puzzleInfo": {
+        "title": "Uneven Terrain",
+        "authors": [
+            "Nordy"
+        ],
+        "ruleset": "Sudoku rules apply.\n\n**Cave**: Shade some cells in the grid such that all unshaded cells are orthogonally connected, and all shaded cells are orthogonally connected by other shaded cells to an edge of the grid.\n\n**Cave Cells Are Odd**: Cave cells must contain odd digits.\n\n**Cave Walls Are Even**: Cave walls must contain even digits.\n\n**Cave 2x2 Not Fully Shaded or Unshaded**: No 2x2 cave region may be completely filled with cave cells or completely filled with wall cells.\n\n**Parity Balance Cage**: The sum of the even digits equals the sum of the odd digits. Digits cannot repeat within a cage.",
+        "ctcYoutubeUrl": "",
+        "ctcUrl": "https://logic-masters.de/Raetselportal/Raetsel/zeigen.php?chlang=en&id=0008YQ"
+    },
+    "nRows": 9,
+    "nCols": 9,
+    "grid": [
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ]
+    ],
+    "local_constraints": {
+        "Parity Balance Cage": {
+            "tool_id": "Parity Balance Cage",
+            "constraints": [
+                {
+                    "cells": [
+                        "R1C2",
+                        "R1C3",
+                        "R1C4"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R1C5",
+                        "R1C6",
+                        "R1C7",
+                        "R1C8",
+                        "R1C9"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R3C1",
+                        "R3C2",
+                        "R3C3"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R2C4",
+                        "R2C5",
+                        "R2C6",
+                        "R3C4",
+                        "R3C6"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R3C9",
+                        "R4C9",
+                        "R5C9",
+                        "R6C9"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R5C7",
+                        "R5C8",
+                        "R6C8"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R4C1",
+                        "R4C2",
+                        "R5C2",
+                        "R6C2",
+                        "R6C3"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R4C4",
+                        "R5C3",
+                        "R5C4"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R5C1",
+                        "R6C1",
+                        "R7C1"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R7C2",
+                        "R8C1",
+                        "R8C2",
+                        "R9C2"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R7C3",
+                        "R8C3",
+                        "R9C3"
+                    ]
+                },
+                {
+                    "cells": [
+                        "R7C7",
+                        "R7C8",
+                        "R7C9",
+                        "R8C7"
+                    ]
+                }
+            ]
+        },
+        "Cave": {
+            "tool_id": "Cave",
+            "constraints": [],
+            "negative_constraints": {
+                "Cave 2x2 Not Fully Shaded or Unshaded": true,
+                "Cave Walls Are Even": true,
+                "Cave Cells Are Odd": true
+            }
+        }
+    }
 }

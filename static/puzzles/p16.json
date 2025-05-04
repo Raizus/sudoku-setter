@@ -1,99 +1,157 @@
 {
-	"puzzleInfo": {
-		"title": "Thermohaline Circulation",
-		"authors": ["Shintaro Fushida-Hardy"],
-		"ruleset": "Sudoku rules apply.\n\n**Cell Center Loop Can Touch Diagonally**: Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself orthogonally, but can touch itself diagonally.\n\n**Not Loop Sized Regions**: Non-loop cells form several orthogonally connected groups. Such a group of size N contains exactly the digits from 1 to N.\n\n**Thermo Sightline Loop Arrow**: Each cell with an arrow (called an 'arrow cell') lies on the loop. The digit in an arrow cell is the number of visible loop cells in the indicated direction, where non-loop cells obstruct vision. (The arrow cell is not included in this count). Additionally, digits increase along loop cells seen by an arrow, starting with the digit in the arrow cell.",
-		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=pry83BrP3RQ",
-		"ctcUrl": "https://sudokupad.app/z7oxi1ve8x"
-	},
-	"nRows": 9,
-	"nCols": 9,
-	"grid": [
-		[
-			{},
-			{},
-			{
-				"given": true,
-				"value": 2
-			},
-			{},
-			{},
-			{},
-			{},
-			{},
-			{}
-		],
-		[
-			{},
-			{
-				"given": true,
-				"value": 6
-			},
-			{},
-			{},
-			{},
-			{},
-			{},
-			{
-				"given": true,
-				"value": 7
-			},
-			{}
-		],
-		[
-			{},
-			{},
-			{},
-			{},
-			{},
-			{},
-			{
-				"given": true,
-				"value": 6
-			},
-			{},
-			{}
-		],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}]
-	],
-	"bool_constraints": {
-		"Cell Center Loop Can Touch Diagonally": true,
-		"Not Loop Sized Regions": true
-	},
-	"local_constraints": {
-		"Cell Center Loop No Touching": {
-			"tool_id": "Cell Center Loop No Touching",
-			"constraints": [],
-			"negative_constraints": {
-				"Cell Center Loop Can Touch Diagonally": true,
-				"Not Loop Sized Regions": true
-			}
-		},
-		"Thermo Sightline Loop Arrow": {
-			"tool_id": "Thermo Sightline Loop Arrow",
-			"constraints": [
-				{
-					"cell": "R4C1",
-					"direction": "S"
-				},
-				{
-					"cell": "R4C6",
-					"direction": "E"
-				},
-				{
-					"cell": "R9C1",
-					"direction": "N"
-				},
-				{
-					"cell": "R9C2",
-					"direction": "E"
-				}
-			]
-		}
-	}
+    "puzzleInfo": {
+        "title": "Thermohaline Circulation",
+        "authors": [
+            "Shintaro Fushida-Hardy"
+        ],
+        "ruleset": "Sudoku rules apply.\n\n**Cell Center Loop Can Touch Diagonally**: Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself orthogonally, but can touch itself diagonally.\n\n**Not Loop Sized Regions**: Non-loop cells form several orthogonally connected groups. Such a group of size N contains exactly the digits from 1 to N.\n\n**Thermo Sightline Loop Arrow**: Each cell with an arrow (called an 'arrow cell') lies on the loop. The digit in an arrow cell is the number of visible loop cells in the indicated direction, where non-loop cells obstruct vision. (The arrow cell is not included in this count). Additionally, digits increase along loop cells seen by an arrow, starting with the digit in the arrow cell.",
+        "ctcYoutubeUrl": "https://www.youtube.com/watch?v=pry83BrP3RQ",
+        "ctcUrl": "https://sudokupad.app/z7oxi1ve8x"
+    },
+    "nRows": 9,
+    "nCols": 9,
+    "grid": [
+        [
+            {},
+            {},
+            {
+                "given": true,
+                "value": 2
+            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {
+                "given": true,
+                "value": 6
+            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+                "given": true,
+                "value": 7
+            },
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+                "given": true,
+                "value": 6
+            },
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ],
+        [
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+        ]
+    ],
+    "local_constraints": {
+        "Cell Center Loop No Touching": {
+            "tool_id": "Cell Center Loop No Touching",
+            "constraints": [],
+            "negative_constraints": {
+                "Cell Center Loop Can Touch Diagonally": true,
+                "Not Loop Sized Regions": true
+            }
+        },
+        "Thermo Sightline Loop Arrow": {
+            "tool_id": "Thermo Sightline Loop Arrow",
+            "constraints": [
+                {
+                    "cell": "R4C1",
+                    "direction": "S"
+                },
+                {
+                    "cell": "R4C6",
+                    "direction": "E"
+                },
+                {
+                    "cell": "R9C1",
+                    "direction": "N"
+                },
+                {
+                    "cell": "R9C2",
+                    "direction": "E"
+                }
+            ]
+        }
+    }
 }
