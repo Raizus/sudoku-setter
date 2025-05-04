@@ -282,9 +282,8 @@ import {
 	reverseCountingCirclesInfo,
 	cellKnightWhispersInfo,
 	shikakuRegionSizeInfo,
-	shikakuRegionSumInfo,
-	fogLighsInfo
-} from './SingleCellElementsInfo';
+	shikakuRegionSumInfo} from './SingleCellElementsInfo';
+import { customFogClearingInfo, fogLighsInfo } from './FogElementsInfo';
 import {
 	coldArrowsInfo,
 	connectFourCountCellsOfSameColorInfo,
@@ -349,10 +348,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.POSITIVE_DIAGONAL]: positiveDiagonalInfo,
 	[TOOLS.NEGATIVE_ANTIDIAGONAL]: negativeAntidiagonalInfo,
 	[TOOLS.POSITIVE_ANTIDIAGONAL]: positiveAntidiagonalInfo,
-	[TOOLS.PARITY_MIRROR_NEGATIVE_DIAGONAL]:
-		parityMirrorNegativeDiagonalInfo,
-	[TOOLS.PARITY_MIRROR_POSITIVE_DIAGONAL]:
-		parityMirrorPositiveDiagonalInfo,
+	[TOOLS.PARITY_MIRROR_NEGATIVE_DIAGONAL]: parityMirrorNegativeDiagonalInfo,
+	[TOOLS.PARITY_MIRROR_POSITIVE_DIAGONAL]: parityMirrorPositiveDiagonalInfo,
 
 	[TOOLS.DOUBLERS]: doublersInfo,
 	[TOOLS.NEGATORS]: negatorsInfo,
@@ -394,8 +391,6 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.CONNECT_FOUR]: connectFourInfo,
 
 	// Single Cell Constraints
-	[TOOLS.FOG_LIGHTS]: fogLighsInfo,
-
 	[TOOLS.ODD]: oddInfo,
 	[TOOLS.EVEN]: evenInfo,
 	[TOOLS.MINIMUM]: minimumInfo,
@@ -667,6 +662,10 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.MINIMUM_DIAGONALLY_ADJACENT_DIFFERENCE]: minimumDiagonallyAdjacentDifferenceInfo,
 	[TOOLS.FORBIDDEN_KNIGHT_SUM]: forbiddenKnightSumInfo,
 	[TOOLS.LITS_MAX_TETROMINO_SUM]: litsMaxTetrominoSumInfo,
+
+	// Fog Tools
+	[TOOLS.FOG_LIGHTS]: fogLighsInfo,
+	[TOOLS.CUSTOM_FOG_CLEARING]: customFogClearingInfo,
 
 	// Cosmetic Tools
 	[TOOLS.COSMETIC_CELL_CENTER_SHAPE]: cosmeticCellShapeInfo,

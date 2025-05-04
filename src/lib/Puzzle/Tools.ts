@@ -172,8 +172,6 @@ export enum GLOBAL_LOOP_CONSTRAINTS {
 }
 
 export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
-	FOG_LIGHTS = 'Fog Lights',
-
 	ODD = 'Odd',
 	EVEN = 'Even',
 	MAXIMUM = 'Maximum',
@@ -491,6 +489,17 @@ export enum COSMETIC_TOOLS {
 	COSMETIC_OUTSIDE_DIRECTION = 'Cosmetic Outside Direction'
 }
 
+export enum FOG_TOOLS {
+	FOG_LIGHTS = 'Fog Lights',
+	CUSTOM_FOG_CLEARING = 'Custom Fog Clearing',
+	FOG_CLEARING_ITSELF = 'Fog Clearing Itself',
+	FOG_CLEARING_ORTHOGONAL_NEIGHBOURS = 'Fog Clearing Orthogonal Neighbours',
+	FOG_CLEARING_DIAGONAL_NEIGHBOURS = 'Fog Clearing Diagonal Neighbours',
+	FOG_CLEARING_CONTAINING_ROW = 'Fog Clearing Containing Row',
+	FOG_CLEARING_CONTAINING_COLUMN = 'Fog Clearing Containing Column',
+	FOG_CLEARING_KNIGHTS_MOVE = 'Fog Clearing Knights Move'
+}
+
 export enum OTHER_TOOLS {
 	PEN_TOOL = 'Pen Tool'
 }
@@ -533,7 +542,8 @@ export const LOCAL_CONSTRAINTS = {
 	...OUTSIDE_CORNER_CONSTRAINTS,
 	...CENTER_EDGE_CORNER_CONSTRAINTS,
 	...CORNER_LINE_CONSTRAINTS,
-	...VALUED_GLOBAL_CONSTRAINTS
+	...VALUED_GLOBAL_CONSTRAINTS,
+	...FOG_TOOLS
 };
 
 export const TOOLS = {
@@ -580,6 +590,7 @@ export type TOOLID =
 	| CORNER_LINE_CONSTRAINTS
 	| VALUED_GLOBAL_CONSTRAINTS
 	| COSMETIC_TOOLS
+	| FOG_TOOLS
 	| OTHER_TOOLS;
 
 export enum TOOL_CATEGORIES {
@@ -626,6 +637,7 @@ export enum TOOL_CATEGORIES {
 	CENTER_CORNER_EDGE_CONSTRAINT = 'Center, Corner or Edge Constraint',
 	VALUED_GLOBAL_CONSTRAINT = 'Valued Global Constraint',
 
+	FOG_TOOL = 'Fog Tool',
 	COSMETIC_TOOL = 'Cosmetic Tool',
 	TYPABLE_TOOL = 'Typable Tool',
 	SINGLE_CELL_ARROW_TOOL = 'Single Cell Arrow Tool',
@@ -789,6 +801,7 @@ export const ELEMENTS_CATEGORIES = [
 	TOOL_CATEGORIES.VALUE_MODIFIER_CONSTRAINT,
 	TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT,
 	...LOCAL_CONSTRAINTS_CATEGORIES,
+	TOOL_CATEGORIES.FOG_TOOL,
 	TOOL_CATEGORIES.COSMETIC_TOOL
 ];
 

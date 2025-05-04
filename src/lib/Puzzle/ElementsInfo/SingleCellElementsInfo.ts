@@ -13,7 +13,7 @@ import {
 	type SingleCellToolOptions
 } from '$input/ToolInputHandlers/types';
 
-const DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES = [
+export const DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES = [
 	TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
 	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
 	TOOL_CATEGORIES.SINGLE_CELL_SHAPE_TOOL,
@@ -74,7 +74,7 @@ export function defaultSingleCellValueUpdater(
 	return defaultValueUpdater(oldValue, key, validatorFunc);
 }
 
-const DEFAULT_SINGLE_CELL_OPTIONS: SingleCellToolOptions = {
+export const DEFAULT_SINGLE_CELL_OPTIONS: SingleCellToolOptions = {
 	type: HANDLER_TOOL_TYPE.SINGLE_CELL
 };
 
@@ -1265,15 +1265,3 @@ export const shikakuRegionSumInfo: SquareCellElementInfo = {
 	}
 };
 
-export const fogLighsInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
-
-	toolId: TOOLS.FOG_LIGHTS,
-
-	meta: {
-		description:
-			'Place fog lights which clear the fog at the start. Fog: cover cells with fog that only clears when a correct digit is placed.',
-		tags: [],
-		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
-	}
-};
