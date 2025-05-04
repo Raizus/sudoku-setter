@@ -168,7 +168,9 @@ function solve_coloring(grid: number[][]): number[][] {
 
 function setSolutionValues(json: JsonT, puzzle: PuzzleI) {
 	const grid = puzzle.grid;
-	const leave_empty_cells = puzzle.globalConstraints.get(TOOLS.LEAVE_EMPTY_CELLS_EMPTY);
+	const elements = puzzle.elementsDict;
+
+	const leave_empty_cells = !!elements.get(TOOLS.LEAVE_EMPTY_CELLS_EMPTY);
 	if (json === undefined) return;
 	const board = json['board'] as number[][] | undefined;
 	if (board === undefined) return;
