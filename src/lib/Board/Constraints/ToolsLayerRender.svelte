@@ -1,9 +1,5 @@
 <script lang="ts">
-	import type {
-		ConstraintsElement,
-		ConstraintType
-	} from '$src/lib/Puzzle/Constraints/LocalConstraints';
-	import { type Element } from '$stores/ElementsStore';
+	import type { ConstraintsElement } from '$src/lib/Puzzle/Constraints/LocalConstraints';
 
 	export let elements: ConstraintsElement[];
 	export let g_name: string;
