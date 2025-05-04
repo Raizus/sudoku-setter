@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { TOOLID } from '$src/lib/Puzzle/Tools';
 	import { elementsDictStore } from '$stores/BoardStore';
-	import ConstraintSelectionButton from '../ToolButton/ConstraintSelectionButton.svelte';
+	import ConstraintSelectionButton from './ConstraintSelectionButton.svelte';
 
 	export let tool_id: TOOLID;
 	$: constraints_element = $elementsDictStore.get(tool_id);

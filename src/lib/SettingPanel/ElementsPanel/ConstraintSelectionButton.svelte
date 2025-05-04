@@ -4,7 +4,7 @@
 	import Trash from '$icons/Trash.svelte';
 	import { currentConstraintStore, selectConstraint, svgRefStore } from '$stores/BoardStore';
 	import { elementsDictStore } from '$stores/BoardStore';
-	import { getLocalConstraintCommand, removeLocalConstraint } from '$stores/LocalConstraintsStore';
+	import { getLocalConstraintCommand } from '$stores/LocalConstraintsStore';
 	import {
 		addLocalConstraintAction,
 		removeLocalConstraintAction
