@@ -21,7 +21,8 @@
 
 	export let tool_id: TOOLID;
 	export let elementHandlers: AbstractElementHandlers;
-
+	
+	const permanent: boolean = !!elementHandlers[tool_id].permanent;
 	let selected: boolean = false;
 	let constraint_name = tool_id;
 
@@ -82,9 +83,11 @@
 		<div class="header" title={getTooltip()} on:click={selectCb}>
 			<div class="element-icon-container"></div>
 			<div class="element-name">{constraint_name}</div>
-			<button class="form-button icon header-button" on:click|stopPropagation={deleteElement}>
-				<Trash />
-			</button>
+			{#if !permanent}
+				<button class="form-button icon header-button" on:click|stopPropagation={deleteElement}>
+					<Trash />
+				</button>
+			{/if}
 		</div>
 		{#if selected}
 			<ElementEditor {tool_id} />
