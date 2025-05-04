@@ -5,7 +5,7 @@
 		TOOLS,
 		type TOOLID,
 		TOOL_CATEGORIES,
-		isLocalElement,
+		isElement,
 		ELEMENTS_CATEGORIES
 	} from '$lib/Puzzle/Tools';
 	import { localConstraintsStore, updateToolAndCurrentConstraintStores } from '$stores/BoardStore';
@@ -53,7 +53,7 @@
 		<ToolSelectorButton elementInfo={getToolInfo(TOOLS.REGIONS, elementHandlers)} />
 
 		{#each $localConstraintsStore.entries() as [tool_id, value] (tool_id)}
-			{#if isLocalElement(tool_id)}
+			{#if isElement(tool_id)}
 				<ElementButton {tool_id} {elementHandlers}/>
 			{/if}
 		{/each}

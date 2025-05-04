@@ -510,7 +510,11 @@ export const UNDETERMINED_REGIONS_CONSTRAINTS = {
 };
 
 export const GLOBAL_CONSTRAINTS = {
-	...NEGATIVE_CONSTRAINTS
+	...NEGATIVE_CONSTRAINTS,
+	...DIAGONAL_CONSTRAINTS,
+	...SIMPLE_GLOBAL_CONSTRAINTS,
+	...UNDETERMINED_REGIONS_CONSTRAINTS,
+	...VALUE_MODIFIER_CONSTRAINTS
 };
 
 export const LOCAL_CONSTRAINTS = {
@@ -529,12 +533,7 @@ export const LOCAL_CONSTRAINTS = {
 	...OUTSIDE_CORNER_CONSTRAINTS,
 	...CENTER_EDGE_CORNER_CONSTRAINTS,
 	...CORNER_LINE_CONSTRAINTS,
-	...VALUED_GLOBAL_CONSTRAINTS,
-
-	...DIAGONAL_CONSTRAINTS,
-	...SIMPLE_GLOBAL_CONSTRAINTS,
-	...UNDETERMINED_REGIONS_CONSTRAINTS,
-	...VALUE_MODIFIER_CONSTRAINTS
+	...VALUED_GLOBAL_CONSTRAINTS
 };
 
 export const TOOLS = {
@@ -662,8 +661,8 @@ export function isCosmeticTool(toolId: TOOLID): boolean {
 	return enumValues.includes(toolId);
 }
 
-export function isLocalElement(toolId: TOOLID): boolean {
-	return isLocalConstraint(toolId) || isCosmeticTool(toolId);
+export function isElement(toolId: TOOLID): boolean {
+	return isLocalConstraint(toolId) || isCosmeticTool(toolId) || isGlobalConstraint(toolId);
 }
 
 export function isSimpleSingleCellTool(toolId: TOOLID): boolean {
@@ -793,9 +792,7 @@ export const ELEMENTS_CATEGORIES = [
 	TOOL_CATEGORIES.COSMETIC_TOOL
 ];
 
-export const GLOBAL_CONSTRAINT_CATEGORIES = [
-	TOOL_CATEGORIES.NEGATIVE_CONSTRAINT
-];
+export const GLOBAL_CONSTRAINT_CATEGORIES = [TOOL_CATEGORIES.NEGATIVE_CONSTRAINT];
 
 export function toolKeyFromString(str: string): TOOLID | undefined {
 	for (const val of Object.values(TOOLS)) {

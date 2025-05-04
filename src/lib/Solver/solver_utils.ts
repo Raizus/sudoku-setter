@@ -557,8 +557,8 @@ export function exactlyNPerRegion(
 	const grid = puzzle.grid;
 
 	let out_str: string = '';
-	const gconstraints = puzzle.globalConstraints;
-	const chaos_construction = gconstraints.get(TOOLS.CHAOS_CONSTRUCTION);
+	const elements = puzzle.elementsDict;
+	const chaos_construction = !!elements.get(TOOLS.CHAOS_CONSTRUCTION);
 	if (!chaos_construction) {
 		out_str += `\n% Exactly ${n} per region \n`;
 		const regions = grid.getUsedRegions();
