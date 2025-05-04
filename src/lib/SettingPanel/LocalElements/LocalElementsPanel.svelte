@@ -41,7 +41,7 @@
 </script>
 
 <SettingToolsPanel
-	title="Local Elements"
+	title="Elements"
 	{onAddTool}
 	{categories}
 	elementHandlerFilterFunc={localCFilterFun}

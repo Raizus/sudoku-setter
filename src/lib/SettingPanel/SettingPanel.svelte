@@ -12,7 +12,7 @@
 	<MenuPanel />
 	<div class="container">
 		<SolverPanel />
-		<GlobalConstraintsPanel elementHandlers={squareCellElementHandlers} />
+		<!-- <GlobalConstraintsPanel elementHandlers={squareCellElementHandlers} /> -->
 		<LocalElementsPanel elementHandlers={squareCellElementHandlers} />
 		<ShapePanel elementHandlers={squareCellElementHandlers} />
 		<OthersPanel />
