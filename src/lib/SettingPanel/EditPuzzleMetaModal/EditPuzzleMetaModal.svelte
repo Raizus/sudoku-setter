@@ -6,8 +6,7 @@
 	import type { PuzzleMetaI } from '$lib/Puzzle/PuzzleMeta';
 	import { joinStrList } from '$lib/utils/functionUtils';
 	import { puzzleMetaStore, updatePuzzleMeta } from '$stores/BoardStore';
-		import { localConstraintsStore } from '$stores/BoardStore';
-		import { globalConstraintsStore } from '$stores/BoardStore';
+	import { localConstraintsStore } from '$stores/BoardStore';
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 
 	export let showModal = false;
@@ -54,32 +53,30 @@
 	function generateDescription(): string {
 		let description: string = '';
 		const elementHandlers = squareCellElementHandlers;
-
-		const globalConstraints = $globalConstraintsStore;
+		const elements_dict = $localConstraintsStore;
 
 		// is sudoku?
-		const sudoku_rules_do_not_apply = !!globalConstraints.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY);
-		if (sudoku_rules_do_not_apply) {
+		const sudoku = !elements_dict.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY);
+		if (!sudoku) {
 			description += 'Sudoku rules do not apply.\n\n';
 		} else {
 			description += 'Sudoku rules apply.\n\n';
 		}
 
 		// other global constraints descriptions
-		for (const [tool_id, value] of globalConstraints.entries()) {
-			if (tool_id === TOOLS.SUDOKU_RULES_DO_NOT_APPLY) continue;
+		// for (const [tool_id, value] of globalConstraints.entries()) {
+		// 	if (tool_id === TOOLS.SUDOKU_RULES_DO_NOT_APPLY) continue;
 
-			if (value) {
-				const elementInfo = elementHandlers[tool_id];
-				const name = elementInfo.menu?.name ?? elementInfo.toolId;
-				const constraint_desc = elementInfo.meta?.description;
-				description += `**${name}**: ${constraint_desc}\n\n`;
-			}
-		}
+		// 	if (value) {
+		// 		const elementInfo = elementHandlers[tool_id];
+		// 		const name = elementInfo.menu?.name ?? elementInfo.toolId;
+		// 		const constraint_desc = elementInfo.meta?.description;
+		// 		description += `**${name}**: ${constraint_desc}\n\n`;
+		// 	}
+		// }
 
 		// local constraints descriptions
-		const localConstraints = $localConstraintsStore;
-		for (const [tool_id, elements] of localConstraints.entries()) {
+		for (const [tool_id, elements] of elements_dict.entries()) {
 			const count = Object.keys(elements).length;
 			if (count > 0) {
 				const elementInfo = elementHandlers[tool_id];

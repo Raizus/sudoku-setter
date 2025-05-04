@@ -1,4 +1,3 @@
-import { GlobalConstraintsDict } from '$lib/Puzzle/Constraints/GlobalConstraints';
 import {
 	ElementsDict,
 	type ConstraintType
@@ -45,7 +44,6 @@ export const cellsStore = writable<Cell[]>(
 );
 
 export const puzzleMetaStore = writable<PuzzleMetaI>({});
-export const globalConstraintsStore = writable<GlobalConstraintsDict>(new GlobalConstraintsDict());
 export const localConstraintsStore = writable<ElementsDict>(new ElementsDict());
 export const currentConstraintStore = writable<ConstraintAndId | null>(null);
 export const currentShapeStore = writable<ShapeI | undefined>(undefined);
@@ -151,7 +149,6 @@ export function createNewPuzzle(nRows: number, nCols: number, valid_digits: numb
 	gridStore.update(() => grid);
 	validDigitsStore.update(() => valid_digits);
 	localConstraintsStore.update(() => new ElementsDict());
-	globalConstraintsStore.update(() => new GlobalConstraintsDict());
 	puzzleMetaStore.update(() => {
 		return {};
 	});
@@ -165,7 +162,6 @@ export function setPuzzle(puzzle: PuzzleI) {
 	updateSolution(puzzle.solution);
 	validDigitsStore.update(() => puzzle.valid_digits);
 	localConstraintsStore.update(() => puzzle.elementsDict);
-	globalConstraintsStore.update(() => puzzle.globalConstraints);
 
 	cellsStore.update(() => puzzle.grid.getAllCells());
 }
@@ -207,7 +203,6 @@ export const puzzleStore = derived(
 	[
 		gridStore,
 		puzzleMetaStore,
-		globalConstraintsStore,
 		localConstraintsStore,
 		solutionStore,
 		validDigitsStore
@@ -215,7 +210,6 @@ export const puzzleStore = derived(
 	([
 		$gridStore,
 		$puzzleMetaStore,
-		$globalConstraintsStore,
 		$localConstraintsStore,
 		$solutionStore,
 		$validDigitsStore
@@ -225,7 +219,6 @@ export const puzzleStore = derived(
 			solution: $solutionStore,
 			puzzleMeta: $puzzleMetaStore,
 			valid_digits: $validDigitsStore,
-			globalConstraints: $globalConstraintsStore,
 			elementsDict: $localConstraintsStore
 		};
 		return puzzle;

@@ -1,4 +1,3 @@
-import type { GlobalConstraintsDict } from './Constraints/GlobalConstraints';
 import type { Grid } from './Grid/Grid';
 
 function checkAllCellsFilled(grid: Grid): boolean {
@@ -11,8 +10,7 @@ function checkAllCellsFilled(grid: Grid): boolean {
 
 
 export function verifyCompletePuzzle(
-	grid: Grid,
-	global_constraints: GlobalConstraintsDict
+	grid: Grid
 ): boolean {
 	// if solution exists compare with solution
 
