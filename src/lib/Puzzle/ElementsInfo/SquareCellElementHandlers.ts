@@ -93,8 +93,8 @@ import {
 	negativeDiagonalInfo,
 	nonconsecutiveInfo,
 	nonratioInfo,
-	oddEvenParityMirrorAlongNegativeDiagonalInfo,
-	oddEvenParityMirrorAlongPositiveDiagonalInfo,
+	parityMirrorNegativeDiagonalInfo,
+	parityMirrorPositiveDiagonalInfo,
 	positiveAntidiagonalInfo,
 	positiveDiagonalInfo,
 	sudokuRulesDoNotApplyInfo,
@@ -349,10 +349,10 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.POSITIVE_DIAGONAL]: positiveDiagonalInfo,
 	[TOOLS.NEGATIVE_ANTIDIAGONAL]: negativeAntidiagonalInfo,
 	[TOOLS.POSITIVE_ANTIDIAGONAL]: positiveAntidiagonalInfo,
-	[TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_NEGATIVE_DIAGONAL]:
-		oddEvenParityMirrorAlongNegativeDiagonalInfo,
-	[TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_POSITIVE_DIAGONAL]:
-		oddEvenParityMirrorAlongPositiveDiagonalInfo,
+	[TOOLS.PARITY_MIRROR_NEGATIVE_DIAGONAL]:
+		parityMirrorNegativeDiagonalInfo,
+	[TOOLS.PARITY_MIRROR_POSITIVE_DIAGONAL]:
+		parityMirrorPositiveDiagonalInfo,
 
 	[TOOLS.DOUBLERS]: doublersInfo,
 	[TOOLS.NEGATORS]: negatorsInfo,

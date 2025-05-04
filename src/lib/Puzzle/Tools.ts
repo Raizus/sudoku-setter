@@ -38,8 +38,8 @@ export enum DIAGONAL_CONSTRAINTS {
 	NEGATIVE_DIAGONAL = 'Negative Diagonal',
 	POSITIVE_ANTIDIAGONAL = 'Positive Antidiagonal',
 	NEGATIVE_ANTIDIAGONAL = 'Negative Antidiagonal',
-	ODD_EVEN_PARITY_MIRROR_ALONG_POSITIVE_DIAGONAL = 'Odd/Even Parity Mirror Along Positive Diagonal',
-	ODD_EVEN_PARITY_MIRROR_ALONG_NEGATIVE_DIAGONAL = 'Odd/Even Parity Mirror Along Negative Diagonal'
+	PARITY_MIRROR_POSITIVE_DIAGONAL = 'Parity Mirror Positive Diagonal',
+	PARITY_MIRROR_NEGATIVE_DIAGONAL = 'Parity Mirror Negative Diagonal'
 }
 
 export enum NEGATIVE_CONSTRAINTS {

@@ -182,8 +182,8 @@ export const positiveAntidiagonalInfo: AbstractElementInfo = {
 	}
 };
 
-export const oddEvenParityMirrorAlongNegativeDiagonalInfo: AbstractElementInfo = {
-	toolId: TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_NEGATIVE_DIAGONAL,
+export const parityMirrorNegativeDiagonalInfo: AbstractElementInfo = {
+	toolId: TOOLS.PARITY_MIRROR_NEGATIVE_DIAGONAL,
 
 	shape: {
 		strokeWidth: { editable: false, value: 0.02 },
@@ -197,8 +197,8 @@ export const oddEvenParityMirrorAlongNegativeDiagonalInfo: AbstractElementInfo =
 	}
 };
 
-export const oddEvenParityMirrorAlongPositiveDiagonalInfo: AbstractElementInfo = {
-	toolId: TOOLS.ODD_EVEN_PARITY_MIRROR_ALONG_POSITIVE_DIAGONAL,
+export const parityMirrorPositiveDiagonalInfo: AbstractElementInfo = {
+	toolId: TOOLS.PARITY_MIRROR_POSITIVE_DIAGONAL,
 
 	shape: {
 		strokeWidth: { editable: false, value: 0.02 },
