@@ -143,7 +143,7 @@
 		Component={CornerLineToolRender}
 	/>
 
-	<SelectionRender {boundingBox} />
+	<SelectionRender />
 	<CursorRender />
 
 	<!-- EdgeToolsRender -->

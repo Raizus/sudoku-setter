@@ -1,14 +1,9 @@
 <script lang="ts">
 	import { isCellInputTool } from "$lib/Puzzle/Tools";
-	import type { Rectangle } from "$lib/Types/types";
 	import { getCagePathStr } from "$lib/utils/SquareCellGridRenderUtils";
 	import { toolStore } from "$stores/BoardStore";
 	import { selectionStore } from '$stores/SelectionStore';
 
-	export let boundingBox: Rectangle;
-
-    $: x = boundingBox.x;
-    $: y = boundingBox.y;
 	const inset = 0.06;
 	const innerRadius = 0.05;
 	const innerOpacity = '#080808';
@@ -34,12 +29,12 @@
 	<mask
 		id="selection-mask"
 		maskUnits="userSpaceOnUse"
-		x={x}
-		y={y}
+		x=0%
+		y=0%
 		width="100%"
 		height="100%"
 	>
-		<rect x={x} y={y} width="100%" height="100%" fill={outlineOpacity} />
+		<rect x="0%" y="0%" width="100%" height="100%" fill={outlineOpacity} />
 		<path d={maskPathStr} fill={innerOpacity} stroke="none" filter="url(#selection-blur)" />
 	</mask>
 	<path class="selection" d={fillPathStr} mask="url(#selection-mask)" />
