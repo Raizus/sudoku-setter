@@ -679,7 +679,11 @@ export function isElement(toolId: TOOLID): boolean {
 
 export function isSimpleSingleCellTool(toolId: TOOLID): boolean {
 	const enumValues = Object.values(SIMPLE_SINGLE_CELL_CONSTRAINTS) as string[];
-	return enumValues.includes(toolId) || toolId === TOOLS.COSMETIC_CELL_CENTER_SHAPE;
+	return (
+		enumValues.includes(toolId) ||
+		toolId === TOOLS.COSMETIC_CELL_CENTER_SHAPE ||
+		toolId === TOOLS.FOG_LIGHTS
+	);
 }
 
 export function isSingleCellArrowTool(toolId: TOOLID): boolean {

@@ -82,6 +82,13 @@ export const fogLightsStore = derived(singleCellToolsStore, ($singleCellToolsSto
 	return record;
 });
 
+export const customFogClearingStore = derived(elementsDictStore, ($elementsDictStore) => {
+	for (const element of $elementsDictStore.values()) {
+		if (element.tool_id === TOOLS.CUSTOM_FOG_CLEARING) return element;
+	}
+	return undefined;
+});
+
 export const minimumConstraintsStore = derived(singleCellToolsStore, ($singleCellToolsStore) => {
 	const target_element = $singleCellToolsStore.find((element) => element.tool_id === TOOLS.MINIMUM);
 	if (target_element) {

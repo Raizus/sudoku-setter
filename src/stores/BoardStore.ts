@@ -1,7 +1,4 @@
-import {
-	ElementsDict,
-	type ConstraintType
-} from '$lib/Puzzle/Constraints/LocalConstraints';
+import { ElementsDict, type ConstraintType } from '$lib/Puzzle/Constraints/LocalConstraints';
 import type { Cell } from '$lib/Puzzle/Grid/Cell';
 import { Grid } from '$lib/Puzzle/Grid/Grid';
 import { type PuzzleI, type Solution } from '$lib/Puzzle/Puzzle';
@@ -188,32 +185,44 @@ export function resetUserState() {
 	setCurrentConstraint(null);
 }
 
-export const showFogStore = derived(
-	[settingsStore, toolStore, gameModeStore],
-	([$settingsStore, $toolStore, $gameModeStore]) => {
+export const hasFogStore = derived(elementsDictStore, ($elementsDictStore) => {
+	for (const element of $elementsDictStore.values()) {
+		const tool_id = element.tool_id;
+		if (tool_id === TOOLS.FOG_LIGHTS || tool_id === TOOLS.CUSTOM_FOG_CLEARING) return true;
+	}
+	return false;
+});
+
+export const enableFogMaskStore = derived(
+	[settingsStore, hasFogStore, gameModeStore, toolStore],
+	([$settingsStore, $hasFogStore, $gameModeStore, $toolStore]) => {
 		const hide_fog = $settingsStore.hideFog;
+		const has_fog = $hasFogStore;
 		const tool = $toolStore;
-		const has_fog = tool === TOOLS.FOG_LIGHTS;
-		const show_fog = has_fog && (!hide_fog && $gameModeStore === GAME_MODE.SETTING);
+		const fogged_tool =
+			tool === TOOLS.DIGIT ||
+			tool === TOOLS.CORNER_PM ||
+			tool === TOOLS.CENTER_PM ||
+			tool === TOOLS.HIGHLIGHTS ||
+			tool === TOOLS.PEN_TOOL;
+		const enable_fog_mask =
+			!hide_fog && has_fog && (fogged_tool || $gameModeStore === GAME_MODE.SOLVING);
+		return enable_fog_mask;
+	}
+);
+
+export const showFogStore = derived(
+	[settingsStore, gameModeStore],
+	([$settingsStore, $gameModeStore]) => {
+		const hide_fog = $settingsStore.hideFog;
+		const show_fog = !hide_fog && $gameModeStore === GAME_MODE.SETTING;
 		return show_fog;
 	}
 );
 
 export const puzzleStore = derived(
-	[
-		gridStore,
-		puzzleMetaStore,
-		elementsDictStore,
-		solutionStore,
-		validDigitsStore
-	],
-	([
-		$gridStore,
-		$puzzleMetaStore,
-		$localConstraintsStore,
-		$solutionStore,
-		$validDigitsStore
-	]) => {
+	[gridStore, puzzleMetaStore, elementsDictStore, solutionStore, validDigitsStore],
+	([$gridStore, $puzzleMetaStore, $localConstraintsStore, $solutionStore, $validDigitsStore]) => {
 		const puzzle: PuzzleI = {
 			grid: $gridStore,
 			solution: $solutionStore,
