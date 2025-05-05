@@ -264,7 +264,7 @@ export function cellsSeenByCell(puzzle: PuzzleI, coords: GridCoordI) {
 	const elements_dict = puzzle.elementsDict;
 
 	const sudoku = !elements_dict.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY);
-	if (!sudoku) {
+	if (sudoku) {
 		seen = new Set<Cell>([
 			...seenByRow(grid, coords),
 			...seenByCol(grid, coords),
