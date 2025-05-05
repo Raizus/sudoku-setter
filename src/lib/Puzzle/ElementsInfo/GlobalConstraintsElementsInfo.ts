@@ -255,26 +255,3 @@ export const allOddDigitsAreOrthogonallyConnectedInfo: AbstractElementInfo = {
 	}
 };
 
-/* --------------------------------------------------------------------------------------------------- */
-
-export const shikakuEachRegionContainsOneSizeCircleInfo: AbstractElementInfo = {
-	toolId: TOOLS.SHIKAKU_EACH_REGION_CONTAINS_ONE_SIZE_CIRCLE,
-
-	meta: {
-		description:
-			'Each shikaku region contains exactly one circle where a digit in a circle indicates the number of cells in its region.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
-	}
-};
-
-export const shikakuEachRegionContainsOneRegionSumClueInfo: AbstractElementInfo = {
-	toolId: TOOLS.SHIKAKU_EACH_REGION_CONTAINS_ONE_REGION_SUM_CLUE,
-
-	meta: {
-		description:
-			'Each shikaku region contains exactly one shikaku region sum clue, and each clue indicates the sum of the digits in its shikaku region.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.NEGATIVE_CONSTRAINT]
-	}
-};

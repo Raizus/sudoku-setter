@@ -1230,6 +1230,14 @@ export const shikakuRegionSizeInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.SHIKAKU_REGION_SIZE,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.SHIKAKU_EACH_REGION_CONTAINS_ONE_SIZE_CIRCLE,
+			description:
+				'Each shikaku region contains exactly one circle where a digit in a circle indicates the number of cells in its region.'
+		}
+	],
+
 	shape: DEFAULT_CIRCLE_SHAPE,
 
 	meta: {
@@ -1250,6 +1258,14 @@ export const shikakuRegionSumInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.SHIKAKU_REGION_SUM,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.SHIKAKU_EACH_REGION_CONTAINS_ONE_REGION_SUM_CLUE,
+			description:
+				'Each shikaku region contains exactly one shikaku region sum clue, and each clue indicates the sum of the digits in its shikaku region.'
+		}
+	],
+
 	shape: {
 		type: SHAPE_TYPES.CAGE,
 		strokeWidth: { editable: false, value: 0 },
@@ -1264,4 +1280,3 @@ export const shikakuRegionSumInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
-
