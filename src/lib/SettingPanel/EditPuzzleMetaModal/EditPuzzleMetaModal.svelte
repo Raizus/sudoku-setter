@@ -63,26 +63,27 @@
 			description += 'Sudoku rules apply.\n\n';
 		}
 
-		// other global constraints descriptions
-		// for (const [tool_id, value] of globalConstraints.entries()) {
-		// 	if (tool_id === TOOLS.SUDOKU_RULES_DO_NOT_APPLY) continue;
-
-		// 	if (value) {
-		// 		const elementInfo = elementHandlers[tool_id];
-		// 		const name = elementInfo.menu?.name ?? elementInfo.toolId;
-		// 		const constraint_desc = elementInfo.meta?.description;
-		// 		description += `**${name}**: ${constraint_desc}\n\n`;
-		// 	}
-		// }
-
 		// local constraints descriptions
-		for (const [tool_id, elements] of elements_dict.entries()) {
-			const count = Object.keys(elements).length;
-			if (count > 0) {
-				const elementInfo = elementHandlers[tool_id];
-				const name = elementInfo.menu?.name ?? elementInfo.toolId;
-				const constraint_desc = elementInfo.meta?.description;
-				description += `**${name}**: ${constraint_desc}\n\n`;
+		for (const [tool_id, element] of elements_dict.entries()) {
+			// elements to ignore
+			if (tool_id === TOOLS.SUDOKU_RULES_DO_NOT_APPLY) continue;
+
+			const elementInfo = elementHandlers[tool_id];
+			const name = elementInfo.menu?.name ?? elementInfo.toolId;
+			const constraint_desc = elementInfo.meta?.description;
+			description += `**${name}**: ${constraint_desc}\n\n`;
+
+			if (!element.negative_constraints) continue;
+			for (const [neg_tool_id, value] of Object.entries(element.negative_constraints)) {
+				if (!value) continue;
+				const neg_constraint = elementInfo.negative_constraints?.find(
+					(neg_constraint) => neg_constraint.toolId === neg_tool_id
+				);
+				if (!neg_constraint) continue;
+
+				const name = neg_tool_id;
+				const constraint_desc = neg_constraint.description;
+				description += ` - **${name}**: ${constraint_desc}\n\n`;
 			}
 		}
 
@@ -109,7 +110,8 @@
 		<ModalSectionHeader title="Ruleset">
 			<button class="generate-button" on:click={autoGenCb}>Auto-Generate</button>
 		</ModalSectionHeader>
-		<textarea class="input-ruleset" placeholder="Ruleset" rows={8} bind:value={rulesetStr}></textarea>
+		<textarea class="input-ruleset" placeholder="Ruleset" rows={8} bind:value={rulesetStr}
+		></textarea>
 		<ModalSectionHeader title="CTC Link" />
 		<input class="input-ctc-link" type="text" placeholder="CTC Link" bind:value={ctcUrlStr} />
 		<ModalSectionHeader title="CTC Youtube Link" />
