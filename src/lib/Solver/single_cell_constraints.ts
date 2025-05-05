@@ -1428,7 +1428,6 @@ function shikakuRegionSizeElement(model: PuzzleModel, element: ConstraintsElemen
 
 	out_str += `array[int] of var int: shikaku_region_size_clues = [\n\t${vars_str}\n];\n`;
 	out_str += `constraint alldifferent(shikaku_region_size_clues);\n`;
-	out_str += `constraint shikaku_each_region_contains_one_circle_p(${VAR_2D_NAMES.SHIKAKU_REGIONS}, shikaku_region_size_clues);\n`;
 
 	for (const constraint of Object.values(constraints)) {
 		const coords = constraint.cell;
@@ -1439,6 +1438,16 @@ function shikakuRegionSizeElement(model: PuzzleModel, element: ConstraintsElemen
 		const shikaku_width = cellToGridVarName(cell, VAR_2D_NAMES.SHIKAKU_WIDTH);
 		const shikaku_height = cellToGridVarName(cell, VAR_2D_NAMES.SHIKAKU_HEIGHT);
 		out_str += `constraint shikaku_region_size_p(${VAR_2D_NAMES.SHIKAKU_REGIONS}, ${shikaku_var}, ${cell_var}, ${shikaku_width}, ${shikaku_height});\n`;
+	}
+
+	if (!element.negative_constraints) return out_str;
+
+	// negative constraint
+	const each_region_has_a_circle =
+		!!element.negative_constraints[TOOLS.SHIKAKU_EACH_REGION_CONTAINS_ONE_SIZE_CIRCLE];
+	if (each_region_has_a_circle) {
+		out_str += `\n% ${TOOLS.SHIKAKU_EACH_REGION_CONTAINS_ONE_SIZE_CIRCLE}\n`;
+		out_str += `constraint shikaku_each_region_contains_one_circle_p(${VAR_2D_NAMES.SHIKAKU_REGIONS}, shikaku_region_size_clues);\n`;
 	}
 
 	return out_str;
@@ -1459,7 +1468,6 @@ function shikakuRegionSumElement(model: PuzzleModel, element: ConstraintsElement
 
 	out_str += `array[int] of var int: shikaku_region_sum_clues = [\n\t${vars_str}\n];\n`;
 	out_str += `constraint alldifferent(shikaku_region_sum_clues);\n`;
-	out_str += `constraint shikaku_each_region_contains_one_circle_p(${VAR_2D_NAMES.SHIKAKU_REGIONS}, shikaku_region_sum_clues);\n`;
 
 	const parse_opts: ParseOptions = {
 		allow_var: true,
@@ -1482,6 +1490,16 @@ function shikakuRegionSumElement(model: PuzzleModel, element: ConstraintsElement
 		out_str += result[0];
 
 		out_str += `constraint shikaku_region_sum_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.SHIKAKU_REGIONS}, ${shikaku_var}, ${var_name});\n`;
+	}
+
+	if (!element.negative_constraints) return out_str;
+
+	// negative constraint
+	const each_region_has_a_clue =
+		!!element.negative_constraints[TOOLS.SHIKAKU_EACH_REGION_CONTAINS_ONE_REGION_SUM_CLUE];
+	if (each_region_has_a_clue) {
+		out_str += `\n% ${TOOLS.SHIKAKU_EACH_REGION_CONTAINS_ONE_REGION_SUM_CLUE}\n`;
+		out_str += `constraint shikaku_each_region_contains_one_circle_p(${VAR_2D_NAMES.SHIKAKU_REGIONS}, shikaku_region_sum_clues);\n`;
 	}
 
 	return out_str;
