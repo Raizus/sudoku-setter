@@ -10,6 +10,7 @@
 	import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
 	import type { CellToolI } from '../Puzzle/Constraints/SingleCellConstraints';
 	import type { Cell } from '../Puzzle/Grid/Cell';
+	import type { Solution } from '../Puzzle/Puzzle';
 	import { TOOLS } from '../Puzzle/Tools';
 	import type { GridShape, Rectangle } from '../Types/types';
 	import { getCagePathStr } from '../utils/SquareCellGridRenderUtils';
@@ -45,6 +46,17 @@
 		return filled_cells;
 	}
 
+	function getCorrectCells(filled: Cell[], solution: Solution) {
+		const correct_cells: Cell[] = [];
+		if (solution) {
+			for (const cell of filled) {
+				const sol_val = solution[cell.r][cell.c];
+				if (sol_val !== null && cell.value === sol_val && !cell.given) correct_cells.push(cell);
+			}
+		}
+		return correct_cells;
+	}
+
 	function getFoggedCells(
 		cells: Cell[],
 		fog_lights: Record<string, CellToolI>,
@@ -55,28 +67,52 @@
 
 		// removed light cells from
 		fogged_cells = fogged_cells.difference(new Set(light_cells));
-		const filled_cells = getFilledCells(cells);
+
+		// use filled cells or cells that match the solution to find which cells to clear
+		let target_cells = getFilledCells(cells);
+		if (solution) {
+			const correct_cells = getCorrectCells(target_cells, solution);
+			target_cells = correct_cells;
+		}
 
 		// remove other cells based on the fog clearing element
 		const neg_constr = fog_clearing_element?.negative_constraints;
 		if (neg_constr) {
-			const clear_itself = !!neg_constr[TOOLS.FOG_CLEARING_ITSELF];
-			const clear_orthogonal_neighbours = !!neg_constr[TOOLS.FOG_CLEARING_ORTHOGONAL_NEIGHBOURS];
-			const clear_diagonal_neighbours = !!neg_constr[TOOLS.FOG_CLEARING_DIAGONAL_NEIGHBOURS];
-
 			// removed filled or correct cells from fogged_cells
 			const cells_to_clear: Set<Cell> = new Set();
+
+			const clear_itself = !!neg_constr[TOOLS.FOG_CLEARING_ITSELF];
 			if (clear_itself) {
-				filled_cells.forEach((cell) => cells_to_clear.add(cell));
+				target_cells.forEach((cell) => cells_to_clear.add(cell));
 			}
+			const clear_orthogonal_neighbours = !!neg_constr[TOOLS.FOG_CLEARING_ORTHOGONAL_NEIGHBOURS];
 			if (clear_orthogonal_neighbours) {
-				filled_cells.forEach((cell) =>
+				target_cells.forEach((cell) =>
 					grid.getOrthogonallyAdjacentCells(cell).forEach((cell2) => cells_to_clear.add(cell2))
 				);
 			}
+			const clear_diagonal_neighbours = !!neg_constr[TOOLS.FOG_CLEARING_DIAGONAL_NEIGHBOURS];
 			if (clear_diagonal_neighbours) {
-				filled_cells.forEach((cell) =>
+				target_cells.forEach((cell) =>
 					grid.getDiagonallyAdjacentCells(cell).forEach((cell2) => cells_to_clear.add(cell2))
+				);
+			}
+			const clear_containing_row = !!neg_constr[TOOLS.FOG_CLEARING_CONTAINING_ROW];
+			if (clear_containing_row) {
+				target_cells.forEach((cell) =>
+					grid.getRow(cell.r).forEach((cell2) => cells_to_clear.add(cell2))
+				);
+			}
+			const clear_containing_column = !!neg_constr[TOOLS.FOG_CLEARING_CONTAINING_COLUMN];
+			if (clear_containing_column) {
+				target_cells.forEach((cell) =>
+					grid.getCol(cell.c).forEach((cell2) => cells_to_clear.add(cell2))
+				);
+			}
+			const clear_knights_move = !!neg_constr[TOOLS.FOG_CLEARING_KNIGHTS_MOVE];
+			if (clear_knights_move) {
+				target_cells.forEach((cell) =>
+					grid.getCellsByKnightMove(cell).forEach((cell2) => cells_to_clear.add(cell2))
 				);
 			}
 
