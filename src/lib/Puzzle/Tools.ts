@@ -286,7 +286,7 @@ export enum EDGE_CONSTRAINTS {
 
 	ONE_WAY_DOOR = 'One Way Door',
 
-	CUSTOM_EDGE_CONSTRAINT = 'Custom Edge Constraint'
+	COMBINED_EDGE_CONSTRAINT = 'Combined Edge Constraint'
 }
 
 export enum CORNER_CONSTRAINTS {

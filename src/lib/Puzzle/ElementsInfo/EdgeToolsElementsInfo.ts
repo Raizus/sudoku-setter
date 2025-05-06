@@ -479,10 +479,10 @@ export const oneWayDoorInfo: SquareCellElementInfo = {
 	}
 };
 
-export const customEdgeConstraintInfo: SquareCellElementInfo = {
+export const combinedEdgeConstraintInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_EDGE_OPTIONS,
 
-	toolId: TOOLS.CUSTOM_EDGE_CONSTRAINT,
+	toolId: TOOLS.COMBINED_EDGE_CONSTRAINT,
 
 	shape: DEFAULT_WHITE_CIRCLE,
 
