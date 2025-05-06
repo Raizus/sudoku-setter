@@ -44,7 +44,7 @@ function caveLitsConstraint(model: PuzzleModel, tool: TOOLID) {
 	const grid_name2 = VAR_2D_NAMES.LITS_REGIONS;
 	const grid_name3 = VAR_2D_NAMES.CAVE_REGIONS;
 
-	let out_str: string = '';
+	let out_str: string = `\n% ${tool}\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name1};\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..4: ${grid_name2};\n`;
 	out_str += `constraint lits_shading_p(${grid_name1});\n`;
@@ -79,7 +79,7 @@ function renbanCavesConstraint(model: PuzzleModel, tool: TOOLID) {
 	const grid_name2 = VAR_2D_NAMES.BOARD_REGIONS;
 	const grid_name3 = 'renban_cave_regions';
 
-	let out_str: string = '';
+	let out_str: string = `\n% ${tool}\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name3};\n`;
 	out_str += `constraint renban_cave_regions_p(${grid_name1}, ${grid_name2}, ${grid_name3});\n`;
 	out_str += `constraint renban_caves_p(${VAR_2D_NAMES.BOARD}, ${grid_name3});\n`;
@@ -101,7 +101,7 @@ export function caveConstraint(model: PuzzleModel, element: ConstraintsElement) 
 	const grid_name1 = VAR_2D_NAMES.CAVE_SHADING;
 	const grid_name2 = VAR_2D_NAMES.CAVE_REGIONS;
 
-	let out_str: string = `\n% ${tool}\n`;
+	let out_str: string = ``;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name1};\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name2};\n`;
 	out_str += `constraint cave_p(${grid_name1}, ${grid_name2});\n`;
