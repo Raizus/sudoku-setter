@@ -62,6 +62,38 @@ function countCellsNotInTheSameRegionElement(model: PuzzleModel, element: Constr
 	return out_str;
 }
 
+function countSeenCellsInTheSameRegionConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToVarName(cell);
+	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.UNKNOWN_REGIONS);
+
+	const directions = constraint.directions;
+	const vars_list: string[] = [];
+	for (const direction of directions) {
+		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
+		const vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+		vars_list.push(vars);
+	}
+
+	const aux = vars_list.map((vars) => `count_uninterrupted(${vars}, ${region_var})`).join(' + ');
+	const constraint_str = `constraint ${aux} + 1 == ${cell_var};\n`;
+	return constraint_str;
+}
+
+function chaosConstructionCountSeenCellsInTheSameRegionElement(
+	model: PuzzleModel,
+	element: ConstraintsElement
+) {
+	const out_str = singleCellMultiArrowElementFunction(
+		model,
+		element,
+		countSeenCellsInTheSameRegionConstraint
+	);
+	return out_str;
+}
+
 function yinYangSumOfCellsOfOppositeColorConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
@@ -380,7 +412,14 @@ function nextNumberedRegionDistanceArrowsElement(model: PuzzleModel, element: Co
 const tool_map = new Map<string, ElementF>([
 	[TOOLS.HOT_ARROWS, hotArrowsElement],
 	[TOOLS.COLD_ARROWS, coldArrowsElement],
-	[TOOLS.COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS, countCellsNotInTheSameRegionElement],
+	[
+		TOOLS.CHAOS_CONSTRUCTION_COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS,
+		countCellsNotInTheSameRegionElement
+	],
+	[
+		TOOLS.CHAOS_CONSTRUCTION_COUNT_SEEN_CELLS_IN_THE_SAME_REGION_ARROWS,
+		chaosConstructionCountSeenCellsInTheSameRegionElement
+	],
 	[TOOLS.YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR, yinYangSumOfCellsOfOppositeColorElement],
 	[TOOLS.LOOP_CELL_COUNT_ARROWS, loopCellsCountArrowsElement],
 	[

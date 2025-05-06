@@ -285,6 +285,7 @@ import {
 	shikakuRegionSumInfo} from './SingleCellElementsInfo';
 import { customFogClearingInfo, fogLighsInfo } from './FogElementsInfo';
 import {
+	chaosCountSeenCellsInTheSameRegionArrowsInfo,
 	coldArrowsInfo,
 	connectFourCountCellsOfSameColorInfo,
 	countCellsNotInTheSameRegionArrowsInfo,
@@ -466,7 +467,10 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	// Single Cell Multi Arrow Constraint
 	[TOOLS.HOT_ARROWS]: hotArrowsInfo,
 	[TOOLS.COLD_ARROWS]: coldArrowsInfo,
-	[TOOLS.COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS]: countCellsNotInTheSameRegionArrowsInfo,
+	[TOOLS.CHAOS_CONSTRUCTION_COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS]:
+		countCellsNotInTheSameRegionArrowsInfo,
+	[TOOLS.CHAOS_CONSTRUCTION_COUNT_SEEN_CELLS_IN_THE_SAME_REGION_ARROWS]:
+		chaosCountSeenCellsInTheSameRegionArrowsInfo,
 	[TOOLS.YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR]: yinYangSumOfCellsOfOppositeColorInfo,
 	[TOOLS.YIN_YANG_COUNT_SHADED_CELLS]: yinYangCountShadedCellsInfo,
 	[TOOLS.LOOP_CELL_COUNT_ARROWS]: loopCellCountArrowsInfo,

@@ -111,13 +111,28 @@ export const yinYangCountShadedCellsInfo: SquareCellElementInfo = {
 export const countCellsNotInTheSameRegionArrowsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
-	toolId: TOOLS.COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS,
+	toolId: TOOLS.CHAOS_CONSTRUCTION_COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS,
 
 	shape: defaultShape,
 
 	meta: {
 		description:
 			'A cell with an arrow (or arrows) indicates how many cells in the indicated directions combined that do not belong to the same region as that cell.',
+		tags: [],
+		categories: defaultCategories
+	}
+};
+
+export const chaosCountSeenCellsInTheSameRegionArrowsInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
+
+	toolId: TOOLS.CHAOS_CONSTRUCTION_COUNT_SEEN_CELLS_IN_THE_SAME_REGION_ARROWS,
+
+	shape: defaultShape,
+
+	meta: {
+		description:
+			"A digit in a cell with arrow(s) gives the total number of cells in the same region as the arrow cell in all indicated directions combined (this count includes the arrow cell itself.) Cells in different regions to the arrow cell immediately block vision (and therefore prevent any cells further along the arrow's path in that direction from contributing to the arrow cell's count).",
 		tags: [],
 		categories: defaultCategories
 	}

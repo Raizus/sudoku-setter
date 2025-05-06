@@ -142,7 +142,7 @@ function chaosConstructionConstraint(model: PuzzleModel, element: ConstraintsEle
 	const reg_idxs = range(1, n_regions + 1);
 	const reg_idxs_str = '[' + reg_idxs.join(',') + ']';
 
-	let out_str: string = `\n% ${tool}\n`;
+	let out_str: string = ``;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var ${1}..${n_regions}: unknown_regions;\n`;
 	out_str += `constraint chaos_construction_p(unknown_regions, ${reg_idxs_str}, ${n_regions});\n`;
 	out_str += `constraint no_repeats_in_unknown_regions_p(board, unknown_regions, ALLOWED_DIGITS, ${reg_idxs_str});\n`;

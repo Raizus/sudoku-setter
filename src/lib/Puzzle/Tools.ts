@@ -252,7 +252,8 @@ export enum SINGLE_CELL_ARROW_CONSTRAINTS {
 export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
 	COLD_ARROWS = 'Cold Arrows',
 	HOT_ARROWS = 'Hot Arrows',
-	COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS = 'Count Cells Not In The Same Region Arrows',
+	CHAOS_CONSTRUCTION_COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS = 'Chaos Construction Count Cells Not In The Same Region Arrows',
+	CHAOS_CONSTRUCTION_COUNT_SEEN_CELLS_IN_THE_SAME_REGION_ARROWS = 'Chaos Construction Count Seen Cells In The Same Region Arrows',
 	YIN_YANG_COUNT_SHADED_CELLS = 'Yin Yang Count Shaded Cells',
 	YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR = 'Yin Yang Sum Of Cells Of Opposite Color',
 	LOOP_CELL_COUNT_ARROWS = 'Loop Cell Count Arrows',
