@@ -864,7 +864,7 @@ function yinYangLabeledShadeCellElement(model: PuzzleModel, element: Constraints
 			.map((coord) => grid.getCell(coord.r, coord.c))
 			.filter((cell) => cell !== undefined);
 		const yin_yang_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
-		out_str += `constraint all_equal(${yin_yang_vars});\n`
+		out_str += `constraint all_equal(${yin_yang_vars});\n`;
 	}
 
 	return out_str;
@@ -1332,10 +1332,17 @@ function connectFourYellowElement(model: PuzzleModel, element: ConstraintsElemen
 
 function nurikabeIslandProductOfSumAndSizeElement(model: PuzzleModel, element: ConstraintsElement) {
 	let out_str: string = '';
-	let count = 0;
 	const constraints = element.constraints as Record<string, CellToolI>;
 	const grid = model.puzzle.grid;
-
+	
+	const all_coords = Object.values(constraints).map((constraint) => constraint.cell);
+	const cells = new Set(
+		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
+	);
+	const nurikabe_vars = cellsToGridVarsStr([...cells], VAR_2D_NAMES.NURIKABE_REGIONS);
+	out_str += `constraint all_different(${nurikabe_vars});\n`;
+	
+	let count = 0;
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const coords = constraint.cell;
 		const cell = grid.getCell(coords.r, coords.c);
@@ -1571,6 +1578,7 @@ const tool_map = new Map<string, ElementF>([
 
 	[TOOLS.NURIKABE_SEEN_WATERWAY_CELLS, nurikabeSeenWaterwayCellsElement],
 	[TOOLS.NURIKABE_ISLAND_SIZE_CELL, nurikabeIslandSizeCellElement],
+	[TOOLS.NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE, nurikabeIslandProductOfSumAndSizeElement],
 
 	[TOOLS.SASHIGANE_BEND_REGION_COUNT, sashiganeBendRegionCountElement],
 	[TOOLS.SASHIGANE_REGION_SUM, sashiganeRegionSumElement],
@@ -1600,7 +1608,6 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.SHIKAKU_REGION_SIZE, shikakuRegionSizeElement],
 	[TOOLS.SHIKAKU_REGION_SUM, shikakuRegionSumElement],
 
-	[TOOLS.NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE, nurikabeIslandProductOfSumAndSizeElement],
 	[TOOLS.TELEPORT, teleportElement]
 ]);
 
