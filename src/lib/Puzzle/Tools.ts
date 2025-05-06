@@ -122,7 +122,8 @@ export enum GLOBAL_NURIMISAKI_CONSTRAINTS {
 export enum GLOBAL_YIN_YANG_CONSTRAINTS {
 	YIN_YANG = 'Yin Yang',
 	YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED = 'Yin Yang Neighbour Greater Than One Within Region Shaded',
-	YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS = 'Yin Yang Shaded Cells Are German Whispers'
+	YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS = 'Yin Yang Shaded Cells Are German Whispers',
+	YIN_YANG_IDENTICAL_DIGITS_DIAGONALLY_BELONG_TO_THE_SAME_REGION = "Ying Yang Identical Digits Diagonally Belong To Same The Region"
 }
 
 export enum GLOBAL_DIRECTED_PATH_CONSTRAINTS {
@@ -212,6 +213,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	YIN_YANG_SEEN_SAME_SHADE_CELLS = 'Yin Yang Seen Same Shade Cells',
 	YIN_YANG_ADJACENT_SAME_SHADE_COUNT = 'Yin Yang Adjacent Same Shade Count',
 	YIN_YANG_SHADED_NEIGHBOURS_COUNT = 'Yin Yang Shaded Neighbours Count',
+	YIN_YANG_LABELED_SHADE_CELL = "Yin Yang Labeled Shade Cell",
 
 	TWO_CONTIGUOUS_REGIONS_ROW_COLUMN_OPPOSITE_SET_COUNT = 'Two Contiguous Regions Row Column Opposite Set Count',
 	SEEN_REGION_BORDERS_COUNT = 'Seen Region Borders Count',

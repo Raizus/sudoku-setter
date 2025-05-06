@@ -283,7 +283,8 @@ import {
 	reverseCountingCirclesInfo,
 	cellKnightWhispersInfo,
 	shikakuRegionSizeInfo,
-	shikakuRegionSumInfo} from './SingleCellElementsInfo';
+	shikakuRegionSumInfo,
+	yinYangLabeledShadeCellInfo} from './SingleCellElementsInfo';
 import { customFogClearingInfo, fogLighsInfo } from './FogElementsInfo';
 import {
 	chaosCountSeenCellsInTheSameRegionArrowsInfo,
@@ -429,6 +430,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.YIN_YANG_SEEN_SAME_SHADE_CELLS]: yinYangSeenSameShadeCellsInfo,
 	[TOOLS.YIN_YANG_ADJACENT_SAME_SHADE_COUNT]: yinYangAdjacentSameShadeCountInfo,
 	[TOOLS.YIN_YANG_SHADED_NEIGHBOURS_COUNT]: yinYangShadedNeighboursCountInfo,
+	[TOOLS.YIN_YANG_LABELED_SHADE_CELL]: yinYangLabeledShadeCellInfo,
 
 	[TOOLS.TWO_CONTIGUOUS_REGIONS_ROW_COLUMN_OPPOSITE_SET_COUNT]:
 		twoContiguousRegionsRowColumnOppositeSetCountInfo,

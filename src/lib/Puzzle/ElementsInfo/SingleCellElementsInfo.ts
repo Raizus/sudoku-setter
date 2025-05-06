@@ -773,6 +773,25 @@ export const yinYangShadedNeighboursCountInfo: SquareCellElementInfo = {
 	}
 };
 
+export const yinYangLabeledShadeCellInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
+
+	toolId: TOOLS.YIN_YANG_LABELED_SHADE_CELL,
+
+	shape: {
+		type: SHAPE_TYPES.CAGE,
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'black' },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description: 'Cells in cages with the same label have the yin yang shading.',
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	}
+};
+
 export const twoContiguousRegionsRowColumnOppositeSetCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 

@@ -2,7 +2,7 @@ import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints'
 import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
-    addHeader,
+	addHeader,
 	adjCellPairGen,
 	cellsToGridVarsStr,
 	cellToGridVarName,
@@ -48,6 +48,12 @@ function yinYangNeighbourGreaterThanOneWithinRegionShadedConstraint(
 	return out_str;
 }
 
+function yinYangIdenticalDigitsDiagonallyBelongToSameRegion(toolId: TOOLID): string {
+	let out_str: string = `\n% ${toolId}\n`;
+	out_str += `constraint yin_yang_identical_digits_diagonally_belong_to_same_region_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.YIN_YANG});\n`;
+	return out_str;
+}
+
 export function yinYangConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
@@ -64,22 +70,32 @@ export function yinYangConstraint(model: PuzzleModel, element: ConstraintsElemen
 	out_str += `constraint yin_yang_p(yin_yang);\n`;
 
 	if (!element.negative_constraints) return out_str;
+
 	const neighbour_greater_than_1_in_region =
 		!!element.negative_constraints[TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED];
-	const shaded_cells_are_german_whispers =
-		!!element.negative_constraints[TOOLS.YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS];
-
 	if (neighbour_greater_than_1_in_region) {
 		out_str += yinYangNeighbourGreaterThanOneWithinRegionShadedConstraint(
 			puzzle,
 			TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED
 		);
-    }
-    
+	}
+
+	const shaded_cells_are_german_whispers =
+		!!element.negative_constraints[TOOLS.YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS];
 	if (shaded_cells_are_german_whispers) {
 		out_str += yinYangShadedCellsAreGermanWhispersConstraint(
 			puzzle,
 			TOOLS.YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS
+		);
+	}
+
+	const identical_digits_diagonally_same_region =
+		!!element.negative_constraints[
+			TOOLS.YIN_YANG_IDENTICAL_DIGITS_DIAGONALLY_BELONG_TO_THE_SAME_REGION
+		];
+	if (identical_digits_diagonally_same_region) {
+		out_str += yinYangIdenticalDigitsDiagonallyBelongToSameRegion(
+			TOOLS.YIN_YANG_IDENTICAL_DIGITS_DIAGONALLY_BELONG_TO_THE_SAME_REGION
 		);
 	}
 

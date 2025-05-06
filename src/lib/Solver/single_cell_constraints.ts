@@ -849,6 +849,27 @@ function yinYangShadedNeighboursCountElement(model: PuzzleModel, element: Constr
 	return out_str;
 }
 
+function yinYangLabeledShadeCellElement(model: PuzzleModel, element: ConstraintsElement) {
+	let out_str = `\n% ${element.tool_id}\n`;
+
+	const constraints = element.constraints as Record<string, CellToolI>;
+	const groups = groupConstraintsByValue(Object.values(constraints));
+	const grid = model.puzzle.grid;
+
+	for (const group of groups.values()) {
+		if (group.length <= 1) continue;
+		// for each combination of 2
+		const coords = group.map((constraint) => constraint.cell);
+		const cells = coords
+			.map((coord) => grid.getCell(coord.r, coord.c))
+			.filter((cell) => cell !== undefined);
+		const yin_yang_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
+		out_str += `constraint all_equal(${yin_yang_vars});\n`
+	}
+
+	return out_str;
+}
+
 function twoConstiguousRegionsRowColumnOppositeSetCountConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -1539,6 +1560,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.YIN_YANG_SEEN_SAME_SHADE_CELLS, yinYangSeenSameShadeElement],
 	[TOOLS.YIN_YANG_ADJACENT_SAME_SHADE_COUNT, yinYangAdjacentSameShadeCountElement],
 	[TOOLS.YIN_YANG_SHADED_NEIGHBOURS_COUNT, yinYangShadedNeighboursCountElement],
+	[TOOLS.YIN_YANG_LABELED_SHADE_CELL, yinYangLabeledShadeCellElement],
 
 	[
 		TOOLS.TWO_CONTIGUOUS_REGIONS_ROW_COLUMN_OPPOSITE_SET_COUNT,

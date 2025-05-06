@@ -47,6 +47,11 @@ export const yinYangInfo: AbstractElementInfo = {
 			toolId: TOOLS.YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS,
 			description:
 				'The yin yang shaded cells act as a German Whispers line: if two orthogonally connected cells are both shaded, then the digits in those cells must have a difference of at least 5.'
+		},
+		{
+			toolId: TOOLS.YIN_YANG_IDENTICAL_DIGITS_DIAGONALLY_BELONG_TO_THE_SAME_REGION,
+			description:
+				'Identical digits which see each other by a bishops move (diagonally) must be the same color.'
 		}
 	],
 

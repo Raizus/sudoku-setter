@@ -2172,6 +2172,23 @@ predicate yin_yang_shaded_cells_are_german_whispers_p(
     forall (r in rows, c in cols where r > 0) (
         (shading[r,c] = 1 /\\ shading[r-1, c] = 1) -> abs(grid[r,c] - grid[r-1, c]) >= 5
     )
+);
+
+predicate yin_yang_identical_digits_diagonally_belong_to_same_region_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: shading
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    assert(index_sets_agree(grid, shading), "grid and shading must have the same indexes") /\\
+    forall(r1 in rows, c1 in cols, r2 in rows, c2 in cols where 
+        r1 != r2 /\\ c1 != c2 /\\              % Different positions
+        abs(r1 - r2) = abs(c1 - c2) /\\       % On same diagonal (bishop's move)
+        grid[r1, c1] = grid[r2, c2]          % Same digit
+    ) (
+        shading[r1, c1] = shading[r2, c2]    % Must have same shading
+    )
 );\n\n`;
 
 	const two_contiguous_regions = `predicate two_contiguous_regions_p(array[int, int] of var 0..1: grid) =
