@@ -9,8 +9,25 @@ import {
 	cellsToGridVarsStr,
 	VAR_2D_NAMES,
 	adjCellPairGen,
-	PuzzleModel
+	PuzzleModel,
+	cellToGridVarName
 } from './solver_utils';
+
+function leaveEmptyCellsEmptyConstraint(model: PuzzleModel, element: ConstraintsElement): string {
+	const tool = element.tool_id;
+	const grid = model.puzzle.grid;
+	const allowed_vals = model.puzzle.valid_digits;
+	const min_val = Math.min(...allowed_vals);
+
+	let out_str: string = '';
+	for (const cell of grid.getAllCells()) {
+		if (cell.value !== null) continue;
+		const cell_var = cellToGridVarName(cell, VAR_2D_NAMES.BOARD);
+		out_str += `constraint ${cell_var} == ${min_val};\n`;
+	}
+	out_str = addHeader(out_str, `${tool}`);
+	return out_str;
+}
 
 export function positiveDiagonalConstraint(
 	model: PuzzleModel,
@@ -404,6 +421,8 @@ export function hexedSudokuConstraint(puzzle: PuzzleI) {
 type ElementF2 = (model: PuzzleModel, element: ConstraintsElement) => string;
 
 const tool_map = new Map<string, ElementF2>([
+	[TOOLS.LEAVE_EMPTY_CELLS_EMPTY, leaveEmptyCellsEmptyConstraint],
+
 	[TOOLS.POSITIVE_DIAGONAL, positiveDiagonalConstraint],
 	[TOOLS.NEGATIVE_DIAGONAL, negativeDiagonalConstraint],
 	[TOOLS.POSITIVE_ANTIDIAGONAL, positiveAntidiagonalConstraint],
