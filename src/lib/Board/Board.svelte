@@ -111,7 +111,7 @@
 	viewBox={getViewbox(boundingBox)}
 >
 	<FogLightBulbDefs />
-	<FogDefs {gridShape} />
+	<FogDefs {gridShape} boundingBox={boundingBox}/>
 	<FogCover {gridShape} />
 
 	<BoardBackground grid={$gridStore} />
