@@ -87,6 +87,25 @@ function renbanCavesConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
+function caveWallSuguruConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name1 = VAR_2D_NAMES.BOARD;
+	const grid_name2 = VAR_2D_NAMES.CAVE_REGIONS;
+
+	let out_str: string = `\n% ${tool}\n`;
+	out_str += `constraint cave_wall_suguru_p(${grid_name1}, ${grid_name2});\n`;
+
+	return out_str;
+}
+
 export function caveConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
@@ -107,35 +126,45 @@ export function caveConstraint(model: PuzzleModel, element: ConstraintsElement) 
 	out_str += `constraint cave_p(${grid_name1}, ${grid_name2});\n`;
 
 	if (!element.negative_constraints) return out_str;
-	const cave_2x2 = !!element.negative_constraints[TOOLS.CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED];
-	const cave_cells_odd = !!element.negative_constraints[TOOLS.CAVE_CELLS_ARE_ODD];
-	const cave_walls_even = !!element.negative_constraints[TOOLS.CAVE_WALLS_ARE_EVEN];
-	const cave_lits = !!element.negative_constraints[TOOLS.CAVE_LITS];
-	const renban_caves = !!element.negative_constraints[TOOLS.RENBAN_CAVES];
-	const digit_not_in_cave =
-		!!element.negative_constraints[TOOLS.ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE];
 
+	const cave_2x2 = !!element.negative_constraints[TOOLS.CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED];
 	if (cave_2x2) {
 		out_str += cave2x2NotFullyShadedOrUnshadedConstraint(
 			TOOLS.CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED
 		);
 	}
+
+	const cave_cells_odd = !!element.negative_constraints[TOOLS.CAVE_CELLS_ARE_ODD];
 	if (cave_cells_odd) {
 		out_str += caveCellsAreOddConstraint(TOOLS.CAVE_CELLS_ARE_ODD);
 	}
+
+	const cave_walls_even = !!element.negative_constraints[TOOLS.CAVE_WALLS_ARE_EVEN];
 	if (cave_walls_even) {
 		out_str += caveWallsAreEvenConstraint(TOOLS.CAVE_WALLS_ARE_EVEN);
 	}
+
+	const cave_lits = !!element.negative_constraints[TOOLS.CAVE_LITS];
 	if (cave_lits) {
 		out_str += caveLitsConstraint(model, TOOLS.CAVE_LITS);
 	}
+
+	const renban_caves = !!element.negative_constraints[TOOLS.RENBAN_CAVES];
 	if (renban_caves) {
 		out_str += renbanCavesConstraint(model, TOOLS.RENBAN_CAVES);
 	}
+
+	const digit_not_in_cave =
+		!!element.negative_constraints[TOOLS.ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE];
 	if (digit_not_in_cave) {
 		out_str += oneDigitDoesNotAppearInTheCaveConstraint(
 			TOOLS.ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE
 		);
+	}
+
+	const cave_wall_suguru = !!element.negative_constraints[TOOLS.CAVE_WALL_SUGURU];
+	if (cave_wall_suguru) {
+		out_str += caveWallSuguruConstraint(model, TOOLS.CAVE_WALL_SUGURU);
 	}
 
 	return out_str;

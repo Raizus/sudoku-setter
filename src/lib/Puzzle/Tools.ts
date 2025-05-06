@@ -123,7 +123,7 @@ export enum GLOBAL_YIN_YANG_CONSTRAINTS {
 	YIN_YANG = 'Yin Yang',
 	YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED = 'Yin Yang Neighbour Greater Than One Within Region Shaded',
 	YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS = 'Yin Yang Shaded Cells Are German Whispers',
-	YIN_YANG_IDENTICAL_DIGITS_DIAGONALLY_BELONG_TO_THE_SAME_REGION = "Ying Yang Identical Digits Diagonally Belong To Same The Region"
+	YIN_YANG_IDENTICAL_DIGITS_DIAGONALLY_BELONG_TO_THE_SAME_REGION = 'Ying Yang Identical Digits Diagonally Belong To Same The Region'
 }
 
 export enum GLOBAL_DIRECTED_PATH_CONSTRAINTS {
@@ -152,7 +152,8 @@ export enum GLOBAL_CAVE_CONSTRAINTS {
 	CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED = 'Cave 2x2 Not Fully Shaded or Unshaded',
 	ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE = 'One Digit Does Not Appear In The Cave',
 	CAVE_LITS = 'Cave LITS',
-	RENBAN_CAVES = 'Renban Caves'
+	RENBAN_CAVES = 'Renban Caves',
+	CAVE_WALL_SUGURU = 'Cave Wall Suguru',
 }
 
 export enum GLOBAL_CONNECT_FOUR_CONSTRAINTS {
@@ -213,7 +214,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	YIN_YANG_SEEN_SAME_SHADE_CELLS = 'Yin Yang Seen Same Shade Cells',
 	YIN_YANG_ADJACENT_SAME_SHADE_COUNT = 'Yin Yang Adjacent Same Shade Count',
 	YIN_YANG_SHADED_NEIGHBOURS_COUNT = 'Yin Yang Shaded Neighbours Count',
-	YIN_YANG_LABELED_SHADE_CELL = "Yin Yang Labeled Shade Cell",
+	YIN_YANG_LABELED_SHADE_CELL = 'Yin Yang Labeled Shade Cell',
 
 	TWO_CONTIGUOUS_REGIONS_ROW_COLUMN_OPPOSITE_SET_COUNT = 'Two Contiguous Regions Row Column Opposite Set Count',
 	SEEN_REGION_BORDERS_COUNT = 'Seen Region Borders Count',
@@ -225,6 +226,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	CAVE_CLUE = 'Cave Clue',
 	CAVE_UNSHADED_SEEN_COUNT_INCLUDING_ITSELF = 'Cave Unshaded Seen Count Including Itself',
 	CAVE_UNSHADED_CELL = 'Cave Unshaded Cell',
+	CAVE_SHADED_REGION_SIZE_UNSHADED_SEEN_ORTHOGONALLY_CLUE = "Cave Shaded Region Size Unshaded Seen Orthogonally Clue",
 
 	SHIKAKU_REGION_SIZE = 'Shikaku Region Size',
 	SHIKAKU_REGION_SUM = 'Shikaku Region Sum',
@@ -443,7 +445,7 @@ export enum OUTSIDE_EDGE_CONSTRAINTS {
 	OUTSIDE_CONSECUTIVE_SUM = 'Outside Consecutive Sum',
 	LOOPWICHES = 'Loopwhiches',
 	CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION = 'Chaos Construction Sum Of First Each Region',
-	CHAOS_CONSTRUCTION_X_INDEX_REGION = "Chaos Construction X-Index Region",
+	CHAOS_CONSTRUCTION_X_INDEX_REGION = 'Chaos Construction X-Index Region',
 	PENTOMINO_BORDER_COUNT = 'Pentomino Border Count'
 }
 

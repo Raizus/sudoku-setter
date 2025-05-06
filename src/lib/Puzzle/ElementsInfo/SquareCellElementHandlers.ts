@@ -284,7 +284,9 @@ import {
 	cellKnightWhispersInfo,
 	shikakuRegionSizeInfo,
 	shikakuRegionSumInfo,
-	yinYangLabeledShadeCellInfo} from './SingleCellElementsInfo';
+	yinYangLabeledShadeCellInfo,
+	caveShadedRegionSizeUnshadedSeenOrthogonallyClueInfo
+} from './SingleCellElementsInfo';
 import { customFogClearingInfo, fogLighsInfo } from './FogElementsInfo';
 import {
 	chaosCountSeenCellsInTheSameRegionArrowsInfo,
@@ -444,6 +446,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.COUNT_LOOP_NEIGHBOUR_CELLS]: countLoopNeighbourCellsInfo,
 
 	[TOOLS.CAVE_CLUE]: caveClueInfo,
+	[TOOLS.CAVE_SHADED_REGION_SIZE_UNSHADED_SEEN_ORTHOGONALLY_CLUE]:
+		caveShadedRegionSizeUnshadedSeenOrthogonallyClueInfo,
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_CLUE]: twilightCaveFillominoClueInfo,
 	[TOOLS.YIN_YANG_FILLOMINO_PARITY]: yinYangFillominoParityInfo,
 

@@ -1115,6 +1115,42 @@ function caveCluesElement(model: PuzzleModel, element: ConstraintsElement) {
 	return out_str;
 }
 
+function caveShadedRegionSizeUnshadedSeenOrthogonallyClueConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const cell_var = cellToVarName(cell);
+	const cave_shading_var = cellToGridVarName(cell, VAR_2D_NAMES.CAVE_SHADING);
+	const cave_region_var = cellToGridVarName(cell, VAR_2D_NAMES.CAVE_REGIONS);
+	const dirCells = getDirectionCells(grid, cell);
+	const cave_vars: string[] = [];
+	for (const cells of dirCells) {
+		const _cave_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.CAVE_SHADING);
+		cave_vars.push(_cave_vars);
+	}
+
+	const constraint_str = `constraint cave_shaded_region_size_unshaded_seen_orthogonally_clue_p(${cell_var}, ${cave_shading_var}, ${cave_region_var}, ${VAR_2D_NAMES.CAVE_REGIONS}, ${cave_vars[0]}, ${cave_vars[1]}, ${cave_vars[2]}, ${cave_vars[3]});\n`;
+	return constraint_str;
+}
+
+function caveShadedRegionSizeUnshadedSeenOrthogonallyClueElement(
+	model: PuzzleModel,
+	element: ConstraintsElement
+) {
+	const out_str = simpleElementFunction(
+		model,
+		element,
+		caveShadedRegionSizeUnshadedSeenOrthogonallyClueConstraint
+	);
+	return out_str;
+}
+
 function chaosConstructionChessSumsConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -1334,14 +1370,14 @@ function nurikabeIslandProductOfSumAndSizeElement(model: PuzzleModel, element: C
 	let out_str: string = '';
 	const constraints = element.constraints as Record<string, CellToolI>;
 	const grid = model.puzzle.grid;
-	
+
 	const all_coords = Object.values(constraints).map((constraint) => constraint.cell);
 	const cells = new Set(
 		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
 	);
 	const nurikabe_vars = cellsToGridVarsStr([...cells], VAR_2D_NAMES.NURIKABE_REGIONS);
 	out_str += `constraint all_different(${nurikabe_vars});\n`;
-	
+
 	let count = 0;
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const coords = constraint.cell;
@@ -1587,6 +1623,10 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.CELL_NOT_ON_THE_LOOP, cellNotOnLoopElement],
 	[TOOLS.COUNT_LOOP_NEIGHBOUR_CELLS, countLoopNeighbourCellsElement],
 	[TOOLS.CAVE_CLUE, caveCluesElement],
+	[
+		TOOLS.CAVE_SHADED_REGION_SIZE_UNSHADED_SEEN_ORTHOGONALLY_CLUE,
+		caveShadedRegionSizeUnshadedSeenOrthogonallyClueElement
+	],
 
 	[TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS, chaosConstructionChessSumsElement],
 	[TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS, chaosConstructionArrowKnotsElement],

@@ -3083,6 +3083,45 @@ predicate renban_caves_p(
             id1 != 0 /\\ id2 != 0 /\\ id1 == id2 -> abs(grid[r,c] - grid[r2, c2]) <= sizes[id1] - 1
         )
     )
+);
+
+predicate cave_shaded_region_size_unshaded_seen_orthogonally_clue_p(
+    var int: cell_var,
+    var 0..1: cell_shading,
+    var int: cave_region,
+	array[int, int] of var int: regions,
+	array[int] of var 0..1: shading1, 
+	array[int] of var 0..1: shading2, 
+	array[int] of var 0..1: shading3, 
+	array[int] of var 0..1: shading4
+) = (
+    (cell_shading = 0 -> cave_clue_f(shading1, shading2, shading3, shading4, cell_shading) + 1 == cell_var)
+    /\\ (cell_shading = 1 -> cell_var == count(array1d(regions), cave_region))
+);
+
+predicate cave_wall_suguru_p(
+    array[int, int] of var int: grid, 
+    array[int, int] of var int: cave_regions
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);  
+} in (
+    assert(index_sets_agree(grid, cave_regions), "grid and cave_regions must have the same indexes.")
+
+    % digits in the same region are different
+    /\\ forall(r in rows, c in cols, r2 in rows, c2 in cols where is_after(r, c, r2, c2))(
+        cave_regions[r,c] != 0 /\\ cave_regions[r,c] == cave_regions[r2,c2] -> grid[r,c] != grid[r2,c2]
+    )
+
+    % no repeats in row and column for wall regions (shaded)
+    /\\ forall(r in rows, c in cols where cave_regions[r,c] != 0)(
+        forall(r2 in rows where r2 != r /\\ cave_regions[r2,c] != 0)(
+            grid[r,c] != grid[r2,c]
+        )
+        /\\ forall(c2 in cols where c2 != c /\\ cave_regions[r,c2] != 0)(
+            grid[r,c] != grid[r,c2]
+        )
+    )
 );\n\n`;
 
 	const cell_center_loop = `predicate cell_center_loop_no_diagonal_touching_p(array[int, int] of var 0..1: grid) = let {

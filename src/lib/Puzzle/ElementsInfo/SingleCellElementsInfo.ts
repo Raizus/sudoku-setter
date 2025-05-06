@@ -1032,6 +1032,21 @@ export const caveClueInfo: SquareCellElementInfo = {
 	}
 };
 
+export const caveShadedRegionSizeUnshadedSeenOrthogonallyClueInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+
+	toolId: TOOLS.CAVE_SHADED_REGION_SIZE_UNSHADED_SEEN_ORTHOGONALLY_CLUE,
+
+	shape: DEFAULT_CIRCLE_SHAPE,
+
+	meta: {
+		description:
+			'An unshaded circled clue (cave) indicates the total number of unshaded cells seen in the four orthogonal directions, including the clue cell. A shaded circle clue (wall) indicates the size of the shaded region.',
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	}
+};
+
 export const chaosConstructionChessSumsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 

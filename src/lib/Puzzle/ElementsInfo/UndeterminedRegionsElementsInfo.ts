@@ -305,6 +305,11 @@ export const caveInfo: AbstractElementInfo = {
 			toolId: TOOLS.CAVE_LITS,
 			description:
 				"The cave and each wall section is a separate region for the purposes of a 'LITS puzzle'. In a LITS puzzle, solvers must place one tetromino into each region. No two tetrominoes of the same shape may share an edge - reflections/rotations count as the same shape. All tetrominoes must form a single orthogonally connected area. No 2x2 area of the grid can be completely covered in tetrominoes."
+		},
+		{
+			toolId: TOOLS.CAVE_WALL_SUGURU,
+			description:
+				'Each orthogonally connected group of shaded (wall) cells contains the digits 1-N (where N is the size of the group). Suguru digits may not repeat in a row, column, or shaded group.'
 		}
 	],
 
