@@ -17,7 +17,6 @@
 				if (!cell) continue;
 				const val = cell.value;
 				line.push(val);
-                
 			}
 			solution.push(line);
 		}
@@ -28,7 +27,13 @@
 <Panel bind:isOpen>
 	<PanelHeader slot="panel-header" title="Other Tools" bind:isOpen />
 	<svelte:fragment slot="panel-content">
-		<button class="entry-panel-button" on:click={setSolution}> Set Solution </button>
+		<button
+			class="entry-panel-button"
+			on:click={setSolution}
+			title="Set current cell values as the puzzle solution"
+		>
+			Set Solution
+		</button>
 	</svelte:fragment>
 </Panel>
 
