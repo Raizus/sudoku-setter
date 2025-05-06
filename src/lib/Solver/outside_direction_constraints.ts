@@ -7,6 +7,7 @@ import type { GridCoordI } from '../utils/SquareCellGridCoords';
 import {
 	cellsToGridVarsStr,
 	cellsToVarsName,
+	cellToGridVarName,
 	constraintsBuilder,
 	PuzzleModel,
 	simpleElementFunction,
@@ -286,20 +287,40 @@ function chaosConstructionSumOfFirstEachRegionElement(
 	model: PuzzleModel,
 	element: ConstraintsElement
 ) {
-	let out_str = '';
-	const constraints = element.constraints;
-	if (!constraints) return out_str;
+	const out_str = simpleElementFunction(
+		model,
+		element,
+		chaosConstructionSumOfFirstEachRegionConstraint
+	);
+	return out_str;
+}
 
-	const grid = model.puzzle.grid;
-	for (const [c_id, constraint] of Object.entries(constraints)) {
-		const constraint_str = chaosConstructionSumOfFirstEachRegionConstraint(
-			model,
-			grid,
-			c_id,
-			constraint as OutsideDirectionToolI
-		);
-		out_str += constraint_str;
-	}
+function chaosConstructionXIndexRegionConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	const cell_coord = constraint.cell;
+	// const cell = grid.getCell(cell_coord.r, cell_coord.c);
+	const direction = constraint.direction;
+
+	const cells = grid.getCellsInDirection(cell_coord.r, cell_coord.c, direction);
+	const first_cell = cells[0];
+	const first_var = cellToGridVarName(first_cell, VAR_2D_NAMES.BOARD);
+	const region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+
+	const out_str: string = `constraint chaos_construction_x_index_region_p(${first_var}, ${region_vars});\n`;
+
+	return out_str;
+}
+
+
+function chaosConstructionXIndexRegionElement(
+	model: PuzzleModel,
+	element: ConstraintsElement
+) {
+	const out_str = simpleElementFunction(model, element, chaosConstructionXIndexRegionConstraint);
 	return out_str;
 }
 
@@ -460,6 +481,7 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED, outsideEdgeYinYangAdjacentSumOfShadedElement],
 	[TOOLS.LOOPWICHES, loopwhichesElement],
 	[TOOLS.CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION, chaosConstructionSumOfFirstEachRegionElement],
+	[TOOLS.CHAOS_CONSTRUCTION_X_INDEX_REGION, chaosConstructionXIndexRegionElement],
 	[TOOLS.PENTOMINO_BORDER_COUNT, pentominoBorderCountElement],
 
 	// outside corner

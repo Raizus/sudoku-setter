@@ -346,6 +346,26 @@ export const chaosConstructionSumOfFirstEachRegionInfo: SquareCellElementInfo = 
 	}
 };
 
+export const chaosConstructionXIndexRegionInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
+		defaultValue: '',
+		cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
+	},
+
+	toolId: TOOLS.CHAOS_CONSTRUCTION_X_INDEX_REGION,
+
+	shape: OUTSIDE_DEFAULT_SHAPE,
+
+	meta: {
+		description:
+			'Clues outside the grid indicate the first N cells pointing in that direction are in the same region - followed by a region border - where N is the first digit seen by the clue.',
+		usage: outsideEdgeUsage(),
+		tags: [],
+		categories: outsideEdgeDefaultCategories
+	}
+};
+
 export const pentominoBorderCountInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,

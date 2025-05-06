@@ -441,6 +441,7 @@ export enum OUTSIDE_EDGE_CONSTRAINTS {
 	OUTSIDE_CONSECUTIVE_SUM = 'Outside Consecutive Sum',
 	LOOPWICHES = 'Loopwhiches',
 	CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION = 'Chaos Construction Sum Of First Each Region',
+	CHAOS_CONSTRUCTION_X_INDEX_REGION = "Chaos Construction X-Index Region",
 	PENTOMINO_BORDER_COUNT = 'Pentomino Border Count'
 }
 

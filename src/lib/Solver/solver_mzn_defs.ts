@@ -1838,6 +1838,19 @@ predicate chaos_construction_sum_of_first_each_region_p(
     assert(index_sets_agree(cell_vars, regions), "cell_vars and regions must have the same indexes")
     /\\ conditional_sum_f(cell_vars, first_bools, true) = val
     /\\ conditional_strictly_increasing_p(cell_vars, first_bools, true)
+);
+
+predicate chaos_construction_x_index_region_p(
+    var int: first_cell,
+    array[int] of var int: regions
+) = let {
+    set of int: idxs = index_set(regions);
+    var int: first_region = regions[min(idxs)];
+} in (
+    forall(i in idxs)(
+        (i <= first_cell -> regions[i] == first_region)
+        /\\ (i >= first_cell + 1 -> regions[i] != first_region)
+    )
 );\n\n`;
 
 	const outside_corner_constraints = `predicate little_killer_sum_p(array[int] of var int: arr, var int: val) =
