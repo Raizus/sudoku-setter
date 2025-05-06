@@ -1849,7 +1849,7 @@ predicate chaos_construction_x_index_region_p(
 } in (
     forall(i in idxs)(
         (i <= first_cell -> regions[i] == first_region)
-        /\\ (i >= first_cell + 1 -> regions[i] != first_region)
+        /\\ (i == first_cell + 1 -> regions[i] != first_region)
     )
 );\n\n`;
 
