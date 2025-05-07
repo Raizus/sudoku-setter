@@ -31,6 +31,7 @@ export enum VAR_2D_NAMES {
 	CELL_CENTER_LOOP = 'cell_center_loop',
 	CAVE_SHADING = 'cave_shading',
 	CAVE_REGIONS = 'cave_regions',
+	CAVE_CELLS_FILLOMINO_REGIONS = 'cave_cells_fillomino_regions',
 	FILLOMINO_REGIONS = 'fillomino_area',
 	GALAXY_REGIONS = 'galaxy_regions',
 	GALAXY_SIZES = 'galaxy_sizes',

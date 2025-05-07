@@ -154,6 +154,7 @@ export enum GLOBAL_CAVE_CONSTRAINTS {
 	CAVE_LITS = 'Cave LITS',
 	RENBAN_CAVES = 'Renban Caves',
 	CAVE_WALL_SUGURU = 'Cave Wall Suguru',
+	CAVE_CELLS_FILLOMINO = 'Cave Cells Fillomino',
 }
 
 export enum GLOBAL_CONNECT_FOUR_CONSTRAINTS {

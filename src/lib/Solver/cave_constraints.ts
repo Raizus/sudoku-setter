@@ -106,6 +106,27 @@ function caveWallSuguruConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
+function caveCellsFillominoConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name1 = VAR_2D_NAMES.BOARD;
+	const grid_name2 = VAR_2D_NAMES.CAVE_SHADING;
+	const grid_name3 = VAR_2D_NAMES.CAVE_CELLS_FILLOMINO_REGIONS;
+
+	let out_str: string = `\n% ${tool}\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name3};\n`;
+	out_str += `constraint cave_cells_fillomino_p(${grid_name1}, ${grid_name2}, ${grid_name3});\n`;
+
+	return out_str;
+}
+
 export function caveConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
@@ -165,6 +186,11 @@ export function caveConstraint(model: PuzzleModel, element: ConstraintsElement) 
 	const cave_wall_suguru = !!element.negative_constraints[TOOLS.CAVE_WALL_SUGURU];
 	if (cave_wall_suguru) {
 		out_str += caveWallSuguruConstraint(model, TOOLS.CAVE_WALL_SUGURU);
+	}
+
+	const cave_cells_fillomino = !!element.negative_constraints[TOOLS.CAVE_CELLS_FILLOMINO];
+	if (cave_cells_fillomino) {
+		out_str += caveCellsFillominoConstraint(model, TOOLS.CAVE_CELLS_FILLOMINO);
 	}
 
 	return out_str;

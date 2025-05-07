@@ -310,6 +310,11 @@ export const caveInfo: AbstractElementInfo = {
 			toolId: TOOLS.CAVE_WALL_SUGURU,
 			description:
 				'Each orthogonally connected group of shaded (wall) cells contains the digits 1-N (where N is the size of the group). Suguru digits may not repeat in a row, column, or shaded group.'
+		},
+		{
+			toolId: TOOLS.CAVE_CELLS_FILLOMINO,
+			description:
+				'Divide unshaded cells into polyominoes and fill each cell with a digit equal to the size of its polyomino. Polyominoes of the same size may not share an edge.'
 		}
 	],
 

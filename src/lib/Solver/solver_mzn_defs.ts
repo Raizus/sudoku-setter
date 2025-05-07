@@ -2841,11 +2841,11 @@ predicate cave_floodfill_p(
 ) = let {
     set of int: rows = index_set_1of2(regions);
     set of int: cols = index_set_2of2(regions);
-        int: n_rows = length(rows);
-        int: n_cols = length(cols);
-        int: g_size = n_rows * n_cols;
-        array [rows, cols] of var 0..g_size: same_before;
-        array[rows, cols] of var 0..g_size: when;
+    int: n_rows = length(rows);
+    int: n_cols = length(cols);
+    int: g_size = n_rows * n_cols;
+    array [rows, cols] of var 0..g_size: same_before;
+    array[rows, cols] of var 0..g_size: when;
 } in (
     same_before_p(regions, same_before)
     /\\ forall (r in rows, c in cols) (
@@ -3122,6 +3122,83 @@ predicate cave_wall_suguru_p(
             grid[r,c] != grid[r,c2]
         )
     )
+);
+
+predicate cave_cells_fillomino_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var 0..1: cave_shading,
+    array[int, int] of var int: cave_fillomino_grid,
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_rows = length(rows);
+    int: n_cols = length(cols);
+    int: g_size = n_rows * n_cols;
+    array[rows, cols] of var 0..g_size: when;
+    set of int: ids = 0..g_size;
+    array[ids] of var 0..g_size: size;
+} in (
+    assert(index_sets_agree(grid, cave_shading), "grid and cave_shading must have the same indexes.")
+    /\\ assert(index_sets_agree(grid, cave_fillomino_grid), "grid and cave_fillomino_grid must have the same indexes.")
+    % cave walls (shading = 1) are not part of the fillomino
+    /\\ forall(r in rows, c in cols)(
+        (cave_shading[r,c] == 1 -> cave_fillomino_grid[r,c] == 0 /\\ when[r,c] == 0)
+        /\\ (cave_shading[r,c] == 0 -> cave_fillomino_grid[r,c] != 0 /\\ when[r,c] > 0)
+    )
+    % 2. Symmetry breaking: canonical numbering of regions (reduces search space, tested)
+    /\\ forall(r in rows, c in cols) (
+        cave_fillomino_grid[r, c] <= (r * n_cols + c + 1) /\\
+        cave_fillomino_grid[r, c] >= 0
+    )
+
+    % 3. regions of size 1
+    /\\ forall(r in rows, c in cols where cave_shading[r,c] == 0)(
+        grid[r,c] == 1 -> cave_fillomino_grid[r, c] = (r * n_cols + c + 1) /\\ when[r,c] == 1
+    )
+    /\\ forall(r in rows, c in cols where cave_shading[r,c] == 0 /\\ grid[r,c] == 1)(
+        forall(t in orth_adjacent_idxs(r,c) where in_bounds_2d(t.1, t.2, grid))(
+            cave_fillomino_grid[r,c] != cave_fillomino_grid[t.1, t.2]
+        )
+    )
+
+    % 7. Adjacent cells in the same region have the same value and in different regions have different values
+    /\\ forall(r1 in rows, c1 in cols where cave_shading[r1,c1] == 0) (
+        forall(t in orth_adjacent_idxs(r1,c1) where in_bounds_2d(t.1, t.2, cave_fillomino_grid) /\\ cave_shading[t.1,t.2] == 0)(
+            (cave_fillomino_grid[r1, c1] != cave_fillomino_grid[t.1, t.2]) = (grid[r1, c1] != grid[t.1, t.2])
+        )
+    )
+
+    % 8. Each region's size equals the count of its cells
+    /\\ forall(id in ids where exists(r in rows, c in cols)(cave_fillomino_grid[r, c] = id)) (
+        size[id] = sum(r in rows, c in cols)(bool2int(cave_fillomino_grid[r, c] = id))
+    )
+    % 9. Each cell's region size matches its value
+    /\\ forall (r in rows, c in cols where cave_shading[r,c] == 0) (
+        grid[r, c] = size[cave_fillomino_grid[r, c]]
+    )
+
+    % 6. lex-order roots
+    /\\ forall(r in rows, c in cols where cave_fillomino_grid[r, c] == (r * n_cols + c + 1)) (
+        forall(r2 in rows, c2 in cols) (
+            (cave_fillomino_grid[r2, c2] = cave_fillomino_grid[r, c]) -> (r2 > r \\/ (r2 = r /\\ c2 >= c))
+        )
+    )
+
+    % floodfill - necessary to make sure each region is connected
+    % root fix
+    /\\ forall(r in rows, c in cols)(
+        when[r,c] == 1 <-> cave_fillomino_grid[r, c] = (r * n_cols + c + 1)
+    )
+
+    % Upper bound on when values
+    % Optimisation: the "when" label is actually the 'distance' of a cell in a
+    % region from the region "root".  This distance cannot be larger than the size
+    % of the region.
+    /\\ forall(r in rows, c in cols where cave_shading[r,c] == 0) (
+        when[r, c] >= 1 /\\ when[r, c] <= grid[r, c] /\\ when[r, c] <= size[cave_fillomino_grid[r, c]]
+    )
+
+    /\\ floodfill_p(cave_fillomino_grid, when)
 );\n\n`;
 
 	const cell_center_loop = `predicate cell_center_loop_no_diagonal_touching_p(array[int, int] of var 0..1: grid) = let {
