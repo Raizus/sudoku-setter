@@ -3,7 +3,7 @@
 	import ModalButtonsContainer from '$lib/Components/Modal/ModalButtonsContainer.svelte';
 	import { puzzleToJson } from '$lib/Puzzle/Puzzle';
 	import type { PuzzleMetaI } from '$lib/Puzzle/PuzzleMeta';
-	import { encodeToBase64UrlSafe, getPuzzleFilename } from '$src/lib/utils/functionUtils';
+	import { decodeFromBase64UrlSafe, encodeToBase64UrlSafe, getPuzzleFilename } from '$src/lib/utils/functionUtils';
 	import { puzzleMetaStore, puzzleStore, svgRefStore } from '$stores/BoardStore';
 
 	export let showModal = false;
@@ -145,17 +145,16 @@
 	};
 
 	const copyCompressedLink = () => {
-		const jsonData = puzzleToJsonAux();
-		const jsonStr = JSON.stringify(jsonData);
-		console.log('jsonStr', jsonStr);
-		const compressedStr = encodeToBase64UrlSafe(jsonStr);
-		const url = `${window.location.host}/?puzzle=${compressedStr}`;
+		const jsonData = puzzleToJsonAux(0);
+		const compressedStr = encodeToBase64UrlSafe(jsonData);
+		const url = `${window.location.host}/encpuzzle/${compressedStr}`;
 		navigator.clipboard.writeText(url);
-
-		// const decompressedStr = decodeFromBase64UrlSafe(compressedStr);
+		
+		// const decompressedStr = decodeURIComponent(compressedStr);
 		// const jsonData2 = JSON.parse(decompressedStr);
-		// console.log(jsonStr.length, compressedStr.length);
-		// console.log(jsonData2);
+		// console.log('jsonData', jsonData);
+		// console.log("decompressedStr", decompressedStr);
+		// console.log("jsonData2", jsonData2);
 	};
 
 	function cancelCb() {
@@ -176,7 +175,7 @@
 				<button class="modal-button" on:click={() => downloadAsSVG(svgElement)}
 					>Download SVG</button
 				>
-				<!-- <button class="modal-button" on:click={copyCompressedLink}>Copy Link</button> -->
+				<button class="modal-button" on:click={copyCompressedLink}>Copy Link</button>
 				<!-- <button>Open With Link</button> -->
 			</div>
 			<div class="column-right">

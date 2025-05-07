@@ -47,7 +47,11 @@ export function puzzleFromJson(puzzleJson: Record<string, unknown>) {
 	const nRows = puzzleJson['nRows'] as number;
 	const nCols = puzzleJson['nCols'] as number;
 
-	const puzzleMeta = puzzleJson['puzzleInfo'] as PuzzleMetaI;
+	const puzzleMetaData = puzzleJson['puzzleInfo'] as PuzzleMetaI;
+	let puzzleMeta: PuzzleMetaI = {};
+	if (puzzleMetaData) {
+		puzzleMeta = puzzleMetaData as PuzzleMetaI;
+	}
 	const parsed_valid_digits = puzzleJson['valid_digits'] as number[] | undefined;
 	const grid_data = puzzleJson['grid'] as CellRecord[][];
 	const grid = Grid.fromJSON(nRows, nCols, grid_data);
