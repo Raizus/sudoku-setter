@@ -3,7 +3,7 @@ import { getToolInfo } from '$lib/Puzzle/ElementHandlersUtils';
 import { derived, writable } from 'svelte/store';
 import { gridStore, svgRefStore, toolStore } from './BoardStore';
 import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
-import { ARROW_TOOL_MODE, BASIC_TOOL_MODE, HANDLER_TOOL_TYPE, type ToolHandlerOptions, type ToolModeT } from '$input/ToolInputHandlers/types';
+import { HANDLER_TOOL_TYPE, type ToolHandlerOptions, type ToolModeT } from '$input/ToolInputHandlers/types';
 import { getArrowToolInputHandler } from '$input/ToolInputHandlers/ArrowToolInputHandler';
 import type { Grid } from '$src/lib/Puzzle/Grid/Grid';
 import type { TOOLID } from '$src/lib/Puzzle/Tools';
@@ -124,6 +124,4 @@ export const InputHandlerStore = derived<
 	return inputHandler;
 });
 
-export const basicToolModeStore = writable<BASIC_TOOL_MODE>(BASIC_TOOL_MODE.DYNAMIC);
-export const arrowToolModeStore = writable<ARROW_TOOL_MODE>(ARROW_TOOL_MODE.DYNAMIC);
 export const toolModeStore = writable<ToolModeT>(undefined);
