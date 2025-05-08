@@ -3,6 +3,7 @@
 	import { svgRefStore } from '$stores/BoardStore';
 	import Board from './Board.svelte';
 	import { onExtraInput } from '$input/ExtraInputHandler';
+	import { currentScaleStore, resetZoom } from '$stores/BoundingBoxStore';
 
 	let boardContainerRef: HTMLDivElement | null = null;
 
@@ -20,6 +21,10 @@
 				onEvent(event);
 			}
 		};
+	}
+
+	function resetZoomCb() {
+		resetZoom();
 	}
 </script>
 
@@ -45,8 +50,20 @@
 		event.currentTarget.focus();
 		inputHandler?.pointerUp(event);
 	}}
+	on:wheel|capture|stopPropagation|preventDefault={(event) => {
+		event.currentTarget.focus();
+		if (inputHandler?.wheelEvent) inputHandler.wheelEvent(event);
+	}}
 >
 	<Board bind:svgRef={$svgRefStore} />
+	{#if $currentScaleStore !== 1}
+		<button
+			class="form-button zoom-reset"
+			on:click|capture|stopPropagation|preventDefault={resetZoomCb}
+		>
+			Reset zoom
+		</button>
+	{/if}
 </div>
 
 <style lang="scss">
@@ -55,7 +72,7 @@
 		display: flex;
 		width: 100%;
 		height: 100%;
-		
+
 		/* margin: 5px;
 		vertical-align: middle;
 		justify-content: space-around;
@@ -63,6 +80,22 @@
 
 		&:focus {
 			outline: none;
+		}
+	}
+
+	.zoom-reset {
+		position: absolute;
+		bottom: 0.5rem;
+		right: 0.5rem;
+		padding: 0 0.5em;
+		min-height: 2em;
+		min-width: 6ch;
+
+		background-color: var(--panel-background-color);
+		border: 0.125rem solid black;
+
+		&:hover {
+			background-color: var(--panel-radio-background-hover);
 		}
 	}
 </style>

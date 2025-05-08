@@ -9,6 +9,7 @@ export interface InputHandler {
 	pointerUp(event: PointerEvent): void;
 	keyDown(event: KeyboardEvent): void;
 	keyUp(event: KeyboardEvent): void;
+	wheelEvent?(event: WheelEvent): void;
 	padClick?(event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }): void;
 }
 

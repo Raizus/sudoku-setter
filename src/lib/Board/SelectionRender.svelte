@@ -1,8 +1,11 @@
 <script lang="ts">
-	import { isCellInputTool } from "$lib/Puzzle/Tools";
-	import { getCagePathStr } from "$lib/utils/SquareCellGridRenderUtils";
-	import { toolStore } from "$stores/BoardStore";
+	import { isCellInputTool } from '$lib/Puzzle/Tools';
+	import { getCagePathStr } from '$lib/utils/SquareCellGridRenderUtils';
+	import { toolStore } from '$stores/BoardStore';
 	import { selectionStore } from '$stores/SelectionStore';
+	import type { GridShape } from '../Types/types';
+
+	export let gridShape: GridShape;
 
 	const inset = 0.06;
 	const innerRadius = 0.05;
@@ -12,11 +15,11 @@
 	$: selection = $selectionStore.cells;
 	$: fillPathStr = getCagePathStr(selection, 0);
 	$: maskPathStr = getCagePathStr(selection, inset);
-	
+
 	$: showSelection = isCellInputTool($toolStore);
 </script>
 
-<g class="selection-layer" visibility={showSelection ? "visible" : "hidden"}>
+<g class="selection-layer" visibility={showSelection ? 'visible' : 'hidden'}>
 	<filter id="selection-blur">
 		<feGaussianBlur in="SourceGraphic" stdDeviation={innerRadius} />
 		<feComponentTransfer>
@@ -29,12 +32,12 @@
 	<mask
 		id="selection-mask"
 		maskUnits="userSpaceOnUse"
-		x=0%
-		y=0%
-		width="100%"
-		height="100%"
+		x={0}
+		y={0}
+		width={gridShape.nCols}
+		height={gridShape.nRows}
 	>
-		<rect x="0%" y="0%" width="100%" height="100%" fill={outlineOpacity} />
+		<rect x={0} y={0} width={gridShape.nCols} height={gridShape.nRows} fill={outlineOpacity} />
 		<path d={maskPathStr} fill={innerOpacity} stroke="none" filter="url(#selection-blur)" />
 	</mask>
 	<path class="selection" d={fillPathStr} mask="url(#selection-mask)" />

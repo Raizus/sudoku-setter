@@ -60,41 +60,13 @@
 	import UnderlayRender from './UnderlayRender.svelte';
 	import CenterCornerOrEdgeToolPreviewRender from './Constraints/CenterCornerOrEdgeToolPreviewRender.svelte';
 	import DIagonalElementsRender from './Constraints/DIagonalElementsRender.svelte';
+	import { boundingBoxStore, defaultBoundingBoxStore } from '$stores/BoundingBoxStore.js';
 
 	export let svgRef: SVGSVGElement | null = null;
 
 	$: grid = $gridStore;
 	$: gridShape = { nRows: grid.nRows, nCols: grid.nCols } as GridShape;
-
-	function hasOutsideCells(): boolean {
-		for (const [toolId, elementGroup] of $elementsDictStore.entries()) {
-			if (!isOutsideDirectionTool(toolId)) continue;
-
-			const hasCellOffGrid = Object.entries(
-				elementGroup.constraints as Record<string, OutsideDirectionToolI>
-			).some(([id, constraint]) => {
-				return !isCellOnGrid(constraint.cell, gridShape);
-			});
-			if (hasCellOffGrid) return true;
-		}
-		return false;
-	}
-
-	function getBoundingBox(gridShape: GridShape, toolId: TOOLID): Rectangle {
-		const outsideCells = hasOutsideCells();
-		const ousideTool = isOutsideDirectionTool(toolId);
-
-		const margin = outsideCells || ousideTool ? 1 : 0.2;
-
-		const x0 = -margin;
-		const y0 = -margin;
-		const width = gridShape.nCols + 2 * margin;
-		const height = gridShape.nRows + 2 * margin;
-
-		return { x: x0, y: y0, width, height };
-	}
-
-	$: boundingBox = getBoundingBox(gridShape, $toolStore);
+	$: boundingBox = $boundingBoxStore;
 
 	function getViewbox(boundingBox: Rectangle) {
 		return `${boundingBox.x} ${boundingBox.y} ${boundingBox.width} ${boundingBox.height}`;
@@ -111,7 +83,7 @@
 	viewBox={getViewbox(boundingBox)}
 >
 	<FogLightBulbDefs />
-	<FogDefs {gridShape} boundingBox={boundingBox}/>
+	<FogDefs {gridShape} boundingBox={$defaultBoundingBoxStore}/>
 	<FogCover {gridShape} />
 
 	<BoardBackground grid={$gridStore} />
@@ -143,7 +115,7 @@
 		Component={CornerLineToolRender}
 	/>
 
-	<SelectionRender />
+	<SelectionRender {gridShape}/>
 	<CursorRender />
 
 	<!-- EdgeToolsRender -->

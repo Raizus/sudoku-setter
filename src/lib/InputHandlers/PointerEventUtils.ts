@@ -8,7 +8,7 @@ import { Vector2D } from '$lib/utils/Vector2D';
 import { CornerOrEdge } from './ToolInputHandlers/types';
 
 export const pointerEventToVector2D = (
-	event: PointerEvent,
+	event: PointerEvent | WheelEvent,
 	svgRef: SVGSVGElement
 ): Vector2D | null => {
 	if (!event || !svgRef) return null;

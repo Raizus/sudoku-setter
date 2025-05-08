@@ -1,14 +1,20 @@
 <script lang="ts">
-	import { showFogStore } from "$stores/BoardStore";
-	import type { GridShape } from "../Types/types";
+	import { enableFogMaskStore } from '$stores/BoardStore';
+	import type { GridShape } from '../Types/types';
 
 	export let gridShape: GridShape;
 
-	$: show_fog = $showFogStore;
+	$: show_fog = $enableFogMaskStore;
 </script>
 
-<g class="fog-fogcover" visibility={show_fog ? "visible" : "hidden"}>
-	<rect x={0} y={0} width={gridShape.nCols} height={gridShape.nRows} mask="url(#fog-mask-light)"/>
+<g class="fog-fogcover">
+	<rect
+		x={0}
+		y={0}
+		width={gridShape.nCols}
+		height={gridShape.nRows}
+		mask="url(#fog-mask-light)"
+	/>
 </g>
 
 <style>

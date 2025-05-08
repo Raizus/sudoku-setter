@@ -136,14 +136,16 @@
 		<use stroke-width={0.1} class="fog-edge-4" href="#fog-shape" />
 		<use href="#fog-shape" />
 	</g>
-	<mask id="fog-mask-fog" maskUnits="userSpaceOnUse" class:disabled={disable_fog_mask}>
-		<rect class="fog-mask-white" x={boundingBox.x} y={boundingBox.y} width="100%" height="100%" />
-		<g class="fog-mask-black">
-			<use href="#fog-edge" />
-		</g>
-	</mask>
+	{#if !disable_fog_mask}
+		<mask id="fog-mask-fog" maskUnits="userSpaceOnUse" class:disabled={disable_fog_mask}>
+			<rect class="fog-mask-white" x={0} y={0} width={gridShape.nCols} height={gridShape.nRows} />
+			<g class="fog-mask-black">
+				<use href="#fog-edge" />
+			</g>
+		</mask>
+	{/if}
 	<mask id="fog-mask-light" maskUnits="userSpaceOnUse">
-		<rect class="fog-mask-white" x={boundingBox.x} y={boundingBox.y} width="100%" height="100%" />
+		<rect class="fog-mask-white" x={0} y={0} width={gridShape.nCols} height={gridShape.nRows} />
 		<rect
 			class="fog-mask-black"
 			x={0}
@@ -191,7 +193,7 @@
 		}
 	}
 
-	#fog-edge.disabled > * {
+	/* #fog-edge.disabled > * {
 		stroke: white;
-	}
+	} */
 </style>
