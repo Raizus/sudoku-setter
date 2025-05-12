@@ -24,7 +24,8 @@
 	$: underlay_elements = $underlayElementsStore;
 </script>
 
-<g class="underlay-layer" mask="url(#fog-mask-fog)">
+<!-- mask="url(#fog-mask-fog)" -->
+<g class="underlay-layer">
 	{#each underlay_elements as element}
 		{#if element.constraints}
 			{#if isSingleCellTool(element.tool_id)}
