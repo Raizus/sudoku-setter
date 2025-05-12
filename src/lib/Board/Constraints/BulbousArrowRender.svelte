@@ -5,6 +5,7 @@
 	import { defaultArrowShape } from '$lib/Puzzle/Shape/Shape';
 	import type { Rectangle } from '$lib/Types/types';
 	import {
+		cellsBoundingBox,
 		cellsLineToPathStr,
 		getCagePoints,
 		linePointsToPathStr,
@@ -35,38 +36,21 @@
 	const strokeLinejoin = 'round';
 	const strokeLinecap = 'round';
 
-    $: cageShape = {
-        ...defaultShape,
-        strokeDasharray: 0,
-        strokeLinejoin: "round",
-        inset,
-    }
+	$: cageShape = {
+		...defaultShape,
+		strokeDasharray: 0,
+		strokeLinejoin: 'round',
+		inset
+	};
 
 	$: bulbPath = cellsLineToPathStr(tool.cells);
 
 	const uid = crypto.randomUUID();
-	const arrowMaskId = `arrow-mask-${arrowId}-${uid}`;
 	const arrowMarkerId = `arrow-marker-${arrowId}-${uid}`;
 </script>
 
-<mask id={arrowMaskId} maskUnits="userSpaceOnUse" x="0%" y="0%" width="100%" height="100%">
-	<rect x="0%" y="0%" width="100%" height="100%" fill="white" />
-	<path
-		class="arrow-bulb"
-		stroke-width={2 * bulbRadius - strokeWidth}
-		d={bulbPath}
-		stroke="black"
-	/>
-</mask>
 <ArrowMarker id={arrowMarkerId} l={0.2} {strokeWidth} {stroke} />
-<CageRender cells={tool.cells} shape={cageShape}/>
-<!-- <path
-	class="arrow-bulb"
-	d={bulbPath}
-	stroke-width={2 * bulbRadius + strokeWidth}
-	{stroke}
-	mask="url(#{arrowMaskId})"
-/> -->
+<CageRender cells={tool.cells} shape={cageShape} />
 
 {#each tool.lines as line}
 	{#if line.length > 1}
@@ -86,9 +70,4 @@
 {/each}
 
 <style>
-	.arrow-bulb {
-		stroke-linejoin: round;
-		stroke-linecap: round;
-		fill: none;
-	}
 </style>

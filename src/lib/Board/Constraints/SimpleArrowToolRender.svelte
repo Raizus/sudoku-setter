@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ArrowToolI } from '$lib/Puzzle/Constraints/ArrowConstraints';
 	import type { ShapeI } from '$lib/Puzzle/Shape/Shape';
-	import { cellsLineToPathStr } from '$lib/utils/SquareCellGridRenderUtils';
+	import { cellsBoundingBox, cellsLineToPathStr } from '$lib/utils/SquareCellGridRenderUtils';
 	import ArrowMarker from './ArrowMarker.svelte';
 
 	export let tool: ArrowToolI;
@@ -22,19 +22,35 @@
 	const strokeLinecap = 'round';
 
 	$: bulbPath = cellsLineToPathStr(tool.cells);
+	$: bbox = cellsBoundingBox(tool.cells);
 
 	const uid = crypto.randomUUID();
 	const arrowMaskId = `arrow-mask-${c_id}-${uid}`;
 	const arrowMarkerId = `arrow-marker-${c_id}-${uid}`;
 </script>
 
-<mask id={arrowMaskId} maskUnits="userSpaceOnUse" x="0%" y="0%" width="100%" height="100%">
-	<rect x="0%" y="0%" width="100%" height="100%" fill="white" />
+<mask
+	id={arrowMaskId}
+	maskUnits="userSpaceOnUse"
+	maskContentUnits="userSpaceOnUse"
+	x={bbox.x}
+	y={bbox.y}
+	width={bbox.width}
+	height={bbox.height}
+>
+	<path
+		class="arrow-bulb"
+		stroke-width={2 * bulbRadius + strokeWidth}
+		d={bulbPath}
+		stroke="white"
+		fill="none"
+	/>
 	<path
 		class="arrow-bulb"
 		stroke-width={2 * bulbRadius - strokeWidth}
 		d={bulbPath}
 		stroke="black"
+		fill="none"
 	/>
 </mask>
 <ArrowMarker id={arrowMarkerId} l={0.2} {strokeWidth} {stroke} />
@@ -66,6 +82,5 @@
 	.arrow-bulb {
 		stroke-linejoin: round;
 		stroke-linecap: round;
-		fill: none;
 	}
 </style>

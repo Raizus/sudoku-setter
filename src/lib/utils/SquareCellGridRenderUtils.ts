@@ -1,4 +1,5 @@
 import type { PathOptions } from '$lib/Puzzle/Shape/Shape';
+import type { Rectangle } from '../Types/types';
 import { DIRECTION } from './directions';
 // import { cloneDeep } from 'lodash';
 import { directionToCoords, type GridCoordI } from './SquareCellGridCoords';
@@ -317,6 +318,22 @@ export function cellToCellCenterVector(cell: GridCoordI): Vector2D {
 export function cellsToVector2DPoints(cells: GridCoordI[]): Vector2D[] {
 	const points = cells.map((coord) => cellToCellCenterVector(coord));
 	return points;
+}
+
+export function cellsBoundingBox(cells: GridCoordI[]) {
+	const min_r = Math.min(...cells.map((cell) => cell.r));
+	const max_r = Math.max(...cells.map((cell) => cell.r));
+	const min_c = Math.min(...cells.map((cell) => cell.c));
+	const max_c = Math.max(...cells.map((cell) => cell.c));
+
+	const bbox: Rectangle = {
+		x: min_c,
+		y: min_r,
+		width: max_c + 1,
+		height: max_r + 1
+	};
+
+	return bbox;
 }
 
 // offsets relative to center
