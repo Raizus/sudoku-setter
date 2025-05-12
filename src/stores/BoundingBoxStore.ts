@@ -182,8 +182,8 @@ export function updateBoundingBoxOnDrag(event_info: PointerEventInfo) {
 	const max_y = min_y + default_bbox.height;
 
 	boundingBoxStore.update((bbox) => {
-		let new_x = bbox.x - 0.015 * 1/current_scale * delta_v.x;
-		let new_y = bbox.y - 0.015 * 1/current_scale * delta_v.y;
+		let new_x = bbox.x - 0.012 * 1/current_scale * delta_v.x;
+		let new_y = bbox.y - 0.012 * 1/current_scale * delta_v.y;
 
 		if (new_y < min_y) {
 			new_y = min_y;
