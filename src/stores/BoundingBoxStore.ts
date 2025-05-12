@@ -204,10 +204,7 @@ export function updateBoundingBoxOnDrag(event_info: PointerEventInfo) {
 			height: bbox.height,
 			width: bbox.width
 		};
-		
-		// console.log("delta_v", delta_v);
-		// console.log('old_x', bbox.x, 'new_x', new_x, 'old_y', bbox.y, 'new_y', new_y);
-		
+
 		return new_bbox;
 	});
 }
