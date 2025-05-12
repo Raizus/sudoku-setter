@@ -2,7 +2,6 @@
 	import type { GridShape } from './../Types/types.ts';
 	import type { Rectangle } from '$lib/Types/types.js';
 	import { cellsStore, gridStore, toolStore } from '$stores/BoardStore';
-	import { elementsDictStore } from '$stores/BoardStore.js';
 	import CursorRender from './CursorRender.svelte';
 	import GridBorderRender from './GridLines/GridBorderRender.svelte';
 	import GridLinesRender from './GridLines/GridLinesRender.svelte';
@@ -19,11 +18,8 @@
 		isSimpleSingleCellTool,
 		isSingleCellArrowTool,
 		isSingleCellMultiArrowTool,
-		TOOLS,
-		type TOOLID
+		TOOLS
 	} from '$lib/Puzzle/Tools';
-	import type { OutsideDirectionToolI } from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
-	import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 	import PenToolRender from './PenToolRender/PenToolRender.svelte';
 	import SeenCellsRender from './SeenCellsRender.svelte';
 	import ConflictsRender from './ConflictsRender.svelte';
@@ -83,7 +79,7 @@
 	viewBox={getViewbox(boundingBox)}
 >
 	<FogLightBulbDefs />
-	<FogDefs {gridShape} boundingBox={$defaultBoundingBoxStore}/>
+	<FogDefs {gridShape} />
 	<FogCover {gridShape} />
 
 	<BoardBackground grid={$gridStore} />

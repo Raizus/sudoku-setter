@@ -16,7 +16,6 @@
 	import { getCagePathStr } from '../utils/SquareCellGridRenderUtils';
 
 	export let gridShape: GridShape;
-	export let boundingBox: Rectangle;
 
 	$: disable_fog_mask = !$enableFogMaskStore;
 	// $: has_fog = $hasFogStore;
