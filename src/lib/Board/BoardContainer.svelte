@@ -4,10 +4,13 @@
 	import Board from './Board.svelte';
 	import { onExtraInput } from '$input/ExtraInputHandler';
 	import { currentScaleStore, resetZoom } from '$stores/BoundingBoxStore';
+	import { getWheelInputHandler } from '$input/WheelInputHandler';
 
 	let boardContainerRef: HTMLDivElement | null = null;
 
 	$: inputHandler = $InputHandlerStore;
+
+	$: wheelInputHandler = getWheelInputHandler($svgRefStore);
 
 	function wrapListener<T>(onEvent?: (event: T) => void): (event: T) => void {
 		return (event: T) => {
@@ -38,6 +41,23 @@
 	bind:this={boardContainerRef}
 	class="board-container"
 	tabindex="-1"
+	on:pointerdown|capture|preventDefault={(event) => {
+		wheelInputHandler.pointerDown(event);
+	}}
+	on:pointermove|capture={(event) => {
+		wheelInputHandler.pointerMove(event);
+	}}
+	on:pointerup|capture={(event) => {
+		wheelInputHandler.pointerUp(event);
+	}}
+	on:pointercancel|capture={(event) => {
+        // Make sure to handle pointer cancellation too
+        wheelInputHandler.pointerUp(event);
+    }}
+	on:wheel|capture|stopPropagation|preventDefault={(event) => {
+		event.currentTarget.focus();
+		if (wheelInputHandler.wheelEvent) wheelInputHandler.wheelEvent(event);
+	}}
 	on:pointerdown|capture|stopPropagation|preventDefault={(event) => {
 		event.currentTarget.focus();
 		inputHandler?.pointerDown(event);
@@ -49,10 +69,6 @@
 	on:pointerup|capture|stopPropagation|preventDefault={(event) => {
 		event.currentTarget.focus();
 		inputHandler?.pointerUp(event);
-	}}
-	on:wheel|capture|stopPropagation|preventDefault={(event) => {
-		event.currentTarget.focus();
-		if (inputHandler?.wheelEvent) inputHandler.wheelEvent(event);
 	}}
 >
 	<Board bind:svgRef={$svgRefStore} />
