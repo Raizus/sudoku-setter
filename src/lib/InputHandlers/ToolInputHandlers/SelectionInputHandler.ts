@@ -39,8 +39,6 @@ import { throttle } from 'lodash';
 import { get } from 'svelte/store';
 import { getSimilarCells } from './utils';
 import { addCommands } from '$stores/HistoryStore';
-import { getWheelEventInfo } from '$input/PointerHandlers/WheelHadler';
-import { updateBoundindBox } from '$stores/BoundingBoxStore';
 
 const cellInputHandler = new CellPointerHandler();
 
@@ -322,11 +320,6 @@ export function getSelectionInputHandler(
 		return onDigitInput(event.key);
 	}
 
-	function onWheelEvent(event: WheelEvent) {
-		const wheel_event_info = getWheelEventInfo(event, svgRef);
-		if (wheel_event_info) updateBoundindBox(wheel_event_info);
-	}
-
 	const throttledMove = throttle((event: PointerEvent) => {
 		cellInputHandler.pointerMove(event, svgRef);
 	}, 10);
@@ -359,9 +352,6 @@ export function getSelectionInputHandler(
 				event.stopImmediatePropagation();
 				event.preventDefault();
 			}
-		},
-		wheelEvent(event: WheelEvent) {
-			onWheelEvent(event);
 		},
 		padClick(event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }) {
 			onDigitInput(event.currentTarget.value);
