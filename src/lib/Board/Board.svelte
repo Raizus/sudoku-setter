@@ -99,7 +99,7 @@
 	<UnderlayRender />
 
 	<GridLinesRender />
-	<DIagonalElementsRender />
+	<DiagonalElementsRender />
 	<GridRegionsRender />
 
 	<!-- overlay elements - above the grid lines -->
