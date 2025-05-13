@@ -7,7 +7,6 @@
 		SHAPE_TYPES
 	} from '$lib/Puzzle/Shape/Shape';
 	import { toolStore, currentConstraintStore, updateCurrentConstraintShape } from '$stores/BoardStore';
-	import ColorPicker from './ColorPicker.svelte';
 	import PropertyBlock from './PropertyBlock.svelte';
 	import SliderBlock from './SliderBlock.svelte';
 	import ShapeRadioBlock from './ShapeRadioBlock.svelte';
@@ -17,6 +16,7 @@
 	import PanelHeader from '../Subpanel/PanelHeader.svelte';
 	import type { ConstraintType } from '$lib/Puzzle/Constraints/LocalConstraints';
 	import { getToolInfo, type AbstractElementHandlers } from '$lib/Puzzle/ElementHandlersUtils';
+	import ColorPicker from '$components/ColorPicker.svelte';
 
 	let isOpen = true;
 	export let elementHandlers: AbstractElementHandlers;
