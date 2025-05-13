@@ -55,7 +55,7 @@
 	import SimpleSingleCellToolPreviewRender from './Constraints/SimpleSingleCellToolPreviewRender.svelte';
 	import UnderlayRender from './UnderlayRender.svelte';
 	import CenterCornerOrEdgeToolPreviewRender from './Constraints/CenterCornerOrEdgeToolPreviewRender.svelte';
-	import DIagonalElementsRender from './Constraints/DIagonalElementsRender.svelte';
+	import DiagonalElementsRender from './Constraints/DiagonalElementsRender.svelte';
 	import { boundingBoxStore, defaultBoundingBoxStore } from '$stores/BoundingBoxStore.js';
 
 	export let svgRef: SVGSVGElement | null = null;
