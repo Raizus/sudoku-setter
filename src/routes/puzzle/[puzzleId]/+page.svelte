@@ -3,6 +3,7 @@
 	import { puzzleFromJson } from '$src/lib/Puzzle/Puzzle';
 	import Game from '$src/routes/Game.svelte';
 	import { resetUserState, setPuzzle } from '$stores/BoardStore';
+	import { resetZoom } from '$stores/BoundingBoxStore';
 	import { onMount } from 'svelte';
 
 	export let data: { puzzle: { id: string; data: any } };
@@ -16,6 +17,7 @@
 				// Delay store updates to ensure proper initialization
 				requestAnimationFrame(() => {
 					setPuzzle(newPuzzle);
+					resetZoom();
 					resetUserState();
 					initialized = true;
 				});

@@ -4,6 +4,7 @@
 	import ModalSectionHeader from '$components/Modal/ModalSectionHeader.svelte';
 	import ValueSliderLabeled from '$components/ValueSliderLabeled.svelte';
 	import { createNewPuzzle, resetUserState } from '$stores/BoardStore';
+	import { resetZoom } from '$stores/BoundingBoxStore';
 	import { range } from 'lodash';
 
 	export let showModal = false;
@@ -22,6 +23,7 @@
 	function confirmCb() {
 		resetUserState();
 		createNewPuzzle(height, width, allowed_digits.sort());
+		resetZoom();
 		showModal = false;
 	}
 
