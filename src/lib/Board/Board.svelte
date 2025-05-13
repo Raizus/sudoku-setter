@@ -56,7 +56,7 @@
 	import UnderlayRender from './UnderlayRender.svelte';
 	import CenterCornerOrEdgeToolPreviewRender from './Constraints/CenterCornerOrEdgeToolPreviewRender.svelte';
 	import DiagonalElementsRender from './Constraints/DiagonalElementsRender.svelte';
-	import { boundingBoxStore, defaultBoundingBoxStore } from '$stores/BoundingBoxStore.js';
+	import { boundingBoxStore } from '$stores/BoundingBoxStore.js';
 
 	export let svgRef: SVGSVGElement | null = null;
 
@@ -80,9 +80,10 @@
 >
 	<FogLightBulbDefs />
 	<FogDefs {gridShape} />
-	<FogCover {gridShape} />
 
 	<BoardBackground grid={$gridStore} />
+	<FogCover {gridShape} />
+
 	<GridBorderRender {gridShape} />
 
 	<g class="highlights-layer">
@@ -111,7 +112,7 @@
 		Component={CornerLineToolRender}
 	/>
 
-	<SelectionRender {gridShape}/>
+	<SelectionRender {gridShape} />
 	<CursorRender />
 
 	<!-- EdgeToolsRender -->
@@ -142,10 +143,11 @@
 			<CellValuesRender {cell} />
 		{/each}
 	</g>
-	<SolutionRender />
 
+	<SolutionRender />
 	<ConflictsRender />
 
+	<!-- ConstraintPreviewRender -->
 	{#if isOutsideDirectionTool($toolStore) && $outsideDirectionToolPreviewStore}
 		<OutsideDirectionToolRender tool={$outsideDirectionToolPreviewStore} />
 	{/if}
