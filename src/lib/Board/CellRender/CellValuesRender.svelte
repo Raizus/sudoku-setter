@@ -3,10 +3,11 @@
 	import { cellsSeenByCell } from '$lib/Puzzle/SeenCells';
 	import { TOOLS } from '$lib/Puzzle/Tools';
 	import { cellToCellCenterVector } from '$lib/utils/SquareCellGridRenderUtils';
-	import { puzzleStore, toolStore } from '$stores/BoardStore';
+	import { enableFogMaskStore, puzzleStore, toolStore } from '$stores/BoardStore';
 	import { settingsStore } from '$stores/SettingsStore';
 	import CenterMarksRender from './CenterMarksRender.svelte';
 	import CornerMarksRender from './CornerMarksRender.svelte';
+	import RenderRegionValue from './RenderRegionValue.svelte';
 
 	export let cell: Cell;
 	const fontSize = 0.8;
@@ -37,24 +38,14 @@
 	}
 
 	$: seen_values = getSeenValues(highlightPMconflicts, cell);
+	$: hide_given = cell.given && $enableFogMaskStore;
 </script>
 
 {#if !showSolution}
-	<g class="cell-values cell-outline" class:hide-given={cell.given}>
+	<g class="cell-values cell-digit-outline" class:hide-given={hide_given}>
 		<!-- render region values -->
 		{#if $toolStore === TOOLS.REGIONS}
-			{#if cell.region !== null}
-				<text
-					class="cell-region"
-					x={center.x}
-					y={center.y}
-					dominant-baseline="central"
-					font-size={fontSize}
-					font-weight={fontWeight}
-				>
-					{cell.region}
-				</text>
-			{/if}
+			<RenderRegionValue {cell}/>
 		{:else if value !== null}
 			<!-- render cell values -->
 			<text
@@ -77,10 +68,6 @@
 {/if}
 
 <style>
-	.cell-region {
-		fill: var(--cell-region-value-color);
-		text-anchor: middle;
-	}
 	.cell-value {
 		fill: var(--cell-digit-color);
 		text-anchor: middle;
@@ -93,7 +80,7 @@
 		mask: url(#fog-mask-fog);
 	}
 
-	.cell-outline {
+	.cell-digit-outline {
 		stroke: var(--cell-digit-outline);
 		stroke-width: 0.005;
 	}
