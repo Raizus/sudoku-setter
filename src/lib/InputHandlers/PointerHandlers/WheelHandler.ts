@@ -43,6 +43,7 @@ export class WheelHandler {
 
 	private _isDown = false;
 	private _lastPoint: Vector2D | null = null;
+	private _pointerId: number | null = null;
 
 	constructor() {}
 
@@ -54,6 +55,12 @@ export class WheelHandler {
 		// const point = pointerEventToVector2D(event, svgRef);
 		const point = new Vector2D(event.clientX, event.clientY);
 		if (!point) return;
+
+		this._pointerId = event.pointerId;
+		// Capture the pointer to ensure we get all events
+		if (event.currentTarget instanceof Element) {
+			event.currentTarget.setPointerCapture(event.pointerId);
+		}
 
 		this._isDown = true;
 		this._lastPoint = point;
@@ -70,6 +77,10 @@ export class WheelHandler {
 
 	pointerMove(event: PointerEvent, svgRef: SVGSVGElement | null): void {
 		if (!this._isDown) return;
+
+		// Only process events from the same pointer that started the drag
+		if (this._pointerId !== null && event.pointerId !== this._pointerId) return;
+
 		if (!svgRef) return;
 
 		// const point = pointerEventToVector2D(event, svgRef);
@@ -88,8 +99,16 @@ export class WheelHandler {
 	}
 
 	pointerUp(event: PointerEvent) {
+		// Only process the pointer that started the drag
+		if (this._pointerId !== null && event.pointerId !== this._pointerId) return;
+		
 		// Only process middle-click releases
 		if (event.button !== 1) return;
+
+		// Release pointer capture
+		if (this._pointerId !== null && event.currentTarget instanceof Element) {
+			event.currentTarget.releasePointerCapture(this._pointerId);
+		}
 
 		if (this._isDown) {
 			this._isDown = false;
@@ -101,6 +120,7 @@ export class WheelHandler {
 		}
 
 		this._lastPoint = null;
+		this._pointerId = null;
 	}
 
 	wheel(event: WheelEvent, svgRef: SVGSVGElement | null): void {
