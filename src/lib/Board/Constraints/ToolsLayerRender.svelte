@@ -6,8 +6,7 @@
 	export let Component;
 </script>
 
-<!-- mask="url(#fog-mask-fog)" -->
-<g class={g_name}>
+<g class={g_name} mask="url(#fog-mask-fog)">
 	{#each elements as element}
 		{#if element.constraints}
 			<g class="element-group" data-toolId={element.tool_id}>

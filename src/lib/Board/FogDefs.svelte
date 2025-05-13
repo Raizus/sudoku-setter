@@ -1,11 +1,5 @@
 <script lang="ts">
-	import {
-		cellsStore,
-		enableFogMaskStore,
-		gridStore,
-		hasFogStore,
-		solutionStore
-	} from '$stores/BoardStore';
+	import { cellsStore, enableFogMaskStore, gridStore, solutionStore } from '$stores/BoardStore';
 	import { customFogClearingStore, fogLightsStore } from '$stores/ElementsStore';
 	import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
 	import type { CellToolI } from '../Puzzle/Constraints/SingleCellConstraints';
@@ -136,14 +130,31 @@
 		<use href="#fog-shape" />
 	</g>
 	{#if !disable_fog_mask}
-		<mask id="fog-mask-fog" maskUnits="userSpaceOnUse" class:disabled={disable_fog_mask}>
+		<mask
+			id="fog-mask-fog"
+			maskUnits="userSpaceOnUse"
+			maskContentUnits="userSpaceOnUse"
+			x={0}
+			y={0}
+			width={gridShape.nCols}
+			height={gridShape.nRows}
+			class:disabled={disable_fog_mask}
+		>
 			<rect class="fog-mask-white" x={0} y={0} width={gridShape.nCols} height={gridShape.nRows} />
 			<g class="fog-mask-black">
 				<use href="#fog-edge" />
 			</g>
 		</mask>
 	{/if}
-	<mask id="fog-mask-light" maskUnits="userSpaceOnUse">
+	<mask
+		id="fog-mask-light"
+		maskUnits="userSpaceOnUse"
+		maskContentUnits="userSpaceOnUse"
+		x={0}
+		y={0}
+		width={gridShape.nCols}
+		height={gridShape.nRows}
+	>
 		<rect class="fog-mask-white" x={0} y={0} width={gridShape.nCols} height={gridShape.nRows} />
 		<rect
 			class="fog-mask-black"
@@ -172,17 +183,14 @@
 	.fog-edge-2 {
 		stroke: rgb(180, 180, 180);
 		opacity: 0.3;
-		/* stroke: rgb(160, 160, 160); */
 	}
 	.fog-edge-3 {
 		stroke: rgb(180, 180, 180);
 		opacity: 0.5;
-		/* stroke: rgb(140, 140, 140); */
 	}
 	.fog-edge-4 {
 		stroke: rgb(180, 180, 180);
 		opacity: 0.7;
-		/* stroke: rgb(120, 120, 120); */
 	}
 
 	#fog-mask-fog.disabled {
@@ -191,8 +199,4 @@
 			fill: white;
 		}
 	}
-
-	/* #fog-edge.disabled > * {
-		stroke: white;
-	} */
 </style>
