@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { findConflicts } from '$lib/Puzzle/conflicts';
 	import { SHAPE_TYPES, type ShapeI } from '$lib/Puzzle/Shape/Shape';
-	import { cellsStore, gridStore, elementsDictStore } from '$stores/BoardStore';
+	import { cellsStore, gridStore, elementsDictStore, enableFogMaskStore } from '$stores/BoardStore';
 	import { settingsStore } from '$stores/SettingsStore';
 	import type { Cell } from '$lib/Puzzle/Grid/Cell';
 
@@ -24,10 +24,11 @@
 		return coords;
 	}
 
+	$: enable_fog_mask = $enableFogMaskStore;
 </script>
 
 {#if showConflicts}
-	<g class="conflicts-layer" mask="url(#fog-mask-fog)">
+	<g class="conflicts-layer" mask={enable_fog_mask ? "url(#fog-mask-fog)" : null}>
 		{#each getConflicts(all_cells) as coord}
 			<rect class="conflict" x={coord.c} y={coord.r} width={1} height={1}/>
 		{/each}

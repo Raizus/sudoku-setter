@@ -20,11 +20,13 @@
 	import CageToolRender from './Constraints/CageToolRender.svelte';
 	import CloneToolRender from './Constraints/CloneToolRender.svelte';
 	import OutsideDirectionToolRender from './Constraints/OutsideDirectionToolRender.svelte';
+	import { enableFogMaskStore } from '$stores/BoardStore';
 
 	$: underlay_elements = $underlayElementsStore;
+	$: enable_fog_mask = $enableFogMaskStore;
 </script>
 
-<g class="underlay-layer" mask="url(#fog-mask-fog)">
+<g class="underlay-layer" mask={enable_fog_mask ? "url(#fog-mask-fog)" : null}>
 	{#each underlay_elements as element}
 		{#if element.constraints}
 			{#if isSingleCellTool(element.tool_id)}
