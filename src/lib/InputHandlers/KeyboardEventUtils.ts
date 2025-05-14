@@ -129,11 +129,11 @@ export function isBackspace(key: string): boolean {
 	return key === 'Backspace';
 }
 
-export function keyboardInputDefaultValidator(event: KeyboardEvent): boolean {
+export function keyboardInputDefaultValidator(key: string): boolean {
 	// valid characters: 0-9,a-z,A-Z,<,>,-
 
-	if (/^[0-9a-zA-Z<>\-,=]$/.test(event.key)) return true;
-	if (isBackspace(event.key)) return true;
+	if (/^[0-9a-zA-Z<>\-,=]$/.test(key)) return true;
+	if (isBackspace(key)) return true;
 
 	return false;
 }

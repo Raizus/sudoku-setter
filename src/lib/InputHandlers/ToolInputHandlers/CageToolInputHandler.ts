@@ -97,7 +97,7 @@ export function getCageToolInputHandler(
 		const id = currentConstraint.id;
 
 		if (constraint.value === undefined) return;
-		if (!keyboardInputDefaultValidator(event)) return;
+		if (!keyboardInputDefaultValidator(event.key)) return;
 		if (!options?.valueUpdater) return;
 
 		const newValue = options.valueUpdater(constraint?.value, event.key);
