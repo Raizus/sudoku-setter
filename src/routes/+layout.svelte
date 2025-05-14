@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { darkModeStore } from '$stores/SettingsStore';
+	import { settingsStore } from '$stores/SettingsStore';
 	import '../global.scss';
 	import { derived } from 'svelte/store';
 	import Header from './Header.svelte';
 
 	let { children } = $props();
 
-	let theme = derived(darkModeStore, ($darkMode) => ($darkMode ? 'dark' : 'light'));
+	let theme = derived(settingsStore, ($settingsStore) => ($settingsStore.darkMode ? 'dark' : 'light'));
 </script>
 
 <div class="App" data-theme={$theme}>

@@ -19,6 +19,7 @@
 	$: highlightPMconflicts = $settingsStore.highlightPencilmarkConflicts;
 	$: puzzle = $puzzleStore;
 	$: showSolution = $settingsStore.showSolution;
+	$: cell_digit_color = given ? "var(--cell-given-color)" : $settingsStore.non_given_color;
 
 	function getSeenValues(highlightPMconflicts: boolean, cell: Cell) {
 		if (!highlightPMconflicts) {
@@ -56,6 +57,7 @@
 				dominant-baseline="central"
 				font-size={fontSize}
 				font-weight={fontWeight}
+				fill={cell_digit_color}
 			>
 				{value}
 			</text>
@@ -69,11 +71,7 @@
 
 <style>
 	.cell-value {
-		fill: var(--cell-digit-color);
 		text-anchor: middle;
-	}
-	.given {
-		fill: var(--cell-given-color);
 	}
 
 	.cell-values.hide-given {

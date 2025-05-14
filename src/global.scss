@@ -115,7 +115,10 @@ main {
 	--constraint-color-gold: gold;
 	--constraint-color-pink: pink;
 
+	--seen-cells-color: hsl(60, 100%, 80%);
+
 	--constraint-selected-color: #5274ea;
+	--selection-color: #4ca4ff;
 
 	--cell-digit-outline: white;
 	--cell-digit-color: rgb(29, 106, 229);
@@ -167,4 +170,12 @@ main {
 			background-color: var(--panel-radio-background-hover);
 		}
 	}
+}
+
+.settings-tab-layout {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	overflow: auto;
+	overflow-y: scroll;
 }

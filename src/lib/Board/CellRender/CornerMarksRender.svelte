@@ -4,6 +4,7 @@
 		cellToCellCenterVector,
 		getCornerMarksOffset
 	} from '$lib/utils/SquareCellGridRenderUtils';
+	import { settingsStore } from '$stores/SettingsStore';
 
 	export let cell: Cell;
 	export let seen_values: number[];
@@ -32,6 +33,8 @@
 		if (found === undefined) return false;
 		return true;
 	}
+
+	$: cell_digit_color = $settingsStore.non_given_color;
 </script>
 
 {#if cell.cornerMarks.length}
@@ -44,6 +47,7 @@
 				class="corner-mark"
 				font-size={fontSize}
 				dominant-baseline="central"
+				fill={cell_digit_color}
 			>
 				{value}
 			</text>
@@ -54,7 +58,6 @@
 <style>
 	.corner-mark {
 		text-anchor: middle;
-		fill: var(--cell-digit-color);
 
 		&.conflict {
 			fill: var(--cell-digit-conflict-color);

@@ -14,12 +14,13 @@
 	$: puzzle = $puzzleStore;
 
 	$: showSelection = isCellInputTool($toolStore);
+	$: seen_color = $settingsStore.seen_cells_color;
 
-	const shape: ShapeI = {
+	$: shape = {
 		type: SHAPE_TYPES.CAGE,
 		strokeWidth: 0,
 		stroke: 'none',
-		fill: 'hsl(60, 100%, 80%)',
+		fill: seen_color,
 		inset: 0.15,
 		connectDiag: false,
 	};

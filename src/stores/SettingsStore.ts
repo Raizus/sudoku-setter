@@ -1,21 +1,12 @@
-import { getDefaultsSettings, type Settings } from '$lib/Types/Settings';
-import { derived, writable } from 'svelte/store';
+import { DEFAULT_SETTINGS, type Settings } from '$lib/Types/Settings';
+import { writable } from 'svelte/store';
 
-export const settingsStore = writable<Settings>(getDefaultsSettings());
+export const settingsStore = writable<Settings>(DEFAULT_SETTINGS);
 
-export const darkModeStore = derived<typeof settingsStore, boolean>(
-	settingsStore,
-	($settingsStore) => {
-		return $settingsStore.darkMode;
-	}
-);
-
-export function updateDarkmode(value: boolean) {
+export function updateSettingsValue<K extends keyof Settings>(key: K, value: Settings[K]) {
 	settingsStore.update((settings) => {
-		return {
-			...settings,
-			darkMode: value
-		};
+		settings[key] = value;
+		return settings;
 	});
 }
 
@@ -28,65 +19,6 @@ export function toggleDarkmode() {
 	});
 }
 
-export function updatePenToolActive(value: boolean) {
-	settingsStore.update((settings) => {
-		return {
-			...settings,
-			penToolActive: value
-		};
-	});
-}
-
-export function updateLetterToolActive(value: boolean) {
-	settingsStore.update((settings) => {
-		return {
-			...settings,
-			letterToolActive: value
-		};
-	});
-}
-
-export function updateHighlightCellsSeen(value: boolean) {
-	settingsStore.update((settings) => {
-		return {
-			...settings,
-			highlightCellsSeenBySelection: value
-		};
-	});
-}
-
-export function updateCheckConflicts(value: boolean) {
-	settingsStore.update((settings) => {
-		return {
-			...settings,
-			checkConflicts: value
-		};
-	});
-}
-
-export function updatePencilmarkConflicts(value: boolean) {
-	settingsStore.update((settings) => {
-		return {
-			...settings,
-			highlightPencilmarkConflicts: value
-		};
-	});
-}
-
-export function updateHideFog(value: boolean) {
-	settingsStore.update((settings) => {
-		return {
-			...settings,
-			hideFog: value
-		};
-	});
-}
-
-export function updateShowSolution(value: boolean) {
-	settingsStore.update((settings) => {
-		return {
-			...settings,
-			showSolution: value
-		};
-	});
+export function restoreSettings() {
+	settingsStore.set(DEFAULT_SETTINGS);
 }

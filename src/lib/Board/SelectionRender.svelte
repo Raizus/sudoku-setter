@@ -3,6 +3,7 @@
 	import { getCagePathStr } from '$lib/utils/SquareCellGridRenderUtils';
 	import { toolStore } from '$stores/BoardStore';
 	import { selectionStore } from '$stores/SelectionStore';
+	import { settingsStore } from '$stores/SettingsStore';
 	import type { GridShape } from '../Types/types';
 
 	export let gridShape: GridShape;
@@ -17,6 +18,8 @@
 	$: maskPathStr = getCagePathStr(selection, inset);
 
 	$: showSelection = isCellInputTool($toolStore);
+
+	$: selection_color = $settingsStore.selection_color;
 </script>
 
 <g class="selection-layer" visibility={showSelection ? 'visible' : 'hidden'}>
@@ -40,12 +43,11 @@
 		<rect x={0} y={0} width={gridShape.nCols} height={gridShape.nRows} fill={outlineOpacity} />
 		<path d={maskPathStr} fill={innerOpacity} stroke="none" filter="url(#selection-blur)" />
 	</mask>
-	<path class="selection" d={fillPathStr} mask="url(#selection-mask)" />
+	<path class="selection" d={fillPathStr} mask="url(#selection-mask)" fill={selection_color}/>
 </g>
 
 <style>
 	.selection {
 		stroke: none;
-		fill: #4ca4ff;
 	}
 </style>
