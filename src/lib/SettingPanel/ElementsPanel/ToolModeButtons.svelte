@@ -1,7 +1,15 @@
 <script lang="ts">
-	import { getDefaultToolMode, getToolModes, type ToolModeT } from '$input/ToolInputHandlers/types';
+	import {
+		getDefaultToolMode,
+		getToolModes,
+		VALUE_TOOL_MODE,
+		type ToolModeT
+	} from '$input/ToolInputHandlers/types';
+	import { pushAddLocalConstraintCommand } from '$input/ToolInputHandlers/utils.js';
+	import { valuedGlobalConstraint } from '$src/lib/Puzzle/Constraints/ValuedGlobalConstraints.js';
 	import type { TOOLID } from '$src/lib/Puzzle/Tools';
 	import { toolModeStore } from '$stores/InputHandlerStore';
+	import { uniqueId } from 'lodash';
 
 	export let tool_id: TOOLID;
 
@@ -9,8 +17,14 @@
 
 	$: currentMode = $toolModeStore;
 
-	function clickCb(mode: ToolModeT) {
+	function select_mode(mode: ToolModeT) {
 		$toolModeStore = mode;
+	}
+
+	function createCb() {
+		const id = uniqueId();
+		const constraint = valuedGlobalConstraint(tool_id, '');
+		pushAddLocalConstraintCommand(id, constraint, tool_id, true);
 	}
 
 	$toolModeStore = getDefaultToolMode(tool_id);
@@ -19,15 +33,21 @@
 {#if modes}
 	<div class="tool-buttons">
 		{#each Object.values(modes) as mode}
-			<button
-				class = "form-button"
-				class:selected={mode === currentMode}
-				role="switch"
-				aria-checked={mode === currentMode}
-				on:click={() => clickCb(mode)}
-			>
-				{mode}
-			</button>
+			{#if mode === VALUE_TOOL_MODE.CREATE}
+				<button class="form-button" on:click={createCb}>
+					{mode}
+				</button>
+			{:else}
+				<button
+					class="form-button radio-button"
+					class:selected={mode === currentMode}
+					role="switch"
+					aria-checked={mode === currentMode}
+					on:click={() => select_mode(mode)}
+				>
+					{mode}
+				</button>
+			{/if}
 		{/each}
 	</div>
 {/if}
@@ -50,13 +70,18 @@
 			background: var(--button-hover-background-color);
 		}
 
+		&:focus {
+			outline: transparent;
+			box-shadow: var(--focus-shadow);
+		}
+
 		&.selected {
 			color: var(--text-primary-color);
 			background: radial-gradient(
 				var(--button-background-color) 30%,
 				var(--button-active-background-color)
 			);
-			box-shadow: 0 .1em .2em -.1em #333;
+			box-shadow: 0 0.1em 0.2em -0.1em #333;
 		}
 	}
 </style>

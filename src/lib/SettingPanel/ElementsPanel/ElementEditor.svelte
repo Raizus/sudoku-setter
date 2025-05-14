@@ -19,7 +19,6 @@
 	const render = is_local || has_negatives;
 
 	$: current_constraint = $currentConstraintStore;
-	$: value_str = current_constraint?.constraint.value ?? '';
 
 	function updateValue(event: Event) {
 		if (!current_constraint) return;
@@ -37,6 +36,7 @@
 			input_options.type !== HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION
 		)
 			return;
+
 		const updater = input_options.valueUpdater;
 		if (!updater) return;
 		const new_value = updater(value, '');

@@ -10,6 +10,7 @@ import {
 	isSimpleSingleCellTool,
 	isSingleCellArrowTool,
 	isSingleCellMultiArrowTool,
+	isValuedGlobalConstraint,
 	type TOOLID
 } from '$src/lib/Puzzle/Tools';
 
@@ -190,7 +191,16 @@ export enum CELL_MULTI_ARROW_TOOL_MODE {
 	DELETE = 'Delete'
 }
 
-export type ToolModeT = CLONE_TOOL_MODE | BASIC_TOOL_MODE | ARROW_TOOL_MODE | undefined;
+export enum VALUE_TOOL_MODE {
+	CREATE = 'Create'
+}
+
+export type ToolModeT =
+	| CLONE_TOOL_MODE
+	| BASIC_TOOL_MODE
+	| ARROW_TOOL_MODE
+	| VALUE_TOOL_MODE
+	| undefined;
 
 export function getToolModes(tool: TOOLID) {
 	if (
@@ -207,6 +217,7 @@ export function getToolModes(tool: TOOLID) {
 		return BASIC_TOOL_MODE;
 	if (isArrowTool(tool)) return ARROW_TOOL_MODE;
 	if (isCloneTool(tool)) return CLONE_TOOL_MODE;
+	if (isValuedGlobalConstraint(tool)) return VALUE_TOOL_MODE;
 	return undefined;
 }
 
