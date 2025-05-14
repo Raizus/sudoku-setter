@@ -28,13 +28,27 @@
 				updateSettingsValue('selection_color', value);
 			}}
 		/>
+		<SettingsColorSelector
+			name="Conflicting cells color:"
+			value={settings.selection_color}
+			onChangeCb={(value) => {
+				updateSettingsValue('conflict_cells_color', value);
+			}}
+		/>
+		<SettingsColorSelector
+			name="Conflicting pencilmarks color:"
+			value={settings.selection_color}
+			onChangeCb={(value) => {
+				updateSettingsValue('conflict_marks_color', value);
+			}}
+		/>
 	</div>
 </div>
 
 <style lang="scss">
-    .grid {
-        display: grid;
-        grid-template-columns: 12rem auto;
-        row-gap: 0.2rem;
-    }
+	.grid {
+		display: grid;
+		grid-template-columns: 12rem auto;
+		row-gap: 0.2rem;
+	}
 </style>

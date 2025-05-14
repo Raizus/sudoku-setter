@@ -3,7 +3,8 @@ export interface Settings {
 	non_given_color: string;
 	selection_color: string;
 	seen_cells_color: string;
-	conflicts_color: string;
+	conflict_marks_color: string;
+	conflict_cells_color: string;
 
 	darkMode: boolean;
 
@@ -25,7 +26,8 @@ export const DEFAULT_SETTINGS: Settings = {
 	non_given_color: 'var(--cell-digit-color)',
 	selection_color: 'var(--selection-color)',
 	seen_cells_color: 'var(--seen-cells-color)',
-	conflicts_color: '',
+	conflict_marks_color: 'var(--cell-digit-conflict-color)',
+	conflict_cells_color: 'var(--conflict-cells-color)',
 
 	darkMode: true,
 	penToolActive: true,
@@ -39,6 +41,6 @@ export const DEFAULT_SETTINGS: Settings = {
 	showSolution: false
 };
 
-export function getDefaultsSettings(): Settings {
-	return DEFAULT_SETTINGS;
+export function getDefaultSettings(): Settings {
+	return {...DEFAULT_SETTINGS};
 }

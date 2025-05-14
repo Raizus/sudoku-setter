@@ -34,6 +34,7 @@
 		return true;
 	}
 
+	$: conflict_color = $settingsStore.conflict_marks_color;
 	$: cell_digit_color = $settingsStore.non_given_color;
 </script>
 
@@ -41,13 +42,12 @@
 	<g class="corner-marks-group">
 		{#each getPositions(cell) as { pos, value }}
 			<text
-				class:conflict={is_conflict(value)}
 				x={pos.x}
 				y={pos.y}
 				class="corner-mark"
 				font-size={fontSize}
 				dominant-baseline="central"
-				fill={cell_digit_color}
+				fill={is_conflict(value) ? conflict_color : cell_digit_color}
 			>
 				{value}
 			</text>
@@ -58,9 +58,5 @@
 <style>
 	.corner-mark {
 		text-anchor: middle;
-
-		&.conflict {
-			fill: var(--cell-digit-conflict-color);
-		}
 	}
 </style>
