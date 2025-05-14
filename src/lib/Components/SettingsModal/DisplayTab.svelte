@@ -30,14 +30,14 @@
 		/>
 		<SettingsColorSelector
 			name="Conflicting cells color:"
-			value={settings.selection_color}
+			value={settings.conflict_cells_color}
 			onChangeCb={(value) => {
 				updateSettingsValue('conflict_cells_color', value);
 			}}
 		/>
 		<SettingsColorSelector
 			name="Conflicting pencilmarks color:"
-			value={settings.selection_color}
+			value={settings.conflict_marks_color}
 			onChangeCb={(value) => {
 				updateSettingsValue('conflict_marks_color', value);
 			}}
