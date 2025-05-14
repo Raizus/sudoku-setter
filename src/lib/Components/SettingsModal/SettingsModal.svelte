@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Modal from '$lib/Components/Modal/Modal.svelte';
-	import { settingsStore } from '$stores/SettingsStore';
 	import TabbedMenu from './TabbedMenu.svelte';
 	import GameplayTab from './GameplayTab.svelte';
 	import OtherTab from './OtherTab.svelte';
