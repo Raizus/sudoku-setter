@@ -27,6 +27,7 @@ export enum HANDLER_TOOL_TYPE {
 	CORNER_LINE,
 	CENTER_CORNER_OR_EDGE,
 	OUTSIDE_DIRECTION,
+	VALUE_TOOL,
 	PEN
 }
 
@@ -39,6 +40,7 @@ export type ValueUpdaterI = (value: string | undefined, key: string) => string |
 // this interface validates the values
 
 export interface ValueToolInputOptions extends ToolOptionsI {
+	type: HANDLER_TOOL_TYPE.VALUE_TOOL;
 	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 }
@@ -111,6 +113,7 @@ export type CornerLineToolInputOptions = {
 
 export type LineToolInputOptions = {
 	type: HANDLER_TOOL_TYPE.LINE;
+	valueUpdater?: ValueUpdaterI;
 	// deletePrioritizeHead: boolean,
 	// deletePrioritizeTail: boolean,
 	allowSelfIntersection: boolean;
@@ -152,7 +155,8 @@ export type ToolHandlerOptions =
 	| CornerLineToolInputOptions
 	| CenterCornerOrEdgeToolInputOptions
 	| OutsideDirectionToolInputOptions
-	| PenToolInputOptions;
+	| PenToolInputOptions
+	| ValueToolInputOptions;
 
 export enum ARROW_TOOL_MODE {
 	DYNAMIC = 'Dynamic',
