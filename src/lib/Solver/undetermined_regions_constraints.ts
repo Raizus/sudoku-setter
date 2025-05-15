@@ -20,6 +20,7 @@ import { galaxiesConstraint } from './galaxy_constraints';
 import { cellCenterLoopNoTouchingConstraint } from './loop_constraints';
 import { mazeDirectedPathConstraint } from './directed_path_constraints';
 import { yinYangConstraint } from './yin_yang_constraints';
+import { doublersConstraint, indexerCellsConstraint, negatorsConstraint } from './value_modifier_constraints';
 
 function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
@@ -486,6 +487,9 @@ function chaosConstructionSuguruConstraint(model: PuzzleModel, element: Constrai
 type ElementF2 = (model: PuzzleModel, element: ConstraintsElement) => string;
 
 const tool_map = new Map<string, ElementF2>([
+	[TOOLS.DOUBLERS, doublersConstraint],
+	[TOOLS.NEGATORS, negatorsConstraint],
+	[TOOLS.INDEXER_CELLS, indexerCellsConstraint],
 	[TOOLS.CAVE, caveConstraint],
 	[TOOLS.CONNECT_FOUR, connectFourConstraint],
 	[TOOLS.GALAXIES, galaxiesConstraint],
