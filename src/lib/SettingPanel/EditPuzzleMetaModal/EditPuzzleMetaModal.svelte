@@ -110,10 +110,19 @@
 		<ModalSectionHeader title="Ruleset">
 			<button class="generate-button" on:click={autoGenCb}>Auto-Generate</button>
 		</ModalSectionHeader>
-		<textarea class="text-input input-ruleset" placeholder="Ruleset" rows={8} bind:value={rulesetStr}
+		<textarea
+			class="text-input input-ruleset"
+			placeholder="Ruleset"
+			rows={8}
+			bind:value={rulesetStr}
 		></textarea>
 		<ModalSectionHeader title="CTC Link" />
-		<input class="text-input input-ctc-link" type="text" placeholder="CTC Link" bind:value={ctcUrlStr} />
+		<input
+			class="text-input input-ctc-link"
+			type="text"
+			placeholder="CTC Link"
+			bind:value={ctcUrlStr}
+		/>
 		<ModalSectionHeader title="CTC Youtube Link" />
 		<input
 			class="text-input input-ctc-youtube-link"
@@ -129,9 +138,6 @@
 </Modal>
 
 <style lang="scss">
-	$button-background: var(--button-background-color);
-	$button-hover-background: var(--button-hover-background-color);
-
 	.edit-puzzle-meta-content {
 		position: relative;
 		display: flex;
@@ -142,18 +148,24 @@
 
 	.generate-button {
 		display: flex;
-		background: $button-background;
-		border-radius: 5px;
-		border: 0;
-		padding: 0.5rem;
-		margin-bottom: 0.2rem;
-		margin-top: 0.2rem;
 		align-items: center;
 		justify-content: center;
 		cursor: pointer;
+		background: var(--button-background-color);
+		border-radius: 5px;
+		border: 0;
+		padding: 0.5rem;
+		
+		margin-bottom: 0.2rem;
+		margin-top: 0.2rem;
 
 		&:hover {
-			background: $button-hover-background;
+			background: var(--button-hover-background-color);
+		}
+
+		&:focus {
+			outline: transparent;
+			box-shadow: var(--focus-shadow);
 		}
 	}
 </style>

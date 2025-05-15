@@ -131,13 +131,15 @@ main {
 
 .modal-button {
 	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
 	background: var(--button-background-color);
 	border-radius: 5px;
 	border: 0;
-	align-items: center;
-	justify-content: center;
+	padding: 0.5rem;
+
 	height: 3rem;
-	cursor: pointer;
 
 	&:hover {
 		background: var(--button-hover-background-color);
@@ -176,6 +178,7 @@ main {
 .settings-tab-layout {
 	display: flex;
 	flex-direction: column;
+	padding: 0.5rem 0.5rem;
 	gap: 0.5rem;
 	overflow: auto;
 	overflow-y: scroll;

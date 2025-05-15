@@ -41,5 +41,10 @@
 		&:hover {
 			background: var(--button-hover-background-color);
 		}
+
+		&:focus {
+			outline: transparent;
+			box-shadow: var(--focus-shadow);
+		}
 	}
 </style>
