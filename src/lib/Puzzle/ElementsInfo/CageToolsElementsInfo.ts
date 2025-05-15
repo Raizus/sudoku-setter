@@ -69,6 +69,13 @@ export const killerCageInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.KILLER_CAGE,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_CAGE_TOTALS_ARE_DIFFERENT,
+			description: 'All Killer Cage totals are different.'
+		}
+	],
+
 	shape: DEFAULT_CAGE_SHAPE,
 
 	meta: {

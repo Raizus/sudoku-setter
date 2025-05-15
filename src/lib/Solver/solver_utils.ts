@@ -195,6 +195,18 @@ export class PuzzleModel implements ModelI {
 		default_name: string,
 		parse_opts: ParseOptions = default_parse_opts
 	): [model_str: string, var_name: string] | null {
+		let model_str = '';
+		if (value.length === 0 && default_name.length > 0) {
+			const var_name = default_name;
+			const exists = this.hasVariable(var_name);
+			if (!exists) {
+				model_str += `var int: ${var_name};\n`;
+				this.addVariable(var_name);
+			}
+
+			return [model_str, var_name];
+		}
+
 		const parsed_value = parseValue(value, parse_opts);
 		if (!parsed_value) return null;
 		// parse number
@@ -204,7 +216,6 @@ export class PuzzleModel implements ModelI {
 		}
 
 		// parse variable
-		let model_str = '';
 		if (parsed_value.type === 'variable') {
 			const var_name = parsed_value.parsed;
 

@@ -52,6 +52,7 @@ export enum NEGATIVE_CONSTRAINTS {
 	ALL_INDEXING_ROW_GIVEN = 'All Indexing Row Given',
 	ALL_RATIOS_GIVEN = 'All Ratios Given',
 	ALL_DIFFERENCES_GIVEN = 'All Differences Given',
+	ALL_CAGE_TOTALS_ARE_DIFFERENT = 'All Cage Totals Are Different',
 
 	ALL_RADARS_GIVEN = 'All Radars Given',
 	ALL_YIN_YANG_KROPKI_GIVEN = 'All Yin Yang Kropki Given',

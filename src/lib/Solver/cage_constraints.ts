@@ -60,54 +60,51 @@ function valuedCageConstraint(
 	c_id: string,
 	constraint: CageToolI,
 	predicate: string
-) {
+): [out_str: string, var_name: string] {
 	const grid = model.puzzle.grid;
 	const vars = getCageVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
 
 	const value = constraint.value;
 	const result = getParsingResult(model, value, c_id);
-	if (!result) return '';
+	if (!result) return ['', ''];
 
 	const var_name = result[1];
 	let out_str: string = result[0];
 	out_str += `constraint ${predicate}(${vars_str}, ${var_name});\n`;
-	return out_str;
+	return [out_str, var_name];
 }
 
-function valuedCageElement(model: PuzzleModel, element: ConstraintsElement, predicate: string) {
+function valuedCageElement(
+	model: PuzzleModel,
+	element: ConstraintsElement,
+	predicate: string
+): [out_str: string, var_names: string[]] {
 	let out_str = '';
 	const constraints = element.constraints;
-	if (!constraints) return out_str;
+	if (!constraints) return [out_str, []];
 
+	const var_names: string[] = [];
 	for (const [c_id, constraint] of Object.entries(constraints)) {
-		const constraint_str = valuedCageConstraint(model, c_id, constraint as CageToolI, predicate);
-		out_str += constraint_str;
+		const result = valuedCageConstraint(model, c_id, constraint as CageToolI, predicate);
+		out_str += result[0];
+		var_names.push(result[1]);
 	}
-	return out_str;
-}
-
-function killerCageConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: CageToolI) {
-	const vars = getCageVars(grid, constraint);
-	const vars_str = `[${vars.join(',')}]`;
-	const value = constraint.value;
-
-	if (!value) {
-		const constraint_str = allDifferentConstraint(vars);
-		return constraint_str;
-	}
-
-	const result = getParsingResult(model, value, c_id);
-	if (!result) return '';
-
-	const var_name = result[1];
-	let out_str: string = result[0];
-	out_str += `constraint killer_cage(${vars_str}, ${var_name});\n`;
-	return out_str;
+	return [out_str, var_names];
 }
 
 function killerCageElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, killerCageConstraint);
+	const result = valuedCageElement(model, element, 'killer_cage');
+	let out_str = result[0];
+
+	const var_names = result[1];
+	if (!element.negative_constraints) return out_str;
+	const cage_totals_different = !!element.negative_constraints[TOOLS.ALL_CAGE_TOTALS_ARE_DIFFERENT];
+
+	if (cage_totals_different) {
+		out_str += `\n% ${TOOLS.ALL_CAGE_TOTALS_ARE_DIFFERENT}\n`;
+		out_str += `constraint all_different([${var_names.join(', ')}]);\n`;
+	}
 	return out_str;
 }
 
@@ -142,8 +139,8 @@ function invertedKillerCageElement(model: PuzzleModel, element: ConstraintsEleme
 }
 
 function sumCageElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedCageElement(model, element, 'sum_cage_p');
-	return out_str;
+	const result = valuedCageElement(model, element, 'sum_cage_p');
+	return result[0];
 }
 
 function parityBalanceCageElement(model: PuzzleModel, element: ConstraintsElement) {
@@ -157,13 +154,13 @@ function sumCageLookAndSayElement(model: PuzzleModel, element: ConstraintsElemen
 }
 
 function divisibleKillerCageElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedCageElement(model, element, 'divisible_killer_cage_p');
-	return out_str;
+	const result = valuedCageElement(model, element, 'divisible_killer_cage_p');
+	return result[0];
 }
 
 function spotlightCageElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedCageElement(model, element, 'spotlight_cage_p');
-	return out_str;
+	const result = valuedCageElement(model, element, 'spotlight_cage_p');
+	return result[0];
 }
 
 function uniqueDigitsCageConstraint(
@@ -273,10 +270,7 @@ function yinYangValuedCageElement(
 	return out_str;
 }
 
-function yinYangAntithesisKillerCageElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-) {
+function yinYangAntithesisKillerCageElement(model: PuzzleModel, element: ConstraintsElement) {
 	// Digits in cages cannot repeat and must sum to the small clue in the top left corner of the cage. However, shaded cells are treated as negative. In other words, the cage total is the sum of unshaded cells minus the sum of shaded cells.
 	const grid = model.puzzle.grid;
 	const out_str = yinYangValuedCageElement(
@@ -288,10 +282,7 @@ function yinYangAntithesisKillerCageElement(
 	return out_str;
 }
 
-function yinYangBreakevenKillerCageElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-) {
+function yinYangBreakevenKillerCageElement(model: PuzzleModel, element: ConstraintsElement) {
 	// Digits in cages cannot repeat and must sum to the small clue in the top left corner of the cage. However, shaded cells are treated as negative. In other words, the cage total is the sum of unshaded cells minus the sum of shaded cells.
 	const grid = model.puzzle.grid;
 	const out_str = yinYangValuedCageElement(
