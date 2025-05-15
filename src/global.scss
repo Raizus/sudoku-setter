@@ -190,7 +190,9 @@ main {
 	background: var(--input-background-color);
 	display: flex;
 	color: var(--text-primary-color);
+
 	&:focus {
-		outline: 2px solid var(--input-outline-color);
+		outline: none;
+		border: 2px solid var(--input-outline-color);
 	}
 }
