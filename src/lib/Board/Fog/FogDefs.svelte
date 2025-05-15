@@ -1,13 +1,13 @@
 <script lang="ts">
+	import type { ConstraintsElement } from '$src/lib/Puzzle/Constraints/LocalConstraints';
+	import type { CellToolI } from '$src/lib/Puzzle/Constraints/SingleCellConstraints';
+	import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
+	import type { Solution } from '$src/lib/Puzzle/Puzzle';
+	import { TOOLS } from '$src/lib/Puzzle/Tools';
+	import type { GridShape } from '$src/lib/Types/types';
+	import { getCagePathStr } from '$src/lib/utils/SquareCellGridRenderUtils';
 	import { cellsStore, enableFogMaskStore, gridStore, solutionStore } from '$stores/BoardStore';
 	import { customFogClearingStore, fogLightsStore } from '$stores/ElementsStore';
-	import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
-	import type { CellToolI } from '../Puzzle/Constraints/SingleCellConstraints';
-	import type { Cell } from '../Puzzle/Grid/Cell';
-	import type { Solution } from '../Puzzle/Puzzle';
-	import { TOOLS } from '../Puzzle/Tools';
-	import type { GridShape, Rectangle } from '../Types/types';
-	import { getCagePathStr } from '../utils/SquareCellGridRenderUtils';
 
 	export let gridShape: GridShape;
 

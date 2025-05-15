@@ -23,8 +23,6 @@
 	import PenToolRender from './PenToolRender/PenToolRender.svelte';
 	import SeenCellsRender from './SeenCellsRender.svelte';
 	import ConflictsRender from './ConflictsRender.svelte';
-	import FogDefs from './FogDefs.svelte';
-	import FogCover from './FogCover.svelte';
 	import SolutionRender from './SolutionRender.svelte';
 	import ToolsLayerRender from './Constraints/ToolsLayerRender.svelte';
 	import {
@@ -47,7 +45,6 @@
 	import CornerLineToolRender from './Constraints/CornerLineToolRender.svelte';
 	import EdgeToolRender from './Constraints/EdgeToolRender.svelte';
 	import SingleCellMultiArrowRender from './Constraints/SingleCellMultiArrowRender.svelte';
-	import FogLightBulbDefs from './FogLightBulbDefs.svelte';
 	import FogLightsRender from './Constraints/FogLightsRender.svelte';
 	import EdgeToolPreviewRender from './Constraints/EdgeToolPreviewRender.svelte';
 	import CornerToolPreviewRender from './Constraints/CornerToolPreviewRender.svelte';
@@ -57,6 +54,9 @@
 	import CenterCornerOrEdgeToolPreviewRender from './Constraints/CenterCornerOrEdgeToolPreviewRender.svelte';
 	import DiagonalElementsRender from './Constraints/DiagonalElementsRender.svelte';
 	import { boundingBoxStore } from '$stores/BoundingBoxStore.js';
+	import FogLightBulbDefs from './Fog/FogLightBulbDefs.svelte';
+	import FogDefs from './Fog/FogDefs.svelte';
+	import FogCover from './Fog/FogCover.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 

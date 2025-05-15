@@ -1,6 +1,6 @@
 <script lang="ts">
+	import type { GridShape } from '$src/lib/Types/types';
 	import { enableFogMaskStore } from '$stores/BoardStore';
-	import type { GridShape } from '../Types/types';
 
 	export let gridShape: GridShape;
 
