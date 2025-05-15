@@ -7,7 +7,8 @@
 	} from '$input/ToolInputHandlers/types';
 	import { pushAddLocalConstraintCommand } from '$input/ToolInputHandlers/utils.js';
 	import { valuedGlobalConstraint } from '$src/lib/Puzzle/Constraints/ValuedGlobalConstraints.js';
-	import type { TOOLID } from '$src/lib/Puzzle/Tools';
+	import { variableConstraint } from '$src/lib/Puzzle/Constraints/VariableConstraints';
+	import { isValuedGlobalConstraint, TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
 	import { toolModeStore } from '$stores/InputHandlerStore';
 	import { uniqueId } from 'lodash';
 
@@ -22,9 +23,15 @@
 	}
 
 	function createCb() {
-		const id = uniqueId();
-		const constraint = valuedGlobalConstraint(tool_id, '');
-		pushAddLocalConstraintCommand(id, constraint, tool_id, true);
+		if (isValuedGlobalConstraint(tool_id)) {
+			const id = uniqueId();
+			const constraint = valuedGlobalConstraint(tool_id, '');
+			pushAddLocalConstraintCommand(id, constraint, tool_id, true);
+		} else if (tool_id === TOOLS.VARIABLE_CONSTRAINT) {
+			const id = uniqueId();
+			const constraint = variableConstraint('', '');
+			pushAddLocalConstraintCommand(id, constraint, tool_id, true);
+		}
 	}
 
 	$toolModeStore = getDefaultToolMode(tool_id);

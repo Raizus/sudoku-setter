@@ -74,12 +74,17 @@ export function parseLines(data: Record<string, unknown>): GridCoordI[][] {
 	return lines;
 }
 
-export function parseValue(data: Record<string, unknown>): string | undefined {
-	const value = data['value'];
+export function parseStringParameter(data: Record<string, unknown>, name: string): string | undefined {
+	const value = data[name];
 	if (value !== undefined && typeof value !== 'string') {
-		throw Error(`value entry must be a string, if present at all: ${value}`);
+		throw Error(`${name} entry must be a string, if present at all: ${value}`);
 	}
 
+	return value;
+}
+
+export function parseValue(data: Record<string, unknown>): string | undefined {
+	const value = parseStringParameter(data, 'value');
 	return value;
 }
 

@@ -317,6 +317,7 @@ import {
 	nexusInfo
 } from './ValueModifierConstraintsElementsInfo';
 import { mazeWallInfo } from './CornerLineToolsElementsInfo';
+import { variableConstraintInfo } from './OtherConstraintsElementsInfo';
 
 export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = {
 	// Cell input elements
@@ -674,6 +675,9 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.MINIMUM_DIAGONALLY_ADJACENT_DIFFERENCE]: minimumDiagonallyAdjacentDifferenceInfo,
 	[TOOLS.FORBIDDEN_KNIGHT_SUM]: forbiddenKnightSumInfo,
 	[TOOLS.LITS_MAX_TETROMINO_SUM]: litsMaxTetrominoSumInfo,
+
+	// Other Constraints
+	[TOOLS.VARIABLE_CONSTRAINT]: variableConstraintInfo,
 
 	// Fog Tools
 	[TOOLS.FOG_LIGHTS]: fogLighsInfo,

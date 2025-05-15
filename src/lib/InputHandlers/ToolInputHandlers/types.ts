@@ -11,6 +11,7 @@ import {
 	isSingleCellArrowTool,
 	isSingleCellMultiArrowTool,
 	isValuedGlobalConstraint,
+	TOOLS,
 	type TOOLID
 } from '$src/lib/Puzzle/Tools';
 
@@ -217,7 +218,7 @@ export function getToolModes(tool: TOOLID) {
 		return BASIC_TOOL_MODE;
 	if (isArrowTool(tool)) return ARROW_TOOL_MODE;
 	if (isCloneTool(tool)) return CLONE_TOOL_MODE;
-	if (isValuedGlobalConstraint(tool)) return VALUE_TOOL_MODE;
+	if (isValuedGlobalConstraint(tool) || tool === TOOLS.VARIABLE_CONSTRAINT) return VALUE_TOOL_MODE;
 	return undefined;
 }
 

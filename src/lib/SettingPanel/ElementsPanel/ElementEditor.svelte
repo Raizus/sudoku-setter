@@ -1,8 +1,12 @@
 <script lang="ts">
 	import { HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
-	import { updateConstraintValue } from '$src/lib/Puzzle/Constraints/LocalConstraints';
+	import {
+		updateConstraintName,
+		updateConstraintValue
+	} from '$src/lib/Puzzle/Constraints/LocalConstraints';
+	import { type VariableConstraintI } from '$src/lib/Puzzle/Constraints/VariableConstraints';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
-	import { isLocalConstraint, type TOOLID } from '$src/lib/Puzzle/Tools';
+	import { isLocalConstraint, TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
 	import { currentConstraintStore, updateLocalConstraint } from '$stores/BoardStore';
 	import ConstraintCheckbox from './ConstraintCheckbox.svelte';
 	import ConstraintList from './ConstraintList.svelte';
@@ -18,10 +22,11 @@
 	// i.e global constraints without negative_constraints
 	const render = is_local || has_negatives;
 
-	$: current_constraint = $currentConstraintStore;
+	$: constraint_and_id = $currentConstraintStore;
+	$: constraint = constraint_and_id?.constraint;
 
 	function updateValue(event: Event) {
-		if (!current_constraint) return;
+		if (!constraint_and_id) return;
 		const target = event.target as HTMLInputElement;
 		const value = target.value;
 		const input_options = element_info.inputOptions;
@@ -42,8 +47,22 @@
 		const new_value = updater(value, '');
 		if (new_value === undefined) return;
 
-		const constraint = updateConstraintValue(current_constraint.constraint, new_value);
-		updateLocalConstraint(tool_id, current_constraint.id, constraint);
+		const constraint = updateConstraintValue(constraint_and_id.constraint, new_value);
+		updateLocalConstraint(tool_id, constraint_and_id.id, constraint);
+	}
+
+	function updateName(event: Event) {
+		if (!constraint_and_id) return;
+		const target = event.target as HTMLInputElement;
+		const value = target.value;
+		const input_options = element_info.inputOptions;
+		if (!input_options) return;
+
+		const constraint = updateConstraintName(
+			constraint_and_id.constraint as VariableConstraintI,
+			value
+		);
+		updateLocalConstraint(tool_id, constraint_and_id.id, constraint);
 	}
 </script>
 
@@ -61,18 +80,32 @@
 					{/each}
 				{/if}
 			</div>
-			{#if current_constraint && current_constraint.constraint.value !== undefined}
-				<div class="value-editor">
-					Value:
-					<input
-						class="text-input"
-						type="text"
-						spellcheck={false}
-						value={current_constraint.constraint.value}
-						on:input={(event) => updateValue(event)}
-					/>
-				</div>
-			{/if}
+			<div class="value-editor-container">
+				{#if constraint && Object.hasOwn(constraint, 'name')}
+					<div class="value-editor">
+						Name:
+						<input
+							class="text-input"
+							type="text"
+							spellcheck={false}
+							value={(constraint as VariableConstraintI)['name']}
+							on:change={(event) => updateName(event)}
+						/>
+					</div>
+				{/if}
+				{#if constraint?.value !== undefined}
+					<div class="value-editor">
+						Value:
+						<input
+							class="text-input"
+							type="text"
+							spellcheck={false}
+							value={constraint.value}
+							on:input={(event) => updateValue(event)}
+						/>
+					</div>
+				{/if}
+			</div>
 			<ToolModeButtons {tool_id} />
 			<ConstraintList {tool_id} />
 		</div>
@@ -91,6 +124,11 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
+	}
+
+	.value-editor-container {
+		display: flex;
+		flex-direction: column;
 	}
 
 	.bool-constraints-container {

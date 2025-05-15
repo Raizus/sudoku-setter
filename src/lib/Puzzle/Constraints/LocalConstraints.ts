@@ -3,6 +3,7 @@ import type { DIRECTION } from '$lib/utils/directions';
 import { uniqueId } from 'lodash';
 import {
 	SIMPLE_SINGLE_CELL_CONSTRAINTS,
+	TOOLS,
 	isArrowTool,
 	isCageTool,
 	isCenterEdgeCornerTool,
@@ -48,6 +49,7 @@ import {
 } from './CenterCornerOrEdgeConstraints';
 import { valuedGlobalConstraintFromJson, type ValuedGlobalToolI } from './ValuedGlobalConstraints';
 import { cornerLineConstraintFromJson, type CornerLineToolI } from './CornerLineConstraints';
+import { variableConstraintFromJson, type VariableConstraintI } from './VariableConstraints';
 
 export type ConstraintType =
 	| CellToolI
@@ -60,10 +62,18 @@ export type ConstraintType =
 	| CloneToolI
 	| OutsideDirectionToolI
 	| CenterCornerOrEdgeToolI
-	| ValuedGlobalToolI;
+	| ValuedGlobalToolI
+	| VariableConstraintI;
 
 export function updateConstraintValue<T extends ConstraintType>(constraint: T, value: string): T {
 	return { ...constraint, value } as T;
+}
+
+export function updateConstraintName(
+	constraint: VariableConstraintI,
+	name: string
+): VariableConstraintI {
+	return { ...constraint, name };
 }
 
 export interface ConstraintsElement {
@@ -227,6 +237,8 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 					constraint = outsideDirectionConstraintFromJson(tool, constraint_data);
 				} else if (isValuedGlobalConstraint(tool)) {
 					constraint = valuedGlobalConstraintFromJson(tool, constraint_data);
+				} else if (tool === TOOLS.VARIABLE_CONSTRAINT) {
+					constraint = variableConstraintFromJson(constraint_data);
 				} else if (isCenterEdgeCornerTool(tool)) {
 					constraint = centerCornerOrEdgeConstraintFromJson(tool, constraint_data);
 				}
@@ -491,6 +503,10 @@ export function constraintToJson(constraint: ConstraintType) {
 
 	if ('value' in constraint && constraint['value']) {
 		jsonObj['value'] = constraint['value'];
+	}
+
+	if ('name' in constraint && constraint['name']) {
+		jsonObj['name'] = constraint['name'];
 	}
 
 	if ('shape' in constraint && constraint['shape']) {
