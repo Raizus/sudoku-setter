@@ -99,10 +99,10 @@
 <Modal bind:showModal title="Edit Puzzle Meta">
 	<div class="edit-puzzle-meta-content">
 		<ModalSectionHeader title="Title" />
-		<input class="input-title" type="text" placeholder="Title" bind:value={titleStr} />
+		<input class="text-input input-title" type="text" placeholder="Title" bind:value={titleStr} />
 		<ModalSectionHeader title="Authors" />
 		<input
-			class="input-authors"
+			class="text-input input-authors"
 			type="text"
 			placeholder="Authors (For multiple authors, separate them with a semi-colon)"
 			bind:value={authorsStr}
@@ -110,13 +110,13 @@
 		<ModalSectionHeader title="Ruleset">
 			<button class="generate-button" on:click={autoGenCb}>Auto-Generate</button>
 		</ModalSectionHeader>
-		<textarea class="input-ruleset" placeholder="Ruleset" rows={8} bind:value={rulesetStr}
+		<textarea class="text-input input-ruleset" placeholder="Ruleset" rows={8} bind:value={rulesetStr}
 		></textarea>
 		<ModalSectionHeader title="CTC Link" />
-		<input class="input-ctc-link" type="text" placeholder="CTC Link" bind:value={ctcUrlStr} />
+		<input class="text-input input-ctc-link" type="text" placeholder="CTC Link" bind:value={ctcUrlStr} />
 		<ModalSectionHeader title="CTC Youtube Link" />
 		<input
-			class="input-ctc-youtube-link"
+			class="text-input input-ctc-youtube-link"
 			type="text"
 			placeholder="CTC Youtube Link"
 			bind:value={ctcYoutubeUrlStr}
@@ -138,19 +138,6 @@
 		flex-direction: column;
 		padding: 0.4em;
 		max-height: 100%;
-	}
-
-	input,
-	textarea {
-		border: 2px solid var(--input-border-color);
-		border-radius: 4px;
-		background: var(--input-background-color);
-	}
-
-	input:focus,
-	textarea:focus {
-		outline: none;
-		border: 2px solid var(--input-outline-color);
 	}
 
 	.generate-button {

@@ -66,7 +66,7 @@
 		/>
 		<ModalSectionHeader title={`Allowed Digits (for the solver): ${allowed_digits_to_str(allowed_digits)}`} />
 		<input
-			class="allowed-digits"
+			class="text-input"
 			type="text"
 			placeholder={allowed_digits_to_str(allowed_digits)}
 			bind:value={inputStr}
@@ -86,16 +86,5 @@
 		flex-direction: column;
 		padding: 0.4em;
 		max-height: 100%;
-	}
-
-	input {
-		border: 2px solid var(--input-border-color);
-		border-radius: 4px;
-		background: var(--input-background-color);
-	}
-
-	input:focus {
-		outline: none;
-		border: 2px solid var(--input-outline-color);
 	}
 </style>

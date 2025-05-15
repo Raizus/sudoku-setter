@@ -65,7 +65,7 @@
 				<div class="value-editor">
 					Value:
 					<input
-						class="value-input"
+						class="text-input"
 						type="text"
 						spellcheck={false}
 						value={current_constraint.constraint.value}
@@ -104,17 +104,5 @@
 		align-items: center;
 		gap: 0.5rem;
 		min-height: 2em;
-	}
-
-	.value-input {
-		background-color: var(--input-background-color);
-		display: flex;
-		color: var(--text-primary-color);
-		border: 1px solid var(--input-border-color);
-		border-radius: 0.15rem;
-
-		&:focus {
-			outline: 2px solid var(--input-outline-color);
-		}
 	}
 </style>
