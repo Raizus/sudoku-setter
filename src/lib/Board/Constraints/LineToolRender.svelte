@@ -1,8 +1,8 @@
 <script lang="ts">
-	import LineRender from '$lib/Components/SvgRender/LineRender.svelte';
-	import LineWithCircleEndsToolRender from '$lib/Components/SvgRender/LineWithCircleEndsToolRender.svelte';
-	import LineWithPolygonEndsRender from '$lib/Components/SvgRender/LineWithPolygonEndsRender.svelte';
-	import ThermoRender from '$lib/Components/SvgRender/ThermoRender.svelte';
+	import LineRender from '$src/lib/Board/SvgComponents/LineRender.svelte';
+	import LineWithCircleEndsToolRender from '$src/lib/Board/SvgComponents/LineWithCircleEndsToolRender.svelte';
+	import LineWithPolygonEndsRender from '$src/lib/Board/SvgComponents/LineWithPolygonEndsRender.svelte';
+	import ThermoRender from '$src/lib/Board/SvgComponents/ThermoRender.svelte';
 	import type { LineToolI } from '$lib/Puzzle/Constraints/LineConstraints';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';

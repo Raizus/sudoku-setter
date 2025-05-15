@@ -7,7 +7,7 @@
 	import { Vector2D } from '$lib/utils/Vector2D';
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 	import QuadrupleTextRender from './QuadrupleTextRender.svelte';
-	import RenderShape from '$components/SvgRender/RenderShape.svelte';
+	import RenderShape from '$src/lib/Board/SvgComponents/RenderShape.svelte';
 	import { currentConstraintStore } from '$stores/BoardStore';
 
 	export let tool: CornerToolI;

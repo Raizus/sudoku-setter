@@ -6,7 +6,7 @@
 	import type { CellToolI } from '$lib/Puzzle/Constraints/SingleCellConstraints';
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 	import MinMaxRender from './MinMaxRender.svelte';
-	import RenderShape from '$components/SvgRender/RenderShape.svelte';
+	import RenderShape from '$src/lib/Board/SvgComponents/RenderShape.svelte';
 	import { Vector2D } from '$src/lib/utils/Vector2D';
 	import CellTextLabelRender from './CellTextLabelRender.svelte';
 	import ColoredCountingCircleRender from './ColoredCountingCircleRender.svelte';

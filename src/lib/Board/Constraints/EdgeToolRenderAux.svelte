@@ -3,7 +3,7 @@
 	import { SHAPE_TYPES, defaultEdgeCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import type { EdgeToolI } from '$lib/Puzzle/Constraints/EdgeConstraints';
-	import CircleRender from '$lib/Components/SvgRender/CircleRender.svelte';
+	import CircleRender from '$src/lib/Board/SvgComponents/CircleRender.svelte';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import {
 		cellToCellCenterVector,
@@ -11,7 +11,7 @@
 	} from '$lib/utils/SquareCellGridRenderUtils';
 	import { vectorAverage } from '$lib/utils/Vector2D';
 	import BorderLineRender from './BorderLineRender.svelte';
-	import RenderShape from '$components/SvgRender/RenderShape.svelte';
+	import RenderShape from '$src/lib/Board/SvgComponents/RenderShape.svelte';
 	import { currentConstraintStore } from '$stores/BoardStore';
 
 	export let tool: EdgeToolI;

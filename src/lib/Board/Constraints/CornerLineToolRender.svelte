@@ -1,5 +1,5 @@
 <script lang="ts">
-	import LineRender from '$lib/Components/SvgRender/LineRender.svelte';
+	import LineRender from '$src/lib/Board/SvgComponents/LineRender.svelte';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { SHAPE_TYPES, defaultLineShape } from '$lib/Puzzle/Shape/Shape';

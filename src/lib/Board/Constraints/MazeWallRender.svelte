@@ -1,6 +1,6 @@
 <script lang="ts">
-	import CircleRender from '$components/SvgRender/CircleRender.svelte';
-	import LineRender from '$components/SvgRender/LineRender.svelte';
+	import CircleRender from '$src/lib/Board/SvgComponents/CircleRender.svelte';
+	import LineRender from '$src/lib/Board/SvgComponents/LineRender.svelte';
 	import { type ShapeI } from '$lib/Puzzle/Shape/Shape';
 	import { Vector2D } from '$lib/utils/Vector2D';
 	import { cloneDeep } from 'lodash';
