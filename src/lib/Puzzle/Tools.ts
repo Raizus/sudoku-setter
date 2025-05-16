@@ -86,6 +86,8 @@ export enum OTHER_UNDETERMINED_REGIONS_CONSTRAINTS {
 	NUMBERED_CHAOS_CONSTRUCTION = 'Numbered Chaos Construction',
 	CHAOS_CONSTRUCTION_SUGURU = 'Chaos Construction Suguru',
 	TWO_CONTIGUOUS_REGIONS = 'Two Contiguous Regions',
+	SHADED_BOUNDARIES = 'Shaded Boundaries',
+	SHADED_BOUNDARIES_ADJACENT_CELL_SUM_IS_EVEN = 'Shaded Boundaries Adjacent Cell Sum Is Even',
 	SASHIGANE = 'Sashigane',
 	NORINORI = 'Norinori',
 	GOLDILOCKS_ZONE = 'Goldilocks Zone',
@@ -274,7 +276,9 @@ export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
 	NURIKABE_COUNT_ISLAND_CELLS_ARROWS = 'Nurikabe Count Island Cells Arrows',
 	CONNECT_FOUR_COUNT_CELLS_OF_SAME_COLOR = 'Connect Four Count Cells Of Same Color',
 
-	NEXT_NUMBERED_REGION_DISTANCE_ARROWS = 'Next Numbered Region Distance Arrows'
+	NEXT_NUMBERED_REGION_DISTANCE_ARROWS = 'Next Numbered Region Distance Arrows',
+
+	SHADED_BOUNDARIES_COMBINED_COUNT_ARROWS = 'Shaded Boundaries Combined Count Arrows'
 }
 
 export enum EDGE_CONSTRAINTS {

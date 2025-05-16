@@ -220,3 +220,18 @@ export const nextNumberedRegionDistanceArrowsInfo: SquareCellElementInfo = {
 		categories: defaultCategories
 	}
 };
+
+export const shadedBoundariesCombinedCountArrowsInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
+
+	toolId: TOOLS.SHADED_BOUNDARIES_COMBINED_COUNT_ARROWS,
+
+	shape: defaultShape,
+
+	meta: {
+		description:
+			'A digit in a cell with one or more arrows indicates the total number of shaded boundaries in the directions of all arrows combined.',
+		tags: [],
+		categories: defaultCategories
+	}
+};

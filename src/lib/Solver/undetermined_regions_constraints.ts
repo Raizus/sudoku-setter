@@ -20,7 +20,11 @@ import { galaxiesConstraint } from './galaxy_constraints';
 import { cellCenterLoopNoTouchingConstraint } from './loop_constraints';
 import { mazeDirectedPathConstraint } from './directed_path_constraints';
 import { yinYangConstraint } from './yin_yang_constraints';
-import { doublersConstraint, indexerCellsConstraint, negatorsConstraint } from './value_modifier_constraints';
+import {
+	doublersConstraint,
+	indexerCellsConstraint,
+	negatorsConstraint
+} from './value_modifier_constraints';
 
 function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
@@ -503,6 +507,45 @@ export function buildYourOwnKillerCagesConstraint(model: PuzzleModel, element: C
 	return out_str;
 }
 
+function shadedBoundariesConstraint(model: PuzzleModel, element: ConstraintsElement) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outisde the grid.`);
+		return '';
+	}
+
+	const grid_name = VAR_2D_NAMES.SHADED_BOUNDARIES_REGIONS;
+	const grid_name2 = VAR_2D_NAMES.SHADED_BOUNDARIES_VERTICAL;
+	const grid_name3 = VAR_2D_NAMES.SHADED_BOUNDARIES_HORIZONTAL;
+	const nrows = grid.nRows;
+	const ncols = grid.nCols;
+	const vert_idxs = `0..${nrows - 2}`;
+	const horiz_idxs = `0..${ncols - 2}`;
+
+	// \n% ${tool}\n
+	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name};\n`;
+	out_str += `array[${vert_idxs}, COL_IDXS] of var bool: ${grid_name2};\n`;
+	out_str += `array[ROW_IDXS, ${horiz_idxs}] of var bool: ${grid_name3};\n`;
+	out_str += `constraint shaded_boundaries_two_regions_p(${grid_name});\n`;
+
+	if (!element.negative_constraints) return out_str;
+	const adjcent_cell_sum_is_even_boundary =
+		!!element.negative_constraints[TOOLS.SHADED_BOUNDARIES_ADJACENT_CELL_SUM_IS_EVEN];
+
+	if (adjcent_cell_sum_is_even_boundary) {
+		out_str += `constraint shaded_boundaries_adjacent_sum_is_even_boundary_vertical_p(${VAR_2D_NAMES.BOARD}, ${grid_name2});\n`;
+		out_str += `constraint shaded_boundaries_adjacent_sum_is_even_boundary_horizontal_p(${VAR_2D_NAMES.BOARD}, ${grid_name3});\n`;
+		out_str += `constraint shaded_boundaries_adjacent_sum_is_even_boundary_region_p(${VAR_2D_NAMES.BOARD}, ${grid_name});\n`;
+	}
+
+	return out_str;
+}
+
 type ElementF2 = (model: PuzzleModel, element: ConstraintsElement) => string;
 
 const tool_map = new Map<string, ElementF2>([
@@ -531,7 +574,8 @@ const tool_map = new Map<string, ElementF2>([
 	[TOOLS.FILLOMINO, fillominoConstraint],
 	[TOOLS.NEXUS, nexusConstraint],
 	[TOOLS.GOLDILOCKS_ZONE, goldilocksConstraint],
-	[TOOLS.BUILD_YOUR_OWN_KILLER_CAGES, buildYourOwnKillerCagesConstraint]
+	[TOOLS.BUILD_YOUR_OWN_KILLER_CAGES, buildYourOwnKillerCagesConstraint],
+	[TOOLS.SHADED_BOUNDARIES, shadedBoundariesConstraint]
 ]);
 
 export function undeterminedRegionsElements(model: PuzzleModel, element: ConstraintsElement) {

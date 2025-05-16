@@ -117,7 +117,8 @@ import {
 	shikakuInfo,
 	LITSInfo,
 	fillominoInfo,
-	buildYourOwnKillerCagesInfo
+	buildYourOwnKillerCagesInfo,
+	shadedBoundariesInfo
 } from './UndeterminedRegionsElementsInfo';
 import {
 	yinYangFillominoParityInfo,
@@ -300,6 +301,7 @@ import {
 	hotArrowsInfo,
 	nextNumberedRegionDistanceArrowsInfo,
 	nurikabeCountIslandCellsArrowsInfo,
+	shadedBoundariesCombinedCountArrowsInfo,
 	yinYangCountShadedCellsInfo
 } from './SingleCellMultiArrowElementsInfo';
 import { yinYangSumOfCellsOfOppositeColorInfo } from './SingleCellMultiArrowElementsInfo';
@@ -379,6 +381,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.NURIMISAKI]: nurimisakiInfo,
 	[TOOLS.NURIKABE]: nurikabeInfo,
 	[TOOLS.BUILD_YOUR_OWN_KILLER_CAGES]: buildYourOwnKillerCagesInfo,
+	[TOOLS.SHADED_BOUNDARIES]: shadedBoundariesInfo,
 
 	[TOOLS.TWO_CONTIGUOUS_REGIONS]: twoContiguousRegionsInfo,
 	[TOOLS.SASHIGANE]: sashiganeRegionsInfo,
@@ -501,6 +504,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.CONNECT_FOUR_COUNT_CELLS_OF_SAME_COLOR]: connectFourCountCellsOfSameColorInfo,
 
 	[TOOLS.NEXT_NUMBERED_REGION_DISTANCE_ARROWS]: nextNumberedRegionDistanceArrowsInfo,
+	[TOOLS.SHADED_BOUNDARIES_COMBINED_COUNT_ARROWS]: shadedBoundariesCombinedCountArrowsInfo,
 
 	// Edge Constraints
 	[TOOLS.DIFFERENCE]: differenceInfo,

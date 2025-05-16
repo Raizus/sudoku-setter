@@ -409,6 +409,67 @@ function nextNumberedRegionDistanceArrowsElement(model: PuzzleModel, element: Co
 	return out_str;
 }
 
+function shadedBoundariesCombinedCountArrowsConstraint(
+	grid: Grid,
+	constraint: CellMultiArrowToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToVarName(cell);
+
+	const directions = constraint.directions;
+	const str_list: string[] = [];
+	for (const direction of directions) {
+		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
+		if (cells.length == 0) continue;
+		if (direction === DIRECTION.N || direction === DIRECTION.S) {
+			const offset = direction === DIRECTION.N ? 0 : -1;
+			const boundary_vars =
+				'[' +
+				cells
+					.map(
+						(cell2) => `${VAR_2D_NAMES.SHADED_BOUNDARIES_VERTICAL}[${cell2.r + offset}, ${cell2.c}]`
+					)
+					.join(',') +
+				']';
+			const aux_str = `count(${boundary_vars}, true)`;
+			str_list.push(aux_str);
+		}
+
+		if (direction === DIRECTION.E || direction === DIRECTION.W) {
+			const offset = direction == DIRECTION.W ? 0 : -1;
+			const boundary_vars =
+				'[' +
+				cells
+					.map(
+						(cell2) =>
+							`${VAR_2D_NAMES.SHADED_BOUNDARIES_HORIZONTAL}[${cell2.r}, ${cell2.c + offset}]`
+					)
+					.join(',') +
+				']';
+			const aux_str = `count(${boundary_vars}, true)`;
+			str_list.push(aux_str);
+		}
+	}
+	if (!str_list.length) return '';
+
+	const out_str = `constraint ${str_list.join(' + ')} = ${cell_var};\n`;
+	return out_str;
+}
+
+function shadedBoundariesCombinedCountArrowsElement(
+	model: PuzzleModel,
+	element: ConstraintsElement
+) {
+	const out_str = singleCellMultiArrowElementFunction(
+		model,
+		element,
+		shadedBoundariesCombinedCountArrowsConstraint
+	);
+	return out_str;
+}
+
 const tool_map = new Map<string, ElementF>([
 	[TOOLS.HOT_ARROWS, hotArrowsElement],
 	[TOOLS.COLD_ARROWS, coldArrowsElement],
@@ -430,7 +491,8 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS, sameGalaxyUnobstructedCountArrowsElement],
 	[TOOLS.NURIKABE_COUNT_ISLAND_CELLS_ARROWS, nurikabeCountIslandCellsArrowsElement],
 	[TOOLS.CONNECT_FOUR_COUNT_CELLS_OF_SAME_COLOR, connectFourCountCellsOfSameColorElement],
-	[TOOLS.NEXT_NUMBERED_REGION_DISTANCE_ARROWS, nextNumberedRegionDistanceArrowsElement]
+	[TOOLS.NEXT_NUMBERED_REGION_DISTANCE_ARROWS, nextNumberedRegionDistanceArrowsElement],
+	[TOOLS.SHADED_BOUNDARIES_COMBINED_COUNT_ARROWS, shadedBoundariesCombinedCountArrowsElement]
 ]);
 
 export function singleCellMultiArrowElements(model: PuzzleModel, element: ConstraintsElement) {

@@ -202,7 +202,8 @@ function setBinaryHighlights(json: JsonT, grid: Grid) {
 		'nurimisaki',
 		'nurikabe_shading',
 		'even_odd_grid',
-		'cave_shading'
+		'cave_shading',
+		VAR_2D_NAMES.SHADED_BOUNDARIES_REGIONS
 	];
 	const color_map: Map<number, number> = new Map([
 		[0, 3],

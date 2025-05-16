@@ -45,7 +45,10 @@ export enum VAR_2D_NAMES {
 	COUNTING_CIRCLES_COLORS = 'counting_circles_colors_board',
 	MAZE_DIRECTED_PATH = 'maze_directed_path',
 	CONNECT_FOUR = 'connect_four',
-	BYOKC_GRID = 'byokc_grid'
+	BYOKC_GRID = 'byokc_grid',
+	SHADED_BOUNDARIES_REGIONS = 'shaded_boundaries_regions',
+	SHADED_BOUNDARIES_VERTICAL = 'shaded_boundaries_vertical',
+	SHADED_BOUNDARIES_HORIZONTAL = 'shaded_boundaries_horizontal'
 }
 
 export function cellToGridVarName(cell: Cell, name: string): string {

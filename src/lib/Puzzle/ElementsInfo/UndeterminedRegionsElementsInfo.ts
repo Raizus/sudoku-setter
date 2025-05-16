@@ -468,3 +468,22 @@ export const buildYourOwnKillerCagesInfo: AbstractElementInfo = {
 		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
+
+export const shadedBoundariesInfo: AbstractElementInfo = {
+	toolId: TOOLS.SHADED_BOUNDARIES,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.SHADED_BOUNDARIES_ADJACENT_CELL_SUM_IS_EVEN,
+			description:
+				'Shade the boundary between adjacent digits if and only if they sum to an even number.'
+		}
+	],
+
+	meta: {
+		description:
+			'Shade the boundary between adjacent. Shaded boundaries must divide the grid into exactly 2 regions. There may be shaded boundaries that lie within a region without fully dividing it, as allowed by other rules.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};

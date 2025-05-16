@@ -181,6 +181,15 @@ test is_after(int: r1, int: c1, int: r2, int: c2) =
 	const helper_f = `function array[1..4] of tuple(int, int): orth_adjacent_idxs(int: r, int: c) =
     [(r-1,c),(r+1,c),(r,c-1),(r,c+1)];
 
+function array[int] of tuple(int, int): orth_adjacent_idxs_in_bounds(
+    int: r,
+    int: c,
+    array[int, int] of var int: grid
+) = let {
+    array[int] of tuple(int, int): idxs = orth_adjacent_idxs(r,c);
+} in
+    [idx | idx in idxs where in_bounds_2d(idx.1, idx.2, grid)];
+
 function array[1..8] of tuple(int, int): orth_or_diag_adjacent_idxs(int: r, int: c) =
     [(r-1,c-1),(r-1,c),(r-1,c+1),(r,c-1),(r,c+1),(r+1,c-1),(r+1,c),(r+1,c+1)];
     
@@ -2181,11 +2190,11 @@ predicate yin_yang_shaded_cells_are_german_whispers_p(
 } in (
     assert(index_sets_agree(grid, shading), "grid and shading must have the same indexes")
     % adjacent shaded cells must be german whispers (horiz adjacent)
-    /\\ forall (r in rows, c in cols where c > 0) (
+    /\\ forall (r in rows, c in cols where c > min(cols)) (
         (shading[r,c] = 1 /\\ shading[r, c - 1] = 1) -> abs(grid[r,c] - grid[r, c-1]) >= 5
     ) /\\
     % adjacent shaded cells must be german whispers (vertical adjacent)
-    forall (r in rows, c in cols where r > 0) (
+    forall (r in rows, c in cols where r > min(rows)) (
         (shading[r,c] = 1 /\\ shading[r-1, c] = 1) -> abs(grid[r,c] - grid[r-1, c]) >= 5
     )
 );
@@ -4990,6 +4999,77 @@ function array[1..4] of var int: polyomino_bounding_box_f(
     [min_row, max_row, min_col, max_col]
 );\n\n`;
 
+	const shaded_boundaries = `predicate shaded_boundaries_two_regions_p(
+    array[int, int] of var 0..1: shaded_boundaries_grid
+) = (
+    exists(val in array1d(shaded_boundaries_grid))(val == 0)
+    /\\ exists(val in array1d(shaded_boundaries_grid))(val == 1)
+    /\\ connected_region(shaded_boundaries_grid, 0)
+    /\\ connected_region(shaded_boundaries_grid, 1)
+);
+
+predicate shaded_boundaries_adjacent_sum_is_even_boundary_region_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var 0..1: shaded_boundaries_grid
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    assert(index_sets_agree(grid, shaded_boundaries_grid), "grid and shaded_boundaries_grid must have the same indexes")
+    
+    % if adjacent sum is odd they must be in the same region
+    % (horiz adjacent)
+    /\\ forall (r in rows, c in cols where c > min(cols)) (
+        (grid[r,c] + grid[r, c - 1]) mod 2 == 1 -> shaded_boundaries_grid[r,c] == shaded_boundaries_grid[r,c-1]
+    )
+    % (vertical adjacent)
+    /\\ forall (r in rows, c in cols where r > min(rows)) (
+        (grid[r,c] + grid[r-1, c]) mod 2 == 1 -> shaded_boundaries_grid[r,c] == shaded_boundaries_grid[r-1,c]
+    )
+    
+    % if there's a region boundary then it must be even
+    % (horiz adjacent)
+    /\\ forall (r in rows, c in cols where c > min(cols)) (
+        shaded_boundaries_grid[r,c] != shaded_boundaries_grid[r,c-1] -> (grid[r,c] + grid[r, c - 1]) mod 2 == 0
+    )
+    % (vertical adjacent)
+    /\\ forall (r in rows, c in cols where r > min(rows)) (
+        shaded_boundaries_grid[r,c] != shaded_boundaries_grid[r-1,c] -> (grid[r,c] + grid[r-1, c]) mod 2 == 0
+    )
+);
+
+predicate shaded_boundaries_adjacent_sum_is_even_boundary_vertical_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var bool: shaded_boundaries_vertical
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    set of int: b_rows = index_set_1of2(shaded_boundaries_vertical);
+    set of int: b_cols = index_set_2of2(shaded_boundaries_vertical);
+} in (
+    assert(cols == b_cols, "index_set_2of2(grid) and index_set_2of2(shaded_boundaries_vertical) must agree.")
+    /\\ forall(c in cols, r in rows where r > min(rows))(
+        ((grid[r,c] + grid[r-1, c]) mod 2 == 0 -> shaded_boundaries_vertical[r-1, c] = 1)
+        /\\ ((grid[r,c] + grid[r-1, c]) mod 2 == 1 -> shaded_boundaries_vertical[r-1, c] = 0)
+    )
+);
+
+predicate shaded_boundaries_adjacent_sum_is_even_boundary_horizontal_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var bool: shaded_boundaries_horizontal
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    set of int: b_rows = index_set_1of2(shaded_boundaries_horizontal);
+    set of int: b_cols = index_set_2of2(shaded_boundaries_horizontal);
+} in (
+    assert(rows == b_rows, "index_set_1of2(grid) and index_set_1of2(shaded_boundaries_horizontal) must agree.")
+    /\\ forall(r in rows, c in cols where c > min(cols))(
+        ((grid[r,c] + grid[r, c-1]) mod 2 == 0 -> shaded_boundaries_horizontal[r, c-1] = 1) 
+        /\\ ((grid[r,c] + grid[r, c-1]) mod 2 == 1 -> shaded_boundaries_horizontal[r, c-1] = 0)
+    )
+);\n\n`;
+
 	const out_str =
 		'\n' +
 		poliominoes +
@@ -5031,7 +5111,8 @@ function array[1..4] of var int: polyomino_bounding_box_f(
 		connect_four +
 		norinori +
 		shikaku +
-		byok_cage;
+		byok_cage +
+		shaded_boundaries;
 
 	return out_str;
 }
