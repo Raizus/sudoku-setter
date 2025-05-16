@@ -252,7 +252,8 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 
 export enum SINGLE_CELL_ARROW_CONSTRAINTS {
 	SASHIGANE_ARROW_POINTS_TO_BEND = 'Sashigane Arrow Points To Bend',
-	THERMO_SIGHTLINE_LOOP_ARROW = 'Thermo Sightline Loop Arrow'
+	THERMO_SIGHTLINE_LOOP_ARROW = 'Thermo Sightline Loop Arrow',
+	INTERNAL_LOOP_SKYSCRAPERS = 'Internal Loop Skyscrapers'
 }
 
 export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {

@@ -285,7 +285,8 @@ import {
 	shikakuRegionSizeInfo,
 	shikakuRegionSumInfo,
 	yinYangLabeledShadeCellInfo,
-	caveShadedRegionSizeUnshadedSeenOrthogonallyClueInfo
+	caveShadedRegionSizeUnshadedSeenOrthogonallyClueInfo,
+	internalLoopSkyscrapersInfo
 } from './SingleCellElementsInfo';
 import { customFogClearingInfo, fogLighsInfo } from './FogElementsInfo';
 import {
@@ -471,6 +472,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	// Single Cell Arrow Constraint
 	[TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND]: sashiganeArrowPointsToBendInfo,
 	[TOOLS.THERMO_SIGHTLINE_LOOP_ARROW]: thermoSightlineLoopArrowInfo,
+	[TOOLS.INTERNAL_LOOP_SKYSCRAPERS]: internalLoopSkyscrapersInfo,
 
 	// Single Cell Multi Arrow Constraint
 	[TOOLS.HOT_ARROWS]: hotArrowsInfo,

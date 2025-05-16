@@ -289,6 +289,23 @@ function var int: conditional_sum_f(
     )
 } in sum(i in index_set(arr) where labels[i] == label)(arr[i]);
 
+function var int: conditional_skyscrapers_f(
+    array[int] of var int: arr,
+    array[int] of var $$T: labels,
+    var $$T: label
+) = let {
+    constraint assert(index_set(arr) = index_set(labels), "Arrays must have same index set")
+} in (
+    sum(i in index_set(arr)) (
+        bool2int(
+            labels[i] == label
+            /\\ forall(j in index_set(arr)
+                where j < i /\\ labels[j] == label
+            )(arr[j] < arr[i])
+        )
+    )
+);
+
 function array[int] of var $$T: rotate_right_f(array[int] of var $$T: arr, int: x) =
     let {
         set of int: idxs = index_set(arr);
@@ -3422,6 +3439,14 @@ predicate loopwhiches_p(
     | i in idxs]
 } in (
     conditional_sum_f(arr, sandwiched, true) == val
+);
+
+predicate internal_loop_skyscrapers_p(
+    array[int] of var int: cell_vars,
+    array[int] of var int: loop_vars,
+    var int: value
+) = (
+    value == conditional_skyscrapers_f(cell_vars, loop_vars, 1)
 );\n\n`;
 
 	const global_constraints = `predicate antiking_p(

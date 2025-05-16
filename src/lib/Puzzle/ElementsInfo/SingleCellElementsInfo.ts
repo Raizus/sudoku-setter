@@ -1314,3 +1314,22 @@ export const shikakuRegionSumInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	}
 };
+
+export const internalLoopSkyscrapersInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
+
+	toolId: TOOLS.INTERNAL_LOOP_SKYSCRAPERS,
+
+	shape: {
+		type: SHAPE_TYPES.CELL_ARROW,
+		strokeWidth: { editable: false, value: 0.05 },
+		stroke: { editable: true, value: 'gray' }
+	},
+
+	meta: {
+		description:
+			'Each cell on the loop represents a skyscraper with a height equal to its value (non-loop cells are not skyscrapers). A digit in a clued cell gives the number of skyscrapers visible in the indicated direction (not including the cell itself), where skyscrapers block the view of skyscrapers with the same or lower height behind them. The clued cell may or may not be on the loop.',
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_ARROW_CATEGORIES
+	}
+};

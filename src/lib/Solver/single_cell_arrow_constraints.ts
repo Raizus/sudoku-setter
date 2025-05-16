@@ -31,7 +31,7 @@ function simpleCellArrowElement(
 	return out_str;
 }
 
-export function sashiganeArrowPointsToBendConstraint(grid: Grid, constraint: CellArrowToolI) {
+function sashiganeArrowPointsToBendConstraint(grid: Grid, constraint: CellArrowToolI) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
@@ -56,7 +56,7 @@ function sashiganeArrowPointsToBendElement(model: PuzzleModel, element: Constrai
 	return out_str;
 }
 
-export function thermoSightlineLoopArrowConstraint(grid: Grid, constraint: CellArrowToolI) {
+function thermoSightlineLoopArrowConstraint(grid: Grid, constraint: CellArrowToolI) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
@@ -79,9 +79,33 @@ function thermoSightlineLoopArrowElement(model: PuzzleModel, element: Constraint
 	return out_str;
 }
 
+function internalLoopSkyscrapersConstraint(grid: Grid, constraint: CellArrowToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const direction = constraint.direction;
+	const cells: Cell[] = grid.getCellsInDirection(cell.r, cell.c, direction);
+
+	const cells_vars = cellsToVarsName(cells);
+	const cells_vars_str = '[' + cells_vars.join(',') + ']';
+	const loop_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.CELL_CENTER_LOOP);
+
+	const cell_var = cellToVarName(cell);
+
+	const constraint_str = `constraint internal_loop_skyscrapers_p(${cells_vars_str}, ${loop_vars_str}, ${cell_var});\n`;
+	return constraint_str;
+}
+
+function internalLoopSkyscrapersElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleCellArrowElement(model, element, internalLoopSkyscrapersConstraint);
+	return out_str;
+}
+
 export const tool_map = new Map<string, ElementF>([
 	[TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND, sashiganeArrowPointsToBendElement],
-	[TOOLS.THERMO_SIGHTLINE_LOOP_ARROW, thermoSightlineLoopArrowElement]
+	[TOOLS.THERMO_SIGHTLINE_LOOP_ARROW, thermoSightlineLoopArrowElement],
+	[TOOLS.INTERNAL_LOOP_SKYSCRAPERS, internalLoopSkyscrapersElement]
 ]);
 
 export function singleCellArrowElements(model: PuzzleModel, element: ConstraintsElement) {
