@@ -12,7 +12,7 @@ import {
 	restoreCellsHighlightsAction,
 	restoreCellsValueAction
 } from '$src/lib/reducers/UpdateCellsActions';
-import type { PuzzleModel } from '$src/lib/Solver/solver_utils';
+import { VAR_2D_NAMES, type PuzzleModel } from '$src/lib/Solver/solver_utils';
 import { areCoordsNeighbours, type GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
 import { executeUpdateCellsAction } from '$stores/CellsStore';
 import { updatePenTool } from '$stores/PenToolStore';
@@ -27,7 +27,7 @@ export interface SolverOptions {
 	'num-solutions'?: number;
 	'all-solutions'?: boolean;
 	'random-seed'?: number;
-};
+}
 
 function grid_coloring(
 	solution_grid: (number | boolean)[][],
@@ -316,7 +316,7 @@ function setConnectFourHighlights(json: JsonT, grid: Grid) {
 
 	const color_map: Map<number, number> = new Map([
 		[1, 7],
-		[2, 8],
+		[2, 8]
 	]);
 
 	grid_coloring(regions, grid, color_map);
@@ -438,7 +438,8 @@ function setColoring(json: JsonT, grid: Grid) {
 		'region_labels',
 		'suguru_regions',
 		'shikaku_regions',
-		'pentomino_regions'
+		'pentomino_regions',
+		VAR_2D_NAMES.BYOKC_GRID
 	];
 
 	for (const name of grid_vars_names) {

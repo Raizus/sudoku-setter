@@ -1333,3 +1333,39 @@ export const internalLoopSkyscrapersInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_ARROW_CATEGORIES
 	}
 };
+
+export const BYOKCageSizeInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+
+	toolId: TOOLS.BYOK_CAGE_SIZE,
+
+	shape: DEFAULT_CIRCLE_SHAPE,
+
+	meta: {
+		description: `Circles appear in cages and count the total number of cells in that cage. All circles are given.`,
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	}
+};
+
+export const BYOKNotCageCellInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+
+	toolId: TOOLS.BYOK_NOT_CAGE_CELL,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_SQUARES_GIVEN,
+			description:
+				"All such squares are given."
+		}
+	],
+
+	shape: DEFAULT_SQUARE_SHAPE,
+
+	meta: {
+		description: `Squares indicate that a cell is not in any cage.`,
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	}
+};

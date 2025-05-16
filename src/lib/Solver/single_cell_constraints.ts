@@ -1569,6 +1569,60 @@ function shikakuRegionSumElement(model: PuzzleModel, element: ConstraintsElement
 	return out_str;
 }
 
+function BYOKCageSizeElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	const constraints = element.constraints as Record<string, CellToolI>;
+	const constl = Object.values(constraints);
+
+	let out_str = '';
+
+	for (const [idx, constraint] of constl.entries()) {
+		const coords = constraint.cell;
+		const cell = grid.getCell(coords.r, coords.c);
+		if (!cell) continue;
+		const cell_var = cellToVarName(cell);
+		const byok_var = cellToGridVarName(cell, VAR_2D_NAMES.BYOKC_GRID);
+
+		out_str += `constraint ${byok_var} == ${idx+1};\n`
+		out_str += `constraint byok_cage_cell_size_p(${VAR_2D_NAMES.BYOKC_GRID}, ${cell_var}, ${byok_var});\n`;
+	}
+
+	return out_str;
+}
+
+function BYOKNotCageCellElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	const constraints = element.constraints as Record<string, CellToolI>;
+
+	let out_str = '';
+
+	for (const constraint of Object.values(constraints)) {
+		const coords = constraint.cell;
+		const cell = grid.getCell(coords.r, coords.c);
+		if (!cell) continue;
+		const byok_var = cellToGridVarName(cell, VAR_2D_NAMES.BYOKC_GRID);
+		out_str += `constraint byok_not_cage_cell_p(${byok_var});\n`;
+	}
+
+	if (!element.negative_constraints) return out_str;
+
+	// negative constraint
+	const all_squares_given = !!element.negative_constraints[TOOLS.ALL_SQUARES_GIVEN];
+	if (all_squares_given) {
+		out_str += `\n% ${TOOLS.ALL_SQUARES_GIVEN}\n`;
+		for (const cell of grid.getAllCells()) {
+			const match = findSingleCellConstraintMatch(constraints, cell);
+			if (match) continue;
+
+			const byok_var = cellToGridVarName(cell, VAR_2D_NAMES.BYOKC_GRID);
+			const constraint_str = `constraint ${byok_var} > 0;\n`;
+			out_str += constraint_str;
+		}
+	}
+
+	return out_str;
+}
+
 const tool_map = new Map<string, ElementF>([
 	[TOOLS.ODD, oddElement],
 	[TOOLS.EVEN, evenElement],
@@ -1631,6 +1685,9 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS, chaosConstructionChessSumsElement],
 	[TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS, chaosConstructionArrowKnotsElement],
 	[TOOLS.CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT, chaosConstructionSeenSameRegionCountElement],
+
+	[TOOLS.BYOK_CAGE_SIZE, BYOKCageSizeElement],
+	[TOOLS.BYOK_NOT_CAGE_CELL, BYOKNotCageCellElement],
 
 	[TOOLS.DIRECTED_PATH_START, directedPathStartElement],
 	[TOOLS.DIRECTED_PATH_END, directedPathEndElement],

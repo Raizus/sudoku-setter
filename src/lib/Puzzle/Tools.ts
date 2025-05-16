@@ -55,6 +55,7 @@ export enum NEGATIVE_CONSTRAINTS {
 	ALL_CAGE_TOTALS_ARE_DIFFERENT = 'All Cage Totals Are Different',
 
 	ALL_RADARS_GIVEN = 'All Radars Given',
+	ALL_SQUARES_GIVEN = 'All Squares Given',
 	ALL_YIN_YANG_KROPKI_GIVEN = 'All Yin Yang Kropki Given',
 	ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN = 'All Nurimisaki Unshaded Endpoints Given',
 	ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN = 'All Yin Yang Count Shaded Cells Given',
@@ -97,7 +98,8 @@ export enum OTHER_UNDETERMINED_REGIONS_CONSTRAINTS {
 
 	LITS = 'LITS',
 	LITS_BLACK_WHITE_STAR_BATTLE = 'LITS Black And White Star Battle',
-	NORINORI_STAR_BATTLE = 'Norinori Star Battle'
+	NORINORI_STAR_BATTLE = 'Norinori Star Battle',
+	BUILD_YOUR_OWN_KILLER_CAGES = 'Build Your Own Killer Cages'
 }
 
 export enum GLOBAL_PENTOMINO_TILLING_CONSTRAINTS {
@@ -228,7 +230,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	CAVE_CLUE = 'Cave Clue',
 	CAVE_UNSHADED_SEEN_COUNT_INCLUDING_ITSELF = 'Cave Unshaded Seen Count Including Itself',
 	CAVE_UNSHADED_CELL = 'Cave Unshaded Cell',
-	CAVE_SHADED_REGION_SIZE_UNSHADED_SEEN_ORTHOGONALLY_CLUE = "Cave Shaded Region Size Unshaded Seen Orthogonally Clue",
+	CAVE_SHADED_REGION_SIZE_UNSHADED_SEEN_ORTHOGONALLY_CLUE = 'Cave Shaded Region Size Unshaded Seen Orthogonally Clue',
 
 	SHIKAKU_REGION_SIZE = 'Shikaku Region Size',
 	SHIKAKU_REGION_SUM = 'Shikaku Region Sum',
@@ -241,6 +243,9 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	NURIKABE_SEEN_WATERWAY_CELLS = 'Nurikabe Seen Waterway Cells',
 	NURIKABE_ISLAND_SIZE_CELL = 'Nurikabe Island Size Cell',
 	NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE = 'Nurikabe Island Product Of Sum And Size Clue',
+
+	BYOK_CAGE_SIZE = 'BYOK Cage Size',
+	BYOK_NOT_CAGE_CELL = 'BYOK Not Cage Cell',
 
 	DIRECTED_PATH_START = 'Directed Path Start',
 	DIRECTED_PATH_END = 'Directed Path End',

@@ -457,3 +457,14 @@ export const LITSInfo: AbstractElementInfo = {
 		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
 };
+
+export const buildYourOwnKillerCagesInfo: AbstractElementInfo = {
+	toolId: TOOLS.BUILD_YOUR_OWN_KILLER_CAGES,
+
+	meta: {
+		description:
+			'A cage is a set of orthogonally connected cells which do not contain repeated digits. Cages may not overlap each other.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};

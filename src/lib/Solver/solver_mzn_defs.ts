@@ -1,6 +1,5 @@
 export function defineFunctionsPredicates() {
-
-    const poliominoes = `
+	const poliominoes = `
 array[int] of array[int] of tuple(int, int): P3_I = [
     [(0, 0), (0, 1), (0, 2)],
     [(0, 0), (1, 0), (2, 0)],
@@ -595,7 +594,7 @@ function array[int] of tuple(int,int): neighbour_frontier_f(
     ]
 } in result;\n\n`;
 
-    const helper_p = `predicate exactly_n_in_row_p(
+	const helper_p = `predicate exactly_n_in_row_p(
     array[int, int] of var $$T: grid,
     int: row,
     var $$T: target,
@@ -2220,7 +2219,7 @@ predicate two_contiguous_regions_row_col_opposite_set_count_p(
 ) =
     count_different(row_vars, region_var) + count_different(col_vars, region_var) == cell_var;\n\n`;
 
-    const unknown_sudoku_regions = `function array[int] of var int: regions_idxs_f(
+	const unknown_sudoku_regions = `function array[int] of var int: regions_idxs_f(
     array[int, int] of var int: regions,
     int: n_regions
 ) =
@@ -3898,7 +3897,7 @@ predicate goldilocks_zone_region_sum_p(
     regions[min_i] != regions[max_i]
 );\n\n`;
 
-    const PENTOMINO_TILLING = `predicate check_pentominos_tilling_p(
+	const PENTOMINO_TILLING = `predicate check_pentominos_tilling_p(
     array[int, int] of var int: pentomino_regions,
     % array[int, int] of var int: pentomino_anchors,
     array[int] of array[int] of tuple(int, int): all_coords, % relative coordinates of all possible orientations of a given pentomino
@@ -4936,9 +4935,64 @@ predicate shikaku_region_sum_p(
     /\\ conditional_sum_f(array1d(grid), array1d(regions), region_var) == sum_var
 );\n\n`;
 
+	const byok_cage = `predicate byok_no_repeats_in_regions(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: byok_grid,
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    assert(index_sets_agree(grid, byok_grid), "grid and byok_grid must have the same indexes")
+    /\\ forall(r in rows, c in cols, r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
+        byok_grid[r,c] != 0 /\\ byok_grid[r2,c2] != 0 /\\ byok_grid[r,c] == byok_grid[r2,c2] -> grid[r,c] != grid[r2,c2]
+    )
+);
+
+predicate byok_not_cage_cell_p(
+    var int: byok_var
+) = (byok_var == 0);
+
+predicate byok_cage_cell_size_p(
+    array[int, int] of var int: byok_grid,
+    var int: cell_var,
+    var int: byok_var,
+) = (
+    count_eq(array1d(byok_grid), byok_var, cell_var)
+    % connected region
+    /\\ connected_region(byok_grid, byok_var)
+);
+
+function array[1..4] of var int: polyomino_bounding_box_f(
+    array[int, int] of var int: byokc_grid, 
+    var int: byok_var
+) = let {
+    % Get grid dimensions
+    set of int: rows = index_set_1of2(byokc_grid);
+    set of int: cols = index_set_2of2(byokc_grid);
+    
+    % Handle special cases explicitly
+    var bool: is_empty = not exists(r in rows, c in cols)(byokc_grid[r, c] = byok_var);
+  
+    % Find bounding box of the polyomino
+    var int: min_row = if is_empty then 0 else 
+                       min([r | r in rows, c in cols where byokc_grid[r, c] = byok_var]) 
+                   endif;
+    var int: max_row = if is_empty then 0 else 
+                       max([r | r in rows, c in cols where byokc_grid[r, c] = byok_var]) 
+                   endif;
+    var int: min_col = if is_empty then 0 else 
+                       min([c | r in rows, c in cols where byokc_grid[r, c] = byok_var]) 
+                   endif;
+    var int: max_col = if is_empty then 0 else 
+                       max([c | r in rows, c in cols where byokc_grid[r, c] = byok_var]) 
+                   endif;
+} in (
+    [min_row, max_row, min_col, max_col]
+);\n\n`;
+
 	const out_str =
-        '\n' +
-        poliominoes +
+		'\n' +
+		poliominoes +
 		tests +
 		helper_f +
 		more_helper_f +
@@ -4976,7 +5030,8 @@ predicate shikaku_region_sum_p(
 		suguru +
 		connect_four +
 		norinori +
-		shikaku;
+		shikaku +
+		byok_cage;
 
 	return out_str;
 }

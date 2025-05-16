@@ -116,7 +116,8 @@ import {
 	pentominoTillingInfo,
 	shikakuInfo,
 	LITSInfo,
-	fillominoInfo
+	fillominoInfo,
+	buildYourOwnKillerCagesInfo
 } from './UndeterminedRegionsElementsInfo';
 import {
 	yinYangFillominoParityInfo,
@@ -286,7 +287,9 @@ import {
 	shikakuRegionSumInfo,
 	yinYangLabeledShadeCellInfo,
 	caveShadedRegionSizeUnshadedSeenOrthogonallyClueInfo,
-	internalLoopSkyscrapersInfo
+	internalLoopSkyscrapersInfo,
+	BYOKCageSizeInfo,
+	BYOKNotCageCellInfo
 } from './SingleCellElementsInfo';
 import { customFogClearingInfo, fogLighsInfo } from './FogElementsInfo';
 import {
@@ -375,6 +378,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.YIN_YANG]: yinYangInfo,
 	[TOOLS.NURIMISAKI]: nurimisakiInfo,
 	[TOOLS.NURIKABE]: nurikabeInfo,
+	[TOOLS.BUILD_YOUR_OWN_KILLER_CAGES]: buildYourOwnKillerCagesInfo,
 
 	[TOOLS.TWO_CONTIGUOUS_REGIONS]: twoContiguousRegionsInfo,
 	[TOOLS.SASHIGANE]: sashiganeRegionsInfo,
@@ -459,6 +463,9 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS]: chaosConstructionChessSumsInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS]: chaosConstructionArrowKnotsInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT]: chaosConstructionSeenSameRegionCountInfo,
+
+	[TOOLS.BYOK_CAGE_SIZE]: BYOKCageSizeInfo,
+	[TOOLS.BYOK_NOT_CAGE_CELL]: BYOKNotCageCellInfo,
 
 	[TOOLS.NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE]: nurikabeIslandProductOfSumAndSizeInfo,
 

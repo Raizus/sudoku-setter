@@ -484,6 +484,25 @@ function chaosConstructionSuguruConstraint(model: PuzzleModel, element: Constrai
 	return out_str;
 }
 
+export function buildYourOwnKillerCagesConstraint(model: PuzzleModel, element: ConstraintsElement) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name1 = VAR_2D_NAMES.BYOKC_GRID;
+
+	let out_str: string = ``;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name1};\n`;
+	out_str += `constraint byok_no_repeats_in_regions(${VAR_2D_NAMES.BOARD}, ${grid_name1});\n`;
+	return out_str;
+}
+
 type ElementF2 = (model: PuzzleModel, element: ConstraintsElement) => string;
 
 const tool_map = new Map<string, ElementF2>([
@@ -511,7 +530,8 @@ const tool_map = new Map<string, ElementF2>([
 	[TOOLS.LITS_BLACK_WHITE_STAR_BATTLE, litsBlackAndWhiteStarBattleConstraint],
 	[TOOLS.FILLOMINO, fillominoConstraint],
 	[TOOLS.NEXUS, nexusConstraint],
-	[TOOLS.GOLDILOCKS_ZONE, goldilocksConstraint]
+	[TOOLS.GOLDILOCKS_ZONE, goldilocksConstraint],
+	[TOOLS.BUILD_YOUR_OWN_KILLER_CAGES, buildYourOwnKillerCagesConstraint]
 ]);
 
 export function undeterminedRegionsElements(model: PuzzleModel, element: ConstraintsElement) {
