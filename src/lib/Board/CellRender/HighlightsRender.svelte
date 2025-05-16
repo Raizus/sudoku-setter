@@ -53,4 +53,8 @@
 			fill: var(--grid-background-color);
 		}
 	}
+
+	.highlights-group{
+		opacity: 0.8;
+	}
 </style>
