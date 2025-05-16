@@ -1,6 +1,5 @@
 <script lang="ts">
 	import RestartButton from './RestartButton.svelte';
-	import InfoButton from './InfoButton.svelte';
 	import FullscreenButton from './FullscreenButton.svelte';
 	import RulesButton from './RulesButton.svelte';
 	import SettingsButton from './SettingsButton.svelte';
@@ -11,7 +10,6 @@
 	<SettingsButton />
 	<RulesButton />
 	<FullscreenButton />
-	<InfoButton />
 	<RestartButton />
 </div>
 

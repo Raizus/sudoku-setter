@@ -4,12 +4,14 @@
 	import GameplayTab from './GameplayTab.svelte';
 	import OtherTab from './OtherTab.svelte';
 	import DisplayTab from './DisplayTab.svelte';
+	import ShortcutsTab from './ShortcutsTab.svelte';
 
 	export let showModal = false;
 
 	const tabs = [
 		{ label: 'Display', component: DisplayTab },
 		{ label: 'Gameplay', component: GameplayTab },
+		{ label: 'Shortcuts', component: ShortcutsTab },
 		{ label: 'Other', component: OtherTab }
 	];
 </script>
