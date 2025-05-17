@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Modal from '$lib/Components/Modal/Modal.svelte';
-	import TabbedMenu from './TabbedMenu.svelte';
+	import TabbedMenu from '../TabbedMenu.svelte';
 	import GameplayTab from './GameplayTab.svelte';
 	import OtherTab from './OtherTab.svelte';
 	import DisplayTab from './DisplayTab.svelte';
