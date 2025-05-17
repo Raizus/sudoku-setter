@@ -34,7 +34,7 @@
 	</div>
 </dialog>
 
-<style>
+<style lang="scss">
 	dialog::backdrop {
 		background: rgba(0, 0, 0, 0.8);
 	}
@@ -49,20 +49,24 @@
 		background: var(--modal-background-color);
 		padding: 0;
 		overflow: hidden;
+
+		&[open] {
+			animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+		}
+
+		&[open]::backdrop {
+			animation: fade 0.2s ease-out;
+		}
+
+		& > div {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+			width: 100%;
+		}
 	}
-	dialog > div {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		width: 100%;
-	}
-	dialog[open] {
-		animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-	}
-	dialog[open]::backdrop {
-		animation: fade 0.2s ease-out;
-	}
+
 	.modal-content-wrapper {
 		flex: 1;
 		position: relative;
