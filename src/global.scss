@@ -151,6 +151,13 @@ main {
 	}
 }
 
+.form-row {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+	min-height: 1.75em;
+}
+
 .form-button {
 	cursor: pointer;
 	border-radius: 0.15rem;
@@ -172,6 +179,24 @@ main {
 		&:hover {
 			background-color: var(--panel-radio-background-hover);
 		}
+	}
+}
+
+.form-modal-button {
+	background-color: var(--button-background-color);
+	border-radius: 0.3rem;
+	border: 0.125rem solid black;
+	padding: 0.5rem;
+	min-height: 2em;
+	min-width: 2em;
+
+	&:hover {
+		background: var(--button-hover-background-color);
+	}
+
+	&:focus {
+		outline: transparent;
+		box-shadow: var(--focus-shadow);
 	}
 }
 

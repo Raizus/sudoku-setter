@@ -27,24 +27,8 @@
 		value={settings.showSolution}
 		updateCb={(value) => updateSettingsValue('showSolution', value)}
 	/>
-	<button class="form-button" on:click={restoreSettings}> Restore default settings </button>
+	<button class="form-button form-modal-button" on:click={restoreSettings}> Restore default settings </button>
 </div>
 
 <style lang="scss">
-	button {
-		background-color: var(--button-background-color);
-		border-radius: 0.3rem;
-		border: 0.125rem solid black;
-		min-height: 2em;
-		min-width: 2em;
-
-		&:hover {
-			background: var(--button-hover-background-color);
-		}
-
-		&:focus {
-			outline: transparent;
-			box-shadow: var(--focus-shadow);
-		}
-	}
 </style>
