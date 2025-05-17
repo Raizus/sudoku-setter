@@ -5000,10 +5000,39 @@ function array[1..4] of var int: polyomino_bounding_box_f(
 );\n\n`;
 
 	const shaded_boundaries = `predicate shaded_boundaries_two_regions_p(
-    array[int, int] of var 0..1: shaded_boundaries_grid
-) = (
+    array[int, int] of var 0..1: shaded_boundaries_grid,
+    array[int, int] of var bool: shaded_boundaries_horizontal,
+    array[int, int] of var bool: shaded_boundaries_vertical
+) = let {
+    set of int: rows = index_set_1of2(shaded_boundaries_grid);
+    set of int: cols = index_set_2of2(shaded_boundaries_grid);
+
+    int: width = max(cols) - min(cols) + 1;
+    int: height = max(rows) - min(rows) + 1;
+  
+    % Calculate number of edges
+    int: num_edges = (width-1)*height + (height-1)*width;    
+
+    % Create nodes array (flattened grid)
+    array[1..width*height] of var bool: ns0 = 
+        [shaded_boundaries_grid[r,c] = 0 | r in rows, c in cols];
+    array[1..width*height] of var bool: ns1 = 
+        [shaded_boundaries_grid[r,c] = 1 | r in rows, c in cols];
+
+    array[1..num_edges] of int: from = grid_to_graph_from_edges(shaded_boundaries_grid);
+    array[1..num_edges] of int: to = grid_to_graph_to_edges(shaded_boundaries_grid);
+
+    array[1..num_edges] of var bool: flat_edges = array1d(shaded_boundaries_horizontal) ++ 
+        [shaded_boundaries_vertical[r,c] | c in index_set_2of2(shaded_boundaries_vertical), r in index_set_1of2(shaded_boundaries_vertical)];
+
+    % edges
+    array[1..num_edges] of var bool: es0 = [((not flat_edges[edge_id]) /\\ ns0[from[edge_id]] /\\ ns0[to[edge_id]]) | edge_id in 1..num_edges];
+    array[1..num_edges] of var bool: es1 = [((not flat_edges[edge_id]) /\\ ns1[from[edge_id]] /\\ ns1[to[edge_id]]) | edge_id in 1..num_edges];
+} in (
     exists(val in array1d(shaded_boundaries_grid))(val == 0)
     /\\ exists(val in array1d(shaded_boundaries_grid))(val == 1)
+    /\\ connected(from, to, ns0, es0)
+    /\\ connected(from, to, ns1, es1)
     /\\ connected_region(shaded_boundaries_grid, 0)
     /\\ connected_region(shaded_boundaries_grid, 1)
 );

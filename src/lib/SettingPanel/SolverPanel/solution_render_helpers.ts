@@ -391,6 +391,58 @@ function setUnknownRegionsBorders(json: JsonT, grid: Grid) {
 	}
 }
 
+function setShadedBoundariesBorders(json: JsonT) {
+	if (json === undefined) return;
+
+	const colorId = 4;
+	const line_markers: LineMarker[] = [];
+	const horiz_edges_name = VAR_2D_NAMES.SHADED_BOUNDARIES_HORIZONTAL;
+	const horiz_edges_grid = json[horiz_edges_name] as boolean[][] | undefined;
+
+	if (horiz_edges_grid) {
+		for (let i = 0; i < horiz_edges_grid.length; i++) {
+			const row = horiz_edges_grid[i];
+
+			for (let j = 0; j < row.length; j++) {
+				const val = row[j];
+				if (!val) continue;
+
+				const marker: LineMarker = {
+					colorId,
+					p1: { r: i, c: j + 1 },
+					p2: { r: i + 1, c: j + 1 }
+				};
+				line_markers.push(marker);
+			}
+		}
+	}
+
+	const vert_edges_name = VAR_2D_NAMES.SHADED_BOUNDARIES_VERTICAL;
+	const vert_edges_grid = json[vert_edges_name] as boolean[][] | undefined;
+
+	if (vert_edges_grid) {
+		for (let i = 0; i < vert_edges_grid.length; i++) {
+			const row = vert_edges_grid[i];
+
+			for (let j = 0; j < row.length; j++) {
+				const val = row[j];
+				if (!val) continue;
+
+				const marker: LineMarker = {
+					colorId,
+					p1: { r: i + 1, c: j },
+					p2: { r: i + 1, c: j + 1 }
+				};
+				line_markers.push(marker);
+			}
+		}
+	}
+	if (line_markers.length) {
+		const action = addLineMarkersAction(line_markers);
+		updatePenTool(action);
+	}
+}
+
 function setOrthogonalPathOrLoopLines(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
 	const grid_vars_names = ['cell_center_loop'];
@@ -556,4 +608,5 @@ export function setBoardOnSolution(json: JsonT, puzzle_model: PuzzleModel) {
 	setColoredCountingCirclesHighlights(json, grid);
 	setDirectedPathPenMarks(json, puzzle_model);
 	setConnectFourHighlights(json, grid);
+	setShadedBoundariesBorders(json);
 }

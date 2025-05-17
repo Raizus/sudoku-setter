@@ -531,7 +531,7 @@ function shadedBoundariesConstraint(model: PuzzleModel, element: ConstraintsElem
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name};\n`;
 	out_str += `array[${vert_idxs}, COL_IDXS] of var bool: ${grid_name2};\n`;
 	out_str += `array[ROW_IDXS, ${horiz_idxs}] of var bool: ${grid_name3};\n`;
-	out_str += `constraint shaded_boundaries_two_regions_p(${grid_name});\n`;
+	out_str += `constraint shaded_boundaries_two_regions_p(${grid_name}, ${grid_name3}, ${grid_name2});\n`;
 
 	if (!element.negative_constraints) return out_str;
 	const adjcent_cell_sum_is_even_boundary =
