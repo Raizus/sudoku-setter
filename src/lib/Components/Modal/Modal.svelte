@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { isPortraitStore } from '$stores/OrientationStore';
 	import ModalHeader from './ModalHeader.svelte';
 
 	export let showModal: boolean;
@@ -7,6 +8,7 @@
 
 	$: if (dialog && showModal) dialog.showModal();
 	$: if (dialog && !showModal) dialog.close();
+	$: isPortrait = $isPortraitStore;
 
 	function closeCb() {
 		showModal = false;
@@ -17,6 +19,7 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <dialog
+	class:mobile-layout={isPortrait}
 	bind:this={dialog}
 	on:close={() => {
 		showModal = false;
@@ -42,13 +45,17 @@
 		cursor: default;
 		border-radius: 10px;
 		border: 3px solid black;
-		max-width: 70vw;
+		max-width: 90vw;
 		min-width: 50vw;
 		max-height: 80vh;
 		height: 80vh;
 		background: var(--modal-background-color);
 		padding: 0;
 		overflow: hidden;
+
+		&.mobile-layout {
+			min-width: 80vw;
+		}
 
 		&[open] {
 			animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);

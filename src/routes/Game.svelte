@@ -8,6 +8,7 @@
 	import { onMount } from 'svelte';
 	import * as MiniZinc from 'minizinc';
 	import { base } from '$app/paths';
+	import { isPortraitStore } from '$stores/OrientationStore';
 
 	$: game_mode = $gameModeStore;
 
@@ -26,13 +27,15 @@
 			console.log(error);
 		}
 	});
+
+	$: isPortrait = $isPortraitStore;
 </script>
 
-<div class="game">
+<div class="game" class:desktop-layout={!isPortrait} class:mobile-layout={isPortrait}>
 	{#if game_mode === GAME_MODE.SETTING}
-	<div class="left-panel">
-		<SettingPanel />
-	</div>
+		<div class="left-panel">
+			<SettingPanel />
+		</div>
 	{/if}
 	<div class="center-panel">
 		<BoardContainer />
@@ -45,7 +48,7 @@
 <style lang="scss">
 	@use '$src/vars' as vars;
 
-	.game {
+	.desktop-layout {
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
@@ -56,11 +59,14 @@
 		display: flex;
 		align-items: center;
 		flex: 1;
+	}
+
+	.desktop-layout .center-panel {
 		flex-basis: 25rem;
 	}
 
-	.left-panel,
-	.right-panel {
+	.desktop-layout .left-panel,
+	.desktop-layout .right-panel {
 		position: relative;
 		flex-grow: 1;
 		flex-shrink: 1;
@@ -68,20 +74,31 @@
 		max-width: 30rem;
 	}
 
-	@include vars.breakpoint-mobile {
-		.game {
+	@media (orientation: portrait) {
+		.mobile-layout {
+			display: flex;
 			flex-direction: column;
-
-			& .center-panel {
-				align-self: center;
-
-				width: vars.$board-size-small;
-				height: vars.$board-size-small;
-			}
-
-			& .right-panel {
-				max-width: 100%;
-			}
+		}
+		.center-panel {
+			width: 100%;
+			flex-basis: 30rem;
 		}
 	}
+
+	// @include vars.breakpoint-mobile {
+	// 	.game {
+	// 		flex-direction: column;
+
+	// 		& .center-panel {
+	// 			align-self: center;
+
+	// 			width: vars.$board-size-small;
+	// 			height: vars.$board-size-small;
+	// 		}
+
+	// 		& .right-panel {
+	// 			max-width: 100%;
+	// 		}
+	// 	}
+	// }
 </style>
