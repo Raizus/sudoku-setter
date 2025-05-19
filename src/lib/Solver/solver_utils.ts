@@ -255,6 +255,36 @@ export class PuzzleModel implements ModelI {
 			}
 		}
 
+		// parse variable interval
+		if (parsed_value.type === 'variable_interval') {
+			const interval = parsed_value.parsed;
+			// if variable does not exist we need to declare it
+			if (interval.lower_bound) {
+				const val = interval.lower_bound[0];
+				const op = interval.lower_bound[1];
+
+				const exists = this.hasVariable(val);
+				if (!exists) {
+					model_str += `var int: ${val};\n`;
+					this.addVariable(val);
+				}
+
+				model_str += `constraint ${default_name} ${op} ${val};\n`;
+			}
+			if (interval.upper_bound) {
+				const val = interval.upper_bound[0];
+				const op = interval.upper_bound[1];
+
+				const exists = this.hasVariable(val);
+				if (!exists) {
+					model_str += `var int: ${val};\n`;
+					this.addVariable(val);
+				}
+
+				model_str += `constraint ${default_name} ${op} ${val};\n`;
+			}
+		}
+
 		// parse number list
 		if (parsed_value.type === 'number_list') {
 			const values = parsed_value.parsed;

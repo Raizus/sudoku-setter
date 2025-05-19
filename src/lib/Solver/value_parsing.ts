@@ -9,12 +9,17 @@ export const default_parse_opts: ParseOptions = {
 	allow_var: true,
 	allow_int_list: false,
 	allow_interval: false,
-	allow_var_list: false,
+	allow_var_list: false
 };
 
-interface IntervalI {
+interface ValueIntervalI {
 	lower_bound?: [val: number, operator: '<' | '>' | '<=' | '>='];
 	upper_bound?: [val: number, operator: '<' | '>' | '<=' | '>='];
+}
+
+interface VariableIntervalI {
+	lower_bound?: [val: string, operator: '<' | '>' | '<=' | '>='];
+	upper_bound?: [val: string, operator: '<' | '>' | '<=' | '>='];
 }
 
 interface ParsedInteger {
@@ -27,9 +32,14 @@ interface ParsedVariable {
 	parsed: string;
 }
 
-interface ParsedInterval {
+interface ParsedValueInterval {
 	type: 'interval';
-	parsed: IntervalI;
+	parsed: ValueIntervalI;
+}
+
+interface ParsedVariableInterval {
+	type: 'variable_interval';
+	parsed: VariableIntervalI;
 }
 
 interface ParsedIntegerList {
@@ -42,9 +52,22 @@ interface ParsedVarList {
 	parsed: string[];
 }
 
-type ParsedValue = ParsedInteger | ParsedVariable | ParsedInterval | ParsedIntegerList | ParsedVarList;
+type ParsedValue =
+	| ParsedInteger
+	| ParsedVariable
+	| ParsedValueInterval
+	| ParsedVariableInterval
+	| ParsedIntegerList
+	| ParsedVarList;
 
-function parseInterval(expression: string): IntervalI | null {
+export function parseVariable(value: string): string | null {
+	const regex = /^([a-zA-Z][a-zA-Z0-9]*)$/;
+	const result = value.match(regex);
+	if (!result) return null;
+	return result[0];
+}
+
+function parseValueInterval(expression: string): ValueIntervalI | null {
 	// Remove whitespace for clean parsing
 	expression = expression.trim();
 
@@ -90,15 +113,54 @@ function parseInterval(expression: string): IntervalI | null {
 	return null;
 }
 
-export function parseInteger(value: string): string | null {
-	const regex = /^(-?\d+)$/;
-	const result = value.match(regex);
-	if (!result) return null;
-	return result[0];
+function parseVariableInterval(expression: string): VariableIntervalI | null {
+	// Remove whitespace for clean parsing
+	expression = expression.trim();
+
+	// Define regex patterns
+	const lowerRegex = /^(>|>=|<|<=)\s*([a-zA-Z][a-zA-Z0-9]*)$/;
+	const bracketRegex = /^([[\]])([a-zA-Z][a-zA-Z0-9]*),\s*([a-zA-Z][a-zA-Z0-9]*)([[\]])$/;
+
+	// Check for inequalities
+	let match = lowerRegex.exec(expression);
+	if (match) {
+		const operator = match[1];
+		const value = match[2];
+
+		if (operator === '>' || operator === '>=') {
+			return {
+				lower_bound: [value, operator]
+			};
+		} else if (operator === '<' || operator === '<=') {
+			return {
+				upper_bound: [value, operator]
+			};
+		}
+	}
+
+	// Check for bracketed interval
+	match = bracketRegex.exec(expression);
+	if (match) {
+		const leftBracket = match[1];
+		const value1 = match[2];
+		const value2 = match[3];
+		const rightBracket = match[4];
+
+		const op1 = leftBracket === '[' ? '>=' : '>';
+		const op2 = rightBracket === ']' ? '<=' : '<';
+
+		return {
+			lower_bound: [value1, op1],
+			upper_bound: [value2, op2]
+		};
+	}
+
+	// No match found
+	return null;
 }
 
-export function parseVariable(value: string): string | null {
-	const regex = /^([a-zA-Z][a-zA-Z0-9]*)$/;
+export function parseInteger(value: string): string | null {
+	const regex = /^(-?\d+)$/;
 	const result = value.match(regex);
 	if (!result) return null;
 	return result[0];
@@ -121,7 +183,7 @@ export function parseVarList(input: string): null | string[] {
 	// Define the regex for a comma-separated list of integers
 	const var_regex = /[a-zA-Z][a-zA-Z0-9]*/;
 	const num_regex = /-?\d+/;
-	const var_or_num_regex = new RegExp(`(?:${num_regex.source}|${var_regex.source})`)
+	const var_or_num_regex = new RegExp(`(?:${num_regex.source}|${var_regex.source})`);
 	const regex = new RegExp(`^${var_or_num_regex.source}(?:,${var_or_num_regex.source}\\s*)*$`);
 
 	// Test the input against the regex
@@ -154,11 +216,16 @@ export function parseValue(value: string, parse_opts: ParseOptions): ParsedValue
 	}
 
 	// match interval
-	const parsed_interval = parseInterval(value);
+	const parsed_interval = parseValueInterval(value);
 	if (parse_opts.allow_interval && parsed_interval) {
 		return { type: 'interval', parsed: parsed_interval };
 	}
-	
+
+	const parsed_var_interval = parseVariableInterval(value);
+	if (parse_opts.allow_interval && parsed_var_interval) {
+		return { type: 'variable_interval', parsed: parsed_var_interval };
+	}
+
 	// match variable list
 	const parsed_var_list = parseVarList(value);
 	if (parse_opts.allow_var_list && parsed_var_list) {
