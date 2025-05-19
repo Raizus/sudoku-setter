@@ -1125,6 +1125,20 @@ export const chaosConstructionSeenSameRegionCountInfo: SquareCellElementInfo = {
 	}
 };
 
+export const chaosConstructionNeighbourCellsSameRegionCountInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+
+	toolId: TOOLS.CHAOS_CONSTRUCTION_NEIGHBOUR_CELLS_SAME_REGION_COUNT,
+
+	shape: DEFAULT_CIRCLE_SHAPE,
+
+	meta: {
+		description: `A digit in a circle shows the amount of cells touching it, orthogonally and diagonally, not including itself, which are part of the same region.`,
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	}
+};
+
 export const directedPathStartInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 

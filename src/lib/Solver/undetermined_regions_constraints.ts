@@ -152,6 +152,13 @@ function chaosConstructionConstraint(model: PuzzleModel, element: ConstraintsEle
 	out_str += `constraint chaos_construction_p(unknown_regions, ${reg_idxs_str}, ${n_regions});\n`;
 	out_str += `constraint no_repeats_in_unknown_regions_p(board, unknown_regions, ALLOWED_DIGITS, ${reg_idxs_str});\n`;
 
+	if (!element.negative_constraints) return out_str;
+	const no_2x2 =
+		!!element.negative_constraints[TOOLS.CHAOS_CONSTRUCTION_2X2_DOES_NOT_BELONG_TO_THE_SAME_REGION];
+	if (no_2x2) {
+		out_str += `constraint chaos_construction_no_2x2_belongs_to_one_region_p(unknown_regions);\n`;
+	}
+
 	return out_str;
 }
 

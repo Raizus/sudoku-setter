@@ -2367,6 +2367,15 @@ predicate no_repeats_in_unknown_regions_p(
         )
     );
 
+predicate chaos_construction_no_2x2_belongs_to_one_region_p(
+    array[int, int] of var int: regions
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+} in forall(r in rows where r < max(rows), c in cols where c < max(cols))(
+    not all_equal([regions[r,c], regions[r,c+1], regions[r+1,c], regions[r+1,c+1]])
+);
+
 predicate numbered_chaos_construction_p(
     array[int, int] of var int: grid,
     array[int, int] of var int: regions,
@@ -2472,6 +2481,16 @@ predicate chaos_construction_arrow_p(
     all_equal(arrow_regions) /\\ 
     all_equal(circle_regions) /\\ 
     circle_regions[min(idxs1)] != arrow_regions[min(idxs2)]
+);
+
+predicate chaos_construction_neighbour_cells_same_region_count_p(
+	var int: cell_val,
+    var int: cell_region,
+	array[int] of var int: neighbour_regions
+) = let {
+    set of int: idxs1 = index_set(neighbour_regions);
+} in (
+    cell_val = count(neighbour_regions, cell_region)
 );\n\n`;
 
 	const nurimisaki = `predicate nurimisaki_p(array[int, int] of var int: grid) =

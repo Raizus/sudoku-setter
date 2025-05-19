@@ -1304,6 +1304,39 @@ function chaosConstructionSeenSameRegionCountElement(
 	return out_str;
 }
 
+function chaosConstructionNeighbourCellsSameRegionCountConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const cell_var = cellToVarName(cell);
+	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const neighbour_cells = grid.getNeighboorCells(cell);
+	const cells = [...neighbour_cells];
+
+	const region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+
+	const constraint_str = `constraint chaos_construction_neighbour_cells_same_region_count_p(${cell_var}, ${region_var}, ${region_vars});\n`;
+	return constraint_str;
+}
+
+function chaosConstructionNeighbourCellsSameRegionCountElement(
+	model: PuzzleModel,
+	element: ConstraintsElement
+) {
+	const out_str = simpleElementFunction(
+		model,
+		element,
+		chaosConstructionNeighbourCellsSameRegionCountConstraint
+	);
+	return out_str;
+}
+
 function directedPathStartConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -1603,7 +1636,7 @@ function BYOKCageSizeElement(model: PuzzleModel, element: ConstraintsElement) {
 		const cell_var = cellToVarName(cell);
 		const byok_var = cellToGridVarName(cell, VAR_2D_NAMES.BYOKC_GRID);
 
-		out_str += `constraint ${byok_var} == ${idx+1};\n`
+		out_str += `constraint ${byok_var} == ${idx + 1};\n`;
 		out_str += `constraint byok_cage_cell_size_p(${VAR_2D_NAMES.BYOKC_GRID}, ${cell_var}, ${byok_var});\n`;
 	}
 
@@ -1706,6 +1739,10 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS, chaosConstructionChessSumsElement],
 	[TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS, chaosConstructionArrowKnotsElement],
 	[TOOLS.CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT, chaosConstructionSeenSameRegionCountElement],
+	[
+		TOOLS.CHAOS_CONSTRUCTION_NEIGHBOUR_CELLS_SAME_REGION_COUNT,
+		chaosConstructionNeighbourCellsSameRegionCountElement
+	],
 
 	[TOOLS.BYOK_CAGE_SIZE, BYOKCageSizeElement],
 	[TOOLS.BYOK_NOT_CAGE_CELL, BYOKNotCageCellElement],

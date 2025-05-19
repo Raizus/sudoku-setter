@@ -85,6 +85,7 @@ export enum VALUE_MODIFIER_CONSTRAINTS {
 
 export enum OTHER_UNDETERMINED_REGIONS_CONSTRAINTS {
 	CHAOS_CONSTRUCTION = 'Chaos Construction',
+	CHAOS_CONSTRUCTION_2X2_DOES_NOT_BELONG_TO_THE_SAME_REGION = 'Chaos Construction 2x2 Does Not Belong To The Same Region',
 	NUMBERED_CHAOS_CONSTRUCTION = 'Numbered Chaos Construction',
 	CHAOS_CONSTRUCTION_SUGURU = 'Chaos Construction Suguru',
 	TWO_CONTIGUOUS_REGIONS = 'Two Contiguous Regions',
@@ -161,7 +162,7 @@ export enum GLOBAL_CAVE_CONSTRAINTS {
 	CAVE_LITS = 'Cave LITS',
 	RENBAN_CAVES = 'Renban Caves',
 	CAVE_WALL_SUGURU = 'Cave Wall Suguru',
-	CAVE_CELLS_FILLOMINO = 'Cave Cells Fillomino',
+	CAVE_CELLS_FILLOMINO = 'Cave Cells Fillomino'
 }
 
 export enum GLOBAL_CONNECT_FOUR_CONSTRAINTS {
@@ -244,6 +245,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	CHAOS_CONSTRUCTION_CHESS_SUMS = 'Chaos Construction Chess Sums',
 	CHAOS_CONSTRUCTION_ARROW_KNOTS = 'Chaos Construction Arrow Knots',
 	CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT = 'Chaos Construction Seen Same Region Count',
+	CHAOS_CONSTRUCTION_NEIGHBOUR_CELLS_SAME_REGION_COUNT = "Chaos Construction Neighbour Cells Same Region Count",
 
 	NURIKABE_SEEN_WATERWAY_CELLS = 'Nurikabe Seen Waterway Cells',
 	NURIKABE_ISLAND_SIZE_CELL = 'Nurikabe Island Size Cell',
@@ -493,7 +495,7 @@ export enum VALUED_GLOBAL_CONSTRAINTS {
 }
 
 export enum OTHER_CONSTRAINTS {
-	VARIABLE_CONSTRAINT = "Variable Constraint"
+	VARIABLE_CONSTRAINT = 'Variable Constraint'
 }
 
 export enum COSMETIC_TOOLS {

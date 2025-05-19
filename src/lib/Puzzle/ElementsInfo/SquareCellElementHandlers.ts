@@ -292,7 +292,8 @@ import {
 	internalLoopSkyscrapersInfo,
 	BYOKCageSizeInfo,
 	BYOKNotCageCellInfo,
-	yinYangShadedCellInfo
+	yinYangShadedCellInfo,
+	chaosConstructionNeighbourCellsSameRegionCountInfo
 } from './SingleCellElementsInfo';
 import { customFogClearingInfo, fogLighsInfo } from './FogElementsInfo';
 import {
@@ -469,6 +470,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS]: chaosConstructionChessSumsInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS]: chaosConstructionArrowKnotsInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT]: chaosConstructionSeenSameRegionCountInfo,
+	[TOOLS.CHAOS_CONSTRUCTION_NEIGHBOUR_CELLS_SAME_REGION_COUNT]: chaosConstructionNeighbourCellsSameRegionCountInfo,
 
 	[TOOLS.BYOK_CAGE_SIZE]: BYOKCageSizeInfo,
 	[TOOLS.BYOK_NOT_CAGE_CELL]: BYOKNotCageCellInfo,

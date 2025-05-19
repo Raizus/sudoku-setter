@@ -4,6 +4,14 @@ import { TOOLS, TOOL_CATEGORIES } from '../Tools';
 export const chaosConstructionInfo: AbstractElementInfo = {
 	toolId: TOOLS.CHAOS_CONSTRUCTION,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.CHAOS_CONSTRUCTION_2X2_DOES_NOT_BELONG_TO_THE_SAME_REGION,
+			description:
+				'Regions cannot cover any 2x2 section of the grid.'
+		}
+	],
+
 	meta: {
 		description:
 			'The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.',
