@@ -94,3 +94,22 @@ export function areArraysEqual(arr1: number[], arr2: number[]): boolean {
 	// If all elements are equal, return true
 	return true;
 }
+
+export function* combinations<T>(input: T[], n: number): Generator<T[]> {
+	if (n < 0 || n > input.length) {
+		return;
+	}
+
+	if (n === 0) {
+		yield [];
+		return;
+	}
+
+	for (let i = 0; i <= input.length - n; i++) {
+		const first = input[i];
+		const remaining = input.slice(i + 1);
+		for (const combination of combinations(remaining, n - 1)) {
+			yield [first, ...combination];
+		}
+	}
+}

@@ -3,6 +3,7 @@ import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints'
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS } from '../Puzzle/Tools';
+import { combinations } from '../utils/functionUtils';
 import {
 	cellsToVarsName,
 	allDifferentConstraint,
@@ -16,6 +17,46 @@ import {
 	type ElementF
 } from './solver_utils';
 import type { ParseOptions } from './value_parsing';
+
+function getCageNeighbours(cells: Cell[], grid: Grid) {
+	const cage_neighbours: Cell[] = [];
+	for (const cell of cells) {
+		const neighbours = grid.getOrthogonallyAdjacentCells(cell);
+		neighbours.forEach((cell2) => {
+			if (!cells.includes(cell2) && !cage_neighbours.includes(cell2)) cage_neighbours.push(cell2);
+		});
+	}
+	return cage_neighbours;
+}
+
+function getAdjacentCages(grid: Grid, element: ConstraintsElement) {
+	const constraints = element.constraints;
+	const adj_list: Map<string, Set<string>> = new Map();
+	if (!constraints) return adj_list;
+	const clist = [...Object.entries(constraints)];
+
+	for (const [cage1, cage2] of combinations(clist, 2)) {
+		const c_id1 = cage1[0];
+		const c_id2 = cage2[0];
+
+		const cells1 = cellsFromCoords(grid, (cage1[1] as CageToolI).cells);
+		const cells2 = new Set(cellsFromCoords(grid, (cage2[1] as CageToolI).cells));
+		const cage1_neighbours = getCageNeighbours(cells1, grid);
+
+		const is_adj = cage1_neighbours.some((cell1) => cells2.has(cell1));
+		if (!is_adj) continue;
+
+		const set1 = adj_list.get(c_id1);
+		if (set1) set1.add(c_id2);
+		else adj_list.set(c_id1, new Set([c_id2]));
+
+		const set2 = adj_list.get(c_id2);
+		if (set2) set2.add(c_id1);
+		else adj_list.set(c_id2, new Set([c_id1]));
+	}
+
+	return adj_list;
+}
 
 function getCageVars(grid: Grid, constraint: CageToolI) {
 	const cells = cellsFromCoords(grid, constraint.cells);
@@ -48,7 +89,8 @@ export function getParsingResult(model: PuzzleModel, value: string, c_id: string
 	const parse_opts: ParseOptions = {
 		allow_var: true,
 		allow_interval: true,
-		allow_int_list: true
+		allow_int_list: true,
+		allow_var_list: true
 	};
 	const default_name = `cage_var_${c_id}`;
 	const result = model.getOrSetSharedVar(value, default_name, parse_opts);
@@ -99,11 +141,52 @@ function killerCageElement(model: PuzzleModel, element: ConstraintsElement) {
 
 	const var_names = result[1];
 	if (!element.negative_constraints) return out_str;
+
 	const cage_totals_different = !!element.negative_constraints[TOOLS.ALL_CAGE_TOTALS_ARE_DIFFERENT];
+	const cage_totals_consecutive =
+		!!element.negative_constraints[TOOLS.ADJACENT_CAGE_TOTALS_ARE_CONSECUTIVE];
+	const adj_cage_totals_different =
+		!!element.negative_constraints[TOOLS.ADJACENT_CAGE_TOTALS_ARE_DIFFERENT];
 
 	if (cage_totals_different) {
 		out_str += `\n% ${TOOLS.ALL_CAGE_TOTALS_ARE_DIFFERENT}\n`;
 		out_str += `constraint all_different([${var_names.join(', ')}]);\n`;
+	}
+	if (cage_totals_consecutive) {
+		const adj_list = getAdjacentCages(model.puzzle.grid, element);
+		out_str += `\n% ${TOOLS.ADJACENT_CAGE_TOTALS_ARE_CONSECUTIVE}\n`;
+		for (const [c_id1, set1] of adj_list.entries()) {
+			for (const c_id2 of set1) {
+				const res1 = getParsingResult(model, '', c_id1);
+				if (!res1) continue;
+				const var1 = res1[1];
+				out_str += res1[0];
+
+				const res2 = getParsingResult(model, '', c_id2);
+				if (!res2) continue;
+				const var2 = res2[1];
+				out_str += res2[0];
+				out_str += `constraint abs(${var1} - ${var2}) == 1;\n`;
+			}
+		}
+	}
+	if (adj_cage_totals_different) {
+		const adj_list = getAdjacentCages(model.puzzle.grid, element);
+		out_str += `\n% ${TOOLS.ADJACENT_CAGE_TOTALS_ARE_DIFFERENT}\n`;
+		for (const [c_id1, set1] of adj_list.entries()) {
+			for (const c_id2 of set1) {
+				const res1 = getParsingResult(model, '', c_id1);
+				if (!res1) continue;
+				const var1 = res1[1];
+				out_str += res1[0];
+
+				const res2 = getParsingResult(model, '', c_id2);
+				if (!res2) continue;
+				const var2 = res2[1];
+				out_str += res2[0];
+				out_str += `constraint ${var1} != ${var2};\n`;
+			}
+		}
 	}
 	return out_str;
 }
@@ -207,14 +290,7 @@ function vaultedCageConstraint(
 	const cells_coords = constraint.cells;
 	const cage_cells = cellsFromCoords(grid, cells_coords);
 
-	const cage_neighbours: Cell[] = [];
-	for (const cell of cage_cells) {
-		const neighbours = grid.getOrthogonallyAdjacentCells(cell);
-		neighbours.forEach((cell2) => {
-			if (!cage_cells.includes(cell2) && !cage_neighbours.includes(cell2))
-				cage_neighbours.push(cell2);
-		});
-	}
+	const cage_neighbours: Cell[] = getCageNeighbours(cage_cells, grid);
 	const cage_neighbour_vars = cellsToGridVarsStr(cage_neighbours, VAR_2D_NAMES.BOARD);
 	out_str += `constraint vaulted_cage_p(${vars_str}, ${cage_neighbour_vars});\n`;
 

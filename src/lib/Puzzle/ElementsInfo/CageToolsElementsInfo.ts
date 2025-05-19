@@ -73,6 +73,14 @@ export const killerCageInfo: SquareCellElementInfo = {
 		{
 			toolId: TOOLS.ALL_CAGE_TOTALS_ARE_DIFFERENT,
 			description: 'All Killer Cage totals are different.'
+		},
+		{
+			toolId: TOOLS.ADJACENT_CAGE_TOTALS_ARE_CONSECUTIVE,
+			description: 'Adjacent Killer Cages have consecutive sums.'
+		},
+		{
+			toolId: TOOLS.ADJACENT_CAGE_TOTALS_ARE_DIFFERENT,
+			description: 'Killer Cages that share an edge have different totals.'
 		}
 	],
 

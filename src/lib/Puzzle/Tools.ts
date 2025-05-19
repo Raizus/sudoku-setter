@@ -53,6 +53,8 @@ export enum NEGATIVE_CONSTRAINTS {
 	ALL_RATIOS_GIVEN = 'All Ratios Given',
 	ALL_DIFFERENCES_GIVEN = 'All Differences Given',
 	ALL_CAGE_TOTALS_ARE_DIFFERENT = 'All Cage Totals Are Different',
+	ADJACENT_CAGE_TOTALS_ARE_CONSECUTIVE = 'Adjacent Cage Totals Are Consecutive',
+	ADJACENT_CAGE_TOTALS_ARE_DIFFERENT = 'Adjacent Cage Totals Are Different',
 
 	ALL_RADARS_GIVEN = 'All Radars Given',
 	ALL_SQUARES_GIVEN = 'All Squares Given',
