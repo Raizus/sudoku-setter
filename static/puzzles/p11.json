@@ -1,246 +1,89 @@
 {
-    "puzzleInfo": {
-        "title": "A Degree in Thermology",
-        "authors": [
-            "Knickolas"
-        ],
-        "ruleset": "Sudoku rules apply.\n\n**Doublers**: The grid contains 9 doublers (numbers multiplied by 2), one in each row, column and box. Each digit appears as a doubler exactly once.\n\n**Doublers Thermometer**: Values along a thermometer must increase from the bulb end. If a thermometer cell is a doubler it counts as twice its value for purposes of the thermometer.\n\n**Doublers Killer Cage**: A digit in a doubler cell counts for twice its value for the purposes of all cage sums. Digits may not repeat in cages, though values might. (eg a cage may not contain a doubled 2 and a regular 2 but may contain a doubled 2 and a regular 4). The values in the cage must sum to the given total in the top left (if one exists).\n",
-        "ctcYoutubeUrl": "https://www.youtube.com/watch?v=yff6U2tI8Zk",
-        "ctcUrl": "https://sudokupad.app/d510hfne1x"
-    },
-    "nRows": 9,
-    "nCols": 9,
-    "grid": [
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ]
-    ],
-    "elements": {
-        "Doublers": {
-            "tool_id": "Doublers",
-            "constraints": []
-        },
-        "Doublers Thermometer": {
-            "tool_id": "Doublers Thermometer",
-            "constraints": [
-                {
-                    "cells": [
-                        "R2C7",
-                        "R1C6",
-                        "R1C5",
-                        "R1C4"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R2C8",
-                        "R3C7",
-                        "R4C6"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R3C8",
-                        "R4C7",
-                        "R5C7",
-                        "R6C7"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R7C8",
-                        "R6C9",
-                        "R5C9",
-                        "R4C9"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R8C7",
-                        "R7C6",
-                        "R7C5",
-                        "R7C4"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R8C3",
-                        "R9C4",
-                        "R9C5",
-                        "R9C6"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R7C2",
-                        "R6C3",
-                        "R5C3",
-                        "R4C3"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R3C2",
-                        "R4C1",
-                        "R5C1",
-                        "R6C1"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R2C3",
-                        "R3C4",
-                        "R3C5",
-                        "R3C6"
-                    ]
-                }
-            ]
-        },
-        "Doublers Killer Cage": {
-            "tool_id": "Doublers Killer Cage",
-            "constraints": [
-                {
-                    "cells": [
-                        "R8C1",
-                        "R8C2"
-                    ],
-                    "value": "12"
-                },
-                {
-                    "cells": [
-                        "R9C7",
-                        "R9C8",
-                        "R9C9"
-                    ],
-                    "value": "24"
-                },
-                {
-                    "cells": [
-                        "R7C9",
-                        "R8C9"
-                    ],
-                    "value": "8"
-                },
-                {
-                    "cells": [
-                        "R5C4",
-                        "R5C5",
-                        "R5C6"
-                    ],
-                    "value": "23"
-                },
-                {
-                    "cells": [
-                        "R1C8",
-                        "R2C8",
-                        "R2C9"
-                    ],
-                    "value": "24"
-                },
-                {
-                    "cells": [
-                        "R1C2",
-                        "R1C3"
-                    ],
-                    "value": "10"
-                }
-            ]
-        }
-    }
+	"puzzleInfo": {
+		"title": "A Degree in Thermology",
+		"authors": ["Knickolas"],
+		"ruleset": "Sudoku rules apply.\n\n**Doublers**: The grid contains 9 doublers (numbers multiplied by 2), one in each row, column and box. Each digit appears as a doubler exactly once.\n\n**Doublers Thermometer**: Values along a thermometer must increase from the bulb end. If a thermometer cell is a doubler it counts as twice its value for purposes of the thermometer.\n\n**Doublers Killer Cage**: A digit in a doubler cell counts for twice its value for the purposes of all cage sums. Digits may not repeat in cages, though values might. (eg a cage may not contain a doubled 2 and a regular 2 but may contain a doubled 2 and a regular 4). The values in the cage must sum to the given total in the top left (if one exists).\n",
+		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=yff6U2tI8Zk",
+		"ctcUrl": "https://sudokupad.app/d510hfne1x"
+	},
+	"nRows": 9,
+	"nCols": 9,
+	"grid": [
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}]
+	],
+	"elements": {
+		"Doublers": {
+			"tool_id": "Doublers",
+			"constraints": []
+		},
+		"Doublers Thermometer": {
+			"tool_id": "Doublers Thermometer",
+			"constraints": [
+				{
+					"cells": ["R2C7", "R1C6", "R1C5", "R1C4"]
+				},
+				{
+					"cells": ["R2C8", "R3C7", "R4C6"]
+				},
+				{
+					"cells": ["R3C8", "R4C7", "R5C7", "R6C7"]
+				},
+				{
+					"cells": ["R7C8", "R6C9", "R5C9", "R4C9"]
+				},
+				{
+					"cells": ["R8C7", "R7C6", "R7C5", "R7C4"]
+				},
+				{
+					"cells": ["R8C3", "R9C4", "R9C5", "R9C6"]
+				},
+				{
+					"cells": ["R7C2", "R6C3", "R5C3", "R4C3"]
+				},
+				{
+					"cells": ["R3C2", "R4C1", "R5C1", "R6C1"]
+				},
+				{
+					"cells": ["R2C3", "R3C4", "R3C5", "R3C6"]
+				}
+			]
+		},
+		"Doublers Killer Cage": {
+			"tool_id": "Doublers Killer Cage",
+			"constraints": [
+				{
+					"cells": ["R8C1", "R8C2"],
+					"value": "12"
+				},
+				{
+					"cells": ["R9C7", "R9C8", "R9C9"],
+					"value": "24"
+				},
+				{
+					"cells": ["R7C9", "R8C9"],
+					"value": "8"
+				},
+				{
+					"cells": ["R5C4", "R5C5", "R5C6"],
+					"value": "23"
+				},
+				{
+					"cells": ["R1C8", "R2C8", "R2C9"],
+					"value": "24"
+				},
+				{
+					"cells": ["R1C2", "R1C3"],
+					"value": "10"
+				}
+			]
+		}
+	}
 }

@@ -1,213 +1,68 @@
 {
-    "puzzleInfo": {
-        "title": "Assigned Seating",
-        "authors": [
-            "ChinStrap"
-        ],
-        "ruleset": "Sudoku rules apply.\n\n**Yin Yang**: Shade some cells in the grid such that all shaded cells are orthogonally connected and all unshaded cells are orthogonally connected, and no 2x2 area is fully shaded or fully unshaded.\n\n**Yin Yang Indexing Line Coloring**: On an index line, the digit in the Nth cell along the line (starting from the diamond) indicates the position along the line where the digit N appears. Eg: 3214 would be a valid line with 3 as the diamond; the 1st digit, 3, indicates that the 3rd cell contains a 1, the 2nd cell a 2, and so on. All cells that reference their own position on a indexing line (the digit N is in position N) should be dark. Cells that are not self referencing should be light. For example for the line 3214 with 3 as the diamond, the 2 and 4 would be dark and the 1 and 3 would be light.\n\n**Yin Yang White Kropki**: Cells separated by a dot indicate that the two connected cells have the same Yin Yang shading and their digits are consecutive.",
-        "ctcYoutubeUrl": "https://www.youtube.com/watch?v=uN2PO9U8_uM",
-        "ctcUrl": "https://sudokupad.app/unrk3m4tg3"
-    },
-    "nRows": 9,
-    "nCols": 9,
-    "grid": [
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ]
-    ],
-    "elements": {
-        "Yin Yang": {
-            "tool_id": "Yin Yang",
-            "constraints": []
-        },
-        "Yin Yang Indexing Line Coloring": {
-            "tool_id": "Yin Yang Indexing Line Coloring",
-            "constraints": [
-                {
-                    "cells": [
-                        "R6C9",
-                        "R5C9",
-                        "R4C9",
-                        "R3C9",
-                        "R2C9"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R6C7",
-                        "R7C7",
-                        "R7C6",
-                        "R6C6",
-                        "R5C6",
-                        "R5C7",
-                        "R4C7",
-                        "R4C8",
-                        "R5C8"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R5C4",
-                        "R4C4",
-                        "R3C4",
-                        "R2C4",
-                        "R2C5",
-                        "R3C5"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R7C9",
-                        "R7C8",
-                        "R8C8",
-                        "R8C7",
-                        "R8C6",
-                        "R8C5",
-                        "R8C4",
-                        "R7C3",
-                        "R7C4"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R9C1",
-                        "R8C1",
-                        "R8C2",
-                        "R9C2"
-                    ]
-                }
-            ]
-        },
-        "Yin Yang White Kropki": {
-            "tool_id": "Yin Yang White Kropki",
-            "constraints": [
-                {
-                    "cells": [
-                        "R3C1",
-                        "R3C2"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R2C7",
-                        "R2C8"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R5C3",
-                        "R6C3"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R5C5",
-                        "R6C5"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R7C2",
-                        "R7C3"
-                    ]
-                }
-            ]
-        }
-    }
+	"puzzleInfo": {
+		"title": "Assigned Seating",
+		"authors": ["ChinStrap"],
+		"ruleset": "Sudoku rules apply.\n\n**Yin Yang**: Shade some cells in the grid such that all shaded cells are orthogonally connected and all unshaded cells are orthogonally connected, and no 2x2 area is fully shaded or fully unshaded.\n\n**Yin Yang Indexing Line Coloring**: On an index line, the digit in the Nth cell along the line (starting from the diamond) indicates the position along the line where the digit N appears. Eg: 3214 would be a valid line with 3 as the diamond; the 1st digit, 3, indicates that the 3rd cell contains a 1, the 2nd cell a 2, and so on. All cells that reference their own position on a indexing line (the digit N is in position N) should be dark. Cells that are not self referencing should be light. For example for the line 3214 with 3 as the diamond, the 2 and 4 would be dark and the 1 and 3 would be light.\n\n**Yin Yang White Kropki**: Cells separated by a dot indicate that the two connected cells have the same Yin Yang shading and their digits are consecutive.",
+		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=uN2PO9U8_uM",
+		"ctcUrl": "https://sudokupad.app/unrk3m4tg3"
+	},
+	"nRows": 9,
+	"nCols": 9,
+	"grid": [
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}]
+	],
+	"elements": {
+		"Yin Yang": {
+			"tool_id": "Yin Yang",
+			"constraints": []
+		},
+		"Yin Yang Indexing Line Coloring": {
+			"tool_id": "Yin Yang Indexing Line Coloring",
+			"constraints": [
+				{
+					"cells": ["R6C9", "R5C9", "R4C9", "R3C9", "R2C9"]
+				},
+				{
+					"cells": ["R6C7", "R7C7", "R7C6", "R6C6", "R5C6", "R5C7", "R4C7", "R4C8", "R5C8"]
+				},
+				{
+					"cells": ["R5C4", "R4C4", "R3C4", "R2C4", "R2C5", "R3C5"]
+				},
+				{
+					"cells": ["R7C9", "R7C8", "R8C8", "R8C7", "R8C6", "R8C5", "R8C4", "R7C3", "R7C4"]
+				},
+				{
+					"cells": ["R9C1", "R8C1", "R8C2", "R9C2"]
+				}
+			]
+		},
+		"Yin Yang White Kropki": {
+			"tool_id": "Yin Yang White Kropki",
+			"constraints": [
+				{
+					"cells": ["R3C1", "R3C2"]
+				},
+				{
+					"cells": ["R2C7", "R2C8"]
+				},
+				{
+					"cells": ["R5C3", "R6C3"]
+				},
+				{
+					"cells": ["R5C5", "R6C5"]
+				},
+				{
+					"cells": ["R7C2", "R7C3"]
+				}
+			]
+		}
+	}
 }

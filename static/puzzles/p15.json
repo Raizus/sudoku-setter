@@ -1,441 +1,360 @@
 {
-    "puzzleInfo": {
-        "title": "Decapitated",
-        "authors": [
-            "Black_Doom"
-        ],
-        "ruleset": "Sudoku rules apply.\n\n**Chaos Construction**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.\n\n**Chaos Construction Seen Same Region Count**: The number in the circle shows how many region cells it sees in its row and column (including the cell with the circle itself) until it reaches the borders of the region.\n\n**Chaos Construction Arrow**: Digits along an arrow must sum to the number in the attached circle. Additionally, each arrow must be contained within one region, and the circle cannot belong to the same region as its arrow.",
-        "ctcYoutubeUrl": "https://www.youtube.com/watch?v=n23BHxpMjY0",
-        "ctcUrl": "https://sudokupad.app/dndxixp4qb"
-    },
-    "nRows": 9,
-    "nCols": 9,
-    "grid": [
-        [
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            }
-        ],
-        [
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            }
-        ],
-        [
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            }
-        ],
-        [
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            }
-        ],
-        [
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            }
-        ],
-        [
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            }
-        ],
-        [
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            }
-        ],
-        [
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            }
-        ],
-        [
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            }
-        ]
-    ],
-    "elements": {
-        "Chaos Construction": {
-            "tool_id": "Chaos Construction",
-            "constraints": []
-        },
-        "Chaos Construction Seen Same Region Count": {
-            "tool_id": "Chaos Construction Seen Same Region Count",
-            "constraints": [
-                {
-                    "cell": "R1C2"
-                },
-                {
-                    "cell": "R1C8"
-                },
-                {
-                    "cell": "R2C6"
-                },
-                {
-                    "cell": "R4C6"
-                },
-                {
-                    "cell": "R5C5"
-                },
-                {
-                    "cell": "R5C3"
-                },
-                {
-                    "cell": "R7C1"
-                },
-                {
-                    "cell": "R8C3"
-                },
-                {
-                    "cell": "R7C7"
-                },
-                {
-                    "cell": "R7C9"
-                }
-            ]
-        },
-        "Chaos Construction Arrow": {
-            "tool_id": "Chaos Construction Arrow",
-            "constraints": [
-                {
-                    "cells": [
-                        "R1C2"
-                    ],
-                    "lines": [
-                        [
-                            "R1C2",
-                            "R1C1",
-                            "R2C1",
-                            "R2C2"
-                        ]
-                    ]
-                },
-                {
-                    "cells": [
-                        "R1C8"
-                    ],
-                    "lines": [
-                        [
-                            "R1C8",
-                            "R2C9",
-                            "R3C8"
-                        ]
-                    ]
-                },
-                {
-                    "cells": [
-                        "R2C6"
-                    ],
-                    "lines": [
-                        [
-                            "R2C6",
-                            "R3C7",
-                            "R2C8"
-                        ]
-                    ]
-                },
-                {
-                    "cells": [
-                        "R4C6"
-                    ],
-                    "lines": [
-                        [
-                            "R4C6",
-                            "R3C5",
-                            "R3C4"
-                        ]
-                    ]
-                },
-                {
-                    "cells": [
-                        "R5C5"
-                    ],
-                    "lines": [
-                        [
-                            "R5C5",
-                            "R6C6"
-                        ]
-                    ]
-                },
-                {
-                    "cells": [
-                        "R5C3"
-                    ],
-                    "lines": [
-                        [
-                            "R5C3",
-                            "R5C2",
-                            "R4C2"
-                        ]
-                    ]
-                },
-                {
-                    "cells": [
-                        "R7C1"
-                    ],
-                    "lines": [
-                        [
-                            "R7C1",
-                            "R8C2"
-                        ]
-                    ]
-                },
-                {
-                    "cells": [
-                        "R8C3"
-                    ],
-                    "lines": [
-                        [
-                            "R8C3",
-                            "R7C4",
-                            "R6C5"
-                        ]
-                    ]
-                },
-                {
-                    "cells": [
-                        "R7C7"
-                    ],
-                    "lines": [
-                        [
-                            "R7C7",
-                            "R7C6",
-                            "R8C6"
-                        ]
-                    ]
-                },
-                {
-                    "cells": [
-                        "R7C9"
-                    ],
-                    "lines": [
-                        [
-                            "R7C9",
-                            "R8C9",
-                            "R9C8"
-                        ]
-                    ]
-                }
-            ]
-        }
-    }
+	"puzzleInfo": {
+		"title": "Decapitated",
+		"authors": ["Black_Doom"],
+		"ruleset": "Sudoku rules apply.\n\n**Chaos Construction**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.\n\n**Chaos Construction Seen Same Region Count**: The number in the circle shows how many region cells it sees in its row and column (including the cell with the circle itself) until it reaches the borders of the region.\n\n**Chaos Construction Arrow**: Digits along an arrow must sum to the number in the attached circle. Additionally, each arrow must be contained within one region, and the circle cannot belong to the same region as its arrow.",
+		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=n23BHxpMjY0",
+		"ctcUrl": "https://sudokupad.app/dndxixp4qb"
+	},
+	"nRows": 9,
+	"nCols": 9,
+	"grid": [
+		[
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			}
+		],
+		[
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			}
+		],
+		[
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			}
+		],
+		[
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			}
+		],
+		[
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			}
+		],
+		[
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			}
+		],
+		[
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			}
+		],
+		[
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			}
+		],
+		[
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			}
+		]
+	],
+	"elements": {
+		"Chaos Construction": {
+			"tool_id": "Chaos Construction",
+			"constraints": []
+		},
+		"Chaos Construction Seen Same Region Count": {
+			"tool_id": "Chaos Construction Seen Same Region Count",
+			"constraints": [
+				{
+					"cell": "R1C2"
+				},
+				{
+					"cell": "R1C8"
+				},
+				{
+					"cell": "R2C6"
+				},
+				{
+					"cell": "R4C6"
+				},
+				{
+					"cell": "R5C5"
+				},
+				{
+					"cell": "R5C3"
+				},
+				{
+					"cell": "R7C1"
+				},
+				{
+					"cell": "R8C3"
+				},
+				{
+					"cell": "R7C7"
+				},
+				{
+					"cell": "R7C9"
+				}
+			]
+		},
+		"Chaos Construction Arrow": {
+			"tool_id": "Chaos Construction Arrow",
+			"constraints": [
+				{
+					"cells": ["R1C2"],
+					"lines": [["R1C2", "R1C1", "R2C1", "R2C2"]]
+				},
+				{
+					"cells": ["R1C8"],
+					"lines": [["R1C8", "R2C9", "R3C8"]]
+				},
+				{
+					"cells": ["R2C6"],
+					"lines": [["R2C6", "R3C7", "R2C8"]]
+				},
+				{
+					"cells": ["R4C6"],
+					"lines": [["R4C6", "R3C5", "R3C4"]]
+				},
+				{
+					"cells": ["R5C5"],
+					"lines": [["R5C5", "R6C6"]]
+				},
+				{
+					"cells": ["R5C3"],
+					"lines": [["R5C3", "R5C2", "R4C2"]]
+				},
+				{
+					"cells": ["R7C1"],
+					"lines": [["R7C1", "R8C2"]]
+				},
+				{
+					"cells": ["R8C3"],
+					"lines": [["R8C3", "R7C4", "R6C5"]]
+				},
+				{
+					"cells": ["R7C7"],
+					"lines": [["R7C7", "R7C6", "R8C6"]]
+				},
+				{
+					"cells": ["R7C9"],
+					"lines": [["R7C9", "R8C9", "R9C8"]]
+				}
+			]
+		}
+	}
 }
