@@ -111,7 +111,7 @@
             {}
         ]
     ],
-    "local_constraints": {
+    "elements": {
         "Indexer Cells": {
             "tool_id": "Indexer Cells",
             "constraints": []

@@ -273,7 +273,7 @@
             }
         ]
     ],
-    "local_constraints": {
+    "elements": {
         "Numbered Chaos Construction": {
             "tool_id": "Numbered Chaos Construction",
             "constraints": []

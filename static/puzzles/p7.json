@@ -111,7 +111,7 @@
             {}
         ]
     ],
-    "local_constraints": {
+    "elements": {
         "Parity Balance Cage": {
             "tool_id": "Parity Balance Cage",
             "constraints": [

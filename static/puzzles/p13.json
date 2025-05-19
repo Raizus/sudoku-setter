@@ -117,7 +117,7 @@
             {}
         ]
     ],
-    "local_constraints": {
+    "elements": {
         "Cell Center Loop No Touching": {
             "tool_id": "Cell Center Loop No Touching",
             "constraints": [],

@@ -37,7 +37,7 @@ export function puzzleToJson(puzzle: PuzzleI) {
 
 	const localConstraintsRecord = localConstraints.toJSON();
 	if (Object.keys(localConstraintsRecord).length) {
-		puzzleRecord['local_constraints'] = localConstraintsRecord;
+		puzzleRecord['elements'] = localConstraintsRecord;
 	}
 
 	return puzzleRecord;
@@ -64,7 +64,7 @@ export function puzzleFromJson(puzzleJson: Record<string, unknown>) {
 	const solution = puzzleJson['solution'] as Solution;
 	// const grid = new Grid(nRows, nCols);
 
-	const local_constraints_data = puzzleJson['local_constraints'] as Record<string, ElementData>;
+	const local_constraints_data = puzzleJson['elements'] as Record<string, ElementData>;
 	const elements_dict = ElementsDict.fromJson(local_constraints_data);
 
 	const puzzle: PuzzleI = {

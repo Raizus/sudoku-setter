@@ -19,7 +19,7 @@
 		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
 		[{}, {}, {}, {}, {}, {}, {}, {}, {}]
 	],
-	"local_constraints": {
+	"elements": {
 		"Positive Diagonal": {
 			"tool_id": "Positive Diagonal",
 			"constraints": []

@@ -111,7 +111,7 @@
             {}
         ]
     ],
-    "local_constraints": {
+    "elements": {
         "Indexing Column": {
             "tool_id": "Indexing Column",
             "constraints": [

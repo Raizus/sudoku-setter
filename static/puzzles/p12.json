@@ -111,7 +111,7 @@
             {}
         ]
     ],
-    "local_constraints": {
+    "elements": {
         "Renban Line": {
             "tool_id": "Renban Line",
             "constraints": [

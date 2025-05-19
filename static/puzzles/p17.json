@@ -111,7 +111,7 @@
             {}
         ]
     ],
-    "local_constraints": {
+    "elements": {
         "Split Peas": {
             "tool_id": "Split Peas",
             "constraints": [

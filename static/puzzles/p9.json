@@ -111,7 +111,7 @@
             {}
         ]
     ],
-    "local_constraints": {
+    "elements": {
         "Arrow": {
             "tool_id": "Arrow",
             "constraints": [

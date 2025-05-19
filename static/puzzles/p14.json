@@ -111,7 +111,7 @@
             {}
         ]
     ],
-    "local_constraints": {
+    "elements": {
         "Disjoint Groups": {
             "tool_id": "Disjoint Groups",
             "constraints": []

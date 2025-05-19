@@ -335,7 +335,7 @@
             }
         ]
     ],
-    "local_constraints": {
+    "elements": {
         "Sudoku rules do not apply": {
             "tool_id": "Sudoku rules do not apply",
             "constraints": []

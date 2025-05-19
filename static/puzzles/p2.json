@@ -277,7 +277,7 @@
             }
         ]
     ],
-    "local_constraints": {
+    "elements": {
         "Chaos Construction": {
             "tool_id": "Chaos Construction",
             "constraints": []
