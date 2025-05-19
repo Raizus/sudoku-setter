@@ -748,6 +748,26 @@ function cellKnightWhispersElement(model: PuzzleModel, element: ConstraintsEleme
 	return out_str;
 }
 
+function yinYangShadedCellConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const yin_yang_var = cellToGridVarName(cell, VAR_2D_NAMES.YIN_YANG);
+	const constraint_str = `constraint ${yin_yang_var} == 1;\n`;
+	return constraint_str;
+}
+
+function yinYangShadedCellElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, yinYangShadedCellConstraint);
+	return out_str;
+}
+
 function yinYangMinesweeperConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -1651,6 +1671,7 @@ const tool_map = new Map<string, ElementF>([
 
 	[TOOLS.CELL_KNIGHT_WHISPERS, cellKnightWhispersElement],
 
+	[TOOLS.YIN_YANG_SHADED_CELL, yinYangShadedCellElement],
 	[TOOLS.YIN_YANG_MINESWEEPER, yinYangMinesweeperElement],
 	[TOOLS.YIN_YANG_SEEN_UNSHADED_CELLS, yinYangSeenUnshadedElement],
 	[TOOLS.YIN_YANG_SEEN_SHADED_CELLS, yinYangSeenShadedElement],

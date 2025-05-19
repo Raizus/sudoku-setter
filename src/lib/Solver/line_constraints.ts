@@ -695,6 +695,15 @@ function yinYangRegionSumLineElement(model: PuzzleModel, element: ConstraintsEle
 	return out_str;
 }
 
+function yinYangCalifornianMountainSnakeElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = yinYangSimpleLineElement(
+		model,
+		element,
+		'yin_yang_californian_mountaint_snake_p'
+	);
+	return out_str;
+}
+
 function goldilocksZoneRegionSumLineConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -861,7 +870,8 @@ const tool_map = new Map<string, ElementF>([
 	[TOOLS.YIN_YANG_UNSHADED_ENTROPIC_LINE, yinYangUnshadedEntropicLineElement],
 	[TOOLS.YIN_YANG_UNSHADED_MODULAR_LINE, yinYangUnshadedModularLineElement],
 	[TOOLS.YIN_YANG_REGION_SUM_LINE, yinYangRegionSumLineElement],
-	[TOOLS.YIN_YANG_INDEXING_LINE_COLORING, yinYangIndexingLineColoringElement]
+	[TOOLS.YIN_YANG_INDEXING_LINE_COLORING, yinYangIndexingLineColoringElement],
+	[TOOLS.YIN_YANG_CALIFORNIAN_MOUNTAIN_SNAKE, yinYangCalifornianMountainSnakeElement]
 
 	// [TOOLS.GOLDILOCKS_ZONE_REGION_SUM, goldilocksZoneRegionSumLineConstraint]
 ]);

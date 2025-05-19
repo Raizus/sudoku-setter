@@ -650,6 +650,24 @@ export const seenOddCountInfo: SquareCellElementInfo = {
 	}
 };
 
+export const yinYangShadedCellInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+
+	toolId: TOOLS.YIN_YANG_SHADED_CELL,
+
+	shape: {
+		type: SHAPE_TYPES.SQUARE,
+		strokeWidth: { editable: false, value: 0 },
+		fill: { editable: false, value: 'var(--constraint-color-gray)' }
+	},
+
+	meta: {
+		description: 'Grey shaded cells are shaded yin yang cells.',
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	}
+};
+
 export const yinYangMinesweeperInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 

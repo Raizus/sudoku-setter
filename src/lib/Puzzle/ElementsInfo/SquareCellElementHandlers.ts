@@ -197,7 +197,8 @@ import {
 	ambiguousArrowInfo,
 	adjacentCellsAreMultiplesOfDifferenceLineInfo,
 	indexerCellsRegionSubsetLineInfo,
-	peapodsLineInfo
+	peapodsLineInfo,
+	yinYangCalifornianMountainSnakeInfo
 } from './LineConstraintsElementsInfo';
 import {
 	littleKillerLookAndSayInfo,
@@ -290,7 +291,8 @@ import {
 	caveShadedRegionSizeUnshadedSeenOrthogonallyClueInfo,
 	internalLoopSkyscrapersInfo,
 	BYOKCageSizeInfo,
-	BYOKNotCageCellInfo
+	BYOKNotCageCellInfo,
+	yinYangShadedCellInfo
 } from './SingleCellElementsInfo';
 import { customFogClearingInfo, fogLighsInfo } from './FogElementsInfo';
 import {
@@ -435,6 +437,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.SEEN_ODD_COUNT]: seenOddCountInfo,
 	[TOOLS.CELL_KNIGHT_WHISPERS]: cellKnightWhispersInfo,
 
+	[TOOLS.YIN_YANG_SHADED_CELL]: yinYangShadedCellInfo,
 	[TOOLS.YIN_YANG_MINESWEEPER]: yinYangMinesweeperInfo,
 	[TOOLS.YIN_YANG_SEEN_UNSHADED_CELLS]: yinYangSeenUnshadedCellsInfo,
 	[TOOLS.YIN_YANG_SEEN_SHADED_CELLS]: yinYangSeenShadedCellsInfo,
@@ -602,6 +605,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.YIN_YANG_UNSHADED_ENTROPIC_LINE]: yinYangUnshadedEntropicLineInfo,
 	[TOOLS.YIN_YANG_UNSHADED_MODULAR_LINE]: yinYangUnshadedModularLineInfo,
 	[TOOLS.YIN_YANG_REGION_SUM_LINE]: yinYangRegionSumLineInfo,
+	[TOOLS.YIN_YANG_CALIFORNIAN_MOUNTAIN_SNAKE]: yinYangCalifornianMountainSnakeInfo,
 
 	[TOOLS.GOLDILOCKS_ZONE_REGION_SUM]: goldilocksZoneRegionSumLineInfo,
 

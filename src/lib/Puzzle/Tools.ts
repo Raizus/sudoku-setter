@@ -214,6 +214,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	CELL_NOT_ON_THE_LOOP = 'Cell Not On The Loop',
 	COUNT_LOOP_NEIGHBOUR_CELLS = 'Count Loop Neighbour Cells',
 
+	YIN_YANG_SHADED_CELL = 'Yin Yang Shaded Cell',
 	YIN_YANG_MINESWEEPER = 'Yin Yang Minesweeper',
 	YIN_YANG_SEEN_UNSHADED_CELLS = 'Yin Yang Seen Unshaded Cells',
 	YIN_YANG_SEEN_SHADED_CELLS = 'Yin Yang Seen Shaded Cells',
@@ -386,6 +387,7 @@ export enum LINE_CONSTRAINTS {
 	YIN_YANG_SHADED_WHISPERS_LINE = 'Yin Yang Shaded Whispers Line',
 	YIN_YANG_UNSHADED_ENTROPIC_LINE = 'Yin Yang Unshaded Entropic Line',
 	YIN_YANG_UNSHADED_MODULAR_LINE = 'Yin Yang Unshaded Modular Line',
+	YIN_YANG_CALIFORNIAN_MOUNTAIN_SNAKE = 'Yin Yang Californian Mountain Snake',
 
 	// goldilocks
 	GOLDILOCKS_ZONE_REGION_SUM = 'Goldilocks Zone Region Sum',

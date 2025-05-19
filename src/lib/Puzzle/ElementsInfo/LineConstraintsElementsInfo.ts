@@ -1523,6 +1523,35 @@ export const yinYangUnshadedModularLineInfo: SquareCellElementInfo = {
 	}
 };
 
+export const yinYangCalifornianMountainSnakeInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.LINE,
+		allowSelfIntersection: false
+	},
+
+	toolId: TOOLS.YIN_YANG_CALIFORNIAN_MOUNTAIN_SNAKE,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		strokeWidth: { editable: true, value: 0.1 },
+		stroke: { editable: true, value: 'var(--constraint-color-dark-red)' },
+		linePathOptions: {
+			shortenHead: { editable: false, value: 0.15 },
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.15 },
+			closeLoops: { editable: false, value: true }
+		}
+	},
+
+	meta: {
+		description:
+			'Along the red line, each run of cells with the same yin yang shading contains a non-repeating set of consecutive digits in any order. Along the red line, digits in each pair of adjacent cells with different yin yang shading must differ by at least 5.',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	}
+};
+
 export const yinYangRegionSumLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 

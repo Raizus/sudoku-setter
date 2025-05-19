@@ -2214,6 +2214,102 @@ predicate yin_yang_identical_digits_diagonally_belong_to_same_region_p(
     ) (
         shading[r1, c1] = shading[r2, c2]    % Must have same shading
     )
+);
+
+predicate yin_yang_run_of_n_renban_p(
+    array[int] of var int: arr, 
+    array[int] of var 0..1: labels,
+    int: n
+) = let {
+    set of int: idxs = index_set(arr);
+    int: l = length(idxs);
+    int: min_i = min(idxs);
+    int: a = n - 1;
+} in (
+    % run of n cells with the same label are all different
+    if n <= l then
+        forall(i in idxs where i > min_i+(n-2))(
+            all_equal(labels[i-(n-1)..i]) -> all_different(arr[i-(n-1)..i])
+        )
+    else
+        true
+    endif
+
+    % each cell pair in a run of n cells with the same label sandwiched between two cells
+    % with different labels must have a a distance <= n - 1
+    /\\ if n <= l - 2 then
+        forall(i in idxs where i > min_i + a /\\ i < max(idxs))(
+            (labels[i-n] != labels[i-n+1]) /\\ all_equal(labels[i-a..i]) /\\ (labels[i] != labels[i+1]) -> forall(j in i-a..i, k in i-a..i where k>j)(
+                abs(arr[j] - arr[k]) <= a
+            )
+        )
+    else
+        true
+    endif
+
+    % start of the line
+    /\\ if (all_equal(labels[min_i..min_i+n-1]) /\\ labels[min_i+n] != labels[min_i+n-1]) then
+        forall(j in min_i..min_i+n-1, k in min_i..min_i+n-1 where k>j)(
+            abs(arr[j] - arr[k]) <= a
+        )
+    else
+        true
+    endif
+);
+
+predicate yin_yang_californian_mountaint_snake_p(
+    array[int] of var int: arr, 
+    array[int] of var 0..1: labels
+) = let {
+    set of int: idxs = index_set(arr);
+    int: n = length(idxs);
+    int: min_i = min(idxs);
+    array[idxs] of var int: regions_arr;
+    constraint regions_arr[min_i] = 1;
+    constraint forall(i in idxs where i > min_i)(
+        if labels[i] == labels[i-1] then
+        regions_arr[i] == regions_arr[i-1]
+        else
+        regions_arr[i] == regions_arr[i-1]+1
+    endif
+    );
+    
+    array[idxs] of var int: regions_sizes;
+    constraint forall(i in idxs)(
+        regions_sizes[i] = count_eq(regions_arr, regions_arr[i])
+    );
+    
+} in (
+    % Along the red line, each run of cells with the same yin yang shading contains a non-repeating 
+    % set of consecutive digits in any order. Along the red line, digits in each pair of adjacent cells 
+    % with different yin yang shading must differ by at least 5.
+    % Ensure arrays have same size
+    assert(index_sets_agree(arr, labels), "arr and labels must have the same indexes")
+    % digits in each pair of adjacent cells with different yin yang shading must differ by at least 5.
+    /\\ forall(i in idxs where i > min_i)(
+        (labels[i-1] != labels[i]) -> abs(arr[i] - arr[i-1]) >= 5
+    )
+
+    % each run of cells with the same yin yang shading contains
+    % a non-repeating set of consecutive digits in any order
+
+    % two adjacent cells with the same label are different
+    % yin_yang_run_of_n_renban_p is redundant but reduces solving time significantly
+    /\\ yin_yang_run_of_n_renban_p(arr, labels, 2)
+    % three adjacent cells with the same label are different
+    /\\ yin_yang_run_of_n_renban_p(arr, labels, 3)
+    % four adjacent cells with the same label are different
+    /\\ yin_yang_run_of_n_renban_p(arr, labels, 4)
+    % five adjacent cells with the same label are different
+    /\\ yin_yang_run_of_n_renban_p(arr, labels, 5)
+
+    % cells in the same region have different values
+    /\\ forall(i1 in idxs, i2 in idxs where i2 > i1)(
+        regions_arr[i1] == regions_arr[i2] -> arr[i1] != arr[i2]
+    )
+    /\\ forall(i1 in idxs, i2 in idxs where i2 > i1)(
+        regions_arr[i1] == regions_arr[i2] -> abs(arr[i1] - arr[i2]) < regions_sizes[i1]
+    )
 );\n\n`;
 
 	const two_contiguous_regions = `predicate two_contiguous_regions_p(array[int, int] of var 0..1: grid) =
