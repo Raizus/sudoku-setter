@@ -172,7 +172,7 @@
 		padding: 0 0.5em;
 	}
 
-	.header-button {
-		align-self: start;
-	}
+	// .header-button {
+	// 	align-self: start;
+	// }
 </style>
