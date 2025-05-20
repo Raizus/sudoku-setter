@@ -61,6 +61,7 @@ export enum NEGATIVE_CONSTRAINTS {
 	ALL_YIN_YANG_KROPKI_GIVEN = 'All Yin Yang Kropki Given',
 	ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN = 'All Nurimisaki Unshaded Endpoints Given',
 	ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN = 'All Yin Yang Count Shaded Cells Given',
+	ALL_GALAXY_CENTERS_GIVEN = 'All Galaxy Centers Given',
 
 	// ALL_GIVEN = 'All Given',
 	// ALL_CAGE_TOTALS_DIFFERENT = 'All Cage Totals Different',
@@ -93,9 +94,12 @@ export enum OTHER_UNDETERMINED_REGIONS_CONSTRAINTS {
 	SHADED_BOUNDARIES_ADJACENT_CELL_SUM_IS_EVEN = 'Shaded Boundaries Adjacent Cell Sum Is Even',
 	SASHIGANE = 'Sashigane',
 	NORINORI = 'Norinori',
+	NORINORI_STAR_BATTLE = 'Norinori Star Battle',
 	GOLDILOCKS_ZONE = 'Goldilocks Zone',
 	NEXUS = 'Nexus',
 
+	STAR_BATTLE = 'Star Battle',
+	ONE_STAR_PER_GALAXY = 'One Star Per Galaxy',
 	TWILIGHT_CAVE_FILLOMINO_REGION_SHADING = 'Twilight Cave Fillomino Region Shading',
 	YIN_YANG_FILLOMINO_PARITY = 'Yin Yang Fillomino Parity',
 
@@ -103,7 +107,6 @@ export enum OTHER_UNDETERMINED_REGIONS_CONSTRAINTS {
 
 	LITS = 'LITS',
 	LITS_BLACK_WHITE_STAR_BATTLE = 'LITS Black And White Star Battle',
-	NORINORI_STAR_BATTLE = 'Norinori Star Battle',
 	BUILD_YOUR_OWN_KILLER_CAGES = 'Build Your Own Killer Cages'
 }
 
@@ -150,7 +153,8 @@ export enum GLOBAL_GALAXY_CONSTRAINTS {
 	TWO_SYMMETRIC_GALAXIES = 'Two Symmetric Galaxies',
 	EVERY_CELL_BELONGS_TO_A_GALAXY = 'Every Cell Belongs To A Galaxy',
 	GALAXY_2X2_DOES_NOT_BELONG_TO_ONE_GALAXY = 'Galaxy 2x2 Does Not Belong To One Galaxy',
-	ONE_GALAXY_IS_A_GERMAN_WHISPERS = 'One Galaxy Is A German Whispers'
+	ONE_GALAXY_IS_A_GERMAN_WHISPERS = 'One Galaxy Is A German Whispers',
+	DIGITS_DO_NOT_REPEAT_IN_A_GALAXY = 'Digits Do Not Repeat In A Galaxy'
 }
 
 export enum GLOBAL_CAVE_CONSTRAINTS {
@@ -245,7 +249,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	CHAOS_CONSTRUCTION_CHESS_SUMS = 'Chaos Construction Chess Sums',
 	CHAOS_CONSTRUCTION_ARROW_KNOTS = 'Chaos Construction Arrow Knots',
 	CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT = 'Chaos Construction Seen Same Region Count',
-	CHAOS_CONSTRUCTION_NEIGHBOUR_CELLS_SAME_REGION_COUNT = "Chaos Construction Neighbour Cells Same Region Count",
+	CHAOS_CONSTRUCTION_NEIGHBOUR_CELLS_SAME_REGION_COUNT = 'Chaos Construction Neighbour Cells Same Region Count',
 
 	NURIKABE_SEEN_WATERWAY_CELLS = 'Nurikabe Seen Waterway Cells',
 	NURIKABE_ISLAND_SIZE_CELL = 'Nurikabe Island Size Cell',

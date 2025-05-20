@@ -51,7 +51,7 @@ function possibleGalaxyCells(
 	return [cells, mapped, not_in_galaxy];
 }
 
-function rotationallySymmetricGalaxyCenterSumConstraints(
+function rotationallySymmetricGalaxyCenterSumElement(
 	model: PuzzleModel,
 	element: ConstraintsElement
 ) {
@@ -86,6 +86,46 @@ function rotationallySymmetricGalaxyCenterSumConstraints(
 	const given_galaxies = constraints_list.length;
 	const reg_idxs = `${given_galaxies + 1}..${max_galaxies}`;
 	out_str += `\nconstraint order_remaining_galaxies_p(${VAR_2D_NAMES.GALAXY_REGIONS}, ${reg_idxs});\n`;
+	return out_str;
+}
+
+function rotationallySymmetricGalaxyCenterElement(model: PuzzleModel, element: ConstraintsElement) {
+	let out_str = '';
+	const constraints = element.constraints as Record<string, CenterCornerOrEdgeToolI>;
+	if (!constraints) return out_str;
+
+	const constraints_list = [...Object.values(constraints)];
+	const grid = model.puzzle.grid;
+	let center_count = 0;
+
+	for (let i = 0; i < constraints_list.length; i++) {
+		const constraint = constraints_list[i];
+		const coord = constraint.cell;
+		const gal_id = i + 1;
+
+		const [cells, mapped, not_in_galaxy] = possibleGalaxyCells(grid, coord);
+		const group_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.GALAXY_REGIONS);
+		const mapped_vars = cellsToGridVarsStr(mapped, VAR_2D_NAMES.GALAXY_REGIONS);
+		const not_in_galaxy_vars = cellsToGridVarsStr(not_in_galaxy, VAR_2D_NAMES.GALAXY_REGIONS);
+		out_str += `% galaxy ${gal_id}\n`;
+		out_str += `constraint galaxy_center_p(${group_vars}, ${mapped_vars}, ${not_in_galaxy_vars}, ${gal_id});\n`;
+		out_str += `constraint connected_region(${VAR_2D_NAMES.GALAXY_REGIONS}, ${gal_id});\n`;
+		center_count += 1;
+	}
+	if (!constraints_list.length) return out_str;
+
+	if (!element.negative_constraints) return out_str;
+	const all_galaxy_centers_given = !!element.negative_constraints[TOOLS.ALL_GALAXY_CENTERS_GIVEN];
+
+	if (all_galaxy_centers_given) {
+		out_str += `\nconstraint all_galaxy_centers_given_p(${VAR_2D_NAMES.GALAXY_REGIONS}, ${center_count});\n`;
+	} else {
+		const max_galaxies = grid.nCols * grid.nRows;
+		const given_galaxies = center_count;
+		const reg_idxs = `${given_galaxies + 1}..${max_galaxies}`;
+		out_str += `\nconstraint order_remaining_galaxies_p(${VAR_2D_NAMES.GALAXY_REGIONS}, ${reg_idxs});\n`;
+	}
+
 	return out_str;
 }
 
@@ -150,7 +190,8 @@ const tool_map = new Map<string, ElementF>([
 		TOOLS.YIN_YANG_SUM_OF_ADJACENT_SHADED_EDGE_CORNER,
 		yinYangSumOfAdjacentShadedEdgeOrCornerElement
 	],
-	[TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER_SUM, rotationallySymmetricGalaxyCenterSumConstraints]
+	[TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER, rotationallySymmetricGalaxyCenterElement],
+	[TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER_SUM, rotationallySymmetricGalaxyCenterSumElement]
 ]);
 
 export function centerCornerOrEdgeElements(model: PuzzleModel, element: ConstraintsElement) {

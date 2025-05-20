@@ -34,6 +34,7 @@ import {
 	regionsInfo
 } from './CellInputElementsInfo';
 import {
+	rotationallySymmetricGalaxyCenterInfo,
 	rotationallySymmetricGalaxyCenterSumInfo,
 	yinYangSumOfAdjacentShadedEdgeOrCornerInfo
 } from './CenterEdgeCornerElementsInfo';
@@ -118,7 +119,9 @@ import {
 	LITSInfo,
 	fillominoInfo,
 	buildYourOwnKillerCagesInfo,
-	shadedBoundariesInfo
+	shadedBoundariesInfo,
+	starBattleInfo,
+	oneStarPerGalaxyInfo
 } from './UndeterminedRegionsElementsInfo';
 import {
 	yinYangFillominoParityInfo,
@@ -396,6 +399,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING]: twilightCaveFillominoRegionShadingInfo,
 
 	[TOOLS.GALAXIES]: galaxiesInfo,
+	[TOOLS.STAR_BATTLE]: starBattleInfo,
+	[TOOLS.ONE_STAR_PER_GALAXY]: oneStarPerGalaxyInfo,
 	[TOOLS.PENTOMINO_TILLING]: pentominoTillingInfo,
 
 	[TOOLS.LITS_BLACK_WHITE_STAR_BATTLE]: litsBlackAndWhiteStarBattleInfo,
@@ -470,7 +475,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS]: chaosConstructionChessSumsInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS]: chaosConstructionArrowKnotsInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT]: chaosConstructionSeenSameRegionCountInfo,
-	[TOOLS.CHAOS_CONSTRUCTION_NEIGHBOUR_CELLS_SAME_REGION_COUNT]: chaosConstructionNeighbourCellsSameRegionCountInfo,
+	[TOOLS.CHAOS_CONSTRUCTION_NEIGHBOUR_CELLS_SAME_REGION_COUNT]:
+		chaosConstructionNeighbourCellsSameRegionCountInfo,
 
 	[TOOLS.BYOK_CAGE_SIZE]: BYOKCageSizeInfo,
 	[TOOLS.BYOK_NOT_CAGE_CELL]: BYOKNotCageCellInfo,
@@ -685,7 +691,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.NEGATORS_LITTLE_KILLER_SUM]: negatorsLittleKillerSumInfo,
 
 	// Center, Corner or Edge Constraints
-	// [TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER]: rotationallySymmetricGalaxyCenterInfo,
+	[TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER]: rotationallySymmetricGalaxyCenterInfo,
 	[TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER_SUM]: rotationallySymmetricGalaxyCenterSumInfo,
 	[TOOLS.YIN_YANG_SUM_OF_ADJACENT_SHADED_EDGE_CORNER]: yinYangSumOfAdjacentShadedEdgeOrCornerInfo,
 

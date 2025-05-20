@@ -25,6 +25,13 @@ export const rotationallySymmetricGalaxyCenterInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER,
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_GALAXY_CENTERS_GIVEN,
+			description: "All galaxy centers are given."
+		}
+	],
+
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
 		r: { editable: false, value: 0.15 },

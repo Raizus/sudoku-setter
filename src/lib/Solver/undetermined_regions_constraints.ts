@@ -553,6 +553,41 @@ function shadedBoundariesConstraint(model: PuzzleModel, element: ConstraintsElem
 	return out_str;
 }
 
+function starBattleElement(model: PuzzleModel, element: ConstraintsElement) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name2 = VAR_2D_NAMES.STAR_BATTLE;
+
+	let out_str: string = `\n% ${tool}\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name2};\n`;
+
+	// 2 stars per column, row, 1 per region
+	out_str += exactlyNPerColumn(2, 1, grid_name2);
+	out_str += exactlyNPerRow(2, 1, grid_name2);
+	out_str += exactlyNPerRegion(puzzle, 2, 1, grid_name2);
+
+	// no touching diagonally or orthogonally
+	out_str += `\n% Star battle stars can't touch orthogonally or diagonally\n`;
+	out_str += `constraint star_battle_no_touching_p(${grid_name2});\n`;
+
+	return out_str;
+}
+
+function oneStarPerGalaxyElement() {
+	const grid_name2 = VAR_2D_NAMES.STAR_BATTLE;
+	const out_str = `constraint one_star_per_galaxy_p(${VAR_2D_NAMES.GALAXY_REGIONS}, ${grid_name2});\n`;
+
+	return out_str;
+}
+
 type ElementF2 = (model: PuzzleModel, element: ConstraintsElement) => string;
 
 const tool_map = new Map<string, ElementF2>([
@@ -561,7 +596,9 @@ const tool_map = new Map<string, ElementF2>([
 	[TOOLS.INDEXER_CELLS, indexerCellsConstraint],
 	[TOOLS.CAVE, caveConstraint],
 	[TOOLS.CONNECT_FOUR, connectFourConstraint],
+	[TOOLS.STAR_BATTLE, starBattleElement],
 	[TOOLS.GALAXIES, galaxiesConstraint],
+	[TOOLS.ONE_STAR_PER_GALAXY, oneStarPerGalaxyElement],
 	[TOOLS.CELL_CENTER_LOOP_NO_TOUCHING, cellCenterLoopNoTouchingConstraint],
 	[TOOLS.MAZE_DIRECTED_PATH, mazeDirectedPathConstraint],
 	[TOOLS.YIN_YANG, yinYangConstraint],

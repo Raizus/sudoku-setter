@@ -3804,13 +3804,15 @@ predicate two_symmetric_galaxies_p(
     int: min_c = min(cols);
     int: max_c = max(cols);
 } in (
+    % rotationally symmetric
     forall(r in rows, c in cols)(
         (regions[r, c] = 1 \\/ regions[r, c] = 2) /\\
-        regions[r, c] = regions[max_r-r+min_r, max_c-c+min_c] % rotationally symmetric
-    ) /\\
-    connected_region(regions, 1) /\\ 
-    connected_region(regions, 2) /\\
-    regions[min_r, min_c] = 1 % fix galaxy numbering
+        regions[r, c] = regions[max_r-r+min_r, max_c-c+min_c]
+    )
+    /\\ connected_region(regions, 1) 
+    /\\ connected_region(regions, 2)
+    % fix galaxy numbering
+    /\\ regions[min_r, min_c] = 1
 );
 
 predicate one_galaxy_is_german_whispers(
@@ -3822,6 +3824,21 @@ predicate one_galaxy_is_german_whispers(
     var 1..2: target;
 } in (
     region_whispers_p(grid, regions, target, 5)
+);
+
+predicate no_repeats_in_galaxy_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+} in (
+    assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes.")
+    /\\ forall(r in rows, c in cols)(
+        forall(r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
+            regions[r,c] == regions[r2,c2] /\\ regions[r,c] != 0 /\\ regions[r2,c2] != 0 -> grid[r,c] != grid[r2,c2]
+        )
+    )
 );
 
 predicate galaxy_center_p(
@@ -3838,6 +3855,18 @@ predicate galaxy_center_p(
         group[i] == galaxy_id <-> mapped_group[i] == galaxy_id
     ) /\\
     count(group, galaxy_id) >= 1 /\\ count(mapped_group, galaxy_id) >= 1
+);
+
+predicate all_galaxy_centers_given_p(
+    array[int, int] of var int: regions,
+    int: max_galaxy_id
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions); 
+} in (
+    forall(r in rows, c in cols)(
+        regions[r,c] <= max_galaxy_id
+    )
 );
 
 predicate galaxy_sum_p(
@@ -3975,6 +4004,19 @@ predicate galaxy_180_symmetry_p(
         } in forall(r in rows, c in cols where r >= r_lb /\\ r <= (r_lb+r_ub) div 2 /\\ c >= c_lb /\\ c <= (c_lb+c_ub) div 2 ) (
             regions[r, c] == g_id <-> regions[r_ub - (r - r_lb), c_ub - (c - c_lb)] == g_id
         )
+    )
+);
+
+predicate one_star_per_galaxy_p(
+    array[int, int] of var int: regions,
+    array[int, int] of var int: star_battle,    
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+} in (
+    assert(index_sets_agree(regions, star_battle), "regions and star_battle must have the same indexes.")
+    /\\ forall(r in rows, c in cols, r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
+        star_battle[r,c] == 1 /\\ star_battle[r2,c2] == 1 /\\ regions[r,c] != 0 /\\ regions[r2,c2] != 0 -> regions[r,c] != regions[r2,c2]
     )
 );\n\n`;
 

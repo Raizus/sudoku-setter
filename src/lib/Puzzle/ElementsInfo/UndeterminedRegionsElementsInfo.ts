@@ -7,8 +7,7 @@ export const chaosConstructionInfo: AbstractElementInfo = {
 	negative_constraints: [
 		{
 			toolId: TOOLS.CHAOS_CONSTRUCTION_2X2_DOES_NOT_BELONG_TO_THE_SAME_REGION,
-			description:
-				'Regions cannot cover any 2x2 section of the grid.'
+			description: 'Regions cannot cover any 2x2 section of the grid.'
 		}
 	],
 
@@ -364,6 +363,10 @@ export const galaxiesInfo: AbstractElementInfo = {
 			description: 'Every cell in the grid belongs to a galaxy.'
 		},
 		{
+			toolId: TOOLS.DIGITS_DO_NOT_REPEAT_IN_A_GALAXY,
+			description: 'Digits do not repeat in each galaxy.'
+		},
+		{
 			toolId: TOOLS.GALAXY_2X2_DOES_NOT_BELONG_TO_ONE_GALAXY,
 			description: 'No 2x2 area may belong entirely to one galaxy.'
 		},
@@ -491,6 +494,27 @@ export const shadedBoundariesInfo: AbstractElementInfo = {
 	meta: {
 		description:
 			'Shade the boundary between adjacent. Shaded boundaries must divide the grid into exactly 2 regions. There may be shaded boundaries that lie within a region without fully dividing it, as allowed by other rules.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const starBattleInfo: AbstractElementInfo = {
+	toolId: TOOLS.STAR_BATTLE,
+
+	meta: {
+		description:
+			"Each row, column, and 3x3 box contains exactly 2 stars. Stars can't be within a kings move (in chess) from each other.",
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	}
+};
+
+export const oneStarPerGalaxyInfo: AbstractElementInfo = {
+	toolId: TOOLS.ONE_STAR_PER_GALAXY,
+
+	meta: {
+		description: 'Every galaxy contains exactly 1 star.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
