@@ -21,7 +21,7 @@ import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import {
 	findSingleCellConstraint,
 	updateConstraintValue
-} from '$lib/Puzzle/Constraints/LocalConstraints';
+} from '$src/lib/Puzzle/Constraints/ElementsDict';
 import {
 	singleCellConstraint,
 	type CellToolI

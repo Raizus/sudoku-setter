@@ -20,7 +20,7 @@ import type { GridShape } from '$lib/Types/types';
 import {
 	updateConstraintValue,
 	findCenterCornerOrEdgeConstraint
-} from '$lib/Puzzle/Constraints/LocalConstraints';
+} from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import {
 	centerCornerOrEdgeConstraint,

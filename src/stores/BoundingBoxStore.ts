@@ -1,6 +1,6 @@
 import { derived, get, writable } from 'svelte/store';
 import { elementsDictStore, gridStore, toolStore } from './BoardStore';
-import type { ElementsDict } from '$src/lib/Puzzle/Constraints/LocalConstraints';
+import type { ElementsDict } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { isOutsideDirectionTool } from '$src/lib/Puzzle/Tools';
 import type { OutsideDirectionToolI } from '$src/lib/Puzzle/Constraints/OutsideDirectionConstraints';
 import { isCellOnGrid } from '$src/lib/utils/SquareCellGridCoords';

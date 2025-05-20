@@ -21,7 +21,7 @@ import {
 	type CellArrowToolI
 } from '$lib/Puzzle/Constraints/SingleCellConstraints';
 import { idxToDirection, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
-import { findSingleCellConstraint } from '$lib/Puzzle/Constraints/LocalConstraints';
+import { findSingleCellConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { DIRECTION } from '$lib/utils/directions';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import { singleCellArrowPreviewStore, type ToolPreview } from '$stores/ElementsStore';

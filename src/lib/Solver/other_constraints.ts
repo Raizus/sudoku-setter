@@ -1,4 +1,4 @@
-import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
+import type { ConstraintsElement } from '../Puzzle/Constraints/ElementsDict';
 import type { VariableConstraintI } from '../Puzzle/Constraints/VariableConstraints';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS } from '../Puzzle/Tools';

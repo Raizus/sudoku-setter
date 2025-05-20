@@ -1,5 +1,5 @@
 import type { CageToolI } from '../Puzzle/Constraints/CageConstraints';
-import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
+import type { ConstraintsElement } from '../Puzzle/Constraints/ElementsDict';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS } from '../Puzzle/Tools';

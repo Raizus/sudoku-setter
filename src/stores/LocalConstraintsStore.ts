@@ -1,7 +1,7 @@
 import {
 	type ConstraintsElement,
 	type ConstraintType
-} from '$src/lib/Puzzle/Constraints/LocalConstraints';
+} from '$src/lib/Puzzle/Constraints/ElementsDict';
 import {
 	LOCAL_CONSTRAINTS_ACTIONS,
 	type LocalConstraintAction

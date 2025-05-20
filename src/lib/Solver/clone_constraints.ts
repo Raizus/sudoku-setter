@@ -1,5 +1,5 @@
 import type { CloneToolI } from '../Puzzle/Constraints/CloneConstraints';
-import type { ConstraintsElement } from '../Puzzle/Constraints/LocalConstraints';
+import type { ConstraintsElement } from '../Puzzle/Constraints/ElementsDict';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS } from '../Puzzle/Tools';
 import type { GridCoordI } from '../utils/SquareCellGridCoords';

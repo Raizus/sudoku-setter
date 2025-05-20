@@ -1,4 +1,4 @@
-import type { ConstraintsElement, ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
+import type { ConstraintsElement, ConstraintType } from '../Puzzle/Constraints/ElementsDict';
 import type { TOOLID } from '../Puzzle/Tools';
 
 export enum LOCAL_CONSTRAINTS_ACTIONS {

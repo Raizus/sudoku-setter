@@ -2,7 +2,7 @@ import type { Grid } from './Grid/Grid';
 import type { Cell } from './Grid/Cell';
 import { counter } from '$lib/utils/functionUtils';
 import { TOOLS } from './Tools';
-import type { ElementsDict } from './Constraints/LocalConstraints';
+import type { ElementsDict } from './Constraints/ElementsDict';
 
 function findCellsWithRepeatedValues(cells: Cell[]): Cell[] {
 	const result: Cell[] = [];

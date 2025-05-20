@@ -14,7 +14,7 @@ import {
 	type LineToolI,
 	lineConstraint
 } from '$lib/Puzzle/Constraints/LineConstraints';
-import { findLineConstraint } from '$lib/Puzzle/Constraints/LocalConstraints';
+import { findLineConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import {
 	CellPointerHandler,
 	type CellDragTapEvent

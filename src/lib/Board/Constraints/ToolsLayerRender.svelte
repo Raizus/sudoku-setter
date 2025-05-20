@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ConstraintsElement } from '$src/lib/Puzzle/Constraints/LocalConstraints';
+	import type { ConstraintsElement } from '$src/lib/Puzzle/Constraints/ElementsDict';
 	import { enableFogMaskStore } from '$stores/BoardStore';
 
 	export let elements: ConstraintsElement[];

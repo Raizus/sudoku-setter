@@ -18,7 +18,7 @@ import {
 	findCornerConstraint,
 	updateConstraintValue,
 	type ConstraintType
-} from '$lib/Puzzle/Constraints/LocalConstraints';
+} from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { cornerConstraint, type CornerToolI } from '$lib/Puzzle/Constraints/CornerConstraints';
 import { cornerCoordToAdjCellCoords, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import {

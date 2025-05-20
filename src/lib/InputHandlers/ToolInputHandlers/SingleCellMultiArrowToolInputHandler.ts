@@ -14,7 +14,7 @@ import {
 	singleCellMultiArrowConstraint,
 	type CellMultiArrowToolI
 } from '$lib/Puzzle/Constraints/SingleCellConstraints';
-import { findSingleCellConstraint } from '$lib/Puzzle/Constraints/LocalConstraints';
+import { findSingleCellConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { idxToDirection, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import type { GridShape } from '$lib/Types/types';
 import type { DIRECTION } from '$lib/utils/directions';

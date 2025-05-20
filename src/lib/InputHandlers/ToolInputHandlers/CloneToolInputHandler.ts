@@ -18,7 +18,7 @@ import {
 	type CloneToolI
 } from '$lib/Puzzle/Constraints/CloneConstraints';
 import { isCellOnGrid, type GridCoordI, areCoordsEqual } from '$lib/utils/SquareCellGridCoords';
-import { findCloneConstraint, findUsedCloneLabels } from '$lib/Puzzle/Constraints/LocalConstraints';
+import { findCloneConstraint, findUsedCloneLabels } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { pushAddLocalConstraintCommand, pushUpdateLocalConstraintCommand } from './utils';
 import { CLONE_TOOL_MODE } from './types';
 import { toolModeStore } from '$stores/InputHandlerStore';

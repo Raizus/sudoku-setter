@@ -19,7 +19,7 @@ import {
 	updateCageValue
 } from '$lib/Puzzle/Constraints/CageConstraints';
 import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
-import { findCageConstraint } from '$lib/Puzzle/Constraints/LocalConstraints';
+import { findCageConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import {
 	CellPointerHandler,
 	type CellDragTapEvent

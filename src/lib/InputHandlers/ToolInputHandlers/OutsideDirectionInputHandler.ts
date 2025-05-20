@@ -19,7 +19,7 @@ import type { GridShape } from '$lib/Types/types';
 import {
 	updateConstraintValue,
 	findOutsideDirectionConstraint
-} from '$lib/Puzzle/Constraints/LocalConstraints';
+} from '$src/lib/Puzzle/Constraints/ElementsDict';
 import {
 	gridCoordsNextInDirection,
 	idxToDirection,

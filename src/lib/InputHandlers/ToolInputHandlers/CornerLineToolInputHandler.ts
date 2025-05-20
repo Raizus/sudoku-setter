@@ -11,7 +11,7 @@ import { areCoordsOnGrid } from '$lib/utils/SquareCellGridCoords';
 import {
 	findCornerLineConstraint,
 	type ConstraintType
-} from '$lib/Puzzle/Constraints/LocalConstraints';
+} from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import {
 	cornerLineConstraint,

@@ -1,5 +1,5 @@
 import { range } from 'lodash';
-import { ElementsDict, type ElementData } from './Constraints/LocalConstraints';
+import { ElementsDict, type ElementData } from './Constraints/ElementsDict';
 import type { CellRecord } from './Grid/Cell';
 import { Grid } from './Grid/Grid';
 import type { PuzzleMetaI } from './PuzzleMeta';

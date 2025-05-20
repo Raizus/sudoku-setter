@@ -1,4 +1,4 @@
-import type { ConstraintsElement, ConstraintType } from '../Puzzle/Constraints/LocalConstraints';
+import type { ConstraintsElement, ConstraintType } from '../Puzzle/Constraints/ElementsDict';
 import type { SingleCellTool } from '../Puzzle/Constraints/SingleCellConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';

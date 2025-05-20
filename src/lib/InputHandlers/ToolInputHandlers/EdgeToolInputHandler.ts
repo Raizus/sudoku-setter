@@ -17,7 +17,7 @@ import {
 	updateConstraintValue,
 	findEdgeConstraint,
 	type ConstraintType
-} from '$lib/Puzzle/Constraints/LocalConstraints';
+} from '$src/lib/Puzzle/Constraints/ElementsDict';
 import {
 	CellEdgePointerHandler,
 	type CellEdgeTapEvent

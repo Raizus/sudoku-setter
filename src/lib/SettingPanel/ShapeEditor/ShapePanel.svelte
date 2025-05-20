@@ -14,7 +14,7 @@
 	import Brush from '$icons/Brush.svelte';
 	import Panel from '../Subpanel/Panel.svelte';
 	import PanelHeader from '../Subpanel/PanelHeader.svelte';
-	import type { ConstraintType } from '$lib/Puzzle/Constraints/LocalConstraints';
+	import type { ConstraintType } from '$src/lib/Puzzle/Constraints/ElementsDict';
 	import { getToolInfo, type AbstractElementHandlers } from '$lib/Puzzle/ElementHandlersUtils';
 	import ColorPicker from '$components/ColorPicker.svelte';
 

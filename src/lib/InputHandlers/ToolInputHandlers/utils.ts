@@ -1,4 +1,4 @@
-import type { ConstraintType } from '$src/lib/Puzzle/Constraints/LocalConstraints';
+import type { ConstraintType } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
 import type { Grid } from '$src/lib/Puzzle/Grid/Grid';
 import { type TOOLID, TOOLS } from '$src/lib/Puzzle/Tools';
