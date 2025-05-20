@@ -1,317 +1,101 @@
 {
-    "puzzleInfo": {
-        "title": "Fare thee well, Miss Carousel",
-        "authors": [
-            "Phistomefel"
-        ],
-        "ruleset": "Sudoku rules apply.\n\n**Arrow**: The digits along an arrow must sum to the number in the connecting pill (read left-to right or downwards) or circle. Digits may repeat on a arrow if allowed by other rules.\n\n**Equal Diagonal Differences**: A dot in the centre of a 2x2 square indicates that the two digits in its positive diagonal have the same difference as the two digits in its negative diagonal. This difference is not necessarily the same for different 2x2 squares with dots.",
-        "ctcYoutubeUrl": "https://www.youtube.com/watch?v=48ml74I9FRM",
-        "ctcUrl": "https://sudokupad.app/F28G66PTLg"
-    },
-    "nRows": 9,
-    "nCols": 9,
-    "grid": [
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ]
-    ],
-    "local_constraints": {
-        "Arrow": {
-            "tool_id": "Arrow",
-            "constraints": [
-                {
-                    "cells": [
-                        "R1C4"
-                    ],
-                    "lines": [
-                        [
-                            "R1C4",
-                            "R1C3",
-                            "R2C3"
-                        ]
-                    ]
-                },
-                {
-                    "cells": [
-                        "R2C5"
-                    ],
-                    "lines": [
-                        [
-                            "R2C5",
-                            "R2C4",
-                            "R3C4"
-                        ]
-                    ]
-                },
-                {
-                    "cells": [
-                        "R3C7"
-                    ],
-                    "lines": [
-                        [
-                            "R3C7",
-                            "R4C8"
-                        ]
-                    ]
-                },
-                {
-                    "cells": [
-                        "R4C6"
-                    ],
-                    "lines": [
-                        [
-                            "R4C6",
-                            "R4C7",
-                            "R5C6"
-                        ]
-                    ]
-                },
-                {
-                    "cells": [
-                        "R4C4"
-                    ],
-                    "lines": [
-                        [
-                            "R4C4",
-                            "R4C3",
-                            "R5C4"
-                        ]
-                    ]
-                },
-                {
-                    "cells": [
-                        "R5C8"
-                    ],
-                    "lines": [
-                        [
-                            "R5C8",
-                            "R5C7",
-                            "R6C8"
-                        ]
-                    ]
-                },
-                {
-                    "cells": [
-                        "R6C9"
-                    ],
-                    "lines": [
-                        [
-                            "R6C9",
-                            "R7C9",
-                            "R7C8"
-                        ]
-                    ]
-                },
-                {
-                    "cells": [
-                        "R7C4"
-                    ],
-                    "lines": [
-                        [
-                            "R7C4",
-                            "R7C3",
-                            "R8C4"
-                        ]
-                    ]
-                },
-                {
-                    "cells": [
-                        "R6C2"
-                    ],
-                    "lines": [
-                        [
-                            "R6C2",
-                            "R5C2",
-                            "R6C3"
-                        ]
-                    ]
-                },
-                {
-                    "cells": [
-                        "R9C2"
-                    ],
-                    "lines": [
-                        [
-                            "R9C2",
-                            "R8C2",
-                            "R9C3"
-                        ]
-                    ]
-                }
-            ]
-        },
-        "Equal Diagonal Differences": {
-            "tool_id": "Equal Diagonal Differences",
-            "constraints": [
-                {
-                    "cells": [
-                        "R1C8",
-                        "R1C9",
-                        "R2C8",
-                        "R2C9"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R1C3",
-                        "R1C4",
-                        "R2C3",
-                        "R2C4"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R2C4",
-                        "R2C5",
-                        "R3C4",
-                        "R3C5"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R4C3",
-                        "R4C4",
-                        "R5C3",
-                        "R5C4"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R5C2",
-                        "R5C3",
-                        "R6C2",
-                        "R6C3"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R4C6",
-                        "R4C7",
-                        "R5C6",
-                        "R5C7"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R6C8",
-                        "R6C9",
-                        "R7C8",
-                        "R7C9"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R7C3",
-                        "R7C4",
-                        "R8C3",
-                        "R8C4"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R8C2",
-                        "R8C3",
-                        "R9C2",
-                        "R9C3"
-                    ]
-                }
-            ]
-        }
-    }
+	"puzzleInfo": {
+		"title": "Fare thee well, Miss Carousel",
+		"authors": ["Phistomefel"],
+		"ruleset": "Sudoku rules apply.\n\n**Arrow**: The digits along an arrow must sum to the number in the connecting pill (read left-to right or downwards) or circle. Digits may repeat on a arrow if allowed by other rules.\n\n**Equal Diagonal Differences**: A dot in the centre of a 2x2 square indicates that the two digits in its positive diagonal have the same difference as the two digits in its negative diagonal. This difference is not necessarily the same for different 2x2 squares with dots.",
+		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=48ml74I9FRM",
+		"ctcUrl": "https://sudokupad.app/F28G66PTLg"
+	},
+	"nRows": 9,
+	"nCols": 9,
+	"grid": [
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}]
+	],
+	"elements": {
+		"Arrow": {
+			"tool_id": "Arrow",
+			"constraints": [
+				{
+					"cells": ["R1C4"],
+					"lines": [["R1C4", "R1C3", "R2C3"]]
+				},
+				{
+					"cells": ["R2C5"],
+					"lines": [["R2C5", "R2C4", "R3C4"]]
+				},
+				{
+					"cells": ["R3C7"],
+					"lines": [["R3C7", "R4C8"]]
+				},
+				{
+					"cells": ["R4C6"],
+					"lines": [["R4C6", "R4C7", "R5C6"]]
+				},
+				{
+					"cells": ["R4C4"],
+					"lines": [["R4C4", "R4C3", "R5C4"]]
+				},
+				{
+					"cells": ["R5C8"],
+					"lines": [["R5C8", "R5C7", "R6C8"]]
+				},
+				{
+					"cells": ["R6C9"],
+					"lines": [["R6C9", "R7C9", "R7C8"]]
+				},
+				{
+					"cells": ["R7C4"],
+					"lines": [["R7C4", "R7C3", "R8C4"]]
+				},
+				{
+					"cells": ["R6C2"],
+					"lines": [["R6C2", "R5C2", "R6C3"]]
+				},
+				{
+					"cells": ["R9C2"],
+					"lines": [["R9C2", "R8C2", "R9C3"]]
+				}
+			]
+		},
+		"Equal Diagonal Differences": {
+			"tool_id": "Equal Diagonal Differences",
+			"constraints": [
+				{
+					"cells": ["R1C8", "R1C9", "R2C8", "R2C9"]
+				},
+				{
+					"cells": ["R1C3", "R1C4", "R2C3", "R2C4"]
+				},
+				{
+					"cells": ["R2C4", "R2C5", "R3C4", "R3C5"]
+				},
+				{
+					"cells": ["R4C3", "R4C4", "R5C3", "R5C4"]
+				},
+				{
+					"cells": ["R5C2", "R5C3", "R6C2", "R6C3"]
+				},
+				{
+					"cells": ["R4C6", "R4C7", "R5C6", "R5C7"]
+				},
+				{
+					"cells": ["R6C8", "R6C9", "R7C8", "R7C9"]
+				},
+				{
+					"cells": ["R7C3", "R7C4", "R8C3", "R8C4"]
+				},
+				{
+					"cells": ["R8C2", "R8C3", "R9C2", "R9C3"]
+				}
+			]
+		}
+	}
 }

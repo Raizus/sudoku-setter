@@ -1,163 +1,91 @@
 {
-    "puzzleInfo": {
-        "title": "Bosnian Whisper",
-        "authors": [
-            "Cale Schoon"
-        ],
-        "ruleset": "Sudoku rules apply.\n\n**Cell Center Loop No Touching**: Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself, even diagonally.\n\n**Adjacent Cells Along Loop Are German Whispers**: Adjacent cells along a loop differ by 5 or more.\n\n**Cell Not On The Loop**: A black circle indicates the cell is not on the loop.\n\n**Count Loop Neighbour Cells**: An orange circle indicates how many cells up to 8 surrounding cells plus itself (9 maximum) are on the loop.",
-        "ctcYoutubeUrl": "https://www.youtube.com/watch?v=t2rs9YwG3sw",
-        "ctcUrl": "https://sudokupad.app/2oxam110an"
-    },
-    "nRows": 9,
-    "nCols": 9,
-    "grid": [
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {
-                "given": true,
-                "value": 2
-            },
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {
-                "given": true,
-                "value": 6
-            },
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ]
-    ],
-    "local_constraints": {
-        "Cell Center Loop No Touching": {
-            "tool_id": "Cell Center Loop No Touching",
-            "constraints": [],
-            "negative_constraints": {
-                "Adjacent Cells Along Loop Are German Whispers": true
-            }
-        },
-        "Cell Not On The Loop": {
-            "tool_id": "Cell Not On The Loop",
-            "constraints": [
-                {
-                    "cell": "R3C1"
-                },
-                {
-                    "cell": "R4C2"
-                },
-                {
-                    "cell": "R4C3"
-                },
-                {
-                    "cell": "R4C7"
-                }
-            ]
-        },
-        "Count Loop Neighbour Cells": {
-            "tool_id": "Count Loop Neighbour Cells",
-            "constraints": [
-                {
-                    "cell": "R3C1"
-                },
-                {
-                    "cell": "R4C2"
-                },
-                {
-                    "cell": "R4C3"
-                },
-                {
-                    "cell": "R4C7"
-                }
-            ]
-        }
-    }
+	"puzzleInfo": {
+		"title": "Bosnian Whisper",
+		"authors": ["Cale Schoon"],
+		"ruleset": "Sudoku rules apply.\n\n**Cell Center Loop No Touching**: Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself, even diagonally.\n\n**Adjacent Cells Along Loop Are German Whispers**: Adjacent cells along a loop differ by 5 or more.\n\n**Cell Not On The Loop**: A black circle indicates the cell is not on the loop.\n\n**Count Loop Neighbour Cells**: An orange circle indicates how many cells up to 8 surrounding cells plus itself (9 maximum) are on the loop.",
+		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=t2rs9YwG3sw",
+		"ctcUrl": "https://sudokupad.app/2oxam110an"
+	},
+	"nRows": 9,
+	"nCols": 9,
+	"grid": [
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[
+			{},
+			{},
+			{},
+			{},
+			{},
+			{
+				"given": true,
+				"value": 2
+			},
+			{},
+			{},
+			{}
+		],
+		[
+			{},
+			{},
+			{},
+			{},
+			{},
+			{},
+			{
+				"given": true,
+				"value": 6
+			},
+			{},
+			{}
+		],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}]
+	],
+	"elements": {
+		"Cell Center Loop No Touching": {
+			"tool_id": "Cell Center Loop No Touching",
+			"constraints": [],
+			"negative_constraints": {
+				"Adjacent Cells Along Loop Are German Whispers": true
+			}
+		},
+		"Cell Not On The Loop": {
+			"tool_id": "Cell Not On The Loop",
+			"constraints": [
+				{
+					"cell": "R3C1"
+				},
+				{
+					"cell": "R4C2"
+				},
+				{
+					"cell": "R4C3"
+				},
+				{
+					"cell": "R4C7"
+				}
+			]
+		},
+		"Count Loop Neighbour Cells": {
+			"tool_id": "Count Loop Neighbour Cells",
+			"constraints": [
+				{
+					"cell": "R3C1"
+				},
+				{
+					"cell": "R4C2"
+				},
+				{
+					"cell": "R4C3"
+				},
+				{
+					"cell": "R4C7"
+				}
+			]
+		}
+	}
 }

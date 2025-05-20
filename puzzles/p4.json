@@ -1,450 +1,446 @@
 {
-    "puzzleInfo": {
-        "title": "LITS Battle",
-        "authors": [
-            "AFrayedKnot"
-        ],
-        "ruleset": "Sudoku rules do not apply.\n\n**LITS**: Shade one tetromino in each region. (A tetromino is a shape of four orthogonally-connected cells.) No two tetrominoes of the same shape may share an edge - reflections/rotations count as the same shape. All tetrominoes must form a single orthogonally connected area. No 2x2 area of the grid can be completely shaded.\n\n**LITS Black And White Star Battle**: Each row, column and region must contain exactly one white star and one black star. Black stars must be located on tetrominoes, and white stars must not. Regardless of colour, stars may not touch each other - not even diagonally.",
-        "ctcYoutubeUrl": "https://www.youtube.com/watch?v=aCEXiE9tYGg",
-        "ctcUrl": "https://sudokupad.app/J9L2r7gL39"
-    },
-    "nRows": 12,
-    "nCols": 12,
-    "valid_digits": [
-        1
-    ],
-    "grid": [
-        [
-            {},
-            {},
-            {},
-            {
-                "region": 1
-            },
-            {},
-            {},
-            {},
-            {},
-            {
-                "region": 1
-            },
-            {
-                "region": 1
-            },
-            {},
-            {
-                "region": 3
-            }
-        ],
-        [
-            {},
-            {},
-            {},
-            {
-                "region": 4
-            },
-            {
-                "region": 4
-            },
-            {
-                "region": 4
-            },
-            {
-                "region": 4
-            },
-            {
-                "region": 4
-            },
-            {
-                "region": 4
-            },
-            {
-                "region": 4
-            },
-            {},
-            {
-                "region": 3
-            }
-        ],
-        [
-            {},
-            {},
-            {},
-            {
-                "region": 5
-            },
-            {
-                "region": 4
-            },
-            {
-                "region": 5
-            },
-            {
-                "region": 5
-            },
-            {
-                "region": 5
-            },
-            {
-                "region": 6
-            },
-            {
-                "region": 6
-            },
-            {},
-            {
-                "region": 3
-            }
-        ],
-        [
-            {
-                "region": 7
-            },
-            {
-                "region": 7
-            },
-            {
-                "region": 0
-            },
-            {
-                "region": 5
-            },
-            {},
-            {
-                "region": 5
-            },
-            {
-                "region": 8
-            },
-            {
-                "region": 5
-            },
-            {
-                "region": 6
-            },
-            {
-                "region": 2
-            },
-            {
-                "region": 2
-            },
-            {
-                "region": 3
-            }
-        ],
-        [
-            {
-                "region": 7
-            },
-            {
-                "region": 9
-            },
-            {
-                "region": 9
-            },
-            {
-                "region": 5
-            },
-            {
-                "region": 5
-            },
-            {
-                "region": 5
-            },
-            {
-                "region": 8
-            },
-            {
-                "region": 6
-            },
-            {
-                "region": 6
-            },
-            {
-                "region": 2
-            },
-            {
-                "region": 3
-            },
-            {
-                "region": 3
-            }
-        ],
-        [
-            {
-                "region": 7
-            },
-            {
-                "region": 10
-            },
-            {
-                "region": 9
-            },
-            {
-                "region": 9
-            },
-            {
-                "region": 8
-            },
-            {
-                "region": 8
-            },
-            {
-                "region": 8
-            },
-            {
-                "region": 6
-            },
-            {
-                "region": 6
-            },
-            {
-                "region": 2
-            },
-            {
-                "region": 3
-            },
-            {
-                "region": 3
-            }
-        ],
-        [
-            {
-                "region": 7
-            },
-            {
-                "region": 10
-            },
-            {
-                "region": 10
-            },
-            {
-                "region": 9
-            },
-            {
-                "region": 8
-            },
-            {
-                "region": 6
-            },
-            {
-                "region": 6
-            },
-            {
-                "region": 6
-            },
-            {
-                "region": 6
-            },
-            {
-                "region": 2
-            },
-            {
-                "region": 3
-            },
-            {
-                "region": 3
-            }
-        ],
-        [
-            {
-                "region": 7
-            },
-            {
-                "region": 10
-            },
-            {
-                "region": 9
-            },
-            {
-                "region": 9
-            },
-            {
-                "region": 8
-            },
-            {
-                "region": 8
-            },
-            {
-                "region": 8
-            },
-            {
-                "region": 8
-            },
-            {
-                "region": 6
-            },
-            {
-                "region": 6
-            },
-            {
-                "region": 3
-            },
-            {
-                "region": 3
-            }
-        ],
-        [
-            {
-                "region": 7
-            },
-            {
-                "region": 10
-            },
-            {
-                "region": 9
-            },
-            {
-                "region": 11
-            },
-            {
-                "region": 11
-            },
-            {
-                "region": 8
-            },
-            {
-                "region": 8
-            },
-            {
-                "region": 8
-            },
-            {},
-            {
-                "region": 6
-            },
-            {
-                "region": 6
-            },
-            {
-                "region": 3
-            }
-        ],
-        [
-            {
-                "region": 7
-            },
-            {
-                "region": 10
-            },
-            {},
-            {},
-            {
-                "region": 11
-            },
-            {
-                "region": 11
-            },
-            {
-                "region": 11
-            },
-            {
-                "region": 11
-            },
-            {
-                "region": 8
-            },
-            {
-                "region": 8
-            },
-            {
-                "region": 6
-            },
-            {
-                "region": 6
-            }
-        ],
-        [
-            {
-                "region": 7
-            },
-            {
-                "region": 10
-            },
-            {
-                "region": 10
-            },
-            {},
-            {
-                "region": 9
-            },
-            {
-                "region": 11
-            },
-            {
-                "region": 11
-            },
-            {
-                "region": 11
-            },
-            {
-                "region": 8
-            },
-            {
-                "region": 6
-            },
-            {
-                "region": 6
-            },
-            {
-                "region": 6
-            }
-        ],
-        [
-            {
-                "region": 7
-            },
-            {
-                "region": 7
-            },
-            {
-                "region": 7
-            },
-            {
-                "region": 7
-            },
-            {
-                "region": 7
-            },
-            {
-                "region": 7
-            },
-            {
-                "region": 11
-            },
-            {
-                "region": 11
-            },
-            {
-                "region": 8
-            },
-            {
-                "region": 8
-            },
-            {
-                "region": 8
-            },
-            {
-                "region": 8
-            }
-        ]
-    ],
-    "local_constraints": {
-        "Sudoku rules do not apply": {
-            "tool_id": "Sudoku rules do not apply",
-            "constraints": []
-        },
-        "Leave Empty Cells Empty": {
-            "tool_id": "Leave Empty Cells Empty",
-            "constraints": []
-        },
-        "LITS": {
-            "tool_id": "LITS",
-            "constraints": []
-        },
-        "LITS Black And White Star Battle": {
-            "tool_id": "LITS Black And White Star Battle",
-            "constraints": []
-        }
-    }
+	"puzzleInfo": {
+		"title": "LITS Battle",
+		"authors": ["AFrayedKnot"],
+		"ruleset": "Sudoku rules do not apply.\n\n**LITS**: Shade one tetromino in each region. (A tetromino is a shape of four orthogonally-connected cells.) No two tetrominoes of the same shape may share an edge - reflections/rotations count as the same shape. All tetrominoes must form a single orthogonally connected area. No 2x2 area of the grid can be completely shaded.\n\n**LITS Black And White Star Battle**: Each row, column and region must contain exactly one white star and one black star. Black stars must be located on tetrominoes, and white stars must not. Regardless of colour, stars may not touch each other - not even diagonally.",
+		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=aCEXiE9tYGg",
+		"ctcUrl": "https://sudokupad.app/J9L2r7gL39"
+	},
+	"nRows": 12,
+	"nCols": 12,
+	"valid_digits": [1],
+	"grid": [
+		[
+			{},
+			{},
+			{},
+			{
+				"region": 1
+			},
+			{},
+			{},
+			{},
+			{},
+			{
+				"region": 1
+			},
+			{
+				"region": 1
+			},
+			{},
+			{
+				"region": 3
+			}
+		],
+		[
+			{},
+			{},
+			{},
+			{
+				"region": 4
+			},
+			{
+				"region": 4
+			},
+			{
+				"region": 4
+			},
+			{
+				"region": 4
+			},
+			{
+				"region": 4
+			},
+			{
+				"region": 4
+			},
+			{
+				"region": 4
+			},
+			{},
+			{
+				"region": 3
+			}
+		],
+		[
+			{},
+			{},
+			{},
+			{
+				"region": 5
+			},
+			{
+				"region": 4
+			},
+			{
+				"region": 5
+			},
+			{
+				"region": 5
+			},
+			{
+				"region": 5
+			},
+			{
+				"region": 6
+			},
+			{
+				"region": 6
+			},
+			{},
+			{
+				"region": 3
+			}
+		],
+		[
+			{
+				"region": 7
+			},
+			{
+				"region": 7
+			},
+			{
+				"region": 0
+			},
+			{
+				"region": 5
+			},
+			{},
+			{
+				"region": 5
+			},
+			{
+				"region": 8
+			},
+			{
+				"region": 5
+			},
+			{
+				"region": 6
+			},
+			{
+				"region": 2
+			},
+			{
+				"region": 2
+			},
+			{
+				"region": 3
+			}
+		],
+		[
+			{
+				"region": 7
+			},
+			{
+				"region": 9
+			},
+			{
+				"region": 9
+			},
+			{
+				"region": 5
+			},
+			{
+				"region": 5
+			},
+			{
+				"region": 5
+			},
+			{
+				"region": 8
+			},
+			{
+				"region": 6
+			},
+			{
+				"region": 6
+			},
+			{
+				"region": 2
+			},
+			{
+				"region": 3
+			},
+			{
+				"region": 3
+			}
+		],
+		[
+			{
+				"region": 7
+			},
+			{
+				"region": 10
+			},
+			{
+				"region": 9
+			},
+			{
+				"region": 9
+			},
+			{
+				"region": 8
+			},
+			{
+				"region": 8
+			},
+			{
+				"region": 8
+			},
+			{
+				"region": 6
+			},
+			{
+				"region": 6
+			},
+			{
+				"region": 2
+			},
+			{
+				"region": 3
+			},
+			{
+				"region": 3
+			}
+		],
+		[
+			{
+				"region": 7
+			},
+			{
+				"region": 10
+			},
+			{
+				"region": 10
+			},
+			{
+				"region": 9
+			},
+			{
+				"region": 8
+			},
+			{
+				"region": 6
+			},
+			{
+				"region": 6
+			},
+			{
+				"region": 6
+			},
+			{
+				"region": 6
+			},
+			{
+				"region": 2
+			},
+			{
+				"region": 3
+			},
+			{
+				"region": 3
+			}
+		],
+		[
+			{
+				"region": 7
+			},
+			{
+				"region": 10
+			},
+			{
+				"region": 9
+			},
+			{
+				"region": 9
+			},
+			{
+				"region": 8
+			},
+			{
+				"region": 8
+			},
+			{
+				"region": 8
+			},
+			{
+				"region": 8
+			},
+			{
+				"region": 6
+			},
+			{
+				"region": 6
+			},
+			{
+				"region": 3
+			},
+			{
+				"region": 3
+			}
+		],
+		[
+			{
+				"region": 7
+			},
+			{
+				"region": 10
+			},
+			{
+				"region": 9
+			},
+			{
+				"region": 11
+			},
+			{
+				"region": 11
+			},
+			{
+				"region": 8
+			},
+			{
+				"region": 8
+			},
+			{
+				"region": 8
+			},
+			{},
+			{
+				"region": 6
+			},
+			{
+				"region": 6
+			},
+			{
+				"region": 3
+			}
+		],
+		[
+			{
+				"region": 7
+			},
+			{
+				"region": 10
+			},
+			{},
+			{},
+			{
+				"region": 11
+			},
+			{
+				"region": 11
+			},
+			{
+				"region": 11
+			},
+			{
+				"region": 11
+			},
+			{
+				"region": 8
+			},
+			{
+				"region": 8
+			},
+			{
+				"region": 6
+			},
+			{
+				"region": 6
+			}
+		],
+		[
+			{
+				"region": 7
+			},
+			{
+				"region": 10
+			},
+			{
+				"region": 10
+			},
+			{},
+			{
+				"region": 9
+			},
+			{
+				"region": 11
+			},
+			{
+				"region": 11
+			},
+			{
+				"region": 11
+			},
+			{
+				"region": 8
+			},
+			{
+				"region": 6
+			},
+			{
+				"region": 6
+			},
+			{
+				"region": 6
+			}
+		],
+		[
+			{
+				"region": 7
+			},
+			{
+				"region": 7
+			},
+			{
+				"region": 7
+			},
+			{
+				"region": 7
+			},
+			{
+				"region": 7
+			},
+			{
+				"region": 7
+			},
+			{
+				"region": 11
+			},
+			{
+				"region": 11
+			},
+			{
+				"region": 8
+			},
+			{
+				"region": 8
+			},
+			{
+				"region": 8
+			},
+			{
+				"region": 8
+			}
+		]
+	],
+	"elements": {
+		"Sudoku rules do not apply": {
+			"tool_id": "Sudoku rules do not apply",
+			"constraints": []
+		},
+		"Leave Empty Cells Empty": {
+			"tool_id": "Leave Empty Cells Empty",
+			"constraints": []
+		},
+		"LITS": {
+			"tool_id": "LITS",
+			"constraints": []
+		},
+		"LITS Black And White Star Battle": {
+			"tool_id": "LITS Black And White Star Battle",
+			"constraints": []
+		}
+	}
 }

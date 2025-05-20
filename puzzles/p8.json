@@ -1,298 +1,161 @@
 {
-    "puzzleInfo": {
-        "title": "Trickster",
-        "authors": [
-            "James Sinclair"
-        ],
-        "ruleset": "Sudoku rules apply.\n\n**Indexing Column**: Numbers in red cells are indexing columns: Any number X appearing in the Yth column of a row indicates the column X where the number Y appears in that row. Example: if R5C1 is a 6, then R5C6 is a 1 as the 1 must appear in the 6th position.\n\n**Whispers Line**: Adjacent numbers along a green line must have a difference of at least 5 (or X).\n\n**Nabner Line**: Orange lines contain no repeated digits and no two digits on the same line can be consecutive.\n\n**Even**: Cell value is even.",
-        "ctcYoutubeUrl": "https://www.youtube.com/watch?v=F6rusDoB8b0",
-        "ctcUrl": "https://sudokupad.app/rlkbec6hy3"
-    },
-    "nRows": 9,
-    "nCols": 9,
-    "grid": [
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ],
-        [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {}
-        ]
-    ],
-    "local_constraints": {
-        "Indexing Column": {
-            "tool_id": "Indexing Column",
-            "constraints": [
-                {
-                    "cell": "R1C1"
-                },
-                {
-                    "cell": "R2C1"
-                },
-                {
-                    "cell": "R4C1"
-                },
-                {
-                    "cell": "R3C1"
-                },
-                {
-                    "cell": "R5C1"
-                },
-                {
-                    "cell": "R6C1"
-                },
-                {
-                    "cell": "R7C1"
-                },
-                {
-                    "cell": "R8C1"
-                },
-                {
-                    "cell": "R9C1"
-                },
-                {
-                    "cell": "R9C5"
-                },
-                {
-                    "cell": "R8C5"
-                },
-                {
-                    "cell": "R7C5"
-                },
-                {
-                    "cell": "R6C5"
-                },
-                {
-                    "cell": "R5C5"
-                },
-                {
-                    "cell": "R4C5"
-                },
-                {
-                    "cell": "R3C5"
-                },
-                {
-                    "cell": "R2C5"
-                },
-                {
-                    "cell": "R1C5"
-                },
-                {
-                    "cell": "R1C9"
-                },
-                {
-                    "cell": "R2C9"
-                },
-                {
-                    "cell": "R3C9"
-                },
-                {
-                    "cell": "R4C9"
-                },
-                {
-                    "cell": "R5C9"
-                },
-                {
-                    "cell": "R6C9"
-                },
-                {
-                    "cell": "R7C9"
-                },
-                {
-                    "cell": "R8C9"
-                },
-                {
-                    "cell": "R9C9"
-                }
-            ]
-        },
-        "Whispers Line": {
-            "tool_id": "Whispers Line",
-            "constraints": [
-                {
-                    "cells": [
-                        "R1C3",
-                        "R2C3",
-                        "R3C3",
-                        "R3C4",
-                        "R2C4",
-                        "R1C4",
-                        "R1C3"
-                    ],
-                    "value": "5"
-                },
-                {
-                    "cells": [
-                        "R7C6",
-                        "R8C6",
-                        "R9C6",
-                        "R9C7",
-                        "R8C7",
-                        "R7C7",
-                        "R7C6"
-                    ],
-                    "value": "5"
-                },
-                {
-                    "cells": [
-                        "R7C3",
-                        "R8C3",
-                        "R9C3",
-                        "R9C4"
-                    ],
-                    "value": "5"
-                }
-            ]
-        },
-        "Nabner Line": {
-            "tool_id": "Nabner Line",
-            "constraints": [
-                {
-                    "cells": [
-                        "R1C9",
-                        "R2C9",
-                        "R3C9"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R1C8",
-                        "R2C7",
-                        "R3C8"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R7C9",
-                        "R8C9",
-                        "R9C9"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R1C1",
-                        "R2C1",
-                        "R3C1"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R7C1",
-                        "R8C1",
-                        "R9C1"
-                    ]
-                },
-                {
-                    "cells": [
-                        "R3C5",
-                        "R4C4",
-                        "R5C3"
-                    ]
-                }
-            ]
-        },
-        "Even": {
-            "tool_id": "Even",
-            "constraints": [
-                {
-                    "cell": "R2C7"
-                },
-                {
-                    "cell": "R8C9"
-                }
-            ]
-        }
-    }
+	"puzzleInfo": {
+		"title": "Trickster",
+		"authors": ["James Sinclair"],
+		"ruleset": "Sudoku rules apply.\n\n**Indexing Column**: Numbers in red cells are indexing columns: Any number X appearing in the Yth column of a row indicates the column X where the number Y appears in that row. Example: if R5C1 is a 6, then R5C6 is a 1 as the 1 must appear in the 6th position.\n\n**Whispers Line**: Adjacent numbers along a green line must have a difference of at least 5 (or X).\n\n**Nabner Line**: Orange lines contain no repeated digits and no two digits on the same line can be consecutive.\n\n**Even**: Cell value is even.",
+		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=F6rusDoB8b0",
+		"ctcUrl": "https://sudokupad.app/rlkbec6hy3"
+	},
+	"nRows": 9,
+	"nCols": 9,
+	"grid": [
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}]
+	],
+	"elements": {
+		"Indexing Column": {
+			"tool_id": "Indexing Column",
+			"constraints": [
+				{
+					"cell": "R1C1"
+				},
+				{
+					"cell": "R2C1"
+				},
+				{
+					"cell": "R4C1"
+				},
+				{
+					"cell": "R3C1"
+				},
+				{
+					"cell": "R5C1"
+				},
+				{
+					"cell": "R6C1"
+				},
+				{
+					"cell": "R7C1"
+				},
+				{
+					"cell": "R8C1"
+				},
+				{
+					"cell": "R9C1"
+				},
+				{
+					"cell": "R9C5"
+				},
+				{
+					"cell": "R8C5"
+				},
+				{
+					"cell": "R7C5"
+				},
+				{
+					"cell": "R6C5"
+				},
+				{
+					"cell": "R5C5"
+				},
+				{
+					"cell": "R4C5"
+				},
+				{
+					"cell": "R3C5"
+				},
+				{
+					"cell": "R2C5"
+				},
+				{
+					"cell": "R1C5"
+				},
+				{
+					"cell": "R1C9"
+				},
+				{
+					"cell": "R2C9"
+				},
+				{
+					"cell": "R3C9"
+				},
+				{
+					"cell": "R4C9"
+				},
+				{
+					"cell": "R5C9"
+				},
+				{
+					"cell": "R6C9"
+				},
+				{
+					"cell": "R7C9"
+				},
+				{
+					"cell": "R8C9"
+				},
+				{
+					"cell": "R9C9"
+				}
+			]
+		},
+		"Whispers Line": {
+			"tool_id": "Whispers Line",
+			"constraints": [
+				{
+					"cells": ["R1C3", "R2C3", "R3C3", "R3C4", "R2C4", "R1C4", "R1C3"],
+					"value": "5"
+				},
+				{
+					"cells": ["R7C6", "R8C6", "R9C6", "R9C7", "R8C7", "R7C7", "R7C6"],
+					"value": "5"
+				},
+				{
+					"cells": ["R7C3", "R8C3", "R9C3", "R9C4"],
+					"value": "5"
+				}
+			]
+		},
+		"Nabner Line": {
+			"tool_id": "Nabner Line",
+			"constraints": [
+				{
+					"cells": ["R1C9", "R2C9", "R3C9"]
+				},
+				{
+					"cells": ["R1C8", "R2C7", "R3C8"]
+				},
+				{
+					"cells": ["R7C9", "R8C9", "R9C9"]
+				},
+				{
+					"cells": ["R1C1", "R2C1", "R3C1"]
+				},
+				{
+					"cells": ["R7C1", "R8C1", "R9C1"]
+				},
+				{
+					"cells": ["R3C5", "R4C4", "R5C3"]
+				}
+			]
+		},
+		"Even": {
+			"tool_id": "Even",
+			"constraints": [
+				{
+					"cell": "R2C7"
+				},
+				{
+					"cell": "R8C9"
+				}
+			]
+		}
+	}
 }

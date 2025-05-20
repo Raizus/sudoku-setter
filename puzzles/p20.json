@@ -1,390 +1,353 @@
 {
-    "puzzleInfo": {
-        "title": "The Moving Finger",
-        "authors": [
-            "Tallcat"
-        ],
-        "ruleset": "Sudoku rules apply.\n\n**Numbered Chaos Construction**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells. The digit in the top-left cell of a region (the leftmost cell in its highest row) is its region number. All region numbers are different.\n\n**Next Numbered Region Distance Arrows**: If a cell with the digit X in a region with the number N contains an arrow, then the cell X steps away in the indicated direction belongs to the region numbered N+1.",
-        "ctcYoutubeUrl": "https://www.youtube.com/watch?v=SEkdIt_LrYQ",
-        "ctcUrl": "https://sudokupad.app/2zohak8sgm"
-    },
-    "nRows": 9,
-    "nCols": 9,
-    "grid": [
-        [
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            }
-        ],
-        [
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            }
-        ],
-        [
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            }
-        ],
-        [
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            }
-        ],
-        [
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            }
-        ],
-        [
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            }
-        ],
-        [
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            }
-        ],
-        [
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            }
-        ],
-        [
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            },
-            {
-                "region": null
-            }
-        ]
-    ],
-    "local_constraints": {
-        "Numbered Chaos Construction": {
-            "tool_id": "Numbered Chaos Construction",
-            "constraints": []
-        },
-        "Next Numbered Region Distance Arrows": {
-            "tool_id": "Next Numbered Region Distance Arrows",
-            "constraints": [
-                {
-                    "cell": "R2C4",
-                    "directions": [
-                        "S"
-                    ]
-                },
-                {
-                    "cell": "R2C6",
-                    "directions": [
-                        "S"
-                    ]
-                },
-                {
-                    "cell": "R4C9",
-                    "directions": [
-                        "NW"
-                    ]
-                },
-                {
-                    "cell": "R4C6",
-                    "directions": [
-                        "SE"
-                    ]
-                },
-                {
-                    "cell": "R4C2",
-                    "directions": [
-                        "SE"
-                    ]
-                },
-                {
-                    "cell": "R5C2",
-                    "directions": [
-                        "E"
-                    ]
-                },
-                {
-                    "cell": "R5C4",
-                    "directions": [
-                        "SW"
-                    ]
-                },
-                {
-                    "cell": "R7C1",
-                    "directions": [
-                        "S"
-                    ]
-                },
-                {
-                    "cell": "R7C4",
-                    "directions": [
-                        "NE"
-                    ]
-                },
-                {
-                    "cell": "R8C4",
-                    "directions": [
-                        "SE"
-                    ]
-                },
-                {
-                    "cell": "R9C4",
-                    "directions": [
-                        "W"
-                    ]
-                },
-                {
-                    "cell": "R9C9",
-                    "directions": [
-                        "NW"
-                    ]
-                },
-                {
-                    "cell": "R8C8",
-                    "directions": [
-                        "N",
-                        "NW"
-                    ]
-                },
-                {
-                    "cell": "R7C9",
-                    "directions": [
-                        "W"
-                    ]
-                },
-                {
-                    "cell": "R7C7",
-                    "directions": [
-                        "NW"
-                    ]
-                },
-                {
-                    "cell": "R6C7",
-                    "directions": [
-                        "W"
-                    ]
-                },
-                {
-                    "cell": "R6C8",
-                    "directions": [
-                        "NW"
-                    ]
-                }
-            ]
-        }
-    }
+	"puzzleInfo": {
+		"title": "The Moving Finger",
+		"authors": ["Tallcat"],
+		"ruleset": "Sudoku rules apply.\n\n**Numbered Chaos Construction**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells. The digit in the top-left cell of a region (the leftmost cell in its highest row) is its region number. All region numbers are different.\n\n**Next Numbered Region Distance Arrows**: If a cell with the digit X in a region with the number N contains an arrow, then the cell X steps away in the indicated direction belongs to the region numbered N+1.",
+		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=SEkdIt_LrYQ",
+		"ctcUrl": "https://sudokupad.app/2zohak8sgm"
+	},
+	"nRows": 9,
+	"nCols": 9,
+	"grid": [
+		[
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			}
+		],
+		[
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			}
+		],
+		[
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			}
+		],
+		[
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			}
+		],
+		[
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			}
+		],
+		[
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			}
+		],
+		[
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			}
+		],
+		[
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			}
+		],
+		[
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			},
+			{
+				"region": null
+			}
+		]
+	],
+	"elements": {
+		"Numbered Chaos Construction": {
+			"tool_id": "Numbered Chaos Construction",
+			"constraints": []
+		},
+		"Next Numbered Region Distance Arrows": {
+			"tool_id": "Next Numbered Region Distance Arrows",
+			"constraints": [
+				{
+					"cell": "R2C4",
+					"directions": ["S"]
+				},
+				{
+					"cell": "R2C6",
+					"directions": ["S"]
+				},
+				{
+					"cell": "R4C9",
+					"directions": ["NW"]
+				},
+				{
+					"cell": "R4C6",
+					"directions": ["SE"]
+				},
+				{
+					"cell": "R4C2",
+					"directions": ["SE"]
+				},
+				{
+					"cell": "R5C2",
+					"directions": ["E"]
+				},
+				{
+					"cell": "R5C4",
+					"directions": ["SW"]
+				},
+				{
+					"cell": "R7C1",
+					"directions": ["S"]
+				},
+				{
+					"cell": "R7C4",
+					"directions": ["NE"]
+				},
+				{
+					"cell": "R8C4",
+					"directions": ["SE"]
+				},
+				{
+					"cell": "R9C4",
+					"directions": ["W"]
+				},
+				{
+					"cell": "R9C9",
+					"directions": ["NW"]
+				},
+				{
+					"cell": "R8C8",
+					"directions": ["N", "NW"]
+				},
+				{
+					"cell": "R7C9",
+					"directions": ["W"]
+				},
+				{
+					"cell": "R7C7",
+					"directions": ["NW"]
+				},
+				{
+					"cell": "R6C7",
+					"directions": ["W"]
+				},
+				{
+					"cell": "R6C8",
+					"directions": ["NW"]
+				}
+			]
+		}
+	}
 }
