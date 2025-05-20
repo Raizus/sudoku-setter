@@ -8,7 +8,7 @@
 
 	export let gridShape: GridShape;
 
-	const inset = 0.06;
+	const inset = 0.1;
 	const innerRadius = 0.05;
 	const innerOpacity = '#080808';
 	const outlineOpacity = '#b2b2b2';
