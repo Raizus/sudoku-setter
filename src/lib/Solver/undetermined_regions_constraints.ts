@@ -356,7 +356,7 @@ function litsConstraint(model: PuzzleModel, element: ConstraintsElement) {
 	const min_region = Math.min(...regions);
 	const max_region = Math.max(...regions);
 
-	let out_str: string = `\n% ${tool}\n`;
+	let out_str: string = ``;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${lits_shading};\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..4: ${lits_region};\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${regions.length}: ${lits_grid};\n`;
