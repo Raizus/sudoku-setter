@@ -6,5 +6,7 @@
 </script>
 
 {#each diagonal_elements as element}
-	<DiagonalElementRender {element} />
+	{#if !element.disabled}
+		<DiagonalElementRender {element} />	
+	{/if}
 {/each}

@@ -11,7 +11,7 @@
 
 <g class={g_name} mask={enable_fog_mask ? "url(#fog-mask-fog)" : null}>
 	{#each elements as element}
-		{#if element.constraints}
+		{#if !element.disabled && element.constraints}
 			<g class="element-group" data-toolId={element.tool_id}>
 				{#each Object.entries(element.constraints) as entry (entry[0])}
 					<Component tool={entry[1]} c_id={entry[0]} />

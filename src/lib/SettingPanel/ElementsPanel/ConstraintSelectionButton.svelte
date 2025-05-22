@@ -4,7 +4,7 @@
 	import Trash from '$icons/Trash.svelte';
 	import { currentConstraintStore, selectConstraint, svgRefStore } from '$stores/BoardStore';
 	import { elementsDictStore } from '$stores/BoardStore';
-	import { getLocalConstraintCommand } from '$stores/LocalConstraintsStore';
+	import { getUpdateElementCommand } from '$stores/LocalConstraintsStore';
 	import {
 		addLocalConstraintAction,
 		removeLocalConstraintAction
@@ -26,7 +26,7 @@
 		if (!constraint) return;
 		const action = removeLocalConstraintAction(constraint_id, tool_id);
 		const reverse_action = addLocalConstraintAction(constraint_id, constraint);
-		const command = getLocalConstraintCommand(action, reverse_action);
+		const command = getUpdateElementCommand(action, reverse_action);
 		addCommand(command);
 	}
 

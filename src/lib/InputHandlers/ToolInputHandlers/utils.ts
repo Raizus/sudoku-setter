@@ -9,7 +9,7 @@ import {
 } from '$src/lib/reducers/LocalConstraintsActions';
 import type { GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
 import { addCommand } from '$stores/HistoryStore';
-import { getLocalConstraintCommand } from '$stores/LocalConstraintsStore';
+import { getUpdateElementCommand } from '$stores/LocalConstraintsStore';
 
 function getSimilarHighlights(cell: Cell, grid: Grid) {
 	const highlights = new Set(cell.highlights);
@@ -93,7 +93,7 @@ export function pushAddLocalConstraintCommand(
 	if (!(id && currentConstraint)) return;
 	const action = addLocalConstraintAction(id, currentConstraint);
 	const reverse_action = removeLocalConstraintAction(id, tool);
-	const command = getLocalConstraintCommand(action, reverse_action);
+	const command = getUpdateElementCommand(action, reverse_action);
 	// add it to histoy but don't execute
 	// the clone constraint was already added/updated but only when
 	// finishing dragging is the action 'complete'
@@ -109,7 +109,7 @@ export function pushRemoveLocalConstraintCommand(
 	if (!(id && currentConstraint)) return;
 	const action = removeLocalConstraintAction(id, tool);
 	const reverse_action = addLocalConstraintAction(id, currentConstraint);
-	const command = getLocalConstraintCommand(action, reverse_action);
+	const command = getUpdateElementCommand(action, reverse_action);
 	// add it to histoy but don't execute
 	// the clone constraint was already added/updated but only when
 	// finishing dragging is the action 'complete'
@@ -126,7 +126,7 @@ export function pushUpdateLocalConstraintCommand(
 	if (!(id && currentConstraint && oldConstraint)) return;
 	const action = updateLocalConstraintAction(tool, id, currentConstraint);
 	const reverse_action = updateLocalConstraintAction(tool, id, oldConstraint);
-	const command = getLocalConstraintCommand(action, reverse_action);
+	const command = getUpdateElementCommand(action, reverse_action);
 	// add it to histoy but don't execute
 	// the clone constraint was already added/updated but only when
 	// finishing dragging is the action 'complete'

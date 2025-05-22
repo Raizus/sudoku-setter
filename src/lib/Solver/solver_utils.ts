@@ -154,6 +154,8 @@ export function constraintsBuilder(
 	tool_map: Map<string, ElementF>
 ) {
 	let out_str = '';
+	if (element.disabled) return out_str;
+
 	const tool_id = element.tool_id;
 	const elementF = tool_map.get(tool_id);
 	if (elementF) {

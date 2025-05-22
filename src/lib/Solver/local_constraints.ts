@@ -39,6 +39,8 @@ export function localAndGlobalConstraints(puzzle: PuzzleI, model: PuzzleModel): 
 	const elements = puzzle.elementsDict;
 
 	for (const [tool_id, element] of elements.entries()) {
+		if (element.disabled) continue;
+
 		for (const constraintF of functions_list) {
 			let constraint_str: string = constraintF(model, element);
 			constraint_str = addHeader(constraint_str, `${tool_id}`);

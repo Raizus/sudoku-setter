@@ -74,12 +74,7 @@ export const fogLightsStore = derived(singleCellToolsStore, ($singleCellToolsSto
 	const target_element = $singleCellToolsStore.find(
 		(element) => element.tool_id === TOOLS.FOG_LIGHTS
 	);
-	if (target_element) {
-		const record = target_element.constraints as Record<string, CellToolI>;
-		return record;
-	}
-	const record: Record<string, CellToolI> = {};
-	return record;
+	return target_element;
 });
 
 export const customFogClearingStore = derived(elementsDictStore, ($elementsDictStore) => {

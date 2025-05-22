@@ -10,7 +10,8 @@ import {
 	VAR_2D_NAMES,
 	adjCellPairGen,
 	PuzzleModel,
-	cellToGridVarName
+	cellToGridVarName,
+	constraintsBuilder
 } from './solver_utils';
 
 function leaveEmptyCellsEmptyConstraint(model: PuzzleModel, element: ConstraintsElement): string {
@@ -410,8 +411,8 @@ export function hexedSudokuConstraint(puzzle: PuzzleI) {
 	const elements_dict = puzzle.elementsDict;
 
 	const tool = TOOLS.HEXED_SUDOKU;
-	const hexed_sudoku = !!elements_dict.get(tool);
-	if (!hexed_sudoku) return '';
+	const hexed_sudoku = elements_dict.get(tool);
+	if (!hexed_sudoku || hexed_sudoku.disabled) return '';
 
 	let out_str = `\n% ${tool}\n`;
 	out_str += `constraint hexed_sudoku_p(board, ALLOWED_DIGITS);\n`;
@@ -451,13 +452,6 @@ const tool_map = new Map<string, ElementF2>([
 ]);
 
 export function globalConstraints(model: PuzzleModel, element: ConstraintsElement) {
-	let out_str = '';
-	const tool_id = element.tool_id;
-	const elementF = tool_map.get(tool_id);
-	if (elementF) {
-		const element_str = elementF(model, element);
-		out_str += element_str;
-	}
-
+	const out_str = constraintsBuilder(model, element, tool_map);
 	return out_str;
 }

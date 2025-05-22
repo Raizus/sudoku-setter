@@ -9,7 +9,7 @@
 	let theme = derived(settingsStore, ($settingsStore) => ($settingsStore.darkMode ? 'dark' : 'light'));
 </script>
 
-<div class="App" data-theme={$theme}>
+<div class="App" id="App" data-theme={$theme}>
 	<Header></Header>
 	<main>
 		{@render children()}
@@ -28,6 +28,7 @@
 		background-color: var(--background-color);
 		width: 100%;
 		height: 100%;
+		color: var(--text-primary-color);
 		// overflow: hidden;
 	}
 

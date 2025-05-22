@@ -6,7 +6,8 @@
 	import { TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
 	import { getUsageDescription } from '$src/lib/Puzzle/ToolUsage';
 	import {
-		removeLocalConstraintGroupAction,
+		enableDisableElementAction,
+		removeElementAction,
 		restoreElementAction
 	} from '$src/lib/reducers/LocalConstraintsActions';
 	import {
@@ -16,22 +17,25 @@
 		updateToolOnRemoveGroup
 	} from '$stores/BoardStore';
 	import { addCommand } from '$stores/HistoryStore';
-	import { getLocalConstraintCommand } from '$stores/LocalConstraintsStore';
+	import { getUpdateElementCommand } from '$stores/LocalConstraintsStore';
 	import ElementEditor from './ElementEditor.svelte';
+	import MoreButton from './MoreButton.svelte';
 
 	export let tool_id: TOOLID;
 	export let elementHandlers: AbstractElementHandlers;
-	
+
 	const permanent: boolean = !!elementHandlers[tool_id].permanent;
 	let selected: boolean = false;
 	let constraint_name = tool_id;
 
 	$: elementInfo = getToolInfo(tool_id, elementHandlers);
+	$: puzzle_element = $elementsDictStore.get(tool_id);
+	$: disabled = !!puzzle_element?.disabled;
 
 	function selectCb() {
 		if (selected) {
 			updateToolAndCurrentConstraintStores(TOOLS.DIGIT);
-		} else {
+		} else if (!disabled) {
 			updateToolAndCurrentConstraintStores(tool_id);
 		}
 	}
@@ -41,10 +45,20 @@
 
 		const constraints = $elementsDictStore.get(tool_id);
 		if (!constraints) return;
-		const action = removeLocalConstraintGroupAction(tool_id);
+		const action = removeElementAction(tool_id);
 		const reverse_action = restoreElementAction(tool_id, constraints);
-		const command = getLocalConstraintCommand(action, reverse_action);
+		const command = getUpdateElementCommand(action, reverse_action);
 		addCommand(command);
+	}
+
+	function enableDisableElement() {
+		const action = enableDisableElementAction(tool_id, !disabled);
+		const reverse_action = enableDisableElementAction(tool_id, disabled);
+		const command = getUpdateElementCommand(action, reverse_action);
+		addCommand(command);
+		if (!disabled) {
+			updateToolAndCurrentConstraintStores(TOOLS.DIGIT);
+		}
 	}
 
 	function getTooltip() {
@@ -79,14 +93,29 @@
 			<CaretDown />
 		</button>
 	</div> -->
-	<div class="constraints-ui" class:clickable={true} class:selected>
+	<div
+		class="constraints-ui"
+		class:clickable={true}
+		class:selected
+		class:disabled={puzzle_element?.disabled}
+	>
 		<div class="header" title={getTooltip()} on:click={selectCb}>
 			<div class="element-icon-container"></div>
-			<div class="element-name">{constraint_name}</div>
+			<div class="name-container">
+				<span class="element-name">
+					{constraint_name}
+				</span>
+			</div>
 			{#if !permanent}
-				<button class="form-button icon header-button" on:click|stopPropagation={deleteElement}>
+				<!-- <button class="form-button icon header-button" on:click|stopPropagation={deleteElement}>
 					<Trash />
-				</button>
+				</button> -->
+				<MoreButton
+					display={!permanent}
+					deleteElementCb={deleteElement}
+					{disabled}
+					enableDisableElementCb={enableDisableElement}
+				/>
 			{/if}
 		</div>
 		{#if selected}
@@ -156,6 +185,17 @@
 		user-select: none;
 	}
 
+	.constraints-ui.disabled .header {
+		background-image: repeating-linear-gradient(
+			-45deg,
+			transparent,
+			transparent 0.25rem,
+			transparent 0.25rem,
+			#e0e0e085 0.5rem
+		);
+		cursor: default;
+	}
+
 	.element-icon-container {
 		width: 2.5rem;
 		height: 2.5rem;
@@ -163,9 +203,14 @@
 		flex-shrink: 0;
 	}
 
-	.element-name {
+	.name-container {
 		line-height: 1;
 		flex: 1;
+	}
+
+	.element-name {
+		background-color: var(--panel-background-color);
+		padding: 0.2rem;
 	}
 
 	.form-button {

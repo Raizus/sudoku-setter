@@ -15,15 +15,17 @@
 	// $: has_fog = $hasFogStore;
 	$: solution = $solutionStore;
 	$: grid = $gridStore;
-	$: fog_lights = $fogLightsStore;
+	$: fog_lights_element = $fogLightsStore;
 	$: custom_fog_clearing = $customFogClearingStore;
 	$: fogPathStr = getCagePathStr(fog_coords, 0);
 	$: all_cells = $cellsStore;
-	$: fog_coords = getFoggedCells(all_cells, fog_lights, custom_fog_clearing);
+	$: fog_coords = getFoggedCells(all_cells, fog_lights_element, custom_fog_clearing);
 
-	function getFogLightCells(fog_lights: Record<string, CellToolI>) {
+	function getFogLightCells(fog_lights_el: ConstraintsElement | undefined) {
 		const light_cells: Cell[] = [];
-		if (!fog_lights) return light_cells;
+		if (!fog_lights_el) return light_cells;
+		
+		const fog_lights = fog_lights_el.constraints as Record<string, CellToolI>;
 		for (const fog_light of Object.entries(fog_lights)) {
 			const coord = fog_light[1].cell;
 			const cell = grid.getCell(coord.r, coord.c);
@@ -53,7 +55,7 @@
 
 	function getFoggedCells(
 		cells: Cell[],
-		fog_lights: Record<string, CellToolI>,
+		fog_lights: ConstraintsElement | undefined,
 		fog_clearing_element: ConstraintsElement | undefined
 	) {
 		const light_cells = getFogLightCells(fog_lights);

@@ -1,16 +1,17 @@
 import type { ConstraintsElement, ConstraintType } from '../Puzzle/Constraints/ElementsDict';
 import type { TOOLID } from '../Puzzle/Tools';
 
-export enum LOCAL_CONSTRAINTS_ACTIONS {
+export enum ELEMENT_ACTIONS {
 	ADD_LOCAL_CONSTRAINT = 'ADD_LOCAL_CONSTRAINT',
 	REMOVE_LOCAL_CONSTRAINT = 'REMOVE_LOCAL_CONSTRAINT',
-	REMOVE_LOCAL_CONSTRAINT_GROUP = 'REMOVE_LOCAL_CONSTRAINT_GROUP',
+	REMOVE_ELEMENT = 'REMOVE_ELEMENT',
 	RESTORE_ELEMENT = 'RESTORE_ELEMENT',
+	ENABLE_DISABLE_ELEMENT = 'ENABLE_DISABLE_ELEMENT',
 	UPDATE_LOCAL_CONSTRAINT = 'UPDATE_LOCAL_CONSTRAINT'
 }
 
 type AddLocalConstraintAction = {
-	type: LOCAL_CONSTRAINTS_ACTIONS.ADD_LOCAL_CONSTRAINT;
+	type: ELEMENT_ACTIONS.ADD_LOCAL_CONSTRAINT;
 	payload: {
 		id: string;
 		constraint: ConstraintType;
@@ -18,30 +19,38 @@ type AddLocalConstraintAction = {
 };
 
 type RemoveLocalConstraintAction = {
-	type: LOCAL_CONSTRAINTS_ACTIONS.REMOVE_LOCAL_CONSTRAINT;
+	type: ELEMENT_ACTIONS.REMOVE_LOCAL_CONSTRAINT;
 	payload: {
 		id: string;
 		tool: TOOLID;
 	};
 };
 
-type RemoveLocalConstraintGroupAction = {
-	type: LOCAL_CONSTRAINTS_ACTIONS.REMOVE_LOCAL_CONSTRAINT_GROUP;
+type RemoveElementAction = {
+	type: ELEMENT_ACTIONS.REMOVE_ELEMENT;
 	payload: {
 		tool: TOOLID;
 	};
 };
 
 type RestoreElementAction = {
-	type: LOCAL_CONSTRAINTS_ACTIONS.RESTORE_ELEMENT;
+	type: ELEMENT_ACTIONS.RESTORE_ELEMENT;
 	payload: {
 		tool: TOOLID;
 		constraints: ConstraintsElement;
 	};
 };
 
+type EnableDisableElementAction = {
+	type: ELEMENT_ACTIONS.ENABLE_DISABLE_ELEMENT;
+	payload: {
+		tool: TOOLID;
+		value: boolean;
+	};
+};
+
 type UpdateLocalConstraintAction = {
-	type: LOCAL_CONSTRAINTS_ACTIONS.UPDATE_LOCAL_CONSTRAINT;
+	type: ELEMENT_ACTIONS.UPDATE_LOCAL_CONSTRAINT;
 	payload: {
 		tool: TOOLID;
 		constraintId: string;
@@ -52,16 +61,17 @@ type UpdateLocalConstraintAction = {
 export type LocalConstraintAction =
 	| AddLocalConstraintAction
 	| RemoveLocalConstraintAction
-	| RemoveLocalConstraintGroupAction
+	| RemoveElementAction
 	| RestoreElementAction
-	| UpdateLocalConstraintAction;
+	| UpdateLocalConstraintAction
+	| EnableDisableElementAction;
 
 export const addLocalConstraintAction = (
 	id: string,
 	constraint: ConstraintType
 ): AddLocalConstraintAction => {
 	return {
-		type: LOCAL_CONSTRAINTS_ACTIONS.ADD_LOCAL_CONSTRAINT,
+		type: ELEMENT_ACTIONS.ADD_LOCAL_CONSTRAINT,
 		payload: {
 			id,
 			constraint
@@ -74,7 +84,7 @@ export const removeLocalConstraintAction = (
 	tool: TOOLID
 ): RemoveLocalConstraintAction => {
 	return {
-		type: LOCAL_CONSTRAINTS_ACTIONS.REMOVE_LOCAL_CONSTRAINT,
+		type: ELEMENT_ACTIONS.REMOVE_LOCAL_CONSTRAINT,
 		payload: {
 			id,
 			tool
@@ -82,11 +92,11 @@ export const removeLocalConstraintAction = (
 	};
 };
 
-export const removeLocalConstraintGroupAction = (
+export const removeElementAction = (
 	tool: TOOLID
-): RemoveLocalConstraintGroupAction => {
+): RemoveElementAction => {
 	return {
-		type: LOCAL_CONSTRAINTS_ACTIONS.REMOVE_LOCAL_CONSTRAINT_GROUP,
+		type: ELEMENT_ACTIONS.REMOVE_ELEMENT,
 		payload: {
 			tool
 		}
@@ -98,10 +108,20 @@ export const restoreElementAction = (
 	element: ConstraintsElement
 ): RestoreElementAction => {
 	return {
-		type: LOCAL_CONSTRAINTS_ACTIONS.RESTORE_ELEMENT,
+		type: ELEMENT_ACTIONS.RESTORE_ELEMENT,
 		payload: {
 			tool,
 			constraints: element
+		}
+	};
+};
+
+export const enableDisableElementAction = (tool: TOOLID, value: boolean): EnableDisableElementAction => {
+	return {
+		type: ELEMENT_ACTIONS.ENABLE_DISABLE_ELEMENT,
+		payload: {
+			tool,
+			value
 		}
 	};
 };
@@ -112,7 +132,7 @@ export const updateLocalConstraintAction = (
 	constraint: ConstraintType
 ): UpdateLocalConstraintAction => {
 	return {
-		type: LOCAL_CONSTRAINTS_ACTIONS.UPDATE_LOCAL_CONSTRAINT,
+		type: ELEMENT_ACTIONS.UPDATE_LOCAL_CONSTRAINT,
 		payload: {
 			constraintId: id,
 			constraint,

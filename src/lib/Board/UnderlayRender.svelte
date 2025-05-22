@@ -28,7 +28,7 @@
 
 <g class="underlay-layer" mask={enable_fog_mask ? 'url(#fog-mask-fog)' : null}>
 	{#each underlay_elements as element}
-		{#if element.constraints}
+		{#if !element.disabled && element.constraints}
 			<g class="element-group" data-toolId={element.tool_id}>
 				{#if isSingleCellTool(element.tool_id)}
 					{#each Object.entries(element.constraints) as entry (entry[0])}

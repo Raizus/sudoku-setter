@@ -3,7 +3,7 @@ import {
 	type ConstraintType
 } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import {
-	LOCAL_CONSTRAINTS_ACTIONS,
+	ELEMENT_ACTIONS,
 	type LocalConstraintAction
 } from '$src/lib/reducers/LocalConstraintsActions';
 import type { CommandI } from '$src/lib/Types/types';
@@ -58,34 +58,46 @@ export function restoreElement(toolId: TOOLID, element: ConstraintsElement) {
 	});
 }
 
-export function updateLocalConstraints(action: LocalConstraintAction): void {
-	if (action.type === LOCAL_CONSTRAINTS_ACTIONS.ADD_LOCAL_CONSTRAINT) {
+export function enableDisableElement(toolId: TOOLID, value: boolean) {
+	elementsDictStore.update((localConstraintsDict) => {
+		const element = localConstraintsDict.get(toolId);
+		if (!element) return localConstraintsDict;
+		element.disabled = value;
+		localConstraintsDict.setElement(toolId, element);
+		return localConstraintsDict;
+	});
+}
+
+export function updateElementAction(action: LocalConstraintAction): void {
+	if (action.type === ELEMENT_ACTIONS.ADD_LOCAL_CONSTRAINT) {
 		addLocalConstraint(action.payload.id, action.payload.constraint);
-	} else if (action.type === LOCAL_CONSTRAINTS_ACTIONS.REMOVE_LOCAL_CONSTRAINT) {
+	} else if (action.type === ELEMENT_ACTIONS.REMOVE_LOCAL_CONSTRAINT) {
 		removeLocalConstraint(action.payload.tool, action.payload.id);
-	} else if (action.type === LOCAL_CONSTRAINTS_ACTIONS.REMOVE_LOCAL_CONSTRAINT_GROUP) {
+	} else if (action.type === ELEMENT_ACTIONS.REMOVE_ELEMENT) {
 		removeGroupFromLocalConstraint(action.payload.tool);
-	} else if (action.type === LOCAL_CONSTRAINTS_ACTIONS.RESTORE_ELEMENT) {
+	} else if (action.type === ELEMENT_ACTIONS.RESTORE_ELEMENT) {
 		restoreElement(action.payload.tool, action.payload.constraints);
-	} else if (action.type === LOCAL_CONSTRAINTS_ACTIONS.UPDATE_LOCAL_CONSTRAINT) {
+	} else if (action.type === ELEMENT_ACTIONS.UPDATE_LOCAL_CONSTRAINT) {
 		updateLocalConstraint(
 			action.payload.tool,
 			action.payload.constraintId,
 			action.payload.constraint
 		);
+	} else if (action.type === ELEMENT_ACTIONS.ENABLE_DISABLE_ELEMENT) {
+		enableDisableElement(action.payload.tool, action.payload.value);
 	}
 }
 
-export function getLocalConstraintCommand(
+export function getUpdateElementCommand(
 	action: LocalConstraintAction,
 	reverse_action: LocalConstraintAction
 ): CommandI {
 	const command: CommandI = {
 		execute: () => {
-			updateLocalConstraints(action);
+			updateElementAction(action);
 		},
 		unExecute: () => {
-			updateLocalConstraints(reverse_action);
+			updateElementAction(reverse_action);
 		}
 	};
 

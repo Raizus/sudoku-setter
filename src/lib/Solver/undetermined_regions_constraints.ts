@@ -6,6 +6,7 @@ import {
 	cellsToGridVarsStr,
 	cellToGridVarName,
 	cellToVarName,
+	constraintsBuilder,
 	exactlyNPerColumn,
 	exactlyNPerRegion,
 	exactlyNPerRow,
@@ -623,13 +624,6 @@ const tool_map = new Map<string, ElementF2>([
 ]);
 
 export function undeterminedRegionsElements(model: PuzzleModel, element: ConstraintsElement) {
-	let out_str = '';
-	const tool_id = element.tool_id;
-	const elementF = tool_map.get(tool_id);
-	if (elementF) {
-		const element_str = elementF(model, element);
-		out_str += element_str;
-	}
-
+	const out_str = constraintsBuilder(model, element, tool_map);
 	return out_str;
 }
