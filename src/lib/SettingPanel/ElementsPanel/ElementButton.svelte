@@ -204,7 +204,7 @@
 	}
 
 	.name-container {
-		line-height: 1;
+		display: flex;
 		flex: 1;
 	}
 
