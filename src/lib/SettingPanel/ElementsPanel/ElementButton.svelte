@@ -204,6 +204,7 @@
 	}
 
 	.name-container {
+		margin: 0.2rem;
 		display: flex;
 		flex: 1;
 	}
