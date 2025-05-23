@@ -129,7 +129,7 @@ export function getDirectionsVars(
 	return vars_arr;
 }
 
-interface PuzzleAuxI {
+export interface PuzzleAuxI {
 	grid: Grid;
 	valid_digits: number[];
 	elementsDict: Map<TOOLID, ConstraintsElement>;

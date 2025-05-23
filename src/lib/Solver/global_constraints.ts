@@ -1,5 +1,4 @@
 import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
-import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS } from '../Puzzle/Tools';
 import {
 	cellsToVarsName,
@@ -11,7 +10,8 @@ import {
 	adjCellPairGen,
 	PuzzleModel,
 	cellToGridVarName,
-	constraintsBuilder
+	constraintsBuilder,
+	type PuzzleAuxI
 } from './solver_utils';
 
 function leaveEmptyCellsEmptyConstraint(model: PuzzleModel, element: ConstraintsElement): string {
@@ -362,7 +362,7 @@ function boxRowsAndColumnsFormModularityAndEntropySetConstraint(
 	return out_str;
 }
 
-export function sudokuConstraints(puzzle: PuzzleI) {
+export function sudokuConstraints(puzzle: PuzzleAuxI) {
 	const elements_dict = puzzle.elementsDict;
 	const not_sudoku = !!elements_dict.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY);
 
@@ -407,7 +407,7 @@ export function sudokuConstraints(puzzle: PuzzleI) {
 	return out_str;
 }
 
-export function hexedSudokuConstraint(puzzle: PuzzleI) {
+export function hexedSudokuConstraint(puzzle: PuzzleAuxI) {
 	const elements_dict = puzzle.elementsDict;
 
 	const tool = TOOLS.HEXED_SUDOKU;

@@ -1,12 +1,11 @@
-import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS } from '../Puzzle/Tools';
 import { hexedSudokuConstraint, sudokuConstraints } from './global_constraints';
-import { localAndGlobalConstraints } from './local_constraints';
-import { cellToVarName, PuzzleModel, set_board_regions } from './solver_utils';
+import { elementConstraints } from './local_constraints';
+import { cellToVarName, PuzzleModel, set_board_regions, type PuzzleAuxI } from './solver_utils';
 import { defineFunctionsPredicates } from './solver_mzn_defs';
 import { range } from 'lodash';
 
-function givenConstraints(puzzle: PuzzleI) {
+function givenConstraints(puzzle: PuzzleAuxI) {
 	const grid = puzzle.grid;
 	let out_str = '';
 	for (const cell of grid.getAllCells()) {
@@ -21,7 +20,7 @@ function givenConstraints(puzzle: PuzzleI) {
 	return out_str;
 }
 
-export function createMinizincModel(puzzle: PuzzleI, randomize_search: boolean = false) {
+export function createMinizincModel(puzzle: PuzzleAuxI, randomize_search: boolean = false) {
 	const grid = puzzle.grid;
 	let valid_digits = puzzle.valid_digits;
 	const model = new PuzzleModel(puzzle);
@@ -60,7 +59,7 @@ export function createMinizincModel(puzzle: PuzzleI, randomize_search: boolean =
 	model.add(sudokuConstraints(puzzle));
 	model.add(hexedSudokuConstraint(puzzle));
 
-	model.add(localAndGlobalConstraints(puzzle, model));
+	model.add(elementConstraints(puzzle, model));
 
 	if (randomize_search) {
 		model.add(`\nsolve :: int_search(array1d(board), first_fail, indomain_random) satisfy;`);
