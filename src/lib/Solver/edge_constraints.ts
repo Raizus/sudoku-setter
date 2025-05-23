@@ -1,5 +1,5 @@
 import type { EdgeToolI } from '../Puzzle/Constraints/EdgeConstraints';
-import type { ConstraintsElement } from '../Puzzle/Constraints/ElementsDict';
+import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS } from '../Puzzle/Tools';

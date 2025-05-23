@@ -1,6 +1,6 @@
 import type { CornerLineToolI } from '../Puzzle/Constraints/CornerLineConstraints';
 import type { EdgeToolI } from '../Puzzle/Constraints/EdgeConstraints';
-import type { ConstraintsElement } from '../Puzzle/Constraints/ElementsDict';
+import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 import type { CellToolI } from '../Puzzle/Constraints/SingleCellConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';

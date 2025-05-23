@@ -1,4 +1,4 @@
-import type { ConstraintsElement } from '../Puzzle/Constraints/ElementsDict';
+import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {

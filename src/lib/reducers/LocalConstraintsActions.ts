@@ -1,4 +1,5 @@
-import type { ConstraintsElement, ConstraintType } from '../Puzzle/Constraints/ElementsDict';
+import type { ConstraintType } from '../Puzzle/Constraints/ElementsDict';
+import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 import type { TOOLID } from '../Puzzle/Tools';
 
 export enum ELEMENT_ACTIONS {

@@ -1,4 +1,4 @@
-import type { ConstraintsElement } from '../Puzzle/Constraints/ElementsDict';
+import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 import { PuzzleModel, VAR_2D_NAMES } from './solver_utils';
 import { exactlyNPerRowColumnRegion } from './solver_utils';
 

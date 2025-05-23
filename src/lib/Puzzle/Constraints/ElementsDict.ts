@@ -50,6 +50,7 @@ import {
 import { valuedGlobalConstraintFromJson, type ValuedGlobalToolI } from './ValuedGlobalConstraints';
 import { cornerLineConstraintFromJson, type CornerLineToolI } from './CornerLineConstraints';
 import { variableConstraintFromJson, type VariableConstraintI } from './VariableConstraints';
+import type { ConstraintsElement } from '../puzzle_schema';
 
 export type ConstraintType =
 	| CellToolI
@@ -74,14 +75,6 @@ export function updateConstraintName(
 	name: string
 ): VariableConstraintI {
 	return { ...constraint, name };
-}
-
-export interface ConstraintsElement {
-	tool_id: TOOLID;
-	name?: string;
-	constraints?: Record<string, ConstraintType>;
-	negative_constraints?: Record<string, boolean>;
-	disabled?: boolean;
 }
 
 export interface ElementData {

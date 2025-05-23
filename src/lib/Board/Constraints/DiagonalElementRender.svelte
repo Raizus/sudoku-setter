@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ConstraintsElement } from '$src/lib/Puzzle/Constraints/ElementsDict';
+		import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$src/lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { defaultDiagonalShape } from '$src/lib/Puzzle/Shape/Shape';

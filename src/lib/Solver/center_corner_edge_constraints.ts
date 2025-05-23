@@ -1,5 +1,5 @@
 import type { CenterCornerOrEdgeToolI } from '../Puzzle/Constraints/CenterCornerOrEdgeConstraints';
-import type { ConstraintsElement } from '../Puzzle/Constraints/ElementsDict';
+import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS } from '../Puzzle/Tools';

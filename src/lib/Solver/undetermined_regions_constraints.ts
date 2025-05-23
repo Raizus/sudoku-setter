@@ -14,7 +14,7 @@ import {
 	PuzzleModel,
 	VAR_2D_NAMES
 } from './solver_utils';
-import type { ConstraintsElement } from '../Puzzle/Constraints/ElementsDict';
+import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 import { caveConstraint } from './cave_constraints';
 import { connectFourConstraint } from './connect_four_constraints';
 import { galaxiesConstraint } from './galaxy_constraints';

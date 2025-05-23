@@ -1,4 +1,4 @@
-import type { ConstraintsElement } from '../Puzzle/Constraints/ElementsDict';
+import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import { addHeader, cellsToGridVarsStr, VAR_2D_NAMES, type PuzzleModel } from './solver_utils';
 

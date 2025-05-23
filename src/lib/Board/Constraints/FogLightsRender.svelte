@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ConstraintsElement } from '$src/lib/Puzzle/Constraints/ElementsDict';
+		import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
 	import type { CellToolI } from '$src/lib/Puzzle/Constraints/SingleCellConstraints';
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 	import { enableFogMaskStore, toolStore } from '$stores/BoardStore';

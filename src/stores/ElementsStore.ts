@@ -22,9 +22,9 @@ import type { EdgeToolI } from '$lib/Puzzle/Constraints/EdgeConstraints';
 import type { OutsideDirectionToolI } from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
 import type { CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/Constraints/CenterCornerOrEdgeConstraints';
 import type {
-	ConstraintsElement,
 	ConstraintType
 } from '$src/lib/Puzzle/Constraints/ElementsDict';
+import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
 
 export type Element<T extends ConstraintType> = {
 	toolId: TOOLID;

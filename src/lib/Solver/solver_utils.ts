@@ -1,9 +1,10 @@
-import type { ConstraintsElement, ConstraintType } from '../Puzzle/Constraints/ElementsDict';
+import type { ConstraintType } from '../Puzzle/Constraints/ElementsDict';
+import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 import type { SingleCellTool } from '../Puzzle/Constraints/SingleCellConstraints';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import type { PuzzleI } from '../Puzzle/Puzzle';
-import { TOOLS } from '../Puzzle/Tools';
+import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import { DIRECTION } from '../utils/directions';
 import type { GridCoordI } from '../utils/SquareCellGridCoords';
 import { type ParseOptions, default_parse_opts, parseValue } from './value_parsing';
@@ -129,56 +130,25 @@ export function getDirectionsVars(
 	return vars_arr;
 }
 
-export type ElementF = (model: PuzzleModel, element: ConstraintsElement) => string;
-
-export function simpleElementFunction<T extends ConstraintType>(
-	model: PuzzleModel,
-	element: ConstraintsElement,
-	func: (model: PuzzleModel, grid: Grid, c_id: string, constraint: T) => string
-) {
-	let out_str = '';
-	const constraints = element.constraints;
-	if (!constraints) return out_str;
-
-	const grid = model.puzzle.grid;
-	for (const [c_id, constraint] of Object.entries(constraints)) {
-		const constraint_str = func(model, grid, c_id, constraint as T);
-		out_str += constraint_str;
-	}
-	return out_str;
-}
-
-export function constraintsBuilder(
-	model: PuzzleModel,
-	element: ConstraintsElement,
-	tool_map: Map<string, ElementF>
-) {
-	let out_str = '';
-	if (element.disabled) return out_str;
-
-	const tool_id = element.tool_id;
-	const elementF = tool_map.get(tool_id);
-	if (elementF) {
-		const element_str = elementF(model, element);
-		out_str += element_str;
-	}
-
-	return out_str;
+interface PuzzleAuxI {
+	grid: Grid;
+	valid_digits: number[];
+	elementsDict: Map<TOOLID, ConstraintsElement>;
 }
 
 export interface ModelI {
 	model_str: string; // string with minizinc model
 	used_vars: Set<string>; // keep track of shared vars
-	puzzle: PuzzleI;
+	puzzle: PuzzleAuxI;
 }
 
 export class PuzzleModel implements ModelI {
 	model_str: string = '';
 	used_vars: Set<string>;
-	puzzle: PuzzleI;
+	puzzle: PuzzleAuxI;
 	edge_list: [s: number, t: number][];
 
-	constructor(puzzle: PuzzleI) {
+	constructor(puzzle: PuzzleAuxI) {
 		this.puzzle = puzzle;
 		this.edge_list = [];
 		this.used_vars = new Set();
@@ -312,6 +282,43 @@ export class PuzzleModel implements ModelI {
 
 		return [model_str, default_name];
 	}
+}
+
+export type ElementF = (model: PuzzleModel, element: ConstraintsElement) => string;
+
+export function simpleElementFunction<T extends ConstraintType>(
+	model: PuzzleModel,
+	element: ConstraintsElement,
+	func: (model: PuzzleModel, grid: Grid, c_id: string, constraint: T) => string
+) {
+	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
+	const grid = model.puzzle.grid;
+	for (const [c_id, constraint] of Object.entries(constraints)) {
+		const constraint_str = func(model, grid, c_id, constraint as T);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
+
+export function constraintsBuilder(
+	model: PuzzleModel,
+	element: ConstraintsElement,
+	tool_map: Map<string, ElementF>
+) {
+	let out_str = '';
+	if (element.disabled) return out_str;
+
+	const tool_id = element.tool_id;
+	const elementF = tool_map.get(tool_id);
+	if (elementF) {
+		const element_str = elementF(model, element);
+		out_str += element_str;
+	}
+
+	return out_str;
 }
 
 /**
