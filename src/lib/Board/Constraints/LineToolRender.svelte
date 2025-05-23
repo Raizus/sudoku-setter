@@ -3,7 +3,7 @@
 	import LineWithCircleEndsToolRender from '$src/lib/Board/SvgComponents/LineWithCircleEndsToolRender.svelte';
 	import LineWithPolygonEndsRender from '$src/lib/Board/SvgComponents/LineWithPolygonEndsRender.svelte';
 	import ThermoRender from '$src/lib/Board/SvgComponents/ThermoRender.svelte';
-	import type { LineToolI } from '$lib/Puzzle/Constraints/LineConstraints';
+		import type { LineToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { SHAPE_TYPES, defaultLineShape } from '$lib/Puzzle/Shape/Shape';

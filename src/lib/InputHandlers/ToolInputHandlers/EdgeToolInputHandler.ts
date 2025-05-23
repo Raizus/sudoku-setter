@@ -15,15 +15,15 @@ import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import type { GridShape } from '$lib/Types/types';
 import {
 	updateConstraintValue,
-	findEdgeConstraint,
-	type ConstraintType
-} from '$src/lib/Puzzle/Constraints/ElementsDict';
+	findEdgeConstraint} from '$src/lib/Puzzle/Constraints/ElementsDict';
+import { type ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 import {
 	CellEdgePointerHandler,
 	type CellEdgeTapEvent
 } from '$src/lib/InputHandlers/PointerHandlers/CellEdgePointerHandler';
 import { cellEdgeToCellCoords, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
-import { edgeConstraint, type EdgeToolI } from '$lib/Puzzle/Constraints/EdgeConstraints';
+import { edgeConstraint } from '$lib/Puzzle/Constraints/EdgeConstraints';
+import { type EdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import { edgeToolPreviewStore, type ToolPreview } from '$stores/ElementsStore';
 import { toolModeStore } from '$stores/InputHandlerStore';

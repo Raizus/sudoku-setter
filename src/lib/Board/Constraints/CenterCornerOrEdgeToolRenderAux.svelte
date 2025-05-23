@@ -2,7 +2,7 @@
 	import { SHAPE_TYPES, defaultEdgeCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
-	import type { CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/Constraints/CenterCornerOrEdgeConstraints';
+		import type { CenterCornerOrEdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import RenderShape from '$src/lib/Board/SvgComponents/RenderShape.svelte';
 	import CellTextLabelRender from './CellTextLabelRender.svelte';
 	import { currentConstraintStore } from '$stores/BoardStore';

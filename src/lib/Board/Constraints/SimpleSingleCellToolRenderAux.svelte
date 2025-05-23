@@ -3,7 +3,7 @@
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { SHAPE_TYPES, defaultSingleCellCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import ValuedCageRender from './ValuedCageRender.svelte';
-	import type { CellToolI } from '$lib/Puzzle/Constraints/SingleCellConstraints';
+		import type { CellToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 	import MinMaxRender from './MinMaxRender.svelte';
 	import RenderShape from '$src/lib/Board/SvgComponents/RenderShape.svelte';

@@ -1,4 +1,4 @@
-import type { CornerToolI } from '../Puzzle/Constraints/CornerConstraints';
+import type { CornerToolI } from "../Puzzle/puzzle_schema";
 import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS } from '../Puzzle/Tools';

@@ -26,9 +26,8 @@ import {
 	isCellOnGrid
 } from '$lib/utils/SquareCellGridCoords';
 import {
-	outsideDirectionConstraint,
-	type OutsideDirectionToolI
-} from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
+	outsideDirectionConstraint} from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
+import { type OutsideDirectionToolI } from "$src/lib/Puzzle/puzzle_schema";
 import type { OutsideDirectionToolInputOptions } from './types';
 import { outsideDirectionToolPreviewStore } from '$stores/ElementsStore';
 import { toolModeStore } from '$stores/InputHandlerStore';

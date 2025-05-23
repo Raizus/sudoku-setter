@@ -1,13 +1,7 @@
 import type { GridCoordI } from "$lib/utils/SquareCellGridCoords";
 import type { TOOLID } from "../Tools";
 import { parseCells, parseValue } from "../utils";
-import type { ConstraintI } from "./ConstraintType";
-
-export interface EdgeToolI extends ConstraintI {
-	toolId: TOOLID;
-	value?: string;
-	cells: GridCoordI[];
-}
+import type { EdgeToolI } from "../puzzle_schema";
 
 export function edgeConstraint(toolId: TOOLID, coords: GridCoordI[], value?: string): EdgeToolI {
 	return {

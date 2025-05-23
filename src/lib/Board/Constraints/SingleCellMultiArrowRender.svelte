@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CellMultiArrowToolI } from '$src/lib/Puzzle/Constraints/SingleCellConstraints';
+		import type { CellMultiArrowToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import SingleCellMultiArrowRenderAux from './SingleCellMultiArrowRenderAux.svelte';
 
 	export let tool: CellMultiArrowToolI;

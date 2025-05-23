@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CornerToolI } from '$src/lib/Puzzle/Constraints/CornerConstraints';
+		import type { CornerToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import CornerToolRenderAux from './CornerToolRenderAux.svelte';
 
 	export let tool: CornerToolI;

@@ -4,17 +4,10 @@ import {
 	sortGridCoords,
 	type GridCoordI
 } from '$lib/utils/SquareCellGridCoords';
+import type { ArrowToolI } from '../puzzle_schema';
 import type { TOOLID } from '../Tools';
 import { parseCells, parseLines } from '../utils';
-import type { ConstraintI } from './ConstraintType';
 import { addToLineSelfHit } from './LineConstraints';
-
-export interface ArrowToolI extends ConstraintI {
-	toolId: TOOLID;
-	value?: string;
-	lines: GridCoordI[][];
-	cells: GridCoordI[];
-}
 
 export function arrowConstraint(toolId: TOOLID, coords: GridCoordI[]): ArrowToolI {
 	return {

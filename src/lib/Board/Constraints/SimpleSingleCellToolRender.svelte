@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CellToolI } from '$src/lib/Puzzle/Constraints/SingleCellConstraints';
+		import type { CellToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import SimpleSingleCellToolRenderAux from './SimpleSingleCellToolRenderAux.svelte';
 
 	export let tool: CellToolI;

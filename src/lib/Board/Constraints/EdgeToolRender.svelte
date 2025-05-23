@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { EdgeToolI } from '$src/lib/Puzzle/Constraints/EdgeConstraints';
+		import type { EdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import EdgeToolRenderAux from './EdgeToolRenderAux.svelte';
 
 	export let tool: EdgeToolI;

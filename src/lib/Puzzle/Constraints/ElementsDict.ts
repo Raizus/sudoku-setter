@@ -19,52 +19,39 @@ import {
 	toolKeyFromString,
 	type TOOLID
 } from '../Tools';
-import { arrowConstraintFromJson, type ArrowToolI } from './ArrowConstraints';
-import { cageConstraintFromJson, type CageToolI } from './CageConstraints';
-import type { CloneToolI } from './CloneConstraints';
-import { cornerConstraintFromJson, type CornerToolI } from './CornerConstraints';
-import { edgeConstraintFromJson, type EdgeToolI } from './EdgeConstraints';
-import { lineConstraintFromJson, type LineToolI } from './LineConstraints';
+import { arrowConstraintFromJson } from './ArrowConstraints';
+import { type ArrowToolI } from '../puzzle_schema';
+import { cageConstraintFromJson } from './CageConstraints';
+import { type CageToolI } from "../puzzle_schema";
+import type { CloneToolI, ConstraintType } from "../puzzle_schema";
+import { cornerConstraintFromJson } from './CornerConstraints';
+import { type CornerToolI } from "../puzzle_schema";
+import { edgeConstraintFromJson } from './EdgeConstraints';
+import { type EdgeToolI } from "../puzzle_schema";
+import { lineConstraintFromJson } from './LineConstraints';
+import { type LineToolI } from "../puzzle_schema";
 import {
-	outsideDirectionConstraintFromJson,
-	type OutsideDirectionToolI
-} from './OutsideDirectionConstraints';
+	outsideDirectionConstraintFromJson} from './OutsideDirectionConstraints';
+import { type OutsideDirectionToolI } from "../puzzle_schema";
 
 import {
 	singleCellArrowConstraintFromJson,
 	singleCellConstraintFromJson,
-	singleCellMultiArrowConstraintFromJson,
-	type CellArrowToolI,
-	type CellMultiArrowToolI,
-	type CellToolI,
-	type SingleCellTool
-} from './SingleCellConstraints';
+	singleCellMultiArrowConstraintFromJson} from './SingleCellConstraints';
+import { type SingleCellTool } from "../puzzle_schema";
 import { getShapeDiff } from '../Shape/Shape';
 import { getDefaultShape } from '../ElementHandlersUtils';
 import { squareCellElementHandlers } from '../ElementsInfo/SquareCellElementHandlers';
 import { parseShape } from '../utils';
 import {
-	centerCornerOrEdgeConstraintFromJson,
-	type CenterCornerOrEdgeToolI
-} from './CenterCornerOrEdgeConstraints';
-import { valuedGlobalConstraintFromJson, type ValuedGlobalToolI } from './ValuedGlobalConstraints';
-import { cornerLineConstraintFromJson, type CornerLineToolI } from './CornerLineConstraints';
-import { variableConstraintFromJson, type VariableConstraintI } from './VariableConstraints';
+	centerCornerOrEdgeConstraintFromJson} from './CenterCornerOrEdgeConstraints';
+import { type CenterCornerOrEdgeToolI } from "../puzzle_schema";
+import { valuedGlobalConstraintFromJson } from './ValuedGlobalConstraints';
+import { cornerLineConstraintFromJson } from './CornerLineConstraints';
+import { type CornerLineToolI } from '../puzzle_schema';
+import { variableConstraintFromJson } from './VariableConstraints';
+import { type VariableConstraintI } from '../puzzle_schema';
 import type { ConstraintsElement } from '../puzzle_schema';
-
-export type ConstraintType =
-	| CellToolI
-	| CellArrowToolI
-	| CellMultiArrowToolI
-	| CornerToolI
-	| LineToolI
-	| ArrowToolI
-	| CageToolI
-	| CloneToolI
-	| OutsideDirectionToolI
-	| CenterCornerOrEdgeToolI
-	| ValuedGlobalToolI
-	| VariableConstraintI;
 
 export function updateConstraintValue<T extends ConstraintType>(constraint: T, value: string): T {
 	return { ...constraint, value } as T;

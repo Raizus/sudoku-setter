@@ -1,5 +1,5 @@
 import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
-import type { VariableConstraintI } from '../Puzzle/Constraints/VariableConstraints';
+import type { VariableConstraintI } from '../Puzzle/puzzle_schema';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS } from '../Puzzle/Tools';
 import {

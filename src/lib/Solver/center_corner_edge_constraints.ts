@@ -1,4 +1,4 @@
-import type { CenterCornerOrEdgeToolI } from '../Puzzle/Constraints/CenterCornerOrEdgeConstraints';
+import type { CenterCornerOrEdgeToolI } from "../Puzzle/puzzle_schema";
 import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';

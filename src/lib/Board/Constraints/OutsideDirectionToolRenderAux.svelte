@@ -4,7 +4,7 @@
 		getArrowHead,
 		linePointsToPathStr
 	} from '$lib/utils/SquareCellGridRenderUtils';
-	import type { OutsideDirectionToolI } from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
+		import type { OutsideDirectionToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { defaultOutsideShape } from '$lib/Puzzle/Shape/Shape';

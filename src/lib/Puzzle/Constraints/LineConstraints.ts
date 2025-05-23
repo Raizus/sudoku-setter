@@ -1,13 +1,7 @@
 import { areCoordsEqual, areCoordsNeighbours, type GridCoordI } from "$lib/utils/SquareCellGridCoords";
 import type { TOOLID } from "../Tools";
 import { parseCells, parseValue } from "../utils";
-import type { ConstraintI } from "./ConstraintType";
-
-export interface LineToolI extends ConstraintI {
-	toolId: TOOLID;
-	value?: string;
-	cells: GridCoordI[];
-}
+import type { LineToolI } from "../puzzle_schema";
 
 export function lineConstraint(toolId: TOOLID, coords: GridCoordI[], value?: string): LineToolI {
 	return {

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CellArrowToolI } from '$src/lib/Puzzle/Constraints/SingleCellConstraints';
+		import type { CellArrowToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import type { ToolPreview } from '$stores/ElementsStore';
 	import RemoveConstraintCrossPreview from './RemoveConstraintCrossPreview.svelte';
 	import SingleCellArrowRenderAux from './SingleCellArrowRenderAux.svelte';

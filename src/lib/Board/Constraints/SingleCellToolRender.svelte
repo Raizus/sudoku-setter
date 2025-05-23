@@ -2,7 +2,7 @@
 	import SingleCellArrowRender from './SingleCellArrowRender.svelte';
 	import SingleCellMultiArrowRender from './SingleCellMultiArrowRender.svelte';
 	import SimpleSingleCellToolRender from './SimpleSingleCellToolRender.svelte';
-	import type { SingleCellTool } from '$src/lib/Puzzle/Constraints/SingleCellConstraints';
+		import type { SingleCellTool } from "$src/lib/Puzzle/puzzle_schema";
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 
 	export let tool: SingleCellTool;

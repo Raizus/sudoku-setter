@@ -1,4 +1,4 @@
-import type { LineToolI } from '../Puzzle/Constraints/LineConstraints';
+import type { LineToolI } from "../Puzzle/puzzle_schema";
 import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/Constraints/CenterCornerOrEdgeConstraints';
+		import type { CenterCornerOrEdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import CenterCornerOrEdgeToolRenderAux from './CenterCornerOrEdgeToolRenderAux.svelte';
 
 	export let tool: CenterCornerOrEdgeToolI;

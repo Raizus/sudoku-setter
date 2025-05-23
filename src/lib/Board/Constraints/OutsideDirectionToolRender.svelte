@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { OutsideDirectionToolI } from '$src/lib/Puzzle/Constraints/OutsideDirectionConstraints';
+		import type { OutsideDirectionToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import OutsideDirectionToolRenderAux from './OutsideDirectionToolRenderAux.svelte';
 
 	export let tool: OutsideDirectionToolI;

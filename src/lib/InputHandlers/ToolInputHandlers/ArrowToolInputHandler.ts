@@ -17,9 +17,8 @@ import {
 	arrowConstraint,
 	arrowRemoveLastLine,
 	arrowShouldRemoveLastLine,
-	removeLineFromArrow,
-	type ArrowToolI
-} from '$lib/Puzzle/Constraints/ArrowConstraints';
+	removeLineFromArrow} from '$lib/Puzzle/Constraints/ArrowConstraints';
+import { type ArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
 import type { GridShape } from '$lib/Types/types';
 import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import {

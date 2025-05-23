@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ArrowToolI } from '$lib/Puzzle/Constraints/ArrowConstraints';
+		import type { ArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import type { ShapeI } from '$lib/Puzzle/Shape/Shape';
 	import { cellsBoundingBox, cellsLineToPathStr } from '$lib/utils/SquareCellGridRenderUtils';
 	import ArrowMarker from './ArrowMarker.svelte';

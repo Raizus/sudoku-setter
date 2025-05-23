@@ -1,13 +1,6 @@
 import { type GridCoordI, addToCellGroup } from "$lib/utils/SquareCellGridCoords";
+import type { CloneToolI } from "../puzzle_schema";
 import type { TOOLID } from "../Tools";
-import type { ConstraintI } from "./ConstraintType";
-
-export interface CloneToolI extends ConstraintI {
-	toolId: TOOLID;
-	value: string;
-	cells: GridCoordI[];
-	cells2: GridCoordI[];
-}
 
 export function cloneConstraint(
 	toolId: TOOLID,

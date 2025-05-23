@@ -1,13 +1,7 @@
 import { areCoordsNeighbours, type GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
 import type { TOOLID } from '../Tools';
 import { parseCoords, parseValue } from '../utils';
-import type { ConstraintI } from './ConstraintType';
-
-export interface CornerLineToolI extends ConstraintI {
-	toolId: TOOLID;
-	value: string;
-	coords: GridCoordI[];
-}
+import type { CornerLineToolI } from "../puzzle_schema";
 
 export function cornerLineConstraint(toolId: TOOLID, coords: GridCoordI[], value = ''): CornerLineToolI {
 	return {

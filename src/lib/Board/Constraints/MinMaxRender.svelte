@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { SingleCellTool } from '$src/lib/Puzzle/Constraints/SingleCellConstraints';
+		import type { SingleCellTool } from "$src/lib/Puzzle/puzzle_schema";
 	import { areCoordsEqual, type GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
 	import { minMaxShape, pointsToPathStr } from '$src/lib/utils/SquareCellGridRenderUtils';
 	import { maximumConstraintsStore, minimumConstraintsStore } from '$stores/ElementsStore';

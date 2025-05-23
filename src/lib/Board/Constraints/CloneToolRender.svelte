@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CloneToolI } from '$lib/Puzzle/Constraints/CloneConstraints';
+		import type { CloneToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { defaultCloneShape } from '$lib/Puzzle/Shape/Shape';

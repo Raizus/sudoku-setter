@@ -1,5 +1,5 @@
 import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
-import type { OutsideDirectionToolI } from '../Puzzle/Constraints/OutsideDirectionConstraints';
+import type { OutsideDirectionToolI } from "../Puzzle/puzzle_schema";
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS } from '../Puzzle/Tools';

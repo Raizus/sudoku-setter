@@ -9,15 +9,13 @@ import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import type { GridShape } from '$lib/Types/types';
 import { areCoordsOnGrid } from '$lib/utils/SquareCellGridCoords';
 import {
-	findCornerLineConstraint,
-	type ConstraintType
-} from '$src/lib/Puzzle/Constraints/ElementsDict';
+	findCornerLineConstraint} from '$src/lib/Puzzle/Constraints/ElementsDict';
+import { type ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import {
 	cornerLineConstraint,
-	updateCornerLineConstraintCoords,
-	type CornerLineToolI
-} from '$src/lib/Puzzle/Constraints/CornerLineConstraints';
+	updateCornerLineConstraintCoords} from '$src/lib/Puzzle/Constraints/CornerLineConstraints';
+import { type CornerLineToolI } from '$src/lib/Puzzle/puzzle_schema';
 import {
 	CellCornerPointerHandler,
 	type CellCornerTapEvent

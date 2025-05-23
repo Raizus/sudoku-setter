@@ -1,6 +1,6 @@
 <script lang="ts">
 		import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
-	import type { CellToolI } from '$src/lib/Puzzle/Constraints/SingleCellConstraints';
+			import type { CellToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
 	import type { Solution } from '$src/lib/Puzzle/Puzzle';
 	import { TOOLS } from '$src/lib/Puzzle/Tools';

@@ -11,19 +11,15 @@ import {
 } from '$lib/Puzzle/Tools';
 import { derived, writable, type Readable } from 'svelte/store';
 import { elementsDictStore, toolStore } from './BoardStore';
-import type { CornerToolI } from '$lib/Puzzle/Constraints/CornerConstraints';
-import type {
-	CellArrowToolI,
-	CellMultiArrowToolI,
-	CellToolI,
-	SingleCellTool
-} from '$lib/Puzzle/Constraints/SingleCellConstraints';
-import type { EdgeToolI } from '$lib/Puzzle/Constraints/EdgeConstraints';
-import type { OutsideDirectionToolI } from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
-import type { CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/Constraints/CenterCornerOrEdgeConstraints';
-import type {
-	ConstraintType
-} from '$src/lib/Puzzle/Constraints/ElementsDict';
+import type { CornerToolI } from "$src/lib/Puzzle/puzzle_schema";
+import type { SingleCellTool } from "$src/lib/Puzzle/puzzle_schema";
+import type { CellMultiArrowToolI } from "$src/lib/Puzzle/puzzle_schema";
+import type { CellArrowToolI } from "$src/lib/Puzzle/puzzle_schema";
+import type { CellToolI } from "$src/lib/Puzzle/puzzle_schema";
+import type { EdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
+import type { OutsideDirectionToolI } from "$src/lib/Puzzle/puzzle_schema";
+import type { CenterCornerOrEdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
+import type { ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
 
 export type Element<T extends ConstraintType> = {

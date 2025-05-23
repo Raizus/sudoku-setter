@@ -2,14 +2,7 @@ import type { GridCoordI } from "$lib/utils/SquareCellGridCoords";
 import type { DIRECTION } from "$lib/utils/directions";
 import type { TOOLID } from "../Tools";
 import { parseCell, parseDirection, parseValue } from "../utils";
-import type { ConstraintI } from "./ConstraintType";
-
-export interface OutsideDirectionToolI extends ConstraintI {
-	toolId: TOOLID;
-	value: string;
-	cell: GridCoordI;
-	direction: DIRECTION;
-}
+import type { OutsideDirectionToolI } from "../puzzle_schema";
 
 export function outsideDirectionConstraint(
 	toolId: TOOLID,

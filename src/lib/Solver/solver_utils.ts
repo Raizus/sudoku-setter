@@ -1,9 +1,8 @@
-import type { ConstraintType } from '../Puzzle/Constraints/ElementsDict';
+import type { ConstraintType } from '../Puzzle/puzzle_schema';
 import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
-import type { SingleCellTool } from '../Puzzle/Constraints/SingleCellConstraints';
+import type { SingleCellTool } from "../Puzzle/puzzle_schema";
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
-import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import { DIRECTION } from '../utils/directions';
 import type { GridCoordI } from '../utils/SquareCellGridCoords';
@@ -603,7 +602,7 @@ export function exactlyNPerColumn(n: number, target: boolean | number, grid_name
 }
 
 export function exactlyNPerRegion(
-	puzzle: PuzzleI,
+	puzzle: PuzzleAuxI,
 	n: number,
 	target: boolean | number,
 	grid_name: string
@@ -627,7 +626,7 @@ export function exactlyNPerRegion(
 }
 
 export function exactlyNPerRowColumnRegion(
-	puzzle: PuzzleI,
+	puzzle: PuzzleAuxI,
 	n: number,
 	target: boolean | number,
 	grid_name: string

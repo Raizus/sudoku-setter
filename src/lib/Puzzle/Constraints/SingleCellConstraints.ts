@@ -1,36 +1,19 @@
-import type { GridCoordI } from "$lib/utils/SquareCellGridCoords";
-import { DIRECTION } from "$lib/utils/directions";
-import type { TOOLID } from "../Tools";
-import { parseCell, parseDirection, parseDirections, parseValue } from "../utils";
-import type { ConstraintI } from "./ConstraintType";
+import type { GridCoordI } from '$lib/utils/SquareCellGridCoords';
+import { DIRECTION } from '$lib/utils/directions';
+import type { TOOLID } from '../Tools';
+import { parseCell, parseDirection, parseDirections, parseValue } from '../utils';
+import type {
+	CellArrowToolI,
+	CellMultiArrowToolI,
+	CellToolI,
+	SingleCellTool
+} from '../puzzle_schema';
 
-export interface CellToolI extends ConstraintI {
-	type: 'SIMPLE';
-	toolId: TOOLID;
-	value?: string;
-	cell: GridCoordI;
-}
-
-export interface CellArrowToolI extends ConstraintI {
-	type: 'ARROW';
-	toolId: TOOLID;
-	value?: string;
-	cell: GridCoordI;
-	direction: DIRECTION;
-}
-
-export interface CellMultiArrowToolI extends ConstraintI {
-	type: 'MULTIARROW';
-	toolId: TOOLID;
-	value?: string;
-	cell: GridCoordI;
-	directions: DIRECTION[];
-}
-
-export type SingleCellTool = CellToolI | CellArrowToolI | CellMultiArrowToolI;
-
-
-export function singleCellConstraint(toolId: TOOLID, coords: GridCoordI, value?: string): CellToolI {
+export function singleCellConstraint(
+	toolId: TOOLID,
+	coords: GridCoordI,
+	value?: string
+): CellToolI {
 	return {
 		type: 'SIMPLE',
 		toolId,
@@ -39,14 +22,16 @@ export function singleCellConstraint(toolId: TOOLID, coords: GridCoordI, value?:
 	};
 }
 
-export function singleCellConstraintFromJson(toolId: TOOLID, data: Record<string, unknown>): SingleCellTool {
-	const cell = parseCell(data)
-	const value = parseValue(data)
+export function singleCellConstraintFromJson(
+	toolId: TOOLID,
+	data: Record<string, unknown>
+): SingleCellTool {
+	const cell = parseCell(data);
+	const value = parseValue(data);
 
-	const constraint = singleCellConstraint(toolId, cell, value)
-	return constraint
+	const constraint = singleCellConstraint(toolId, cell, value);
+	return constraint;
 }
-	
 
 export function singleCellArrowConstraint(
 	toolId: TOOLID,
@@ -93,6 +78,6 @@ export function singleCellMultiArrowConstraintFromJson(
 	const directions = parseDirections(data);
 
 	const constraint = singleCellMultiArrowConstraint(toolId, cell, DIRECTION.N);
-	constraint.directions = directions
+	constraint.directions = directions;
 	return constraint;
 }

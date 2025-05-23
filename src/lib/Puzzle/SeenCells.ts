@@ -1,6 +1,6 @@
 import { type GridCoordI } from '$lib/utils/SquareCellGridCoords';
-import type { CageToolI } from './Constraints/CageConstraints';
-import type { LineToolI } from './Constraints/LineConstraints';
+import type { CageToolI } from "./puzzle_schema";
+import type { LineToolI } from "./puzzle_schema";
 import type { ElementsDict } from './Constraints/ElementsDict';
 import type { ConstraintsElement } from './puzzle_schema';
 import type { Cell } from './Grid/Cell';

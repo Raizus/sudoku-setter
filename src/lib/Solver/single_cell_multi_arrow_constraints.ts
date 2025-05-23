@@ -1,5 +1,5 @@
 import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
-import type { CellMultiArrowToolI } from '../Puzzle/Constraints/SingleCellConstraints';
+import type { CellMultiArrowToolI } from "../Puzzle/puzzle_schema";
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS } from '../Puzzle/Tools';

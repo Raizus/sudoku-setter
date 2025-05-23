@@ -23,9 +23,8 @@ import {
 	updateConstraintValue
 } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import {
-	singleCellConstraint,
-	type CellToolI
-} from '$lib/Puzzle/Constraints/SingleCellConstraints';
+	singleCellConstraint} from '$lib/Puzzle/Constraints/SingleCellConstraints';
+import { type CellToolI } from "$src/lib/Puzzle/puzzle_schema";
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import { simpleCellToolPreviewStore, type ToolPreview } from '$stores/ElementsStore';
 import { toolModeStore } from '$stores/InputHandlerStore';

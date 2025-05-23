@@ -23,9 +23,8 @@ import {
 } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import {
-	centerCornerOrEdgeConstraint,
-	type CenterCornerOrEdgeToolI
-} from '$src/lib/Puzzle/Constraints/CenterCornerOrEdgeConstraints';
+	centerCornerOrEdgeConstraint} from '$src/lib/Puzzle/Constraints/CenterCornerOrEdgeConstraints';
+import { type CenterCornerOrEdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
 import type { CenterCornerOrEdgeToolInputOptions } from './types';
 import { toolModeStore } from '$stores/InputHandlerStore';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';

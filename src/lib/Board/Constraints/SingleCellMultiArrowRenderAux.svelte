@@ -5,7 +5,7 @@
 	import {
 		getSingleCellMultiArrowPath,
 	} from '$lib/utils/SquareCellGridRenderUtils';
-	import type { CellMultiArrowToolI } from '$lib/Puzzle/Constraints/SingleCellConstraints';
+		import type { CellMultiArrowToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import { currentConstraintStore } from '$stores/BoardStore';
 
 	export let tool: CellMultiArrowToolI;

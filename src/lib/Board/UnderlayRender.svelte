@@ -8,12 +8,12 @@
 		isOutsideDirectionTool,
 		isSingleCellTool
 	} from '../Puzzle/Tools';
-	import { type SingleCellTool } from '../Puzzle/Constraints/SingleCellConstraints';
-	import { type LineToolI } from '../Puzzle/Constraints/LineConstraints';
-	import { type ArrowToolI } from '../Puzzle/Constraints/ArrowConstraints';
-	import { type CageToolI } from '../Puzzle/Constraints/CageConstraints';
-	import { type CloneToolI } from '../Puzzle/Constraints/CloneConstraints';
-	import { type OutsideDirectionToolI } from '../Puzzle/Constraints/OutsideDirectionConstraints';
+		import { type SingleCellTool } from "../Puzzle/puzzle_schema";
+		import { type LineToolI } from "../Puzzle/puzzle_schema";
+		import { type ArrowToolI } from '../Puzzle/puzzle_schema';
+		import { type CageToolI } from "../Puzzle/puzzle_schema";
+		import { type CloneToolI } from "../Puzzle/puzzle_schema";
+		import { type OutsideDirectionToolI } from "../Puzzle/puzzle_schema";
 	import SingleCellToolRender from './Constraints/SingleCellToolRender.svelte';
 	import LineToolRender from './Constraints/LineToolRender.svelte';
 	import ArrowToolRender from './Constraints/ArrowToolRender.svelte';

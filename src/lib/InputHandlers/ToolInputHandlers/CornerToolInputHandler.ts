@@ -16,10 +16,10 @@ import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import type { GridShape } from '$lib/Types/types';
 import {
 	findCornerConstraint,
-	updateConstraintValue,
-	type ConstraintType
-} from '$src/lib/Puzzle/Constraints/ElementsDict';
-import { cornerConstraint, type CornerToolI } from '$lib/Puzzle/Constraints/CornerConstraints';
+	updateConstraintValue} from '$src/lib/Puzzle/Constraints/ElementsDict';
+import { type ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
+import { cornerConstraint } from '$lib/Puzzle/Constraints/CornerConstraints';
+import { type CornerToolI } from "$src/lib/Puzzle/puzzle_schema";
 import { cornerCoordToAdjCellCoords, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import {
 	CellCornerPointerHandler,

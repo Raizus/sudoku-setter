@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ValuedCageRender from './ValuedCageRender.svelte';
 	import { defaultCageShape } from '$lib/Puzzle/Shape/Shape';
-	import type { CageToolI } from '$lib/Puzzle/Constraints/CageConstraints';
+		import type { CageToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { currentConstraintStore } from '$stores/BoardStore';

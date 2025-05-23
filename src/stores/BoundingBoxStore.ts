@@ -2,7 +2,7 @@ import { derived, get, writable } from 'svelte/store';
 import { elementsDictStore, gridStore, toolStore } from './BoardStore';
 import type { ElementsDict } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { isOutsideDirectionTool } from '$src/lib/Puzzle/Tools';
-import type { OutsideDirectionToolI } from '$src/lib/Puzzle/Constraints/OutsideDirectionConstraints';
+import type { OutsideDirectionToolI } from "$src/lib/Puzzle/puzzle_schema";
 import { isCellOnGrid } from '$src/lib/utils/SquareCellGridCoords';
 import type { GridShape, Rectangle } from '$src/lib/Types/types';
 import type { PointerEventInfo, WheelEventInfo } from '$input/PointerHandlers/WheelHandler';

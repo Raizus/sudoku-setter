@@ -1,12 +1,6 @@
-import { OTHER_CONSTRAINTS, TOOLS } from '../Tools';
+import { TOOLS } from '../Tools';
 import { parseStringParameter, parseValue } from '../utils';
-import type { ConstraintI } from './ConstraintType';
-
-export interface VariableConstraintI extends ConstraintI {
-	toolId: OTHER_CONSTRAINTS.VARIABLE_CONSTRAINT;
-	name: string;
-	value: string;
-}
+import type { VariableConstraintI } from "../puzzle_schema";
 
 export function variableConstraint(name: string = '', value: string = ''): VariableConstraintI {
 	return {

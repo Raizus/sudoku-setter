@@ -2,7 +2,7 @@
 	import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';
 	import { SHAPE_TYPES, defaultEdgeCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
-	import type { EdgeToolI } from '$lib/Puzzle/Constraints/EdgeConstraints';
+		import type { EdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import CircleRender from '$src/lib/Board/SvgComponents/CircleRender.svelte';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import {

@@ -11,9 +11,8 @@ import {
 } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
 import { BASIC_TOOL_MODE, type SingleCellMultiArrowToolOptions } from './types';
 import {
-	singleCellMultiArrowConstraint,
-	type CellMultiArrowToolI
-} from '$lib/Puzzle/Constraints/SingleCellConstraints';
+	singleCellMultiArrowConstraint} from '$lib/Puzzle/Constraints/SingleCellConstraints';
+import { type CellMultiArrowToolI } from "$src/lib/Puzzle/puzzle_schema";
 import { findSingleCellConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { idxToDirection, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import type { GridShape } from '$lib/Types/types';

@@ -15,9 +15,9 @@ import type { GridShape } from '$lib/Types/types';
 import {
 	cageConstraint,
 	updateCageConstraintCells,
-	type CageToolI,
 	updateCageValue
 } from '$lib/Puzzle/Constraints/CageConstraints';
+import { type CageToolI } from "$src/lib/Puzzle/puzzle_schema";
 import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { findCageConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import {

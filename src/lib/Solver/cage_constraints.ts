@@ -1,4 +1,4 @@
-import type { CageToolI } from '../Puzzle/Constraints/CageConstraints';
+import type { CageToolI } from "../Puzzle/puzzle_schema";
 import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';

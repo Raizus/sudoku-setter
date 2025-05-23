@@ -3,7 +3,7 @@
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { SHAPE_TYPES, defaultLineShape } from '$lib/Puzzle/Shape/Shape';
-	import type { CornerLineToolI } from '$src/lib/Puzzle/Constraints/CornerLineConstraints';
+		import type { CornerLineToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { Vector2D } from '$src/lib/utils/Vector2D';
 	import MazeWallRender from './MazeWallRender.svelte';
 

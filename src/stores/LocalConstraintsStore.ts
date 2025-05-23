@@ -1,6 +1,4 @@
-import {
-	type ConstraintType
-} from '$src/lib/Puzzle/Constraints/ElementsDict';
+import { type ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 import { type ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
 import {
 	ELEMENT_ACTIONS,

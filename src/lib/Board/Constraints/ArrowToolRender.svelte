@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ArrowToolI } from '$lib/Puzzle/Constraints/ArrowConstraints';
+		import type { ArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { defaultArrowShape, SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
-	import type { CornerToolI } from '$lib/Puzzle/Constraints/CornerConstraints';
+		import type { CornerToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import { SHAPE_TYPES, defaultCornerCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 

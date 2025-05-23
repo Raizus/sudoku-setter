@@ -1,5 +1,5 @@
 import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
-import type { ValuedGlobalToolI } from '../Puzzle/Constraints/ValuedGlobalConstraints';
+import type { ValuedGlobalToolI } from "../Puzzle/puzzle_schema";
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS } from '../Puzzle/Tools';
 import {
