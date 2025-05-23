@@ -57,6 +57,8 @@ export function getLineToolInputHandler(
 	pointerHandler.onDragStart = (event: CellDragTapEvent): void => {
 		const mode = get(toolModeStore);
 
+		if (!eventOnGrid(event)) return;
+
 		if (mode !== BASIC_TOOL_MODE.DELETE) {
 			id = uniqueId();
 			newConstraint = lineConstraint(tool, [], options?.defaultValue);
