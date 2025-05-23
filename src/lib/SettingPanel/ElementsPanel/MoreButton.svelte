@@ -44,10 +44,19 @@
 	// Handle clicks outside the dropdown to close it
 	function handleClickOutside(event: MouseEvent) {
 		const target = event.target;
-		if (dropdow_open && dropdownEl && target && !dropdownEl.contains(target as HTMLElement)) {
+		if (
+			dropdow_open &&
+			dropdownEl &&
+			target &&
+			!dropdownEl.contains(target as HTMLElement) &&
+			!buttonEl.contains(target as HTMLElement)
+		) {
 			event.preventDefault();
 			event.stopPropagation();
+			event.stopImmediatePropagation();
 			closeCb();
+			console.log('handleClickOutside');
+			return false;
 		}
 	}
 
@@ -67,18 +76,22 @@
 		portalContainer.style.position = 'absolute';
 		portalContainer.style.top = '0';
 		portalContainer.style.left = '0';
-		portalContainer.style.zIndex = '9999';
+		portalContainer.style.bottom = '0';
+		portalContainer.style.right = '0';
+		portalContainer.style.zIndex = '9000';
 		portalContainer.style.pointerEvents = 'none'; // Allow clicks to pass through container
 		appElement.appendChild(portalContainer);
 
 		// Add global event listeners
-		document.addEventListener('click', handleClickOutside, true);
+		document.addEventListener('click', handleClickOutside, { capture: true, passive: false });
+		document.addEventListener('pointerdown', handleClickOutside, { capture: true, passive: false });
 		window.addEventListener('resize', handleWindowEvents);
 		window.addEventListener('scroll', handleWindowEvents, true);
 
 		// Clean up on destroy
 		return () => {
-			document.removeEventListener('click', handleClickOutside, true);
+			document.removeEventListener('click', handleClickOutside, { capture: true });
+			document.addEventListener('pointerdown', handleClickOutside, { capture: true});
 			window.removeEventListener('resize', handleWindowEvents);
 			window.removeEventListener('scroll', handleWindowEvents, true);
 			if (portalContainer && portalContainer.parentNode) {
@@ -109,43 +122,51 @@
 	</div>
 
 	{#if dropdow_open}
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
+			class="popup-container"
 			bind:this={dropdownEl}
-			class="dropdown-menu"
-			style="top: {dropdownPosition.top}px; left: {dropdownPosition.left}px; min-width: {dropdownPosition.width}px;"
 		>
-			{#if enableDisableElementCb}
-				<button
-					class="dropdown-button"
-					on:click|stopPropagation={() => {
-						enableDisableElementCb();
-						closeCb();
-					}}
-				>
-					<div class="icon-wrapper">
-						{#if disabled}
-							<Visibility></Visibility>
-						{:else}
-							<VisibilityOff></VisibilityOff>
-						{/if}
-					</div>
-					{disabled ? 'Enable' : 'Disable'}
-				</button>
-			{/if}
-			{#if deleteElementCb}
-				<button
-					class="dropdown-button"
-					on:click|stopPropagation={() => {
-						deleteElementCb();
-						closeCb();
-					}}
-				>
-					<div class="icon-wrapper">
-						<Trash></Trash>
-					</div>
-					Delete
-				</button>
-			{/if}
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
+			<!-- svelte-ignore a11y_no_static_element_interactions -->
+			<div
+				class="dropdown-menu"
+				style="top: {dropdownPosition.top}px; left: {dropdownPosition.left}px; min-width: {dropdownPosition.width}px;"
+			>
+				{#if enableDisableElementCb}
+					<button
+						class="dropdown-button"
+						on:click|stopPropagation={() => {
+							enableDisableElementCb();
+							closeCb();
+						}}
+					>
+						<div class="icon-wrapper">
+							{#if disabled}
+								<Visibility></Visibility>
+							{:else}
+								<VisibilityOff></VisibilityOff>
+							{/if}
+						</div>
+						{disabled ? 'Enable' : 'Disable'}
+					</button>
+				{/if}
+				{#if deleteElementCb}
+					<button
+						class="dropdown-button"
+						on:click|stopPropagation={() => {
+							deleteElementCb();
+							closeCb();
+						}}
+					>
+						<div class="icon-wrapper">
+							<Trash></Trash>
+						</div>
+						Delete
+					</button>
+				{/if}
+			</div>
 		</div>
 	{/if}
 {/if}
@@ -158,6 +179,15 @@
 
 	.header-button {
 		padding: 0 0.5em;
+	}
+
+	.popup-container {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 9999;
 	}
 
 	.dropdown-menu {
