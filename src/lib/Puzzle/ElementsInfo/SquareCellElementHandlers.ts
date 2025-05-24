@@ -22,7 +22,7 @@ import {
 	yinYangAntithesisKillerCageInfo,
 	yinYangBreakevenKillerCageInfo,
 	vaultedCageInfo
-} from './CageToolsElementsInfo';
+} from './CageElementsInfo/CageToolsElementsInfo';
 import {
 	centerPMInfo,
 	cornerPMInfo,

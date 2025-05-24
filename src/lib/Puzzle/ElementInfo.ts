@@ -1,4 +1,5 @@
 import type { ToolHandlerOptions } from '$input/ToolInputHandlers/types';
+import type { ElementF } from '../Solver/solver_utils';
 import type { EditableShapeI } from './Shape/Shape';
 import type { TOOLID } from './Tools';
 
@@ -34,4 +35,6 @@ export interface AbstractElementInfo {
 
 export interface SquareCellElementInfo extends AbstractElementInfo {
 	inputOptions?: ToolHandlerOptions;
+
+	solver_func?: ElementF;
 }

@@ -59,7 +59,7 @@ export function createMinizincModel(puzzle: PuzzleAuxI, randomize_search: boolea
 	model.add(sudokuConstraints(puzzle));
 	model.add(hexedSudokuConstraint(puzzle));
 
-	model.add(elementConstraints(puzzle, model));
+	model.add(elementConstraints(model));
 
 	if (randomize_search) {
 		model.add(`\nsolve :: int_search(array1d(board), first_fail, indomain_random) satisfy;`);

@@ -3,6 +3,16 @@ import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { arrowUsage } from '../ToolUsage';
 import { HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
+import {
+	cellsToGridVarsStr,
+	cellsToVarsName,
+	simpleElementFunction,
+	VAR_2D_NAMES,
+	type PuzzleModel
+} from '$src/lib/Solver/solver_utils';
+import type { ArrowToolI, ConstraintsElement } from '../puzzle_schema';
+import type { Grid } from '../Grid/Grid';
+import type { GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
 
 const DEFAULT_ARROW_CATEGORIES = [
 	TOOL_CATEGORIES.ARROW_CONSTRAINT,
@@ -10,6 +20,53 @@ const DEFAULT_ARROW_CATEGORIES = [
 	TOOL_CATEGORIES.ARROW_TOOL,
 	TOOL_CATEGORIES.LOCAL_ELEMENT
 ];
+
+function getArrowPillVars(grid: Grid, constraint: ArrowToolI) {
+	const cells_coords = constraint.cells;
+	const cells = cells_coords
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+	const vars = cellsToVarsName(cells);
+	return vars;
+}
+
+function lineToVarsStr(grid: Grid, line: GridCoordI[]) {
+	const line_cells = line.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell);
+	const line_vars = cellsToVarsName(line_cells.slice(1));
+	const line_vars_str = `[${line_vars.join(',')}]`;
+	return line_vars_str;
+}
+
+function simpleArrowConstraint(grid: Grid, constraint: ArrowToolI, predicate: string) {
+	let out_str = '';
+	const bulb_vars = getArrowPillVars(grid, constraint);
+	const bulb_str = '[' + bulb_vars.join(',') + ']';
+
+	for (const line of constraint.lines) {
+		const line_vars_str = lineToVarsStr(grid, line);
+		out_str += `constraint ${predicate}(${bulb_str}, ${line_vars_str});\n`;
+	}
+
+	return out_str;
+}
+
+function simpleArrowElement(grid: Grid, element: ConstraintsElement, predicate: string) {
+	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
+	for (const constraint of Object.values(constraints)) {
+		const constraint_str = simpleArrowConstraint(grid, constraint as ArrowToolI, predicate);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
+
+function arrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	const out_str = simpleArrowElement(grid, element, 'arrow_p');
+	return out_str;
+}
 
 export const arrowInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW },
@@ -33,8 +90,36 @@ export const arrowInfo: SquareCellElementInfo = {
 		usage: arrowUsage(),
 		tags: [],
 		categories: DEFAULT_ARROW_CATEGORIES
-	}
+	},
+
+	solver_func: arrowElement
 };
+
+function averageArrowConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: ArrowToolI
+) {
+	let out_str = '';
+	const vars = getArrowPillVars(grid, constraint);
+
+	if (vars.length === 1) {
+		const circ_var = vars[0];
+		const lines = constraint.lines;
+		for (const line of lines) {
+			const line_vars_str = lineToVarsStr(grid, line);
+			const constraint_str = `constraint average_arrow_p(${line_vars_str}, ${circ_var});\n`;
+			out_str += constraint_str;
+		}
+	}
+	return out_str;
+}
+
+function averageArrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, averageArrowConstraint);
+	return out_str;
+}
 
 export const averageArrowInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW },
@@ -57,8 +142,16 @@ export const averageArrowInfo: SquareCellElementInfo = {
 		usage: arrowUsage(),
 		tags: [],
 		categories: DEFAULT_ARROW_CATEGORIES
-	}
+	},
+
+	solver_func: averageArrowElement
 };
+
+function bulbousArrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	const out_str = simpleArrowElement(grid, element, 'bulbous_arrow_p');
+	return out_str;
+}
 
 export const bulbousArrowInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW, allowSelfIntersection: true },
@@ -84,7 +177,9 @@ export const bulbousArrowInfo: SquareCellElementInfo = {
 		usage: arrowUsage(),
 		tags: [],
 		categories: DEFAULT_ARROW_CATEGORIES
-	}
+	},
+
+	solver_func: bulbousArrowElement
 };
 
 export const squareRootArrowInfo: SquareCellElementInfo = {
@@ -112,6 +207,38 @@ export const squareRootArrowInfo: SquareCellElementInfo = {
 	}
 };
 
+function chaosConstructionArrowConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: ArrowToolI
+) {
+	let out_str = '';
+
+	const circle_cells = constraint.cells
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+	const circle_region_vars = cellsToGridVarsStr(circle_cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const lines_cells = constraint.lines.map((line) =>
+		line.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
+	);
+
+	for (const line of lines_cells) {
+		if (line.length <= 1) continue;
+		const arrow_vars = cellsToGridVarsStr(line.slice(1), VAR_2D_NAMES.UNKNOWN_REGIONS);
+		out_str += `constraint chaos_construction_arrow_p(${circle_region_vars}, ${arrow_vars});\n`;
+	}
+
+	out_str += simpleArrowConstraint(grid, constraint, 'arrow_p');
+
+	return out_str;
+}
+
+function chaosConstructionArrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, chaosConstructionArrowConstraint);
+	return out_str;
+}
+
 export const chaosConstructionArrowInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW },
 
@@ -134,5 +261,7 @@ export const chaosConstructionArrowInfo: SquareCellElementInfo = {
 		usage: arrowUsage(),
 		tags: [],
 		categories: DEFAULT_ARROW_CATEGORIES
-	}
+	},
+
+	solver_func: chaosConstructionArrowElement
 };

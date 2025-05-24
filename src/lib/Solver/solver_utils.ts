@@ -563,6 +563,7 @@ export function cellsFromCoords(grid: Grid, coords: GridCoordI[]): Cell[] {
 	const cells = coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell);
 	return cells;
 }
+
 export function* adjCellPairGen(grid: Grid) {
 	for (const cell of grid.getAllCells()) {
 		const adj_cells = grid
@@ -573,6 +574,7 @@ export function* adjCellPairGen(grid: Grid) {
 		}
 	}
 }
+
 export function findSingleCellConstraintMatch<T extends SingleCellTool>(
 	constraints: Record<string, T>,
 	cell: Cell

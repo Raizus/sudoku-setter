@@ -1,7 +1,7 @@
 import { SHAPE_TYPES } from '../Shape/Shape';
 import { TOOLS, TOOL_CATEGORIES } from '../Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
-import { defaultCageValueUpdater, validateCageValue } from './CageToolsElementsInfo';
+import { defaultCageValueUpdater, validateCageValue } from './CageElementsInfo/CageToolsElementsInfo';
 import { defaultEdgeValueUpdater, validateEdgeValue } from './EdgeToolsElementsInfo';
 import { defaultCornerValueUpdater, validateCornerValue } from './CornerToolsElementsInfo';
 import { defaultOutsideDirectionValueUpdater } from './OutsideCornerToolsElementsInfo';
