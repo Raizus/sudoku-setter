@@ -7,9 +7,7 @@ import {
 import { SHAPE_TYPES, type EditableShapeI } from '../Shape/Shape';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import {
-	CornerOrEdge,
 	HANDLER_TOOL_TYPE,
-	type SingleCellArrowToolOptions,
 	type SingleCellToolOptions
 } from '$input/ToolInputHandlers/types';
 
@@ -24,13 +22,6 @@ const DEFAULT_SINGLE_CELL_COLOR_CATEGORIES = [
 	TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
 	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
 	TOOL_CATEGORIES.SINGLE_CELL_COLOR_TOOL,
-	TOOL_CATEGORIES.LOCAL_ELEMENT
-];
-
-const DEFAULT_SINGLE_CELL_ARROW_CATEGORIES = [
-	TOOL_CATEGORIES.SINGLE_CELL_ARROW_TOOL,
-	TOOL_CATEGORIES.SINGLE_CELL_CONSTRAINT,
-	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
 	TOOL_CATEGORIES.LOCAL_ELEMENT
 ];
 
@@ -83,11 +74,6 @@ const DEFAULT_VALUED_SINGLE_CELL_OPTIONS: SingleCellToolOptions = {
 	valueUpdater: (oldValue: string | undefined, key: string) =>
 		defaultSingleCellValueUpdater(oldValue, key, validateSingleCellValue),
 	defaultValue: ''
-};
-
-const DEFAULT_SINGLE_CELL_ARROW_OPTIONS: SingleCellArrowToolOptions = {
-	type: HANDLER_TOOL_TYPE.SINGLE_CELL_ARROW,
-	cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
 };
 
 export const oddInfo: SquareCellElementInfo = {
@@ -902,44 +888,6 @@ export const sashiganeBendRegionCountInfo: SquareCellElementInfo = {
 	}
 };
 
-export const sashiganeArrowPointsToBendInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
-
-	toolId: TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND,
-
-	shape: {
-		type: SHAPE_TYPES.CELL_ARROW,
-		strokeWidth: { editable: false, value: 0.05 },
-		stroke: { editable: true, value: 'gray' }
-	},
-
-	meta: {
-		description:
-			'An arrow in a cell means that cell is an end of a region, the arrow points to the bend, and also the value in the cell counts the number of cells in that leg of the region, including the bend cell (this rule does not apply to end-cells without arrows).',
-		tags: [],
-		categories: DEFAULT_SINGLE_CELL_ARROW_CATEGORIES
-	}
-};
-
-export const thermoSightlineLoopArrowInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
-
-	toolId: TOOLS.THERMO_SIGHTLINE_LOOP_ARROW,
-
-	shape: {
-		type: SHAPE_TYPES.CELL_ARROW,
-		strokeWidth: { editable: false, value: 0.05 },
-		stroke: { editable: true, value: 'gray' }
-	},
-
-	meta: {
-		description:
-			"Each cell with an arrow (called an 'arrow cell') lies on the loop. The digit in an arrow cell is the number of visible loop cells in the indicated direction, where non-loop cells obstruct vision. (The arrow cell is not included in this count). Additionally, digits increase along loop cells seen by an arrow, starting with the digit in the arrow cell.",
-		tags: [],
-		categories: DEFAULT_SINGLE_CELL_ARROW_CATEGORIES
-	}
-};
-
 export const sashiganeRegionSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
@@ -1344,25 +1292,6 @@ export const shikakuRegionSumInfo: SquareCellElementInfo = {
 			'Each shikaku region contains exactly one clue, and each clue indicates the sum of the digits in its shikaku region.',
 		tags: [],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
-	}
-};
-
-export const internalLoopSkyscrapersInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
-
-	toolId: TOOLS.INTERNAL_LOOP_SKYSCRAPERS,
-
-	shape: {
-		type: SHAPE_TYPES.CELL_ARROW,
-		strokeWidth: { editable: false, value: 0.05 },
-		stroke: { editable: true, value: 'gray' }
-	},
-
-	meta: {
-		description:
-			'Each cell on the loop represents a skyscraper with a height equal to its value (non-loop cells are not skyscrapers). A digit in a clued cell gives the number of skyscrapers visible in the indicated direction (not including the cell itself), where skyscrapers block the view of skyscrapers with the same or lower height behind them. The clued cell may or may not be on the loop.',
-		tags: [],
-		categories: DEFAULT_SINGLE_CELL_ARROW_CATEGORIES
 	}
 };
 

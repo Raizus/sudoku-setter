@@ -8,6 +8,10 @@ import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { cornerUsage, quadrupleUsage } from '../ToolUsage';
 import { HANDLER_TOOL_TYPE, type CornerToolOptions } from '$input/ToolInputHandlers/types';
+import { cellsFromCoords, cellsToVarsName, type PuzzleModel } from '$src/lib/Solver/solver_utils';
+import type { ConstraintsElement, CornerToolI } from '../puzzle_schema';
+import type { Grid } from '../Grid/Grid';
+import { parseVarList } from '$src/lib/Solver/value_parsing';
 
 const DEFAULT_UNTYPABLE_CORNER_CATEGORIES = [
 	TOOL_CATEGORIES.CORNER_CONSTRAINT,
@@ -58,6 +62,121 @@ const DEFAULT_CORNER_OPTIONS: CornerToolOptions = {
 		defaultCornerValueUpdater(oldValue, key, validateCornerValue)
 };
 
+function getCornerVars(grid: Grid, constraint: CornerToolI) {
+	const cells = cellsFromCoords(grid, constraint.cells);
+	const vars = cellsToVarsName(cells);
+	return vars;
+}
+
+function simpleCornerConstraint(grid: Grid, constraint: CornerToolI, predicate: string) {
+	const vars = getCornerVars(grid, constraint);
+	const vars_str = `[${vars.join(',')}]`;
+
+	const constraint_str = `constraint ${predicate}(${vars_str});\n`;
+	return constraint_str;
+}
+
+function simpleCornerElement(grid: Grid, element: ConstraintsElement, predicate: string) {
+	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
+	for (const constraint of Object.values(constraints)) {
+		const constraint_str = simpleCornerConstraint(grid, constraint as CornerToolI, predicate);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
+
+function valuedCornerConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CornerToolI,
+	predicate: string,
+	default_value: string = ''
+) {
+	const vars = getCornerVars(grid, constraint);
+	const vars_str = `[${vars.join(',')}]`;
+
+	let value = constraint.value;
+	if (!value) value = default_value;
+
+	if (value) {
+		const val = parseInt(value);
+		const constraint_str = `constraint ${predicate}(${vars_str}, ${val});\n`;
+		return constraint_str;
+	}
+	return '';
+}
+
+function valuedCornerElement(
+	model: PuzzleModel,
+	grid: Grid,
+	element: ConstraintsElement,
+	predicate: string,
+	default_value: string = ''
+) {
+	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
+	for (const [c_id, constraint] of Object.entries(constraints)) {
+		const constraint_str = valuedCornerConstraint(
+			model,
+			grid,
+			c_id,
+			constraint as CornerToolI,
+			predicate,
+			default_value
+		);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
+
+function quadrupleConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CornerToolI
+) {
+	const vars = getCornerVars(grid, constraint);
+	const vars_str = `[${vars.join(',')}]`;
+
+	const value = constraint.value;
+	if (!value) return '';
+	const parsed_values = parseVarList(value);
+	if (!parsed_values) return '';
+
+	let out_str = '';
+	for (const parsed_var of parsed_values) {
+		const val = parseInt(parsed_var);
+		if (Number.isNaN(val) && !model.hasVariable(parsed_var)) {
+			out_str += `var int: ${parsed_var};\n`;
+			model.addVariable(parsed_var);
+		}
+	}
+
+	const values_str = '[' + parsed_values.join(',') + ']';
+	out_str += `constraint quadruple_p(${vars_str}, ${values_str});\n`;
+	return out_str;
+}
+
+function quadrupleElement(model: PuzzleModel, element: ConstraintsElement) {
+	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
+	const grid = model.puzzle.grid;
+	for (const [c_id, constraint] of Object.entries(constraints)) {
+		const constraint_str = quadrupleConstraint(model, grid, c_id, constraint as CornerToolI);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
+
+
 export const quadrupleInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.CORNER,
@@ -81,8 +200,16 @@ export const quadrupleInfo: SquareCellElementInfo = {
 		tags: [],
 		usage: quadrupleUsage(),
 		categories: DEFAULT_TYPABLE_CORNER_CATEGORIES
-	}
+	},
+
+	solver_func: quadrupleElement
 };
+
+function cornerSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	const out_str = valuedCornerElement(model, grid, element, 'corner_sum_p');
+	return out_str;
+}
 
 export const cornerSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CORNER_OPTIONS,
@@ -103,8 +230,16 @@ export const cornerSumInfo: SquareCellElementInfo = {
 		tags: [],
 		usage: cornerUsage(),
 		categories: DEFAULT_TYPABLE_CORNER_CATEGORIES
-	}
+	},
+
+	solver_func: cornerSumElement
 };
+
+function cornerSumOfThreeEqualsTheOtherElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	const out_str = simpleCornerElement(grid, element, 'corner_sum_of_three_equals_the_other_p');
+	return out_str;
+}
 
 export const cornerSumOfThreeEqualsTheOtherInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -128,8 +263,16 @@ export const cornerSumOfThreeEqualsTheOtherInfo: SquareCellElementInfo = {
 		tags: [],
 		usage: cornerUsage(),
 		categories: DEFAULT_UNTYPABLE_CORNER_CATEGORIES
-	}
+	},
+
+	solver_func: cornerSumOfThreeEqualsTheOtherElement
 };
+
+function cornerEvenCountElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	const out_str = valuedCornerElement(model, grid, element, 'corner_even_count_p');
+	return out_str;
+}
 
 export const cornerEvenCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CORNER_OPTIONS,
@@ -150,7 +293,9 @@ export const cornerEvenCountInfo: SquareCellElementInfo = {
 		tags: [],
 		usage: cornerUsage(),
 		categories: DEFAULT_UNTYPABLE_CORNER_CATEGORIES
-	}
+	},
+
+	solver_func: cornerEvenCountElement
 };
 
 export const cornerCellsBelongToExacltyThreeRegionsInfo: SquareCellElementInfo = {
@@ -175,6 +320,12 @@ export const cornerCellsBelongToExacltyThreeRegionsInfo: SquareCellElementInfo =
 	}
 };
 
+function productSquareElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	const out_str = simpleCornerElement(grid, element, 'product_square_p');
+	return out_str;
+}
+
 export const productSquareInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.CORNER,
@@ -198,8 +349,16 @@ export const productSquareInfo: SquareCellElementInfo = {
 		tags: [],
 		usage: cornerUsage(),
 		categories: DEFAULT_UNTYPABLE_CORNER_CATEGORIES
-	}
+	},
+
+	solver_func: productSquareElement
 };
+
+function equalDiagonalDifferencesElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	const out_str = simpleCornerElement(grid, element, 'equal_diagonal_differences_p');
+	return out_str;
+}
 
 export const equalDiagonalDifferencesInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -223,5 +382,7 @@ export const equalDiagonalDifferencesInfo: SquareCellElementInfo = {
 		tags: [],
 		usage: cornerUsage(),
 		categories: DEFAULT_UNTYPABLE_CORNER_CATEGORIES
-	}
+	},
+
+	solver_func: equalDiagonalDifferencesElement
 };

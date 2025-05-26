@@ -103,10 +103,8 @@ import {
 } from './GlobalConstraintsElementsInfo';
 import {
 	chaosConstructionSuguruInfo,
-	connectFourInfo,
 	directedPathTeleportRenbanSegmentsInfo,
 	directedPathTeleportSegmentsSumInfo,
-	galaxiesInfo,
 	goldilocksZoneInfo,
 	litsBlackAndWhiteStarBattleInfo,
 	mazeDirectedPathInfo,
@@ -123,17 +121,19 @@ import {
 	starBattleInfo,
 	oneStarPerGalaxyInfo
 } from './UndeterminedRegionsElementsInfo';
+import { connectFourInfo } from './UndeterminedRegionsInfo/ConnectFourElementsInfo';
+import { galaxiesInfo } from './UndeterminedRegionsInfo/GalaxyElementsInfo';
 import {
 	yinYangFillominoParityInfo,
 	twilightCaveFillominoRegionShadingInfo,
-	caveInfo,
-	cellCenterLoopNoTouchingInfo,
 	sashiganeRegionsInfo,
 	twoContiguousRegionsInfo,
 	nurimisakiInfo,
-	yinYangInfo,
 	chaosConstructionInfo
 } from './UndeterminedRegionsElementsInfo';
+import { yinYangInfo } from './UndeterminedRegionsInfo/YinYangElementsInfo';
+import { cellCenterLoopNoTouchingInfo } from './UndeterminedRegionsInfo/LoopElementsInfo';
+import { caveInfo } from './UndeterminedRegionsInfo/CaveElementsInfo';
 import {
 	adjacentMultiplesLineInfo,
 	arithmeticSequenceLineInfo,
@@ -258,11 +258,9 @@ import {
 	orthogonalSumInfo,
 	radarInfo,
 	sandwichRowColCountInfo,
-	sashiganeArrowPointsToBendInfo,
 	sashiganeBendRegionCountInfo,
 	sashiganeRegionSumInfo,
 	seenRegionBordersCountInfo,
-	thermoSightlineLoopArrowInfo,
 	twilightCaveFillominoClueInfo,
 	twoContiguousRegionsRowColumnOppositeSetCountInfo,
 	chaosConstructionChessSumsInfo,
@@ -292,12 +290,14 @@ import {
 	shikakuRegionSumInfo,
 	yinYangLabeledShadeCellInfo,
 	caveShadedRegionSizeUnshadedSeenOrthogonallyClueInfo,
-	internalLoopSkyscrapersInfo,
 	BYOKCageSizeInfo,
 	BYOKNotCageCellInfo,
 	yinYangShadedCellInfo,
 	chaosConstructionNeighbourCellsSameRegionCountInfo
 } from './SingleCellElementsInfo';
+import { internalLoopSkyscrapersInfo } from './SingleCellArrowElementsInfo';
+import { thermoSightlineLoopArrowInfo } from './SingleCellArrowElementsInfo';
+import { sashiganeArrowPointsToBendInfo } from './SingleCellArrowElementsInfo';
 import { customFogClearingInfo, fogLighsInfo } from './FogElementsInfo';
 import {
 	chaosCountSeenCellsInTheSameRegionArrowsInfo,

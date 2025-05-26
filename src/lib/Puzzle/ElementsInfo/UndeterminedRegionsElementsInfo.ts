@@ -41,35 +41,6 @@ export const chaosConstructionSuguruInfo: AbstractElementInfo = {
 	}
 };
 
-export const yinYangInfo: AbstractElementInfo = {
-	toolId: TOOLS.YIN_YANG,
-
-	negative_constraints: [
-		{
-			toolId: TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED,
-			description:
-				'In the completed grid, cells containing numbers exactly one greater than an immediate neighbour (diagonal or orthogonal) within their box are shaded (and otherwise unshaded).'
-		},
-		{
-			toolId: TOOLS.YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS,
-			description:
-				'The yin yang shaded cells act as a German Whispers line: if two orthogonally connected cells are both shaded, then the digits in those cells must have a difference of at least 5.'
-		},
-		{
-			toolId: TOOLS.YIN_YANG_IDENTICAL_DIGITS_DIAGONALLY_BELONG_TO_THE_SAME_REGION,
-			description:
-				'Identical digits which see each other by a bishops move (diagonally) must be the same color.'
-		}
-	],
-
-	meta: {
-		description:
-			'Shade some cells in the grid such that all shaded cells are orthogonally connected and all unshaded cells are orthogonally connected, and no 2x2 area is fully shaded or fully unshaded.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
 export const nurimisakiInfo: AbstractElementInfo = {
 	toolId: TOOLS.NURIMISAKI,
 
@@ -178,44 +149,6 @@ export const goldilocksZoneInfo: AbstractElementInfo = {
 	}
 };
 
-export const cellCenterLoopNoTouchingInfo: AbstractElementInfo = {
-	toolId: TOOLS.CELL_CENTER_LOOP_NO_TOUCHING,
-
-	negative_constraints: [
-		{
-			toolId: TOOLS.CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY,
-			description:
-				'Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself orthogonally, but can touch itself diagonally.'
-		},
-		{
-			toolId: TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES,
-			description:
-				'For each pair of adjacent cells along the loop, the larger digit is an integer multiple of the smaller digit.'
-		},
-		{
-			toolId: TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS,
-			description: 'Adjacent cells along a loop differ by 5 or more.'
-		},
-		{
-			toolId: TOOLS.NOT_LOOP_SIZED_REGIONS,
-			description:
-				'Non-loop cells form several orthogonally connected groups. Such a group of size N contains exactly the digits from 1 to N.'
-		},
-		{
-			toolId: TOOLS.MODULAR_LOOP,
-			description:
-				'Along the loop, any three consecutive cells must contain numbers congruent to 0 mod 3, 1 mod 3, and 2 mod 3. (In other words, one of the numbers is from the set {3, 6, 9, 12, …}, one is from {1, 4, 7, 10, …}, and one from {2, 5, 8, 11, …}.'
-		}
-	],
-
-	meta: {
-		description:
-			'Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself orthogonally.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
 export const mazeDirectedPathInfo: AbstractElementInfo = {
 	toolId: TOOLS.MAZE_DIRECTED_PATH,
 
@@ -282,57 +215,6 @@ export const directedPathTeleportRenbanSegmentsInfo: AbstractElementInfo = {
 	}
 };
 
-export const caveInfo: AbstractElementInfo = {
-	toolId: TOOLS.CAVE,
-
-	negative_constraints: [
-		{
-			toolId: TOOLS.CAVE_2X2_NOT_FULLY_SHADED_OR_UNSHADED,
-			description:
-				'No 2x2 cave region may be completely filled with cave cells or completely filled with wall cells.'
-		},
-		{
-			toolId: TOOLS.CAVE_WALLS_ARE_EVEN,
-			description: 'Cave walls must contain even digits.'
-		},
-		{
-			toolId: TOOLS.CAVE_CELLS_ARE_ODD,
-			description: 'Cave cells must contain odd digits.'
-		},
-		{
-			toolId: TOOLS.ONE_DIGIT_DOES_NOT_APPEAR_IN_THE_CAVE,
-			description: 'There is exactly one digit that does not appear anywhere in the cave.'
-		},
-		{
-			toolId: TOOLS.RENBAN_CAVES,
-			description:
-				'Every set of orthogonally connected unshaded cells within a 3x3 Sudoku region acts as a Renban line: that is, those cells must contain a nonrepeating set of consecutive digits in any order. Note that a 3x3 region may have more than one such set of cells. Also note that such a set may consist of just one cell.'
-		},
-		{
-			toolId: TOOLS.CAVE_LITS,
-			description:
-				"The cave and each wall section is a separate region for the purposes of a 'LITS puzzle'. In a LITS puzzle, solvers must place one tetromino into each region. No two tetrominoes of the same shape may share an edge - reflections/rotations count as the same shape. All tetrominoes must form a single orthogonally connected area. No 2x2 area of the grid can be completely covered in tetrominoes."
-		},
-		{
-			toolId: TOOLS.CAVE_WALL_SUGURU,
-			description:
-				'Each orthogonally connected group of shaded (wall) cells contains the digits 1-N (where N is the size of the group). Suguru digits may not repeat in a row, column, or shaded group.'
-		},
-		{
-			toolId: TOOLS.CAVE_CELLS_FILLOMINO,
-			description:
-				'Divide unshaded cells into polyominoes and fill each cell with a digit equal to the size of its polyomino. Polyominoes of the same size may not share an edge.'
-		}
-	],
-
-	meta: {
-		description:
-			'Shade some cells in the grid such that all unshaded cells are orthogonally connected, and all shaded cells are orthogonally connected by other shaded cells to an edge of the grid.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
 export const twilightCaveFillominoRegionShadingInfo: AbstractElementInfo = {
 	toolId: TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING,
 
@@ -349,42 +231,6 @@ export const yinYangFillominoParityInfo: AbstractElementInfo = {
 
 	meta: {
 		description: 'All odd polyominoes are shaded, while all even polyominoes are unshaded.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
-export const galaxiesInfo: AbstractElementInfo = {
-	toolId: TOOLS.GALAXIES,
-
-	negative_constraints: [
-		{
-			toolId: TOOLS.EVERY_CELL_BELONGS_TO_A_GALAXY,
-			description: 'Every cell in the grid belongs to a galaxy.'
-		},
-		{
-			toolId: TOOLS.DIGITS_DO_NOT_REPEAT_IN_A_GALAXY,
-			description: 'Digits do not repeat in each galaxy.'
-		},
-		{
-			toolId: TOOLS.GALAXY_2X2_DOES_NOT_BELONG_TO_ONE_GALAXY,
-			description: 'No 2x2 area may belong entirely to one galaxy.'
-		},
-		{
-			toolId: TOOLS.TWO_SYMMETRIC_GALAXIES,
-			description:
-				"Divide the grid into two galaxies. Each galaxy must consist of a region of orthogonally connected cells, and must have 180 degree rotational symmetry. (The central point around which a galaxy is symmetrical doesn't need to actually belong to that galaxy.)"
-		},
-		{
-			toolId: TOOLS.ONE_GALAXY_IS_A_GERMAN_WHISPERS,
-			description:
-				'One of the two galaxies behaves like a German whisper; orthogonally adjacent cells in this galaxy must have a difference of at least 5.'
-		}
-	],
-
-	meta: {
-		description:
-			'Each galaxy must consist of a region of orthogonally connected cells, and must have 180 degree rotational symmetry.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}
@@ -414,34 +260,6 @@ export const litsBlackAndWhiteStarBattleInfo: AbstractElementInfo = {
 	meta: {
 		description:
 			'Each row, column and region must contain exactly one white star and one black star. Black stars must be located on tetrominoes, and white stars must not. Regardless of colour, stars may not touch each other - not even diagonally.',
-		tags: [],
-		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-	}
-};
-
-export const connectFourInfo: AbstractElementInfo = {
-	toolId: TOOLS.CONNECT_FOUR,
-
-	negative_constraints: [
-		{
-			toolId: TOOLS.CONNECT_FOUR_DRAW,
-			description:
-				'The board represents a game of Connect 4 ended in a draw. And so it resulted in a draw; the board became full of an equal number of red and yellow discs without either of them managing to get any horizontal, vertical or diagonal connected line of 4 discs of their colour. Recreate the end board state by colouring the holes red and yellow.'
-		},
-		{
-			toolId: TOOLS.CONNECT_FOUR_ADJACENT_REDS_DIFFERENT_PARITY,
-			description:
-				'Two orthogonally adjacent red discs must be of different parity (one odd digit and one even digit).'
-		},
-		{
-			toolId: TOOLS.CONNECT_FOUR_ADJACENT_YELLOWS_MINIMUM_DIFFERENCE_AT_LEAST_3,
-			description: 'Two orthogonally adjacent yellow discs must have a difference of at least 3.'
-		}
-	],
-
-	meta: {
-		description:
-			'The board represents a game of Connect 4. And so it resulted in a draw; the board became full of an equal number of red and yellow discs without either of them managing to get any horizontal, vertical or diagonal connected line of 4 discs of their colour. Recreate the end board state by colouring the holes red and yellow. The first two moves have been shown.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	}

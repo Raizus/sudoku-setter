@@ -1,15 +1,7 @@
-import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
-import { TOOLS, type TOOLID } from '../Puzzle/Tools';
-import {
-	addHeader,
-	adjCellPairGen,
-	cellsToGridVarsStr,
-	cellToGridVarName,
-	cellToVarName,
-	VAR_2D_NAMES,
-	type PuzzleAuxI,
-	type PuzzleModel
-} from './solver_utils';
+import { addHeader, adjCellPairGen, cellsToGridVarsStr, cellToGridVarName, cellToVarName, PuzzleModel, VAR_2D_NAMES, type PuzzleAuxI } from '$src/lib/Solver/solver_utils';
+import type { SquareCellElementInfo } from '../../ElementInfo';
+import type { ConstraintsElement } from '../../puzzle_schema';
+import { TOOLS, TOOL_CATEGORIES, type TOOLID } from '../../Tools';
 
 function yinYangShadedCellsAreGermanWhispersConstraint(puzzle: PuzzleAuxI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
@@ -54,7 +46,7 @@ function yinYangIdenticalDigitsDiagonallyBelongToSameRegion(toolId: TOOLID): str
 	return out_str;
 }
 
-export function yinYangConstraint(model: PuzzleModel, element: ConstraintsElement) {
+export function yinYangElement(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 	const tool = element.tool_id;
@@ -101,3 +93,34 @@ export function yinYangConstraint(model: PuzzleModel, element: ConstraintsElemen
 
 	return out_str;
 }
+
+export const yinYangInfo: SquareCellElementInfo = {
+	toolId: TOOLS.YIN_YANG,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED,
+			description:
+				'In the completed grid, cells containing numbers exactly one greater than an immediate neighbour (diagonal or orthogonal) within their box are shaded (and otherwise unshaded).'
+		},
+		{
+			toolId: TOOLS.YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS,
+			description:
+				'The yin yang shaded cells act as a German Whispers line: if two orthogonally connected cells are both shaded, then the digits in those cells must have a difference of at least 5.'
+		},
+		{
+			toolId: TOOLS.YIN_YANG_IDENTICAL_DIGITS_DIAGONALLY_BELONG_TO_THE_SAME_REGION,
+			description:
+				'Identical digits which see each other by a bishops move (diagonally) must be the same color.'
+		}
+	],
+
+	meta: {
+		description:
+			'Shade some cells in the grid such that all shaded cells are orthogonally connected and all unshaded cells are orthogonally connected, and no 2x2 area is fully shaded or fully unshaded.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+    },
+    
+    solver_func: yinYangElement
+};
