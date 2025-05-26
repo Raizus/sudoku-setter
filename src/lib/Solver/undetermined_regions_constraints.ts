@@ -1,5 +1,4 @@
 import { range } from 'lodash';
-import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
 	adjCellPairGen,
@@ -12,7 +11,8 @@ import {
 	exactlyNPerRow,
 	exactlyNPerRowColumnRegion,
 	PuzzleModel,
-	VAR_2D_NAMES
+	VAR_2D_NAMES,
+	type PuzzleAuxI
 } from './solver_utils';
 import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 import { caveConstraint } from './cave_constraints';
@@ -27,7 +27,7 @@ import {
 	negatorsConstraint
 } from './value_modifier_constraints';
 
-function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleAuxI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
 	let out_str: string = `\n% ${toolId}\n`;
 	for (const [cell1, cell2] of adjCellPairGen(grid)) {
@@ -595,6 +595,7 @@ const tool_map = new Map<string, ElementF2>([
 	[TOOLS.DOUBLERS, doublersConstraint],
 	[TOOLS.NEGATORS, negatorsConstraint],
 	[TOOLS.INDEXER_CELLS, indexerCellsConstraint],
+
 	[TOOLS.CAVE, caveConstraint],
 	[TOOLS.CONNECT_FOUR, connectFourConstraint],
 	[TOOLS.STAR_BATTLE, starBattleElement],
