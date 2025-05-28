@@ -1,7 +1,9 @@
-import type { AbstractElementInfo } from '../ElementInfo';
+import { exactlyNPerRowColumnRegion, VAR_2D_NAMES, type PuzzleModel } from '$src/lib/Solver/solver_utils';
+import type { SquareCellElementInfo } from '../ElementInfo';
+import type { ConstraintsElement } from '../puzzle_schema';
 import { TOOLS, TOOL_CATEGORIES } from '../Tools';
 
-export const vampireAndPreyInfo: AbstractElementInfo = {
+export const vampireAndPreyInfo: SquareCellElementInfo = {
 	toolId: TOOLS.VAMPIRE_AND_PREY,
 
 	meta: {
@@ -12,7 +14,7 @@ export const vampireAndPreyInfo: AbstractElementInfo = {
 	}
 };
 
-export const markedCellsInfo: AbstractElementInfo = {
+export const markedCellsInfo: SquareCellElementInfo = {
 	toolId: TOOLS.MARKED_CELLS,
 
 	meta: {
@@ -23,7 +25,29 @@ export const markedCellsInfo: AbstractElementInfo = {
 	}
 };
 
-export const doublersInfo: AbstractElementInfo = {
+export function doublersElement(model: PuzzleModel, element: ConstraintsElement) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	let out_str: string = `\n% ${tool}\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: doublers_grid;\n`;
+	out_str += exactlyNPerRowColumnRegion(puzzle, 1, true, VAR_2D_NAMES.DOUBLERS);
+	// only one of each digit
+	out_str += `\nconstraint one_of_each_digit_p(board, doublers_grid, ALLOWED_DIGITS);\n`;
+	// values grid
+	out_str += `array[int, int] of var int: values_grid = doublers_value_grid_f(board, doublers_grid);\n`;
+
+	return out_str;
+}
+
+export const doublersInfo: SquareCellElementInfo = {
 	toolId: TOOLS.DOUBLERS,
 
 	meta: {
@@ -31,10 +55,37 @@ export const doublersInfo: AbstractElementInfo = {
 			'The grid contains 9 doublers (numbers multiplied by 2), one in each row, column and box. Each digit appears as a doubler exactly once.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.VALUE_MODIFIER_CONSTRAINT]
-	}
+	},
+
+	solver_func: doublersElement
 };
 
-export const negatorsInfo: AbstractElementInfo = {
+export function negatorsElement(model: PuzzleModel, element: ConstraintsElement) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name = 'negators_grid';
+
+	let out_str: string = `\n% ${tool}\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: ${grid_name};\n`;
+
+	out_str += exactlyNPerRowColumnRegion(puzzle, 1, true, VAR_2D_NAMES.NEGATORS);
+	// only one of each digit
+	out_str += `\nconstraint one_of_each_digit_p(board, ${grid_name}, ALLOWED_DIGITS);\n`;
+	// values grid
+	out_str += `array[int, int] of var int: values_grid = negators_value_grid_f(board, ${grid_name});\n`;
+
+	return out_str;
+}
+
+export const negatorsInfo: SquareCellElementInfo = {
 	toolId: TOOLS.NEGATORS,
 
 	meta: {
@@ -42,10 +93,12 @@ export const negatorsInfo: AbstractElementInfo = {
 			'The grid contains 9 negators (numbers multipled by -1), one in each row, column and box. Each digit appears as a negator exactly once.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.VALUE_MODIFIER_CONSTRAINT]
-	}
+	},
+
+	solver_func: negatorsElement
 };
 
-export const hotCellsInfo: AbstractElementInfo = {
+export const hotCellsInfo: SquareCellElementInfo = {
 	toolId: TOOLS.HOT_CELLS,
 
 	meta: {
@@ -56,7 +109,7 @@ export const hotCellsInfo: AbstractElementInfo = {
 	}
 };
 
-export const coldCellsInfo: AbstractElementInfo = {
+export const coldCellsInfo: SquareCellElementInfo = {
 	toolId: TOOLS.COLD_CELLS,
 
 	meta: {
@@ -67,7 +120,7 @@ export const coldCellsInfo: AbstractElementInfo = {
 	}
 };
 
-export const decrementFountainInfo: AbstractElementInfo = {
+export const decrementFountainInfo: SquareCellElementInfo = {
 	toolId: TOOLS.DECREMENT_FOUNTAIN,
 
 	meta: {
@@ -78,7 +131,25 @@ export const decrementFountainInfo: AbstractElementInfo = {
 	}
 };
 
-export const nexusInfo: AbstractElementInfo = {
+function nexusElement(model: PuzzleModel, element: ConstraintsElement) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	let out_str: string = `\n% ${tool}\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: nexus_grid;\n`;
+	out_str += `\nconstraint nexus_p(board, nexus_grid, ALLOWED_DIGITS);\n`;
+
+	return out_str;
+}
+
+export const nexusInfo: SquareCellElementInfo = {
 	toolId: TOOLS.NEXUS,
 
 	meta: {
@@ -86,10 +157,36 @@ export const nexusInfo: AbstractElementInfo = {
 			'One cell within the grid, to be deduced, is a “multiplier nexus” cell. The value “n” within this “nexus” cell indicates that there are: exactly “n” 1s which have a taxicab distance of 1 away from the nexus; exactly “n” 2s which have a taxicab distance of 2 away from the nexus; exactly “n” 3s which have a taxicab distance of 3 away from the nexus; and so on... up to and including 9. A taxicab distance is the shortest distance between two cells, moving only horizontally and vertically.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.VALUE_MODIFIER_CONSTRAINT]
-	}
+	},
+
+	solver_func: nexusElement
 };
 
-export const indexerCellsInfo: AbstractElementInfo = {
+export function indexerCellsElement(model: PuzzleModel, element: ConstraintsElement) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const name1 = VAR_2D_NAMES.INDEXER_CELLS_GRID;
+
+	let out_str: string = `\n% ${tool}\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: ${name1};\n`;
+	out_str += exactlyNPerRowColumnRegion(puzzle, 2, true, name1);
+
+	// values grid
+	out_str += `array[ROW_IDXS, COL_IDXS] of var int: values_grid;\n`;
+	out_str += `constraint indexer_cells_p(board, ${name1}, values_grid);\n`;
+
+	return out_str;
+}
+
+export const indexerCellsInfo: SquareCellElementInfo = {
 	toolId: TOOLS.INDEXER_CELLS,
 
 	meta: {
@@ -97,5 +194,7 @@ export const indexerCellsInfo: AbstractElementInfo = {
 			"Identify two 'indexer' cells in each row, column, and box, with one indexing in the row and the other indexing in the column. The digit in an indexer cell indicates the position of the other indexer cell in its row or column. Positions are counted left to right in rows and top to bottom in columns. The value of an indexer cell is the digit in the cell it indexes. For all other cells, their value is their own digit. Example: If () represents an indexer cell, then 12(6)34(7)598 would be a valid row of digits, because there are exactly two indexer cells, and one of the cells indexes the other: the (7) is in position 6, and the other indexer cell contains a 6. The value of the (6) cell would be 7, because that is the digit in the cell it indexes. Given that this is a row, we would also know that r7c6 must be an indexer cell, because the (7) cell indexes it.",
 		tags: [],
 		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.VALUE_MODIFIER_CONSTRAINT]
-	}
+	},
+
+	solver_func: indexerCellsElement
 };

@@ -430,6 +430,7 @@ const tool_map = new Map<string, ElementF2>([
 	[TOOLS.NEGATIVE_ANTIDIAGONAL, negativeAntidiagonalConstraint],
 	[TOOLS.PARITY_MIRROR_POSITIVE_DIAGONAL, oddEvenMirrorPositiveDiagonalConstraint],
 	[TOOLS.PARITY_MIRROR_NEGATIVE_DIAGONAL, oddEvenMirrorNegativeDiagonalConstraint],
+	
 	[TOOLS.ANTIKING, antikingConstraint],
 	[TOOLS.ANTIKNIGHT, antiknightConstraint],
 	[TOOLS.ANTI_LONG_KNIGHT, antiLongKnightConstraint],

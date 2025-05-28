@@ -1,17 +1,15 @@
 import {
-	defaultValidateValueOnInput,
-	defaultValueUpdater,
-	type ValueValidatorOptions
-} from '$src/lib/InputHandlers/InputHandler';
-import {
 	CornerOrEdge,
 	HANDLER_TOOL_TYPE,
 	type OutsideDirectionToolInputOptions
 } from '$input/ToolInputHandlers/types';
-import type { SquareCellElementInfo } from '../ElementInfo';
-import type { EditableShapeI } from '../Shape/Shape';
-import { outsideCornerUsage } from '../ToolUsage';
-import { TOOL_CATEGORIES, TOOLS } from '../Tools';
+import { cellsToGridVarsStr, simpleElementFunction, VAR_2D_NAMES, type PuzzleModel } from '$src/lib/Solver/solver_utils';
+import type { SquareCellElementInfo } from '../../ElementInfo';
+import type { Grid } from '../../Grid/Grid';
+import { outsideCornerUsage } from '../../ToolUsage';
+import { TOOL_CATEGORIES, TOOLS } from '../../Tools';
+import type { ConstraintsElement, OutsideDirectionToolI } from '../../puzzle_schema';
+import { defaultOutsideDirectionValueUpdater, OUTSIDE_DEFAULT_SHAPE, simpleOutsideDirectionElement, validateOutsideDirectionValue } from './helpers';
 
 const outsideCornerDefaultCategories = [
 	TOOL_CATEGORIES.OUTSIDE_CORNER_CONSTRAINT,
@@ -22,30 +20,6 @@ const outsideCornerDefaultCategories = [
 	TOOL_CATEGORIES.LOCAL_ELEMENT
 ];
 
-export function validateOutsideDirectionValue(value: string, maxLength = 5): boolean {
-	const options: ValueValidatorOptions = {
-		maxLength: maxLength,
-		allowSymbolicVariables: true,
-		allowInequalities: true,
-		allowNegatives: true
-	};
-	const valid = defaultValidateValueOnInput(value, options);
-	return valid;
-}
-
-export function defaultOutsideDirectionValueUpdater(
-	oldValue: string | undefined,
-	key: string,
-	validatorFunc: (val: string) => boolean
-): string | undefined {
-	return defaultValueUpdater(oldValue, key, validatorFunc);
-}
-
-const OUTSIDE_DEFAULT_SHAPE: EditableShapeI = {
-	fontColor: { editable: true, value: 'var(--text-primary-color)' },
-	stroke: { editable: true, value: 'var(--text-primary-color)' }
-};
-
 const DEFAULT_OUTSIDE_CORNER_OPTIONS: OutsideDirectionToolInputOptions = {
 	type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
 	valueUpdater: (oldValue: string | undefined, key: string) =>
@@ -53,6 +27,11 @@ const DEFAULT_OUTSIDE_CORNER_OPTIONS: OutsideDirectionToolInputOptions = {
 	defaultValue: '',
 	cornerOrEdge: CornerOrEdge.CORNER
 };
+
+function littleKillerSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleOutsideDirectionElement(model, element, 'little_killer_sum_p');
+	return out_str;
+}
 
 export const littleKillerSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
@@ -67,8 +46,15 @@ export const littleKillerSumInfo: SquareCellElementInfo = {
 		usage: outsideCornerUsage(),
 		tags: [],
 		categories: outsideCornerDefaultCategories
-	}
+	},
+
+	solver_func: littleKillerSumElement
 };
+
+function littleKillerProductElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleOutsideDirectionElement(model, element, 'little_killer_product_p');
+	return out_str;
+}
 
 export const littleKillerProductInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
@@ -83,7 +69,9 @@ export const littleKillerProductInfo: SquareCellElementInfo = {
 		usage: outsideCornerUsage(),
 		tags: [],
 		categories: outsideCornerDefaultCategories
-	}
+	},
+
+	solver_func: littleKillerProductElement
 };
 
 export const littleKillerLookAndSayInfo: SquareCellElementInfo = {
@@ -102,6 +90,11 @@ export const littleKillerLookAndSayInfo: SquareCellElementInfo = {
 	}
 };
 
+function xOmitlittleKillerSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleOutsideDirectionElement(model, element, 'x_omit_little_killer_sum_p');
+	return out_str;
+}
+
 export const xOmitLittleKillerSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
 
@@ -115,7 +108,9 @@ export const xOmitLittleKillerSumInfo: SquareCellElementInfo = {
 		usage: outsideCornerUsage(),
 		tags: [],
 		categories: outsideCornerDefaultCategories
-	}
+	},
+
+	solver_func: xOmitlittleKillerSumElement
 };
 
 export const littleKillerRegionSumProductInfo: SquareCellElementInfo = {
@@ -134,6 +129,32 @@ export const littleKillerRegionSumProductInfo: SquareCellElementInfo = {
 	}
 };
 
+function negatorsLittleKillerSumConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	const cell_coord = constraint.cell;
+	const direction = constraint.direction;
+
+	const cells = grid.getCellsInDirection(cell_coord.r, cell_coord.c, direction);
+	const values_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.VALUES_GRID);
+
+	const value = constraint.value;
+	if (value) {
+		const val = parseInt(value);
+		const constraint_str: string = `constraint little_killer_sum_p(${values_vars_str}, ${val});\n`;
+		return constraint_str;
+	}
+	return '';
+}
+
+function negatorsLittleKillerSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, negatorsLittleKillerSumConstraint);
+	return out_str;
+}
+
 export const negatorsLittleKillerSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
 
@@ -147,5 +168,7 @@ export const negatorsLittleKillerSumInfo: SquareCellElementInfo = {
 		usage: outsideCornerUsage(),
 		tags: [],
 		categories: outsideCornerDefaultCategories
-	}
+	},
+
+	solver_func: negatorsLittleKillerSumElement
 };

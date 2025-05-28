@@ -1,7 +1,7 @@
 import { SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
 import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '$lib/Puzzle/ElementInfo';
-import { lineUsage } from '../ToolUsage';
+import { lineUsage } from '../../ToolUsage';
 import { HANDLER_TOOL_TYPE, type LineToolInputOptions } from '$input/ToolInputHandlers/types';
 
 const simpleLineDefaultCategories = [

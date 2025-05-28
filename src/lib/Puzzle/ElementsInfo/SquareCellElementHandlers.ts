@@ -90,24 +90,21 @@ import {
 	globalIndexingColumnInfo,
 	hexedSudokuInfo,
 	leaveEmptyCellsEmptyInfo,
-	negativeAntidiagonalInfo,
-	negativeDiagonalInfo,
 	nonconsecutiveInfo,
 	nonratioInfo,
-	parityMirrorNegativeDiagonalInfo,
-	parityMirrorPositiveDiagonalInfo,
-	positiveAntidiagonalInfo,
-	positiveDiagonalInfo,
 	sudokuRulesDoNotApplyInfo,
 	tangoInfo
-} from './GlobalConstraintsElementsInfo';
+} from './GlobalElementsInfo/GlobalConstraintsElementsInfo';
+import { parityMirrorPositiveDiagonalInfo } from './GlobalElementsInfo/DiagonalElementsInfo';
+import { parityMirrorNegativeDiagonalInfo } from './GlobalElementsInfo/DiagonalElementsInfo';
+import { positiveAntidiagonalInfo } from './GlobalElementsInfo/DiagonalElementsInfo';
+import { negativeAntidiagonalInfo } from './GlobalElementsInfo/DiagonalElementsInfo';
+import { positiveDiagonalInfo } from './GlobalElementsInfo/DiagonalElementsInfo';
+import { negativeDiagonalInfo } from './GlobalElementsInfo/DiagonalElementsInfo';
 import {
 	chaosConstructionSuguruInfo,
-	directedPathTeleportRenbanSegmentsInfo,
-	directedPathTeleportSegmentsSumInfo,
 	goldilocksZoneInfo,
 	litsBlackAndWhiteStarBattleInfo,
-	mazeDirectedPathInfo,
 	norinoriInfo,
 	norinoriStarBattleInfo,
 	numberedChaosConstructionInfo,
@@ -120,7 +117,10 @@ import {
 	shadedBoundariesInfo,
 	starBattleInfo,
 	oneStarPerGalaxyInfo
-} from './UndeterminedRegionsElementsInfo';
+} from './UndeterminedRegionsInfo/UndeterminedRegionsElementsInfo';
+import { directedPathTeleportRenbanSegmentsInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
+import { directedPathTeleportSegmentsSumInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
+import { mazeDirectedPathInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
 import { connectFourInfo } from './UndeterminedRegionsInfo/ConnectFourElementsInfo';
 import { galaxiesInfo } from './UndeterminedRegionsInfo/GalaxyElementsInfo';
 import {
@@ -130,7 +130,7 @@ import {
 	twoContiguousRegionsInfo,
 	nurimisakiInfo,
 	chaosConstructionInfo
-} from './UndeterminedRegionsElementsInfo';
+} from './UndeterminedRegionsInfo/UndeterminedRegionsElementsInfo';
 import { yinYangInfo } from './UndeterminedRegionsInfo/YinYangElementsInfo';
 import { cellCenterLoopNoTouchingInfo } from './UndeterminedRegionsInfo/LoopElementsInfo';
 import { caveInfo } from './UndeterminedRegionsInfo/CaveElementsInfo';
@@ -202,7 +202,7 @@ import {
 	indexerCellsRegionSubsetLineInfo,
 	peapodsLineInfo,
 	yinYangCalifornianMountainSnakeInfo
-} from './LineConstraintsElementsInfo';
+} from './LineElementsInfo.ts/LineElementsInfo';
 import {
 	littleKillerLookAndSayInfo,
 	littleKillerProductInfo,
@@ -210,7 +210,7 @@ import {
 	littleKillerSumInfo,
 	negatorsLittleKillerSumInfo,
 	xOmitLittleKillerSumInfo
-} from './OutsideCornerToolsElementsInfo';
+} from './OutsideDirectionElementsInfo.ts/OutsideCornerToolsElementsInfo';
 import {
 	battlefieldInfo,
 	brokenXSumInfo,
@@ -230,7 +230,7 @@ import {
 	xIndexInfo,
 	xSumInfo,
 	xSumSkyscrapersInfo
-} from './OutsideEdgeElementsInfo';
+} from './OutsideDirectionElementsInfo.ts/OutsideEdgeElementsInfo';
 import {
 	adjacentCellsInDifferentDirectionsHaveOpositeParityInfo,
 	caveClueInfo,

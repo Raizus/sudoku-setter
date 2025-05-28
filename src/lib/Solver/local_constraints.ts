@@ -1,12 +1,8 @@
 import type { SquareCellElementInfo } from '../Puzzle/ElementInfo';
 import { squareCellElementHandlers } from '../Puzzle/ElementsInfo/SquareCellElementHandlers';
-import { edgeElements } from './edge_constraints';
-import { globalConstraints } from './global_constraints';
 import { lineElement } from './line_constraints';
-import { outsideDirectionElements } from './outside_direction_constraints';
 import { singleCellElements } from './single_cell_constraints';
 import { addHeader, PuzzleModel, type ElementF } from './solver_utils';
-import { undeterminedRegionsElements } from './undetermined_regions_constraints';
 
 export function elementConstraintsFromElementHandlers(
 	model: PuzzleModel,
@@ -32,21 +28,21 @@ export function elementConstraintsFromElementHandlers(
 }
 
 const functions_list: ElementF[] = [
-	undeterminedRegionsElements,
+	// undeterminedRegionsElements,
 	// centerCornerOrEdgeElements,
 	singleCellElements,
 	// singleCellArrowElements,
 	// singleCellMultiArrowElements,
-	edgeElements,
+	// edgeElements,
 	// cornerElements,
 	lineElement,
 	// arrowElements,
 	// cageElements,
-	outsideDirectionElements,
+	// outsideDirectionElements,
 	// cloneElements,
 	// valuedGlobalElements,
 	// otherElements,
-	globalConstraints
+	// globalConstraints
 ];
 
 export function elementConstraints(model: PuzzleModel): string {

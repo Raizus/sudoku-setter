@@ -2,7 +2,7 @@ import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 import { PuzzleModel, VAR_2D_NAMES } from './solver_utils';
 import { exactlyNPerRowColumnRegion } from './solver_utils';
 
-export function doublersConstraint(model: PuzzleModel, element: ConstraintsElement) {
+export function doublersElement(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 	const tool = element.tool_id;
@@ -24,7 +24,7 @@ export function doublersConstraint(model: PuzzleModel, element: ConstraintsEleme
 	return out_str;
 }
 
-export function negatorsConstraint(model: PuzzleModel, element: ConstraintsElement) {
+export function negatorsElement(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 	const tool = element.tool_id;
@@ -49,7 +49,7 @@ export function negatorsConstraint(model: PuzzleModel, element: ConstraintsEleme
 	return out_str;
 }
 
-export function indexerCellsConstraint(model: PuzzleModel, element: ConstraintsElement) {
+export function indexerCellsElement(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 	const tool = element.tool_id;

@@ -22,9 +22,9 @@ import { cellCenterLoopNoTouchingConstraint } from './loop_constraints';
 import { mazeDirectedPathConstraint } from './directed_path_constraints';
 import { yinYangConstraint } from './yin_yang_constraints';
 import {
-	doublersConstraint,
-	indexerCellsConstraint,
-	negatorsConstraint
+	doublersElement,
+	indexerCellsElement,
+	negatorsElement
 } from './value_modifier_constraints';
 
 function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleAuxI, toolId: TOOLID): string {
@@ -592,9 +592,9 @@ function oneStarPerGalaxyElement() {
 type ElementF2 = (model: PuzzleModel, element: ConstraintsElement) => string;
 
 const tool_map = new Map<string, ElementF2>([
-	[TOOLS.DOUBLERS, doublersConstraint],
-	[TOOLS.NEGATORS, negatorsConstraint],
-	[TOOLS.INDEXER_CELLS, indexerCellsConstraint],
+	[TOOLS.DOUBLERS, doublersElement],
+	[TOOLS.NEGATORS, negatorsElement],
+	[TOOLS.INDEXER_CELLS, indexerCellsElement],
 
 	[TOOLS.CAVE, caveConstraint],
 	[TOOLS.CONNECT_FOUR, connectFourConstraint],

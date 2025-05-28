@@ -40,23 +40,6 @@ function findEdgeConstraintMatch(constraints: Record<string, EdgeToolI>, cell1: 
 	return match;
 }
 
-// function getEdgeConstraintCellPairs(
-// 	grid: Grid,
-// 	constraints: Record<string, ConstraintType> | undefined
-// ) {
-// 	const edgec_pairs: Set<Cell>[] = [];
-// 	if (constraints) {
-// 		for (const constraint of Object.values(constraints)) {
-// 			const coords = (constraint as EdgeToolI).cells;
-// 			const cell_pair = new Set(
-// 				coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
-// 			);
-// 			edgec_pairs.push(cell_pair);
-// 		}
-// 	}
-// 	return edgec_pairs;
-// }
-
 function getEdgeVars(grid: Grid, constraint: EdgeToolI) {
 	const cells = cellsFromCoords(grid, constraint.cells);
 	const vars = cellsToVarsName(cells);

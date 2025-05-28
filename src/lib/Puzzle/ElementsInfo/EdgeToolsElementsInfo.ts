@@ -7,6 +7,11 @@ import {
 } from '$src/lib/InputHandlers/InputHandler';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { HANDLER_TOOL_TYPE, type EdgeToolOptions } from '$input/ToolInputHandlers/types';
+import { adjCellPairGen, cellsFromCoords, cellsToGridVarsName, cellsToVarsName, cellToGridVarName, cellToVarName, PuzzleModel, VAR_2D_NAMES } from '$src/lib/Solver/solver_utils';
+import type { ConstraintsElement, EdgeToolI } from '../puzzle_schema';
+import type { Grid } from '../Grid/Grid';
+import type { Cell } from '../Grid/Cell';
+import type { ParseOptions } from '$src/lib/Solver/value_parsing';
 
 const edgeDefaultCategories = [
 	TOOL_CATEGORIES.EDGE_CONSTRAINT,
@@ -112,6 +117,153 @@ const DEFAULT_EDGE_OPTIONS: EdgeToolOptions = {
 		defaultEdgeValueUpdater(oldValue, key, validateEdgeValue)
 };
 
+function findEdgeConstraintMatch(constraints: Record<string, EdgeToolI>, cell1: Cell, cell2: Cell) {
+	const clist = [...Object.values(constraints)];
+	const match = clist.find((constraint) => {
+		const coord1 = constraint.cells[0];
+		const coord2 = constraint.cells[1];
+		if (
+			cell1.c === coord1.c &&
+			cell1.r === coord1.r &&
+			cell2.c === coord2.c &&
+			cell2.r === coord2.r
+		)
+			return constraint;
+		if (
+			cell1.c === coord2.c &&
+			cell1.r === coord2.r &&
+			cell2.c === coord1.c &&
+			cell2.r === coord1.r
+		)
+			return constraint;
+	});
+	return match;
+}
+
+function getEdgeVars(grid: Grid, constraint: EdgeToolI) {
+	const cells = cellsFromCoords(grid, constraint.cells);
+	const vars = cellsToVarsName(cells);
+	return vars;
+}
+
+function simpleEdgeConstraint(grid: Grid, constraint: EdgeToolI, predicate: string) {
+	const vars = getEdgeVars(grid, constraint);
+	const [var1, var2] = vars;
+
+	const constraint_str = `constraint ${predicate}(${var1}, ${var2});\n`;
+	return constraint_str;
+}
+
+function simpleEdgeElement(grid: Grid, element: ConstraintsElement, predicate: string) {
+	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
+	for (const constraint of Object.values(constraints)) {
+		const constraint_str = simpleEdgeConstraint(grid, constraint as EdgeToolI, predicate);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
+
+function getParsingResult(model: PuzzleModel, value: string, c_id: string) {
+	const parse_opts: ParseOptions = {
+		allow_var: true,
+		allow_interval: true,
+		allow_int_list: false
+	};
+	const default_name = `edge_var_${c_id}`;
+	const result = model.getOrSetSharedVar(value, default_name, parse_opts);
+	return result;
+}
+
+function valuedEdgeConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: EdgeToolI,
+	predicate: string,
+	default_value: string = ''
+) {
+	const vars = getEdgeVars(grid, constraint);
+	const [var1, var2] = vars;
+
+	const value = constraint.value?.length ? constraint.value : default_value;
+	const result = getParsingResult(model, value, c_id);
+	if (!result) return '';
+
+	const var_name = result[1];
+	let out_str: string = result[0];
+	out_str += `constraint ${predicate}(${var1}, ${var2}, ${var_name});\n`;
+	return out_str;
+}
+
+function valuedEdgeElement(
+	model: PuzzleModel,
+	element: ConstraintsElement,
+	predicate: string,
+	default_value: string = ''
+) {
+	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
+	const grid = model.puzzle.grid;
+	for (const [c_id, constraint] of Object.entries(constraints)) {
+		const constraint_str = valuedEdgeConstraint(
+			model,
+			grid,
+			c_id,
+			constraint as EdgeToolI,
+			predicate,
+			default_value
+		);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
+
+function ratioElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	let out_str = valuedEdgeElement(model, element, 'ratio_p', '2');
+
+	if (!element.negative_constraints) return out_str;
+
+	// negative constraint
+	const all_given = !!element.negative_constraints[TOOLS.ALL_RATIOS_GIVEN];
+	if (!all_given) return out_str;
+	const constraints = element.constraints as Record<string, EdgeToolI>;
+
+	let used_vals: string[] = [];
+	if (constraints) {
+		used_vals = Object.values(constraints)
+			.map((constraint) => constraint.value)
+			.map((val) => (!val ? '2' : val));
+	}
+	if (used_vals.length === 0) used_vals.push('2');
+
+	const values = [...new Set(used_vals)];
+
+	console.log('values', values);
+
+	out_str += `\n% ${TOOLS.ALL_RATIOS_GIVEN}\n`;
+	for (const [cell1, cell2] of adjCellPairGen(grid)) {
+		// check if cell pair is not in ratio pairs
+		const match = findEdgeConstraintMatch(constraints, cell1, cell2);
+		if (match) continue;
+
+		const var1 = cellToVarName(cell1);
+		const var2 = cellToVarName(cell2);
+		for (const value of values) {
+			const val = parseInt(value);
+			const constraint_str = `constraint not ratio_p(${var1}, ${var2}, ${val});\n`;
+			out_str += constraint_str;
+		}
+	}
+
+	return out_str;
+}
+
 export const ratioInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.EDGE,
@@ -142,8 +294,49 @@ export const ratioInfo: SquareCellElementInfo = {
 			'Cells separated by a black dot have a 1:2 ratio or a 1:X ratio if the circle has value X.',
 		tags: [],
 		categories: typableEdgeDefaultCategories
-	}
+	},
+
+	solver_func: ratioElement
 };
+
+function differenceElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	let out_str = valuedEdgeElement(model, element, 'abs_difference', '1');
+
+	if (!element.negative_constraints) return out_str;
+
+	// negative constraint
+	const all_given = !!element.negative_constraints[TOOLS.ALL_DIFFERENCES_GIVEN];
+	if (!all_given) return out_str;
+	const constraints = element.constraints as Record<string, EdgeToolI>;
+
+	let used_vals: string[] = [];
+	if (constraints) {
+		used_vals = Object.values(constraints)
+			.map((constraint) => constraint.value)
+			.map((val) => (!val ? '1' : val));
+	}
+	if (used_vals.length === 0) used_vals.push('1');
+
+	const values = [...new Set(used_vals)];
+
+	out_str += `\n% ${TOOLS.ALL_DIFFERENCES_GIVEN}\n`;
+	for (const [cell1, cell2] of adjCellPairGen(grid)) {
+		// check if cell pair is not in difference pairs
+		const match = findEdgeConstraintMatch(constraints, cell1, cell2);
+		if (match) continue;
+
+		const var1 = cellToVarName(cell1);
+		const var2 = cellToVarName(cell2);
+		for (const value of values) {
+			const val = parseInt(value);
+			const constraint_str = `constraint abs(${var1} - ${var2}) != ${val};\n`;
+			out_str += constraint_str;
+		}
+	}
+
+	return out_str;
+}
 
 export const differenceInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_EDGE_OPTIONS,
@@ -164,8 +357,15 @@ export const differenceInfo: SquareCellElementInfo = {
 			'Numbers separated by a white circle are consecutive. Cells separated by a white circle with a number X must have a difference of X.',
 		tags: [],
 		categories: typableEdgeDefaultCategories
-	}
+	},
+
+	solver_func: differenceElement
 };
+
+function edgeSumElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedEdgeElement(model, element, 'edge_sum_p');
+	return out_str;
+}
 
 export const edgeSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_EDGE_OPTIONS,
@@ -182,8 +382,59 @@ export const edgeSumInfo: SquareCellElementInfo = {
 			'Cells separated by a transparent blue dot marked with an X have a fixed sum of X.',
 		tags: [],
 		categories: typableEdgeDefaultCategories
-	}
+	},
+
+	solver_func: edgeSumElement
 };
+
+function xvConstraint(grid: Grid, constraint: EdgeToolI) {
+	const vars = getEdgeVars(grid, constraint);
+	const [var1, var2] = vars;
+	if (constraint.value === 'V' || constraint.value === 'v') {
+		const constraint_str = `constraint ${var1} + ${var2} = 5;\n`;
+		return constraint_str;
+	}
+	const constraint_str = `constraint ${var1} + ${var2} = 10;\n`;
+	return constraint_str;
+}
+
+function xvElement(model: PuzzleModel, element: ConstraintsElement) {
+	let out_str = '';
+	const constraints = element.constraints as Record<string, EdgeToolI>;
+
+	const grid = model.puzzle.grid;
+	for (const constraint of Object.values(constraints)) {
+		const constraint_str = xvConstraint(grid, constraint as EdgeToolI);
+		out_str += constraint_str;
+	}
+
+	// negative constraints
+	if (!element.negative_constraints) return out_str;
+	const all_v_given = !!element.negative_constraints[TOOLS.NEGATIVE_V_CONSTRAINT];
+	const all_x_given = !!element.negative_constraints[TOOLS.NEGATIVE_X_CONSTRAINT];
+	const all_xv_given = !!element.negative_constraints[TOOLS.NEGATIVE_XV_CONSTRAINT];
+	if (!all_v_given && !all_x_given && !all_xv_given) return out_str;
+
+	for (const [cell1, cell2] of adjCellPairGen(grid)) {
+		// check if cell pair is not in xv pairs
+		const match = findEdgeConstraintMatch(constraints, cell1, cell2);
+
+		const var1_name = cellToVarName(cell1);
+		const var2_name = cellToVarName(cell2);
+		if (all_v_given && (!match || (match.value !== 'V' && match.value !== 'v'))) {
+			const constraint_str = `constraint ${var1_name} + ${var2_name} != 5;\n`;
+			out_str += constraint_str;
+		} else if (all_x_given && (!match || (match.value !== 'X' && match.value !== 'x'))) {
+			const constraint_str = `constraint ${var1_name} + ${var2_name} != 10;\n`;
+			out_str += constraint_str;
+		} else if (all_xv_given && !match) {
+			const constraint_str = `constraint ${var1_name} + ${var2_name} != 5 /\\ (${var1_name} + ${var2_name} != 10);\n`;
+			out_str += constraint_str;
+		}
+	}
+
+	return out_str;
+}
 
 export const xvInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -222,8 +473,38 @@ export const xvInfo: SquareCellElementInfo = {
 		description: 'Two cells joined by X must sum to 10. Two cells joined by a V must sum to 5.',
 		tags: [],
 		categories: typableEdgeDefaultCategories
-	}
+	},
+
+	solver_func: xvElement
 };
+
+function edgeInequalityConstraint(grid: Grid, constraint: EdgeToolI) {
+	const vars = getEdgeVars(grid, constraint);
+	const [var1, var2] = vars;
+	const value = constraint.value;
+
+	if (value === '<') {
+		const constraint_str = `constraint ${var1} < ${var2};\n`;
+		return constraint_str;
+	} else if (value === '>') {
+		const constraint_str = `constraint ${var1} > ${var2};\n`;
+		return constraint_str;
+	}
+	return '';
+}
+
+function edgeInequalityElement(model: PuzzleModel, element: ConstraintsElement) {
+	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
+	const grid = model.puzzle.grid;
+	for (const constraint of Object.values(constraints)) {
+		const constraint_str = edgeInequalityConstraint(grid, constraint as EdgeToolI);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
 
 export const edgeInequalityInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -248,7 +529,9 @@ export const edgeInequalityInfo: SquareCellElementInfo = {
 			'An inequality sign that separates two cells points to the lower of the two digits.',
 		tags: [],
 		categories: typableEdgeDefaultCategories
-	}
+	},
+
+	solver_func: edgeInequalityElement
 };
 
 export const edgeProductInfo: SquareCellElementInfo = {
@@ -269,6 +552,11 @@ export const edgeProductInfo: SquareCellElementInfo = {
 	}
 };
 
+function edgeModuloElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedEdgeElement(model, element, 'edge_modulo_p');
+	return out_str;
+}
+
 export const edgeModuloInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_EDGE_OPTIONS,
 
@@ -284,8 +572,16 @@ export const edgeModuloInfo: SquareCellElementInfo = {
 			'Cells that share an edge separated by a transparent orange circle marked with an X shows the remainder when the bigger number is divided by the smaller number.',
 		tags: [],
 		categories: typableEdgeDefaultCategories
-	}
+	},
+
+	solver_func: edgeModuloElement
 };
+
+function edgeFactorElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	const out_str = simpleEdgeElement(grid, element, 'edge_factor_p');
+	return out_str;
+}
 
 export const edgeFactorInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_EDGE_OPTIONS,
@@ -302,8 +598,73 @@ export const edgeFactorInfo: SquareCellElementInfo = {
 			'For two cells that share an edge separated by a transparent yellow dot, one must be divisible by the other.',
 		tags: [],
 		categories: typableEdgeDefaultCategories
-	}
+	},
+
+	solver_func: edgeFactorElement
 };
+
+function xyDiffHelper(grid: Grid, cell1: Cell, cell2: Cell) {
+	const var1 = cellToVarName(cell1);
+	const var2 = cellToVarName(cell2);
+
+	let var3: string = '';
+	if (cell1.r == cell2.r) {
+		const row_cells = grid.getRow(cell1.r);
+		const first_cell = row_cells[0];
+		var3 = cellToVarName(first_cell);
+	} else if (cell1.c == cell2.c) {
+		const col_cells = grid.getCol(cell1.c);
+		const first_cell = col_cells[0];
+		var3 = cellToVarName(first_cell);
+	}
+	if (!var3) return '';
+
+	const out_str = `xy_differences_p(${var1}, ${var2}, ${var3});\n`;
+	return out_str;
+}
+
+function xyDifferencesConstraint(grid: Grid, constraint: EdgeToolI) {
+	const cells = cellsFromCoords(grid, constraint.cells);
+	const [cell1, cell2] = cells;
+
+	const aux_str = xyDiffHelper(grid, cell1, cell2);
+	if (aux_str.length === 0) return '';
+
+	const constraint_str = `constraint ${aux_str}`;
+	return constraint_str;
+}
+
+function xyDifferencesElement(model: PuzzleModel, element: ConstraintsElement) {
+	const constraints = element.constraints as Record<string, EdgeToolI>;
+	const grid = model.puzzle.grid;
+	let out_str = '';
+
+	for (const constraint of Object.values(constraints)) {
+		const constraint_str = xyDifferencesConstraint(grid, constraint as EdgeToolI);
+		out_str += constraint_str;
+	}
+
+	if (!element.negative_constraints) return out_str;
+
+	// negative constraint
+	const all_given = !!element.negative_constraints[TOOLS.ALL_XY_DIFFERENCES_GIVEN];
+	if (!all_given) return out_str;
+
+	out_str += `\n% ${TOOLS.ALL_XY_DIFFERENCES_GIVEN}\n`;
+	for (const [cell1, cell2] of adjCellPairGen(grid)) {
+		// check if cell pair is not in xy diff pairs
+		const match = findEdgeConstraintMatch(constraints, cell1, cell2);
+		if (match) continue;
+
+		const aux_str = xyDiffHelper(grid, cell1, cell2);
+		if (aux_str.length === 0) continue;
+
+		const constraint_str = `constraint not ${aux_str}`;
+		out_str += constraint_str;
+	}
+
+	return out_str;
+}
 
 export const xyDifferencesInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -334,25 +695,61 @@ export const xyDifferencesInfo: SquareCellElementInfo = {
 			'If two cells are separated by a diamond, the digits must exhibit a difference equal to the leftmost or topmost digit sharing a row or column with them. For example, the difference between R9C34 = R9C1, and the difference between R23C1 = R1C1.',
 		tags: [],
 		categories: typableEdgeDefaultCategories
-	}
-};
-
-export const yinYangWhiteKropkiInfo: SquareCellElementInfo = {
-	inputOptions: {
-		type: HANDLER_TOOL_TYPE.EDGE
 	},
 
-	toolId: TOOLS.YIN_YANG_WHITE_KROPKI,
-
-	shape: DEFAULT_WHITE_CIRCLE,
-
-	meta: {
-		description:
-			'Cells separated by a dot indicate that the two connected cells have the same Yin Yang shading and their digits are consecutive.',
-		tags: [],
-		categories: typableEdgeDefaultCategories
-	}
+	solver_func: xyDifferencesElement
 };
+
+function yinYangEdgeConstraint(grid: Grid, constraint: EdgeToolI, predicate: string) {
+	const cells = cellsFromCoords(grid, constraint.cells);
+	const [var1, var2] = cellsToVarsName(cells);
+	const yin_yang_vars = cellsToGridVarsName(cells, VAR_2D_NAMES.YIN_YANG);
+	const [yin_yang1, yin_yang2] = yin_yang_vars;
+
+	const constraint_str = `constraint ${predicate}(${var1}, ${var2}, ${yin_yang1}, ${yin_yang2});\n`;
+	return constraint_str;
+}
+
+function yinYangEdgeElement(grid: Grid, element: ConstraintsElement, predicate: string) {
+	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
+	for (const constraint of Object.values(constraints)) {
+		const constraint_str = yinYangEdgeConstraint(grid, constraint as EdgeToolI, predicate);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
+
+function yinYangKropkiElement(model: PuzzleModel, element: ConstraintsElement): string {
+	const grid = model.puzzle.grid;
+	let out_str = yinYangEdgeElement(grid, element, 'yin_yang_kropki_p');
+	if (!element.negative_constraints) return out_str;
+
+	// negative constraint
+	const all_given = !!element.negative_constraints[TOOLS.ALL_YIN_YANG_KROPKI_GIVEN];
+	if (!all_given) return out_str;
+
+	const constraints = element.constraints as Record<string, EdgeToolI>;
+	out_str += `\n% ${TOOLS.ALL_YIN_YANG_KROPKI_GIVEN}\n`;
+	for (const [cell1, cell2] of adjCellPairGen(grid)) {
+		// check if cell pair is not in kropki pairs
+		const match = findEdgeConstraintMatch(constraints, cell1, cell2);
+		if (match) continue;
+
+		const var1 = cellToVarName(cell1);
+		const var2 = cellToVarName(cell2);
+
+		const yin_yang1 = cellToGridVarName(cell1, VAR_2D_NAMES.YIN_YANG);
+		const yin_yang2 = cellToGridVarName(cell2, VAR_2D_NAMES.YIN_YANG);
+
+		const constraint_str = `constraint not yin_yang_kropki_p(${var1}, ${var2}, ${yin_yang1}, ${yin_yang2});\n`;
+		out_str += constraint_str;
+	}
+
+	return out_str;
+}
 
 export const yinYangKropkiInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -384,24 +781,66 @@ export const yinYangKropkiInfo: SquareCellElementInfo = {
 			'Cells separated by a a light blue transparent dot indicate that the two connected cells have the same Yin Yang shading. If a grey dot is between two unshaded cells their digits are in a 1:2 ratio; if a grey dot is between two shaded cells, their digits are consecutive.',
 		tags: [],
 		categories: typableEdgeDefaultCategories
-	}
+	},
+
+	solver_func: yinYangKropkiElement
 };
 
-export const fillominoRegionBorderInfo: SquareCellElementInfo = {
+function yinYangWhiteKropkiElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	const out_str = yinYangEdgeElement(grid, element, 'yin_yang_white_kropki_p');
+	return out_str;
+}
+
+export const yinYangWhiteKropkiInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.EDGE
 	},
 
-	toolId: TOOLS.FILLOMINO_REGION_BORDER,
+	toolId: TOOLS.YIN_YANG_WHITE_KROPKI,
 
-	shape: DEFAULT_BORDER_LINE,
+	shape: DEFAULT_WHITE_CIRCLE,
 
 	meta: {
-		description: 'A line in the border between cells indicates a fillomino region border.',
+		description:
+			'Cells separated by a dot indicate that the two connected cells have the same Yin Yang shading and their digits are consecutive.',
 		tags: [],
-		categories: edgeDefaultCategories
-	}
+		categories: typableEdgeDefaultCategories
+	},
+
+	solver_func: yinYangWhiteKropkiElement
 };
+
+function regionBorderConstraint(grid: Grid, constraint: EdgeToolI, regions_var_name: VAR_2D_NAMES) {
+	const cells = cellsFromCoords(grid, constraint.cells);
+	const region_vars = cellsToGridVarsName(cells, regions_var_name);
+	const [region1, region2] = region_vars;
+
+	const constraint_str = `constraint ${region1} != ${region2};\n`;
+	return constraint_str;
+}
+
+function regionBorderElement(
+	grid: Grid,
+	element: ConstraintsElement,
+	regions_var_name: VAR_2D_NAMES
+) {
+	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
+	for (const constraint of Object.values(constraints)) {
+		const constraint_str = regionBorderConstraint(grid, constraint as EdgeToolI, regions_var_name);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
+
+function unknownRegionBorderElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	const out_str = regionBorderElement(grid, element, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	return out_str;
+}
 
 export const unknownRegionBorderInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -416,8 +855,40 @@ export const unknownRegionBorderInfo: SquareCellElementInfo = {
 		description: 'A line in the border between cells indicates a region border.',
 		tags: [],
 		categories: edgeDefaultCategories
-	}
+	},
+
+	solver_func: unknownRegionBorderElement
 };
+
+function fillominoRegionBorderElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	const out_str = regionBorderElement(grid, element, VAR_2D_NAMES.FILLOMINO_REGIONS);
+	return out_str;
+}
+
+export const fillominoRegionBorderInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE
+	},
+
+	toolId: TOOLS.FILLOMINO_REGION_BORDER,
+
+	shape: DEFAULT_BORDER_LINE,
+
+	meta: {
+		description: 'A line in the border between cells indicates a fillomino region border.',
+		tags: [],
+		categories: edgeDefaultCategories
+	},
+
+	solver_func: fillominoRegionBorderElement
+};
+
+function chaosConstructionSuguruBorderElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	const out_str = regionBorderElement(grid, element, VAR_2D_NAMES.SUGURU_REGIONS);
+	return out_str;
+}
 
 export const chaosConstructionSuguruBorderInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -432,8 +903,16 @@ export const chaosConstructionSuguruBorderInfo: SquareCellElementInfo = {
 		description: 'A line in the border between cells indicates a region border.',
 		tags: [],
 		categories: edgeDefaultCategories
-	}
+	},
+
+	solver_func: chaosConstructionSuguruBorderElement
 };
+
+function edgeCaveOneOfEachElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	const out_str = regionBorderElement(grid, element, VAR_2D_NAMES.CAVE_SHADING);
+	return out_str;
+}
 
 export const edgeCaveOneOfEachInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -449,7 +928,9 @@ export const edgeCaveOneOfEachInfo: SquareCellElementInfo = {
 			'For two cells separated by a white dot, one must be shaded and the other unshaded (one must belong to the cave and the other to the wall).',
 		tags: [],
 		categories: edgeDefaultCategories
-	}
+	},
+
+	solver_func: edgeCaveOneOfEachElement
 };
 
 export const oneWayDoorInfo: SquareCellElementInfo = {
@@ -476,7 +957,9 @@ export const oneWayDoorInfo: SquareCellElementInfo = {
 			'The path may only pass directly through a purple arrow if moving in the direction the arrow is pointing. An arrow always points to the smaller of the two digits it sits between.',
 		tags: [],
 		categories: typableEdgeDefaultCategories
-	}
+	},
+
+	solver_func: edgeInequalityElement
 };
 
 export const combinedEdgeConstraintInfo: SquareCellElementInfo = {
