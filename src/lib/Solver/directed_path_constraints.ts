@@ -4,7 +4,6 @@ import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 import type { CellToolI } from "../Puzzle/puzzle_schema";
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
-import type { PuzzleI } from '../Puzzle/Puzzle';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
 import {
 	cellEdgeToCellCoords,
@@ -13,7 +12,7 @@ import {
 	cornerCoordToAdjCellCoords,
 	type GridCoordI
 } from '../utils/SquareCellGridCoords';
-import { addHeader, format_2d_array, groupConstraintsByValue, PuzzleModel } from './solver_utils';
+import { addHeader, format_2d_array, groupConstraintsByValue, PuzzleModel, type PuzzleAuxI } from './solver_utils';
 
 function directedPathAdjacentCellsSumIsPrimeConstraint(toolId: TOOLID): string {
 	let out_str: string = '';
@@ -43,7 +42,7 @@ function directedPathTeleportSegmentsSumConstraint(toolId: TOOLID): string {
 	return out_str;
 }
 
-function directedPathTeleportRenbanSegmentsConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+function directedPathTeleportRenbanSegmentsConstraint(puzzle: PuzzleAuxI, toolId: TOOLID): string {
 	let out_str: string = '';
 	const grid = puzzle.grid;
 	const used_regions = puzzle.grid.getUsedRegions();
@@ -63,7 +62,7 @@ function directedPathIsParityLineConstraint(toolId: TOOLID): string {
 	return out_str;
 }
 
-function directedPathSumOfCellsPerRegionIsPrimeConstraint(puzzle: PuzzleI, toolId: TOOLID): string {
+function directedPathSumOfCellsPerRegionIsPrimeConstraint(puzzle: PuzzleAuxI, toolId: TOOLID): string {
 	let out_str: string = '';
 
 	const grid = puzzle.grid;
@@ -79,7 +78,7 @@ function coordsToIdx(r: number, c: number, n_cols: number) {
 	return n;
 }
 
-function findWalledEdges(puzzle: PuzzleI) {
+function findWalledEdges(puzzle: PuzzleAuxI) {
 	const grid = puzzle.grid;
 	function edge_wall_vertical(cell1: Cell, cell2: Cell) {
 		const edges: [s: number, t: number][] = [];
@@ -155,7 +154,7 @@ function findWalledEdges(puzzle: PuzzleI) {
 	return edges_rem;
 }
 
-function findEdgesBlockedByOneWayDoors(puzzle: PuzzleI) {
+function findEdgesBlockedByOneWayDoors(puzzle: PuzzleAuxI) {
 	const grid = puzzle.grid;
 	const edges_rem: [s: number, t: number][] = [];
 	const lconstraints = puzzle.elementsDict;
@@ -201,7 +200,7 @@ interface TpRes {
 	tp_count: number;
 }
 
-function teleportConstraints(puzzle: PuzzleI): TpRes {
+function teleportConstraints(puzzle: PuzzleAuxI): TpRes {
 	const grid = puzzle.grid;
 	const tp_edges: [s: number, t: number][] = [];
 	const tp_idxs: number[] = [];
