@@ -1,12 +1,17 @@
 import { SHAPE_TYPES } from '../Shape/Shape';
 import { TOOLS, TOOL_CATEGORIES } from '../Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
-import { defaultCageValueUpdater, validateCageValue } from './CageElementsInfo/CageToolsElementsInfo';
+import {
+	defaultCageValueUpdater,
+	validateCageValue
+} from './CageElementsInfo/CageToolsElementsInfo';
 import { defaultEdgeValueUpdater, validateEdgeValue } from './EdgeToolsElementsInfo';
 import { defaultCornerValueUpdater, validateCornerValue } from './CornerToolsElementsInfo';
-import { defaultOutsideDirectionValueUpdater } from './OutsideDirectionElementsInfo.ts/helpers';
+import {
+	defaultOutsideDirectionValueUpdater,
+	validateOutsideDirectionValue
+} from './OutsideDirectionElementsInfo.ts/helpers';
 import { CornerOrEdge, HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
-import { validateOutsideDirectionValue } from './OutsideDirectionElementsInfo.ts/OutsideEdgeElementsInfo';
 
 export const cosmeticCellShapeInfo: SquareCellElementInfo = {
 	inputOptions: {

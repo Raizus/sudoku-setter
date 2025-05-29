@@ -1,40 +1,55 @@
 import { SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
-import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
+import { TOOLS } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '$lib/Puzzle/ElementInfo';
 import { lineUsage } from '../../ToolUsage';
-import { HANDLER_TOOL_TYPE, type LineToolInputOptions } from '$input/ToolInputHandlers/types';
+import { HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
+import {
+	circularValuedLineElement,
+	DEFAULT_LINE_OPTIONS_INTERSECT,
+	DEFAULT_LINE_OPTIONS_NO_INTERSECT,
+	DEFAULT_META_1,
+	getLineVars,
+	simpleLineDefaultCategories,
+	simpleLineElement,
+	simpleMultipliersLineElement,
+	valuedLineElement
+} from './helpers';
+import type { ConstraintsElement, LineToolI } from '../../puzzle_schema';
+import {
+	cellsFromCoords,
+	cellsToGridVarsStr,
+	cellsToVarsName,
+	simpleElementFunction,
+	VAR_2D_NAMES,
+	type PuzzleModel
+} from '$src/lib/Solver/solver_utils';
+import type { Cell } from '../../Grid/Cell';
+import type { Grid } from '../../Grid/Grid';
 
-const simpleLineDefaultCategories = [
-	TOOL_CATEGORIES.LINE_CONSTRAINT,
-	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
-	TOOL_CATEGORIES.LINE_TOOL,
-	TOOL_CATEGORIES.LOCAL_ELEMENT
-];
+function splitLineByRegion(line: Cell[]) {
+	const regions: Cell[][] = [];
+	if (!line.length) return regions;
 
-const doubleEndedLineDefaultCategories = [
-	TOOL_CATEGORIES.LINE_CONSTRAINT,
-	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
-	TOOL_CATEGORIES.DOUBLE_ENDED_LINE_CONSTRAINT,
-	TOOL_CATEGORIES.LINE_TOOL,
-	TOOL_CATEGORIES.LOCAL_ELEMENT
-];
+	let prev_region: number | null = null;
+	let cells: Cell[] = [];
+	for (const cell of line) {
+		const region = cell.region;
+		if (prev_region !== region) {
+			if (cells.length) regions.push(cells);
+			cells = [];
+		}
+		cells.push(cell);
+		prev_region = region;
+	}
+	if (cells.length) regions.push(cells);
 
-const DEFAULT_META_1 = {
-	description: '',
-	usage: lineUsage(),
-	tags: [],
-	categories: simpleLineDefaultCategories
-};
+	return regions;
+}
 
-const DEFAULT_LINE_OPTIONS_INTERSECT: LineToolInputOptions = {
-	type: HANDLER_TOOL_TYPE.LINE,
-	allowSelfIntersection: true
-};
-
-const DEFAULT_LINE_OPTIONS_NO_INTERSECT: LineToolInputOptions = {
-	type: HANDLER_TOOL_TYPE.LINE,
-	allowSelfIntersection: false
-};
+function thermoElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'strictly_increasing');
+	return out_str;
+}
 
 export const thermometerInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -58,8 +73,15 @@ export const thermometerInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META_1,
 		description: 'Numbers along a thermometer must increase from the bulb end.'
-	}
+	},
+
+	solver_func: thermoElement
 };
+
+function customThermoElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'custom_thermo_p');
+	return out_str;
+}
 
 export const customThermometerInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -88,8 +110,15 @@ export const customThermometerInfo: SquareCellElementInfo = {
 		...DEFAULT_META_1,
 		description:
 			'Numbers along a thermometer must increase by at least X (default = 2) at a time. Negative values are allowed.'
-	}
+	},
+
+	solver_func: customThermoElement
 };
+
+function fuzzyThermoElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'fuzzy_thermo_p');
+	return out_str;
+}
 
 export const fuzzyThermometerInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -113,8 +142,15 @@ export const fuzzyThermometerInfo: SquareCellElementInfo = {
 		...DEFAULT_META_1,
 		description:
 			'Grey lines are thermometers. Digits along thermometers must increase from the bulb to the tip, which can be on either end and are to be deduced.'
-	}
+	},
+
+	solver_func: fuzzyThermoElement
 };
+
+function slowThermoElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'increasing');
+	return out_str;
+}
 
 export const slowThermometerInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -138,8 +174,43 @@ export const slowThermometerInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META_1,
 		description: 'Numbers along a slow thermometer must not decrease from the bulb to the tip(s).'
-	}
+	},
+
+	solver_func: slowThermoElement
 };
+
+function rowCycleThermoConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	const cells = cellsFromCoords(grid, constraint.cells);
+
+	let out_str = '';
+	const cycle_vars: string[] = [];
+	for (let i = 0; i < cells.length; i++) {
+		const cell = cells[i];
+		const row = grid.getRow(cell.r);
+		const row_vars = cellsToGridVarsStr(row, VAR_2D_NAMES.BOARD);
+		const var_name = `cycle_${c_id}_${i}`;
+		cycle_vars.push(var_name);
+		const start = cell.c + 1;
+		out_str += `var int: ${var_name} = cycle_order_f(${row_vars}, ${start});\n`;
+	}
+	const cycle_vars_str = '[' + cycle_vars.join(',') + ']';
+	out_str += `constraint strictly_increasing(${cycle_vars_str});\n`;
+
+	return out_str;
+}
+
+function rowCycleThermoElement(model: PuzzleModel, element: ConstraintsElement) {
+	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
+	const grid = model.puzzle.grid;
+	for (const [c_id, constraint] of Object.entries(constraints)) {
+		const constraint_str = rowCycleThermoConstraint(grid, c_id, constraint as LineToolI);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
 
 export const rowCyclethermometerInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -164,8 +235,15 @@ export const rowCyclethermometerInfo: SquareCellElementInfo = {
 		...DEFAULT_META_1,
 		description:
 			"Within a row, let a 'cycle' be the path taken starting from digit A in column X and then looking at digit B in Column A, then digit C in Column B etc until the cycle returns to digit A again. The 'order' of a cycle is the number of unique digits contained in the cycle. eg A 5 in r9c1, a 9 in r9c5 and a 1 in r9c9 would force a cycle of order 3. The Order of the cycle increases along light blue thermometers starting from the bulb end."
-	}
+	},
+
+	solver_func: rowCycleThermoElement
 };
+
+function palindromeElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'palindrome');
+	return out_str;
+}
 
 export const palindromeInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -183,8 +261,15 @@ export const palindromeInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: palindromeElement
 };
+
+function renbanElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'renban', true);
+	return out_str;
+}
 
 export const renbanLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -209,8 +294,15 @@ export const renbanLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: renbanElement
 };
+
+function doubleRenbanElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'double_renban_p', true);
+	return out_str;
+}
 
 export const doubleRenbanLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -235,8 +327,15 @@ export const doubleRenbanLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: doubleRenbanElement
 };
+
+function renrenbanbanElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'renrenbanban_p', true);
+	return out_str;
+}
 
 export const renrenbanbanLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -261,8 +360,15 @@ export const renrenbanbanLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: renrenbanbanElement
 };
+
+function nConsecutiveRenbanLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = circularValuedLineElement(model, element, 'n_consecutive_renban_line_p');
+	return out_str;
+}
 
 export const nConsecutiveRenbanLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -290,8 +396,15 @@ export const nConsecutiveRenbanLineInfo: SquareCellElementInfo = {
 			'Every string of N consecutive cells along the large purple loop must contain a set of N consecutive digits in any order without repeats (default N = 5).',
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: nConsecutiveRenbanLineElement
 };
+
+function nabnerElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'knabner_p', true);
+	return out_str;
+}
 
 export const nabnerLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -316,8 +429,15 @@ export const nabnerLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: nabnerElement
 };
+
+function whispersElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'whispers', '5');
+	return out_str;
+}
 
 export const whispersLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -345,8 +465,15 @@ export const whispersLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: whispersElement
 };
+
+function dutchWhispersElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'whispers', '4');
+	return out_str;
+}
 
 export const dutchWhispersInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -374,8 +501,15 @@ export const dutchWhispersInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: dutchWhispersElement
 };
+
+function maximumAdjacentDifferenceLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'maximum_adjacent_difference_line_p', '2');
+	return out_str;
+}
 
 export const maximumAdjacentDifferenceLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -404,8 +538,15 @@ export const maximumAdjacentDifferenceLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: maximumAdjacentDifferenceLineElement
 };
+
+function renbanOrWhispersLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'renban_or_whispers_p', '5');
+	return out_str;
+}
 
 export const renbanOrWhispersLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -434,8 +575,15 @@ export const renbanOrWhispersLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: renbanOrWhispersLineElement
 };
+
+function renbanOrNabnerElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'renban_or_nabner_line_p', true);
+	return out_str;
+}
 
 export const renbanOrNabnerLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -464,8 +612,15 @@ export const renbanOrNabnerLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: renbanOrNabnerElement
 };
+
+function outOfOrderConsecutiveLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'out_of_order_consecutive_line_p');
+	return out_str;
+}
 
 export const outOfOrderConsecutiveLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -490,8 +645,15 @@ export const outOfOrderConsecutiveLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: outOfOrderConsecutiveLineElement
 };
+
+function indexLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'index_line_p');
+	return out_str;
+}
 
 export const indexLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -519,8 +681,15 @@ export const indexLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: indexLineElement
 };
+
+function uniqueValuesLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'alldifferent', true);
+	return out_str;
+}
 
 export const uniqueValuesLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -538,8 +707,36 @@ export const uniqueValuesLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: uniqueValuesLineElement
 };
+
+function regionSumLineConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: LineToolI
+) {
+	let out_str = '';
+	const cells = cellsFromCoords(grid, constraint.cells);
+
+	const cell_regions = splitLineByRegion(cells);
+	if (!cell_regions.length) return '';
+	const sum_var: string = `sum_line_${c_id}`;
+	out_str += `var int: ${sum_var};\n`;
+	for (const cell_region of cell_regions) {
+		const vars_str = cellsToGridVarsStr(cell_region, VAR_2D_NAMES.BOARD);
+		const constraint_str = `constraint sum(${vars_str}) == ${sum_var};\n`;
+		out_str += constraint_str;
+	}
+	return out_str;
+}
+
+function regionSumLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, regionSumLineConstraint);
+	return out_str;
+}
 
 export const regionSumLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -564,8 +761,15 @@ export const regionSumLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: regionSumLineElement
 };
+
+function sumLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'sum_line_p');
+	return out_str;
+}
 
 export const sumLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -593,8 +797,15 @@ export const sumLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: sumLineElement
 };
+
+function arithmeticSequenceLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'arithmetic_sequence_line_p');
+	return out_str;
+}
 
 export const arithmeticSequenceLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -619,8 +830,15 @@ export const arithmeticSequenceLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: arithmeticSequenceLineElement
 };
+
+function sameParityLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'same_parity_line_p');
+	return out_str;
+}
 
 export const sameParityLineLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -644,8 +862,15 @@ export const sameParityLineLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: sameParityLineElement
 };
+
+function modularLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'modular_line_p', '3');
+	return out_str;
+}
 
 export const modularLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -674,8 +899,15 @@ export const modularLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: modularLineElement
 };
+
+function unimodularLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'unimodular_line_p', '3');
+	return out_str;
+}
 
 export const unimodularLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -704,8 +936,15 @@ export const unimodularLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: unimodularLineElement
 };
+
+function modularOrUnimodularLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'modular_or_unimodular_line_p', '3');
+	return out_str;
+}
 
 export const modularOrUnimodularLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -734,8 +973,15 @@ export const modularOrUnimodularLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: modularOrUnimodularLineElement
 };
+
+function oddEvenOscillatorLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'odd_even_oscillator_line_p');
+	return out_str;
+}
 
 export const oddEvenOscilatorLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -759,8 +1005,15 @@ export const oddEvenOscilatorLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: oddEvenOscillatorLineElement
 };
+
+function highLowOscillatorLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'high_low_oscillator_line_p', '5');
+	return out_str;
+}
 
 export const highLowOscilatorLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -789,8 +1042,27 @@ export const highLowOscilatorLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: highLowOscillatorLineElement
 };
+
+function entropicLineConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: LineToolI
+) {
+	const vars = getLineVars(grid, constraint);
+	const vars_str = `[${vars.join(',')}]`;
+	const constraint_str: string = `constraint entropic_line_p(${vars_str}, {1,2,3}, {4,5,6}, {7,8,9});\n`;
+	return constraint_str;
+}
+
+function entropicLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, entropicLineConstraint);
+	return out_str;
+}
 
 export const entropicLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -815,8 +1087,27 @@ export const entropicLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: entropicLineElement
 };
+
+function entropicOrModularLineConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: LineToolI
+) {
+	const vars = getLineVars(grid, constraint);
+	const vars_str = `[${vars.join(',')}]`;
+	const constraint_str: string = `constraint entropic_or_modular_line_p(${vars_str}, {1,2,3}, {4,5,6}, {7,8,9}, 3);\n`;
+	return constraint_str;
+}
+
+function entropicOrModularLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, entropicOrModularLineConstraint);
+	return out_str;
+}
 
 export const entropicOrModularLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -841,7 +1132,9 @@ export const entropicOrModularLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: entropicOrModularLineElement
 };
 
 export const indexingColumnIsXLineInfo: SquareCellElementInfo = {
@@ -904,6 +1197,11 @@ export const indexingRowIsXLineInfo: SquareCellElementInfo = {
 	}
 };
 
+function repeatedDigitsLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'repeated_digits_line_p');
+	return out_str;
+}
+
 export const repeatedDigitsLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
@@ -927,8 +1225,15 @@ export const repeatedDigitsLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: repeatedDigitsLineElement
 };
+
+function superfuzzyArrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'superfuzzy_arrow_p');
+	return out_str;
+}
 
 export const superfuzzyArrowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -953,8 +1258,15 @@ export const superfuzzyArrowInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: superfuzzyArrowElement
 };
+
+function ambiguousArrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'ambiguous_arrow_p', true);
+	return out_str;
+}
 
 export const ambiguousArrowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -979,8 +1291,15 @@ export const ambiguousArrowInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: ambiguousArrowElement
 };
+
+function headlessArrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'headless_arrow_p');
+	return out_str;
+}
 
 export const headlessArrowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -1004,8 +1323,15 @@ export const headlessArrowInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: headlessArrowElement
 };
+
+function xvLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'xv_line_p');
+	return out_str;
+}
 
 export const xvLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -1029,8 +1355,56 @@ export const xvLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: xvLineElement
 };
+
+function rowSumLineConstraint(grid: Grid, constraint: LineToolI) {
+	const cells = cellsFromCoords(grid, constraint.cells);
+
+	function split_by_row(_cells: Cell[]) {
+		const groups: Cell[][] = [];
+		let prev_row: number | null = null;
+		for (const cell of _cells) {
+			if (cell.r != prev_row) {
+				groups.push([cell]);
+				prev_row = cell.r;
+			} else {
+				groups[groups.length - 1].push(cell);
+			}
+		}
+		return groups;
+	}
+
+	const groups = split_by_row(cells);
+	if (groups.length < 2) return '';
+	const first_group = groups[0];
+	const vars1 = cellsToVarsName(first_group);
+	const vars1_str = `[${vars1.join(',')}]`;
+
+	let out_str = '';
+	for (let i = 1; i < groups.length; i++) {
+		const group = groups[i];
+		const vars = cellsToVarsName(group);
+		const vars_str = `[${vars.join(',')}]`;
+		out_str += `constraint sum(${vars_str}) == sum(${vars1_str});\n`;
+	}
+	return out_str;
+}
+
+function rowSumLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
+	const grid = model.puzzle.grid;
+	for (const constraint of Object.values(constraints)) {
+		const constraint_str = rowSumLineConstraint(grid, constraint as LineToolI);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
 
 export const rowSumLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -1054,8 +1428,15 @@ export const rowSumLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: rowSumLineElement
 };
+
+function atLeastXLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'at_least_x_line_p', '10');
+	return out_str;
+}
 
 export const atLeastXLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -1083,8 +1464,15 @@ export const atLeastXLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: atLeastXLineElement
 };
+
+function nConsecutiveFuzzySumLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = circularValuedLineElement(model, element, 'n_consecutive_fuzzy_sum_line_p');
+	return out_str;
+}
 
 export const nConsecutiveFuzzySumLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -1113,7 +1501,9 @@ export const nConsecutiveFuzzySumLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: nConsecutiveFuzzySumLineElement
 };
 
 export const adjacentCellSumIsPrimeLineInfo: SquareCellElementInfo = {
@@ -1141,6 +1531,11 @@ export const adjacentCellSumIsPrimeLineInfo: SquareCellElementInfo = {
 	}
 };
 
+function productLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = valuedLineElement(model, element, 'product_line_p');
+	return out_str;
+}
+
 export const productLineInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.LINE,
@@ -1167,8 +1562,15 @@ export const productLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: productLineElement
 };
+
+function adjacentMultiplesLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'adjacent_multiples_line_p');
+	return out_str;
+}
 
 export const adjacentMultiplesLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -1193,8 +1595,15 @@ export const adjacentMultiplesLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: adjacentMultiplesLineElement
 };
+
+function adjacentDifferencesCountLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'adjacent_differences_count_line_p');
+	return out_str;
+}
 
 export const adjacentDifferencesCountLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -1219,8 +1628,15 @@ export const adjacentDifferencesCountLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: adjacentDifferencesCountLineElement
 };
+
+function lookAndSayLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'look_and_say_line_p', true);
+	return out_str;
+}
 
 export const lookandSayLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -1245,10 +1661,17 @@ export const lookandSayLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: lookAndSayLineElement
 };
 
-export const ZipperLineInfo: SquareCellElementInfo = {
+function zipperLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'zipper_line_p');
+	return out_str;
+}
+
+export const zipperLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
 	toolId: TOOLS.ZIPPER_LINE,
@@ -1271,8 +1694,15 @@ export const ZipperLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: zipperLineElement
 };
+
+function segmentedSumLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = circularValuedLineElement(model, element, 'segmented_sum_line_p');
+	return out_str;
+}
 
 export const segmentedSumLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -1301,8 +1731,15 @@ export const segmentedSumLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: segmentedSumLineElement
 };
+
+function segmentedSumAndRenbanLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'segmented_sum_and_renban_line_p');
+	return out_str;
+}
 
 export const segmentedSumAndRenbanLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -1331,8 +1768,23 @@ export const segmentedSumAndRenbanLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: segmentedSumAndRenbanLineElement
 };
+
+function adjacentCellsAreMultiplesOfDifferenceLineElement(
+	model: PuzzleModel,
+	element: ConstraintsElement
+) {
+	const out_str = simpleLineElement(
+		model,
+		element,
+		'adjacent_cells_are_multiples_of_difference_line_p',
+		false
+	);
+	return out_str;
+}
 
 export const adjacentCellsAreMultiplesOfDifferenceLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -1361,7 +1813,9 @@ export const adjacentCellsAreMultiplesOfDifferenceLineInfo: SquareCellElementInf
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: adjacentCellsAreMultiplesOfDifferenceLineElement
 };
 
 export const thermoOrAverageArrowInfo: SquareCellElementInfo = {
@@ -1392,6 +1846,36 @@ export const thermoOrAverageArrowInfo: SquareCellElementInfo = {
 	}
 };
 
+function indexerCellsRegionSubsetLineConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: LineToolI
+) {
+	const cells = cellsFromCoords(grid, constraint.cells);
+
+	const cell_regions = splitLineByRegion(cells);
+	cell_regions.sort((group1, group2) => group2.length - group1.length);
+	if (cell_regions.length <= 1) return '';
+	let out_str: string = '';
+
+	const group1 = cell_regions[0];
+	const group1_vars = cellsToGridVarsStr(group1, VAR_2D_NAMES.VALUES_GRID);
+	for (const group2 of cell_regions.slice(1)) {
+		const group2_vars = cellsToGridVarsStr(group2, VAR_2D_NAMES.VALUES_GRID);
+
+		const constraint_str = `constraint subset_p(${group1_vars}, ${group2_vars});\n`;
+		out_str += constraint_str;
+	}
+
+	return out_str;
+}
+
+function indexerCellsRegionSubsetLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, indexerCellsRegionSubsetLineConstraint);
+	return out_str;
+}
+
 export const indexerCellsRegionSubsetLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
@@ -1409,8 +1893,15 @@ export const indexerCellsRegionSubsetLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: indexerCellsRegionSubsetLineElement
 };
+
+function peapodsLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleLineElement(model, element, 'peapods_p');
+	return out_str;
+}
 
 export const peapodsLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -1432,189 +1923,27 @@ export const peapodsLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: peapodsLineElement
 };
 
 /* ----------------------------------------------------------------------------- */
 
-export const yinYangShadedWhispersLineInfo: SquareCellElementInfo = {
-	inputOptions: {
-		type: HANDLER_TOOL_TYPE.LINE,
-		allowSelfIntersection: true,
-		defaultValue: '5'
-	},
+// function goldilocksZoneRegionSumLineConstraint(
+// 	model: PuzzleModel,
+// 	grid: Grid,
+// 	c_id: string,
+// 	constraint: LineToolI
+// ) {
+// 	const cells = cellsFromCoords(grid, constraint.cells);
 
-	toolId: TOOLS.YIN_YANG_SHADED_WHISPERS_LINE,
+// 	const values_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.VALUES_GRID);
+// 	const region_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.GOLDILOCKS_REGIONS);
 
-	shape: {
-		type: SHAPE_TYPES.LINE,
-		strokeWidth: { editable: true, value: 0.15 },
-		stroke: { editable: true, value: 'var(--constraint-color-green)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
-	},
-
-	meta: {
-		description:
-			'Within shaded yin yang areas, adjacent digits along a green line must differ by at least x (default x = 5).',
-		usage: lineUsage(),
-		tags: [],
-		categories: simpleLineDefaultCategories
-	}
-};
-
-export const yinYangUnshadedEntropicLineInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
-
-	toolId: TOOLS.YIN_YANG_UNSHADED_ENTROPIC_LINE,
-
-	shape: {
-		type: SHAPE_TYPES.LINE,
-		strokeWidth: { editable: true, value: 0.15 },
-		stroke: { editable: true, value: 'var(--constraint-color-orange)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
-	},
-
-	meta: {
-		description:
-			'Within unshaded yin yang areas, any string or 3 or fewer digits along an orange line must be from a different set ({1,2,3}, {4,5,6}, {7,8,9}).',
-		usage: lineUsage(),
-		tags: [],
-		categories: simpleLineDefaultCategories
-	}
-};
-
-export const yinYangUnshadedModularLineInfo: SquareCellElementInfo = {
-	inputOptions: {
-		type: HANDLER_TOOL_TYPE.LINE,
-		allowSelfIntersection: true,
-		defaultValue: '3'
-	},
-
-	toolId: TOOLS.YIN_YANG_UNSHADED_MODULAR_LINE,
-
-	shape: {
-		type: SHAPE_TYPES.LINE,
-		strokeWidth: { editable: true, value: 0.15 },
-		stroke: { editable: true, value: 'var(--constraint-color-dark-blue)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
-	},
-
-	meta: {
-		description:
-			'Within unshaded yin yang areas, every set of N or less sequential digits contains one number from every possible remainder set, from 0 to N-1 (default N = 3). For example, on modular lines of mod 3, every set of 3 sequential cells contains one digit from {1,4,7} (remainder 1), one from {2,5,8} (remainder 2) and one from {3,6,9} (remainder 0).',
-		usage: lineUsage(),
-		tags: [],
-		categories: simpleLineDefaultCategories
-	}
-};
-
-export const yinYangCalifornianMountainSnakeInfo: SquareCellElementInfo = {
-	inputOptions: {
-		type: HANDLER_TOOL_TYPE.LINE,
-		allowSelfIntersection: false
-	},
-
-	toolId: TOOLS.YIN_YANG_CALIFORNIAN_MOUNTAIN_SNAKE,
-
-	shape: {
-		type: SHAPE_TYPES.LINE,
-		strokeWidth: { editable: true, value: 0.1 },
-		stroke: { editable: true, value: 'var(--constraint-color-dark-red)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
-	},
-
-	meta: {
-		description:
-			'Along the red line, each run of cells with the same yin yang shading contains a non-repeating set of consecutive digits in any order. Along the red line, digits in each pair of adjacent cells with different yin yang shading must differ by at least 5.',
-		usage: lineUsage(),
-		tags: [],
-		categories: simpleLineDefaultCategories
-	}
-};
-
-export const yinYangRegionSumLineInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
-
-	toolId: TOOLS.YIN_YANG_REGION_SUM_LINE,
-
-	negative_constraints: [
-		{
-			toolId: TOOLS.YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE,
-			description: 'All lines must cross colours at least once.'
-		}
-	],
-
-	shape: {
-		type: SHAPE_TYPES.LINE,
-		strokeWidth: { editable: true, value: 0.15 },
-		stroke: { editable: true, value: 'var(--constraint-color-blue)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
-	},
-
-	meta: {
-		description:
-			'Blue lines must have an equal sum N within each colour they pass through. If a blue line passes through a colour multiple times, each individual pass sums to N.',
-		usage: lineUsage(),
-		tags: [],
-		categories: simpleLineDefaultCategories
-	}
-};
-
-export const yinYangIndexingLineColoringInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
-
-	toolId: TOOLS.YIN_YANG_INDEXING_LINE_COLORING,
-
-	shape: {
-		type: SHAPE_TYPES.THERMO_WITH_POLYGON,
-		strokeWidth: { editable: false, value: 0.1 },
-		n: { editable: false, value: 4 },
-		r: { editable: false, value: 0.3 },
-		opacity: { editable: false, value: 0.9 },
-		stroke: { editable: false, value: 'var(--constraint-color-gray)' },
-		fill: { editable: false, value: 'var(--constraint-color-gray)' },
-		linePathOptions: {
-			shortenTail: { editable: false, value: 0.1 },
-			bezierRounding: { editable: false, value: 0.1 },
-			closeLoops: { editable: false, value: false }
-		}
-	},
-
-	meta: {
-		description:
-			'On an index line, the digit in the Nth cell along the line (starting from the diamond) indicates the position along the line where the digit N appears. Eg: 3214 would be a valid line with 3 as the diamond; the 1st digit, 3, indicates that the 3rd cell contains a 1, the 2nd cell a 2, and so on. All cells that reference their own position on a indexing line (the digit N is in position N) should be dark. Cells that are not self referencing should be light. For example for the line 3214 with 3 as the diamond, the 2 and 4 would be dark and the 1 and 3 would be light.',
-		usage: lineUsage(),
-		tags: [],
-		categories: simpleLineDefaultCategories
-	}
-};
-
-/* ----------------------------------------------------------------------------- */
+// 	const constraint_str: string = `constraint goldilocks_zone_region_sum_p(${values_vars_str}, ${region_vars_str});\n`;
+// 	return constraint_str;
+// }
 
 export const goldilocksZoneRegionSumLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -1642,181 +1971,10 @@ export const goldilocksZoneRegionSumLineInfo: SquareCellElementInfo = {
 	}
 };
 
-/* ----------------------------------------------------------------------------- */
-
-export const betweenLineInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
-
-	toolId: TOOLS.BETWEEN_LINE,
-
-	shape: {
-		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
-		r: { editable: false, value: 0.35 },
-		strokeWidth: { editable: true, value: 0.04 },
-		stroke: { editable: true, value: 'var(--constraint-color-green)' },
-		linePathOptions: {
-			bezierRounding: { editable: false, value: 0.15 }
-		}
-	},
-
-	meta: {
-		description:
-			"Numbers on a green line must be numerically in between the two circled cells at the line's ends.",
-		usage: lineUsage(),
-		tags: [],
-		categories: doubleEndedLineDefaultCategories
-	}
-};
-
-export const lockoutLineInfo: SquareCellElementInfo = {
-	inputOptions: {
-		type: HANDLER_TOOL_TYPE.LINE,
-		allowSelfIntersection: true,
-		defaultValue: '4'
-	},
-
-	toolId: TOOLS.LOCKOUT_LINE,
-
-	shape: {
-		type: SHAPE_TYPES.LINE_WITH_POLYGON_ENDS,
-		n: { editable: false, value: 4 },
-		r: { editable: false, value: 0.35 },
-		strokeWidth: { editable: true, value: 0.04 },
-		stroke: { editable: true, value: 'var(--constraint-color-purple)' },
-		linePathOptions: {
-			bezierRounding: { editable: false, value: 0.15 }
-		}
-	},
-
-	meta: {
-		description:
-			'Numbers on the diamond endpoints of a purple line must have a difference of at least N (default N = 4) and the remaining digits on the line cannot be between or equal to the digits on the endpoints.',
-		usage: lineUsage(),
-		tags: [],
-		categories: doubleEndedLineDefaultCategories
-	}
-};
-
-export const tightropeLineInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
-
-	toolId: TOOLS.TIGHTROPE_LINE,
-
-	shape: {
-		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
-		r: { editable: false, value: 0.35 },
-		strokeWidth: { editable: true, value: 0.04 },
-		stroke: { editable: true, value: 'black' },
-		linePathOptions: {
-			bezierRounding: { editable: false, value: 0.15 }
-		}
-	},
-
-	meta: {
-		description:
-			'Circled cells at the ends of a black line have the same value and that value does not repeat along the line connecting them.',
-		usage: lineUsage(),
-		tags: [],
-		categories: doubleEndedLineDefaultCategories
-	}
-};
-
-export const parityCountLineInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
-
-	toolId: TOOLS.PARITY_COUNT_LINE,
-
-	shape: {
-		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
-		r: { editable: false, value: 0.35 },
-		strokeWidth: { editable: true, value: 0.04 },
-		stroke: { editable: true, value: 'var(--constraint-color-dark-gray)' },
-		linePathOptions: {
-			bezierRounding: { editable: false, value: 0.15 }
-		}
-	},
-
-	meta: {
-		description:
-			'Circled cells at the ends of a line count the number of even values cells and the number of odd values cells on the line. Which circle is counts odds or evens must be determined by the solver.',
-		usage: lineUsage(),
-		tags: [],
-		categories: doubleEndedLineDefaultCategories
-	}
-};
-
-export const doubleArrowLineInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
-
-	toolId: TOOLS.DOUBLE_ARROW_LINE,
-
-	shape: {
-		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
-		r: { editable: false, value: 0.35 },
-		strokeWidth: { editable: true, value: 0.04 },
-		stroke: { editable: true, value: 'var(--constraint-color-dark-gray)' },
-		linePathOptions: {
-			bezierRounding: { editable: false, value: 0.15 }
-		}
-	},
-
-	meta: {
-		description:
-			'The sum of the values on the line must equal the sum of the values in its end circles. Values may repeat if allowed by other rules.',
-		tags: [],
-		usage: lineUsage(),
-		categories: doubleEndedLineDefaultCategories
-	}
-};
-
-export const productOfEndsEqualsSumOfLineInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
-
-	toolId: TOOLS.PRODUCT_OF_ENDS_EQUALS_SUM_OF_LINE,
-
-	shape: {
-		type: SHAPE_TYPES.LINE_WITH_POLYGON_ENDS,
-		n: { editable: false, value: 4 },
-		r: { editable: false, value: 0.35 },
-		strokeWidth: { editable: true, value: 0.04 },
-		stroke: { editable: true, value: 'var(--constraint-color-orange)' },
-		linePathOptions: {
-			bezierRounding: { editable: false, value: 0.15 }
-		}
-	},
-
-	meta: {
-		description:
-			'The sum of the values on the orange line must equal the product of the values in its end diamonds. Values may repeat if allowed by other rules.',
-		usage: lineUsage(),
-		tags: [],
-		categories: doubleEndedLineDefaultCategories
-	}
-};
-
-export const splitPeasLineInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
-
-	toolId: TOOLS.SPLIT_PEAS,
-
-	shape: {
-		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
-		r: { editable: false, value: 0.35 },
-		strokeWidth: { editable: true, value: 0.04 },
-		stroke: { editable: true, value: 'lightgreen' },
-		linePathOptions: {
-			bezierRounding: { editable: false, value: 0.15 }
-		}
-	},
-
-	meta: {
-		description:
-			'The sum of the digits on a line strictly between two circles is equal to a concatenation of the two values in the circles, in some order. For instance, 3_346_1 could be a valid split pea line, as 3+4+6=13, which is 1 concatenated with 3.',
-		usage: lineUsage(),
-		tags: [],
-		categories: doubleEndedLineDefaultCategories
-	}
-};
+function doublersThermometerElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleMultipliersLineElement(model, element, 'strictly_increasing');
+	return out_str;
+}
 
 export const doublersThermometerInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -1843,53 +2001,7 @@ export const doublersThermometerInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
-};
-
-export const doublersBetweenLineInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
-
-	toolId: TOOLS.DOUBLERS_BETWEEN_LINE,
-
-	shape: {
-		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
-		r: { editable: false, value: 0.35 },
-		strokeWidth: { editable: true, value: 0.04 },
-		stroke: { editable: true, value: 'var(--constraint-color-green)' },
-		linePathOptions: {
-			bezierRounding: { editable: false, value: 0.15 }
-		}
 	},
 
-	meta: {
-		description:
-			"Digits on a 'between line', which may include repeats, must be strictly between the values in the circles on the ends of that line. For the purposes of the between lines, digits on doublers count as double their value.",
-		usage: lineUsage(),
-		tags: [],
-		categories: doubleEndedLineDefaultCategories
-	}
-};
-
-export const doublersDoubleArrowLineInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
-
-	toolId: TOOLS.DOUBLERS_DOUBLE_ARROW_LINE,
-
-	shape: {
-		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
-		r: { editable: false, value: 0.35 },
-		strokeWidth: { editable: true, value: 0.04 },
-		stroke: { editable: true, value: 'var(--constraint-color-green)' },
-		linePathOptions: {
-			bezierRounding: { editable: false, value: 0.15 }
-		}
-	},
-
-	meta: {
-		description:
-			'The sum of the values on the line must equal the sum of the values in its end circles. Values may repeat if allowed by other rules. For the purposes of the double arrow lines, digits on doublers count as double their value.',
-		usage: lineUsage(),
-		tags: [],
-		categories: doubleEndedLineDefaultCategories
-	}
+	solver_func: doublersThermometerElement
 };

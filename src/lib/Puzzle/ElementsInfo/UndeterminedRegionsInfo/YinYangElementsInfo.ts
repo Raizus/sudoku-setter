@@ -1,4 +1,13 @@
-import { addHeader, adjCellPairGen, cellsToGridVarsStr, cellToGridVarName, cellToVarName, PuzzleModel, VAR_2D_NAMES, type PuzzleAuxI } from '$src/lib/Solver/solver_utils';
+import {
+	addHeader,
+	adjCellPairGen,
+	cellsToGridVarsStr,
+	cellToGridVarName,
+	cellToVarName,
+	PuzzleModel,
+	VAR_2D_NAMES,
+	type PuzzleAuxI
+} from '$src/lib/Solver/solver_utils';
 import type { SquareCellElementInfo } from '../../ElementInfo';
 import type { ConstraintsElement } from '../../puzzle_schema';
 import { TOOLS, TOOL_CATEGORIES, type TOOLID } from '../../Tools';
@@ -120,7 +129,7 @@ export const yinYangInfo: SquareCellElementInfo = {
 			'Shade some cells in the grid such that all shaded cells are orthogonally connected and all unshaded cells are orthogonally connected, and no 2x2 area is fully shaded or fully unshaded.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
-    },
-    
-    solver_func: yinYangElement
+	},
+
+	solver_func: yinYangElement
 };

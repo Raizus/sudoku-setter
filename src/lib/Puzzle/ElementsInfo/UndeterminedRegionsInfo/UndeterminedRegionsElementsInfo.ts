@@ -1,4 +1,16 @@
-import { addHeader, adjCellPairGen, cellsToGridVarsStr, cellToGridVarName, cellToVarName, exactlyNPerColumn, exactlyNPerRegion, exactlyNPerRow, exactlyNPerRowColumnRegion, PuzzleModel, VAR_2D_NAMES, type PuzzleAuxI } from '$src/lib/Solver/solver_utils';
+import {
+	adjCellPairGen,
+	cellsToGridVarsStr,
+	cellToGridVarName,
+	cellToVarName,
+	exactlyNPerColumn,
+	exactlyNPerRegion,
+	exactlyNPerRow,
+	exactlyNPerRowColumnRegion,
+	PuzzleModel,
+	VAR_2D_NAMES,
+	type PuzzleAuxI
+} from '$src/lib/Solver/solver_utils';
 import { range } from 'lodash';
 import type { SquareCellElementInfo } from '../../ElementInfo';
 import type { ConstraintsElement } from '../../puzzle_schema';
@@ -70,7 +82,7 @@ function numberedChaosConstructionElement(model: PuzzleModel, element: Constrain
 	const n_regions = Math.max(grid.nCols, grid.nRows);
 	const reg_idxs = range(1, n_regions + 1);
 	const reg_idxs_str = '[' + reg_idxs.join(',') + ']';
-	let out_str: string = `\n% ${tool}\n`;
+	let out_str: string = ``;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var ${1}..${n_regions}: ${grid_name};\n`;
 	out_str += `constraint numbered_chaos_construction_p(${VAR_2D_NAMES.BOARD}, ${grid_name}, ${reg_idxs_str}, ${n_regions});\n`;
 	out_str += `constraint no_repeats_in_unknown_regions_p(${VAR_2D_NAMES.BOARD}, ${grid_name}, ALLOWED_DIGITS, ${reg_idxs_str});\n`;
@@ -103,7 +115,7 @@ function chaosConstructionSuguruElement(model: PuzzleModel, element: Constraints
 	}
 
 	const grid_name = VAR_2D_NAMES.SUGURU_REGIONS;
-	let out_str: string = `\n% ${tool}\n`;
+	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name};\n`;
 	out_str += `constraint chaos_construction_suguru_p(board, ${grid_name});\n`;
 	// out_str += `constraint max_grid_val_p(board, 4);\n`;
@@ -151,7 +163,7 @@ function nurimisakiElement(model: PuzzleModel, element: ConstraintsElement) {
 		return '';
 	}
 
-	let out_str: string = `\n% ${tool}\n`;
+	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: nurimisaki;\n`;
 	out_str += `constraint nurimisaki_p(nurimisaki);\n`;
 
@@ -216,7 +228,7 @@ function nurikabeElement(model: PuzzleModel, element: ConstraintsElement) {
 		return '';
 	}
 
-	let out_str: string = `\n% ${tool}\n`;
+	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: nurikabe_shading;\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: nurikabe_regions;\n`;
 	out_str += `constraint nurikabe_p(nurikabe_shading, nurikabe_regions);\n`;
@@ -263,7 +275,7 @@ function twoContiguousRegionsElement(model: PuzzleModel, element: ConstraintsEle
 		return '';
 	}
 
-	let out_str: string = `\n% ${tool}\n`;
+	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: two_contiguous_regions;\n`;
 	out_str += `constraint two_contiguous_regions_p(two_contiguous_regions);\n`;
 
@@ -293,7 +305,7 @@ function sashiganeElement(model: PuzzleModel, element: ConstraintsElement) {
 		return '';
 	}
 
-	let out_str: string = `\n% ${tool}\n`;
+	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: sashigane;\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: sashigane_bends;\n`;
 	out_str += `constraint sashigane_adjacency_p(sashigane);\n`;
@@ -330,7 +342,7 @@ function norinoriElement(model: PuzzleModel, element: ConstraintsElement) {
 
 	const grid_name1 = VAR_2D_NAMES.NORINORI_SHADING;
 
-	let out_str: string = `\n% ${tool}\n`;
+	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name1};\n`;
 	out_str += `constraint norinori_p(${VAR_2D_NAMES.BOARD_REGIONS}, ${grid_name1});\n`;
 
@@ -383,7 +395,7 @@ function shikakuElement(model: PuzzleModel, element: ConstraintsElement) {
 
 	const grid_name1 = VAR_2D_NAMES.SHIKAKU_REGIONS;
 
-	let out_str: string = `\n% ${tool}\n`;
+	let out_str: string = '';
 	const n_rows = grid.nRows;
 	const n_cols = grid.nCols;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name1};\n`;
@@ -482,7 +494,7 @@ function goldilocksElement(model: PuzzleModel, element: ConstraintsElement) {
 		return '';
 	}
 
-	let out_str: string = `\n% ${tool}\n`;
+	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..2: goldilocks_regions;\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: values_grid;\n`;
 	out_str += `constraint goldilocks_zone_p(goldilocks_regions);\n`;
@@ -504,15 +516,9 @@ export const goldilocksZoneInfo: SquareCellElementInfo = {
 	solver_func: goldilocksElement
 };
 
-function twilightCaveFillominoRegionsShadingElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-): string {
-	const tool = element.tool_id;
-
+function twilightCaveFillominoRegionsShadingElement(): string {
 	let out_str: string = '';
 	out_str += `constraint twilight_cave_fillomino_region_shading(cave_shading, fillomino_area);\n`;
-	out_str = addHeader(out_str, `${tool}`);
 	return out_str;
 }
 
@@ -529,12 +535,9 @@ export const twilightCaveFillominoRegionShadingInfo: SquareCellElementInfo = {
 	solver_func: twilightCaveFillominoRegionsShadingElement
 };
 
-function yinYangFillominoParityElement(model: PuzzleModel, element: ConstraintsElement): string {
-	const tool = element.tool_id;
-
+function yinYangFillominoParityElement(): string {
 	let out_str: string = '';
 	out_str += `constraint yin_yang_fillomino_parity_p(board, yin_yang);\n`;
-	out_str = addHeader(out_str, `${tool}`);
 	return out_str;
 }
 
@@ -564,7 +567,7 @@ function pentominoTillingElement(model: PuzzleModel, element: ConstraintsElement
 	const num_pentominoes = 12;
 	const grid_name = VAR_2D_NAMES.PENTOMINO_REGIONS;
 
-	let out_str: string = `\n% ${tool}\n`;
+	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..${num_pentominoes}: ${grid_name};\n`;
 	out_str += `constraint pentomino_tilling_p(${grid_name});\n`;
 
@@ -655,7 +658,7 @@ function fillominoElement(model: PuzzleModel, element: ConstraintsElement) {
 	}
 
 	const grid_name = VAR_2D_NAMES.FILLOMINO_REGIONS;
-	let out_str: string = `\n% ${tool}\n`;
+	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name};\n`;
 	out_str += `constraint fillomino_p(board, ${grid_name});\n`;
 
@@ -835,7 +838,7 @@ function starBattleElement(model: PuzzleModel, element: ConstraintsElement) {
 
 	const grid_name2 = VAR_2D_NAMES.STAR_BATTLE;
 
-	let out_str: string = `\n% ${tool}\n`;
+	let out_str: string = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name2};\n`;
 
 	// 2 stars per column, row, 1 per region

@@ -95,12 +95,14 @@ import {
 	sudokuRulesDoNotApplyInfo,
 	tangoInfo
 } from './GlobalElementsInfo/GlobalConstraintsElementsInfo';
-import { parityMirrorPositiveDiagonalInfo } from './GlobalElementsInfo/DiagonalElementsInfo';
-import { parityMirrorNegativeDiagonalInfo } from './GlobalElementsInfo/DiagonalElementsInfo';
-import { positiveAntidiagonalInfo } from './GlobalElementsInfo/DiagonalElementsInfo';
-import { negativeAntidiagonalInfo } from './GlobalElementsInfo/DiagonalElementsInfo';
-import { positiveDiagonalInfo } from './GlobalElementsInfo/DiagonalElementsInfo';
-import { negativeDiagonalInfo } from './GlobalElementsInfo/DiagonalElementsInfo';
+import {
+	parityMirrorPositiveDiagonalInfo,
+	parityMirrorNegativeDiagonalInfo,
+	positiveAntidiagonalInfo,
+	negativeAntidiagonalInfo,
+	positiveDiagonalInfo,
+	negativeDiagonalInfo
+} from './GlobalElementsInfo/DiagonalElementsInfo';
 import {
 	chaosConstructionSuguruInfo,
 	goldilocksZoneInfo,
@@ -138,12 +140,8 @@ import {
 	adjacentMultiplesLineInfo,
 	arithmeticSequenceLineInfo,
 	atLeastXLineInfo,
-	betweenLineInfo,
 	adjacentDifferencesCountLineInfo,
-	doubleArrowLineInfo,
 	doubleRenbanLineInfo,
-	doublersBetweenLineInfo,
-	doublersDoubleArrowLineInfo,
 	doublersThermometerInfo,
 	entropicLineInfo,
 	entropicOrModularLineInfo,
@@ -151,7 +149,6 @@ import {
 	indexingColumnIsXLineInfo,
 	indexingRowIsXLineInfo,
 	nabnerLineInfo,
-	lockoutLineInfo,
 	maximumAdjacentDifferenceLineInfo,
 	modularLineInfo,
 	modularOrUnimodularLineInfo,
@@ -159,9 +156,7 @@ import {
 	nConsecutiveRenbanLineInfo,
 	oddEvenOscilatorLineInfo,
 	palindromeInfo,
-	parityCountLineInfo,
 	productLineInfo,
-	productOfEndsEqualsSumOfLineInfo,
 	regionSumLineInfo,
 	renbanLineInfo,
 	renbanOrWhispersLineInfo,
@@ -170,27 +165,20 @@ import {
 	rowCyclethermometerInfo,
 	rowSumLineInfo,
 	sameParityLineLineInfo,
-	splitPeasLineInfo,
 	sumLineInfo,
 	superfuzzyArrowInfo,
 	thermometerInfo,
-	tightropeLineInfo,
 	unimodularLineInfo,
 	uniqueValuesLineInfo,
 	whispersLineInfo,
 	xvLineInfo,
-	yinYangRegionSumLineInfo,
-	yinYangShadedWhispersLineInfo,
-	yinYangUnshadedEntropicLineInfo,
-	yinYangUnshadedModularLineInfo,
 	lookandSayLineInfo,
 	slowThermometerInfo,
 	indexLineInfo,
-	yinYangIndexingLineColoringInfo,
 	renbanOrNabnerLineInfo,
 	headlessArrowInfo,
 	outOfOrderConsecutiveLineInfo,
-	ZipperLineInfo,
+	zipperLineInfo,
 	segmentedSumLineInfo,
 	dutchWhispersInfo,
 	goldilocksZoneRegionSumLineInfo,
@@ -200,9 +188,27 @@ import {
 	ambiguousArrowInfo,
 	adjacentCellsAreMultiplesOfDifferenceLineInfo,
 	indexerCellsRegionSubsetLineInfo,
-	peapodsLineInfo,
-	yinYangCalifornianMountainSnakeInfo
-} from './LineElementsInfo.ts/LineElementsInfo';
+	peapodsLineInfo
+} from './LineElementsInfo/LineElementsInfo';
+import {
+	doubleArrowLineInfo,
+	doublersBetweenLineInfo,
+	doublersDoubleArrowLineInfo,
+	lockoutLineInfo,
+	parityCountLineInfo,
+	productOfEndsEqualsSumOfLineInfo,
+	splitPeasLineInfo,
+	tightropeLineInfo
+} from './LineElementsInfo/DoubleEndedLineElementsInfo';
+import { betweenLineInfo } from './LineElementsInfo/DoubleEndedLineElementsInfo';
+import {
+	yinYangIndexingLineColoringInfo,
+	yinYangRegionSumLineInfo,
+	yinYangCalifornianMountainSnakeInfo,
+	yinYangUnshadedModularLineInfo,
+	yinYangUnshadedEntropicLineInfo,
+	yinYangShadedWhispersLineInfo
+} from './LineElementsInfo/YinYangLineElementsInfo';
 import {
 	littleKillerLookAndSayInfo,
 	littleKillerProductInfo,
@@ -265,13 +271,7 @@ import {
 	twoContiguousRegionsRowColumnOppositeSetCountInfo,
 	chaosConstructionChessSumsInfo,
 	watchtowerInfo,
-	yinYangAdjacentSameShadeCountInfo,
-	yinYangMinesweeperInfo,
-	yinYangSeenSameShadeCellsInfo,
-	yinYangSeenShadedCellsInfo,
-	yinYangSeenUnshadedCellsInfo,
 	uniqueCellsInfo,
-	yinYangShadedNeighboursCountInfo,
 	coloredCountingCirclesInfo,
 	directedPathStartInfo,
 	directedPathEndInfo,
@@ -288,16 +288,26 @@ import {
 	cellKnightWhispersInfo,
 	shikakuRegionSizeInfo,
 	shikakuRegionSumInfo,
-	yinYangLabeledShadeCellInfo,
 	caveShadedRegionSizeUnshadedSeenOrthogonallyClueInfo,
 	BYOKCageSizeInfo,
 	BYOKNotCageCellInfo,
-	yinYangShadedCellInfo,
 	chaosConstructionNeighbourCellsSameRegionCountInfo
-} from './SingleCellElementsInfo';
-import { internalLoopSkyscrapersInfo } from './SingleCellArrowElementsInfo';
-import { thermoSightlineLoopArrowInfo } from './SingleCellArrowElementsInfo';
-import { sashiganeArrowPointsToBendInfo } from './SingleCellArrowElementsInfo';
+} from './SingleCellElementsInfo/SingleCellElementsInfo';
+import {
+	yinYangAdjacentSameShadeCountInfo,
+	yinYangMinesweeperInfo,
+	yinYangSeenSameShadeCellsInfo,
+	yinYangSeenShadedCellsInfo,
+	yinYangSeenUnshadedCellsInfo,
+	yinYangShadedNeighboursCountInfo,
+	yinYangLabeledShadeCellInfo,
+	yinYangShadedCellInfo
+} from './SingleCellElementsInfo/YinYangSingleCellElementsInfo';
+import {
+	internalLoopSkyscrapersInfo,
+	thermoSightlineLoopArrowInfo,
+	sashiganeArrowPointsToBendInfo
+} from './SingleCellArrowElementsInfo';
 import { customFogClearingInfo, fogLighsInfo } from './FogElementsInfo';
 import {
 	chaosCountSeenCellsInTheSameRegionArrowsInfo,
@@ -308,10 +318,8 @@ import {
 	nextNumberedRegionDistanceArrowsInfo,
 	nurikabeCountIslandCellsArrowsInfo,
 	shadedBoundariesCombinedCountArrowsInfo,
-	yinYangCountShadedCellsInfo
-} from './SingleCellMultiArrowElementsInfo';
-import { yinYangSumOfCellsOfOppositeColorInfo } from './SingleCellMultiArrowElementsInfo';
-import {
+	yinYangCountShadedCellsInfo,
+	yinYangSumOfCellsOfOppositeColorInfo,
 	loopCellCountArrowsInfo,
 	yinYangCountUniqueFillominoSameShadingInfo,
 	sameGalaxyUnobstructedCountArrowsInfo
@@ -586,7 +594,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.ADJACENT_DIFFERENCES_COUNT_LINE]: adjacentDifferencesCountLineInfo,
 	[TOOLS.LOOK_AND_SAY_LINE]: lookandSayLineInfo,
 	[TOOLS.ARITHMETIC_SEQUENCE_LINE]: arithmeticSequenceLineInfo,
-	[TOOLS.ZIPPER_LINE]: ZipperLineInfo,
+	[TOOLS.ZIPPER_LINE]: zipperLineInfo,
 	[TOOLS.SEGMENTED_SUM_LINE]: segmentedSumLineInfo,
 	[TOOLS.SEGMENTED_SUM_AND_RENBAN_LINE]: segmentedSumAndRenbanLineInfo,
 	[TOOLS.ADJACENT_CELLS_ARE_MULTIPLES_OF_DIFFERENCE_LINE]:
