@@ -29,8 +29,10 @@ export enum SIMPLE_GLOBAL_CONSTRAINTS {
 	GLOBAL_ENTROPY = 'Global Entropy',
 	GLOBAL_INDEXING_COLUMN = 'Global Indexing Column',
 	GLOBAL_INDEXING_ROW = 'Global Indexing Row',
+	CONSECUTIVE_CLOSE_NEIGHBORS = 'Consecutive Close Neighbors',
 
-	ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED = 'All Odd Digits Are Orthogonally Connected'
+	ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED = 'All Odd Digits Are Orthogonally Connected',
+	NOT_ALL_ODD_IN_A_2X2_SQUARE = 'Not All Odd In A 2x2 Square'
 }
 
 export enum DIAGONAL_CONSTRAINTS {
@@ -55,6 +57,7 @@ export enum NEGATIVE_CONSTRAINTS {
 	ALL_CAGE_TOTALS_ARE_DIFFERENT = 'All Cage Totals Are Different',
 	ADJACENT_CAGE_TOTALS_ARE_CONSECUTIVE = 'Adjacent Cage Totals Are Consecutive',
 	ADJACENT_CAGE_TOTALS_ARE_DIFFERENT = 'Adjacent Cage Totals Are Different',
+	DISTINCT_RENBANS = 'Distinct Renbans',
 
 	ALL_RADARS_GIVEN = 'All Radars Given',
 	ALL_SQUARES_GIVEN = 'All Squares Given',
@@ -134,7 +137,8 @@ export enum GLOBAL_YIN_YANG_CONSTRAINTS {
 	YIN_YANG = 'Yin Yang',
 	YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED = 'Yin Yang Neighbour Greater Than One Within Region Shaded',
 	YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS = 'Yin Yang Shaded Cells Are German Whispers',
-	YIN_YANG_IDENTICAL_DIGITS_DIAGONALLY_BELONG_TO_THE_SAME_REGION = 'Ying Yang Identical Digits Diagonally Belong To Same The Region'
+	YIN_YANG_IDENTICAL_DIGITS_DIAGONALLY_BELONG_TO_THE_SAME_REGION = 'Ying Yang Identical Digits Diagonally Belong To Same The Region',
+	YIN_YANG_CHAOS_CONSTRUCTION_FULLY_SHADED_OR_FULLY_UNSHADED = 'Yin Yang Chaos Construction Fully Shaded Or Fully Unshaded'
 }
 
 export enum GLOBAL_DIRECTED_PATH_CONSTRAINTS {
@@ -278,6 +282,7 @@ export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
 	CHAOS_CONSTRUCTION_COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS = 'Chaos Construction Count Cells Not In The Same Region Arrows',
 	CHAOS_CONSTRUCTION_COUNT_SEEN_CELLS_IN_THE_SAME_REGION_ARROWS = 'Chaos Construction Count Seen Cells In The Same Region Arrows',
 	YIN_YANG_COUNT_SHADED_CELLS = 'Yin Yang Count Shaded Cells',
+	YIN_YANG_COMBINED_SHADED_CELLS_COUNT_EXCEPT_ITSELF = 'Yin Yang Combined Shaded Cells Count Except Itself',
 	YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR = 'Yin Yang Sum Of Cells Of Opposite Color',
 	LOOP_CELL_COUNT_ARROWS = 'Loop Cell Count Arrows',
 	YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS = 'Yin Yang Count Unique Fillomino Same Shading Arrows',
@@ -319,10 +324,11 @@ export enum CORNER_CONSTRAINTS {
 	CORNER_SUM = 'Corner Sum',
 	CORNER_SUM_OF_THREE_EQUALS_THE_OTHER = 'Corner Sum of Three Equals The Other',
 	CORNER_EVEN_COUNT = 'Corner Even Count',
-	CORNER_CELLS_BELONG_TO_EXACTLY_THREE_REGIONS = 'Corner Cells Belong To Exactly Three Regions',
-	CORNER_CELLS_BELONG_TO_SAME_REGION = 'Corner Cells Belong To Same Region',
+	CHAOS_CONSTRUCTION_CORNER_CELLS_BELONG_TO_EXACTLY_THREE_REGIONS = 'Chaos Construction Corner Cells Belong To Exactly Three Regions',
+	CHAOS_CONSTRUCTION_CORNER_CELLS_BELONG_TO_SAME_REGION = 'Chaos Construction Corner Cells Belong To Same Region',
 	PRODUCT_SQUARE = 'Product Square',
-	EQUAL_DIAGONAL_DIFFERENCES = 'Equal Diagonal Differences'
+	EQUAL_DIAGONAL_DIFFERENCES = 'Equal Diagonal Differences',
+	DIFFERENT_CORNER_DIAGONAL_SUMS = 'Different Corner Diagonal Sums'
 }
 
 export enum LINE_CONSTRAINTS {
@@ -437,6 +443,7 @@ export enum CAGE_CONSTRAINTS {
 	AQUARIUM_CAGE = 'Aquarium Cage',
 	MULTISET_CAGE = 'Multiset Cage',
 	VAULTED_CAGE = 'Vaulted Cage',
+	VAULTED_KILLER_CAGE = 'Vaulted Killer Cage',
 	YIN_YANG_ANTITHESIS_KILLER_CAGE = 'Yin Yang Antithesis Killer Cage',
 	YIN_YANG_BREAKEVEN_KILLER_CAGE = 'Yin Yang Breakeven Killer Cage',
 
@@ -463,7 +470,7 @@ export enum OUTSIDE_EDGE_CONSTRAINTS {
 	RISING_STREAK = 'Rising Streak',
 	ROW_OR_COLUMN_RANK = 'Row Or Column Rank',
 	OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED = 'Outside Edge Yin Yang Sum Of Shaded',
-	X_SUM_REGION_BORDERS = 'X-Sum Region Borders',
+	CHAOS_CONSTRUCTION_X_SUM_REGION_BORDERS = 'Chaos Construction X-Sum Region Borders',
 	OUTSIDE_CONSECUTIVE_SUM = 'Outside Consecutive Sum',
 	LOOPWICHES = 'Loopwhiches',
 	CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION = 'Chaos Construction Sum Of First Each Region',

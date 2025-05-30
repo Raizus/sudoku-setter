@@ -21,7 +21,8 @@ import {
 	uniqueDigitsCageInfo,
 	yinYangAntithesisKillerCageInfo,
 	yinYangBreakevenKillerCageInfo,
-	vaultedCageInfo
+	vaultedCageInfo,
+	vaultedKillerCageInfo
 } from './CageElementsInfo/CageToolsElementsInfo';
 import {
 	centerPMInfo,
@@ -40,9 +41,12 @@ import {
 } from './CenterEdgeCornerElementsInfo';
 import { cloneRegionInfo } from './CloneToolsElementsInfo';
 import {
+	chaosConstructionCornerCellsBelongToExacltyThreeRegionsInfo,
+	chaosConstructionCornerCellsBelongToSameRegionsInfo,
 	cornerEvenCountInfo,
 	cornerSumInfo,
 	cornerSumOfThreeEqualsTheOtherInfo,
+	differentCornerDiagonalSumsInfo,
 	equalDiagonalDifferencesInfo,
 	productSquareInfo,
 	quadrupleInfo
@@ -86,14 +90,18 @@ import {
 	antiknightInfo,
 	antiLongKnightInfo,
 	boxRowsAndColumnsFormModularityAndEntropySetInfo,
+	consecutiveCloseNeighborsInfo,
 	disjointGroupsInfo,
+	globalEntropyInfo,
 	globalIndexingColumnInfo,
 	hexedSudokuInfo,
 	leaveEmptyCellsEmptyInfo,
 	nonconsecutiveInfo,
 	nonratioInfo,
+	notAllOddIn2x2SquareInfo,
 	sudokuRulesDoNotApplyInfo,
-	tangoInfo
+	tangoInfo,
+	yinYangChaosConstructionFullyShadedOrFullyUnshadedInfo
 } from './GlobalElementsInfo/GlobalConstraintsElementsInfo';
 import {
 	parityMirrorPositiveDiagonalInfo,
@@ -222,6 +230,7 @@ import {
 	brokenXSumInfo,
 	chaosConstructionSumOfFirstEachRegionInfo,
 	chaosConstructionXIndexRegionInfo,
+	chaosConstructionXSumRegionBordersInfo,
 	loopwhichesInfo,
 	mysterySandwichSumInfo,
 	outsideConsecutiveSumInfo,
@@ -322,7 +331,8 @@ import {
 	yinYangSumOfCellsOfOppositeColorInfo,
 	loopCellCountArrowsInfo,
 	yinYangCountUniqueFillominoSameShadingInfo,
-	sameGalaxyUnobstructedCountArrowsInfo
+	sameGalaxyUnobstructedCountArrowsInfo,
+	yinYangCombinedShadedCellsCountExceptItselfInfo
 } from './SingleCellMultiArrowElementsInfo';
 import {
 	forbiddenKnightSumInfo,
@@ -365,10 +375,13 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.NONCONSECUTIVE]: nonconsecutiveInfo,
 	[TOOLS.NONRATIO]: nonratioInfo,
 	[TOOLS.ANTI_ENTROPY]: antiEntropyInfo,
+	[TOOLS.GLOBAL_ENTROPY]: globalEntropyInfo,
 	[TOOLS.GLOBAL_INDEXING_COLUMN]: globalIndexingColumnInfo,
 	[TOOLS.ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED]: allOddDigitsAreOrthogonallyConnectedInfo,
+	[TOOLS.NOT_ALL_ODD_IN_A_2X2_SQUARE]: notAllOddIn2x2SquareInfo,
 	[TOOLS.BOX_ROWS_AND_COLUMNS_FORM_MODULARITY_AND_ENTROPY_SETS]:
 		boxRowsAndColumnsFormModularityAndEntropySetInfo,
+	[TOOLS.CONSECUTIVE_CLOSE_NEIGHBORS]: consecutiveCloseNeighborsInfo,
 
 	[TOOLS.NEGATIVE_DIAGONAL]: negativeDiagonalInfo,
 	[TOOLS.POSITIVE_DIAGONAL]: positiveDiagonalInfo,
@@ -396,6 +409,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.NURIKABE]: nurikabeInfo,
 	[TOOLS.BUILD_YOUR_OWN_KILLER_CAGES]: buildYourOwnKillerCagesInfo,
 	[TOOLS.SHADED_BOUNDARIES]: shadedBoundariesInfo,
+	[TOOLS.YIN_YANG_CHAOS_CONSTRUCTION_FULLY_SHADED_OR_FULLY_UNSHADED]:
+		yinYangChaosConstructionFullyShadedOrFullyUnshadedInfo,
 
 	[TOOLS.TWO_CONTIGUOUS_REGIONS]: twoContiguousRegionsInfo,
 	[TOOLS.SASHIGANE]: sashiganeRegionsInfo,
@@ -512,6 +527,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 		chaosCountSeenCellsInTheSameRegionArrowsInfo,
 	[TOOLS.YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR]: yinYangSumOfCellsOfOppositeColorInfo,
 	[TOOLS.YIN_YANG_COUNT_SHADED_CELLS]: yinYangCountShadedCellsInfo,
+	[TOOLS.YIN_YANG_COMBINED_SHADED_CELLS_COUNT_EXCEPT_ITSELF]:
+		yinYangCombinedShadedCellsCountExceptItselfInfo,
 	[TOOLS.LOOP_CELL_COUNT_ARROWS]: loopCellCountArrowsInfo,
 	[TOOLS.YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS]:
 		yinYangCountUniqueFillominoSameShadingInfo,
@@ -552,6 +569,11 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.CORNER_EVEN_COUNT]: cornerEvenCountInfo,
 	[TOOLS.PRODUCT_SQUARE]: productSquareInfo,
 	[TOOLS.EQUAL_DIAGONAL_DIFFERENCES]: equalDiagonalDifferencesInfo,
+	[TOOLS.DIFFERENT_CORNER_DIAGONAL_SUMS]: differentCornerDiagonalSumsInfo,
+	[TOOLS.CHAOS_CONSTRUCTION_CORNER_CELLS_BELONG_TO_EXACTLY_THREE_REGIONS]:
+		chaosConstructionCornerCellsBelongToExacltyThreeRegionsInfo,
+	[TOOLS.CHAOS_CONSTRUCTION_CORNER_CELLS_BELONG_TO_SAME_REGION]:
+		chaosConstructionCornerCellsBelongToSameRegionsInfo,
 
 	// Line Constraints
 	[TOOLS.THERMOMETER]: thermometerInfo,
@@ -659,6 +681,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.PUTTERIA_CAGE]: putteriaCageInfo,
 	[TOOLS.MULTISET_CAGE]: multisetCageInfo,
 	[TOOLS.VAULTED_CAGE]: vaultedCageInfo,
+	[TOOLS.VAULTED_KILLER_CAGE]: vaultedKillerCageInfo,
 	[TOOLS.YIN_YANG_ANTITHESIS_KILLER_CAGE]: yinYangAntithesisKillerCageInfo,
 	[TOOLS.YIN_YANG_BREAKEVEN_KILLER_CAGE]: yinYangBreakevenKillerCageInfo,
 
@@ -687,6 +710,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.LOOPWICHES]: loopwhichesInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION]: chaosConstructionSumOfFirstEachRegionInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_X_INDEX_REGION]: chaosConstructionXIndexRegionInfo,
+	[TOOLS.CHAOS_CONSTRUCTION_X_SUM_REGION_BORDERS]: chaosConstructionXSumRegionBordersInfo,
 	[TOOLS.PENTOMINO_BORDER_COUNT]: pentominoBorderCountInfo,
 
 	// Outside Corner Constraints

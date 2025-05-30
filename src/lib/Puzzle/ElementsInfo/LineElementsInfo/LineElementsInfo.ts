@@ -25,6 +25,7 @@ import {
 } from '$src/lib/Solver/solver_utils';
 import type { Cell } from '../../Grid/Cell';
 import type { Grid } from '../../Grid/Grid';
+import { combinations } from '$src/lib/utils/functionUtils';
 
 function splitLineByRegion(line: Cell[]) {
 	const regions: Cell[][] = [];
@@ -267,7 +268,27 @@ export const palindromeInfo: SquareCellElementInfo = {
 };
 
 function renbanElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'renban', true);
+	let out_str = simpleLineElement(model, element, 'renban', true);
+
+	if (!element.negative_constraints) return out_str;
+	const distinct_renbans = !!element.negative_constraints[TOOLS.DISTINCT_RENBANS];
+	if (!distinct_renbans) return out_str;
+
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+	const clist = [...Object.entries(constraints)];
+	const grid = model.puzzle.grid;
+
+	for (const [line1, line2] of combinations(clist, 2)) {
+		const cells1 = cellsFromCoords(grid, (line1[1] as LineToolI).cells);
+		const cells2 = cellsFromCoords(grid, (line2[1] as LineToolI).cells);
+
+		const vars1 = cellsToGridVarsStr(cells1, VAR_2D_NAMES.BOARD);
+		const vars2 = cellsToGridVarsStr(cells2, VAR_2D_NAMES.BOARD);
+
+		out_str += `constraint distinct_renbans_p(${vars1}, ${vars2});\n`;
+	}
+
 	return out_str;
 }
 
@@ -275,6 +296,14 @@ export const renbanLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
 	toolId: TOOLS.RENBAN_LINE,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.DISTINCT_RENBANS,
+			description:
+				'No two renban lines can contain exactly the same set of digits. (Eg if one length three line contains the digits 345, no other length three line can contain those exact digits. However a length four line containing 2345 or a length three line containing 456 would both be acceptable.)'
+		}
+	],
 
 	shape: {
 		type: SHAPE_TYPES.LINE,
@@ -1930,20 +1959,25 @@ export const peapodsLineInfo: SquareCellElementInfo = {
 
 /* ----------------------------------------------------------------------------- */
 
-// function goldilocksZoneRegionSumLineConstraint(
-// 	model: PuzzleModel,
-// 	grid: Grid,
-// 	c_id: string,
-// 	constraint: LineToolI
-// ) {
-// 	const cells = cellsFromCoords(grid, constraint.cells);
+function goldilocksZoneRegionSumLineConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: LineToolI
+) {
+	const cells = cellsFromCoords(grid, constraint.cells);
 
-// 	const values_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.VALUES_GRID);
-// 	const region_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.GOLDILOCKS_REGIONS);
+	const values_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.VALUES_GRID);
+	const region_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.GOLDILOCKS_REGIONS);
 
-// 	const constraint_str: string = `constraint goldilocks_zone_region_sum_p(${values_vars_str}, ${region_vars_str});\n`;
-// 	return constraint_str;
-// }
+	const constraint_str: string = `constraint goldilocks_zone_region_sum_p(${values_vars_str}, ${region_vars_str});\n`;
+	return constraint_str;
+}
+
+function goldilocksZoneRegionSumLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, goldilocksZoneRegionSumLineConstraint);
+	return out_str;
+}
 
 export const goldilocksZoneRegionSumLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -1968,7 +2002,9 @@ export const goldilocksZoneRegionSumLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-	}
+	},
+
+	solver_func: goldilocksZoneRegionSumLineElement
 };
 
 function doublersThermometerElement(model: PuzzleModel, element: ConstraintsElement) {

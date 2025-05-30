@@ -8,7 +8,14 @@ import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { cornerUsage, quadrupleUsage } from '../ToolUsage';
 import { HANDLER_TOOL_TYPE, type CornerToolOptions } from '$input/ToolInputHandlers/types';
-import { cellsFromCoords, cellsToVarsName, type PuzzleModel } from '$src/lib/Solver/solver_utils';
+import {
+	cellsFromCoords,
+	cellsToGridVarsStr,
+	cellsToVarsName,
+	simpleElementFunction,
+	VAR_2D_NAMES,
+	type PuzzleModel
+} from '$src/lib/Solver/solver_utils';
 import type { ConstraintsElement, CornerToolI } from '../puzzle_schema';
 import type { Grid } from '../Grid/Grid';
 import { parseVarList } from '$src/lib/Solver/value_parsing';
@@ -176,7 +183,6 @@ function quadrupleElement(model: PuzzleModel, element: ConstraintsElement) {
 	return out_str;
 }
 
-
 export const quadrupleInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.CORNER,
@@ -298,26 +304,101 @@ export const cornerEvenCountInfo: SquareCellElementInfo = {
 	solver_func: cornerEvenCountElement
 };
 
-export const cornerCellsBelongToExacltyThreeRegionsInfo: SquareCellElementInfo = {
+function chaosConstructionCornerCellsBelongToExacltyThreeRegionsConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CornerToolI
+) {
+	const cells = cellsFromCoords(grid, constraint.cells);
+	const region_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+
+	const constraint_str = `constraint chaos_construction_regions_count(${region_vars_str}, 3);\n`;
+	return constraint_str;
+}
+
+function chaosConstructionCornerCellsBelongToExacltyThreeRegionsElement(
+	model: PuzzleModel,
+	element: ConstraintsElement
+) {
+	const out_str = simpleElementFunction(
+		model,
+		element,
+		chaosConstructionCornerCellsBelongToExacltyThreeRegionsConstraint
+	);
+	return out_str;
+}
+
+export const chaosConstructionCornerCellsBelongToExacltyThreeRegionsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CORNER_OPTIONS,
 
-	toolId: TOOLS.CORNER_CELLS_BELONG_TO_EXACTLY_THREE_REGIONS,
+	toolId: TOOLS.CHAOS_CONSTRUCTION_CORNER_CELLS_BELONG_TO_EXACTLY_THREE_REGIONS,
+
+	shape: {
+		type: SHAPE_TYPES.SQUARE,
+		r: { editable: false, value: 0.10 },
+		strokeWidth: { editable: false, value: 0.023 },
+		stroke: { editable: false, value: 'black' },
+		fill: { editable: false, value: 'black' }
+	},
+
+	meta: {
+		description:
+			'The 4 cells surrounding a black square belong to exactly three different regions.',
+		tags: [],
+		usage: cornerUsage(),
+		categories: DEFAULT_UNTYPABLE_CORNER_CATEGORIES
+	},
+
+	solver_func: chaosConstructionCornerCellsBelongToExacltyThreeRegionsElement
+};
+
+function chaosConstructionCornerCellsBelongToSameRegionConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CornerToolI
+) {
+	const cells = cellsFromCoords(grid, constraint.cells);
+	const region_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+
+	const constraint_str = `constraint chaos_construction_regions_count(${region_vars_str}, 1);\n`;
+	return constraint_str;
+}
+
+function chaosConstructionCornerCellsBelongToSameRegionElement(
+	model: PuzzleModel,
+	element: ConstraintsElement
+) {
+	const out_str = simpleElementFunction(
+		model,
+		element,
+		chaosConstructionCornerCellsBelongToSameRegionConstraint
+	);
+	return out_str;
+}
+
+export const chaosConstructionCornerCellsBelongToSameRegionsInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_CORNER_OPTIONS,
+
+	toolId: TOOLS.CHAOS_CONSTRUCTION_CORNER_CELLS_BELONG_TO_SAME_REGION,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: 0.25 },
+		r: { editable: false, value: 0.10 },
 		strokeWidth: { editable: false, value: 0.023 },
 		stroke: { editable: false, value: 'black' },
 		fill: { editable: false, value: 'var(--grid-background-color)' }
 	},
 
 	meta: {
-		description:
-			'Cells separated by a transparent blue dot marked with an X have a fixed sum of X.',
+		description: 'The 4 cells surrounding a circle must belong to the same region.',
 		tags: [],
 		usage: cornerUsage(),
-		categories: DEFAULT_TYPABLE_CORNER_CATEGORIES
-	}
+		categories: DEFAULT_UNTYPABLE_CORNER_CATEGORIES
+	},
+
+	solver_func: chaosConstructionCornerCellsBelongToSameRegionElement
 };
 
 function productSquareElement(model: PuzzleModel, element: ConstraintsElement) {
@@ -385,4 +466,37 @@ export const equalDiagonalDifferencesInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: equalDiagonalDifferencesElement
+};
+
+function differentCornerDiagonalSumsElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	const out_str = simpleCornerElement(grid, element, 'different_corner_diagonal_sums_p');
+	return out_str;
+}
+
+export const differentCornerDiagonalSumsInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.CORNER,
+		defaultValue: ''
+	},
+
+	toolId: TOOLS.DIFFERENT_CORNER_DIAGONAL_SUMS,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		r: { editable: false, value: 0.15 },
+		strokeWidth: { editable: false, value: 0.023 },
+		stroke: { editable: false, value: 'black' },
+		fill: { editable: false, value: 'var(--grid-background-color)' }
+	},
+
+	meta: {
+		description:
+			'A dot in the centre of a 2x2 square indicates that the sum of the two digits in its positive diagonal is different than the sum of the two digits in its negative diagonal.',
+		tags: [],
+		usage: cornerUsage(),
+		categories: DEFAULT_UNTYPABLE_CORNER_CATEGORIES
+	},
+
+	solver_func: differentCornerDiagonalSumsElement
 };

@@ -676,6 +676,69 @@ export const chaosConstructionXIndexRegionInfo: SquareCellElementInfo = {
 	solver_func: chaosConstructionXIndexRegionElement
 };
 
+function chaosConstructionXSumRegionBordersConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	const cell_coord = constraint.cell;
+	const cell = grid.getCell(cell_coord.r, cell_coord.c);
+	const direction = constraint.direction;
+
+	const cells = grid.getCellsInDirection(cell_coord.r, cell_coord.c, direction);
+
+	const cell_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+	const region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+
+	const value = constraint.value;
+	const result = getParsingResult(model, value, cell_coord, cell);
+	if (!result) return '';
+
+	const var_name = result[1];
+	let out_str: string = result[0];
+
+	out_str += `constraint chaos_construction_x_sum_region_borders_p(${cell_vars}, ${region_vars}, ${var_name});\n`;
+
+	return out_str;
+}
+
+function chaosConstructionXSumRegionBordersElement(
+	model: PuzzleModel,
+	element: ConstraintsElement
+) {
+	const out_str = simpleElementFunction(
+		model,
+		element,
+		chaosConstructionXSumRegionBordersConstraint
+	);
+	return out_str;
+}
+
+export const chaosConstructionXSumRegionBordersInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+			defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
+		defaultValue: '',
+		cornerOrEdge: CornerOrEdge.EDGE
+	},
+
+	toolId: TOOLS.CHAOS_CONSTRUCTION_X_SUM_REGION_BORDERS,
+
+	shape: OUTSIDE_DEFAULT_SHAPE,
+
+	meta: {
+		description:
+			'A number outside the grid gives the sum of the first M cells of the row/column from that direction. M is the number of region borders in that row/column.**',
+		usage: outsideEdgeUsage(),
+		tags: [],
+		categories: outsideEdgeDefaultCategories
+	},
+
+	solver_func: chaosConstructionXSumRegionBordersElement
+};
+
 function pentominoBorderCountConstraint(
 	model: PuzzleModel,
 	grid: Grid,

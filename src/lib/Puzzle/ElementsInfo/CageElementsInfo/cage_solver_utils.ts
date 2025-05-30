@@ -84,7 +84,7 @@ export function getParsingResult(model: PuzzleModel, value: string, c_id: string
     return result;
 }
 
-function valuedCageConstraint(
+export function valuedCageConstraint(
     model: PuzzleModel,
     c_id: string,
     constraint: CageToolI,

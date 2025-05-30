@@ -1,4 +1,13 @@
-import { addHeader, adjCellPairGen, cellsToGridVarsStr, cellsToVarsName, cellToGridVarName, cellToVarName, VAR_2D_NAMES, type PuzzleModel } from '$src/lib/Solver/solver_utils';
+import {
+	addHeader,
+	adjCellPairGen,
+	cellsToGridVarsStr,
+	cellsToVarsName,
+	cellToGridVarName,
+	cellToVarName,
+	VAR_2D_NAMES,
+	type PuzzleModel
+} from '$src/lib/Solver/solver_utils';
 import type { SquareCellElementInfo } from '../../ElementInfo';
 import type { ConstraintsElement } from '../../puzzle_schema';
 import { TOOLS, TOOL_CATEGORIES } from '../../Tools';
@@ -75,7 +84,6 @@ function antiknightElement(model: PuzzleModel, element: ConstraintsElement): str
 	}
 	return out_str;
 }
-
 
 export const antiknightInfo: SquareCellElementInfo = {
 	toolId: TOOLS.ANTIKNIGHT,
@@ -338,6 +346,24 @@ export const antiEntropyInfo: SquareCellElementInfo = {
 	solver_func: antiEntropyElement
 };
 
+function globalEntropyElement(): string {
+	const out_str = `constraint global_entropy_p(board);\n`;
+	return out_str;
+}
+
+export const globalEntropyInfo: SquareCellElementInfo = {
+	toolId: TOOLS.GLOBAL_ENTROPY,
+
+	meta: {
+		description:
+			'Consider the low digits (1, 2, 3), middle digits (4, 5, 6) and high digits (7, 8, 9) as three different groups. Each 2x2 box in the grid has to contain at least one digit of each group.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	},
+
+	solver_func: globalEntropyElement
+};
+
 function globalIndexingColumnElement(model: PuzzleModel, element: ConstraintsElement): string {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
@@ -395,3 +421,57 @@ export const allOddDigitsAreOrthogonallyConnectedInfo: SquareCellElementInfo = {
 	solver_func: allOddDigitsOrthogonallyConnectedElement
 };
 
+function notAllOddIn2x2SquareElement(): string {
+	const out_str = 'constraint not_all_odd_in_2x2_square_p(board);\n';
+	return out_str;
+}
+
+export const notAllOddIn2x2SquareInfo: SquareCellElementInfo = {
+	toolId: TOOLS.NOT_ALL_ODD_IN_A_2X2_SQUARE,
+
+	meta: {
+		description:
+			'For every 2x2 square in the grid, not all digits can be odd (at least one must be even).',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	},
+
+	solver_func: notAllOddIn2x2SquareElement
+};
+
+function consecutiveCloseNeighborsElement(): string {
+	let out_str: string = '';
+	out_str += `constraint consecutive_close_neighbors_p(board);\n`;
+	return out_str;
+}
+
+export const consecutiveCloseNeighborsInfo: SquareCellElementInfo = {
+	toolId: TOOLS.CONSECUTIVE_CLOSE_NEIGHBORS,
+
+	meta: {
+		description:
+			'Every number must share a side with at least one other consecutive number. For example, 2 must share a side with either a 1 or a 3 (possibly both).',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	},
+
+	solver_func: consecutiveCloseNeighborsElement
+};
+
+function yinYangChaosConstructionFullyShadedOrFullyUnshadedElement(): string {
+	const out_str = `constraint yin_yang_chaos_construction_same_shading_p(${VAR_2D_NAMES.UNKNOWN_REGIONS}, ${VAR_2D_NAMES.YIN_YANG});\n`;
+	return out_str;
+}
+
+export const yinYangChaosConstructionFullyShadedOrFullyUnshadedInfo: SquareCellElementInfo = {
+	toolId: TOOLS.YIN_YANG_CHAOS_CONSTRUCTION_FULLY_SHADED_OR_FULLY_UNSHADED,
+
+	meta: {
+		description:
+			'Each unknown region is either fully shaded or fully unshaded (with yin yang shading).',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	},
+
+	solver_func: yinYangChaosConstructionFullyShadedOrFullyUnshadedElement
+};

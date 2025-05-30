@@ -1072,7 +1072,11 @@ predicate product_square_p(array[int] of var int: arr) =
     
 predicate equal_diagonal_differences_p(array[int] of var int: arr) =
     assert(length(arr) == 4, "Array must have length 4.") /\\
-    abs(arr[1] - arr[4]) = abs(arr[2] - arr[3]);\n\n`;
+    abs(arr[1] - arr[4]) = abs(arr[2] - arr[3]);
+    
+predicate different_corner_diagonal_sums_p(array[int] of var int: arr) =
+    assert(length(arr) == 4, "Array must have length 4.") /\\
+    arr[1] + arr[4] != arr[2] + arr[3];\n\n`;
 
 	const line_constraints = `predicate fuzzy_thermo_p(array[int] of var int: arr) =
     strictly_increasing(arr) \\/ strictly_decreasing(arr);
@@ -1090,6 +1094,21 @@ predicate renban(array[int] of var int: arr) =
     alldifferent(arr) /\\
     % Ensure the absolute difference between min and max is n-1
     max(arr) - min(arr) == card(index_set(arr)) - 1;
+
+predicate distinct_renbans_p(
+    array[int] of var int: arr1,
+    array[int] of var int: arr2
+) = let {
+    set of int: idxs1 = index_set(arr1);
+    set of int: idxs2 = index_set(arr2);
+} in (
+    if length(idxs1) == length(idxs2) then
+        exists(ele1 in arr1)(not member(arr2, ele1)) \\/
+        exists(ele2 in arr2)(not member(arr1, ele2))
+    else
+        true
+    endif
+);
 
 predicate whispers(array[int] of var int: arr, var int: d) =
     forall(i in index_set(arr) where i < max(index_set(arr))) (
@@ -1715,6 +1734,7 @@ predicate vaulted_cage_p(
 predicate sandwich_sum_p(array[int] of var int: arr, var int: val, var int: a, var int: b) =
     val == sandwich_sum(arr, a, b);
 
+% sum of the first x elements
 function var int: x_sum_f(array[int] of var int: arr, var int: x) =
     let {
         set of int: idxs = index_set(arr);
@@ -1876,6 +1896,17 @@ predicate chaos_construction_x_index_region_p(
         (i <= first_cell -> regions[i] == first_region)
         /\\ (i == first_cell + 1 -> regions[i] != first_region)
     )
+);
+
+predicate chaos_construction_x_sum_region_borders_p(
+    array[int] of var int: cell_vars,
+    array[int] of var int: regions,
+    var int: val
+) = let {
+    var int: border_count = count_transitions_f(regions)
+} in (
+    assert(index_sets_agree(cell_vars, regions), "cell_vars and regions must have the same indexes") /\\
+    x_sum_f(cell_vars, border_count) == val
 );\n\n`;
 
 	const outside_corner_constraints = `predicate little_killer_sum_p(array[int] of var int: arr, var int: val) =
@@ -2491,6 +2522,18 @@ predicate chaos_construction_neighbour_cells_same_region_count_p(
     set of int: idxs1 = index_set(neighbour_regions);
 } in (
     cell_val = count(neighbour_regions, cell_region)
+);
+
+predicate chaos_construction_regions_count(
+    array[int] of var int: region_vars,
+    var int: count
+) = (
+    count == count_unique_values(region_vars) /\\
+    (if count == 1 then
+        all_equal(region_vars)
+    else
+        true
+    endif)
 );\n\n`;
 
 	const nurimisaki = `predicate nurimisaki_p(array[int, int] of var int: grid) =
@@ -3703,6 +3746,48 @@ predicate anti_entropy_p(
     )
 );
 
+predicate global_entropy_p(
+    array[int,int] of var int: grid
+) = let {
+    int: rows = max(index_set_1of2(grid));
+    int: cols = max(index_set_2of2(grid));
+    set of int: low_group = {1,2,3};
+    set of int: middle_group = {4,5,6};
+    set of int: high_group = {7,8,9};
+} in (
+    forall(r in 1..rows-1, c in 1..cols-1) (
+        let {
+            % Extract the 2x2 box starting at position (r,c)
+            array[1..4] of var int: box = [grid[r,c], grid[r,c+1], grid[r+1,c], grid[r+1,c+1]];
+            
+            % Check if each group is present in the box
+            var bool: has_low = exists(i in 1..4)(box[i] in low_group);
+            var bool: has_middle = exists(i in 1..4)(box[i] in middle_group);
+            var bool: has_high = exists(i in 1..4)(box[i] in high_group);
+        } in
+        has_low /\\ has_middle /\\ has_high
+    )
+);
+
+predicate not_all_odd_in_2x2_square_p(
+    array[int,int] of var int: grid
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: max_r = max(rows);
+    int: max_c = max(cols);
+} in (
+    forall(r in rows, c in cols where r<max_r /\\ c<max_c) (
+        % For each 2x2 square starting at position (r,c),
+        % at least one cell must be even (i.e., not all can be odd)
+        not (grid[r,c] mod 2 = 1 /\\ 
+            grid[r,c+1] mod 2 = 1 /\\ 
+            grid[r+1,c] mod 2 = 1 /\\ 
+            grid[r+1,c+1] mod 2 = 1)
+    )
+);
+
+
 predicate max_grid_val_p(
     array[int, int] of var int: grid,
     var int: val,
@@ -3739,6 +3824,33 @@ predicate entropy_and_modularity_set_p(
     var bool: different_entropy = forall(x in entropy)(x > 0) /\\ all_different(entropy);
 } in (
     (all_equal_rem \\/ all_different_rem) /\\ (same_entropy \\/ different_entropy)
+);
+
+predicate consecutive_close_neighbors_p(
+    array[int,int] of var int: grid
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    forall(r in rows, c in cols) (
+        % For each cell, at least one orthogonal neighbor must be consecutive
+        exists(dr in {-1, 0, 1}, dc in {-1, 0, 1} where (abs(dr) + abs(dc) = 1) /\\ in_bounds_2d(r+dr,c+dc,grid)) (
+            abs(grid[r + dr, c + dc] - grid[r, c]) = 1
+        )
+    )
+);
+
+predicate yin_yang_chaos_construction_same_shading_p(
+    array[int,int] of var int: regions,
+    array[int,int] of var 0..1: shading
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+} in (
+    assert(index_sets_agree(regions, shading), "regions and shading must have the same indexes.") /\\
+    forall(r1 in rows, c1 in cols, r2 in rows, c2 in cols where is_after(r1,c1,r2,c2)) (
+        (regions[r1,c1] = regions[r2,c2] -> shading[r1,c1] = shading[r2,c2])
+    )
 );\n\n`;
 
 	const galaxies = `predicate every_cell_is_in_a_galaxy_p(

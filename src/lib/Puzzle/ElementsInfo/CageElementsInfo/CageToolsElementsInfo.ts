@@ -12,7 +12,7 @@ import { SHAPE_TYPES, type EditableShapeI } from '../../Shape/Shape';
 import { cageUsage, typableCageUsage } from '../../ToolUsage';
 import { TOOL_CATEGORIES, TOOLS } from '../../Tools';
 import type { CageToolI, ConstraintsElement } from '../../puzzle_schema';
-import { getAdjacentCages, getCageNeighbours, getCageVars, getParsingResult, simpleCageElement, valuedCageElement } from './cage_solver_utils';
+import { getAdjacentCages, getCageNeighbours, getCageVars, getParsingResult, simpleCageElement, valuedCageConstraint, valuedCageElement } from './cage_solver_utils';
 
 const nonTypableCageDefaultCategories = [
 	TOOL_CATEGORIES.CAGE_CONSTRAINT,
@@ -456,15 +456,9 @@ function vaultedCageConstraint(
 ) {
 	const vars = getCageVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
-	const value = constraint.value;
 
-	let out_str = '';
-	const result = getParsingResult(model, value, c_id);
-	if (result) {
-		const var_name = result[1];
-		out_str += result[0];
-		out_str += `constraint sum(${vars_str}) == ${var_name};\n`;
-	}
+	const result = valuedCageConstraint(model, c_id, constraint, 'sum_cage_p');
+	let out_str = result[0];
 
 	const cells_coords = constraint.cells;
 	const cage_cells = cellsFromCoords(grid, cells_coords);
@@ -497,6 +491,44 @@ export const vaultedCageInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: vaultedCageElement
+};
+
+function vaultedKillerCageConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CageToolI
+) {
+	const vars = getCageVars(grid, constraint);
+	const vars_str = `[${vars.join(',')}]`;
+
+	let out_str = `constraint all_different(${vars_str});\n`
+	out_str += vaultedCageConstraint(model, grid, c_id, constraint);
+
+	return out_str;
+}
+
+function vaultedKillerCageElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, vaultedKillerCageConstraint);
+	return out_str;
+}
+
+export const vaultedKillerCageInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_CAGE_OPTIONS,
+
+	toolId: TOOLS.VAULTED_KILLER_CAGE,
+
+	shape: DEFAULT_CAGE_SHAPE,
+
+	meta: {
+		description:
+			'Numbers must not repeat in a killer cage. The numbers in the cage must sum to the given total in the top left (if one exists). Digits in a cage may not appear in any cell orthogonally adjacent to that cage.',
+		usage: typableCageUsage(),
+		tags: [],
+		categories: typableCageDefaultCategories
+	},
+
+	solver_func: vaultedKillerCageElement
 };
 
 export const aquariumCageInfo: SquareCellElementInfo = {

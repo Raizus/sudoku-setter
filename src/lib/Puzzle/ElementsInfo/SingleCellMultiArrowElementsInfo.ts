@@ -329,6 +329,60 @@ export const yinYangCountShadedCellsInfo: SquareCellElementInfo = {
 	solver_func: yinYangCountShadedCellsElement
 };
 
+function yinYangCombinedShadedCellsCountExceptItselfConstraint(
+	grid: Grid,
+	constraint: CellMultiArrowToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+	const cell_var = cellToVarName(cell);
+
+	const directions = constraint.directions;
+	const str_list: string[] = [];
+	for (const direction of directions) {
+		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
+
+		const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
+		const aux_str = `count(${yin_yang_vars_str}, 1)`;
+		str_list.push(aux_str);
+	}
+	if (!str_list.length) return '';
+
+	const out_str = `constraint ${str_list.join(' + ')} = ${cell_var};\n`;
+	return out_str;
+}
+
+function yinYangCombinedShadedCellsCountExceptItselfElement(
+	model: PuzzleModel,
+	element: ConstraintsElement
+) {
+	const out_str = singleCellMultiArrowElementFunction(
+		model,
+		element,
+		yinYangCombinedShadedCellsCountExceptItselfConstraint
+	);
+
+	return out_str;
+}
+
+export const yinYangCombinedShadedCellsCountExceptItselfInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
+
+	toolId: TOOLS.YIN_YANG_COMBINED_SHADED_CELLS_COUNT_EXCEPT_ITSELF,
+
+	shape: defaultShape,
+
+	meta: {
+		description:
+			'The digit in a cell with one or more arrows is equal to the total number of shaded cells that appear in the indicated directions combined (not including the arrow cell itself).',
+		tags: [],
+		categories: defaultCategories
+	},
+
+	solver_func: yinYangCombinedShadedCellsCountExceptItselfElement
+};
+
 function countCellsNotInTheSameRegionConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
