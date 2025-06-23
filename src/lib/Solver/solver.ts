@@ -87,6 +87,7 @@ export function createMinizincModel(puzzle: PuzzleAuxI, randomize_search: boolea
 
 	model.add(elementConstraints(model, squareCellElementHandlers));
 
+	// randomize search doesn't work for the minizinc WASM version
 	if (randomize_search) {
 		model.add(`\nsolve :: int_search(array1d(board), first_fail, indomain_random) satisfy;`);
 	} else {
