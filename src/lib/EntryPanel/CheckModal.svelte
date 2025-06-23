@@ -3,7 +3,7 @@
 	import { cellsStore, gridStore, solutionStore } from '$stores/BoardStore';
 	import type { Cell } from '../Puzzle/Grid/Cell';
 	import type { Grid } from '../Puzzle/Grid/Grid';
-	import type { Solution } from '../Puzzle/Puzzle';
+	import type { Solution } from '../Puzzle/puzzle_schema';
 
 	export let showModal = false;
 	$: solution = $solutionStore;
@@ -38,7 +38,7 @@
 		const matches_solution = compareToSolution(grid, solution);
 		// const constraint_violated = false;
 
-		// possible cases: 
+		// possible cases:
 		// 	- has solution, is unfinished but correct
 		// 	- has solution, is unfinished but at least one cell incorrect
 		// 	- has solution, is finished and correct
@@ -51,9 +51,7 @@
 </script>
 
 <Modal bind:showModal title="Check puzzle">
-	<div class="rules-content">
-
-	</div>
+	<div class="rules-content"></div>
 </Modal>
 
 <style>

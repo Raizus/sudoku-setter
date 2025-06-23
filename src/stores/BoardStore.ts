@@ -2,9 +2,10 @@ import { ElementsDict } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { type ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 import type { Cell } from '$lib/Puzzle/Grid/Cell';
 import { Grid } from '$lib/Puzzle/Grid/Grid';
-import { type PuzzleI, type Solution } from '$lib/Puzzle/Puzzle';
+import { type PuzzleI } from '$src/lib/Puzzle/Puzzle';
+import { type Solution } from '$src/lib/Puzzle/puzzle_schema';
 
-import type { PuzzleMetaI } from '$lib/Puzzle/PuzzleMeta';
+import type { PuzzleMetaI } from '$src/lib/Puzzle/puzzle_schema';
 import type { ShapeI } from '$lib/Puzzle/Shape/Shape';
 import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';
 

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { puzzleFromJson, type PuzzleI } from '$src/lib/Puzzle/Puzzle';
+	import { puzzleFromJson } from '$src/lib/Puzzle/Puzzle';
+	import { type PuzzleI } from '$src/lib/Puzzle/Puzzle';
 	import Game from '$src/routes/Game.svelte';
 	import { resetUserState, setPuzzle } from '$stores/BoardStore';
 	import { onMount } from 'svelte';

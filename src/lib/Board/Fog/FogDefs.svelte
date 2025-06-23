@@ -1,8 +1,8 @@
 <script lang="ts">
-		import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
-			import type { CellToolI } from "$src/lib/Puzzle/puzzle_schema";
+	import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
+	import type { CellToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
-	import type { Solution } from '$src/lib/Puzzle/Puzzle';
+	import type { Solution } from '$src/lib/Puzzle/puzzle_schema';
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 	import type { GridShape } from '$src/lib/Types/types';
 	import { getCagePathStr } from '$src/lib/utils/SquareCellGridRenderUtils';
@@ -24,7 +24,7 @@
 	function getFogLightCells(fog_lights_el: ConstraintsElement | undefined) {
 		const light_cells: Cell[] = [];
 		if (!fog_lights_el) return light_cells;
-		
+
 		const fog_lights = fog_lights_el.constraints as Record<string, CellToolI>;
 		for (const fog_light of Object.entries(fog_lights)) {
 			const coord = fog_light[1].cell;

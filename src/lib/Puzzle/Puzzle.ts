@@ -2,10 +2,9 @@ import { range } from 'lodash';
 import { ElementsDict, type ElementData } from './Constraints/ElementsDict';
 import type { CellRecord } from './Grid/Cell';
 import { Grid } from './Grid/Grid';
-import type { PuzzleMetaI } from './PuzzleMeta';
+import type { PuzzleMetaI } from "./puzzle_schema";
 import { areArraysEqual } from '../utils/functionUtils';
-
-export type Solution = undefined | Array<Array<null | number>>;
+import type { Solution } from './puzzle_schema';
 
 export interface PuzzleI {
 	grid: Grid;

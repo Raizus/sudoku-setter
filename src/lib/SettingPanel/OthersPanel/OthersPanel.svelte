@@ -3,7 +3,7 @@
 	import Panel from '../Subpanel/Panel.svelte';
 	import PanelHeader from '../Subpanel/PanelHeader.svelte';
 	import { gridStore, updateSolution } from '$stores/BoardStore';
-	import type { Solution } from '$src/lib/Puzzle/Puzzle';
+	import type { Solution } from '$src/lib/Puzzle/puzzle_schema';
 
 	let isOpen = false;
 

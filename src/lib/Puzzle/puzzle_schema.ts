@@ -122,3 +122,15 @@ export interface ConstraintsElement {
 	negative_constraints?: Record<string, boolean>;
 	disabled?: boolean;
 }
+
+export type Solution = undefined | Array<Array<null | number>>;
+
+export interface PuzzleMetaI {
+	title?: string;
+	authors?: string[];
+	ruleset?: string;
+	ctcUrl?: string;
+	ctcYoutubeUrl?: string;
+}
+
+

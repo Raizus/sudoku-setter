@@ -1,4 +1,4 @@
-import type { PuzzleMetaI } from '../Puzzle/PuzzleMeta';
+import type { PuzzleMetaI } from "../Puzzle/puzzle_schema";
 
 export function threshold(val: number, min?: number, max?: number): number {
 	if (min !== undefined) val = Math.max(val, min);

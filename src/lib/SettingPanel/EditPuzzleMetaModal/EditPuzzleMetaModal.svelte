@@ -3,7 +3,7 @@
 	import ModalButtonsContainer from '$lib/Components/Modal/ModalButtonsContainer.svelte';
 	import ModalSectionHeader from '$lib/Components/Modal/ModalSectionHeader.svelte';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
-	import type { PuzzleMetaI } from '$lib/Puzzle/PuzzleMeta';
+	import type { PuzzleMetaI } from '$src/lib/Puzzle/puzzle_schema';
 	import { joinStrList } from '$lib/utils/functionUtils';
 	import { puzzleMetaStore, updatePuzzleMeta } from '$stores/BoardStore';
 	import { elementsDictStore } from '$stores/BoardStore';
@@ -155,7 +155,7 @@
 		border-radius: 5px;
 		border: 0;
 		padding: 0.5rem;
-		
+
 		margin-bottom: 0.2rem;
 		margin-top: 0.2rem;
 

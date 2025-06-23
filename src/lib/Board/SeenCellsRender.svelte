@@ -22,7 +22,7 @@
 		stroke: 'none',
 		fill: seen_color,
 		inset: 0.15,
-		connectDiag: false,
+		connectDiag: false
 	};
 
 	function getSeen(selected: GridCoordI[], _puzzle: PuzzleI): GridCoordI[] {
@@ -35,7 +35,7 @@
 </script>
 
 {#if showSeen && showSelection}
-	<g class="seen-cells-layer" mask={enable_fog_mask ? "url(#fog-mask-fog)" : null}>
+	<g class="seen-cells-layer" mask={enable_fog_mask ? 'url(#fog-mask-fog)' : null}>
 		<CageRender cells={getSeen(selection, puzzle)} {shape} />
 	</g>
 {/if}
