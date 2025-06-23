@@ -180,3 +180,44 @@ export const internalLoopSkyscrapersInfo: SquareCellElementInfo = {
 
 	solver_func: internalLoopSkyscrapersElement
 };
+
+function skyscrapersArrowConstraint(grid: Grid, constraint: CellArrowToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const direction = constraint.direction;
+	const cells: Cell[] = grid.getCellsInDirection(cell.r, cell.c, direction);
+
+	const cell_var = cellToVarName(cell);
+	const cells_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+
+	const out_str = `constraint skyscrapers_p(${cells_vars}, ${cell_var});\n`;
+	return out_str;
+}
+
+function skyscrapersArrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleCellArrowElement(model, element, skyscrapersArrowConstraint);
+	return out_str;
+}
+
+export const skyscrapersArrowInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
+
+	toolId: TOOLS.SKYSCRAPERS_ARROW,
+
+	shape: {
+		type: SHAPE_TYPES.CELL_ARROW,
+		strokeWidth: { editable: false, value: 0.05 },
+		stroke: { editable: true, value: 'gray' }
+	},
+
+	meta: {
+		description:
+			'A digit on an arrow indicates the number of visible digits in that direction. A digit is visible only if it is greater than all digits between it and the arrow.',
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_ARROW_CATEGORIES
+	},
+
+	solver_func: skyscrapersArrowElement
+};
