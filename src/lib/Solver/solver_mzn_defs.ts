@@ -3533,6 +3533,26 @@ predicate adjacent_loop_cells_are_german_whispers_p(
        "grid and labels must have same dimensions") /\\
     region_whispers_p(grid, labels, 1, 5)
 );
+
+predicate loop_parity_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var 0..1: labels
+) =
+    assert(index_set_1of2(grid) = index_set_1of2(labels) /\\
+       index_set_2of2(grid) = index_set_2of2(labels),
+       "grid and labels must have same dimensions") /\\
+    forall(i in index_set_1of2(grid), j in index_set_2of2(grid))(
+        % Right neighbor
+        (j < max(index_set_2of2(grid)) ->
+            (labels[i,j] = 1 /\\ labels[i,j+1] = 1 ->
+                different_parity_p(grid[i,j], grid[i,j+1]))
+        ) /\\
+        % Down neighbor
+        (i < max(index_set_1of2(grid)) ->
+            (labels[i,j] = 1 /\\ labels[i+1,j] = 1 ->
+                different_parity_p(grid[i,j], grid[i+1,j]))
+        )
+    );
     
 function var int: count_loop_vars_f(array[int] of var 0..1: arr) =
     sum(i in index_set(arr))(bool2int(arr[i] != 0));
@@ -3613,6 +3633,20 @@ predicate internal_loop_skyscrapers_p(
     var int: value
 ) = (
     value == conditional_skyscrapers_f(cell_vars, loop_vars, 1)
+);
+
+predicate loop_pointer_arrow_p(
+    var int: circle_var,
+    var int: tip_var,
+    array[int] of var int: direction_vars,
+    array[int] of var int: direction_loop_vars,
+) = (
+    assert(index_sets_agree(direction_vars, direction_loop_vars), "direction_vars and direction_loop_vars must have the same indexes.")
+    % arrow tip points to cell containing digit in arrow bulb
+    % digit on arrow tip is the distance to the pointed cell
+    /\\ direction_vars[tip_var] = circle_var
+    % pointed cell is on the loop
+    /\\ direction_loop_vars[tip_var] = 1
 );\n\n`;
 
 	const global_constraints = `predicate antiking_p(

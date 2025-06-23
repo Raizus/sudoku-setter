@@ -187,7 +187,8 @@ export enum GLOBAL_LOOP_CONSTRAINTS {
 	NOT_LOOP_SIZED_REGIONS = 'Not Loop Sized Regions',
 	MODULAR_LOOP = 'Modular Loop',
 	ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES = 'Adjacent Cells Along Loop Are Multiples',
-	ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS = 'Adjacent Cells Along Loop Are German Whispers'
+	ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS = 'Adjacent Cells Along Loop Are German Whispers',
+	LOOP_PARITY = 'Loop Parity'
 }
 
 export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
@@ -427,7 +428,8 @@ export enum ARROW_CONSTRAINTS {
 	BULBOUS_ARROW = 'Bulbous Arrow',
 	SQUARE_ROOT_ARROW = 'Square Root Arrow',
 
-	CHAOS_CONSTRUCTION_ARROW = 'Chaos Construction Arrow'
+	CHAOS_CONSTRUCTION_ARROW = 'Chaos Construction Arrow',
+	LOOP_POINTER_ARROW = 'Loop Pointer Arrow',
 }
 
 export enum CAGE_CONSTRAINTS {

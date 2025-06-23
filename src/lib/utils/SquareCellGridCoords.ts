@@ -194,6 +194,19 @@ export function directionToCoords(direction: DIRECTION): GridCoordI {
 	return delta;
 }
 
+export function coordsToDirection(delta: GridCoordI): DIRECTION {
+	if (delta.r === 0 && delta.c == 1) return DIRECTION.E;
+	if (delta.r === 0 && delta.c == -1) return DIRECTION.W;
+	if (delta.r === 1 && delta.c == 0) return DIRECTION.S;
+	if (delta.r === -1 && delta.c == 0) return DIRECTION.N;
+	if (delta.r === 1 && delta.c == 1) return DIRECTION.SE;
+	if (delta.r === 1 && delta.c == -1) return DIRECTION.SW;
+	if (delta.r === -1 && delta.c == 1) return DIRECTION.NE;
+	if (delta.r === -1 && delta.c == -1) return DIRECTION.NW;
+
+	throw Error('delta is not a valid direction.')
+}
+
 export function gridCoordsNextInDirection(cell: GridCoordI, direction: DIRECTION): GridCoordI {
 	const delta = directionToCoords(direction)
 	const cell2 = coordsAdd(cell, delta)

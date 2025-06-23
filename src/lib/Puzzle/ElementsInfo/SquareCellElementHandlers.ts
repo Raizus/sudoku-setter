@@ -4,7 +4,8 @@ import {
 	arrowInfo,
 	averageArrowInfo,
 	bulbousArrowInfo,
-	chaosConstructionArrowInfo
+	chaosConstructionArrowInfo,
+	loopPointerArrowInfo
 } from './ArrowToolsElementsInfo';
 import {
 	divisibleKillerCageInfo,
@@ -667,6 +668,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.CHAOS_CONSTRUCTION_ARROW]: chaosConstructionArrowInfo,
 	[TOOLS.AVERAGE_ARROW]: averageArrowInfo,
 	[TOOLS.BULBOUS_ARROW]: bulbousArrowInfo,
+	[TOOLS.LOOP_POINTER_ARROW]: loopPointerArrowInfo,
 
 	// Corner Line Constraints
 	[TOOLS.MAZE_WALL]: mazeWallInfo,

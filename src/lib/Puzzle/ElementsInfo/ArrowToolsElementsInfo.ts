@@ -6,13 +6,17 @@ import { HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
 import {
 	cellsToGridVarsStr,
 	cellsToVarsName,
+	cellToGridVarName,
 	simpleElementFunction,
 	VAR_2D_NAMES,
 	type PuzzleModel
 } from '$src/lib/Solver/solver_utils';
 import type { ArrowToolI, ConstraintsElement } from '../puzzle_schema';
 import type { Grid } from '../Grid/Grid';
-import type { GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
+import {
+	coordsToDirection,
+	type GridCoordI
+} from '$src/lib/utils/SquareCellGridCoords';
 
 const DEFAULT_ARROW_CATEGORIES = [
 	TOOL_CATEGORIES.ARROW_CONSTRAINT,
@@ -264,4 +268,94 @@ export const chaosConstructionArrowInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: chaosConstructionArrowElement
+};
+
+function loopPointerArrowConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: ArrowToolI
+) {
+	let out_str = '';
+
+	const circle_cells = constraint.cells
+		.map((coord) => grid.getCell(coord.r, coord.c))
+		.filter((cell) => !!cell);
+
+	if (circle_cells.length != 1) return out_str;
+
+	const circle_cell_var = cellToGridVarName(circle_cells[0], VAR_2D_NAMES.BOARD);
+	const circle_cell_loop_var = cellToGridVarName(circle_cells[0], VAR_2D_NAMES.CELL_CENTER_LOOP);
+
+	const lines_cells = constraint.lines.map((line) =>
+		line.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
+	);
+
+	// circle cell is on the loop
+	out_str += `constraint ${circle_cell_loop_var} == 1;\n`;
+	out_str += simpleArrowConstraint(grid, constraint, 'arrow_p');
+
+	for (const line of lines_cells) {
+		if (line.length <= 1) continue;
+
+
+		const arrow_tip_cell = line[line.length - 1];
+		const arrow_tip_var = cellToGridVarName(arrow_tip_cell, VAR_2D_NAMES.BOARD);
+		const arrow_before_tip_cell = line[line.length - 2];
+
+		const delta: GridCoordI = {
+			r: arrow_tip_cell.r - arrow_before_tip_cell.r,
+			c: arrow_tip_cell.c - arrow_before_tip_cell.c
+		};
+		const direction = coordsToDirection(delta);
+		const cells_in_direction = grid.getCellsInDirection(
+			arrow_tip_cell.r,
+			arrow_tip_cell.c,
+			direction
+		);
+		const dir_cells_vars = cellsToGridVarsStr(cells_in_direction, VAR_2D_NAMES.BOARD);
+		const dir_cells_loop_vars = cellsToGridVarsStr(
+			cells_in_direction,
+			VAR_2D_NAMES.CELL_CENTER_LOOP
+		);
+
+		out_str += `constraint loop_pointer_arrow_p(${circle_cell_var}, ${arrow_tip_var}, ${dir_cells_vars}, ${dir_cells_loop_vars});\n`;
+	}
+
+	out_str += simpleArrowConstraint(grid, constraint, 'arrow_p');
+
+	return out_str;
+}
+
+function loopPointerArrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = simpleElementFunction(model, element, loopPointerArrowConstraint);
+	return out_str;
+}
+
+export const loopPointerArrowInfo: SquareCellElementInfo = {
+	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW },
+
+	toolId: TOOLS.LOOP_POINTER_ARROW,
+
+	shape: {
+		type: SHAPE_TYPES.LINE,
+		r: { editable: false, value: 0.35 },
+		strokeWidth: { editable: true, value: 0.05 },
+		stroke: { editable: true, value: 'var(--constraint-color-gray)' },
+		linePathOptions: {
+			shortenTail: { editable: false, value: 0.15 },
+			bezierRounding: { editable: false, value: 0.25 }
+		}
+	},
+
+	meta: {
+		description: ` - Digits along an arrow must sum to the digit in that arrow's bulb, and all bulbs are on the loop.
+ - Additionally, arrow tips point towards a cell containing the digit within the arrow's bulb, and this cell with the pointed-to digit is also on the loop.
+ - The digit in the arrow tip indicates the distance from the arrow tip to the pointed-to cell. There may be other instances of the same digit between this cell and the arrow tip.`,
+		usage: arrowUsage(),
+		tags: [],
+		categories: DEFAULT_ARROW_CATEGORIES
+	},
+
+	solver_func: loopPointerArrowElement
 };
