@@ -105,6 +105,7 @@ export type ConstraintType =
 	| CellToolI
 	| CellArrowToolI
 	| CellMultiArrowToolI
+	| EdgeToolI
 	| CornerToolI
 	| LineToolI
 	| ArrowToolI
