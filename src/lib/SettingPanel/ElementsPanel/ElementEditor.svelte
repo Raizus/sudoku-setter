@@ -4,7 +4,7 @@
 		updateConstraintName,
 		updateConstraintValue
 	} from '$src/lib/Puzzle/Constraints/ElementsDict';
-		import { type VariableConstraintI } from '$src/lib/Puzzle/puzzle_schema';
+	import { type VariableConstraintI } from '$src/lib/Puzzle/puzzle_schema';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { isLocalConstraint, TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
 	import { currentConstraintStore, updateLocalConstraint } from '$stores/BoardStore';

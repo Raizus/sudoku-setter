@@ -7,7 +7,16 @@ import {
 } from '$src/lib/InputHandlers/InputHandler';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { HANDLER_TOOL_TYPE, type EdgeToolOptions } from '$input/ToolInputHandlers/types';
-import { adjCellPairGen, cellsFromCoords, cellsToGridVarsName, cellsToVarsName, cellToGridVarName, cellToVarName, PuzzleModel, VAR_2D_NAMES } from '$src/lib/Solver/solver_utils';
+import {
+	adjCellPairGen,
+	cellsFromCoords,
+	cellsToGridVarsName,
+	cellsToVarsName,
+	cellToGridVarName,
+	cellToVarName,
+	PuzzleModel,
+	VAR_2D_NAMES
+} from '$src/lib/Solver/solver_utils';
 import type { ConstraintsElement, EdgeToolI } from '../puzzle_schema';
 import type { Grid } from '../Grid/Grid';
 import type { Cell } from '../Grid/Cell';
@@ -20,7 +29,7 @@ const edgeDefaultCategories = [
 	TOOL_CATEGORIES.LOCAL_ELEMENT
 ];
 
-const typableEdgeDefaultCategories = [
+export const typableEdgeDefaultCategories = [
 	TOOL_CATEGORIES.EDGE_CONSTRAINT,
 	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
 	TOOL_CATEGORIES.TYPABLE_TOOL,
@@ -493,7 +502,7 @@ function edgeInequalityConstraint(grid: Grid, constraint: EdgeToolI) {
 	return '';
 }
 
-function edgeInequalityElement(model: PuzzleModel, element: ConstraintsElement) {
+export function edgeInequalityElement(model: PuzzleModel, element: ConstraintsElement) {
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
@@ -761,8 +770,7 @@ export const yinYangKropkiInfo: SquareCellElementInfo = {
 	negative_constraints: [
 		{
 			toolId: TOOLS.ALL_YIN_YANG_KROPKI_GIVEN,
-			description:
-				'All such dots are given.'
+			description: 'All such dots are given.'
 		}
 	],
 
@@ -975,3 +983,4 @@ export const combinedEdgeConstraintInfo: SquareCellElementInfo = {
 		categories: typableEdgeDefaultCategories
 	}
 };
+

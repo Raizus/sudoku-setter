@@ -2,10 +2,8 @@
 	import { defaultSingleCellMultiArrowShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
-	import {
-		getSingleCellMultiArrowPath,
-	} from '$lib/utils/SquareCellGridRenderUtils';
-		import type { CellMultiArrowToolI } from "$src/lib/Puzzle/puzzle_schema";
+	import { getSingleCellMultiArrowPath } from '$lib/utils/SquareCellGridRenderUtils';
+	import type { CellMultiArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { currentConstraintStore } from '$stores/BoardStore';
 
 	export let tool: CellMultiArrowToolI;
@@ -16,8 +14,7 @@
 	const outline = true;
 
 	$: defaultShape =
-		getDefaultShape(tool.toolId, squareCellElementHandlers) ??
-		defaultSingleCellMultiArrowShape;
+		getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultSingleCellMultiArrowShape;
 	$: shape = tool.shape ?? defaultShape;
 
 	$: outlineShape = {
@@ -31,7 +28,6 @@
 		stroke: 'var(--constraint-selected-color)',
 		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.05 : 0.05
 	};
-
 </script>
 
 {#if outline}
@@ -65,4 +61,3 @@
 		stroke-linecap="round"
 	/>
 {/each}
-
