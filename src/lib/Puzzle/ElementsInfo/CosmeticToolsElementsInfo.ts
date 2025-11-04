@@ -5,7 +5,7 @@ import {
 	defaultCageValueUpdater,
 	validateCageValue
 } from './CageElementsInfo/CageToolsElementsInfo';
-import { defaultEdgeValueUpdater, validateEdgeValue } from './EdgeToolsElementsInfo';
+import { defaultEdgeValueUpdater, edgeInequalityElement, validateEdgeValue } from './EdgeToolsElementsInfo';
 import { defaultCornerValueUpdater, validateCornerValue } from './CornerToolsElementsInfo';
 import {
 	defaultOutsideDirectionValueUpdater,
@@ -379,4 +379,33 @@ export const cosmeticOutsideDirectionInfo: SquareCellElementInfo = {
 			TOOL_CATEGORIES.LOCAL_ELEMENT
 		]
 	}
+};
+
+export const cosmeticDirectedAdjacentCellsInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.DIRECTED_ADJACENT_CELLS,
+		defaultValue: ''
+	},
+
+	toolId: TOOLS.COSMETIC_DIRECTED_ADJACENT_CELLS,
+
+	shape: {
+		type: SHAPE_TYPES.ARROW,
+		r: { editable: false, value: 0.1 },
+		strokeWidth: { editable: false, value: 0.1, lb: 0, ub: 1, step: 0.025 },
+		stroke: { editable: false, value: 'black' },
+		fontSize: { editable: false, value: 0.3 }
+	},
+
+	meta: {
+		description: 'An inequality sign that separates two cells points to the lower of the two digits.',
+		tags: [],
+		categories: [
+			TOOL_CATEGORIES.COSMETIC_TOOL,
+			TOOL_CATEGORIES.EDGE_TOOL,
+			TOOL_CATEGORIES.LOCAL_ELEMENT
+		]
+	},
+
+	solver_func: edgeInequalityElement
 };

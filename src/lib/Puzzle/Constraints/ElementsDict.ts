@@ -175,7 +175,10 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 			if (typeof tool_id_str !== 'string') throw TypeError('tool_id_str must be of type string.');
 			const tool = toolKeyFromString(tool_id_str);
 			if (tool === undefined) continue;
-			if (!Object.keys(squareCellElementHandlers).includes(tool)) continue;
+			if (!Object.keys(squareCellElementHandlers).includes(tool)) {
+				console.log(`tool ${tool} not defined in squareCellElementHandlers`);
+				continue
+			};
 
 			// add element
 			local_constraints.addToDict(tool);
@@ -269,6 +272,25 @@ export function findEdgeConstraint(
 		if (match) return entry;
 	}
 	return null;
+}
+
+export function findAdjacentCellsArrowConstraint(
+	elementsDict: ElementsDict,
+	toolId: TOOLID,
+	cells: GridCoordI[]
+) {
+	const elements = elementsDict.get(toolId);
+	if (!elements || !elements.constraints) return null;
+
+	for (const entry of Object.entries(elements.constraints)) {
+		const constraint = entry[1] as EdgeToolI;
+		const match = cells.every((cell) =>
+			constraint.cells.some((cell2) => areCoordsEqual(cell, cell2))
+		);
+
+		if (match) return entry;
+	}
+	return null;	
 }
 
 export function findCornerConstraint(

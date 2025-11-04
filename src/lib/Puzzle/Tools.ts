@@ -710,7 +710,8 @@ export function isGlobalConstraint(toolId: TOOLID): boolean {
 
 export function isLocalConstraint(toolId: TOOLID): boolean {
 	const enumValues = Object.values(LOCAL_CONSTRAINTS) as string[];
-	return enumValues.includes(toolId);
+	const enumValues2 = Object.values(COSMETIC_TOOLS) as string[];	
+	return enumValues.includes(toolId) || enumValues2.includes(toolId);
 }
 
 export function isCosmeticTool(toolId: TOOLID): boolean {
@@ -751,7 +752,11 @@ export function isSingleCellTool(toolId: TOOLID): boolean {
 
 export function isEdgeTool(toolId: TOOLID): boolean {
 	const enumValues = Object.values(EDGE_CONSTRAINTS) as string[];
-	return enumValues.includes(toolId) || toolId === TOOLS.COSMETIC_EDGE;
+	return (
+		enumValues.includes(toolId) ||
+		toolId === TOOLS.COSMETIC_EDGE ||
+		toolId === TOOLS.COSMETIC_DIRECTED_ADJACENT_CELLS
+	);
 }
 
 export function isCornerTool(toolId: TOOLID): boolean {

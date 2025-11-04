@@ -21,6 +21,7 @@ export enum HANDLER_TOOL_TYPE {
 	SINGLE_CELL_ARROW,
 	SINGLE_CELL_MULTI_ARROW,
 	EDGE,
+	DIRECTED_ADJACENT_CELLS,
 	CORNER,
 	LINE,
 	ARROW,
@@ -74,6 +75,12 @@ export type SingleCellMultiArrowToolOptions = {
 
 export type EdgeToolOptions = {
 	type: HANDLER_TOOL_TYPE.EDGE;
+	valueUpdater?: ValueUpdaterI;
+	defaultValue?: string;
+};
+
+export type DirectedAdjacentCellsToolOptions = {
+	type: HANDLER_TOOL_TYPE.DIRECTED_ADJACENT_CELLS;
 	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 };
@@ -149,6 +156,7 @@ export type ToolHandlerOptions =
 	| SingleCellArrowToolOptions
 	| SingleCellMultiArrowToolOptions
 	| EdgeToolOptions
+	| DirectedAdjacentCellsToolOptions
 	| CornerToolOptions
 	| CageToolInputOptions
 	| CloneToolInputOptions

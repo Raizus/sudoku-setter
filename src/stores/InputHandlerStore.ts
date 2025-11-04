@@ -19,6 +19,7 @@ import { getEdgeToolInputHandler } from '$input/ToolInputHandlers/EdgeToolInputH
 import { getCornerToolInputHandler } from '$input/ToolInputHandlers/CornerToolInputHandler';
 import { getPenToolInputHandler } from '$input/ToolInputHandlers/PenToolInputHandler';
 import { getCloneToolInputHandler } from '$input/ToolInputHandlers/CloneToolInputHandler';
+import { getDirectedAdjacentCellsToolInputHandler } from '$input/ToolInputHandlers/AdjacentCellArrowToolInputHandler';
 
 export function getInputHandlerF(
 	options: ToolHandlerOptions
@@ -52,6 +53,12 @@ export function getInputHandlerF(
 			return getEdgeToolInputHandler(svgRef, grid, tool, options2);
 		}
 		return getInputHandler;
+	} else if (options.type === HANDLER_TOOL_TYPE.DIRECTED_ADJACENT_CELLS) {
+		const options2 = options;
+		function getInputHandler(svgRef: SVGSVGElement, grid: Grid, tool: TOOLID) {
+			return getDirectedAdjacentCellsToolInputHandler(svgRef, grid, tool, options2);
+		}
+		return getInputHandler;
 	} else if (options.type === HANDLER_TOOL_TYPE.CORNER) {
 		const options2 = options;
 		function getInputHandler(svgRef: SVGSVGElement, grid: Grid, tool: TOOLID) {
@@ -72,6 +79,7 @@ export function getInputHandlerF(
 		return getInputHandler;
 	} else if (options.type === HANDLER_TOOL_TYPE.CAGE) {
 		const options2 = options;
+		console.log("getInpuHandler, cage")
 		function getInputHandler(svgRef: SVGSVGElement, grid: Grid, tool: TOOLID) {
 			return getCageToolInputHandler(svgRef, grid, tool, options2);
 		}

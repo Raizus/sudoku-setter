@@ -83,6 +83,7 @@ import {
 	yinYangKropkiInfo,
 	yinYangWhiteKropkiInfo
 } from './EdgeToolsElementsInfo';
+import { cosmeticDirectedAdjacentCellsInfo } from './CosmeticToolsElementsInfo';
 import {
 	allOddDigitsAreOrthogonallyConnectedInfo,
 	antiEntropyInfo,
@@ -564,6 +565,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.EDGE_CAVE_ONE_OF_EACH]: edgeCaveOneOfEachInfo,
 
 	[TOOLS.ONE_WAY_DOOR]: oneWayDoorInfo,
+
+	[TOOLS.COSMETIC_DIRECTED_ADJACENT_CELLS]: cosmeticDirectedAdjacentCellsInfo,
 
 	// Corner Constraints
 	[TOOLS.QUADRUPLE]: quadrupleInfo,
