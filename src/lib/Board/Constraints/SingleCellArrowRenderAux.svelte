@@ -1,10 +1,11 @@
 <script lang="ts">
-		import type { CellArrowToolI } from "$src/lib/Puzzle/puzzle_schema";
+	import type { CellArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { defaultSingleCellArrowShape } from '$lib/Puzzle/Shape/Shape';
-	import { getSingleCellArrowPath } from '$lib/utils/SquareCellGridRenderUtils';
+	import { cellToCellCenterVector } from '$lib/utils/SquareCellGridRenderUtils';
 	import { currentConstraintStore } from '$stores/BoardStore';
+	import CenteredArrowRender from '../SvgComponents/CenteredArrowRender.svelte';
 
 	export let tool: CellArrowToolI;
 	export let c_id: string | undefined = undefined;
@@ -16,8 +17,6 @@
 	$: defaultShape =
 		getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultSingleCellArrowShape;
 	$: shape = tool.shape ?? defaultShape;
-	$: strokeWidth = shape.strokeWidth ?? 0.1;
-	$: stroke = shape.stroke ?? 'black';
 
 	$: outlineShape = {
 		...shape,
@@ -31,25 +30,26 @@
 		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.07 : 0.07
 	};
 
-	$: arrowPathStr = getSingleCellArrowPath(tool.cell, tool.direction);
+	const arrow_l = 0.6;
+	$: center = cellToCellCenterVector(tool.cell);
 </script>
 
 {#if outline}
-	<path
-		d={arrowPathStr}
-		fill="none"
-		stroke={outlineShape.stroke}
-		stroke-width={outlineShape.strokeWidth}
-		stroke-linecap="round"
+	<CenteredArrowRender
+		cx={center.x}
+		cy={center.y}
+		{arrow_l}
+		shape={outlineShape}
+		direction={tool.direction}
 	/>
 {/if}
 {#if c_id && c_id === currentConstraintId}
-	<path
-		d={arrowPathStr}
-		fill="none"
-		stroke={selectedOutlineShape.stroke}
-		stroke-width={selectedOutlineShape.strokeWidth}
-		stroke-linecap="round"
+	<CenteredArrowRender
+		cx={center.x}
+		cy={center.y}
+		{arrow_l}
+		shape={selectedOutlineShape}
+		direction={tool.direction}
 	/>
 {/if}
-<path d={arrowPathStr} fill="none" {stroke} stroke-width={strokeWidth} stroke-linecap="round" />
+<CenteredArrowRender cx={center.x} cy={center.y} {arrow_l} {shape} direction={tool.direction} />

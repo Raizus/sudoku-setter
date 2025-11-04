@@ -451,30 +451,6 @@ export function getArrowHead(l: number, _direction: DIRECTION) {
 	return rotatedHead;
 }
 
-function getSingleCellArrowLine(_cell: GridCoordI, _direction: DIRECTION) {
-	const scale = 0.3;
-	const delta = directionToCoords(_direction);
-	const vec = new Vector2D(delta.c, delta.r).normalise().scale(scale);
-	const cellCenter = cellToCellCenterVector(_cell);
-
-	const p1 = cellCenter.subtract(vec);
-	const p2 = cellCenter.add(vec);
-	const line = [p1, p2];
-	return line;
-}
-
-export function getSingleCellArrowPath(_cell: GridCoordI, _direction: DIRECTION) {
-	const l = 0.2;
-	const line = getSingleCellArrowLine(_cell, _direction);
-	let head = getArrowHead(l, _direction);
-	head = head.map((p) => p.add(line[1]));
-
-	const linePathStr = linePointsToPathStr(line);
-	const headPathStr = linePointsToPathStr(head);
-	const arrowPathStr = linePathStr + headPathStr;
-	return arrowPathStr;
-}
-
 export function getSingleCellMultiArrowLine(_cell: GridCoordI, _direction: DIRECTION) {
 	const arrow_l = 0.2;
 	const delta = directionToCoords(_direction);
