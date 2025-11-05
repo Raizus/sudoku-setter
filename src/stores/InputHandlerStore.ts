@@ -3,7 +3,11 @@ import { getToolInfo } from '$lib/Puzzle/ElementHandlersUtils';
 import { derived, writable } from 'svelte/store';
 import { gridStore, svgRefStore, toolStore } from './BoardStore';
 import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
-import { HANDLER_TOOL_TYPE, type ToolHandlerOptions, type ToolModeT } from '$input/ToolInputHandlers/types';
+import {
+	HANDLER_TOOL_TYPE,
+	type ToolHandlerOptions,
+	type ToolModeT
+} from '$input/ToolInputHandlers/types';
 import { getArrowToolInputHandler } from '$input/ToolInputHandlers/ArrowToolInputHandler';
 import type { Grid } from '$src/lib/Puzzle/Grid/Grid';
 import type { TOOLID } from '$src/lib/Puzzle/Tools';
@@ -21,9 +25,8 @@ import { getPenToolInputHandler } from '$input/ToolInputHandlers/PenToolInputHan
 import { getCloneToolInputHandler } from '$input/ToolInputHandlers/CloneToolInputHandler';
 import { getDirectedAdjacentCellsToolInputHandler } from '$input/ToolInputHandlers/AdjacentCellArrowToolInputHandler';
 
-export function getInputHandlerF(
-	options: ToolHandlerOptions
-): GetInputHandler | undefined {
+
+export function getInputHandlerF(options: ToolHandlerOptions): GetInputHandler | undefined {
 	if (options.type === HANDLER_TOOL_TYPE.SELECTION) {
 		function getInputHandler(svgRef: SVGSVGElement, grid: Grid, tool: TOOLID) {
 			return getSelectionInputHandler(svgRef, grid, tool);
@@ -79,7 +82,7 @@ export function getInputHandlerF(
 		return getInputHandler;
 	} else if (options.type === HANDLER_TOOL_TYPE.CAGE) {
 		const options2 = options;
-		console.log("getInpuHandler, cage")
+		console.log('getInpuHandler, cage');
 		function getInputHandler(svgRef: SVGSVGElement, grid: Grid, tool: TOOLID) {
 			return getCageToolInputHandler(svgRef, grid, tool, options2);
 		}
@@ -121,7 +124,7 @@ export const InputHandlerStore = derived<
 	}
 	if ($svgRefStore === null) return undefined;
 
-	const inputOpts = toolInfo.inputOptions;	
+	const inputOpts = toolInfo.inputOptions;
 	const getInputHandler = inputOpts ? getInputHandlerF(inputOpts) : undefined;
 	if (!getInputHandler) return undefined;
 	const inputHandler = getInputHandler($svgRefStore, $gridStore, $toolStore);
