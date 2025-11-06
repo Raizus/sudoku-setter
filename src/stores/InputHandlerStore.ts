@@ -2,7 +2,7 @@ import type { GetInputHandler, InputHandler } from '$src/lib/InputHandlers/Input
 import { getToolInfo } from '$lib/Puzzle/ElementHandlersUtils';
 import { derived, writable } from 'svelte/store';
 import { gridStore, svgRefStore, toolStore } from './BoardStore';
-import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 import {
 	HANDLER_TOOL_TYPE,
 	type ToolHandlerOptions,
@@ -117,7 +117,7 @@ export const InputHandlerStore = derived<
 	[typeof svgRefStore, typeof gridStore, typeof toolStore],
 	InputHandler | undefined
 >([svgRefStore, gridStore, toolStore], ([$svgRefStore, $gridStore, $toolStore]) => {
-	const toolInfo = getToolInfo($toolStore, squareCellElementHandlers);
+	const toolInfo = getToolInfo($toolStore, elementInfoRegistry);
 	if (toolInfo === undefined) {
 		console.warn(`Element handler for ${$toolStore} is not defined`);
 		return undefined;

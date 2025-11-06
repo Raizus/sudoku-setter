@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import ElementsPanel from './ElementsPanel/ElementsPanel.svelte';
 	import ShapePanel from './ShapeEditor/ShapePanel.svelte';
 	import MenuPanel from './MenuPanel/MenuPanel.svelte';
@@ -11,8 +11,8 @@
 	<MenuPanel />
 	<div class="container">
 		<SolverPanel />
-		<ElementsPanel elementHandlers={squareCellElementHandlers} />
-		<ShapePanel elementHandlers={squareCellElementHandlers} />
+		<ElementsPanel elementHandlers={elementInfoRegistry} />
+		<ShapePanel elementHandlers={elementInfoRegistry} />
 		<OthersPanel />
 	</div>
 </div>

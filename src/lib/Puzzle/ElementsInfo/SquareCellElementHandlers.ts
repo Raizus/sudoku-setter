@@ -355,7 +355,7 @@ import {
 import { mazeWallInfo } from './CornerLineToolsElementsInfo';
 import { variableConstraintInfo } from './OtherConstraintsElementsInfo';
 
-export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = {
+export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	// Cell input elements
 	[TOOLS.GIVEN]: givenInfo,
 	[TOOLS.DIGIT]: digitInfo,

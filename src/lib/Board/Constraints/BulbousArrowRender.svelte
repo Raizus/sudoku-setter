@@ -1,7 +1,7 @@
 <script lang="ts">
 		import type { ArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
-	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { defaultArrowShape } from '$lib/Puzzle/Shape/Shape';
 	import type { Rectangle } from '$lib/Types/types';
 	import {
@@ -17,7 +17,7 @@
 	export let tool: ArrowToolI;
 	export let arrowId: string;
 
-	const defaultShape = getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultArrowShape;
+	const defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultArrowShape;
 	$: shape = tool.shape ?? defaultShape;
 
 	$: bulbRadius = shape?.r ?? 0.4;

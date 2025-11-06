@@ -6,7 +6,7 @@
 	} from '$lib/utils/SquareCellGridRenderUtils';
 		import type { OutsideDirectionToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
-	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { defaultOutsideShape } from '$lib/Puzzle/Shape/Shape';
 	import { directionToCoords, type GridCoordI } from '$lib/utils/SquareCellGridCoords';
 	import type { DIRECTION } from '$src/lib/utils/directions';
@@ -23,7 +23,7 @@
 
     $: cells = $gridStore.getCellsInDirection(tool.cell.r, tool.cell.c, tool.direction);
 
-	$: defaultShape = getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultOutsideShape;
+	$: defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultOutsideShape;
 	$: shape = tool.shape ?? defaultShape;
 	// maybe adjust fontSize to shape size?
 	$: fontSize = shape?.fontSize ?? 0.5;

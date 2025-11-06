@@ -3,7 +3,7 @@ import { hexedSudokuConstraint, sudokuConstraints } from './global_constraints';
 import { addHeader, cellToVarName, PuzzleModel, set_board_regions, type PuzzleAuxI } from './solver_utils';
 import { defineFunctionsPredicates } from './solver_mzn_defs';
 import { range } from 'lodash';
-import { squareCellElementHandlers } from '../Puzzle/ElementsInfo/SquareCellElementHandlers';
+import { elementInfoRegistry } from '../Puzzle/ElementsInfo/SquareCellElementHandlers';
 import type { SquareCellElementInfo } from '../Puzzle/ElementInfo';
 
 function givenConstraints(puzzle: PuzzleAuxI) {
@@ -85,7 +85,7 @@ export function createMinizincModel(puzzle: PuzzleAuxI, randomize_search: boolea
 	model.add(sudokuConstraints(puzzle));
 	model.add(hexedSudokuConstraint(puzzle));
 
-	model.add(elementConstraints(model, squareCellElementHandlers));
+	model.add(elementConstraints(model, elementInfoRegistry));
 
 	// randomize search doesn't work for the minizinc WASM version
 	if (randomize_search) {

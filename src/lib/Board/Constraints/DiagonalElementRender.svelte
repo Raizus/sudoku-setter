@@ -1,7 +1,7 @@
 <script lang="ts">
 		import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$src/lib/Puzzle/ElementHandlersUtils';
-	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { defaultDiagonalShape } from '$src/lib/Puzzle/Shape/Shape';
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 	import { gridStore } from '$stores/BoardStore';
@@ -10,7 +10,7 @@
 
 	$: tool = element.tool_id;
 	$: defaultShape =
-		getDefaultShape(element.tool_id, squareCellElementHandlers) ?? defaultDiagonalShape;
+		getDefaultShape(element.tool_id, elementInfoRegistry) ?? defaultDiagonalShape;
 	$: strokeWidth = defaultShape?.strokeWidth ?? 0.02;
 	$: stroke = defaultShape?.stroke ?? 'black';
 

@@ -1,14 +1,14 @@
 <script lang="ts">
 	import LineRender from '$src/lib/Board/SvgComponents/LineRender.svelte';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
-	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { SHAPE_TYPES, defaultLineShape } from '$lib/Puzzle/Shape/Shape';
 		import type { CornerLineToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { Vector2D } from '$src/lib/utils/Vector2D';
 	import MazeWallRender from './MazeWallRender.svelte';
 
 	export let tool: CornerLineToolI;
-	const defaultShape = getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultLineShape;
+	const defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultLineShape;
 
 	$: linePoints = tool.coords.map((coord) => new Vector2D(coord.c, coord.r));
 	$: shape = tool.shape ?? defaultShape;

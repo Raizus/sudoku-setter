@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { SHAPE_TYPES, defaultSingleCellCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import ValuedCageRender from './ValuedCageRender.svelte';
@@ -21,7 +21,7 @@
 	const outline = true;
 
 	$: defaultShape =
-		getDefaultShape(tool.toolId, squareCellElementHandlers) ??
+		getDefaultShape(tool.toolId, elementInfoRegistry) ??
 		defaultSingleCellCircleShape;
 	$: shape = tool.shape ?? defaultShape;
 	$: type = shape?.type || SHAPE_TYPES.CIRCLE;

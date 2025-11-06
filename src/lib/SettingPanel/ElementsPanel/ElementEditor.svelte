@@ -5,7 +5,7 @@
 		updateConstraintValue
 	} from '$src/lib/Puzzle/Constraints/ElementsDict';
 	import { type VariableConstraintI } from '$src/lib/Puzzle/puzzle_schema';
-	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { isLocalConstraint, TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
 	import { currentConstraintStore, updateLocalConstraint } from '$stores/BoardStore';
 	import ConstraintCheckbox from './ConstraintCheckbox.svelte';
@@ -13,7 +13,7 @@
 	import ToolModeButtons from './ToolModeButtons.svelte';
 
 	export let tool_id: TOOLID;
-	const element_info = squareCellElementHandlers[tool_id];
+	const element_info = elementInfoRegistry[tool_id];
 	const negative_constraints = element_info.negative_constraints;
 	const has_negatives =
 		negative_constraints && Object.keys(negative_constraints).length > 0 ? true : false;

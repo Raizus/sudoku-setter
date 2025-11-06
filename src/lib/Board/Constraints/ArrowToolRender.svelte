@@ -1,7 +1,7 @@
 <script lang="ts">
 		import type { ArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
-	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { defaultArrowShape, SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
 	import BulbousArrowRender from './BulbousArrowRender.svelte';
 	import SimpleArrowToolRender from './SimpleArrowToolRender.svelte';
@@ -11,7 +11,7 @@
 	export let c_id: string;
 	
 	const outline = true;
-	const defaultShape = getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultArrowShape;
+	const defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultArrowShape;
 	$: shape = tool.shape ?? defaultShape;
 
 	$: outlineShape = {

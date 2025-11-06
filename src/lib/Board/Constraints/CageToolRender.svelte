@@ -3,14 +3,14 @@
 	import { defaultCageShape } from '$lib/Puzzle/Shape/Shape';
 		import type { CageToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
-	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { currentConstraintStore } from '$stores/BoardStore';
 	import CageRender from './CageRender.svelte';
 
 	export let tool: CageToolI;
 	export let c_id: string;
 
-	const defaultShape = getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultCageShape;
+	const defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultCageShape;
 	$: shape = tool.shape ?? defaultShape;
 
 	$: currentConstraintId = $currentConstraintStore?.id;

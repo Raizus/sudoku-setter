@@ -5,7 +5,7 @@
 	import ThermoRender from '$src/lib/Board/SvgComponents/ThermoRender.svelte';
 		import type { LineToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
-	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { SHAPE_TYPES, defaultLineShape } from '$lib/Puzzle/Shape/Shape';
 	import { cellsToVector2DPoints } from '$lib/utils/SquareCellGridRenderUtils';
 	import { currentConstraintStore } from '$stores/BoardStore';
@@ -13,7 +13,7 @@
 	export let tool: LineToolI;
 	export let c_id: string;
 	
-	const defaultShape = getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultLineShape;
+	const defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultLineShape;
 	const outline = true;
 
 	$: currentConstraintId = $currentConstraintStore?.id;

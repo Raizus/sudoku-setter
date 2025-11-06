@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 		import type { CornerToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import { SHAPE_TYPES, defaultCornerCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
@@ -16,7 +16,7 @@
 	$: currentConstraintId = $currentConstraintStore?.id;
 
 	$: defaultShape =
-	getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultCornerCircleShape;
+	getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultCornerCircleShape;
 	$: shape = tool.shape ?? defaultShape;
 	$: type = shape?.type ?? SHAPE_TYPES.CIRCLE;
 	$: fontSize = shape?.fontSize ?? 0.2;

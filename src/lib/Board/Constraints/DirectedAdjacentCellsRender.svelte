@@ -2,7 +2,7 @@
 	import { defaultArrowShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import type { EdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
-	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { cellsToVector2DPoints } from '$lib/utils/SquareCellGridRenderUtils';
 	import { vectorAverage } from '$lib/utils/Vector2D';
 	import { currentConstraintStore } from '$stores/BoardStore';
@@ -15,7 +15,7 @@
 
 	$: currentConstraintId = $currentConstraintStore?.id;
 
-	$: defaultShape = getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultArrowShape;
+	$: defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultArrowShape;
 	$: shape = tool.shape ?? defaultShape;
 
 	const outline = true;

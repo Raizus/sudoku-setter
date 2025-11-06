@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { defaultSingleCellMultiArrowShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
-	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { getSingleCellMultiArrowPath } from '$lib/utils/SquareCellGridRenderUtils';
 	import type { CellMultiArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { currentConstraintStore } from '$stores/BoardStore';
@@ -14,7 +14,7 @@
 	const outline = true;
 
 	$: defaultShape =
-		getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultSingleCellMultiArrowShape;
+		getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultSingleCellMultiArrowShape;
 	$: shape = tool.shape ?? defaultShape;
 
 	$: outlineShape = {

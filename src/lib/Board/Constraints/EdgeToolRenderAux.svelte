@@ -4,7 +4,7 @@
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 		import type { EdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import CircleRender from '$src/lib/Board/SvgComponents/CircleRender.svelte';
-	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import {
 		cellToCellCenterVector,
 		cellsToVector2DPoints
@@ -20,7 +20,7 @@
 	$: currentConstraintId = $currentConstraintStore?.id;
 
 	$: defaultShape =
-		getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultEdgeCircleShape;
+		getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultEdgeCircleShape;
 	$: shape = tool.shape ?? defaultShape;
 
 	// maybe adjust fontSize to shape size?

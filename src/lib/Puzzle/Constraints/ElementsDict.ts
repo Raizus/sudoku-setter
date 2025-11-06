@@ -41,7 +41,7 @@ import {
 import { type SingleCellTool } from "../puzzle_schema";
 import { getShapeDiff } from '../Shape/Shape';
 import { getDefaultShape } from '../ElementHandlersUtils';
-import { squareCellElementHandlers } from '../ElementsInfo/SquareCellElementHandlers';
+import { elementInfoRegistry } from '../ElementsInfo/SquareCellElementHandlers';
 import { parseShape } from '../utils';
 import {
 	centerCornerOrEdgeConstraintFromJson} from './CenterCornerOrEdgeConstraints';
@@ -175,7 +175,7 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 			if (typeof tool_id_str !== 'string') throw TypeError('tool_id_str must be of type string.');
 			const tool = toolKeyFromString(tool_id_str);
 			if (tool === undefined) continue;
-			if (!Object.keys(squareCellElementHandlers).includes(tool)) {
+			if (!Object.keys(elementInfoRegistry).includes(tool)) {
 				console.log(`tool ${tool} not defined in squareCellElementHandlers`);
 				continue
 			};
@@ -512,7 +512,7 @@ export function constraintToJson(constraint: ConstraintType) {
 	}
 
 	if ('shape' in constraint && constraint['shape']) {
-		const default_shape = getDefaultShape(constraint.toolId, squareCellElementHandlers);
+		const default_shape = getDefaultShape(constraint.toolId, elementInfoRegistry);
 		const shapeDiff = getShapeDiff(constraint.shape, default_shape);
 		// console.log(shapeDiff);
 		if (shapeDiff) {

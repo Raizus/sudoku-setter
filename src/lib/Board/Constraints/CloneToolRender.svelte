@@ -1,7 +1,7 @@
 <script lang="ts">
 		import type { CloneToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
-	import { squareCellElementHandlers } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
 	import { defaultCloneShape } from '$lib/Puzzle/Shape/Shape';
 	import CageRender from './CageRender.svelte';
 	import CellTextLabelRender from './CellTextLabelRender.svelte';
@@ -13,7 +13,7 @@
 
 	$: currentConstraintId = $currentConstraintStore?.id;
 
-	const defaultShape = getDefaultShape(tool.toolId, squareCellElementHandlers) ?? defaultCloneShape;
+	const defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultCloneShape;
 	$: shape = tool.shape ?? defaultShape;
 
 	$: selectedOutlineShape = {

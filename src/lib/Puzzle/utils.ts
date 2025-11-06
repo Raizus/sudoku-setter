@@ -1,7 +1,7 @@
 import { strToCellCoord, strToGridCoord, type GridCoordI } from '$lib/utils/SquareCellGridCoords';
 import { stringToDirection, type DIRECTION } from '$lib/utils/directions';
 import { getDefaultShape } from './ElementHandlersUtils';
-import { squareCellElementHandlers } from './ElementsInfo/SquareCellElementHandlers';
+import { elementInfoRegistry } from './ElementsInfo/SquareCellElementHandlers';
 import type { ShapeI } from './Shape/Shape';
 import type { TOOLID } from './Tools';
 // import type { ShapeI } from './Shape/Shape';
@@ -120,7 +120,7 @@ export function parseShape(
 	const shape_data = data['shape'];
 	if (shape_data === undefined) return undefined;
 
-	const default_shape = getDefaultShape(toolId, squareCellElementHandlers);
+	const default_shape = getDefaultShape(toolId, elementInfoRegistry);
 	const shape: ShapeI = {
 		...default_shape,
 		...shape_data as ShapeI
