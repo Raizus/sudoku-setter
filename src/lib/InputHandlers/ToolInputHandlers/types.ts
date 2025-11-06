@@ -48,79 +48,79 @@ export interface ValueToolInputOptions extends ToolOptionsI {
 	defaultValue?: string;
 }
 
-export type SelectionInputOptions = {
+export interface SelectionInputOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.SELECTION;
 };
 
-export type SingleCellToolOptions = {
+export interface SingleCellToolOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.SINGLE_CELL;
 	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 	oppositeConstraintId?: TOOLID;
 };
 
-export type SingleCellArrowToolOptions = {
+export interface SingleCellArrowToolOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.SINGLE_CELL_ARROW;
 	cornerOrEdge: CornerOrEdge;
 	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 };
 
-export type SingleCellMultiArrowToolOptions = {
+export interface SingleCellMultiArrowToolOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.SINGLE_CELL_MULTI_ARROW;
 	cornerOrEdge: CornerOrEdge;
 	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 };
 
-export type EdgeToolOptions = {
+export interface EdgeToolOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.EDGE;
 	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 };
 
-export type DirectedAdjacentCellsToolOptions = {
+export interface DirectedAdjacentCellsToolOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.DIRECTED_ADJACENT_CELLS;
 	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 };
 
-export type CornerToolOptions = {
+export interface CornerToolOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.CORNER;
 	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 };
 
-export type ArrowToolInputOptions = {
+export interface ArrowToolInputOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.ARROW;
 	allowSelfIntersection?: boolean; // allow arrow to intersect bulb
 	defaultValue?: string;
 };
 
-export type CageToolInputOptions = {
+export interface CageToolInputOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.CAGE;
 	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 	allowDiagonallyAdjacent?: boolean;
 };
 
-export type CloneToolInputOptions = {
+export interface CloneToolInputOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.CLONE;
 };
 
-export type CenterCornerOrEdgeToolInputOptions = {
+export interface CenterCornerOrEdgeToolInputOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.CENTER_CORNER_OR_EDGE;
 	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 	targets: CornerOrEdge;
 };
 
-export type CornerLineToolInputOptions = {
+export interface CornerLineToolInputOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.CORNER_LINE;
 	defaultValue?: string;
 };
 
-export type LineToolInputOptions = {
+export interface LineToolInputOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.LINE;
 	valueUpdater?: ValueUpdaterI;
 	// deletePrioritizeHead: boolean,
@@ -139,34 +139,56 @@ export enum CornerOrEdge {
 	CLOSEST
 }
 
-export type OutsideDirectionToolInputOptions = {
+export interface OutsideDirectionToolInputOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION;
 	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 	cornerOrEdge: CornerOrEdge;
 };
 
-export type PenToolInputOptions = {
+export interface PenToolInputOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.PEN;
 };
 
-export type ToolHandlerOptions =
-	| SelectionInputOptions
-	| SingleCellToolOptions
-	| SingleCellArrowToolOptions
-	| SingleCellMultiArrowToolOptions
-	| EdgeToolOptions
-	| DirectedAdjacentCellsToolOptions
-	| CornerToolOptions
-	| CageToolInputOptions
-	| CloneToolInputOptions
-	| LineToolInputOptions
-	| ArrowToolInputOptions
-	| CornerLineToolInputOptions
-	| CenterCornerOrEdgeToolInputOptions
-	| OutsideDirectionToolInputOptions
-	| PenToolInputOptions
-	| ValueToolInputOptions;
+export interface ToolOptionsRegistry {
+	[HANDLER_TOOL_TYPE.SELECTION]: SelectionInputOptions;
+	[HANDLER_TOOL_TYPE.SINGLE_CELL]: SingleCellToolOptions;
+	[HANDLER_TOOL_TYPE.SINGLE_CELL_ARROW]: SingleCellArrowToolOptions;
+	[HANDLER_TOOL_TYPE.SINGLE_CELL_MULTI_ARROW]: SingleCellMultiArrowToolOptions;
+	[HANDLER_TOOL_TYPE.EDGE]: EdgeToolOptions;
+	[HANDLER_TOOL_TYPE.DIRECTED_ADJACENT_CELLS]: DirectedAdjacentCellsToolOptions;
+	[HANDLER_TOOL_TYPE.CORNER]: CornerToolOptions;
+	[HANDLER_TOOL_TYPE.CAGE]: CageToolInputOptions;
+	[HANDLER_TOOL_TYPE.CLONE]: CloneToolInputOptions;
+	[HANDLER_TOOL_TYPE.LINE]: LineToolInputOptions;
+	[HANDLER_TOOL_TYPE.ARROW]: ArrowToolInputOptions;
+	// [HANDLER_TOOL_TYPE.CORNER_LINE]: CornerLineToolInputOptions;
+	[HANDLER_TOOL_TYPE.CENTER_CORNER_OR_EDGE]: CenterCornerOrEdgeToolInputOptions;
+	[HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION]: OutsideDirectionToolInputOptions;
+	[HANDLER_TOOL_TYPE.PEN]: PenToolInputOptions;
+	// [HANDLER_TOOL_TYPE.VALUE_TOOL]: ValueToolInputOptions;
+}
+
+// Automatically derived union type
+export type ToolHandlerOptions = ToolOptionsRegistry[keyof ToolOptionsRegistry];
+
+// export type ToolHandlerOptions =
+// 	| SelectionInputOptions
+// 	| SingleCellToolOptions
+// 	| SingleCellArrowToolOptions
+// 	| SingleCellMultiArrowToolOptions
+// 	| EdgeToolOptions
+// 	| DirectedAdjacentCellsToolOptions
+// 	| CornerToolOptions
+// 	| CageToolInputOptions
+// 	| CloneToolInputOptions
+// 	| LineToolInputOptions
+// 	| ArrowToolInputOptions
+// 	| CornerLineToolInputOptions
+// 	| CenterCornerOrEdgeToolInputOptions
+// 	| OutsideDirectionToolInputOptions
+// 	| PenToolInputOptions
+// 	| ValueToolInputOptions;
 
 export enum ARROW_TOOL_MODE {
 	DYNAMIC = 'Dynamic',
