@@ -2,7 +2,7 @@ import type { GetInputHandler, InputHandler } from '$src/lib/InputHandlers/Input
 import { getToolInfo } from '$lib/Puzzle/ElementHandlersUtils';
 import { derived, writable } from 'svelte/store';
 import { gridStore, svgRefStore, toolStore } from './BoardStore';
-import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 import {
 	HANDLER_TOOL_TYPE,
 	type ToolHandlerOptions,

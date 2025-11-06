@@ -41,7 +41,7 @@ import {
 import { type SingleCellTool } from "../puzzle_schema";
 import { getShapeDiff } from '../Shape/Shape';
 import { getDefaultShape } from '../ElementHandlersUtils';
-import { elementInfoRegistry } from '../ElementsInfo/SquareCellElementHandlers';
+import { elementInfoRegistry } from '../ElementsInfo/ElementInfoRegistry';
 import { parseShape } from '../utils';
 import {
 	centerCornerOrEdgeConstraintFromJson} from './CenterCornerOrEdgeConstraints';

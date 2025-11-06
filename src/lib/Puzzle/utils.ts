@@ -1,7 +1,7 @@
 import { strToCellCoord, strToGridCoord, type GridCoordI } from '$lib/utils/SquareCellGridCoords';
 import { stringToDirection, type DIRECTION } from '$lib/utils/directions';
 import { getDefaultShape } from './ElementHandlersUtils';
-import { elementInfoRegistry } from './ElementsInfo/SquareCellElementHandlers';
+import { elementInfoRegistry } from './ElementsInfo/ElementInfoRegistry';
 import type { ShapeI } from './Shape/Shape';
 import type { TOOLID } from './Tools';
 // import type { ShapeI } from './Shape/Shape';
