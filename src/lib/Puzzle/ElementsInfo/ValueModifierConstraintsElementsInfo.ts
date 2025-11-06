@@ -37,12 +37,12 @@ export function doublersElement(model: PuzzleModel, element: ConstraintsElement)
 	}
 
 	let out_str: string = `\n% ${tool}\n`;
-	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: doublers_grid;\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: ${VAR_2D_NAMES.DOUBLERS};\n`;
 	out_str += exactlyNPerRowColumnRegion(puzzle, 1, true, VAR_2D_NAMES.DOUBLERS);
 	// only one of each digit
-	out_str += `\nconstraint one_of_each_digit_p(board, doublers_grid, ALLOWED_DIGITS);\n`;
+	out_str += `\nconstraint one_of_each_digit_p(board, ${VAR_2D_NAMES.DOUBLERS}, ALLOWED_DIGITS);\n`;
 	// values grid
-	out_str += `array[int, int] of var int: values_grid = doublers_value_grid_f(board, doublers_grid);\n`;
+	out_str += `array[int, int] of var int: values_grid = doublers_value_grid_f(board, ${VAR_2D_NAMES.DOUBLERS});\n`;
 
 	return out_str;
 }
