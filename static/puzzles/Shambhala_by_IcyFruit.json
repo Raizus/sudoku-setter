@@ -1,0 +1,97 @@
+{
+	"puzzleInfo": {
+		"title": "Shambhala",
+		"authors": ["IcyFruit"],
+		"ruleset": "Sudoku rules apply.\n\n**Shaded Row Column and Box Counters**: Circle a digit in each row, column, and box. Each circled digit must be different. Shade some cells, such that within any row, column, or box, the number of shaded cells is equal to the circled digit.\n\n**Cell Shaded Row Column Box Not Counter**: A digit in a diamond is not circled, and equals the sum of the circled digits in its row and column.\n\n**Shaded Row Column Box Counters Shaded Digit Sum Cage**: Shaded digits within a cage sum to the value given in the top left of the cage.",
+		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=zfF6xGsesJI",
+		"ctcUrl": "https://sudokupad.app/5ut8ou1zu2"
+	},
+	"nRows": 9,
+	"nCols": 9,
+	"grid": [
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
+		[{}, {}, {}, {}, {}, {}, {}, {}, {}]
+	],
+	"elements": {
+		"Shaded Row Column and Box Counters": {
+			"tool_id": "Shaded Row Column and Box Counters",
+			"constraints": []
+		},
+		"Cell Shaded Row Column Box Not Counter": {
+			"tool_id": "Cell Shaded Row Column Box Not Counter",
+			"constraints": [
+				{
+					"cell": "R1C4"
+				},
+				{
+					"cell": "R2C5"
+				},
+				{
+					"cell": "R1C7"
+				},
+				{
+					"cell": "R3C7"
+				},
+				{
+					"cell": "R3C2"
+				},
+				{
+					"cell": "R5C3"
+				},
+				{
+					"cell": "R6C1"
+				},
+				{
+					"cell": "R7C2"
+				},
+				{
+					"cell": "R4C6"
+				}
+			]
+		},
+		"Shaded Row Column Box Counters Shaded Digit Sum Cage": {
+			"tool_id": "Shaded Row Column Box Counters Shaded Digit Sum Cage",
+			"constraints": [
+				{
+					"cells": ["R1C8", "R1C9", "R2C9"],
+					"value": "11"
+				},
+				{
+					"cells": ["R2C4", "R2C5", "R2C6", "R3C6"],
+					"value": "12"
+				},
+				{
+					"cells": ["R4C7", "R4C8", "R5C8", "R6C8"],
+					"value": "11"
+				},
+				{
+					"cells": ["R4C4", "R4C5", "R4C6", "R5C4", "R5C5", "R5C6", "R6C4", "R6C5", "R6C6"],
+					"value": "3"
+				},
+				{
+					"cells": ["R4C3", "R5C3", "R6C3"],
+					"value": "8"
+				},
+				{
+					"cells": ["R7C4", "R7C5", "R7C6"],
+					"value": "10"
+				},
+				{
+					"cells": ["R8C1", "R9C1", "R9C2"],
+					"value": "13"
+				},
+				{
+					"cells": ["R8C9", "R9C8", "R9C9"],
+					"value": "16"
+				}
+			]
+		}
+	}
+}

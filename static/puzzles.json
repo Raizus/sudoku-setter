@@ -1,170 +1,177 @@
 [
 	{
-		"id": "p1",
+		"id": "AssignedSeating_by_ChinStrap",
 		"title": "Assigned Seating",
 		"authors": ["ChinStrap"],
 		"description": "Sudoku rules apply.\n\n**Yin Yang**: Shade some cells in the grid such that all shaded cells are orthogonally connected and all unshaded cells are orthogonally connected, and no 2x2 area is fully shaded or fully unshaded.\n\n**Index Line**: On an index line, the digit in the Nth cell along the line (starting from the diamond) indicates the position along the line where the digit N appears. Eg: 3214 would be a valid line with 3 as the diamond; the 1st digit, 3, indicates that the 3rd cell contains a 1, the 2nd cell a 2, and so on.\n\n**Yin Yang Indexing Line Coloring**: All cells that reference their own position on a indexing line (the digit N is in position N) should be dark. Cells that are not self referencing should be light. For example for the line 3214 with 3 as the diamond, the 2 and 4 would be dark and the 1 and 3 would be light.\n\n**Yin Yang White Kropki**: Cells separated by a dot indicate that the two connected cells have the same Yin Yang shading and their digits are consecutive.\n",
 		"thumbnail": "/thumbnails/AssignedSeating_by_ChinStrap.png"
 	},
 	{
-		"id": "p2",
+		"id": "SteppingStones_by_grkles",
 		"title": "Stepping Stones",
 		"authors": ["grkles"],
 		"description": "Sudoku rules apply.\n\n**Chaos Construction**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.\n\n**Chaos Construction Sum Of First Each Region**: Clues outside the grid give the sum of the first digit seen in each successive region in that row or column. **The summed digits always appear in increasing order.**\n\n**Unknown Region Border**: A line in the border between cells indicates a region border.",
 		"thumbnail": "/thumbnails/SteppingStones_by_grkles.png"
 	},
 	{
-		"id": "p3",
+		"id": "FaretheewellMissCarousel_by_Phistomefel",
 		"title": "Fare thee well, Miss Carousel",
 		"authors": ["Phistomefel"],
 		"description": "Sudoku rules apply.\n\n**Arrow**: The digits along an arrow must sum to the number in the connecting pill (read left-to right or downwards) or circle. Digits may repeat on a arrow if allowed by other rules.\n\n**Equal Diagonal Differences**: A dot in the centre of a 2x2 square indicates that the two digits in its positive diagonal have the same difference as the two digits in its negative diagonal. This difference is not necessarily the same for different 2x2 squares with dots.",
 		"thumbnail": "/thumbnails/FaretheewellMissCarousel_by_Phistomefel.png"
 	},
 	{
-		"id": "p4",
+		"id": "LITSBattle_by_AFrayedKnot",
 		"title": "LITS Battle",
 		"authors": ["AFrayedKnot"],
 		"description": "Sudoku rules do not apply.\n\n**LITS**: Shade one tetromino in each region. (A tetromino is a shape of four orthogonally-connected cells.) No two tetrominoes of the same shape may share an edge - reflections/rotations count as the same shape. All tetrominoes must form a single orthogonally connected area. No 2x2 area of the grid can be completely shaded.\n\n**LITS Black And White Star Battle**: Each row, column and region must contain exactly one white star and one black star. Black stars must be located on tetrominoes, and white stars must not. Regardless of colour, stars may not touch each other - not even diagonally.",
 		"thumbnail": "/thumbnails/LITSBattle_by_AFrayedKnot.png"
 	},
 	{
-		"id": "p5",
+		"id": "Taiga_by_IcyFruit",
 		"title": "Taiga",
 		"authors": ["IcyFruit"],
 		"description": "Sudoku rules apply.\n\n**Indexer Cells**: Identify two 'indexer' cells in each row, column, and box, with one indexing in the row and the other indexing in the column. The digit in an indexer cell indicates the position of the other indexer cell in its row or column. Positions are counted left to right in rows and top to bottom in columns. The value of an indexer cell is the digit in the cell it indexes. For all other cells, their value is their own digit. Example: If () represents an indexer cell, then 12(6)34(7)598 would be a valid row of digits, because there are exactly two indexer cells, and one of the cells indexes the other: the (7) is in position 6, and the other indexer cell contains a 6. The value of the (6) cell would be 7, because that is the digit in the cell it indexes. Given that this is a row, we would also know that r7c6 must be an indexer cell, because the (7) cell indexes it.\n\n**Indexer Cells Region Subset Line**: All lines are region-subset lines: ie 3x3 box boundaries divide each line into segments. For any pair of segments on the same line, the values on one of those segments must all appear on the other segment. The value of an indexer cell is the digit in the cell it indexes. Example: A region-subset line could contain the values 189-8-98-918, where a dash represents a box boundary. This is valid because (8) is a subset of (89) and (189), (89) is a subset of (189), and (189) is a subset of itself.",
 		"thumbnail": "/thumbnails/Taiga_by_IcyFruit.png"
 	},
 	{
-		"id": "p6",
+		"id": "GalaxiesCollide_by_MartySears_Dorlir",
 		"title": "Galaxies Collide",
 		"authors": ["Marty Sears", "Dorlir"],
 		"description": "Sudoku rules apply.\n\n**Galaxies**: Each galaxy must consist of a region of orthogonally connected cells, and must have 180 degree rotational symmetry.\n\n**Two Symmetric Galaxies**: Divide the grid into two galaxies. Each galaxy must consist of a region of orthogonally connected cells, and must have 180 degree rotational symmetry. (The central point around which a galaxy is symmetrical doesn't need to actually belong to that galaxy.)\n\n**Every Cell Belongs To A Galaxy**: Every cell in the grid belongs to a galaxy.\n\n**Galaxy 2x2 Does Not Belong To One Galaxy**: No 2x2 area may belong entirely to one galaxy.\n\n**One Galaxy Is A German Whispers**: One of the two galaxies behaves like a German whisper; orthogonally adjacent cells in this galaxy must have a difference of at least 5.\n\n**Same Galaxy Unobstructed Count Arrows**: An arrow cell counts how many cells in its own galaxy are being pointed at altogether by its arrow(s), and this combined total is displayed on the arrow cell (the arrow cell itself is not included in the count.) Vision is not obscured by the other galaxy's cells.",
 		"thumbnail": "/thumbnails/GalaxiesCollide_by_MartySears_Dorlir.png"
 	},
 	{
-		"id": "p7",
+		"id": "UnevenTerrain_by_Nordy",
 		"title": "Uneven Terrain",
 		"authors": ["Nordy"],
 		"description": "Sudoku rules apply.\n\n**Cave**: Shade some cells in the grid such that all unshaded cells are orthogonally connected, and all shaded cells are orthogonally connected by other shaded cells to an edge of the grid.\n\n**Cave Cells Are Odd**: Cave cells must contain odd digits.\n\n**Cave Walls Are Even**: Cave walls must contain even digits.\n\n**Cave 2x2 Not Fully Shaded or Unshaded**: No 2x2 cave region may be completely filled with cave cells or completely filled with wall cells.\n\n**Parity Balance Cage**: The sum of the even digits equals the sum of the odd digits. Digits cannot repeat within a cage.",
 		"thumbnail": "/thumbnails/UnevenTerrain_by_Nordy.png"
 	},
 	{
-		"id": "p8",
+		"id": "Trickster_by_JamesSinclair",
 		"title": "Trickster",
 		"authors": ["James Sinclair"],
 		"description": "Sudoku rules apply.\n\n**Indexing Column**: Numbers in red cells are indexing columns: Any number X appearing in the Yth column of a row indicates the column X where the number Y appears in that row. Example: if R5C1 is a 6, then R5C6 is a 1 as the 1 must appear in the 6th position.\n\n**Whispers Line**: Adjacent numbers along a green line must have a difference of at least 5 (or X).\n\n**Nabner Line**: Orange lines contain no repeated digits and no two digits on the same line can be consecutive.\n\n**Even**: Cell value is even.",
 		"thumbnail": "/thumbnails/Trickster_by_JamesSinclair.png"
 	},
 	{
-		"id": "p9",
+		"id": "Runway_by_Qodec",
 		"title": "Runway",
 		"authors": ["Qodec"],
 		"description": "Sudoku rules apply.\n\n**Arrow**: The digits along an arrow must sum to the number in the connecting pill (read left-to right or downwards) or circle. Digits may repeat on a arrow if allowed by other rules.\n\n**Killer Cage**: Numbers must not repeat in a killer cage. The numbers in the cage must sum to the given total in the top left (if one exists).\n",
 		"thumbnail": "/thumbnails/Runway_by_Qodec.png"
 	},
 	{
-		"id": "p10",
+		"id": "Equilibrium_by_SneakySteve",
 		"title": "Equilibrium",
 		"authors": ["SneakySteve"],
 		"description": "Sudoku rules apply.\n\n**Positive Diagonal**: Numbers must not repeat on the positive diagonal.\n\n**Cold Arrows**: A blue arrow points toward a cell N distance away that has a value less than N, where N is the digit in the arrow's cell. (For example, if r9c8 is 5, then r4c8 is less than 5.)\n\n**Hot Arrows**: An orange arrow points toward a cell N distance away that has a value greater than N, where N is the digit in the arrow's cell. (For example, if r1c2 is 5, then r6c2 is greater than 5.)",
 		"thumbnail": "/thumbnails/Equilibrium_by_SneakySteve.png"
 	},
 	{
-		"id": "p11",
+		"id": "ADegreeinThermology_by_Knickolas",
 		"title": "A Degree in Thermology",
 		"authors": ["Knickolas"],
 		"description": "Sudoku rules apply.\n\n**Doublers**: The grid contains 9 doublers (numbers multiplied by 2), one in each row, column and box. Each digit appears as a doubler exactly once.\n\n**Doublers Thermometer**: Values along a thermometer must increase from the bulb end. If a thermometer cell is a doubler it counts as twice its value for purposes of the thermometer.\n\n**Doublers Killer Cage**: A digit in a doubler cell counts for twice its value for the purposes of all cage sums. Digits may not repeat in cages, though values might. (eg a cage may not contain a doubled 2 and a regular 2 but may contain a doubled 2 and a regular 4). The values in the cage must sum to the given total in the top left (if one exists).\n",
 		"thumbnail": "/thumbnails/ADegreeinThermology_by_Knickolas.png"
 	},
 	{
-		"id": "p12",
+		"id": "Alarm_by_zetamath",
 		"title": "Alarm",
 		"authors": ["zetamath"],
 		"description": "Sudoku rules apply.\n\n**Renban Line**: Number along a purple line form a set of non-repeating consecutive digits (which can be in any order).\n\n**Between Line**: Numbers on a green line must be numerically in between the two circled cells at the line's ends.\n\n**Ratio**: Cells separated by a black dot have a 1:2 ratio or a 1:X ratio if the circle has value X.\n\n**Segmented Sum Line**: Each thick grey line can be divided into one or more non-overlapping segments. Each segment contains digits that sum to 10. Eg 513173 is a valid fill for a length 6 line, because it can be broken into 5131 and 73, each of which sum to 10.\n",
 		"thumbnail": "/thumbnails/Alarm_by_zetamath.png"
 	},
 	{
-		"id": "p13",
+		"id": "BosnianWhisper_by_CaleSchoon",
 		"title": "Bosnian Whisper",
 		"authors": ["Cale Schoon"],
 		"description": "Sudoku rules apply.\n\n**Cell Center Loop No Touching**: Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself, even diagonally.\n\n**Adjacent Cells Along Loop Are German Whispers**: Adjacent cells along a loop differ by 5 or more.\n\n**Cell Not On The Loop**: A black circle indicates the cell is not on the loop.\n\n**Count Loop Neighbour Cells**: An orange circle indicates how many cells up to 8 surrounding cells plus itself (9 maximum) are on the loop.",
 		"thumbnail": "/thumbnails/BosnianWhisper_by_CaleSchoon.png"
 	},
 	{
-		"id": "p14",
+		"id": "BentIntoShape_by_99Sneaky",
 		"title": "Bent Into Shape",
 		"authors": ["99%Sneaky"],
 		"description": "Sudoku rules apply.\n\n**Disjoint Groups**: Cells that appear in the same position relative to their default regions must not contain the same number.\n\n**Quadruple**: Digits in a circle appear at least once in the four surrounding cells.\n\n**Dutch Whispers Line**: Adjacent numbers along an orange line must have a difference of at least 4.\n",
 		"thumbnail": "/thumbnails/BentIntoShape_by_99Sneaky.png"
 	},
 	{
-		"id": "p15",
+		"id": "Decapitated_by_Black_Doom",
 		"title": "Decapitated",
 		"authors": ["Black_Doom"],
 		"description": "Sudoku rules apply.\n\n**Chaos Construction**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.\n\n**Chaos Construction Seen Same Region Count**: The number in the circle shows how many region cells it sees in its row and column (including the cell with the circle itself) until it reaches the borders of the region.\n\n**Chaos Construction Arrow**: Digits along an arrow must sum to the number in the attached circle. Additionally, each arrow must be contained within one region, and the circle cannot belong to the same region as its arrow.",
 		"thumbnail": "/thumbnails/Decapitated_by_Black_Doom.png"
 	},
 	{
-		"id": "p16",
+		"id": "ThermohalineCirculation_by_ShintaroFushidaHardy",
 		"title": "Thermohaline Circulation",
 		"authors": ["Shintaro Fushida-Hardy"],
 		"description": "Sudoku rules apply.\n\n**Cell Center Loop Can Touch Diagonally**: Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself orthogonally, but can touch itself diagonally.\n\n**Not Loop Sized Regions**: Non-loop cells form several orthogonally connected groups. Such a group of size N contains exactly the digits from 1 to N.\n\n**Thermo Sightline Loop Arrow**: Each cell with an arrow (called an 'arrow cell') lies on the loop. The digit in an arrow cell is the number of visible loop cells in the indicated direction, where non-loop cells obstruct vision. (The arrow cell is not included in this count). Additionally, digits increase along loop cells seen by an arrow, starting with the digit in the arrow cell.",
 		"thumbnail": "/thumbnails/ThermohalineCirculation_by_ShintaroFushidaHardy.png"
 	},
 	{
-		"id": "p17",
+		"id": "NoRePEAts_by_sujoyku",
 		"title": "No RePEAts!",
 		"authors": ["sujoyku"],
 		"description": "Sudoku rules apply.\n\n**Split Peas**: The sum of the digits on a line strictly between two circles is equal to a concatenation of the two values in the circles, in some order. For instance, 3_346_1 could be a valid split pea line, as 3+4+6=13, which is 1 concatenated with 3.\n\n**Unique Cells**: Digits do not repeat on cells with hexagons on them.",
 		"thumbnail": "/thumbnails/NoRePEAts_by_sujoyku.png"
 	},
 	{
-		"id": "p18",
+		"id": "RomanCircus_by_JeffWajes",
 		"title": "Roman Circus",
 		"authors": ["Jeff Wajes"],
 		"description": "Sudoku rules apply.\n\n**Colored Counting Circles**: Using red (1), green (2), and blue (3), color in all circles such that:\n\t\t\t\t-Orthogonally adjacent circles are different colors.\n\t\t\t\t-The digit inside a circle appears that many times in circles of that color.\n\n**XV**: Two cells joined by X must sum to 10. Two cells joined by a V must sum to 5.",
 		"thumbnail": "/thumbnails/RomanCircus_by_JeffWajes.png"
 	},
 	{
-		"id": "p19",
+		"id": "KillerCaves_by_StephenMason",
 		"title": "Killer Caves",
 		"authors": ["Stephen Mason"],
 		"description": "Sudoku rules apply.\n\n**Cave**: Shade some cells in the grid such that all unshaded cells are orthogonally connected, and all shaded cells are orthogonally connected by other shaded cells to an edge of the grid.\n\n**One Digit Does Not Appear In The Cave**: There is exactly one digit that does not appear anywhere in the cave.\n\n**Killer Cage**: Numbers must not repeat in a killer cage. The numbers in the cage must sum to the given total in the top left (if one exists).\n\n**Cave Clue**: Light blue circled cells are cave clues. Cave clues must be a part of the cave, with each number indicating the total count of cells connected vertically and horizontally to the numbered cell including the cell itself.\n",
 		"thumbnail": "/thumbnails/KillerCaves_by_StephenMason.png"
 	},
 	{
-		"id": "p20",
+		"id": "TheMovingFinger_by_Tallcat",
 		"title": "The Moving Finger",
 		"authors": ["Tallcat"],
 		"description": "Sudoku rules apply.\n\n**Numbered Chaos Construction**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells. The digit in the top-left cell of a region (the leftmost cell in its highest row) is its region number. All region numbers are different.\n\n**Next Numbered Region Distance Arrows**: If a cell with the digit X in a region with the number N contains an arrow, then the cell X steps away in the indicated direction belongs to the region numbered N+1.",
 		"thumbnail": "/thumbnails/TheMovingFinger_by_Tallcat.png"
 	},
 	{
-		"id": "p21",
+		"id": "BorderCountPentominous_by_Gliperal",
 		"title": "Border Count Pentominous",
 		"authors": ["Gliperal"],
 		"description": "Sudoku rules do not apply.\n\n**Pentomino Tilling**: Divide the grid into pentominoes, such that no two pentominoes of the same shape (including rotations and reflections) touch orthogonally.\n\n**Pentomino Border Count**: Clues outside the grid indicate the number of borders between pentominoes present in that row or column.",
 		"thumbnail": "/thumbnails/BorderCountPentominous_by_Gliperal.png"
 	},
 	{
-		"id": "p22",
+		"id": "Shikakudoku_by_JamesSinclair",
 		"title": "Shikaku-doku",
 		"authors": ["James Sinclair"],
 		"description": "Sudoku rules apply.\n\n**Positive Diagonal**: Numbers must not repeat on the positive diagonal.\n\n**Shikaku**: Divide the grid into rectangular regions of orthogonally connected cells, so that every cell is in a region and regions do not overlap.\n\n**Killer Cage**: Numbers must not repeat in a killer cage. The numbers in the cage must sum to the given total in the top left (if one exists).\n\n**Shikaku Region Size**: Each shikaku region contains exactly one circle, and a digit in a circle indicates the number of cells in its region.",
 		"thumbnail": "/thumbnails/Shikakudoku_by_JamesSinclair.png"
 	},
 	{
-		"id": "p23",
+		"id": "MedievalUpheaval4_by_Nordy",
 		"title": "Medieval Upheaval 4",
 		"authors": ["Nordy"],
 		"description": "Sudoku rules apply.\n\n**Chaos Construction**: The grid must be divided into 9 regions. Each region must be determined and each is a set of nine orthogonally connected cells.\n\n**Renban Line**: Number along a purple line form a set of non-repeating consecutive digits (which can be in any order).\n\n**Chaos Construction Chess Sums**: A cell with a number in its top-left corner is a Chess Sums cell. The number in the top-left corner indicates the amount of Chess Sums satisfied by the digit in that cell. A digit in a Chess Sums cell gives one or more of the following:\n - The sum of all digits that share its region and are a king's move away\n - The sum of all digits that share its region and are a knight's move away\n - The sum of all digits that share its region and are a bishop's move away\nClarifications:\n - Bishops can “see” past cells from other regions—cells from other regions do not block a bishop's vision.\n - Each Chess Sum is calculated separately. For example, a cell with a “2” clue that contains a 7 can see 4 and 3 by king's move, and can see 5 and 2 by knight's move—the king's move digits and the knight's move digits each sum to 7 separately.",
 		"thumbnail": "/thumbnails/MedievalUpheaval4_by_Nordy.png"
 	},
 	{
-		"id": "p24",
+		"id": "YinYangKropkiSudoku_by_Phistomefel",
 		"title": "Yin Yang Kropki Sudoku",
 		"authors": ["Phistomefel"],
 		"description": "Sudoku rules apply.\n\n**Yin Yang**: Shade some cells in the grid such that all shaded cells are orthogonally connected and all unshaded cells are orthogonally connected, and no 2x2 area is fully shaded or fully unshaded.\n\n**Yin Yang Kropki**: Cells separated by a a light blue transparent dot indicate that the two connected cells have the same Yin Yang shading. If a grey dot is between two unshaded cells their digits are in a 1:2 ratio; if a grey dot is between two shaded cells, their digits are consecutive.\n\n**All Yin Yang Kropki Given**: Cells separated by a a light blue transparent dot indicate that the two connected cells have the same Yin Yang shading. If a grey dot is between two unshaded cells their digits are in a 1:2 ratio; if a grey dot is between two shaded cells, their digits are consecutive. All such dots are given.",
 		"thumbnail": "/thumbnails/YinYangKropkiSudoku_by_Phistomefel.png"
+	},
+	{
+		"id": "Shambhala_by_IcyFruit",
+		"title": "Shambhala",
+		"authors": ["IcyFruit"],
+		"description": "Sudoku rules apply.\n\n**Shaded Row Column and Box Counters**: Circle a digit in each row, column, and box. Each circled digit must be different. Shade some cells, such that within any row, column, or box, the number of shaded cells is equal to the circled digit.\n\n**Cell Shaded Row Column Box Not Counter**: A digit in a diamond is not circled, and equals the sum of the circled digits in its row and column.\n\n**Shaded Row Column Box Counters Shaded Digit Sum Cage**: Shaded digits within a cage sum to the value given in the top left of the cage.",
+		"thumbnail": "/thumbnails/Shambhala_by_IcyFruit.png"
 	}
 ]
