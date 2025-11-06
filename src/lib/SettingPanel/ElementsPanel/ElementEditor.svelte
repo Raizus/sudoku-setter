@@ -32,16 +32,6 @@
 		const input_options = element_info.inputOptions;
 		if (!input_options) return;
 
-		if (
-			input_options.type !== HANDLER_TOOL_TYPE.VALUE_TOOL &&
-			input_options.type !== HANDLER_TOOL_TYPE.CAGE &&
-			input_options.type !== HANDLER_TOOL_TYPE.LINE &&
-			input_options.type !== HANDLER_TOOL_TYPE.EDGE &&
-			input_options.type !== HANDLER_TOOL_TYPE.CORNER &&
-			input_options.type !== HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION
-		)
-			return;
-
 		const updater = input_options.valueUpdater;
 		if (!updater) return;
 		const new_value = updater(value, '');

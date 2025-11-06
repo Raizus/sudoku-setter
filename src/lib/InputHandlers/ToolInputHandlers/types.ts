@@ -36,6 +36,7 @@ export enum HANDLER_TOOL_TYPE {
 
 export interface ToolOptionsI {
 	type: HANDLER_TOOL_TYPE;
+	valueUpdater?: ValueUpdaterI;
 }
 
 export type ValueUpdaterI = (value: string | undefined, key: string) => string | undefined;
@@ -44,7 +45,6 @@ export type ValueUpdaterI = (value: string | undefined, key: string) => string |
 
 export interface ValueToolInputOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.VALUE_TOOL;
-	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 }
 
@@ -54,7 +54,6 @@ export interface SelectionInputOptions extends ToolOptionsI {
 
 export interface SingleCellToolOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.SINGLE_CELL;
-	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 	oppositeConstraintId?: TOOLID;
 };
@@ -62,32 +61,27 @@ export interface SingleCellToolOptions extends ToolOptionsI {
 export interface SingleCellArrowToolOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.SINGLE_CELL_ARROW;
 	cornerOrEdge: CornerOrEdge;
-	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 };
 
 export interface SingleCellMultiArrowToolOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.SINGLE_CELL_MULTI_ARROW;
 	cornerOrEdge: CornerOrEdge;
-	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 };
 
 export interface EdgeToolOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.EDGE;
-	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 };
 
 export interface DirectedAdjacentCellsToolOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.DIRECTED_ADJACENT_CELLS;
-	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 };
 
 export interface CornerToolOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.CORNER;
-	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 };
 
@@ -99,7 +93,6 @@ export interface ArrowToolInputOptions extends ToolOptionsI {
 
 export interface CageToolInputOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.CAGE;
-	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 	allowDiagonallyAdjacent?: boolean;
 };
@@ -110,7 +103,6 @@ export interface CloneToolInputOptions extends ToolOptionsI {
 
 export interface CenterCornerOrEdgeToolInputOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.CENTER_CORNER_OR_EDGE;
-	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 	targets: CornerOrEdge;
 };
@@ -122,7 +114,6 @@ export interface CornerLineToolInputOptions extends ToolOptionsI {
 
 export interface LineToolInputOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.LINE;
-	valueUpdater?: ValueUpdaterI;
 	// deletePrioritizeHead: boolean,
 	// deletePrioritizeTail: boolean,
 	allowSelfIntersection: boolean;
@@ -141,7 +132,6 @@ export enum CornerOrEdge {
 
 export interface OutsideDirectionToolInputOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION;
-	valueUpdater?: ValueUpdaterI;
 	defaultValue?: string;
 	cornerOrEdge: CornerOrEdge;
 };
