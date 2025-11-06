@@ -14,76 +14,52 @@ import { lineUsage } from '../../ToolUsage';
 import {
 	DEFAULT_LINE_OPTIONS_INTERSECT,
 	DEFAULT_LINE_OPTIONS_NO_INTERSECT,
+	REGION_SUM_LINE_SHAPE,
+	shadedLineElement,
 	simpleLineDefaultCategories
 } from './helpers';
 
 function yinYangValuedLineConstraint(
-    model: PuzzleModel,
-    c_id: string,
-    constraint: LineToolI,
-    predicate: string,
-    default_value: string = ''
+	model: PuzzleModel,
+	c_id: string,
+	constraint: LineToolI,
+	predicate: string,
+	default_value: string = ''
 ) {
-    const grid = model.puzzle.grid;
-    const cells = cellsFromCoords(grid, constraint.cells);
-    const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
-    const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
+	const grid = model.puzzle.grid;
+	const cells = cellsFromCoords(grid, constraint.cells);
+	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+	const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
 
-    let value = constraint.value;
-    if (!value) value = default_value;
-    const val = parseInt(value);
+	let value = constraint.value;
+	if (!value) value = default_value;
+	const val = parseInt(value);
 
-    const constraint_str: string = `constraint ${predicate}(${vars_str}, ${yin_yang_vars_str}, ${val});\n`;
-    return constraint_str;
+	const constraint_str: string = `constraint ${predicate}(${vars_str}, ${yin_yang_vars_str}, ${val});\n`;
+	return constraint_str;
 }
 
 export function yinYangValuedLineElement(
-    model: PuzzleModel,
-    element: ConstraintsElement,
-    predicate: string,
-    default_value: string = ''
+	model: PuzzleModel,
+	element: ConstraintsElement,
+	predicate: string,
+	default_value: string = ''
 ) {
-    let out_str = '';
-    const constraints = element.constraints;
-    if (!constraints) return out_str;
+	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
 
-    for (const [c_id, constraint] of Object.entries(constraints)) {
-        const constraint_str = yinYangValuedLineConstraint(
-            model,
-            c_id,
-            constraint as LineToolI,
-            predicate,
-            default_value
-        );
-        out_str += constraint_str;
-    }
-    return out_str;
-}
-
-function yinYangSimpleLineConstraint(grid: Grid, constraint: LineToolI, predicate: string) {
-    const cells = cellsFromCoords(grid, constraint.cells);
-    const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
-    const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
-
-    const constraint_str: string = `constraint ${predicate}(${vars_str}, ${yin_yang_vars_str});\n`;
-    return constraint_str;
-}
-
-function yinYangSimpleLineElement(
-    model: PuzzleModel,
-    element: ConstraintsElement,
-    predicate: string
-) {
-    let out_str = '';
-    const constraints = element.constraints;
-    if (!constraints) return out_str;
-
-    const grid = model.puzzle.grid;
-    for (const constraint of Object.values(constraints)) {
-        const constraint_str = yinYangSimpleLineConstraint(grid, constraint as LineToolI, predicate);
-        out_str += constraint_str;
-    }
-    return out_str;
+	for (const [c_id, constraint] of Object.entries(constraints)) {
+		const constraint_str = yinYangValuedLineConstraint(
+			model,
+			c_id,
+			constraint as LineToolI,
+			predicate,
+			default_value
+		);
+		out_str += constraint_str;
+	}
+	return out_str;
 }
 
 /* ----------------------------------------------------------------------------- */
@@ -120,13 +96,18 @@ export const yinYangShadedWhispersLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-    },
-    
-    solver_func: yinYangShadedWhispersLineElement
+	},
+
+	solver_func: yinYangShadedWhispersLineElement
 };
 
 function yinYangUnshadedEntropicLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = yinYangSimpleLineElement(model, element, 'yin_yang_unshaded_entropic_line_p');
+	const out_str = shadedLineElement(
+		model,
+		element,
+		VAR_2D_NAMES.YIN_YANG,
+		'yin_yang_unshaded_entropic_line_p'
+	);
 	return out_str;
 }
 
@@ -153,9 +134,9 @@ export const yinYangUnshadedEntropicLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-    },
-    
-    solver_func: yinYangUnshadedEntropicLineElement
+	},
+
+	solver_func: yinYangUnshadedEntropicLineElement
 };
 
 function yinYangUnshadedModularLineElement(model: PuzzleModel, element: ConstraintsElement) {
@@ -196,9 +177,10 @@ export const yinYangUnshadedModularLineInfo: SquareCellElementInfo = {
 };
 
 function yinYangCalifornianMountainSnakeElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = yinYangSimpleLineElement(
+	const out_str = shadedLineElement(
 		model,
 		element,
+		VAR_2D_NAMES.YIN_YANG,
 		'yin_yang_californian_mountaint_snake_p'
 	);
 	return out_str;
@@ -230,9 +212,9 @@ export const yinYangCalifornianMountainSnakeInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-    },
-    
-    solver_func: yinYangCalifornianMountainSnakeElement
+	},
+
+	solver_func: yinYangCalifornianMountainSnakeElement
 };
 
 function yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(
@@ -257,7 +239,12 @@ function yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(
 }
 
 function yinYangRegionSumLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	let out_str = yinYangSimpleLineElement(model, element, 'yin_yang_region_sum_line_p');
+	let out_str = shadedLineElement(
+		model,
+		element,
+		VAR_2D_NAMES.YIN_YANG,
+		'yin_yang_region_sum_line_p'
+	);
 
 	// negative constraints
 	if (!element.negative_constraints) return out_str;
@@ -286,8 +273,7 @@ export const yinYangRegionSumLineInfo: SquareCellElementInfo = {
 		}
 	],
 
-	shape: REGION_SUM_LINE_SHAPE
-	},
+	shape: REGION_SUM_LINE_SHAPE,
 
 	meta: {
 		description:
@@ -295,13 +281,18 @@ export const yinYangRegionSumLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-    },
-    
-    solver_func: yinYangRegionSumLineElement
+	},
+
+	solver_func: yinYangRegionSumLineElement
 };
 
 function yinYangIndexingLineColoringElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = yinYangSimpleLineElement(model, element, 'yin_yang_indexing_line_coloring_p');
+	const out_str = shadedLineElement(
+		model,
+		element,
+		VAR_2D_NAMES.YIN_YANG,
+		'yin_yang_indexing_line_coloring_p'
+	);
 	return out_str;
 }
 
@@ -331,7 +322,7 @@ export const yinYangIndexingLineColoringInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: simpleLineDefaultCategories
-    },
-    
-    solver_func: yinYangIndexingLineColoringElement
+	},
+
+	solver_func: yinYangIndexingLineColoringElement
 };

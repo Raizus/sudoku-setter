@@ -107,6 +107,18 @@ export function simpleLineElement(
 	return out_str;
 }
 
+/**
+ * Encodes a valued line constraint into a string for the minizinc model,
+ * in the form of
+ * 		`constraint {predicate}({line_vars}, {value});`
+ * @param model
+ * @param grid
+ * @param c_id
+ * @param constraint
+ * @param predicate
+ * @param default_value
+ * @returns
+ */
 function valuedLineConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -227,6 +239,43 @@ export function simpleMultipliersLineElement(
 		const constraint_str = simpleMultipliersLineConstraint(
 			model,
 			constraint as LineToolI,
+			predicate
+		);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
+
+function shadedLineConstraint(
+	grid: Grid,
+	constraint: LineToolI,
+	shade_var_name: string,
+	predicate: string
+) {
+	const cells = cellsFromCoords(grid, constraint.cells);
+	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+	const yin_yang_vars_str = cellsToGridVarsStr(cells, shade_var_name);
+
+	const constraint_str: string = `constraint ${predicate}(${vars_str}, ${yin_yang_vars_str});\n`;
+	return constraint_str;
+}
+
+export function shadedLineElement(
+	model: PuzzleModel,
+	element: ConstraintsElement,
+	shade_var_name: string,
+	predicate: string
+) {
+	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
+	const grid = model.puzzle.grid;
+	for (const constraint of Object.values(constraints)) {
+		const constraint_str = shadedLineConstraint(
+			grid,
+			constraint as LineToolI,
+			shade_var_name,
 			predicate
 		);
 		out_str += constraint_str;
