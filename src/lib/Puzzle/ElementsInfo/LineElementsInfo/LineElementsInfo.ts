@@ -2029,7 +2029,7 @@ function nurikabeRegionSumLineElement(model: PuzzleModel, element: ConstraintsEl
 		model,
 		element,
 		VAR_2D_NAMES.NURIKABE_SHADING,
-		'unknown_regions_region_sum_line_p'
+		'nurikabe_region_sum_line_p'
 	);
 
 	return out_str;

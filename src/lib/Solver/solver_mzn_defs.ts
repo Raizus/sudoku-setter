@@ -695,7 +695,6 @@ predicate unknown_regions_region_sum_line_p(
 ) =
     % Ensure arrays have same size
     index_set(arr) = index_set(labels)
-    /\\ not all_equal(labels)
     /\\ let {
         % Find start indices of each segment
         array[index_set(arr)] of var bool: is_start = [
@@ -4992,6 +4991,14 @@ predicate nurikabe_island_size_cell_p(
 ) = (
     region != 0    % is island and not water
     /\\ cell_value = count(array1d(regions), region)
+);
+
+predicate nurikabe_region_sum_line_p(
+    array[int] of var int: arr,
+    array[int] of var 0..1: labels
+) = (
+    unknown_regions_region_sum_line_p(arr, labels)
+    /\\ not all_equal(labels)
 );\n\n`;
 
 	const suguru = `
