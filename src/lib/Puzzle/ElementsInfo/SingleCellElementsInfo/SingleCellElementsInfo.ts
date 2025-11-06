@@ -98,6 +98,18 @@ export const DEFAULT_VALUED_SINGLE_CELL_OPTIONS: SingleCellToolOptions = {
 	defaultValue: ''
 };
 
+function cellsFromElement(grid: Grid, element: ConstraintsElement) {
+	const constraints = element.constraints as Record<string, CellToolI>;
+	const constl = Object.values(constraints);
+
+	const all_coords = constl.map((constraint) => constraint.cell);
+	const cells = new Set(
+		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
+	);
+
+	return cells
+}
+
 function oddElement(model: PuzzleModel, element: ConstraintsElement) {
 	const out_str = simpleSingleCellElement(model, element, 'odd_p');
 	return out_str;
@@ -156,12 +168,9 @@ function minMaxConstraint(grid: Grid, element: ConstraintsElement, predicate: st
 	const constraints = element.constraints as Record<string, CellToolI>;
 	const constl = Object.values(constraints);
 
+	const max_cells = cellsFromElement(grid, element)
+	
 	let out_str = '';
-	const all_max_coords = constl.map((constraint) => constraint.cell);
-	const max_cells = new Set(
-		all_max_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
-	);
-
 	for (const constraint of constl) {
 		const coord = constraint.cell;
 		const cell = grid.getCell(coord.r, coord.c);
@@ -486,9 +495,8 @@ function radarConstraint(model: PuzzleModel, grid: Grid, c_id: string, constrain
 function radarElement(model: PuzzleModel, element: ConstraintsElement) {
 	let out_str = simpleElementFunction(model, element, radarConstraint);
 
-	if (!element.negative_constraints) return out_str;
-
 	// negative constraint
+	if (!element.negative_constraints) return out_str;
 	const all_given = !!element.negative_constraints[TOOLS.ALL_RADARS_GIVEN];
 	if (!all_given) return out_str;
 	const constraints = element.constraints as Record<string, CellToolI>;
@@ -977,18 +985,12 @@ export const sandwichRowColCountInfo: SquareCellElementInfo = {
 };
 
 function countingCirclesElement(model: PuzzleModel, element: ConstraintsElement) {
-	const grid = model.puzzle.grid;
-	const constraints = element.constraints as Record<string, CellToolI>;
-	const constl = Object.values(constraints);
-
-	let out_str = '';
-	const all_coords = constl.map((constraint) => constraint.cell);
-	const cells = new Set(
-		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
-	);
+	const cells = cellsFromElement(model.puzzle.grid, element);
 	const vars = cellsToVarsName([...cells]);
 	const vars_str = `${vars.join(',\n\t')}`;
 
+	
+	let out_str = '';
 	out_str += `array[int] of var int: counting_circles = [\n\t${vars_str}\n];\n`;
 	out_str += `constraint counting_circles_p(counting_circles, ALLOWED_DIGITS);\n`;
 
@@ -1020,23 +1022,17 @@ export const countingCirclesInfo: SquareCellElementInfo = {
 
 function reverseCountingCirclesElement(model: PuzzleModel, element: ConstraintsElement) {
 	const grid = model.puzzle.grid;
-	const constraints = element.constraints as Record<string, CellToolI>;
-	const constl = Object.values(constraints);
 
-	let out_str = '';
-	const all_coords = constl.map((constraint) => constraint.cell);
-	const circle_cells = new Set(
-		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
-	);
-
+	const circle_cells = cellsFromElement(grid, element);
 	const not_circle_cells = grid.getAllCells().filter((cell) => !circle_cells.has(cell));
-
+	
 	const circle_vars = cellsToVarsName([...circle_cells]);
 	const circle_vars_str = `${circle_vars.join(',\n\t')}`;
-
+	
 	const not_circle_vars = cellsToVarsName([...not_circle_cells]);
 	const not_circle_vars_str = `${not_circle_vars.join(',\n\t')}`;
-
+	
+	let out_str = '';
 	out_str += `array[int] of var int: reverse_counting_circles = [\n\t${circle_vars_str}\n];\n`;
 	out_str += `array[int] of var int: not_reverse_counting_circles = [\n\t${not_circle_vars_str}\n];\n`;
 	out_str += `constraint reverse_counting_circles_p(reverse_counting_circles, not_reverse_counting_circles);\n`;
@@ -1072,17 +1068,14 @@ function coloredCountingCirclesElement(model: PuzzleModel, element: ConstraintsE
 	const constraints = element.constraints as Record<string, CellToolI>;
 	const constl = Object.values(constraints);
 
-	let out_str = '';
-	const all_coords = constl.map((constraint) => constraint.cell);
-	const cells = new Set(
-		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
-	);
+	const cells = cellsFromElement(grid, element);
 	const vars = cellsToVarsName([...cells]);
 	const vars_str = `${vars.join(',\n\t')}`;
-
+	
 	const circle_colors_vars = cellsToGridVarsName([...cells], VAR_2D_NAMES.COUNTING_CIRCLES_COLORS);
 	const circle_colors_vars_str = `${circle_colors_vars.join(',\n\t')}`;
-
+	
+	let out_str = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..3: ${VAR_2D_NAMES.COUNTING_CIRCLES_COLORS};\n`;
 	out_str += `array[int] of var int: colored_counting_circles = [\n\t${vars_str}\n];\n`;
 	out_str += `array[int] of var int: counting_circles_colors = [\n\t${circle_colors_vars_str}\n];\n`;
@@ -1095,6 +1088,7 @@ function coloredCountingCirclesElement(model: PuzzleModel, element: ConstraintsE
 		out_str += `constraint ${color_var} == 0;\n`;
 	}
 
+	// colored circles 
 	for (const constraint of constl) {
 		const coord = constraint.cell;
 		const cell = grid.getCell(coord.r, coord.c);
@@ -1140,17 +1134,12 @@ export const coloredCountingCirclesInfo: SquareCellElementInfo = {
 
 function uniqueCellsElement(model: PuzzleModel, element: ConstraintsElement) {
 	const grid = model.puzzle.grid;
-	const constraints = element.constraints as Record<string, CellToolI>;
-	const constl = Object.values(constraints);
 
-	let out_str = '';
-	const all_coords = constl.map((constraint) => constraint.cell);
-	const cells = new Set(
-		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
-	);
+	const cells = cellsFromElement(grid, element);
 	const vars = cellsToVarsName([...cells]);
 	const vars_str = `${vars.join(',\n\t')}`;
-
+	
+	let out_str = '';
 	out_str += `array[int] of var int: unique_cells = [\n\t${vars_str}\n];\n`;
 	out_str += `constraint alldifferent(unique_cells);\n`;
 	return out_str;
@@ -2439,16 +2428,12 @@ export const connectFourRedInfo: SquareCellElementInfo = {
 function shikakuRegionSizeElement(model: PuzzleModel, element: ConstraintsElement) {
 	const grid = model.puzzle.grid;
 	const constraints = element.constraints as Record<string, CellToolI>;
-	const constl = Object.values(constraints);
 
-	let out_str = '';
-	const all_coords = constl.map((constraint) => constraint.cell);
-	const cells = new Set(
-		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
-	);
+	const cells = cellsFromElement(grid, element);
 	const shikaku_vars = cellsToGridVarsName([...cells], VAR_2D_NAMES.SHIKAKU_REGIONS);
 	const vars_str = `${shikaku_vars.join(',\n\t')}`;
-
+	
+	let out_str = '';
 	out_str += `array[int] of var int: shikaku_region_size_clues = [\n\t${vars_str}\n];\n`;
 	out_str += `constraint alldifferent(shikaku_region_size_clues);\n`;
 
@@ -2504,16 +2489,12 @@ export const shikakuRegionSizeInfo: SquareCellElementInfo = {
 function shikakuRegionSumElement(model: PuzzleModel, element: ConstraintsElement) {
 	const grid = model.puzzle.grid;
 	const constraints = element.constraints as Record<string, CellToolI>;
-	const constl = Object.values(constraints);
 
-	let out_str = '';
-	const all_coords = constl.map((constraint) => constraint.cell);
-	const cells = new Set(
-		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
-	);
+	const cells = cellsFromElement(grid, element);
 	const shikaku_vars = cellsToGridVarsName([...cells], VAR_2D_NAMES.SHIKAKU_REGIONS);
 	const vars_str = `${shikaku_vars.join(',\n\t')}`;
-
+	
+	let out_str = '';
 	out_str += `array[int] of var int: shikaku_region_sum_clues = [\n\t${vars_str}\n];\n`;
 	out_str += `constraint alldifferent(shikaku_region_sum_clues);\n`;
 
