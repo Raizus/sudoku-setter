@@ -2321,7 +2321,17 @@ function nurikabeIslandSizeCellConstraint(
 }
 
 function nurikabeIslandSizeCellElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, nurikabeIslandSizeCellConstraint);
+	let out_str = simpleElementFunction(model, element, nurikabeIslandSizeCellConstraint);
+
+	if (!element.negative_constraints) return out_str;
+	const all_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
+	if (!all_given) return out_str;
+
+	const cells = [...cellsFromElement(model.puzzle.grid, element)];
+	// all different and max island count equal to number of cells
+	const nurikabe_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.NURIKABE_REGIONS);
+	out_str += `constraint alldifferent(${nurikabe_vars_str});\n`
+	out_str += `constraint count_unique_values(array1d(${VAR_2D_NAMES.NURIKABE_REGIONS})) - 1 == ${cells.length};\n`;
 	return out_str;
 }
 
@@ -2329,6 +2339,10 @@ export const nurikabeIslandSizeCellInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
 	toolId: TOOLS.NURIKABE_ISLAND_SIZE_CELL,
+
+	negative_constraints: [
+		{toolId: TOOLS.ALL_GIVEN, description: 'All islands contain exactly one circle.'}
+	],
 
 	shape: DEFAULT_CIRCLE_SHAPE,
 

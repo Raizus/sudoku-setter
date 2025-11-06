@@ -689,10 +689,14 @@ predicate maximum_p(array[int] of var int: arr, var int: max_val) =
 predicate minimum_p(array[int] of var int: arr, var int: min_val) =
     forall(i in index_set(arr))(arr[i] > min_val);
 
-predicate unknown_regions_region_sum_line_p(array[int] of var int: arr, array[int] of var int: labels) =
+predicate unknown_regions_region_sum_line_p(
+    array[int] of var int: arr,
+    array[int] of var int: labels
+) =
     % Ensure arrays have same size
-    index_set(arr) = index_set(labels) /\\
-    let {
+    index_set(arr) = index_set(labels)
+    /\\ not all_equal(labels)
+    /\\ let {
         % Find start indices of each segment
         array[index_set(arr)] of var bool: is_start = [
             i = min(index_set(arr)) \\/ 

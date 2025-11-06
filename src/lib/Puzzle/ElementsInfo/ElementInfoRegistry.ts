@@ -200,7 +200,8 @@ import {
 	ambiguousArrowInfo,
 	adjacentCellsAreMultiplesOfDifferenceLineInfo,
 	indexerCellsRegionSubsetLineInfo,
-	peapodsLineInfo
+	peapodsLineInfo,
+	nurikabeRegionSumLineInfo
 } from './LineElementsInfo/LineElementsInfo';
 import {
 	doubleArrowLineInfo,
@@ -658,6 +659,8 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.YIN_YANG_CALIFORNIAN_MOUNTAIN_SNAKE]: yinYangCalifornianMountainSnakeInfo,
 
 	[TOOLS.GOLDILOCKS_ZONE_REGION_SUM]: goldilocksZoneRegionSumLineInfo,
+
+	[TOOLS.NURIKABE_REGION_SUM_LINE]: nurikabeRegionSumLineInfo,
 
 	// Line with Circle ends Constraints
 	[TOOLS.BETWEEN_LINE]: betweenLineInfo,

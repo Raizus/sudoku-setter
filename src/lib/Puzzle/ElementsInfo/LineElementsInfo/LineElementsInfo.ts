@@ -10,6 +10,7 @@ import {
 	DEFAULT_META_1,
 	getLineVars,
 	REGION_SUM_LINE_SHAPE,
+	shadedLineElement,
 	simpleLineDefaultCategories,
 	simpleLineElement,
 	simpleMultipliersLineElement,
@@ -2021,4 +2022,33 @@ export const doublersThermometerInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: doublersThermometerElement
+};
+
+function nurikabeRegionSumLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = shadedLineElement(
+		model,
+		element,
+		VAR_2D_NAMES.NURIKABE_SHADING,
+		'unknown_regions_region_sum_line_p'
+	);
+
+	return out_str;
+}
+
+export const nurikabeRegionSumLineInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
+
+	toolId: TOOLS.NURIKABE_REGION_SUM_LINE,
+
+	shape: REGION_SUM_LINE_SHAPE,
+
+	meta: {
+		description:
+			'A blue line must contain at least one shaded and at least one unshaded cell. Switching between shaded and unshaded cells divides each line into segments with the same sum. Different lines may have different sums. Digits may repeat on a line if allowed by other rules.',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	},
+
+	solver_func: nurikabeRegionSumLineElement
 };

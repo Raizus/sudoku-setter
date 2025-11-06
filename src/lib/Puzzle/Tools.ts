@@ -66,7 +66,7 @@ export enum NEGATIVE_CONSTRAINTS {
 	ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN = 'All Yin Yang Count Shaded Cells Given',
 	ALL_GALAXY_CENTERS_GIVEN = 'All Galaxy Centers Given',
 
-	// ALL_GIVEN = 'All Given',
+	ALL_GIVEN = 'All Given',
 	// ALL_CAGE_TOTALS_DIFFERENT = 'All Cage Totals Different',
 	// ADJACENT_CAGE_TOTALS_DIFFERENT = 'Adjacent Cage Totals Different',
 
@@ -408,6 +408,8 @@ export enum LINE_CONSTRAINTS {
 	YIN_YANG_UNSHADED_ENTROPIC_LINE = 'Yin Yang Unshaded Entropic Line',
 	YIN_YANG_UNSHADED_MODULAR_LINE = 'Yin Yang Unshaded Modular Line',
 	YIN_YANG_CALIFORNIAN_MOUNTAIN_SNAKE = 'Yin Yang Californian Mountain Snake',
+
+	NURIKABE_REGION_SUM_LINE = 'Nurikabe Region Sum Line',
 
 	// goldilocks
 	GOLDILOCKS_ZONE_REGION_SUM = 'Goldilocks Zone Region Sum',
