@@ -1000,6 +1000,16 @@ predicate cell_knights_whisper_p(
     var int: value
 ) = forall(cell2 in knights_cells)(
     abs(cell2 - cell) >= value
+);
+
+predicate cell_shaded_row_col_box_not_counter_p(
+	array[int] of var int: row_vars,
+	array[int] of var int: col_vars,
+	array[int] of var int: row_counters,
+	array[int] of var int: col_counters,
+    var int: cell_var
+) = (
+    cell_var == conditional_sum_f(row_vars, row_counters, true) + conditional_sum_f(col_vars, col_counters, true)
 );\n\n`;
 
 	const single_cell_multiarrow_constraints = `predicate cold_arrows_p(
@@ -2534,6 +2544,52 @@ predicate chaos_construction_regions_count(
     else
         true
     endif)
+);
+
+predicate shaded_row_col_box_counters_p(
+    array[int, int] of var int: board,
+    array[int, int] of var int: regions,
+    array[int, int] of var bool: shaded_grid,
+    array[int, int] of var bool: counters_grid,
+    set of int: region_ids
+) = let {
+    set of int: rows = index_set_1of2(board);
+    set of int: cols = index_set_2of2(board);
+} in (
+    assert(index_sets_agree(board, shaded_grid), "board and shaded_grid must have the same indexes")
+    /\\ assert(index_sets_agree(board, counters_grid), "board and counters_grid must have the same indexes")
+    /\\ assert(index_sets_agree(board, regions), "board and regions must have the same indexes")
+
+    % count shaded cells in row
+    /\\ forall (r in rows) (
+        let {
+            array[int] of var bool: row_bools = [shaded_grid[r,c] | c in cols];
+            var int: shaded_count = count(row_bools, true);
+        } in forall (c in cols) (
+            counters_grid[r,c] -> shaded_count == board[r,c]
+        )
+    )
+    % count shaded cells in col
+    /\\ forall (c in cols) (
+        let {
+            array[int] of var bool: col_bools = [shaded_grid[r,c] | r in rows];
+            var int: shaded_count = count(col_bools, true);
+        } in forall (r in rows) (
+            counters_grid[r,c] -> (shaded_count == board[r,c])
+        )
+    )
+
+    % count shaded cells in region
+    /\\ forall (r_id in region_ids) (
+        let {
+            var int: shaded_count = conditional_count_f(array1d(shaded_grid), array1d(regions), true, r_id);
+            array[int] of var opt bool: region_counters = [counters_grid[r,c] | r in rows, c in cols where regions[r,c] == r_id];
+            array[int] of var opt int: region_cells = [board[r,c] | r in rows, c in cols where regions[r,c] == r_id];
+        } in forall (i in index_set(region_counters)) (
+            region_counters[i] -> (shaded_count == region_cells[i])
+        )
+    )
+
 );\n\n`;
 
 	const nurimisaki = `predicate nurimisaki_p(array[int, int] of var int: grid) =

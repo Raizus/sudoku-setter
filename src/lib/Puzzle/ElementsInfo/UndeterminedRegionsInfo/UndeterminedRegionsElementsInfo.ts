@@ -884,3 +884,46 @@ export const oneStarPerGalaxyInfo: SquareCellElementInfo = {
 
 	solver_func: oneStarPerGalaxyElement
 };
+
+export function shadedRowCollumnBoxCountersElement(
+	model: PuzzleModel,
+	element: ConstraintsElement
+) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	let out_str: string = `\n% ${tool}\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: ${VAR_2D_NAMES.SHADED_ROW_COLUMN_BOX_COUNTERS_SHADED_GRID};\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: ${VAR_2D_NAMES.SHADED_ROW_COLUMN_BOX_COUNTERS};\n`;
+	out_str += exactlyNPerRowColumnRegion(
+		puzzle,
+		1,
+		true,
+		VAR_2D_NAMES.SHADED_ROW_COLUMN_BOX_COUNTERS
+	);
+	// only one of each digit
+	out_str += `\nconstraint one_of_each_digit_p(board, ${VAR_2D_NAMES.SHADED_ROW_COLUMN_BOX_COUNTERS}, ALLOWED_DIGITS);\n`;
+	out_str += `\nconstraint shaded_row_col_box_counters_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.BOARD_REGIONS}, ${VAR_2D_NAMES.SHADED_ROW_COLUMN_BOX_COUNTERS_SHADED_GRID}, ${VAR_2D_NAMES.SHADED_ROW_COLUMN_BOX_COUNTERS}, REGION_IDXS);\n`;
+
+	return out_str;
+}
+
+export const shadedRowCollumnBoxCountersInfo: SquareCellElementInfo = {
+	toolId: TOOLS.SHADED_ROW_COLUMN_BOX_COUNTERS,
+
+	meta: {
+		description:
+			'Circle a digit in each row, column, and box. Each circled digit must be different. Shade some cells, such that within any row, column, or box, the number of shaded cells is equal to the circled digit.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	},
+
+	solver_func: shadedRowCollumnBoxCountersElement
+};

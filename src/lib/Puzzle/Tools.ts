@@ -110,7 +110,9 @@ export enum OTHER_UNDETERMINED_REGIONS_CONSTRAINTS {
 
 	LITS = 'LITS',
 	LITS_BLACK_WHITE_STAR_BATTLE = 'LITS Black And White Star Battle',
-	BUILD_YOUR_OWN_KILLER_CAGES = 'Build Your Own Killer Cages'
+	BUILD_YOUR_OWN_KILLER_CAGES = 'Build Your Own Killer Cages',
+
+	SHADED_ROW_COLUMN_BOX_COUNTERS = 'Shaded Row Column and Box Counters'
 }
 
 export enum GLOBAL_PENTOMINO_TILLING_CONSTRAINTS {
@@ -268,7 +270,9 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	TELEPORT = 'Teleport',
 
 	CONNECT_FOUR_YELLOW = 'Connect Four Yellow',
-	CONENCT_FOUR_RED = 'Connect Four Red'
+	CONNECT_FOUR_RED = 'Connect Four Red',
+
+	CELL_SHADED_ROW_COLUMN_BOX_NOT_COUNTER = 'Cell Shaded Row Column Box Not Counter'
 }
 
 export enum SINGLE_CELL_ARROW_CONSTRAINTS {
@@ -429,7 +433,7 @@ export enum ARROW_CONSTRAINTS {
 	SQUARE_ROOT_ARROW = 'Square Root Arrow',
 
 	CHAOS_CONSTRUCTION_ARROW = 'Chaos Construction Arrow',
-	LOOP_POINTER_ARROW = 'Loop Pointer Arrow',
+	LOOP_POINTER_ARROW = 'Loop Pointer Arrow'
 }
 
 export enum CAGE_CONSTRAINTS {
@@ -451,7 +455,9 @@ export enum CAGE_CONSTRAINTS {
 	YIN_YANG_BREAKEVEN_KILLER_CAGE = 'Yin Yang Breakeven Killer Cage',
 
 	DOUBLERS_KILLER_CAGE = 'Doublers Killer Cage',
-	NEGATORS_KILLER_CAGE = 'Negators Killer Cage'
+	NEGATORS_KILLER_CAGE = 'Negators Killer Cage',
+
+	SHADED_ROW_COLUMN_BOX_COUNTERS_SHADED_DIGIT_SUM_CAGE = 'Shaded Row Column Box Counters Shaded Digit Sum Cage'
 }
 
 export enum CLONE_CONSTRAINTS {

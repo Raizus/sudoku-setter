@@ -48,7 +48,9 @@ export enum VAR_2D_NAMES {
 	BYOKC_GRID = 'byokc_grid',
 	SHADED_BOUNDARIES_REGIONS = 'shaded_boundaries_regions',
 	SHADED_BOUNDARIES_VERTICAL = 'shaded_boundaries_vertical',
-	SHADED_BOUNDARIES_HORIZONTAL = 'shaded_boundaries_horizontal'
+	SHADED_BOUNDARIES_HORIZONTAL = 'shaded_boundaries_horizontal',
+	SHADED_ROW_COLUMN_BOX_COUNTERS = 'shaded_row_column_box_counters',
+	SHADED_ROW_COLUMN_BOX_COUNTERS_SHADED_GRID = 'shaded_row_column_box_counters_shaded_grid'
 }
 
 export function cellToGridVarName(cell: Cell, name: string): string {
@@ -517,32 +519,33 @@ export function format_2d_array(arr: number[][]): string {
 
 export function set_board_regions(model: PuzzleModel, grid: Grid) {
 	// add regions array if applicable
-	const regions = [...grid.getUsedRegions()];
-	if (regions.length) {
-		const min_r = Math.min(...regions);
-		const max_r = Math.max(...regions);
-		const regions_arr: number[][] = [];
-		for (let i = 0; i < grid.nRows; i++) {
-			const row: number[] = [];
-			for (let j = 0; j < grid.nCols; j++) {
-				const cell = grid.getCell(i, j);
-				if (!cell || cell.region === null) row.push(min_r - 1);
-				else row.push(cell.region);
-			}
-			regions_arr.push(row);
+	const regions = [...grid.getUsedRegions()].sort();
+	if (!regions.length) return;
+
+	const min_r = Math.min(...regions);
+	const max_r = Math.max(...regions);
+	const regions_arr: number[][] = [];
+	for (let i = 0; i < grid.nRows; i++) {
+		const row: number[] = [];
+		for (let j = 0; j < grid.nCols; j++) {
+			const cell = grid.getCell(i, j);
+			if (!cell || cell.region === null) row.push(min_r - 1);
+			else row.push(cell.region);
 		}
-
-		const array_str = format_2d_array(regions_arr);
-		model.add(
-			`array[ROW_IDXS, COL_IDXS] of var ${min_r - 1}..${max_r}: ${VAR_2D_NAMES.BOARD_REGIONS} = array2d(ROW_IDXS, COL_IDXS, ${array_str});\n`
-		);
-
-		// for (const cell of grid.getAllCells()) {
-		// 	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.BOARD_REGIONS);
-		// 	if (cell.region !== null) model.add(`constraint ${region_var} = ${cell.region};\n`);
-		// 	else model.add(`constraint ${region_var} = ${min_r - 1};\n`);
-		// }
+		regions_arr.push(row);
 	}
+
+	const array_str = format_2d_array(regions_arr);
+	model.add(`set of int: REGION_IDXS = {${regions.join(',')}};\n`)
+	model.add(
+		`array[ROW_IDXS, COL_IDXS] of var ${min_r - 1}..${max_r}: ${VAR_2D_NAMES.BOARD_REGIONS} = array2d(ROW_IDXS, COL_IDXS, ${array_str});\n`
+	);
+
+	// for (const cell of grid.getAllCells()) {
+	// 	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.BOARD_REGIONS);
+	// 	if (cell.region !== null) model.add(`constraint ${region_var} = ${cell.region};\n`);
+	// 	else model.add(`constraint ${region_var} = ${min_r - 1};\n`);
+	// }
 }
 
 export function groupConstraintsByValue<T extends ConstraintType>(constraints: T[]) {

@@ -23,7 +23,8 @@ import {
 	yinYangAntithesisKillerCageInfo,
 	yinYangBreakevenKillerCageInfo,
 	vaultedCageInfo,
-	vaultedKillerCageInfo
+	vaultedKillerCageInfo,
+	shadedRowCollumnBoxCountersShadedDigitSumCageInfo
 } from './CageElementsInfo/CageToolsElementsInfo';
 import {
 	centerPMInfo,
@@ -128,7 +129,8 @@ import {
 	buildYourOwnKillerCagesInfo,
 	shadedBoundariesInfo,
 	starBattleInfo,
-	oneStarPerGalaxyInfo
+	oneStarPerGalaxyInfo,
+	shadedRowCollumnBoxCountersInfo
 } from './UndeterminedRegionsInfo/UndeterminedRegionsElementsInfo';
 import { directedPathTeleportRenbanSegmentsInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
 import { directedPathTeleportSegmentsSumInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
@@ -302,7 +304,8 @@ import {
 	caveShadedRegionSizeUnshadedSeenOrthogonallyClueInfo,
 	BYOKCageSizeInfo,
 	BYOKNotCageCellInfo,
-	chaosConstructionNeighbourCellsSameRegionCountInfo
+	chaosConstructionNeighbourCellsSameRegionCountInfo,
+	cellShadedRowColumnBoxNotCounterInfo
 } from './SingleCellElementsInfo/SingleCellElementsInfo';
 import {
 	yinYangAdjacentSameShadeCountInfo,
@@ -437,6 +440,7 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS]: directedPathTeleportRenbanSegmentsInfo,
 
 	[TOOLS.CONNECT_FOUR]: connectFourInfo,
+	[TOOLS.SHADED_ROW_COLUMN_BOX_COUNTERS]: shadedRowCollumnBoxCountersInfo,
 
 	// Single Cell Constraints
 	[TOOLS.ODD]: oddInfo,
@@ -514,7 +518,9 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 	[TOOLS.TELEPORT]: teleportInfo,
 
 	[TOOLS.CONNECT_FOUR_YELLOW]: connectFourYellowInfo,
-	[TOOLS.CONENCT_FOUR_RED]: connectFourRedInfo,
+	[TOOLS.CONNECT_FOUR_RED]: connectFourRedInfo,
+
+	[TOOLS.CELL_SHADED_ROW_COLUMN_BOX_NOT_COUNTER]: cellShadedRowColumnBoxNotCounterInfo,
 
 	// Single Cell Arrow Constraint
 	[TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND]: sashiganeArrowPointsToBendInfo,
@@ -694,6 +700,8 @@ export const squareCellElementHandlers: Record<string, SquareCellElementInfo> = 
 
 	[TOOLS.DOUBLERS_KILLER_CAGE]: doublersKillerCageInfo,
 	[TOOLS.NEGATORS_KILLER_CAGE]: negatorsKillerCageInfo,
+	[TOOLS.SHADED_ROW_COLUMN_BOX_COUNTERS_SHADED_DIGIT_SUM_CAGE]:
+		shadedRowCollumnBoxCountersShadedDigitSumCageInfo,
 
 	// Clone Constraints
 	[TOOLS.CLONE_REGION]: cloneRegionInfo,

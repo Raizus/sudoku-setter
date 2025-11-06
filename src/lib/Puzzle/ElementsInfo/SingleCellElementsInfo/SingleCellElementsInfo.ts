@@ -6,12 +6,27 @@ import {
 } from '$src/lib/InputHandlers/InputHandler';
 import { SHAPE_TYPES, type EditableShapeI } from '../../Shape/Shape';
 import type { SquareCellElementInfo } from '../../ElementInfo';
+import { HANDLER_TOOL_TYPE, type SingleCellToolOptions } from '$input/ToolInputHandlers/types';
 import {
-	HANDLER_TOOL_TYPE,
-	type SingleCellToolOptions
-} from '$input/ToolInputHandlers/types';
-import { cellsToGridVarsName, cellsToGridVarsStr, cellsToVarsName, cellToGridVarName, cellToVarName, findSingleCellConstraintMatch, getDirectionCells, getDirectionsVars, groupConstraintsByValue, simpleElementFunction, VAR_2D_NAMES, type PuzzleModel } from '$src/lib/Solver/solver_utils';
-import { getParsingResult, orthogonalRegionSeenCountConstraint, simpleSingleCellElement, valuedSingleCellElement } from './helpers';
+	cellsToGridVarsName,
+	cellsToGridVarsStr,
+	cellsToVarsName,
+	cellToGridVarName,
+	cellToVarName,
+	findSingleCellConstraintMatch,
+	getDirectionCells,
+	getDirectionsVars,
+	groupConstraintsByValue,
+	simpleElementFunction,
+	VAR_2D_NAMES,
+	type PuzzleModel
+} from '$src/lib/Solver/solver_utils';
+import {
+	getParsingResult,
+	orthogonalRegionSeenCountConstraint,
+	simpleSingleCellElement,
+	valuedSingleCellElement
+} from './helpers';
 import type { CellToolI, ConstraintsElement } from '../../puzzle_schema';
 import type { Grid } from '../../Grid/Grid';
 import { DIRECTION } from '$src/lib/utils/directions';
@@ -2402,7 +2417,7 @@ function connectFourRedElement(model: PuzzleModel, element: ConstraintsElement) 
 export const connectFourRedInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
-	toolId: TOOLS.CONENCT_FOUR_RED,
+	toolId: TOOLS.CONNECT_FOUR_RED,
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
@@ -2651,8 +2666,7 @@ export const BYOKNotCageCellInfo: SquareCellElementInfo = {
 	negative_constraints: [
 		{
 			toolId: TOOLS.ALL_SQUARES_GIVEN,
-			description:
-				"All such squares are given."
+			description: 'All such squares are given.'
 		}
 	],
 
@@ -2665,4 +2679,54 @@ export const BYOKNotCageCellInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: BYOKNotCageCellElement
+};
+
+function cellShadedRowColumnBoxNotCounterElement(model: PuzzleModel, element: ConstraintsElement) {
+	// A digit in a diamond is not circled, and equals the sum of the circled digits in its row and column.
+	const grid = model.puzzle.grid;
+	const constraints = element.constraints as Record<string, CellToolI>;
+
+	let out_str = '';
+
+	for (const constraint of Object.values(constraints)) {
+		const coords = constraint.cell;
+		const cell = grid.getCell(coords.r, coords.c);
+		if (!cell) continue;
+		const counter_var = cellToGridVarName(cell, VAR_2D_NAMES.SHADED_ROW_COLUMN_BOX_COUNTERS);
+		const cell_var = cellToGridVarName(cell, VAR_2D_NAMES.BOARD);
+		// A digit in a diamond is not circled
+		out_str += `constraint ${counter_var} == false;\n`;
+
+		// A digit in a diamond equals the sum of the circled digits in its row and column.
+		const row_cells = grid.getRow(cell.r);
+		const col_cells = grid.getCol(cell.c);
+		const row_vars = cellsToGridVarsStr(row_cells, VAR_2D_NAMES.BOARD);
+		const col_vars = cellsToGridVarsStr(col_cells, VAR_2D_NAMES.BOARD);
+		const row_counters = cellsToGridVarsStr(row_cells, VAR_2D_NAMES.SHADED_ROW_COLUMN_BOX_COUNTERS);
+		const col_counters = cellsToGridVarsStr(col_cells, VAR_2D_NAMES.SHADED_ROW_COLUMN_BOX_COUNTERS);
+
+		out_str += `constraint cell_shaded_row_col_box_not_counter_p(${row_vars}, ${col_vars}, ${row_counters}, ${col_counters}, ${cell_var});\n`;
+	}
+
+	return out_str;
+}
+
+export const cellShadedRowColumnBoxNotCounterInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+
+	toolId: TOOLS.CELL_SHADED_ROW_COLUMN_BOX_NOT_COUNTER,
+
+	shape: {
+		...DEFAULT_SQUARE_SHAPE,
+		r: { editable: true, value: 0.25 },
+		angle: { editable: false, value: 45 }
+	},
+
+	meta: {
+		description: `A digit in a diamond is not circled, and equals the sum of the circled digits in its row and column.`,
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	},
+
+	solver_func: cellShadedRowColumnBoxNotCounterElement
 };

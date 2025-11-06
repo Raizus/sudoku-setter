@@ -203,7 +203,8 @@ function setBinaryHighlights(json: JsonT, grid: Grid) {
 		'nurikabe_shading',
 		'even_odd_grid',
 		'cave_shading',
-		VAR_2D_NAMES.SHADED_BOUNDARIES_REGIONS
+		VAR_2D_NAMES.SHADED_BOUNDARIES_REGIONS,
+		VAR_2D_NAMES.SHADED_ROW_COLUMN_BOX_COUNTERS_SHADED_GRID
 	];
 	const color_map: Map<number, number> = new Map([
 		[0, 3],
@@ -522,9 +523,13 @@ function setColoring(json: JsonT, grid: Grid) {
 
 function setStarBattlePenMarks(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
-	const grid_vars_names = ['lits_white_black_star_battle', 'star_battle'];
+	const grid_vars_names = [
+		['lits_white_black_star_battle', 'X'],
+		['star_battle', 'X'],
+		[VAR_2D_NAMES.SHADED_ROW_COLUMN_BOX_COUNTERS, 'O']
+	];
 
-	for (const name of grid_vars_names) {
+	for (const [name, marker_symb] of grid_vars_names) {
 		const regions_grid = json[name] as number[][] | undefined;
 		if (regions_grid === undefined) continue;
 
@@ -536,12 +541,12 @@ function setStarBattlePenMarks(json: JsonT, grid: Grid) {
 				if (!cell1) continue;
 
 				const val = regions_grid[cell1.r][cell1.c];
-				if (val === 0) continue;
+				if (Boolean(val) === false) continue;
 				const color = val === 1 ? 1 : 3;
 
 				const marker: CellMarker = {
 					colorId: color,
-					marker: 'X',
+					marker: marker_symb as "X" | "O",
 					r: cell1.r + 0.5,
 					c: cell1.c + 0.5
 				};

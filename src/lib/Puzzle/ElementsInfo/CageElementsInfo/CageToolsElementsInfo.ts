@@ -734,3 +734,52 @@ export const negatorsKillerCageInfo: SquareCellElementInfo = {
 
 	solver_func: negatorsKillerCageElement
 };
+
+function shadedRowCollumnBoxCountersShadedDigitSumCageConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CageToolI
+) {
+	const cells = cellsFromCoords(grid, constraint.cells);
+	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+
+	const shaded_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.SHADED_ROW_COLUMN_BOX_COUNTERS_SHADED_GRID);
+
+	const value = constraint.value;
+	if (value) {
+		const val = parseInt(value);
+		const constraint_str = `constraint conditional_sum_f(${vars_str}, ${shaded_vars_str}, true) == ${val};\n`;
+		return constraint_str;
+	}
+	return '';
+}
+
+function shadedRowCollumnBoxCountersShadedDigitSumCageElement(
+	model: PuzzleModel,
+	element: ConstraintsElement
+) {
+	const out_str = simpleElementFunction(
+		model,
+		element,
+		shadedRowCollumnBoxCountersShadedDigitSumCageConstraint
+	);
+	return out_str;
+}
+
+export const shadedRowCollumnBoxCountersShadedDigitSumCageInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_CAGE_OPTIONS,
+
+	toolId: TOOLS.SHADED_ROW_COLUMN_BOX_COUNTERS_SHADED_DIGIT_SUM_CAGE,
+
+	shape: DEFAULT_CAGE_SHAPE,
+
+	meta: {
+		description: 'Shaded digits within a cage sum to the value given in the top left of the cage.',
+		usage: typableCageUsage(),
+		tags: [],
+		categories: typableCageDefaultCategories
+	},
+
+	solver_func: shadedRowCollumnBoxCountersShadedDigitSumCageElement
+};
