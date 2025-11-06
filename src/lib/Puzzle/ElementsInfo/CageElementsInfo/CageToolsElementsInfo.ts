@@ -651,6 +651,51 @@ export const yinYangBreakevenKillerCageInfo: SquareCellElementInfo = {
 	solver_func: yinYangBreakevenKillerCageElement
 };
 
+function yinYangEqualSumCageConstraint(
+	grid: Grid,
+	constraint: CageToolI,
+) {
+	const cells = cellsFromCoords(grid, constraint.cells);
+	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+
+	const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
+
+	const constraint_str = `constraint yin_yang_equal_sum_cage_p(${vars_str}, ${yin_yang_vars_str});\n`;
+	return constraint_str;
+}
+
+function yinYangEqualSumCageElement(model: PuzzleModel, element: ConstraintsElement) {
+	// Digits in cages cannot repeat and must sum to the small clue in the top left corner of the cage. However, shaded cells are treated as negative. In other words, the cage total is the sum of unshaded cells minus the sum of shaded cells.
+	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
+	const grid = model.puzzle.grid;
+	for (const constraint of Object.values(constraints)) {
+		const constraint_str = yinYangEqualSumCageConstraint(grid, constraint as CageToolI);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
+
+export const yinYangEqualSumCageInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_UNVALUED_CAGE_OPTIONS,
+
+	toolId: TOOLS.YIN_YANG_EQUAL_SUM_CAGE,
+
+	shape: DEFAULT_CAGE_SHAPE,
+
+	meta: {
+		description:
+			'Within each cage, the sum of the shaded digits equals the sum of the unshaded digits. Digits MAY repeat within a cage.',
+		usage: typableCageUsage(),
+		tags: [],
+		categories: nonTypableCageDefaultCategories
+	},
+
+	solver_func: yinYangEqualSumCageElement
+};
+
 function doublersKillerCageConstraint(
 	model: PuzzleModel,
 	grid: Grid,

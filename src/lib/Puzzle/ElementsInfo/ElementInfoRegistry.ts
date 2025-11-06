@@ -24,7 +24,8 @@ import {
 	yinYangBreakevenKillerCageInfo,
 	vaultedCageInfo,
 	vaultedKillerCageInfo,
-	shadedRowCollumnBoxCountersShadedDigitSumCageInfo
+	shadedRowCollumnBoxCountersShadedDigitSumCageInfo,
+	yinYangEqualSumCageInfo
 } from './CageElementsInfo/CageToolsElementsInfo';
 import {
 	centerPMInfo,
@@ -700,6 +701,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.VAULTED_KILLER_CAGE]: vaultedKillerCageInfo,
 	[TOOLS.YIN_YANG_ANTITHESIS_KILLER_CAGE]: yinYangAntithesisKillerCageInfo,
 	[TOOLS.YIN_YANG_BREAKEVEN_KILLER_CAGE]: yinYangBreakevenKillerCageInfo,
+	[TOOLS.YIN_YANG_EQUAL_SUM_CAGE]: yinYangEqualSumCageInfo,
 
 	[TOOLS.DOUBLERS_KILLER_CAGE]: doublersKillerCageInfo,
 	[TOOLS.NEGATORS_KILLER_CAGE]: negatorsKillerCageInfo,

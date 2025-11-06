@@ -2028,7 +2028,7 @@ predicate yin_yang_minesweeper_p(array[int] of var int: yin_yang_vars, var int: 
     yin_yang_vars[start_idx] == 0 /\\
     % sum of all shaded in the neighborhood is equal to the value in the cell
     count_eq(yin_yang_vars, 1, cell_var);
-    
+
 predicate yin_yang_breakeven_killer_cage_p(
 	array[int] of var int: arr, 
 	array[int] of var 0..1: shading, 
@@ -2049,6 +2049,21 @@ predicate yin_yang_breakeven_killer_cage_p(
         % unshaded cells are odd
         % shading[i] == 0 <-> arr[i] mod 2 == 1
     );
+
+predicate yin_yang_equal_sum_cage_p(
+	array[int] of var int: arr, 
+	array[int] of var 0..1: shading
+) = 
+    let {
+        % Arrays must have same index set
+        constraint assert(
+            index_set(arr) = index_set(shading),
+            "Arrays must have same index set"
+            );
+        var int: unshaded_sum = conditional_sum_f(arr, shading, 0);
+        var int: shaded_sum = conditional_sum_f(arr, shading, 1);
+    } in
+    unshaded_sum == shaded_sum;
 
 predicate yin_yang_seen_unshaded_p(
 	array[int] of var int: arr1, 
