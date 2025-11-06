@@ -1,8 +1,15 @@
 import { type LineToolInputOptions, HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
-import { cellsFromCoords, cellsToGridVarsStr, cellsToVarsName, VAR_2D_NAMES, type PuzzleModel } from '$src/lib/Solver/solver_utils';
+import {
+	cellsFromCoords,
+	cellsToGridVarsStr,
+	cellsToVarsName,
+	VAR_2D_NAMES,
+	type PuzzleModel
+} from '$src/lib/Solver/solver_utils';
 import type { ParseOptions } from '$src/lib/Solver/value_parsing';
 import type { Grid } from '../../Grid/Grid';
 import type { ConstraintsElement, LineToolI } from '../../puzzle_schema';
+import { type EditableShapeI, SHAPE_TYPES } from '../../Shape/Shape';
 import { TOOL_CATEGORIES } from '../../Tools';
 import { lineUsage } from '../../ToolUsage';
 
@@ -36,6 +43,18 @@ export const DEFAULT_LINE_OPTIONS_INTERSECT: LineToolInputOptions = {
 export const DEFAULT_LINE_OPTIONS_NO_INTERSECT: LineToolInputOptions = {
 	type: HANDLER_TOOL_TYPE.LINE,
 	allowSelfIntersection: false
+};
+
+export const REGION_SUM_LINE_SHAPE: EditableShapeI = {
+	type: SHAPE_TYPES.LINE,
+	strokeWidth: { editable: true, value: 0.15 },
+	stroke: { editable: true, value: 'var(--constraint-color-light-blue)' },
+	linePathOptions: {
+		shortenHead: { editable: false, value: 0.15 },
+		shortenTail: { editable: false, value: 0.15 },
+		bezierRounding: { editable: false, value: 0.15 },
+		closeLoops: { editable: false, value: true }
+	}
 };
 
 function getParsingResult(model: PuzzleModel, value: string, c_id: string) {
@@ -181,7 +200,6 @@ export function circularValuedLineElement(
 	}
 	return out_str;
 }
-
 
 function simpleMultipliersLineConstraint(
 	model: PuzzleModel,

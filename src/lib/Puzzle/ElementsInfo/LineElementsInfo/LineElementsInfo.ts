@@ -9,6 +9,7 @@ import {
 	DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 	DEFAULT_META_1,
 	getLineVars,
+	REGION_SUM_LINE_SHAPE,
 	simpleLineDefaultCategories,
 	simpleLineElement,
 	simpleMultipliersLineElement,
@@ -772,17 +773,7 @@ export const regionSumLineInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.REGION_SUM_LINE,
 
-	shape: {
-		type: SHAPE_TYPES.LINE,
-		strokeWidth: { editable: true, value: 0.15 },
-		stroke: { editable: true, value: 'var(--constraint-color-light-blue)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
-	},
+	shape: REGION_SUM_LINE_SHAPE,
 
 	meta: {
 		description:
@@ -1984,17 +1975,7 @@ export const goldilocksZoneRegionSumLineInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.GOLDILOCKS_ZONE_REGION_SUM,
 
-	shape: {
-		type: SHAPE_TYPES.LINE,
-		strokeWidth: { editable: true, value: 0.15 },
-		stroke: { editable: true, value: 'var(--constraint-color-light-blue)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
-	},
+	shape: REGION_SUM_LINE_SHAPE,
 
 	meta: {
 		description:

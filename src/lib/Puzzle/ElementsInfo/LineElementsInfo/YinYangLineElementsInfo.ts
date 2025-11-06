@@ -1,7 +1,12 @@
 import { HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
-import { cellsFromCoords, cellsToGridVarsStr, VAR_2D_NAMES, type PuzzleAuxI, type PuzzleModel } from '$src/lib/Solver/solver_utils';
+import {
+	cellsFromCoords,
+	cellsToGridVarsStr,
+	VAR_2D_NAMES,
+	type PuzzleAuxI,
+	type PuzzleModel
+} from '$src/lib/Solver/solver_utils';
 import type { SquareCellElementInfo } from '../../ElementInfo';
-import type { Grid } from '../../Grid/Grid';
 import type { ConstraintsElement, LineToolI } from '../../puzzle_schema';
 import { SHAPE_TYPES } from '../../Shape/Shape';
 import { TOOLS, type TOOLID } from '../../Tools';
@@ -281,16 +286,7 @@ export const yinYangRegionSumLineInfo: SquareCellElementInfo = {
 		}
 	],
 
-	shape: {
-		type: SHAPE_TYPES.LINE,
-		strokeWidth: { editable: true, value: 0.15 },
-		stroke: { editable: true, value: 'var(--constraint-color-blue)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+	shape: REGION_SUM_LINE_SHAPE
 	},
 
 	meta: {
