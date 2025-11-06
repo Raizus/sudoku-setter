@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { CellArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
-	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { defaultSingleCellArrowShape } from '$lib/Puzzle/Shape/Shape';
 	import { cellToCellCenterVector } from '$lib/utils/SquareCellGridRenderUtils';
 	import { currentConstraintStore } from '$stores/BoardStore';

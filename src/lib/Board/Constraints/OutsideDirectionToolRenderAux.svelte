@@ -6,7 +6,7 @@
 	} from '$lib/utils/SquareCellGridRenderUtils';
 		import type { OutsideDirectionToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
-	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { defaultOutsideShape } from '$lib/Puzzle/Shape/Shape';
 	import { directionToCoords, type GridCoordI } from '$lib/utils/SquareCellGridCoords';
 	import type { DIRECTION } from '$src/lib/utils/directions';

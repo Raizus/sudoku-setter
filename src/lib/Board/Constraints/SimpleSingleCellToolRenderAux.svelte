@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { SHAPE_TYPES, defaultSingleCellCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import ValuedCageRender from './ValuedCageRender.svelte';

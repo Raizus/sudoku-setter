@@ -4,7 +4,7 @@
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 		import type { EdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import CircleRender from '$src/lib/Board/SvgComponents/CircleRender.svelte';
-	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import {
 		cellToCellCenterVector,
 		cellsToVector2DPoints

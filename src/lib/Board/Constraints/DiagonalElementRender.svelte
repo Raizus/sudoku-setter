@@ -1,7 +1,7 @@
 <script lang="ts">
 		import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$src/lib/Puzzle/ElementHandlersUtils';
-	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { defaultDiagonalShape } from '$src/lib/Puzzle/Shape/Shape';
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 	import { gridStore } from '$stores/BoardStore';

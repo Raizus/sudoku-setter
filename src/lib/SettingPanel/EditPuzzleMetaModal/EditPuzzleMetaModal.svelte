@@ -2,7 +2,7 @@
 	import Modal from '$lib/Components/Modal/Modal.svelte';
 	import ModalButtonsContainer from '$lib/Components/Modal/ModalButtonsContainer.svelte';
 	import ModalSectionHeader from '$lib/Components/Modal/ModalSectionHeader.svelte';
-	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import type { PuzzleMetaI } from '$src/lib/Puzzle/puzzle_schema';
 	import { joinStrList } from '$lib/utils/functionUtils';
 	import { puzzleMetaStore, updatePuzzleMeta } from '$stores/BoardStore';

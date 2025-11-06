@@ -3,7 +3,7 @@
 	import { defaultCageShape } from '$lib/Puzzle/Shape/Shape';
 		import type { CageToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
-	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { currentConstraintStore } from '$stores/BoardStore';
 	import CageRender from './CageRender.svelte';
 

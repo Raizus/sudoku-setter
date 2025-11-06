@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { SHAPE_TYPES, defaultEdgeCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
-	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 		import type { CenterCornerOrEdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import RenderShape from '$src/lib/Board/SvgComponents/RenderShape.svelte';
 	import CellTextLabelRender from './CellTextLabelRender.svelte';

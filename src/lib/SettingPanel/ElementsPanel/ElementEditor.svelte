@@ -5,7 +5,7 @@
 		updateConstraintValue
 	} from '$src/lib/Puzzle/Constraints/ElementsDict';
 	import { type VariableConstraintI } from '$src/lib/Puzzle/puzzle_schema';
-	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { isLocalConstraint, TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
 	import { currentConstraintStore, updateLocalConstraint } from '$stores/BoardStore';
 	import ConstraintCheckbox from './ConstraintCheckbox.svelte';

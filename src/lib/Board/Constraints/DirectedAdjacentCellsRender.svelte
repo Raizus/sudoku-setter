@@ -2,7 +2,7 @@
 	import { defaultArrowShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import type { EdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
-	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { cellsToVector2DPoints } from '$lib/utils/SquareCellGridRenderUtils';
 	import { vectorAverage } from '$lib/utils/Vector2D';
 	import { currentConstraintStore } from '$stores/BoardStore';

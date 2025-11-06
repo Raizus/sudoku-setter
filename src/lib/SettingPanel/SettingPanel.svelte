@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import ElementsPanel from './ElementsPanel/ElementsPanel.svelte';
 	import ShapePanel from './ShapeEditor/ShapePanel.svelte';
 	import MenuPanel from './MenuPanel/MenuPanel.svelte';

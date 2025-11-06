@@ -1,7 +1,7 @@
 <script lang="ts">
 		import type { ArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
-	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/SquareCellElementHandlers';
+	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { defaultArrowShape } from '$lib/Puzzle/Shape/Shape';
 	import type { Rectangle } from '$lib/Types/types';
 	import {
