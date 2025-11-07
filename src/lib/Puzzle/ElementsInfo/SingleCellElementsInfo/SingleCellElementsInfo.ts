@@ -107,12 +107,7 @@ function cellsFromElement(grid: Grid, element: ConstraintsElement) {
 		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
 	);
 
-	return cells
-}
-
-function oddElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleSingleCellElement(model, element, 'odd_p');
-	return out_str;
+	return cells;
 }
 
 export const oddInfo: SquareCellElementInfo = {
@@ -134,13 +129,10 @@ export const oddInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: oddElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleSingleCellElement(model, element, 'odd_p');
+	}
 };
-
-function evenElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleSingleCellElement(model, element, 'even_p');
-	return out_str;
-}
 
 export const evenInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
@@ -161,15 +153,17 @@ export const evenInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: evenElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleSingleCellElement(model, element, 'even_p');
+	}
 };
 
 function minMaxConstraint(grid: Grid, element: ConstraintsElement, predicate: string) {
 	const constraints = element.constraints as Record<string, CellToolI>;
 	const constl = Object.values(constraints);
 
-	const max_cells = cellsFromElement(grid, element)
-	
+	const max_cells = cellsFromElement(grid, element);
+
 	let out_str = '';
 	for (const constraint of constl) {
 		const coord = constraint.cell;
@@ -342,11 +336,6 @@ function countSameParityNeighbourConstraint(
 	return constraint_str;
 }
 
-function countSameParityNeighbourElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, countSameParityNeighbourConstraint);
-	return out_str;
-}
-
 export const countSameParityNeighborCellsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -367,7 +356,9 @@ export const countSameParityNeighborCellsInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: countSameParityNeighbourElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, countSameParityNeighbourConstraint);
+	}
 };
 
 function watchtowerFarsightHelper(grid: Grid, constraint: CellToolI, predicate: string) {
@@ -398,11 +389,6 @@ function watchtowerFarsightElementHelper(
 	return out_str;
 }
 
-function watchtowerElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = watchtowerFarsightElementHelper(model, element, 'is_watchtower_p');
-	return out_str;
-}
-
 export const watchtowerInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -423,13 +409,10 @@ export const watchtowerInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: watchtowerElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return watchtowerFarsightElementHelper(model, element, 'is_watchtower_p');
+	}
 };
-
-function notWatchtowerElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = watchtowerFarsightElementHelper(model, element, 'is_not_watchtower_p');
-	return out_str;
-}
 
 export const notWatchtowerInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
@@ -451,13 +434,10 @@ export const notWatchtowerInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: notWatchtowerElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return watchtowerFarsightElementHelper(model, element, 'is_not_watchtower_p');
+	}
 };
-
-function farsightElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = watchtowerFarsightElementHelper(model, element, 'farsight_p');
-	return out_str;
-}
 
 export const farsightInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
@@ -478,7 +458,9 @@ export const farsightInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: farsightElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return watchtowerFarsightElementHelper(model, element, 'farsight_p');
+	}
 };
 
 function radarConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: CellToolI) {
@@ -569,11 +551,6 @@ function orthogonalSumConstraint(
 	return constraint_str;
 }
 
-function orthogonalSumElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, orthogonalSumConstraint);
-	return out_str;
-}
-
 export const orthogonalSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -594,7 +571,9 @@ export const orthogonalSumInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: orthogonalSumElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, orthogonalSumConstraint);
+	}
 };
 
 function indexingColumnConstraint(
@@ -743,11 +722,6 @@ export const indexingRowInfo: SquareCellElementInfo = {
 	solver_func: indexingRowElement
 };
 
-function lowDigitElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedSingleCellElement(model, element, 'low_digit_p', '5');
-	return out_str;
-}
-
 export const lowDigitInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -765,13 +739,10 @@ export const lowDigitInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_COLOR_CATEGORIES
 	},
 
-	solver_func: lowDigitElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return valuedSingleCellElement(model, element, 'low_digit_p', '5');
+	}
 };
-
-function highDigitElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedSingleCellElement(model, element, 'high_digit_p', '5');
-	return out_str;
-}
 
 export const highDigitInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
@@ -790,7 +761,9 @@ export const highDigitInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_COLOR_CATEGORIES
 	},
 
-	solver_func: highDigitElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return valuedSingleCellElement(model, element, 'high_digit_p', '5');
+	}
 };
 
 function friendlyCellConstraint(
@@ -815,11 +788,6 @@ function friendlyCellConstraint(
 	return constraint_str;
 }
 
-function friendlyCellElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, friendlyCellConstraint);
-	return out_str;
-}
-
 export const friendlyCellInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -838,7 +806,9 @@ export const friendlyCellInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_COLOR_CATEGORIES
 	},
 
-	solver_func: friendlyCellElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, friendlyCellConstraint);
+	}
 };
 
 function diagonallyAdjacentSumConstraint(
@@ -857,11 +827,6 @@ function diagonallyAdjacentSumConstraint(
 
 	const constraint_str = `constraint sum_p(${vars_str}, ${var1});\n`;
 	return constraint_str;
-}
-
-function diagonallyAdjacentSumElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, diagonallyAdjacentSumConstraint);
-	return out_str;
 }
 
 export const diagonallyAdjacentSumInfo: SquareCellElementInfo = {
@@ -883,7 +848,9 @@ export const diagonallyAdjacentSumInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: diagonallyAdjacentSumElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, diagonallyAdjacentSumConstraint);
+	}
 };
 
 function adjCellsOppositeDirOppositeParityConstraint(
@@ -909,15 +876,6 @@ function adjCellsOppositeDirOppositeParityConstraint(
 	return constraint_str;
 }
 
-function adjCellsOppositeDirOppositeParityElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(
-		model,
-		element,
-		adjCellsOppositeDirOppositeParityConstraint
-	);
-	return out_str;
-}
-
 export const adjacentCellsInDifferentDirectionsHaveOpositeParityInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -938,7 +896,9 @@ export const adjacentCellsInDifferentDirectionsHaveOpositeParityInfo: SquareCell
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: adjCellsOppositeDirOppositeParityElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, adjCellsOppositeDirOppositeParityConstraint);
+	}
 };
 
 function sandwichRowColCountConstraint(
@@ -962,11 +922,6 @@ function sandwichRowColCountConstraint(
 	return constraint_str;
 }
 
-function sandwichRowColCountElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, sandwichRowColCountConstraint);
-	return out_str;
-}
-
 export const sandwichRowColCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -981,7 +936,9 @@ export const sandwichRowColCountInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: sandwichRowColCountElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, sandwichRowColCountConstraint);
+	}
 };
 
 function countingCirclesElement(model: PuzzleModel, element: ConstraintsElement) {
@@ -989,7 +946,6 @@ function countingCirclesElement(model: PuzzleModel, element: ConstraintsElement)
 	const vars = cellsToVarsName([...cells]);
 	const vars_str = `${vars.join(',\n\t')}`;
 
-	
 	let out_str = '';
 	out_str += `array[int] of var int: counting_circles = [\n\t${vars_str}\n];\n`;
 	out_str += `constraint counting_circles_p(counting_circles, ALLOWED_DIGITS);\n`;
@@ -1025,13 +981,13 @@ function reverseCountingCirclesElement(model: PuzzleModel, element: ConstraintsE
 
 	const circle_cells = cellsFromElement(grid, element);
 	const not_circle_cells = grid.getAllCells().filter((cell) => !circle_cells.has(cell));
-	
+
 	const circle_vars = cellsToVarsName([...circle_cells]);
 	const circle_vars_str = `${circle_vars.join(',\n\t')}`;
-	
+
 	const not_circle_vars = cellsToVarsName([...not_circle_cells]);
 	const not_circle_vars_str = `${not_circle_vars.join(',\n\t')}`;
-	
+
 	let out_str = '';
 	out_str += `array[int] of var int: reverse_counting_circles = [\n\t${circle_vars_str}\n];\n`;
 	out_str += `array[int] of var int: not_reverse_counting_circles = [\n\t${not_circle_vars_str}\n];\n`;
@@ -1071,10 +1027,10 @@ function coloredCountingCirclesElement(model: PuzzleModel, element: ConstraintsE
 	const cells = cellsFromElement(grid, element);
 	const vars = cellsToVarsName([...cells]);
 	const vars_str = `${vars.join(',\n\t')}`;
-	
+
 	const circle_colors_vars = cellsToGridVarsName([...cells], VAR_2D_NAMES.COUNTING_CIRCLES_COLORS);
 	const circle_colors_vars_str = `${circle_colors_vars.join(',\n\t')}`;
-	
+
 	let out_str = '';
 	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..3: ${VAR_2D_NAMES.COUNTING_CIRCLES_COLORS};\n`;
 	out_str += `array[int] of var int: colored_counting_circles = [\n\t${vars_str}\n];\n`;
@@ -1088,7 +1044,7 @@ function coloredCountingCirclesElement(model: PuzzleModel, element: ConstraintsE
 		out_str += `constraint ${color_var} == 0;\n`;
 	}
 
-	// colored circles 
+	// colored circles
 	for (const constraint of constl) {
 		const coord = constraint.cell;
 		const cell = grid.getCell(coord.r, coord.c);
@@ -1138,7 +1094,7 @@ function uniqueCellsElement(model: PuzzleModel, element: ConstraintsElement) {
 	const cells = cellsFromElement(grid, element);
 	const vars = cellsToVarsName([...cells]);
 	const vars_str = `${vars.join(',\n\t')}`;
-	
+
 	let out_str = '';
 	out_str += `array[int] of var int: unique_cells = [\n\t${vars_str}\n];\n`;
 	out_str += `constraint alldifferent(unique_cells);\n`;
@@ -1242,11 +1198,6 @@ function cellKnightWhispersConstraint(
 	return out_str;
 }
 
-function cellKnightWhispersElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, cellKnightWhispersConstraint);
-	return out_str;
-}
-
 export const cellKnightWhispersInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.SINGLE_CELL,
@@ -1266,7 +1217,9 @@ export const cellKnightWhispersInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: cellKnightWhispersElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, cellKnightWhispersConstraint);
+	}
 };
 
 function seenOddCountElement(model: PuzzleModel, element: ConstraintsElement) {
@@ -1319,18 +1272,6 @@ function twoConstiguousRegionsRowColumnOppositeSetCountConstraint(
 	return constraint_str;
 }
 
-function twoConstiguousRegionsRowColumnOppositeSetCountElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(
-		model,
-		element,
-		twoConstiguousRegionsRowColumnOppositeSetCountConstraint
-	);
-	return out_str;
-}
-
 export const twoContiguousRegionsRowColumnOppositeSetCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -1351,7 +1292,13 @@ export const twoContiguousRegionsRowColumnOppositeSetCountInfo: SquareCellElemen
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: twoConstiguousRegionsRowColumnOppositeSetCountElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(
+			model,
+			element,
+			twoConstiguousRegionsRowColumnOppositeSetCountConstraint
+		);
+	}
 };
 
 function seenRegionBordersCountConstraint(
@@ -1374,11 +1321,6 @@ function seenRegionBordersCountConstraint(
 	return constraint_str;
 }
 
-function seenRegionBordersCountElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, seenRegionBordersCountConstraint);
-	return out_str;
-}
-
 export const seenRegionBordersCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -1399,7 +1341,9 @@ export const seenRegionBordersCountInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: seenRegionBordersCountElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, seenRegionBordersCountConstraint);
+	}
 };
 
 function nurimisakiUnshadedEndpointsConstraint(
@@ -1506,11 +1450,6 @@ function sashiganeBendRegionCountConstraint(
 	return out_str;
 }
 
-function sashiganeBendRegionCountElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, sashiganeBendRegionCountConstraint);
-	return out_str;
-}
-
 export const sashiganeBendRegionCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -1531,7 +1470,9 @@ export const sashiganeBendRegionCountInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: sashiganeBendRegionCountElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, sashiganeBendRegionCountConstraint);
+	}
 };
 
 function sashiganeRegionSumConstraint(
@@ -1553,11 +1494,6 @@ function sashiganeRegionSumConstraint(
 	return constraint_str;
 }
 
-function sashiganeRegionSumElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, sashiganeRegionSumConstraint);
-	return out_str;
-}
-
 export const sashiganeRegionSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
@@ -1577,7 +1513,9 @@ export const sashiganeRegionSumInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: sashiganeRegionSumElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, sashiganeRegionSumConstraint);
+	}
 };
 
 function cellOnLoopConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: CellToolI) {
@@ -1589,11 +1527,6 @@ function cellOnLoopConstraint(model: PuzzleModel, grid: Grid, c_id: string, cons
 
 	const constraint_str = `constraint ${cell_center_loop_var} == 1;\n`;
 	return constraint_str;
-}
-
-function cellOnLoopElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, cellOnLoopConstraint);
-	return out_str;
 }
 
 export const cellOnTheLoopInfo: SquareCellElementInfo = {
@@ -1609,7 +1542,9 @@ export const cellOnTheLoopInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: cellOnLoopElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, cellOnLoopConstraint);
+	}
 };
 
 function cellNotOnLoopConstraint(
@@ -1628,11 +1563,6 @@ function cellNotOnLoopConstraint(
 	return constraint_str;
 }
 
-function cellNotOnLoopElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, cellNotOnLoopConstraint);
-	return out_str;
-}
-
 export const cellNotOnTheLoopInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -1646,7 +1576,9 @@ export const cellNotOnTheLoopInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: cellNotOnLoopElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, cellNotOnLoopConstraint);
+	}
 };
 
 function countLoopNeighbourCellsConstraint(
@@ -1669,11 +1601,6 @@ function countLoopNeighbourCellsConstraint(
 	return constraint_str;
 }
 
-function countLoopNeighbourCellsElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, countLoopNeighbourCellsConstraint);
-	return out_str;
-}
-
 export const countLoopNeighbourCellsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -1694,7 +1621,9 @@ export const countLoopNeighbourCellsInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: countLoopNeighbourCellsElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, countLoopNeighbourCellsConstraint);
+	}
 };
 
 export const twilightCaveFillominoClueInfo: SquareCellElementInfo = {
@@ -1735,11 +1664,6 @@ function caveCluesConstraint(model: PuzzleModel, grid: Grid, c_id: string, const
 	return constraint_str;
 }
 
-function caveCluesElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, caveCluesConstraint);
-	return out_str;
-}
-
 export const caveClueInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -1760,7 +1684,9 @@ export const caveClueInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: caveCluesElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, caveCluesConstraint);
+	}
 };
 
 function caveShadedRegionSizeUnshadedSeenOrthogonallyClueConstraint(
@@ -1787,18 +1713,6 @@ function caveShadedRegionSizeUnshadedSeenOrthogonallyClueConstraint(
 	return constraint_str;
 }
 
-function caveShadedRegionSizeUnshadedSeenOrthogonallyClueElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(
-		model,
-		element,
-		caveShadedRegionSizeUnshadedSeenOrthogonallyClueConstraint
-	);
-	return out_str;
-}
-
 export const caveShadedRegionSizeUnshadedSeenOrthogonallyClueInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -1813,7 +1727,13 @@ export const caveShadedRegionSizeUnshadedSeenOrthogonallyClueInfo: SquareCellEle
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: caveShadedRegionSizeUnshadedSeenOrthogonallyClueElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(
+			model,
+			element,
+			caveShadedRegionSizeUnshadedSeenOrthogonallyClueConstraint
+		);
+	}
 };
 
 function chaosConstructionChessSumsConstraint(
@@ -1872,11 +1792,6 @@ function chaosConstructionChessSumsConstraint(
 	return out_str;
 }
 
-function chaosConstructionChessSumsElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, chaosConstructionChessSumsConstraint);
-	return out_str;
-}
-
 export const chaosConstructionChessSumsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
@@ -1901,7 +1816,9 @@ Clarifications:
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: chaosConstructionChessSumsElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, chaosConstructionChessSumsConstraint);
+	}
 };
 
 function chaosConstructionArrowKnotsConstraint(
@@ -1944,11 +1861,6 @@ function chaosConstructionArrowKnotsConstraint(
 	return out_str;
 }
 
-function chaosConstructionArrowKnotsElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, chaosConstructionArrowKnotsConstraint);
-	return out_str;
-}
-
 export const chaosConstructionArrowKnotsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
@@ -1969,7 +1881,9 @@ export const chaosConstructionArrowKnotsInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: chaosConstructionArrowKnotsElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, chaosConstructionArrowKnotsConstraint);
+	}
 };
 
 function chaosConstructionSeenSameRegionCountConstraint(
@@ -1987,18 +1901,6 @@ function chaosConstructionSeenSameRegionCountConstraint(
 	return constraint_str;
 }
 
-function chaosConstructionSeenSameRegionCountElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(
-		model,
-		element,
-		chaosConstructionSeenSameRegionCountConstraint
-	);
-	return out_str;
-}
-
 export const chaosConstructionSeenSameRegionCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 
@@ -2012,7 +1914,9 @@ export const chaosConstructionSeenSameRegionCountInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: chaosConstructionSeenSameRegionCountElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, chaosConstructionSeenSameRegionCountConstraint);
+	}
 };
 
 function chaosConstructionNeighbourCellsSameRegionCountConstraint(
@@ -2036,18 +1940,6 @@ function chaosConstructionNeighbourCellsSameRegionCountConstraint(
 	return constraint_str;
 }
 
-function chaosConstructionNeighbourCellsSameRegionCountElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(
-		model,
-		element,
-		chaosConstructionNeighbourCellsSameRegionCountConstraint
-	);
-	return out_str;
-}
-
 export const chaosConstructionNeighbourCellsSameRegionCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -2061,7 +1953,13 @@ export const chaosConstructionNeighbourCellsSameRegionCountInfo: SquareCellEleme
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: chaosConstructionNeighbourCellsSameRegionCountElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(
+			model,
+			element,
+			chaosConstructionNeighbourCellsSameRegionCountConstraint
+		);
+	}
 };
 
 function directedPathStartConstraint(
@@ -2078,11 +1976,6 @@ function directedPathStartConstraint(
 
 	const constraint_str = `constraint dpath_source == ${node_id};\n`;
 	return constraint_str;
-}
-
-function directedPathStartElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, directedPathStartConstraint);
-	return out_str;
 }
 
 export const directedPathStartInfo: SquareCellElementInfo = {
@@ -2105,7 +1998,9 @@ export const directedPathStartInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: directedPathStartElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, directedPathStartConstraint);
+	}
 };
 
 function directedPathEndConstraint(
@@ -2122,11 +2017,6 @@ function directedPathEndConstraint(
 
 	const constraint_str = `constraint dpath_target == ${node_id};\n`;
 	return constraint_str;
-}
-
-function directedPathEndElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, directedPathEndConstraint);
-	return out_str;
 }
 
 export const directedPathEndInfo: SquareCellElementInfo = {
@@ -2149,7 +2039,9 @@ export const directedPathEndInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: directedPathEndElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, directedPathEndConstraint);
+	}
 };
 
 function teleportElement(model: PuzzleModel, element: ConstraintsElement) {
@@ -2279,11 +2171,6 @@ function nurikabeSeenWaterwayCellsConstraint(
 	return constraint_str;
 }
 
-function nurikabeSeenWaterwayCellsElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, nurikabeSeenWaterwayCellsConstraint);
-	return out_str;
-}
-
 export const nurikabeSeenWaterwayCellsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -2300,7 +2187,9 @@ export const nurikabeSeenWaterwayCellsInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: nurikabeSeenWaterwayCellsElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, nurikabeSeenWaterwayCellsConstraint);
+	}
 };
 
 function nurikabeIslandSizeCellConstraint(
@@ -2330,7 +2219,7 @@ function nurikabeIslandSizeCellElement(model: PuzzleModel, element: ConstraintsE
 	const cells = [...cellsFromElement(model.puzzle.grid, element)];
 	// all different and max island count equal to number of cells
 	const nurikabe_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.NURIKABE_REGIONS);
-	out_str += `constraint alldifferent(${nurikabe_vars_str});\n`
+	out_str += `constraint alldifferent(${nurikabe_vars_str});\n`;
 	out_str += `constraint count_unique_values(array1d(${VAR_2D_NAMES.NURIKABE_REGIONS})) - 1 == ${cells.length};\n`;
 	return out_str;
 }
@@ -2341,7 +2230,7 @@ export const nurikabeIslandSizeCellInfo: SquareCellElementInfo = {
 	toolId: TOOLS.NURIKABE_ISLAND_SIZE_CELL,
 
 	negative_constraints: [
-		{toolId: TOOLS.ALL_GIVEN, description: 'All islands contain exactly one circle.'}
+		{ toolId: TOOLS.ALL_GIVEN, description: 'All islands contain exactly one circle.' }
 	],
 
 	shape: DEFAULT_CIRCLE_SHAPE,
@@ -2370,11 +2259,6 @@ function connectFourYellowConstraint(
 	return constraint_str;
 }
 
-function connectFourYellowElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, connectFourYellowConstraint);
-	return out_str;
-}
-
 export const connectFourYellowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -2394,7 +2278,9 @@ export const connectFourYellowInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: connectFourYellowElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, connectFourYellowConstraint);
+	}
 };
 
 function connectFourRedConstraint(
@@ -2410,11 +2296,6 @@ function connectFourRedConstraint(
 
 	const constraint_str = `constraint connect_four_red_p(${cell_var});\n`;
 	return constraint_str;
-}
-
-function connectFourRedElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, connectFourRedConstraint);
-	return out_str;
 }
 
 export const connectFourRedInfo: SquareCellElementInfo = {
@@ -2436,7 +2317,9 @@ export const connectFourRedInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: connectFourRedElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, connectFourRedConstraint);
+	}
 };
 
 function shikakuRegionSizeElement(model: PuzzleModel, element: ConstraintsElement) {
@@ -2446,7 +2329,7 @@ function shikakuRegionSizeElement(model: PuzzleModel, element: ConstraintsElemen
 	const cells = cellsFromElement(grid, element);
 	const shikaku_vars = cellsToGridVarsName([...cells], VAR_2D_NAMES.SHIKAKU_REGIONS);
 	const vars_str = `${shikaku_vars.join(',\n\t')}`;
-	
+
 	let out_str = '';
 	out_str += `array[int] of var int: shikaku_region_size_clues = [\n\t${vars_str}\n];\n`;
 	out_str += `constraint alldifferent(shikaku_region_size_clues);\n`;
@@ -2507,7 +2390,7 @@ function shikakuRegionSumElement(model: PuzzleModel, element: ConstraintsElement
 	const cells = cellsFromElement(grid, element);
 	const shikaku_vars = cellsToGridVarsName([...cells], VAR_2D_NAMES.SHIKAKU_REGIONS);
 	const vars_str = `${shikaku_vars.join(',\n\t')}`;
-	
+
 	let out_str = '';
 	out_str += `array[int] of var int: shikaku_region_sum_clues = [\n\t${vars_str}\n];\n`;
 	out_str += `constraint alldifferent(shikaku_region_sum_clues);\n`;
