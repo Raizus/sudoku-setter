@@ -13,6 +13,7 @@
 	import BorderLineRender from './BorderLineRender.svelte';
 	import RenderShape from '$src/lib/Board/SvgComponents/RenderShape.svelte';
 	import { currentConstraintStore } from '$stores/BoardStore';
+	import DirectedAdjacentCellsRender from './DirectedAdjacentCellsRender.svelte';
 
 	export let tool: EdgeToolI;
 	export let c_id: string | undefined = undefined;
@@ -62,6 +63,8 @@
 			<CircleRender x={center.x} y={center.y} shape={selectedOutlineShape} />
 		{/if}
 		<CircleRender x={center.x} y={center.y} {shape} />
+	{:else if type === SHAPE_TYPES.ARROW}
+		<DirectedAdjacentCellsRender {tool} {c_id} />
 	{:else if type === SHAPE_TYPES.TEXT_ONLY}
 		{#if c_id && c_id === currentConstraintId}
 			<CircleRender x={center.x} y={center.y} shape={selectedOutlineShape} />

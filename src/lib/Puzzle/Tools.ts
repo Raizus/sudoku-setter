@@ -322,7 +322,9 @@ export enum EDGE_CONSTRAINTS {
 
 	ONE_WAY_DOOR = 'One Way Door',
 
-	COMBINED_EDGE_CONSTRAINT = 'Combined Edge Constraint'
+	COMBINED_EDGE_CONSTRAINT = 'Combined Edge Constraint',
+
+	DIFFERENCE_INDEXING_ARROW = 'Difference Indexing Arrow'
 }
 
 export enum CORNER_CONSTRAINTS {

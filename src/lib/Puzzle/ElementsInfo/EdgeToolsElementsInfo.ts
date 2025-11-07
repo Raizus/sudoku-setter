@@ -15,6 +15,7 @@ import {
 	cellToGridVarName,
 	cellToVarName,
 	PuzzleModel,
+	simpleElementFunction,
 	VAR_2D_NAMES
 } from '$src/lib/Solver/solver_utils';
 import type { ConstraintsElement, EdgeToolI } from '../puzzle_schema';
@@ -24,8 +25,8 @@ import type { ParseOptions } from '$src/lib/Solver/value_parsing';
 
 const edgeDefaultCategories = [
 	TOOL_CATEGORIES.EDGE_CONSTRAINT,
-	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
 	TOOL_CATEGORIES.EDGE_TOOL,
+	TOOL_CATEGORIES.LOCAL_CONSTRAINT,
 	TOOL_CATEGORIES.LOCAL_ELEMENT
 ];
 
@@ -984,3 +985,51 @@ export const combinedEdgeConstraintInfo: SquareCellElementInfo = {
 	}
 };
 
+function differenceIndexingArrowConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: EdgeToolI
+) {
+	const coords = constraint.cells;
+	const cells = cellsFromCoords(grid, coords);
+	const cells_vars = cellsToGridVarsName(cells, VAR_2D_NAMES.BOARD);
+	const cell1_var = cells_vars[0];
+	const cell2_var = cells_vars[1];
+
+	const constraint_str = `constraint difference_indexing_arrow_p(board, ${cell1_var}, ${cell2_var});\n`;
+	return constraint_str;
+}
+
+export const differenceIndexingArrowInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.DIRECTED_ADJACENT_CELLS,
+		defaultValue: ''
+	},
+
+	toolId: TOOLS.DIFFERENCE_INDEXING_ARROW,
+
+	shape: {
+		type: SHAPE_TYPES.ARROW,
+		r: { editable: false, value: 0.1 },
+		strokeWidth: { editable: false, value: 0.1, lb: 0, ub: 1, step: 0.025 },
+		stroke: { editable: false, value: 'black' },
+		fontSize: { editable: false, value: 0.3 }
+	},
+
+	meta: {
+		description:
+			'An inequality sign that separates two cells points to the lower of the two digits.',
+		tags: [],
+		categories: [
+			TOOL_CATEGORIES.EDGE_CONSTRAINT,
+			TOOL_CATEGORIES.EDGE_TOOL,
+			TOOL_CATEGORIES.LOCAL_ELEMENT,
+			TOOL_CATEGORIES.LOCAL_CONSTRAINT
+		]
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, differenceIndexingArrowConstraint);
+	}
+};

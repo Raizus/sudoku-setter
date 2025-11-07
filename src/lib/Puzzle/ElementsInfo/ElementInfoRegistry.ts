@@ -69,6 +69,7 @@ import {
 } from './CosmeticToolsElementsInfo';
 import {
 	chaosConstructionSuguruBorderInfo,
+	differenceIndexingArrowInfo,
 	differenceInfo,
 	edgeCaveOneOfEachInfo,
 	edgeFactorInfo,
@@ -573,8 +574,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.EDGE_CAVE_ONE_OF_EACH]: edgeCaveOneOfEachInfo,
 
 	[TOOLS.ONE_WAY_DOOR]: oneWayDoorInfo,
-
-	[TOOLS.COSMETIC_DIRECTED_ADJACENT_CELLS]: cosmeticDirectedAdjacentCellsInfo,
+	[TOOLS.DIFFERENCE_INDEXING_ARROW]: differenceIndexingArrowInfo,
 
 	// Corner Constraints
 	[TOOLS.QUADRUPLE]: quadrupleInfo,
@@ -765,6 +765,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.COSMETIC_CELL_ARROW]: cosmeticCellArrowInfo,
 	[TOOLS.COSMETIC_CELL_MULTI_ARROW]: cosmeticCellMultiArrowInfo,
 	[TOOLS.COSMETIC_EDGE]: cosmeticEdgeInfo,
+	[TOOLS.COSMETIC_DIRECTED_ADJACENT_CELLS]: cosmeticDirectedAdjacentCellsInfo,
 	[TOOLS.COSMETIC_CORNER]: cosmeticCornerInfo,
 	[TOOLS.COSMETIC_LINE]: cosmeticLineInfo,
 	[TOOLS.COSMETIC_LINE_WITH_CIRCLE_ENDS]: cosmeticLineWithCircleEndsInfo,

@@ -1058,7 +1058,20 @@ predicate edge_factor_p(var int: a, var int: b) =
     multiples_p(a, b);
     
 predicate xy_differences_p(var int: cell1, var int: cell2, var int: first_cell) =
-    abs(cell1 - cell2) == first_cell;\n\n`;
+    abs(cell1 - cell2) == first_cell;
+    
+predicate difference_indexing_arrow_p(
+    array[int, int] of var int: grid,
+    var int: a,
+    var int: b
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    (a - 1) in rows 
+    /\\ (b - 1) in cols
+    /\\ grid[a-1, b-1] = abs(a - b)
+);\n\n`;
 
 	const corner_constraints = `predicate quadruple_p(
     array[int] of var int: arr,
