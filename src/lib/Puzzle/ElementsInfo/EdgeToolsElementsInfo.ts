@@ -1011,15 +1011,14 @@ export const differenceIndexingArrowInfo: SquareCellElementInfo = {
 
 	shape: {
 		type: SHAPE_TYPES.ARROW,
-		r: { editable: false, value: 0.1 },
-		strokeWidth: { editable: false, value: 0.1, lb: 0, ub: 1, step: 0.025 },
-		stroke: { editable: false, value: 'black' },
+		strokeWidth: { editable: true, value: 0.1, lb: 0, ub: 1, step: 0.025 },
+		stroke: { editable: true, value: 'black' },
 		fontSize: { editable: false, value: 0.3 }
 	},
 
 	meta: {
 		description:
-			'An inequality sign that separates two cells points to the lower of the two digits.',
+			"The two digits on an arrow give the coordinates of a particular target cell somewhere in the grid. The digit on the arrow's shaft indicates the target cell's row, and the digit on the arrowhead indicates the target cell's column. The difference between the two digits should be placed into the target cell.",
 		tags: [],
 		categories: [
 			TOOL_CATEGORIES.EDGE_CONSTRAINT,
