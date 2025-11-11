@@ -261,12 +261,12 @@ function yinYangCountShadedCellsElement(model: PuzzleModel, element: Constraints
 	if (!element.negative_constraints) return out_str;
 
 	// negative constraint
-	const all_given = !!element.negative_constraints[TOOLS.ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN];
+	const all_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
 	if (!all_given) return out_str;
 	const constraints = element.constraints as Record<string, CellMultiArrowToolI>;
 	const grid = model.puzzle.grid;
 
-	out_str += `\n% ${TOOLS.ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN}\n`;
+	out_str += `\n% ${TOOLS.ALL_GIVEN}\n`;
 	for (const cell of grid.getAllCells()) {
 		// check if cell pair is not in xv pairs
 		const match = findSingleCellConstraintMatch(constraints, cell);
@@ -292,9 +292,9 @@ export const yinYangCountShadedCellsInfo: SquareCellElementInfo = {
 
 	negative_constraints: [
 		{
-			toolId: TOOLS.ALL_YIN_YANG_COUNT_SHADED_CELLS_GIVEN,
+			toolId: TOOLS.ALL_GIVEN,
 			description:
-				'Values in cells with arrows give the number of shaded cells in the indicated direction. All possible arrows are given.'
+				'All possible arrows are given.'
 		}
 	],
 

@@ -240,7 +240,7 @@ function ratioElement(model: PuzzleModel, element: ConstraintsElement) {
 	if (!element.negative_constraints) return out_str;
 
 	// negative constraint
-	const all_given = !!element.negative_constraints[TOOLS.ALL_RATIOS_GIVEN];
+	const all_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
 	if (!all_given) return out_str;
 	const constraints = element.constraints as Record<string, EdgeToolI>;
 
@@ -256,7 +256,7 @@ function ratioElement(model: PuzzleModel, element: ConstraintsElement) {
 
 	console.log('values', values);
 
-	out_str += `\n% ${TOOLS.ALL_RATIOS_GIVEN}\n`;
+	out_str += `\n% ${TOOLS.ALL_GIVEN}\n`;
 	for (const [cell1, cell2] of adjCellPairGen(grid)) {
 		// check if cell pair is not in ratio pairs
 		const match = findEdgeConstraintMatch(constraints, cell1, cell2);
@@ -285,7 +285,7 @@ export const ratioInfo: SquareCellElementInfo = {
 
 	negative_constraints: [
 		{
-			toolId: TOOLS.ALL_RATIOS_GIVEN,
+			toolId: TOOLS.ALL_GIVEN,
 			description: 'All Ratios are given.'
 		}
 	],
@@ -316,7 +316,7 @@ function differenceElement(model: PuzzleModel, element: ConstraintsElement) {
 	if (!element.negative_constraints) return out_str;
 
 	// negative constraint
-	const all_given = !!element.negative_constraints[TOOLS.ALL_DIFFERENCES_GIVEN];
+	const all_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
 	if (!all_given) return out_str;
 	const constraints = element.constraints as Record<string, EdgeToolI>;
 
@@ -330,7 +330,7 @@ function differenceElement(model: PuzzleModel, element: ConstraintsElement) {
 
 	const values = [...new Set(used_vals)];
 
-	out_str += `\n% ${TOOLS.ALL_DIFFERENCES_GIVEN}\n`;
+	out_str += `\n% ${TOOLS.ALL_GIVEN}\n`;
 	for (const [cell1, cell2] of adjCellPairGen(grid)) {
 		// check if cell pair is not in difference pairs
 		const match = findEdgeConstraintMatch(constraints, cell1, cell2);
@@ -355,7 +355,7 @@ export const differenceInfo: SquareCellElementInfo = {
 
 	negative_constraints: [
 		{
-			toolId: TOOLS.ALL_DIFFERENCES_GIVEN,
+			toolId: TOOLS.ALL_GIVEN,
 			description: 'All Differences are given.'
 		}
 	],
@@ -647,10 +647,10 @@ function xyDifferencesElement(model: PuzzleModel, element: ConstraintsElement) {
 	if (!element.negative_constraints) return out_str;
 
 	// negative constraint
-	const all_given = !!element.negative_constraints[TOOLS.ALL_XY_DIFFERENCES_GIVEN];
+	const all_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
 	if (!all_given) return out_str;
 
-	out_str += `\n% ${TOOLS.ALL_XY_DIFFERENCES_GIVEN}\n`;
+	out_str += `\n% ${TOOLS.ALL_GIVEN}\n`;
 	for (const [cell1, cell2] of adjCellPairGen(grid)) {
 		// check if cell pair is not in xy diff pairs
 		const match = findEdgeConstraintMatch(constraints, cell1, cell2);
@@ -675,9 +675,8 @@ export const xyDifferencesInfo: SquareCellElementInfo = {
 
 	negative_constraints: [
 		{
-			toolId: TOOLS.ALL_XY_DIFFERENCES_GIVEN,
-			description:
-				'If two cells are separated by a diamond, the digits must exhibit a difference equal to the leftmost or topmost digit sharing a row or column with them. For example, the difference between R9C34 = R9C1, and the difference between R23C1 = R1C1. Not all possible diamonds are necessarily given. All XY differences are given.'
+			toolId: TOOLS.ALL_GIVEN,
+			description: 'All XY differences are given.'
 		}
 	],
 
@@ -728,11 +727,11 @@ function yinYangKropkiElement(model: PuzzleModel, element: ConstraintsElement): 
 	if (!element.negative_constraints) return out_str;
 
 	// negative constraint
-	const all_given = !!element.negative_constraints[TOOLS.ALL_YIN_YANG_KROPKI_GIVEN];
+	const all_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
 	if (!all_given) return out_str;
 
 	const constraints = element.constraints as Record<string, EdgeToolI>;
-	out_str += `\n% ${TOOLS.ALL_YIN_YANG_KROPKI_GIVEN}\n`;
+	out_str += `\n% ${TOOLS.ALL_GIVEN}\n`;
 	for (const [cell1, cell2] of adjCellPairGen(grid)) {
 		// check if cell pair is not in kropki pairs
 		const match = findEdgeConstraintMatch(constraints, cell1, cell2);
@@ -760,7 +759,7 @@ export const yinYangKropkiInfo: SquareCellElementInfo = {
 
 	negative_constraints: [
 		{
-			toolId: TOOLS.ALL_YIN_YANG_KROPKI_GIVEN,
+			toolId: TOOLS.ALL_GIVEN,
 			description: 'All such dots are given.'
 		}
 	],

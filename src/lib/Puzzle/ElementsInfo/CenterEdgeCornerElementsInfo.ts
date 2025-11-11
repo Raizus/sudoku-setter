@@ -105,7 +105,7 @@ function rotationallySymmetricGalaxyCenterElement(model: PuzzleModel, element: C
 	if (!constraints_list.length) return out_str;
 
 	if (!element.negative_constraints) return out_str;
-	const all_galaxy_centers_given = !!element.negative_constraints[TOOLS.ALL_GALAXY_CENTERS_GIVEN];
+	const all_galaxy_centers_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
 
 	if (all_galaxy_centers_given) {
 		out_str += `\nconstraint all_galaxy_centers_given_p(${VAR_2D_NAMES.GALAXY_REGIONS}, ${center_count});\n`;
@@ -126,7 +126,7 @@ export const rotationallySymmetricGalaxyCenterInfo: SquareCellElementInfo = {
 
 	negative_constraints: [
 		{
-			toolId: TOOLS.ALL_GALAXY_CENTERS_GIVEN,
+			toolId: TOOLS.ALL_GIVEN,
 			description: 'All galaxy centers are given.'
 		}
 	],

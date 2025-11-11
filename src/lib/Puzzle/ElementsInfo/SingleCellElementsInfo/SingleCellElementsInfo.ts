@@ -479,12 +479,12 @@ function radarElement(model: PuzzleModel, element: ConstraintsElement) {
 
 	// negative constraint
 	if (!element.negative_constraints) return out_str;
-	const all_given = !!element.negative_constraints[TOOLS.ALL_RADARS_GIVEN];
+	const all_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
 	if (!all_given) return out_str;
 	const constraints = element.constraints as Record<string, CellToolI>;
 	const grid = model.puzzle.grid;
 
-	out_str += `\n% ${TOOLS.ALL_RADARS_GIVEN}\n`;
+	out_str += `\n% ${TOOLS.ALL_GIVEN}\n`;
 	for (const cell of grid.getAllCells()) {
 		const match = findSingleCellConstraintMatch(constraints, cell);
 		if (match) continue;
@@ -510,9 +510,8 @@ export const radarInfo: SquareCellElementInfo = {
 
 	negative_constraints: [
 		{
-			toolId: TOOLS.ALL_RADARS_GIVEN,
-			description:
-				"Cells with grey cages are radars. Radars are cells that have a value indicating the distance to the closest 'X' on their row or column (default X = 9). All radars are given."
+			toolId: TOOLS.ALL_GIVEN,
+			description: 'All radars are given.'
 		}
 	],
 
@@ -600,12 +599,12 @@ function indexingColumnElement(model: PuzzleModel, element: ConstraintsElement) 
 	if (!element.negative_constraints) return out_str;
 
 	// negative constraint
-	const all_given = !!element.negative_constraints[TOOLS.ALL_INDEXING_COLUMN_GIVEN];
+	const all_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
 	if (!all_given) return out_str;
 	const constraints = element.constraints as Record<string, CellToolI>;
 	const grid = model.puzzle.grid;
 
-	out_str += `\n% ${TOOLS.ALL_INDEXING_COLUMN_GIVEN}\n`;
+	out_str += `\n% ${TOOLS.ALL_GIVEN}\n`;
 	for (const cell of grid.getAllCells()) {
 		const match = findSingleCellConstraintMatch(constraints, cell);
 		if (match) continue;
@@ -627,7 +626,7 @@ export const indexingColumnInfo: SquareCellElementInfo = {
 
 	negative_constraints: [
 		{
-			toolId: TOOLS.ALL_INDEXING_COLUMN_GIVEN,
+			toolId: TOOLS.ALL_GIVEN,
 			description:
 				'Any number X in a red cell appearing in column Y index (ie give) the column X in which the number Y appears in their respective row. All possible indexing column cells in the given columns are given.'
 		}
@@ -673,12 +672,12 @@ function indexingRowElement(model: PuzzleModel, element: ConstraintsElement) {
 	if (!element.negative_constraints) return out_str;
 
 	// negative constraint
-	const all_given = !!element.negative_constraints[TOOLS.ALL_INDEXING_ROW_GIVEN];
+	const all_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
 	if (!all_given) return out_str;
 	const constraints = element.constraints as Record<string, CellToolI>;
 	const grid = model.puzzle.grid;
 
-	out_str += `\n% ${TOOLS.ALL_INDEXING_ROW_GIVEN}\n`;
+	out_str += `\n% ${TOOLS.ALL_GIVEN}\n`;
 	for (const cell of grid.getAllCells()) {
 		const match = findSingleCellConstraintMatch(constraints, cell);
 		if (match) continue;
@@ -700,7 +699,7 @@ export const indexingRowInfo: SquareCellElementInfo = {
 
 	negative_constraints: [
 		{
-			toolId: TOOLS.ALL_INDEXING_ROW_GIVEN,
+			toolId: TOOLS.ALL_GIVEN,
 			description:
 				'Any number X in a blue cell appearing in the Yth row of a column indicates the row X where the number Y appears in that column. All possible indexing column cells in the given columns are given.'
 		}
@@ -1378,12 +1377,12 @@ function nurimisakiUnshadedEndpointsElement(model: PuzzleModel, element: Constra
 	if (!element.negative_constraints) return out_str;
 
 	// negative constraint
-	const all_given = !!element.negative_constraints[TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN];
+	const all_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
 	if (!all_given) return out_str;
 	const constraints = element.constraints as Record<string, CellToolI>;
 	const grid = model.puzzle.grid;
 
-	out_str += `\n% ${TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN}\n`;
+	out_str += `\n% ${TOOLS.ALL_GIVEN}\n`;
 	for (const cell of grid.getAllCells()) {
 		const match = findSingleCellConstraintMatch(constraints, cell);
 		if (match) continue;
@@ -1407,9 +1406,8 @@ export const nurimisakiUnshadedEndpointInfo: SquareCellElementInfo = {
 
 	negative_constraints: [
 		{
-			toolId: TOOLS.ALL_NURIMISAKI_UNSHADED_ENDPOINTS_GIVEN,
-			description:
-				"Circles mark every instance of a cell which is unshaded and orthogonally adjacent to exactly one other unshaded cell (i.e. the circles are the only 'endpoints' of the unshaded area)."
+			toolId: TOOLS.ALL_GIVEN,
+			description: 'All nurimisaki unshaded endpoints are given.'
 		}
 	],
 
@@ -2520,9 +2518,9 @@ function BYOKNotCageCellElement(model: PuzzleModel, element: ConstraintsElement)
 	if (!element.negative_constraints) return out_str;
 
 	// negative constraint
-	const all_squares_given = !!element.negative_constraints[TOOLS.ALL_SQUARES_GIVEN];
-	if (all_squares_given) {
-		out_str += `\n% ${TOOLS.ALL_SQUARES_GIVEN}\n`;
+	const all_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
+	if (all_given) {
+		out_str += `\n% ${TOOLS.ALL_GIVEN}\n`;
 		for (const cell of grid.getAllCells()) {
 			const match = findSingleCellConstraintMatch(constraints, cell);
 			if (match) continue;
@@ -2543,7 +2541,7 @@ export const BYOKNotCageCellInfo: SquareCellElementInfo = {
 
 	negative_constraints: [
 		{
-			toolId: TOOLS.ALL_SQUARES_GIVEN,
+			toolId: TOOLS.ALL_GIVEN,
 			description: 'All such squares are given.'
 		}
 	],
@@ -2551,7 +2549,7 @@ export const BYOKNotCageCellInfo: SquareCellElementInfo = {
 	shape: DEFAULT_SQUARE_SHAPE,
 
 	meta: {
-		description: `Squares indicate that a cell is not in any cage.`,
+		description: `Squares indicate that a cell is not in any BYOK cage.`,
 		tags: [],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
