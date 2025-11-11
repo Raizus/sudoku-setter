@@ -156,7 +156,7 @@ export interface ToolOptionsRegistry {
 	[HANDLER_TOOL_TYPE.CENTER_CORNER_OR_EDGE]: CenterCornerOrEdgeToolInputOptions;
 	[HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION]: OutsideDirectionToolInputOptions;
 	[HANDLER_TOOL_TYPE.PEN]: PenToolInputOptions;
-	// [HANDLER_TOOL_TYPE.VALUE_TOOL]: ValueToolInputOptions;
+	[HANDLER_TOOL_TYPE.VALUE_TOOL]: ValueToolInputOptions;
 }
 
 // Automatically derived union type
