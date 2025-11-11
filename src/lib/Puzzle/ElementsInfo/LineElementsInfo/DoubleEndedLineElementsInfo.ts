@@ -5,14 +5,14 @@ import type { ConstraintsElement } from '../../puzzle_schema';
 import { SHAPE_TYPES } from '../../Shape/Shape';
 import { TOOLS } from '../../Tools';
 import { lineUsage } from '../../ToolUsage';
-import { DEFAULT_LINE_OPTIONS_INTERSECT, doubleEndedLineDefaultCategories, simpleLineElement, simpleMultipliersLineElement } from './helpers';
+import {
+	DEFAULT_LINE_OPTIONS_INTERSECT,
+	doubleEndedLineDefaultCategories,
+	simpleLineElement,
+	simpleMultipliersLineElement
+} from './helpers';
 
 /* ----------------------------------------------------------------------------- */
-
-function betweenLineElement(model: PuzzleModel, element: ConstraintsElement) {
-    const out_str = simpleLineElement(model, element, 'between_line_p');
-    return out_str;
-}
 
 export const betweenLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -35,11 +35,12 @@ export const betweenLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: doubleEndedLineDefaultCategories
-    },
-    
-    solver_func: betweenLineElement
-};
+	},
 
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'between_line_p');
+	}
+};
 
 export const lockoutLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -70,11 +71,6 @@ export const lockoutLineInfo: SquareCellElementInfo = {
 	}
 };
 
-function tightropeLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'tightrope_line_p');
-	return out_str;
-}
-
 export const tightropeLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
@@ -96,15 +92,12 @@ export const tightropeLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: doubleEndedLineDefaultCategories
-    },
-    
-    solver_func: tightropeLineElement
-};
+	},
 
-function parityCountLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'parity_count_line_p');
-	return out_str;
-}
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'tightrope_line_p');
+	}
+};
 
 export const parityCountLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -127,15 +120,12 @@ export const parityCountLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: doubleEndedLineDefaultCategories
-    },
-    
-    solver_func: parityCountLineElement
-};
+	},
 
-function doubleArrowElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'double_arrow_p');
-	return out_str;
-}
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'parity_count_line_p');
+	}
+};
 
 export const doubleArrowLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -158,15 +148,12 @@ export const doubleArrowLineInfo: SquareCellElementInfo = {
 		tags: [],
 		usage: lineUsage(),
 		categories: doubleEndedLineDefaultCategories
-    },
-    
-    solver_func: doubleArrowElement
-};
+	},
 
-function productOfEndsEqualsSumOfLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'product_of_ends_equals_sum_of_line_p');
-	return out_str;
-}
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'double_arrow_p');
+	}
+};
 
 export const productOfEndsEqualsSumOfLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -190,15 +177,12 @@ export const productOfEndsEqualsSumOfLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: doubleEndedLineDefaultCategories
-    },
-    
-    solver_func: productOfEndsEqualsSumOfLineElement
-};
+	},
 
-function splitPeasElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'split_peas_p');
-	return out_str;
-}
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'product_of_ends_equals_sum_of_line_p');
+	}
+};
 
 export const splitPeasLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -221,15 +205,12 @@ export const splitPeasLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: doubleEndedLineDefaultCategories
-    },
-    
-    solver_func: splitPeasElement
-};
+	},
 
-function doublersBetweenLineElement(model: PuzzleModel, element: ConstraintsElement) {
-    const out_str = simpleMultipliersLineElement(model, element, 'between_line_p');
-    return out_str;
-}
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'split_peas_p');
+	}
+};
 
 export const doublersBetweenLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -252,15 +233,12 @@ export const doublersBetweenLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: doubleEndedLineDefaultCategories
-    },
-    
-    solver_func: doublersBetweenLineElement
-};
+	},
 
-function doublersDoubleArrowLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleMultipliersLineElement(model, element, 'double_arrow_p');
-	return out_str;
-}
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleMultipliersLineElement(model, element, 'between_line_p');
+	}
+};
 
 export const doublersDoubleArrowLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -283,7 +261,9 @@ export const doublersDoubleArrowLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: doubleEndedLineDefaultCategories
-    },
-    
-    solver_func: doublersDoubleArrowLineElement
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleMultipliersLineElement(model, element, 'double_arrow_p');
+	}
 };

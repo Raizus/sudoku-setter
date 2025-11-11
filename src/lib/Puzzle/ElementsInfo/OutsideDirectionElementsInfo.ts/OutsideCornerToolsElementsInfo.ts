@@ -3,13 +3,23 @@ import {
 	HANDLER_TOOL_TYPE,
 	type OutsideDirectionToolInputOptions
 } from '$input/ToolInputHandlers/types';
-import { cellsToGridVarsStr, simpleElementFunction, VAR_2D_NAMES, type PuzzleModel } from '$src/lib/Solver/solver_utils';
+import {
+	cellsToGridVarsStr,
+	simpleElementFunction,
+	VAR_2D_NAMES,
+	type PuzzleModel
+} from '$src/lib/Solver/solver_utils';
 import type { SquareCellElementInfo } from '../../ElementInfo';
 import type { Grid } from '../../Grid/Grid';
 import { outsideCornerUsage } from '../../ToolUsage';
 import { TOOL_CATEGORIES, TOOLS } from '../../Tools';
 import type { ConstraintsElement, OutsideDirectionToolI } from '../../puzzle_schema';
-import { defaultOutsideDirectionValueUpdater, OUTSIDE_DEFAULT_SHAPE, simpleOutsideDirectionElement, validateOutsideDirectionValue } from './helpers';
+import {
+	defaultOutsideDirectionValueUpdater,
+	OUTSIDE_DEFAULT_SHAPE,
+	simpleOutsideDirectionElement,
+	validateOutsideDirectionValue
+} from './helpers';
 
 const outsideCornerDefaultCategories = [
 	TOOL_CATEGORIES.OUTSIDE_CORNER_CONSTRAINT,
@@ -28,11 +38,6 @@ const DEFAULT_OUTSIDE_CORNER_OPTIONS: OutsideDirectionToolInputOptions = {
 	cornerOrEdge: CornerOrEdge.CORNER
 };
 
-function littleKillerSumElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, element, 'little_killer_sum_p');
-	return out_str;
-}
-
 export const littleKillerSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
 
@@ -48,13 +53,10 @@ export const littleKillerSumInfo: SquareCellElementInfo = {
 		categories: outsideCornerDefaultCategories
 	},
 
-	solver_func: littleKillerSumElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleOutsideDirectionElement(model, element, 'little_killer_sum_p');
+	}
 };
-
-function littleKillerProductElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, element, 'little_killer_product_p');
-	return out_str;
-}
 
 export const littleKillerProductInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
@@ -71,7 +73,9 @@ export const littleKillerProductInfo: SquareCellElementInfo = {
 		categories: outsideCornerDefaultCategories
 	},
 
-	solver_func: littleKillerProductElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleOutsideDirectionElement(model, element, 'little_killer_product_p');
+	}
 };
 
 export const littleKillerLookAndSayInfo: SquareCellElementInfo = {
@@ -90,11 +94,6 @@ export const littleKillerLookAndSayInfo: SquareCellElementInfo = {
 	}
 };
 
-function xOmitlittleKillerSumElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, element, 'x_omit_little_killer_sum_p');
-	return out_str;
-}
-
 export const xOmitLittleKillerSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
 
@@ -110,7 +109,9 @@ export const xOmitLittleKillerSumInfo: SquareCellElementInfo = {
 		categories: outsideCornerDefaultCategories
 	},
 
-	solver_func: xOmitlittleKillerSumElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleOutsideDirectionElement(model, element, 'x_omit_little_killer_sum_p');
+	}
 };
 
 export const littleKillerRegionSumProductInfo: SquareCellElementInfo = {
@@ -150,11 +151,6 @@ function negatorsLittleKillerSumConstraint(
 	return '';
 }
 
-function negatorsLittleKillerSumElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, negatorsLittleKillerSumConstraint);
-	return out_str;
-}
-
 export const negatorsLittleKillerSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_CORNER_OPTIONS,
 
@@ -170,5 +166,7 @@ export const negatorsLittleKillerSumInfo: SquareCellElementInfo = {
 		categories: outsideCornerDefaultCategories
 	},
 
-	solver_func: negatorsLittleKillerSumElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, negatorsLittleKillerSumConstraint);
+	}
 };

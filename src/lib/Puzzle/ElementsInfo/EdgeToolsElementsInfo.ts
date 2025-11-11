@@ -372,11 +372,6 @@ export const differenceInfo: SquareCellElementInfo = {
 	solver_func: differenceElement
 };
 
-function edgeSumElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedEdgeElement(model, element, 'edge_sum_p');
-	return out_str;
-}
-
 export const edgeSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_EDGE_OPTIONS,
 
@@ -394,7 +389,9 @@ export const edgeSumInfo: SquareCellElementInfo = {
 		categories: typableEdgeDefaultCategories
 	},
 
-	solver_func: edgeSumElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return valuedEdgeElement(model, element, 'edge_sum_p');
+	}
 };
 
 function xvConstraint(grid: Grid, constraint: EdgeToolI) {
@@ -562,11 +559,6 @@ export const edgeProductInfo: SquareCellElementInfo = {
 	}
 };
 
-function edgeModuloElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedEdgeElement(model, element, 'edge_modulo_p');
-	return out_str;
-}
-
 export const edgeModuloInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_EDGE_OPTIONS,
 
@@ -584,14 +576,10 @@ export const edgeModuloInfo: SquareCellElementInfo = {
 		categories: typableEdgeDefaultCategories
 	},
 
-	solver_func: edgeModuloElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return valuedEdgeElement(model, element, 'edge_modulo_p');
+	}
 };
-
-function edgeFactorElement(model: PuzzleModel, element: ConstraintsElement) {
-	const grid = model.puzzle.grid;
-	const out_str = simpleEdgeElement(grid, element, 'edge_factor_p');
-	return out_str;
-}
 
 export const edgeFactorInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_EDGE_OPTIONS,
@@ -610,7 +598,9 @@ export const edgeFactorInfo: SquareCellElementInfo = {
 		categories: typableEdgeDefaultCategories
 	},
 
-	solver_func: edgeFactorElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleEdgeElement(model.puzzle.grid, element, 'edge_factor_p');
+	}
 };
 
 function xyDiffHelper(grid: Grid, cell1: Cell, cell2: Cell) {
@@ -795,12 +785,6 @@ export const yinYangKropkiInfo: SquareCellElementInfo = {
 	solver_func: yinYangKropkiElement
 };
 
-function yinYangWhiteKropkiElement(model: PuzzleModel, element: ConstraintsElement) {
-	const grid = model.puzzle.grid;
-	const out_str = yinYangEdgeElement(grid, element, 'yin_yang_white_kropki_p');
-	return out_str;
-}
-
 export const yinYangWhiteKropkiInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.EDGE
@@ -817,7 +801,9 @@ export const yinYangWhiteKropkiInfo: SquareCellElementInfo = {
 		categories: typableEdgeDefaultCategories
 	},
 
-	solver_func: yinYangWhiteKropkiElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return yinYangEdgeElement(model.puzzle.grid, element, 'yin_yang_white_kropki_p');
+	}
 };
 
 function regionBorderConstraint(grid: Grid, constraint: EdgeToolI, regions_var_name: VAR_2D_NAMES) {
@@ -845,12 +831,6 @@ function regionBorderElement(
 	return out_str;
 }
 
-function unknownRegionBorderElement(model: PuzzleModel, element: ConstraintsElement) {
-	const grid = model.puzzle.grid;
-	const out_str = regionBorderElement(grid, element, VAR_2D_NAMES.UNKNOWN_REGIONS);
-	return out_str;
-}
-
 export const unknownRegionBorderInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.EDGE
@@ -866,14 +846,10 @@ export const unknownRegionBorderInfo: SquareCellElementInfo = {
 		categories: edgeDefaultCategories
 	},
 
-	solver_func: unknownRegionBorderElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return regionBorderElement(model.puzzle.grid, element, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	}
 };
-
-function fillominoRegionBorderElement(model: PuzzleModel, element: ConstraintsElement) {
-	const grid = model.puzzle.grid;
-	const out_str = regionBorderElement(grid, element, VAR_2D_NAMES.FILLOMINO_REGIONS);
-	return out_str;
-}
 
 export const fillominoRegionBorderInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -890,14 +866,10 @@ export const fillominoRegionBorderInfo: SquareCellElementInfo = {
 		categories: edgeDefaultCategories
 	},
 
-	solver_func: fillominoRegionBorderElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return regionBorderElement(model.puzzle.grid, element, VAR_2D_NAMES.FILLOMINO_REGIONS);
+	}
 };
-
-function chaosConstructionSuguruBorderElement(model: PuzzleModel, element: ConstraintsElement) {
-	const grid = model.puzzle.grid;
-	const out_str = regionBorderElement(grid, element, VAR_2D_NAMES.SUGURU_REGIONS);
-	return out_str;
-}
 
 export const chaosConstructionSuguruBorderInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -914,14 +886,10 @@ export const chaosConstructionSuguruBorderInfo: SquareCellElementInfo = {
 		categories: edgeDefaultCategories
 	},
 
-	solver_func: chaosConstructionSuguruBorderElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return regionBorderElement(model.puzzle.grid, element, VAR_2D_NAMES.SUGURU_REGIONS);
+	}
 };
-
-function edgeCaveOneOfEachElement(model: PuzzleModel, element: ConstraintsElement) {
-	const grid = model.puzzle.grid;
-	const out_str = regionBorderElement(grid, element, VAR_2D_NAMES.CAVE_SHADING);
-	return out_str;
-}
 
 export const edgeCaveOneOfEachInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -939,7 +907,9 @@ export const edgeCaveOneOfEachInfo: SquareCellElementInfo = {
 		categories: edgeDefaultCategories
 	},
 
-	solver_func: edgeCaveOneOfEachElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return regionBorderElement(model.puzzle.grid, element, VAR_2D_NAMES.CAVE_SHADING);
+	}
 };
 
 export const oneWayDoorInfo: SquareCellElementInfo = {

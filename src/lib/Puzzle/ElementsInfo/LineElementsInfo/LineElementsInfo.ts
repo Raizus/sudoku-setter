@@ -49,11 +49,6 @@ function splitLineByRegion(line: Cell[]) {
 	return regions;
 }
 
-function thermoElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'strictly_increasing');
-	return out_str;
-}
-
 export const thermometerInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
@@ -78,13 +73,10 @@ export const thermometerInfo: SquareCellElementInfo = {
 		description: 'Numbers along a thermometer must increase from the bulb end.'
 	},
 
-	solver_func: thermoElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'strictly_increasing');
+	}
 };
-
-function customThermoElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, element, 'custom_thermo_p');
-	return out_str;
-}
 
 export const customThermometerInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -115,13 +107,10 @@ export const customThermometerInfo: SquareCellElementInfo = {
 			'Numbers along a thermometer must increase by at least X (default = 2) at a time. Negative values are allowed.'
 	},
 
-	solver_func: customThermoElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return valuedLineElement(model, element, 'custom_thermo_p');
+	}
 };
-
-function fuzzyThermoElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'fuzzy_thermo_p');
-	return out_str;
-}
 
 export const fuzzyThermometerInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -147,13 +136,10 @@ export const fuzzyThermometerInfo: SquareCellElementInfo = {
 			'Grey lines are thermometers. Digits along thermometers must increase from the bulb to the tip, which can be on either end and are to be deduced.'
 	},
 
-	solver_func: fuzzyThermoElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'fuzzy_thermo_p');
+	}
 };
-
-function slowThermoElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'increasing');
-	return out_str;
-}
 
 export const slowThermometerInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -179,7 +165,9 @@ export const slowThermometerInfo: SquareCellElementInfo = {
 		description: 'Numbers along a slow thermometer must not decrease from the bulb to the tip(s).'
 	},
 
-	solver_func: slowThermoElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'increasing');
+	}
 };
 
 function rowCycleThermoConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
@@ -243,11 +231,6 @@ export const rowCyclethermometerInfo: SquareCellElementInfo = {
 	solver_func: rowCycleThermoElement
 };
 
-function palindromeElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'palindrome');
-	return out_str;
-}
-
 export const palindromeInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
@@ -266,7 +249,10 @@ export const palindromeInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: palindromeElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		const out_str = simpleLineElement(model, element, 'palindrome');
+		return out_str;
+	}
 };
 
 function renbanElement(model: PuzzleModel, element: ConstraintsElement) {
@@ -330,11 +316,6 @@ export const renbanLineInfo: SquareCellElementInfo = {
 	solver_func: renbanElement
 };
 
-function doubleRenbanElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'double_renban_p', true);
-	return out_str;
-}
-
 export const doubleRenbanLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
@@ -360,13 +341,10 @@ export const doubleRenbanLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: doubleRenbanElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'double_renban_p', true);
+	}
 };
-
-function renrenbanbanElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'renrenbanban_p', true);
-	return out_str;
-}
 
 export const renrenbanbanLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -393,13 +371,10 @@ export const renrenbanbanLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: renrenbanbanElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'renrenbanban_p', true);
+	}
 };
-
-function nConsecutiveRenbanLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = circularValuedLineElement(model, element, 'n_consecutive_renban_line_p');
-	return out_str;
-}
 
 export const nConsecutiveRenbanLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -429,13 +404,10 @@ export const nConsecutiveRenbanLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: nConsecutiveRenbanLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return circularValuedLineElement(model, element, 'n_consecutive_renban_line_p');
+	}
 };
-
-function nabnerElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'knabner_p', true);
-	return out_str;
-}
 
 export const nabnerLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -462,13 +434,10 @@ export const nabnerLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: nabnerElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'knabner_p', true);
+	}
 };
-
-function whispersElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, element, 'whispers', '5');
-	return out_str;
-}
 
 export const whispersLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -498,13 +467,10 @@ export const whispersLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: whispersElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return valuedLineElement(model, element, 'whispers', '5');
+	}
 };
-
-function dutchWhispersElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, element, 'whispers', '4');
-	return out_str;
-}
 
 export const dutchWhispersInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -534,13 +500,10 @@ export const dutchWhispersInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: dutchWhispersElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return valuedLineElement(model, element, 'whispers', '4');
+	}
 };
-
-function maximumAdjacentDifferenceLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, element, 'maximum_adjacent_difference_line_p', '2');
-	return out_str;
-}
 
 export const maximumAdjacentDifferenceLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -571,13 +534,10 @@ export const maximumAdjacentDifferenceLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: maximumAdjacentDifferenceLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return valuedLineElement(model, element, 'maximum_adjacent_difference_line_p', '2');
+	}
 };
-
-function renbanOrWhispersLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, element, 'renban_or_whispers_p', '5');
-	return out_str;
-}
 
 export const renbanOrWhispersLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -608,13 +568,10 @@ export const renbanOrWhispersLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: renbanOrWhispersLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return valuedLineElement(model, element, 'renban_or_whispers_p', '5');
+	}
 };
-
-function renbanOrNabnerElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'renban_or_nabner_line_p', true);
-	return out_str;
-}
 
 export const renbanOrNabnerLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -645,13 +602,10 @@ export const renbanOrNabnerLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: renbanOrNabnerElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'renban_or_nabner_line_p', true);
+	}
 };
-
-function outOfOrderConsecutiveLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'out_of_order_consecutive_line_p');
-	return out_str;
-}
 
 export const outOfOrderConsecutiveLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -678,13 +632,10 @@ export const outOfOrderConsecutiveLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: outOfOrderConsecutiveLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'out_of_order_consecutive_line_p');
+	}
 };
-
-function indexLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'index_line_p');
-	return out_str;
-}
 
 export const indexLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -714,13 +665,10 @@ export const indexLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: indexLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'index_line_p');
+	}
 };
-
-function uniqueValuesLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'alldifferent', true);
-	return out_str;
-}
 
 export const uniqueValuesLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -740,7 +688,9 @@ export const uniqueValuesLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: uniqueValuesLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'alldifferent', true);
+	}
 };
 
 function regionSumLineConstraint(
@@ -764,11 +714,6 @@ function regionSumLineConstraint(
 	return out_str;
 }
 
-function regionSumLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, regionSumLineConstraint);
-	return out_str;
-}
-
 export const regionSumLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
 
@@ -784,13 +729,10 @@ export const regionSumLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: regionSumLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, regionSumLineConstraint);
+	}
 };
-
-function sumLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, element, 'sum_line_p');
-	return out_str;
-}
 
 export const sumLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -820,13 +762,10 @@ export const sumLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: sumLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return valuedLineElement(model, element, 'sum_line_p');
+	}
 };
-
-function arithmeticSequenceLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'arithmetic_sequence_line_p');
-	return out_str;
-}
 
 export const arithmeticSequenceLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -853,13 +792,10 @@ export const arithmeticSequenceLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: arithmeticSequenceLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'arithmetic_sequence_line_p');
+	}
 };
-
-function sameParityLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'same_parity_line_p');
-	return out_str;
-}
 
 export const sameParityLineLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -885,13 +821,10 @@ export const sameParityLineLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: sameParityLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'same_parity_line_p');
+	}
 };
-
-function modularLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, element, 'modular_line_p', '3');
-	return out_str;
-}
 
 export const modularLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -922,13 +855,10 @@ export const modularLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: modularLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return valuedLineElement(model, element, 'modular_line_p', '3');
+	}
 };
-
-function unimodularLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, element, 'unimodular_line_p', '3');
-	return out_str;
-}
 
 export const unimodularLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -959,13 +889,10 @@ export const unimodularLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: unimodularLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return valuedLineElement(model, element, 'unimodular_line_p', '3');
+	}
 };
-
-function modularOrUnimodularLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, element, 'modular_or_unimodular_line_p', '3');
-	return out_str;
-}
 
 export const modularOrUnimodularLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -996,13 +923,10 @@ export const modularOrUnimodularLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: modularOrUnimodularLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return valuedLineElement(model, element, 'modular_or_unimodular_line_p', '3');
+	}
 };
-
-function oddEvenOscillatorLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'odd_even_oscillator_line_p');
-	return out_str;
-}
 
 export const oddEvenOscilatorLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -1028,13 +952,10 @@ export const oddEvenOscilatorLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: oddEvenOscillatorLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'odd_even_oscillator_line_p');
+	}
 };
-
-function highLowOscillatorLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, element, 'high_low_oscillator_line_p', '5');
-	return out_str;
-}
 
 export const highLowOscilatorLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -1065,7 +986,9 @@ export const highLowOscilatorLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: highLowOscillatorLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return valuedLineElement(model, element, 'high_low_oscillator_line_p', '5');
+	}
 };
 
 function entropicLineConstraint(
@@ -1078,11 +1001,6 @@ function entropicLineConstraint(
 	const vars_str = `[${vars.join(',')}]`;
 	const constraint_str: string = `constraint entropic_line_p(${vars_str}, {1,2,3}, {4,5,6}, {7,8,9});\n`;
 	return constraint_str;
-}
-
-function entropicLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, entropicLineConstraint);
-	return out_str;
 }
 
 export const entropicLineInfo: SquareCellElementInfo = {
@@ -1110,7 +1028,9 @@ export const entropicLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: entropicLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, entropicLineConstraint);
+	}
 };
 
 function entropicOrModularLineConstraint(
@@ -1123,11 +1043,6 @@ function entropicOrModularLineConstraint(
 	const vars_str = `[${vars.join(',')}]`;
 	const constraint_str: string = `constraint entropic_or_modular_line_p(${vars_str}, {1,2,3}, {4,5,6}, {7,8,9}, 3);\n`;
 	return constraint_str;
-}
-
-function entropicOrModularLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, entropicOrModularLineConstraint);
-	return out_str;
 }
 
 export const entropicOrModularLineInfo: SquareCellElementInfo = {
@@ -1155,7 +1070,9 @@ export const entropicOrModularLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: entropicOrModularLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, entropicOrModularLineConstraint);
+	}
 };
 
 export const indexingColumnIsXLineInfo: SquareCellElementInfo = {
@@ -1218,11 +1135,6 @@ export const indexingRowIsXLineInfo: SquareCellElementInfo = {
 	}
 };
 
-function repeatedDigitsLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'repeated_digits_line_p');
-	return out_str;
-}
-
 export const repeatedDigitsLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
@@ -1248,13 +1160,10 @@ export const repeatedDigitsLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: repeatedDigitsLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'repeated_digits_line_p');
+	}
 };
-
-function superfuzzyArrowElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'superfuzzy_arrow_p');
-	return out_str;
-}
 
 export const superfuzzyArrowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -1281,13 +1190,10 @@ export const superfuzzyArrowInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: superfuzzyArrowElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'superfuzzy_arrow_p');
+	}
 };
-
-function ambiguousArrowElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'ambiguous_arrow_p', true);
-	return out_str;
-}
 
 export const ambiguousArrowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -1314,13 +1220,10 @@ export const ambiguousArrowInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: ambiguousArrowElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'ambiguous_arrow_p', true);
+	}
 };
-
-function headlessArrowElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'headless_arrow_p');
-	return out_str;
-}
 
 export const headlessArrowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -1346,13 +1249,10 @@ export const headlessArrowInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: headlessArrowElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'headless_arrow_p');
+	}
 };
-
-function xvLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'xv_line_p');
-	return out_str;
-}
 
 export const xvLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -1378,7 +1278,9 @@ export const xvLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: xvLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'xv_line_p');
+	}
 };
 
 function rowSumLineConstraint(grid: Grid, constraint: LineToolI) {
@@ -1454,11 +1356,6 @@ export const rowSumLineInfo: SquareCellElementInfo = {
 	solver_func: rowSumLineElement
 };
 
-function atLeastXLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, element, 'at_least_x_line_p', '10');
-	return out_str;
-}
-
 export const atLeastXLineInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.LINE,
@@ -1487,13 +1384,10 @@ export const atLeastXLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: atLeastXLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return valuedLineElement(model, element, 'at_least_x_line_p', '10');
+	}
 };
-
-function nConsecutiveFuzzySumLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = circularValuedLineElement(model, element, 'n_consecutive_fuzzy_sum_line_p');
-	return out_str;
-}
 
 export const nConsecutiveFuzzySumLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -1524,7 +1418,9 @@ export const nConsecutiveFuzzySumLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: nConsecutiveFuzzySumLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return circularValuedLineElement(model, element, 'n_consecutive_fuzzy_sum_line_p');
+	}
 };
 
 export const adjacentCellSumIsPrimeLineInfo: SquareCellElementInfo = {
@@ -1551,11 +1447,6 @@ export const adjacentCellSumIsPrimeLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	}
 };
-
-function productLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = valuedLineElement(model, element, 'product_line_p');
-	return out_str;
-}
 
 export const productLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -1585,13 +1476,10 @@ export const productLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: productLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return valuedLineElement(model, element, 'product_line_p');
+	}
 };
-
-function adjacentMultiplesLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'adjacent_multiples_line_p');
-	return out_str;
-}
 
 export const adjacentMultiplesLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -1618,13 +1506,10 @@ export const adjacentMultiplesLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: adjacentMultiplesLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'adjacent_multiples_line_p');
+	}
 };
-
-function adjacentDifferencesCountLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'adjacent_differences_count_line_p');
-	return out_str;
-}
 
 export const adjacentDifferencesCountLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -1651,13 +1536,10 @@ export const adjacentDifferencesCountLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: adjacentDifferencesCountLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'adjacent_differences_count_line_p');
+	}
 };
-
-function lookAndSayLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'look_and_say_line_p', true);
-	return out_str;
-}
 
 export const lookandSayLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -1684,13 +1566,10 @@ export const lookandSayLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: lookAndSayLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'look_and_say_line_p', true);
+	}
 };
-
-function zipperLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'zipper_line_p');
-	return out_str;
-}
 
 export const zipperLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -1717,13 +1596,10 @@ export const zipperLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: zipperLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'zipper_line_p');
+	}
 };
-
-function segmentedSumLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = circularValuedLineElement(model, element, 'segmented_sum_line_p');
-	return out_str;
-}
 
 export const segmentedSumLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -1754,13 +1630,10 @@ export const segmentedSumLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: segmentedSumLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return circularValuedLineElement(model, element, 'segmented_sum_line_p');
+	}
 };
-
-function segmentedSumAndRenbanLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'segmented_sum_and_renban_line_p');
-	return out_str;
-}
 
 export const segmentedSumAndRenbanLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -1791,21 +1664,10 @@ export const segmentedSumAndRenbanLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: segmentedSumAndRenbanLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'segmented_sum_and_renban_line_p');
+	}
 };
-
-function adjacentCellsAreMultiplesOfDifferenceLineElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-) {
-	const out_str = simpleLineElement(
-		model,
-		element,
-		'adjacent_cells_are_multiples_of_difference_line_p',
-		false
-	);
-	return out_str;
-}
 
 export const adjacentCellsAreMultiplesOfDifferenceLineInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -1836,7 +1698,14 @@ export const adjacentCellsAreMultiplesOfDifferenceLineInfo: SquareCellElementInf
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: adjacentCellsAreMultiplesOfDifferenceLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(
+			model,
+			element,
+			'adjacent_cells_are_multiples_of_difference_line_p',
+			false
+		);
+	}
 };
 
 export const thermoOrAverageArrowInfo: SquareCellElementInfo = {
@@ -1892,11 +1761,6 @@ function indexerCellsRegionSubsetLineConstraint(
 	return out_str;
 }
 
-function indexerCellsRegionSubsetLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, indexerCellsRegionSubsetLineConstraint);
-	return out_str;
-}
-
 export const indexerCellsRegionSubsetLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
@@ -1916,13 +1780,10 @@ export const indexerCellsRegionSubsetLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: indexerCellsRegionSubsetLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, indexerCellsRegionSubsetLineConstraint);
+	}
 };
-
-function peapodsLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleLineElement(model, element, 'peapods_p');
-	return out_str;
-}
 
 export const peapodsLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -1946,7 +1807,9 @@ export const peapodsLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: peapodsLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'peapods_p');
+	}
 };
 
 /* ----------------------------------------------------------------------------- */
@@ -1966,11 +1829,6 @@ function goldilocksZoneRegionSumLineConstraint(
 	return constraint_str;
 }
 
-function goldilocksZoneRegionSumLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, goldilocksZoneRegionSumLineConstraint);
-	return out_str;
-}
-
 export const goldilocksZoneRegionSumLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
@@ -1986,13 +1844,10 @@ export const goldilocksZoneRegionSumLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: goldilocksZoneRegionSumLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, goldilocksZoneRegionSumLineConstraint);
+	}
 };
-
-function doublersThermometerElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleMultipliersLineElement(model, element, 'strictly_increasing');
-	return out_str;
-}
 
 export const doublersThermometerInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
@@ -2021,19 +1876,11 @@ export const doublersThermometerInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: doublersThermometerElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		const out_str = simpleMultipliersLineElement(model, element, 'strictly_increasing');
+		return out_str;
+	}
 };
-
-function nurikabeRegionSumLineElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = shadedLineElement(
-		model,
-		element,
-		VAR_2D_NAMES.NURIKABE_SHADING,
-		'nurikabe_region_sum_line_p'
-	);
-
-	return out_str;
-}
 
 export const nurikabeRegionSumLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
@@ -2050,5 +1897,12 @@ export const nurikabeRegionSumLineInfo: SquareCellElementInfo = {
 		categories: simpleLineDefaultCategories
 	},
 
-	solver_func: nurikabeRegionSumLineElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return shadedLineElement(
+			model,
+			element,
+			VAR_2D_NAMES.NURIKABE_SHADING,
+			'nurikabe_region_sum_line_p'
+		);
+	}
 };

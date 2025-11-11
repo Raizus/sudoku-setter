@@ -4,9 +4,18 @@ import {
 	HANDLER_TOOL_TYPE,
 	type CenterCornerOrEdgeToolInputOptions
 } from '$input/ToolInputHandlers/types';
-import { cellsToGridVarsStr, simpleElementFunction, VAR_2D_NAMES, type PuzzleModel } from '$src/lib/Solver/solver_utils';
+import {
+	cellsToGridVarsStr,
+	simpleElementFunction,
+	VAR_2D_NAMES,
+	type PuzzleModel
+} from '$src/lib/Solver/solver_utils';
 import type { ParseOptions } from '$src/lib/Solver/value_parsing';
-import { cellEdgeToCellCoords, cornerCoordToAdjCellCoords, type GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
+import {
+	cellEdgeToCellCoords,
+	cornerCoordToAdjCellCoords,
+	type GridCoordI
+} from '$src/lib/utils/SquareCellGridCoords';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import type { Cell } from '../Grid/Cell';
 import type { Grid } from '../Grid/Grid';
@@ -118,7 +127,7 @@ export const rotationallySymmetricGalaxyCenterInfo: SquareCellElementInfo = {
 	negative_constraints: [
 		{
 			toolId: TOOLS.ALL_GALAXY_CENTERS_GIVEN,
-			description: "All galaxy centers are given."
+			description: 'All galaxy centers are given.'
 		}
 	],
 
@@ -208,7 +217,7 @@ export const rotationallySymmetricGalaxyCenterSumInfo: SquareCellElementInfo = {
 		tags: [],
 		categories: DEFAULT_CENTER_EDGE_CORNER_CATEGORIES
 	},
-	
+
 	solver_func: rotationallySymmetricGalaxyCenterSumElement
 };
 
@@ -245,18 +254,6 @@ function yinYangSumOfAdjacentShadedEdgeOrCornerConstraints(
 	return out_str;
 }
 
-function yinYangSumOfAdjacentShadedEdgeOrCornerElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(
-		model,
-		element,
-		yinYangSumOfAdjacentShadedEdgeOrCornerConstraints
-	);
-	return out_str;
-}
-
 export const yinYangSumOfAdjacentShadedEdgeOrCornerInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.CENTER_CORNER_OR_EDGE,
@@ -287,5 +284,7 @@ export const yinYangSumOfAdjacentShadedEdgeOrCornerInfo: SquareCellElementInfo =
 		categories: DEFAULT_CENTER_EDGE_CORNER_CATEGORIES
 	},
 
-	solver_func: yinYangSumOfAdjacentShadedEdgeOrCornerElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, yinYangSumOfAdjacentShadedEdgeOrCornerConstraints);
+	}
 };

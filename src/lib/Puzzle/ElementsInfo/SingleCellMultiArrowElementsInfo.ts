@@ -77,15 +77,6 @@ function sameGalaxyUnobstructedCountArrowsConstraint(grid: Grid, constraint: Cel
 	return out_str;
 }
 
-function sameGalaxyUnobstructedCountArrowsElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = singleCellMultiArrowElementFunction(
-		model,
-		element,
-		sameGalaxyUnobstructedCountArrowsConstraint
-	);
-	return out_str;
-}
-
 export const sameGalaxyUnobstructedCountArrowsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
@@ -100,7 +91,13 @@ export const sameGalaxyUnobstructedCountArrowsInfo: SquareCellElementInfo = {
 		categories: defaultCategories
 	},
 
-	solver_func: sameGalaxyUnobstructedCountArrowsElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return singleCellMultiArrowElementFunction(
+			model,
+			element,
+			sameGalaxyUnobstructedCountArrowsConstraint
+		);
+	}
 };
 
 function yinYangCountUniqueFillominoSameShadingConstraint(
@@ -130,18 +127,6 @@ function yinYangCountUniqueFillominoSameShadingConstraint(
 	return out_str;
 }
 
-function yinYangCountUniqueFillominoSameShadingElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-) {
-	const out_str = singleCellMultiArrowElementFunction(
-		model,
-		element,
-		yinYangCountUniqueFillominoSameShadingConstraint
-	);
-	return out_str;
-}
-
 export const yinYangCountUniqueFillominoSameShadingInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
@@ -156,7 +141,13 @@ export const yinYangCountUniqueFillominoSameShadingInfo: SquareCellElementInfo =
 		categories: defaultCategories
 	},
 
-	solver_func: yinYangCountUniqueFillominoSameShadingElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return singleCellMultiArrowElementFunction(
+			model,
+			element,
+			yinYangCountUniqueFillominoSameShadingConstraint
+		);
+	}
 };
 
 function loopCellsCountArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
@@ -180,15 +171,6 @@ function loopCellsCountArrowsConstraint(grid: Grid, constraint: CellMultiArrowTo
 	return out_str;
 }
 
-function loopCellsCountArrowsElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = singleCellMultiArrowElementFunction(
-		model,
-		element,
-		loopCellsCountArrowsConstraint
-	);
-	return out_str;
-}
-
 export const loopCellCountArrowsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
@@ -203,7 +185,9 @@ export const loopCellCountArrowsInfo: SquareCellElementInfo = {
 		categories: defaultCategories
 	},
 
-	solver_func: loopCellsCountArrowsElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return singleCellMultiArrowElementFunction(model, element, loopCellsCountArrowsConstraint);
+	}
 };
 
 function yinYangSumOfCellsOfOppositeColorConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
@@ -226,15 +210,6 @@ function yinYangSumOfCellsOfOppositeColorConstraint(grid: Grid, constraint: Cell
 	return out_str;
 }
 
-function yinYangSumOfCellsOfOppositeColorElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = singleCellMultiArrowElementFunction(
-		model,
-		element,
-		yinYangSumOfCellsOfOppositeColorConstraint
-	);
-	return out_str;
-}
-
 export const yinYangSumOfCellsOfOppositeColorInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
@@ -249,7 +224,13 @@ export const yinYangSumOfCellsOfOppositeColorInfo: SquareCellElementInfo = {
 		categories: defaultCategories
 	},
 
-	solver_func: yinYangSumOfCellsOfOppositeColorElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return singleCellMultiArrowElementFunction(
+			model,
+			element,
+			yinYangSumOfCellsOfOppositeColorConstraint
+		);
+	}
 };
 
 function yinYangCountShadedCellsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
@@ -353,19 +334,6 @@ function yinYangCombinedShadedCellsCountExceptItselfConstraint(
 	return out_str;
 }
 
-function yinYangCombinedShadedCellsCountExceptItselfElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-) {
-	const out_str = singleCellMultiArrowElementFunction(
-		model,
-		element,
-		yinYangCombinedShadedCellsCountExceptItselfConstraint
-	);
-
-	return out_str;
-}
-
 export const yinYangCombinedShadedCellsCountExceptItselfInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
@@ -380,7 +348,13 @@ export const yinYangCombinedShadedCellsCountExceptItselfInfo: SquareCellElementI
 		categories: defaultCategories
 	},
 
-	solver_func: yinYangCombinedShadedCellsCountExceptItselfElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return singleCellMultiArrowElementFunction(
+			model,
+			element,
+			yinYangCombinedShadedCellsCountExceptItselfConstraint
+		);
+	}
 };
 
 function countCellsNotInTheSameRegionConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
@@ -403,15 +377,6 @@ function countCellsNotInTheSameRegionConstraint(grid: Grid, constraint: CellMult
 	return constraint_str;
 }
 
-function countCellsNotInTheSameRegionElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = singleCellMultiArrowElementFunction(
-		model,
-		element,
-		countCellsNotInTheSameRegionConstraint
-	);
-	return out_str;
-}
-
 export const countCellsNotInTheSameRegionArrowsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
@@ -426,7 +391,13 @@ export const countCellsNotInTheSameRegionArrowsInfo: SquareCellElementInfo = {
 		categories: defaultCategories
 	},
 
-	solver_func: countCellsNotInTheSameRegionElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return singleCellMultiArrowElementFunction(
+			model,
+			element,
+			countCellsNotInTheSameRegionConstraint
+		);
+	}
 };
 
 function countSeenCellsInTheSameRegionConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
@@ -449,18 +420,6 @@ function countSeenCellsInTheSameRegionConstraint(grid: Grid, constraint: CellMul
 	return constraint_str;
 }
 
-function chaosConstructionCountSeenCellsInTheSameRegionElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-) {
-	const out_str = singleCellMultiArrowElementFunction(
-		model,
-		element,
-		countSeenCellsInTheSameRegionConstraint
-	);
-	return out_str;
-}
-
 export const chaosCountSeenCellsInTheSameRegionArrowsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
@@ -475,7 +434,13 @@ export const chaosCountSeenCellsInTheSameRegionArrowsInfo: SquareCellElementInfo
 		categories: defaultCategories
 	},
 
-	solver_func: chaosConstructionCountSeenCellsInTheSameRegionElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return singleCellMultiArrowElementFunction(
+			model,
+			element,
+			countSeenCellsInTheSameRegionConstraint
+		);
+	}
 };
 
 function coldArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
@@ -493,11 +458,6 @@ function coldArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 		out_str += `constraint cold_arrows_p(${cells_vars_str}, ${cell_var});\n`;
 	}
 
-	return out_str;
-}
-
-function coldArrowsElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = singleCellMultiArrowElementFunction(model, element, coldArrowsConstraint);
 	return out_str;
 }
 
@@ -519,7 +479,9 @@ export const coldArrowsInfo: SquareCellElementInfo = {
 		categories: defaultCategories
 	},
 
-	solver_func: coldArrowsElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return singleCellMultiArrowElementFunction(model, element, coldArrowsConstraint);
+	}
 };
 
 function hotArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
@@ -541,11 +503,6 @@ function hotArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	return out_str;
 }
 
-function hotArrowsElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = singleCellMultiArrowElementFunction(model, element, hotArrowsConstraint);
-	return out_str;
-}
-
 export const hotArrowsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
@@ -564,7 +521,9 @@ export const hotArrowsInfo: SquareCellElementInfo = {
 		categories: defaultCategories
 	},
 
-	solver_func: hotArrowsElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return singleCellMultiArrowElementFunction(model, element, hotArrowsConstraint);
+	}
 };
 
 function nurikabeCountIslandCellsArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
@@ -588,15 +547,6 @@ function nurikabeCountIslandCellsArrowsConstraint(grid: Grid, constraint: CellMu
 	return out_str;
 }
 
-function nurikabeCountIslandCellsArrowsElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = singleCellMultiArrowElementFunction(
-		model,
-		element,
-		nurikabeCountIslandCellsArrowsConstraint
-	);
-	return out_str;
-}
-
 export const nurikabeCountIslandCellsArrowsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
@@ -610,7 +560,13 @@ export const nurikabeCountIslandCellsArrowsInfo: SquareCellElementInfo = {
 		tags: [],
 		categories: defaultCategories
 	},
-	solver_func: nurikabeCountIslandCellsArrowsElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return singleCellMultiArrowElementFunction(
+			model,
+			element,
+			nurikabeCountIslandCellsArrowsConstraint
+		);
+	}
 };
 
 function connectFourCountCellsOfSameColorConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
@@ -633,15 +589,6 @@ function connectFourCountCellsOfSameColorConstraint(grid: Grid, constraint: Cell
 	return out_str;
 }
 
-function connectFourCountCellsOfSameColorElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = singleCellMultiArrowElementFunction(
-		model,
-		element,
-		connectFourCountCellsOfSameColorConstraint
-	);
-	return out_str;
-}
-
 export const connectFourCountCellsOfSameColorInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
@@ -656,7 +603,13 @@ export const connectFourCountCellsOfSameColorInfo: SquareCellElementInfo = {
 		categories: defaultCategories
 	},
 
-	solver_func: connectFourCountCellsOfSameColorElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return singleCellMultiArrowElementFunction(
+			model,
+			element,
+			connectFourCountCellsOfSameColorConstraint
+		);
+	}
 };
 
 function nextNumberedRegionDistanceArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
@@ -678,15 +631,6 @@ function nextNumberedRegionDistanceArrowsConstraint(grid: Grid, constraint: Cell
 	return out_str;
 }
 
-function nextNumberedRegionDistanceArrowsElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = singleCellMultiArrowElementFunction(
-		model,
-		element,
-		nextNumberedRegionDistanceArrowsConstraint
-	);
-	return out_str;
-}
-
 export const nextNumberedRegionDistanceArrowsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
@@ -701,7 +645,13 @@ export const nextNumberedRegionDistanceArrowsInfo: SquareCellElementInfo = {
 		categories: defaultCategories
 	},
 
-	solver_func: nextNumberedRegionDistanceArrowsElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return singleCellMultiArrowElementFunction(
+			model,
+			element,
+			nextNumberedRegionDistanceArrowsConstraint
+		);
+	}
 };
 
 function shadedBoundariesCombinedCountArrowsConstraint(
@@ -753,18 +703,6 @@ function shadedBoundariesCombinedCountArrowsConstraint(
 	return out_str;
 }
 
-function shadedBoundariesCombinedCountArrowsElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-) {
-	const out_str = singleCellMultiArrowElementFunction(
-		model,
-		element,
-		shadedBoundariesCombinedCountArrowsConstraint
-	);
-	return out_str;
-}
-
 export const shadedBoundariesCombinedCountArrowsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
@@ -779,5 +717,11 @@ export const shadedBoundariesCombinedCountArrowsInfo: SquareCellElementInfo = {
 		categories: defaultCategories
 	},
 
-	solver_func: shadedBoundariesCombinedCountArrowsElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return singleCellMultiArrowElementFunction(
+			model,
+			element,
+			shadedBoundariesCombinedCountArrowsConstraint
+		);
+	}
 };

@@ -1,11 +1,24 @@
-import { cellsToGridVarsStr, cellToGridVarName, cellToVarName, groupConstraintsByValue, simpleElementFunction, VAR_2D_NAMES, type PuzzleModel } from '$src/lib/Solver/solver_utils';
+import {
+	cellsToGridVarsStr,
+	cellToGridVarName,
+	cellToVarName,
+	groupConstraintsByValue,
+	simpleElementFunction,
+	VAR_2D_NAMES,
+	type PuzzleModel
+} from '$src/lib/Solver/solver_utils';
 import type { SquareCellElementInfo } from '../../ElementInfo';
 import type { Grid } from '../../Grid/Grid';
 import type { CellToolI, ConstraintsElement } from '../../puzzle_schema';
 import { SHAPE_TYPES } from '../../Shape/Shape';
 import { TOOLS } from '../../Tools';
 import { orthogonalRegionSeenCountElement } from './helpers';
-import { DEFAULT_SINGLE_CELL_OPTIONS, DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES, DEFAULT_SQUARE_SHAPE, DEFAULT_VALUED_SINGLE_CELL_OPTIONS } from './SingleCellElementsInfo';
+import {
+	DEFAULT_SINGLE_CELL_OPTIONS,
+	DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES,
+	DEFAULT_SQUARE_SHAPE,
+	DEFAULT_VALUED_SINGLE_CELL_OPTIONS
+} from './SingleCellElementsInfo';
 
 function yinYangShadedCellConstraint(
 	model: PuzzleModel,
@@ -20,11 +33,6 @@ function yinYangShadedCellConstraint(
 	const yin_yang_var = cellToGridVarName(cell, VAR_2D_NAMES.YIN_YANG);
 	const constraint_str = `constraint ${yin_yang_var} == 1;\n`;
 	return constraint_str;
-}
-
-function yinYangShadedCellElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, yinYangShadedCellConstraint);
-	return out_str;
 }
 
 export const yinYangShadedCellInfo: SquareCellElementInfo = {
@@ -42,9 +50,11 @@ export const yinYangShadedCellInfo: SquareCellElementInfo = {
 		description: 'Grey shaded cells are shaded yin yang cells.',
 		tags: [],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
-    },
-    
-    solver_func: yinYangShadedCellElement
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, yinYangShadedCellConstraint);
+	}
 };
 
 function yinYangMinesweeperConstraint(
@@ -66,11 +76,6 @@ function yinYangMinesweeperConstraint(
 	return constraint_str;
 }
 
-function yinYangMinesweeperElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, yinYangMinesweeperConstraint);
-	return out_str;
-}
-
 export const yinYangMinesweeperInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -85,23 +90,16 @@ export const yinYangMinesweeperInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description: "Circles act as 'minesweeper' clues. Cells containing a circle are always unshaded, and their value is the number of shaded cells in the surrounding 3x3 area (i.e. the up to eight cells that touch the circle either orthogonally or diagonally).",
+		description:
+			"Circles act as 'minesweeper' clues. Cells containing a circle are always unshaded, and their value is the number of shaded cells in the surrounding 3x3 area (i.e. the up to eight cells that touch the circle either orthogonally or diagonally).",
 		tags: [],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
-    },
-    
-    solver_func: yinYangMinesweeperElement
-};
+	},
 
-function yinYangSeenUnshadedElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = orthogonalRegionSeenCountElement(
-		model,
-		element,
-		VAR_2D_NAMES.YIN_YANG,
-		'yin_yang_seen_unshaded_p'
-	);
-	return out_str;
-}
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, yinYangMinesweeperConstraint);
+	}
+};
 
 export const yinYangSeenUnshadedCellsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
@@ -117,23 +115,21 @@ export const yinYangSeenUnshadedCellsInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description: 'Black circles represent unshaded cells. A digit on a circle is equal to the number of consecutive unshaded cells (including itself) the circle sees in its row and column.',
+		description:
+			'Black circles represent unshaded cells. A digit on a circle is equal to the number of consecutive unshaded cells (including itself) the circle sees in its row and column.',
 		tags: [],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
-    },
-    
-    solver_func: yinYangSeenUnshadedElement
-};
+	},
 
-function yinYangSeenShadedElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = orthogonalRegionSeenCountElement(
-		model,
-		element,
-		VAR_2D_NAMES.YIN_YANG,
-		'yin_yang_seen_shaded_p'
-	);
-	return out_str;
-}
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return orthogonalRegionSeenCountElement(
+			model,
+			element,
+			VAR_2D_NAMES.YIN_YANG,
+			'yin_yang_seen_unshaded_p'
+		);
+	}
+};
 
 export const yinYangSeenShadedCellsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
@@ -149,23 +145,21 @@ export const yinYangSeenShadedCellsInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description: 'Yellow circles represent shaded cells. A digit on a circle is equal to the number of consecutive shaded cells (including itself) the circle sees in its row and column.',
+		description:
+			'Yellow circles represent shaded cells. A digit on a circle is equal to the number of consecutive shaded cells (including itself) the circle sees in its row and column.',
 		tags: [],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
-    },
-    
-    solver_func: yinYangSeenShadedElement
-};
+	},
 
-function yinYangSeenSameShadeElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = orthogonalRegionSeenCountElement(
-		model,
-		element,
-		VAR_2D_NAMES.YIN_YANG,
-		'yin_yang_seen_same_shade_p'
-	);
-	return out_str;
-}
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return orthogonalRegionSeenCountElement(
+			model,
+			element,
+			VAR_2D_NAMES.YIN_YANG,
+			'yin_yang_seen_shaded_p'
+		);
+	}
+};
 
 export const yinYangSeenSameShadeCellsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
@@ -175,12 +169,20 @@ export const yinYangSeenSameShadeCellsInfo: SquareCellElementInfo = {
 	shape: DEFAULT_SQUARE_SHAPE,
 
 	meta: {
-		description: 'A digit on a black square is equal to the number of consecutive shaded cells (including itself) the circle sees in its row and column, where cells of the other color block vision.',
+		description:
+			'A digit on a black square is equal to the number of consecutive shaded cells (including itself) the circle sees in its row and column, where cells of the other color block vision.',
 		tags: [],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
-    },
-    
-    solver_func: yinYangSeenSameShadeElement
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return orthogonalRegionSeenCountElement(
+			model,
+			element,
+			VAR_2D_NAMES.YIN_YANG,
+			'yin_yang_seen_same_shade_p'
+		);
+	}
 };
 
 function yinYangAdjacentSameShadeCountConstraint(
@@ -202,11 +204,6 @@ function yinYangAdjacentSameShadeCountConstraint(
 	return constraint_str;
 }
 
-function yinYangAdjacentSameShadeCountElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, yinYangAdjacentSameShadeCountConstraint);
-	return out_str;
-}
-
 export const yinYangAdjacentSameShadeCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -222,12 +219,15 @@ export const yinYangAdjacentSameShadeCountInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description: "Numbers in cells with yellow diamonds indicate how many of that cell's (up to four) orthogonal neighbours share the same shading as the cell.",
+		description:
+			"Numbers in cells with yellow diamonds indicate how many of that cell's (up to four) orthogonal neighbours share the same shading as the cell.",
 		tags: [],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
-    },
-    
-    solver_func: yinYangAdjacentSameShadeCountElement
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, yinYangAdjacentSameShadeCountConstraint);
+	}
 };
 
 function yinYangShadedNeighboursCountConstraint(
@@ -248,11 +248,6 @@ function yinYangShadedNeighboursCountConstraint(
 	return constraint_str;
 }
 
-function yinYangShadedNeighboursCountElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, yinYangShadedNeighboursCountConstraint);
-	return out_str;
-}
-
 export const yinYangShadedNeighboursCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -269,12 +264,15 @@ export const yinYangShadedNeighboursCountInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description: 'Values in cells with ocatgons give the number of shaded cells in the (up to 8) surrounding cells.',
+		description:
+			'Values in cells with ocatgons give the number of shaded cells in the (up to 8) surrounding cells.',
 		tags: [],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
-    },
-    
-    solver_func: yinYangShadedNeighboursCountElement
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, yinYangShadedNeighboursCountConstraint);
+	}
 };
 
 function yinYangLabeledShadeCellElement(model: PuzzleModel, element: ConstraintsElement) {
@@ -314,7 +312,7 @@ export const yinYangLabeledShadeCellInfo: SquareCellElementInfo = {
 		description: 'Cells in cages with the same label have the yin yang shading.',
 		tags: [],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
-    },
-    
-    solver_func: yinYangLabeledShadeCellElement
+	},
+
+	solver_func: yinYangLabeledShadeCellElement
 };

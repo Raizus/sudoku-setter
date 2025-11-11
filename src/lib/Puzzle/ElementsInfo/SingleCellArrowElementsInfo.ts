@@ -67,11 +67,6 @@ function sashiganeArrowPointsToBendConstraint(grid: Grid, constraint: CellArrowT
 	return out_str;
 }
 
-function sashiganeArrowPointsToBendElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleCellArrowElement(model, element, sashiganeArrowPointsToBendConstraint);
-	return out_str;
-}
-
 export const sashiganeArrowPointsToBendInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
 
@@ -90,7 +85,9 @@ export const sashiganeArrowPointsToBendInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_ARROW_CATEGORIES
 	},
 
-	solver_func: sashiganeArrowPointsToBendElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleCellArrowElement(model, element, sashiganeArrowPointsToBendConstraint);
+	}
 };
 
 function thermoSightlineLoopArrowConstraint(grid: Grid, constraint: CellArrowToolI) {
@@ -111,11 +108,6 @@ function thermoSightlineLoopArrowConstraint(grid: Grid, constraint: CellArrowToo
 	return constraint_str;
 }
 
-function thermoSightlineLoopArrowElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleCellArrowElement(model, element, thermoSightlineLoopArrowConstraint);
-	return out_str;
-}
-
 export const thermoSightlineLoopArrowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
 
@@ -134,7 +126,9 @@ export const thermoSightlineLoopArrowInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_ARROW_CATEGORIES
 	},
 
-	solver_func: thermoSightlineLoopArrowElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleCellArrowElement(model, element, thermoSightlineLoopArrowConstraint);
+	}
 };
 
 function internalLoopSkyscrapersConstraint(grid: Grid, constraint: CellArrowToolI) {
@@ -155,11 +149,6 @@ function internalLoopSkyscrapersConstraint(grid: Grid, constraint: CellArrowTool
 	return constraint_str;
 }
 
-function internalLoopSkyscrapersElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleCellArrowElement(model, element, internalLoopSkyscrapersConstraint);
-	return out_str;
-}
-
 export const internalLoopSkyscrapersInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
 
@@ -178,7 +167,9 @@ export const internalLoopSkyscrapersInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_ARROW_CATEGORIES
 	},
 
-	solver_func: internalLoopSkyscrapersElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleCellArrowElement(model, element, internalLoopSkyscrapersConstraint);
+	}
 };
 
 function skyscrapersArrowConstraint(grid: Grid, constraint: CellArrowToolI) {
@@ -193,11 +184,6 @@ function skyscrapersArrowConstraint(grid: Grid, constraint: CellArrowToolI) {
 	const cells_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
 
 	const out_str = `constraint skyscrapers_p(${cells_vars}, ${cell_var});\n`;
-	return out_str;
-}
-
-function skyscrapersArrowElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleCellArrowElement(model, element, skyscrapersArrowConstraint);
 	return out_str;
 }
 
@@ -219,5 +205,7 @@ export const skyscrapersArrowInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_ARROW_CATEGORIES
 	},
 
-	solver_func: skyscrapersArrowElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleCellArrowElement(model, element, skyscrapersArrowConstraint);
+	}
 };

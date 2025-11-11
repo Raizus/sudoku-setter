@@ -4,12 +4,25 @@ import {
 	type OutsideDirectionToolInputOptions
 } from '$input/ToolInputHandlers/types';
 import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
-import { cellsToGridVarsStr, cellToGridVarName, simpleElementFunction, VAR_2D_NAMES, type PuzzleModel } from '$src/lib/Solver/solver_utils';
+import {
+	cellsToGridVarsStr,
+	cellToGridVarName,
+	simpleElementFunction,
+	VAR_2D_NAMES,
+	type PuzzleModel
+} from '$src/lib/Solver/solver_utils';
 import type { SquareCellElementInfo } from '../../ElementInfo';
 import type { Grid } from '../../Grid/Grid';
 import type { ConstraintsElement, OutsideDirectionToolI } from '../../puzzle_schema';
 import { outsideEdgeUsage } from '../../ToolUsage';
-import { defaultOutsideDirectionValueUpdater, getOutsideDirectionConstraintVars, getParsingResult, OUTSIDE_DEFAULT_SHAPE, simpleOutsideDirectionElement, validateOutsideDirectionValue } from './helpers';
+import {
+	defaultOutsideDirectionValueUpdater,
+	getOutsideDirectionConstraintVars,
+	getParsingResult,
+	OUTSIDE_DEFAULT_SHAPE,
+	simpleOutsideDirectionElement,
+	validateOutsideDirectionValue
+} from './helpers';
 
 const outsideEdgeDefaultCategories = [
 	TOOL_CATEGORIES.OUTSIDE_EDGE_CONSTRAINT,
@@ -53,11 +66,6 @@ function sandwichSumConstraint(
 	return out_str;
 }
 
-function sandwichSumElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, sandwichSumConstraint);
-	return out_str;
-}
-
 export const sandwichSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
@@ -73,14 +81,12 @@ export const sandwichSumInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	},
 
-	solver_func: sandwichSumElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, sandwichSumConstraint);
+	}
 };
 
-
-function mysterySandwichSumElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-) {
+function mysterySandwichSumElement(model: PuzzleModel, element: ConstraintsElement) {
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return '';
@@ -165,11 +171,6 @@ function sandwichSumXorXSumConstraint(
 	return out_str;
 }
 
-function sandwichSumXorXSumElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, sandwichSumXorXSumConstraint);
-	return out_str;
-}
-
 export const sandwichSumXorXSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
@@ -185,13 +186,10 @@ export const sandwichSumXorXSumInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	},
 
-	solver_func: sandwichSumXorXSumElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, sandwichSumXorXSumConstraint);
+	}
 };
-
-function xSumElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, element, 'x_sum_p');
-	return out_str;
-}
 
 export const xSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
@@ -208,13 +206,10 @@ export const xSumInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	},
 
-	solver_func: xSumElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleOutsideDirectionElement(model, element, 'x_sum_p');
+	}
 };
-
-function shortsightedXSumElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, element, 'shortsighted_x_sum_p');
-	return out_str;
-}
 
 export const shortsightedXSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
@@ -231,13 +226,10 @@ export const shortsightedXSumInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	},
 
-	solver_func: shortsightedXSumElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleOutsideDirectionElement(model, element, 'shortsighted_x_sum_p');
+	}
 };
-
-function shiftedXSumElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, element, 'shifted_x_sum_p');
-	return out_str;
-}
 
 export const shiftedXSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
@@ -254,13 +246,10 @@ export const shiftedXSumInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	},
 
-	solver_func: shiftedXSumElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleOutsideDirectionElement(model, element, 'shifted_x_sum_p');
+	}
 };
-
-function brokenXSumElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, element, 'broken_x_sum_p');
-	return out_str;
-}
 
 export const brokenXSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
@@ -277,13 +266,10 @@ export const brokenXSumInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	},
 
-	solver_func: brokenXSumElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleOutsideDirectionElement(model, element, 'broken_x_sum_p');
+	}
 };
-
-function xSumSkyscrapersElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, element, 'x_sum_skyscrapers_p');
-	return out_str;
-}
 
 export const xSumSkyscrapersInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
@@ -300,13 +286,10 @@ export const xSumSkyscrapersInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	},
 
-	solver_func: xSumSkyscrapersElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleOutsideDirectionElement(model, element, 'x_sum_skyscrapers_p');
+	}
 };
-
-function battlefieldElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, element, 'battlefield_p');
-	return out_str;
-}
 
 export const battlefieldInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
@@ -323,13 +306,10 @@ export const battlefieldInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	},
 
-	solver_func: battlefieldElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleOutsideDirectionElement(model, element, 'battlefield_p');
+	}
 };
-
-function skyscrapersElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, element, 'skyscrapers_p');
-	return out_str;
-}
 
 export const skyscrapersInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
@@ -345,7 +325,9 @@ export const skyscrapersInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	},
 
-	solver_func: skyscrapersElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleOutsideDirectionElement(model, element, 'skyscrapers_p');
+	}
 };
 
 function xIndexConstraint(
@@ -371,11 +353,6 @@ function xIndexConstraint(
 	return out_str;
 }
 
-function xIndexElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, xIndexConstraint);
-	return out_str;
-}
-
 export const xIndexInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
@@ -391,13 +368,10 @@ export const xIndexInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	},
 
-	solver_func: xIndexElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, xIndexConstraint);
+	}
 };
-
-function risingStreakElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, element, 'rising_streak_p');
-	return out_str;
-}
 
 export const risingStreakInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
@@ -414,7 +388,9 @@ export const risingStreakInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	},
 
-	solver_func: risingStreakElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleOutsideDirectionElement(model, element, 'rising_streak_p');
+	}
 };
 
 export const rowOrColumnRankInfo: SquareCellElementInfo = {
@@ -455,18 +431,6 @@ function outsideEdgeYinYangAdjacentSumOfShadedConstraint(
 	return '';
 }
 
-function outsideEdgeYinYangAdjacentSumOfShadedElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(
-		model,
-		element,
-		outsideEdgeYinYangAdjacentSumOfShadedConstraint
-	);
-	return out_str;
-}
-
 export const outsideEdgeYinYangSumOfShadedInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
@@ -482,13 +446,10 @@ export const outsideEdgeYinYangSumOfShadedInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	},
 
-	solver_func: outsideEdgeYinYangAdjacentSumOfShadedElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, outsideEdgeYinYangAdjacentSumOfShadedConstraint);
+	}
 };
-
-function outsideConsecutiveSumElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleOutsideDirectionElement(model, element, 'outside_consecutive_sum_p');
-	return out_str;
-}
 
 export const outsideConsecutiveSumInfo: SquareCellElementInfo = {
 	inputOptions: {
@@ -511,9 +472,10 @@ export const outsideConsecutiveSumInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	},
 
-	solver_func: outsideConsecutiveSumElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleOutsideDirectionElement(model, element, 'outside_consecutive_sum_p');
+	}
 };
-
 
 function loopwhichesConstraint(
 	model: PuzzleModel,
@@ -537,11 +499,6 @@ function loopwhichesConstraint(
 	return '';
 }
 
-function loopwhichesElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, loopwhichesConstraint);
-	return out_str;
-}
-
 export const loopwhichesInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
@@ -563,7 +520,9 @@ export const loopwhichesInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	},
 
-	solver_func: loopwhichesElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, loopwhichesConstraint);
+	}
 };
 
 function chaosConstructionSumOfFirstEachRegionConstraint(
@@ -593,18 +552,6 @@ function chaosConstructionSumOfFirstEachRegionConstraint(
 	return out_str;
 }
 
-function chaosConstructionSumOfFirstEachRegionElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(
-		model,
-		element,
-		chaosConstructionSumOfFirstEachRegionConstraint
-	);
-	return out_str;
-}
-
 export const chaosConstructionSumOfFirstEachRegionInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
@@ -626,7 +573,9 @@ export const chaosConstructionSumOfFirstEachRegionInfo: SquareCellElementInfo = 
 		categories: outsideEdgeDefaultCategories
 	},
 
-	solver_func: chaosConstructionSumOfFirstEachRegionElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, chaosConstructionSumOfFirstEachRegionConstraint);
+	}
 };
 
 function chaosConstructionXIndexRegionConstraint(
@@ -649,11 +598,6 @@ function chaosConstructionXIndexRegionConstraint(
 	return out_str;
 }
 
-function chaosConstructionXIndexRegionElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, chaosConstructionXIndexRegionConstraint);
-	return out_str;
-}
-
 export const chaosConstructionXIndexRegionInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
@@ -673,7 +617,9 @@ export const chaosConstructionXIndexRegionInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	},
 
-	solver_func: chaosConstructionXIndexRegionElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, chaosConstructionXIndexRegionConstraint);
+	}
 };
 
 function chaosConstructionXSumRegionBordersConstraint(
@@ -703,18 +649,6 @@ function chaosConstructionXSumRegionBordersConstraint(
 	return out_str;
 }
 
-function chaosConstructionXSumRegionBordersElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(
-		model,
-		element,
-		chaosConstructionXSumRegionBordersConstraint
-	);
-	return out_str;
-}
-
 export const chaosConstructionXSumRegionBordersInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
@@ -736,7 +670,9 @@ export const chaosConstructionXSumRegionBordersInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	},
 
-	solver_func: chaosConstructionXSumRegionBordersElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, chaosConstructionXSumRegionBordersConstraint);
+	}
 };
 
 function pentominoBorderCountConstraint(
@@ -764,11 +700,6 @@ function pentominoBorderCountConstraint(
 	return out_str;
 }
 
-function pentominoBorderCountElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, pentominoBorderCountConstraint);
-	return out_str;
-}
-
 export const pentominoBorderCountInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
@@ -790,5 +721,7 @@ export const pentominoBorderCountInfo: SquareCellElementInfo = {
 		categories: outsideEdgeDefaultCategories
 	},
 
-	solver_func: pentominoBorderCountElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, pentominoBorderCountConstraint);
+	}
 };

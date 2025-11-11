@@ -13,10 +13,7 @@ import {
 } from '$src/lib/Solver/solver_utils';
 import type { ArrowToolI, ConstraintsElement } from '../puzzle_schema';
 import type { Grid } from '../Grid/Grid';
-import {
-	coordsToDirection,
-	type GridCoordI
-} from '$src/lib/utils/SquareCellGridCoords';
+import { coordsToDirection, type GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
 
 const DEFAULT_ARROW_CATEGORIES = [
 	TOOL_CATEGORIES.ARROW_CONSTRAINT,
@@ -66,12 +63,6 @@ function simpleArrowElement(grid: Grid, element: ConstraintsElement, predicate: 
 	return out_str;
 }
 
-function arrowElement(model: PuzzleModel, element: ConstraintsElement) {
-	const grid = model.puzzle.grid;
-	const out_str = simpleArrowElement(grid, element, 'arrow_p');
-	return out_str;
-}
-
 export const arrowInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW },
 
@@ -96,7 +87,9 @@ export const arrowInfo: SquareCellElementInfo = {
 		categories: DEFAULT_ARROW_CATEGORIES
 	},
 
-	solver_func: arrowElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleArrowElement(model.puzzle.grid, element, 'arrow_p');
+	}
 };
 
 function averageArrowConstraint(
@@ -117,11 +110,6 @@ function averageArrowConstraint(
 			out_str += constraint_str;
 		}
 	}
-	return out_str;
-}
-
-function averageArrowElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, averageArrowConstraint);
 	return out_str;
 }
 
@@ -148,14 +136,10 @@ export const averageArrowInfo: SquareCellElementInfo = {
 		categories: DEFAULT_ARROW_CATEGORIES
 	},
 
-	solver_func: averageArrowElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, averageArrowConstraint);
+	}
 };
-
-function bulbousArrowElement(model: PuzzleModel, element: ConstraintsElement) {
-	const grid = model.puzzle.grid;
-	const out_str = simpleArrowElement(grid, element, 'bulbous_arrow_p');
-	return out_str;
-}
 
 export const bulbousArrowInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW, allowSelfIntersection: true },
@@ -183,7 +167,9 @@ export const bulbousArrowInfo: SquareCellElementInfo = {
 		categories: DEFAULT_ARROW_CATEGORIES
 	},
 
-	solver_func: bulbousArrowElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleArrowElement(model.puzzle.grid, element, 'bulbous_arrow_p');
+	}
 };
 
 export const squareRootArrowInfo: SquareCellElementInfo = {
@@ -238,11 +224,6 @@ function chaosConstructionArrowConstraint(
 	return out_str;
 }
 
-function chaosConstructionArrowElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, chaosConstructionArrowConstraint);
-	return out_str;
-}
-
 export const chaosConstructionArrowInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW },
 
@@ -267,7 +248,9 @@ export const chaosConstructionArrowInfo: SquareCellElementInfo = {
 		categories: DEFAULT_ARROW_CATEGORIES
 	},
 
-	solver_func: chaosConstructionArrowElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, chaosConstructionArrowConstraint);
+	}
 };
 
 function loopPointerArrowConstraint(
@@ -298,7 +281,6 @@ function loopPointerArrowConstraint(
 	for (const line of lines_cells) {
 		if (line.length <= 1) continue;
 
-
 		const arrow_tip_cell = line[line.length - 1];
 		const arrow_tip_var = cellToGridVarName(arrow_tip_cell, VAR_2D_NAMES.BOARD);
 		const arrow_before_tip_cell = line[line.length - 2];
@@ -327,11 +309,6 @@ function loopPointerArrowConstraint(
 	return out_str;
 }
 
-function loopPointerArrowElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, loopPointerArrowConstraint);
-	return out_str;
-}
-
 export const loopPointerArrowInfo: SquareCellElementInfo = {
 	inputOptions: { type: HANDLER_TOOL_TYPE.ARROW },
 
@@ -357,5 +334,7 @@ export const loopPointerArrowInfo: SquareCellElementInfo = {
 		categories: DEFAULT_ARROW_CATEGORIES
 	},
 
-	solver_func: loopPointerArrowElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, loopPointerArrowConstraint);
+	}
 };

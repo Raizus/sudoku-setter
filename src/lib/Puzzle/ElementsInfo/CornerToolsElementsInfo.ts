@@ -336,7 +336,7 @@ export const chaosConstructionCornerCellsBelongToExacltyThreeRegionsInfo: Square
 
 	shape: {
 		type: SHAPE_TYPES.SQUARE,
-		r: { editable: false, value: 0.10 },
+		r: { editable: false, value: 0.1 },
 		strokeWidth: { editable: false, value: 0.023 },
 		stroke: { editable: false, value: 'black' },
 		fill: { editable: false, value: 'black' }
@@ -366,18 +366,6 @@ function chaosConstructionCornerCellsBelongToSameRegionConstraint(
 	return constraint_str;
 }
 
-function chaosConstructionCornerCellsBelongToSameRegionElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(
-		model,
-		element,
-		chaosConstructionCornerCellsBelongToSameRegionConstraint
-	);
-	return out_str;
-}
-
 export const chaosConstructionCornerCellsBelongToSameRegionsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CORNER_OPTIONS,
 
@@ -385,7 +373,7 @@ export const chaosConstructionCornerCellsBelongToSameRegionsInfo: SquareCellElem
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: 0.10 },
+		r: { editable: false, value: 0.1 },
 		strokeWidth: { editable: false, value: 0.023 },
 		stroke: { editable: false, value: 'black' },
 		fill: { editable: false, value: 'var(--grid-background-color)' }
@@ -398,7 +386,13 @@ export const chaosConstructionCornerCellsBelongToSameRegionsInfo: SquareCellElem
 		categories: DEFAULT_UNTYPABLE_CORNER_CATEGORIES
 	},
 
-	solver_func: chaosConstructionCornerCellsBelongToSameRegionElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(
+			model,
+			element,
+			chaosConstructionCornerCellsBelongToSameRegionConstraint
+		);
+	}
 };
 
 function productSquareElement(model: PuzzleModel, element: ConstraintsElement) {

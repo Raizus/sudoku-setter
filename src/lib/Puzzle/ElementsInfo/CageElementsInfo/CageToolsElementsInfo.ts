@@ -4,7 +4,15 @@ import {
 	defaultValueUpdater,
 	type ValueValidatorOptions
 } from '$src/lib/InputHandlers/InputHandler';
-import { allDifferentConstraint, cellsFromCoords, cellsToGridVarsStr, groupConstraintsByValue, simpleElementFunction, VAR_2D_NAMES, type PuzzleModel } from '$src/lib/Solver/solver_utils';
+import {
+	allDifferentConstraint,
+	cellsFromCoords,
+	cellsToGridVarsStr,
+	groupConstraintsByValue,
+	simpleElementFunction,
+	VAR_2D_NAMES,
+	type PuzzleModel
+} from '$src/lib/Solver/solver_utils';
 import type { SquareCellElementInfo } from '../../ElementInfo';
 import type { Cell } from '../../Grid/Cell';
 import type { Grid } from '../../Grid/Grid';
@@ -12,7 +20,15 @@ import { SHAPE_TYPES, type EditableShapeI } from '../../Shape/Shape';
 import { cageUsage, typableCageUsage } from '../../ToolUsage';
 import { TOOL_CATEGORIES, TOOLS } from '../../Tools';
 import type { CageToolI, ConstraintsElement } from '../../puzzle_schema';
-import { getAdjacentCages, getCageNeighbours, getCageVars, getParsingResult, simpleCageElement, valuedCageConstraint, valuedCageElement } from './cage_solver_utils';
+import {
+	getAdjacentCages,
+	getCageNeighbours,
+	getCageVars,
+	getParsingResult,
+	simpleCageElement,
+	valuedCageConstraint,
+	valuedCageElement
+} from './cage_solver_utils';
 
 const nonTypableCageDefaultCategories = [
 	TOOL_CATEGORIES.CAGE_CONSTRAINT,
@@ -176,11 +192,6 @@ function uniqueDigitsCageConstraint(
 	return '';
 }
 
-function uniqueDigitsCageElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, uniqueDigitsCageConstraint);
-	return out_str;
-}
-
 export const uniqueDigitsCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
@@ -203,7 +214,9 @@ export const uniqueDigitsCageInfo: SquareCellElementInfo = {
 		categories: typableCageDefaultCategories
 	},
 
-	solver_func: uniqueDigitsCageElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, uniqueDigitsCageConstraint);
+	}
 };
 
 function invertedKillerCageConstraint(
@@ -231,11 +244,6 @@ function invertedKillerCageConstraint(
 	return out_str;
 }
 
-function invertedKillerCageElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, invertedKillerCageConstraint);
-	return out_str;
-}
-
 export const invertedKillerCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
@@ -251,13 +259,10 @@ export const invertedKillerCageInfo: SquareCellElementInfo = {
 		categories: typableCageDefaultCategories
 	},
 
-	solver_func: invertedKillerCageElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, invertedKillerCageConstraint);
+	}
 };
-
-function sumCageElement(model: PuzzleModel, element: ConstraintsElement) {
-	const result = valuedCageElement(model, element, 'sum_cage_p');
-	return result[0];
-}
 
 export const sumCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
@@ -274,13 +279,11 @@ export const sumCageInfo: SquareCellElementInfo = {
 		categories: typableCageDefaultCategories
 	},
 
-	solver_func: sumCageElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		const result = valuedCageElement(model, element, 'sum_cage_p');
+		return result[0];
+	}
 };
-
-function sumCageLookAndSayElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleCageElement(model, element, 'sum_cage_look_and_say_p');
-	return out_str;
-}
 
 export const sumCageLookAndSayInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_UNVALUED_CAGE_OPTIONS,
@@ -297,13 +300,10 @@ export const sumCageLookAndSayInfo: SquareCellElementInfo = {
 		categories: nonTypableCageDefaultCategories
 	},
 
-	solver_func: sumCageLookAndSayElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleCageElement(model, element, 'sum_cage_look_and_say_p');
+	}
 };
-
-function parityBalanceCageElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleCageElement(model, element, 'parity_balance_cage_p');
-	return out_str;
-}
 
 export const parityBalanceCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_UNVALUED_CAGE_OPTIONS,
@@ -320,13 +320,10 @@ export const parityBalanceCageInfo: SquareCellElementInfo = {
 		categories: nonTypableCageDefaultCategories
 	},
 
-	solver_func: parityBalanceCageElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleCageElement(model, element, 'parity_balance_cage_p');
+	}
 };
-
-function divisibleKillerCageElement(model: PuzzleModel, element: ConstraintsElement) {
-	const result = valuedCageElement(model, element, 'divisible_killer_cage_p');
-	return result[0];
-}
 
 export const divisibleKillerCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
@@ -342,14 +339,12 @@ export const divisibleKillerCageInfo: SquareCellElementInfo = {
 		tags: [],
 		categories: typableCageDefaultCategories
 	},
-	
-	solver_func: divisibleKillerCageElement
-};
 
-function spotlightCageElement(model: PuzzleModel, element: ConstraintsElement) {
-	const result = valuedCageElement(model, element, 'spotlight_cage_p');
-	return result[0];
-}
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		const result = valuedCageElement(model, element, 'divisible_killer_cage_p');
+		return result[0];
+	}
+};
 
 export const spotlightCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
@@ -366,7 +361,10 @@ export const spotlightCageInfo: SquareCellElementInfo = {
 		categories: typableCageDefaultCategories
 	},
 
-	solver_func: spotlightCageElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		const result = valuedCageElement(model, element, 'spotlight_cage_p');
+		return result[0];
+	}
 };
 
 export const putteriaCageInfo: SquareCellElementInfo = {
@@ -470,11 +468,6 @@ function vaultedCageConstraint(
 	return out_str;
 }
 
-function vaultedCageElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, vaultedCageConstraint);
-	return out_str;
-}
-
 export const vaultedCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
@@ -490,7 +483,9 @@ export const vaultedCageInfo: SquareCellElementInfo = {
 		categories: typableCageDefaultCategories
 	},
 
-	solver_func: vaultedCageElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, vaultedCageConstraint);
+	}
 };
 
 function vaultedKillerCageConstraint(
@@ -502,14 +497,9 @@ function vaultedKillerCageConstraint(
 	const vars = getCageVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
 
-	let out_str = `constraint all_different(${vars_str});\n`
+	let out_str = `constraint all_different(${vars_str});\n`;
 	out_str += vaultedCageConstraint(model, grid, c_id, constraint);
 
-	return out_str;
-}
-
-function vaultedKillerCageElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, vaultedKillerCageConstraint);
 	return out_str;
 }
 
@@ -528,7 +518,9 @@ export const vaultedKillerCageInfo: SquareCellElementInfo = {
 		categories: typableCageDefaultCategories
 	},
 
-	solver_func: vaultedKillerCageElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, vaultedKillerCageConstraint);
+	}
 };
 
 export const aquariumCageInfo: SquareCellElementInfo = {
@@ -549,12 +541,11 @@ export const aquariumCageInfo: SquareCellElementInfo = {
 
 function yinYangValuedCageConstraint(
 	model: PuzzleModel,
-	grid: Grid,
 	c_id: string,
 	constraint: CageToolI,
 	predicate: string
 ) {
-	const cells = cellsFromCoords(grid, constraint.cells);
+	const cells = cellsFromCoords(model.puzzle.grid, constraint.cells);
 	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
 
 	const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
@@ -570,7 +561,6 @@ function yinYangValuedCageConstraint(
 
 function yinYangValuedCageElement(
 	model: PuzzleModel,
-	grid: Grid,
 	element: ConstraintsElement,
 	predicate: string
 ) {
@@ -581,25 +571,12 @@ function yinYangValuedCageElement(
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = yinYangValuedCageConstraint(
 			model,
-			grid,
 			c_id,
 			constraint as CageToolI,
 			predicate
 		);
 		out_str += constraint_str;
 	}
-	return out_str;
-}
-
-function yinYangAntithesisKillerCageElement(model: PuzzleModel, element: ConstraintsElement) {
-	// Digits in cages cannot repeat and must sum to the small clue in the top left corner of the cage. However, shaded cells are treated as negative. In other words, the cage total is the sum of unshaded cells minus the sum of shaded cells.
-	const grid = model.puzzle.grid;
-	const out_str = yinYangValuedCageElement(
-		model,
-		grid,
-		element,
-		'yin_yang_antithesis_killer_cage_p'
-	);
 	return out_str;
 }
 
@@ -618,20 +595,10 @@ export const yinYangAntithesisKillerCageInfo: SquareCellElementInfo = {
 		categories: typableCageDefaultCategories
 	},
 
-	solver_func: yinYangAntithesisKillerCageElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return yinYangValuedCageElement(model, element, 'yin_yang_antithesis_killer_cage_p');
+	}
 };
-
-function yinYangBreakevenKillerCageElement(model: PuzzleModel, element: ConstraintsElement) {
-	// Digits in cages cannot repeat and must sum to the small clue in the top left corner of the cage. However, shaded cells are treated as negative. In other words, the cage total is the sum of unshaded cells minus the sum of shaded cells.
-	const grid = model.puzzle.grid;
-	const out_str = yinYangValuedCageElement(
-		model,
-		grid,
-		element,
-		'yin_yang_breakeven_killer_cage_p'
-	);
-	return out_str;
-}
 
 export const yinYangBreakevenKillerCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
@@ -648,13 +615,12 @@ export const yinYangBreakevenKillerCageInfo: SquareCellElementInfo = {
 		categories: typableCageDefaultCategories
 	},
 
-	solver_func: yinYangBreakevenKillerCageElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return yinYangValuedCageElement(model, element, 'yin_yang_breakeven_killer_cage_p');
+	}
 };
 
-function yinYangEqualSumCageConstraint(
-	grid: Grid,
-	constraint: CageToolI,
-) {
+function yinYangEqualSumCageConstraint(grid: Grid, constraint: CageToolI) {
 	const cells = cellsFromCoords(grid, constraint.cells);
 	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
 
@@ -715,11 +681,6 @@ function doublersKillerCageConstraint(
 	return '';
 }
 
-function doublersKillerCageElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, doublersKillerCageConstraint);
-	return out_str;
-}
-
 export const doublersKillerCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
@@ -735,7 +696,9 @@ export const doublersKillerCageInfo: SquareCellElementInfo = {
 		categories: typableCageDefaultCategories
 	},
 
-	solver_func: doublersKillerCageElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, doublersKillerCageConstraint);
+	}
 };
 
 function negatorsKillerCageConstraint(
@@ -757,11 +720,6 @@ function negatorsKillerCageConstraint(
 	return '';
 }
 
-function negatorsKillerCageElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = simpleElementFunction(model, element, negatorsKillerCageConstraint);
-	return out_str;
-}
-
 export const negatorsKillerCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 
@@ -777,7 +735,9 @@ export const negatorsKillerCageInfo: SquareCellElementInfo = {
 		categories: typableCageDefaultCategories
 	},
 
-	solver_func: negatorsKillerCageElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, negatorsKillerCageConstraint);
+	}
 };
 
 function shadedRowCollumnBoxCountersShadedDigitSumCageConstraint(
@@ -789,7 +749,10 @@ function shadedRowCollumnBoxCountersShadedDigitSumCageConstraint(
 	const cells = cellsFromCoords(grid, constraint.cells);
 	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
 
-	const shaded_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.SHADED_ROW_COLUMN_BOX_COUNTERS_SHADED_GRID);
+	const shaded_vars_str = cellsToGridVarsStr(
+		cells,
+		VAR_2D_NAMES.SHADED_ROW_COLUMN_BOX_COUNTERS_SHADED_GRID
+	);
 
 	const value = constraint.value;
 	if (value) {
@@ -798,18 +761,6 @@ function shadedRowCollumnBoxCountersShadedDigitSumCageConstraint(
 		return constraint_str;
 	}
 	return '';
-}
-
-function shadedRowCollumnBoxCountersShadedDigitSumCageElement(
-	model: PuzzleModel,
-	element: ConstraintsElement
-) {
-	const out_str = simpleElementFunction(
-		model,
-		element,
-		shadedRowCollumnBoxCountersShadedDigitSumCageConstraint
-	);
-	return out_str;
 }
 
 export const shadedRowCollumnBoxCountersShadedDigitSumCageInfo: SquareCellElementInfo = {
@@ -826,5 +777,11 @@ export const shadedRowCollumnBoxCountersShadedDigitSumCageInfo: SquareCellElemen
 		categories: typableCageDefaultCategories
 	},
 
-	solver_func: shadedRowCollumnBoxCountersShadedDigitSumCageElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(
+			model,
+			element,
+			shadedRowCollumnBoxCountersShadedDigitSumCageConstraint
+		);
+	}
 };
