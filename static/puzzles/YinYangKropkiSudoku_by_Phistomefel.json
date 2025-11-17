@@ -99,7 +99,7 @@
 				}
 			],
 			"negative_constraints": {
-				"All Yin Yang Kropki Given": true
+				"All Given": true
 			}
 		}
 	}
