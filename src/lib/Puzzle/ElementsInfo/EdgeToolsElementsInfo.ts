@@ -150,9 +150,10 @@ function findEdgeConstraintMatch(constraints: Record<string, EdgeToolI>, cell1: 
 	return match;
 }
 
-function getEdgeVars(grid: Grid, constraint: EdgeToolI) {
+function getEdgeVars(grid: Grid, constraint: EdgeToolI, use_values: boolean = false) {
+	const grid_name = use_values ? VAR_2D_NAMES.VALUES_GRID : VAR_2D_NAMES.BOARD;
 	const cells = cellsFromCoords(grid, constraint.cells);
-	const vars = cellsToVarsName(cells);
+	const vars = cellsToGridVarsName(cells, grid_name);
 	return vars;
 }
 
@@ -193,9 +194,10 @@ function valuedEdgeConstraint(
 	c_id: string,
 	constraint: EdgeToolI,
 	predicate: string,
-	default_value: string = ''
+	default_value: string = '',
+	use_values: boolean = false
 ) {
-	const vars = getEdgeVars(grid, constraint);
+	const vars = getEdgeVars(grid, constraint, use_values);
 	const [var1, var2] = vars;
 
 	const value = constraint.value?.length ? constraint.value : default_value;
@@ -218,6 +220,9 @@ function valuedEdgeElement(
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const mod_constraints = element.negative_constraints;
+	const use_values = mod_constraints ? !!mod_constraints[TOOLS.USE_CELL_VALUES] : false;
+
 	const grid = model.puzzle.grid;
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = valuedEdgeConstraint(
@@ -226,7 +231,8 @@ function valuedEdgeElement(
 			c_id,
 			constraint as EdgeToolI,
 			predicate,
-			default_value
+			default_value,
+			use_values
 		);
 		out_str += constraint_str;
 	}
@@ -237,10 +243,13 @@ function ratioElement(model: PuzzleModel, element: ConstraintsElement) {
 	const grid = model.puzzle.grid;
 	let out_str = valuedEdgeElement(model, element, 'ratio_p', '2');
 
-	if (!element.negative_constraints) return out_str;
+	const mod_constraints = element.negative_constraints;
+	if (!mod_constraints) return out_str;
 
 	// negative constraint
-	const all_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
+	const use_values = mod_constraints ? !!mod_constraints[TOOLS.USE_CELL_VALUES] : false;
+	const all_given = !!mod_constraints[TOOLS.ALL_GIVEN];
+
 	if (!all_given) return out_str;
 	const constraints = element.constraints as Record<string, EdgeToolI>;
 
@@ -254,7 +263,7 @@ function ratioElement(model: PuzzleModel, element: ConstraintsElement) {
 
 	const values = [...new Set(used_vals)];
 
-	console.log('values', values);
+	const grid_name = use_values ? VAR_2D_NAMES.VALUES_GRID : VAR_2D_NAMES.BOARD;
 
 	out_str += `\n% ${TOOLS.ALL_GIVEN}\n`;
 	for (const [cell1, cell2] of adjCellPairGen(grid)) {
@@ -262,8 +271,7 @@ function ratioElement(model: PuzzleModel, element: ConstraintsElement) {
 		const match = findEdgeConstraintMatch(constraints, cell1, cell2);
 		if (match) continue;
 
-		const var1 = cellToVarName(cell1);
-		const var2 = cellToVarName(cell2);
+		const [var1, var2] = cellsToGridVarsName([cell1, cell2], grid_name);
 		for (const value of values) {
 			const val = parseInt(value);
 			const constraint_str = `constraint not ratio_p(${var1}, ${var2}, ${val});\n`;
@@ -287,6 +295,10 @@ export const ratioInfo: SquareCellElementInfo = {
 		{
 			toolId: TOOLS.ALL_GIVEN,
 			description: 'All Ratios are given.'
+		},
+		{
+			toolId: TOOLS.USE_CELL_VALUES,
+			description: 'Ratio constraints use modified cell values instead of the cell digits.'
 		}
 	],
 
@@ -313,10 +325,13 @@ function differenceElement(model: PuzzleModel, element: ConstraintsElement) {
 	const grid = model.puzzle.grid;
 	let out_str = valuedEdgeElement(model, element, 'abs_difference', '1');
 
-	if (!element.negative_constraints) return out_str;
-
+	const mod_constraints = element.negative_constraints;
+	if (!mod_constraints) return out_str;
+	
 	// negative constraint
-	const all_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
+	const all_given = !!mod_constraints[TOOLS.ALL_GIVEN];
+	const use_values = mod_constraints ? !!mod_constraints[TOOLS.USE_CELL_VALUES] : false;
+
 	if (!all_given) return out_str;
 	const constraints = element.constraints as Record<string, EdgeToolI>;
 
@@ -330,14 +345,14 @@ function differenceElement(model: PuzzleModel, element: ConstraintsElement) {
 
 	const values = [...new Set(used_vals)];
 
+	const grid_name = use_values ? VAR_2D_NAMES.VALUES_GRID : VAR_2D_NAMES.BOARD;
 	out_str += `\n% ${TOOLS.ALL_GIVEN}\n`;
 	for (const [cell1, cell2] of adjCellPairGen(grid)) {
 		// check if cell pair is not in difference pairs
 		const match = findEdgeConstraintMatch(constraints, cell1, cell2);
 		if (match) continue;
 
-		const var1 = cellToVarName(cell1);
-		const var2 = cellToVarName(cell2);
+		const [var1, var2] = cellsToGridVarsName([cell1, cell2], grid_name);
 		for (const value of values) {
 			const val = parseInt(value);
 			const constraint_str = `constraint abs(${var1} - ${var2}) != ${val};\n`;
@@ -357,6 +372,10 @@ export const differenceInfo: SquareCellElementInfo = {
 		{
 			toolId: TOOLS.ALL_GIVEN,
 			description: 'All Differences are given.'
+		},
+		{
+			toolId: TOOLS.USE_CELL_VALUES,
+			description: 'Difference constraints use modified cell values instead of the cell digits.'
 		}
 	],
 
@@ -394,8 +413,8 @@ export const edgeSumInfo: SquareCellElementInfo = {
 	}
 };
 
-function xvConstraint(grid: Grid, constraint: EdgeToolI) {
-	const vars = getEdgeVars(grid, constraint);
+function xvConstraint(grid: Grid, constraint: EdgeToolI, use_values: boolean = false) {
+	const vars = getEdgeVars(grid, constraint, use_values);
 	const [var1, var2] = vars;
 	if (constraint.value === 'V' || constraint.value === 'v') {
 		const constraint_str = `constraint ${var1} + ${var2} = 5;\n`;
@@ -409,33 +428,37 @@ function xvElement(model: PuzzleModel, element: ConstraintsElement) {
 	let out_str = '';
 	const constraints = element.constraints as Record<string, EdgeToolI>;
 
+	const mod_constraints = element.negative_constraints;
+	const use_values = mod_constraints ? !!mod_constraints[TOOLS.USE_CELL_VALUES] : false;
+
 	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
-		const constraint_str = xvConstraint(grid, constraint as EdgeToolI);
+		const constraint_str = xvConstraint(grid, constraint as EdgeToolI, use_values);
 		out_str += constraint_str;
 	}
 
 	// negative constraints
-	if (!element.negative_constraints) return out_str;
-	const all_v_given = !!element.negative_constraints[TOOLS.NEGATIVE_V_CONSTRAINT];
-	const all_x_given = !!element.negative_constraints[TOOLS.NEGATIVE_X_CONSTRAINT];
-	const all_xv_given = !!element.negative_constraints[TOOLS.NEGATIVE_XV_CONSTRAINT];
+	if (!mod_constraints) return out_str;
+	const all_v_given = !!mod_constraints[TOOLS.NEGATIVE_V_CONSTRAINT];
+	const all_x_given = !!mod_constraints[TOOLS.NEGATIVE_X_CONSTRAINT];
+	const all_xv_given = !!mod_constraints[TOOLS.NEGATIVE_XV_CONSTRAINT];
+	const grid_name = use_values ? VAR_2D_NAMES.VALUES_GRID : VAR_2D_NAMES.BOARD;
+
 	if (!all_v_given && !all_x_given && !all_xv_given) return out_str;
 
 	for (const [cell1, cell2] of adjCellPairGen(grid)) {
 		// check if cell pair is not in xv pairs
 		const match = findEdgeConstraintMatch(constraints, cell1, cell2);
 
-		const var1_name = cellToVarName(cell1);
-		const var2_name = cellToVarName(cell2);
+		const [var1, var2] = cellsToGridVarsName([cell1, cell2], grid_name);
 		if (all_v_given && (!match || (match.value !== 'V' && match.value !== 'v'))) {
-			const constraint_str = `constraint ${var1_name} + ${var2_name} != 5;\n`;
+			const constraint_str = `constraint ${var1} + ${var2} != 5;\n`;
 			out_str += constraint_str;
 		} else if (all_x_given && (!match || (match.value !== 'X' && match.value !== 'x'))) {
-			const constraint_str = `constraint ${var1_name} + ${var2_name} != 10;\n`;
+			const constraint_str = `constraint ${var1} + ${var2} != 10;\n`;
 			out_str += constraint_str;
 		} else if (all_xv_given && !match) {
-			const constraint_str = `constraint ${var1_name} + ${var2_name} != 5 /\\ (${var1_name} + ${var2_name} != 10);\n`;
+			const constraint_str = `constraint ${var1} + ${var2} != 5 /\\ (${var1} + ${var2} != 10);\n`;
 			out_str += constraint_str;
 		}
 	}
@@ -464,6 +487,10 @@ export const xvInfo: SquareCellElementInfo = {
 		{
 			toolId: TOOLS.NEGATIVE_XV_CONSTRAINT,
 			description: 'All pairs of adjacent cells not joined with an V or X cannot sum to 5 or 10.'
+		},
+		{
+			toolId: TOOLS.USE_CELL_VALUES,
+			description: 'XV constraints use modified cell values instead of the cell digits.'
 		}
 	],
 

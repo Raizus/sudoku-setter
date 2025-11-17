@@ -9,7 +9,6 @@ import {
 } from './ArrowToolsElementsInfo';
 import {
 	divisibleKillerCageInfo,
-	doublersKillerCageInfo,
 	invertedKillerCageInfo,
 	killerCageInfo,
 	negatorsKillerCageInfo,
@@ -156,7 +155,6 @@ import {
 	atLeastXLineInfo,
 	adjacentDifferencesCountLineInfo,
 	doubleRenbanLineInfo,
-	doublersThermometerInfo,
 	entropicLineInfo,
 	entropicOrModularLineInfo,
 	highLowOscilatorLineInfo,
@@ -207,8 +205,6 @@ import {
 } from './LineElementsInfo/LineElementsInfo';
 import {
 	doubleArrowLineInfo,
-	doublersBetweenLineInfo,
-	doublersDoubleArrowLineInfo,
 	lockoutLineInfo,
 	parityCountLineInfo,
 	productOfEndsEqualsSumOfLineInfo,
@@ -351,6 +347,7 @@ import {
 } from './ValuedGlobalConstraintsElementsInfo';
 import {
 	doublersInfo,
+	hotCellsInfo,
 	indexerCellsInfo,
 	negatorsInfo,
 	nexusInfo
@@ -405,7 +402,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.INDEXER_CELLS]: indexerCellsInfo,
 	// [TOOLS.VAMPIRE_AND_PREY]: vampireAndPreyInfo,
 	// [TOOLS.MARKED_CELLS]: markedCellsInfo,
-	// [TOOLS.HOT_CELLS]: hotCellsInfo,
+	[TOOLS.HOT_CELLS]: hotCellsInfo,
 	// [TOOLS.COLD_CELLS]: coldCellsInfo,
 	// [TOOLS.DECREMENT_FOUNTAIN]: decrementFountainInfo,
 
@@ -672,10 +669,6 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.PRODUCT_OF_ENDS_EQUALS_SUM_OF_LINE]: productOfEndsEqualsSumOfLineInfo,
 	[TOOLS.SPLIT_PEAS]: splitPeasLineInfo,
 
-	[TOOLS.DOUBLERS_THERMOMETER]: doublersThermometerInfo,
-	[TOOLS.DOUBLERS_BETWEEN_LINE]: doublersBetweenLineInfo,
-	[TOOLS.DOUBLERS_DOUBLE_ARROW_LINE]: doublersDoubleArrowLineInfo,
-
 	// Arrow constraints
 	[TOOLS.ARROW]: arrowInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_ARROW]: chaosConstructionArrowInfo,
@@ -703,7 +696,6 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.YIN_YANG_BREAKEVEN_KILLER_CAGE]: yinYangBreakevenKillerCageInfo,
 	[TOOLS.YIN_YANG_EQUAL_SUM_CAGE]: yinYangEqualSumCageInfo,
 
-	[TOOLS.DOUBLERS_KILLER_CAGE]: doublersKillerCageInfo,
 	[TOOLS.NEGATORS_KILLER_CAGE]: negatorsKillerCageInfo,
 	[TOOLS.SHADED_ROW_COLUMN_BOX_COUNTERS_SHADED_DIGIT_SUM_CAGE]:
 		shadedRowCollumnBoxCountersShadedDigitSumCageInfo,

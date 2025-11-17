@@ -8,8 +8,7 @@ import { lineUsage } from '../../ToolUsage';
 import {
 	DEFAULT_LINE_OPTIONS_INTERSECT,
 	doubleEndedLineDefaultCategories,
-	simpleLineElement,
-	simpleMultipliersLineElement
+	simpleLineElement
 } from './helpers';
 
 /* ----------------------------------------------------------------------------- */
@@ -36,6 +35,13 @@ export const betweenLineInfo: SquareCellElementInfo = {
 		tags: [],
 		categories: doubleEndedLineDefaultCategories
 	},
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.USE_CELL_VALUES,
+			description: 'Between Line constraints use modified cell values instead of the cell digits.'
+		}
+	],
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
 		return simpleLineElement(model, element, 'between_line_p');
@@ -150,6 +156,13 @@ export const doubleArrowLineInfo: SquareCellElementInfo = {
 		categories: doubleEndedLineDefaultCategories
 	},
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.USE_CELL_VALUES,
+			description: 'Double Arrow Line constraints use modified cell values instead of the cell digits.'
+		}
+	],
+
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
 		return simpleLineElement(model, element, 'double_arrow_p');
 	}
@@ -209,61 +222,5 @@ export const splitPeasLineInfo: SquareCellElementInfo = {
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
 		return simpleLineElement(model, element, 'split_peas_p');
-	}
-};
-
-export const doublersBetweenLineInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
-
-	toolId: TOOLS.DOUBLERS_BETWEEN_LINE,
-
-	shape: {
-		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
-		r: { editable: false, value: 0.35 },
-		strokeWidth: { editable: true, value: 0.04 },
-		stroke: { editable: true, value: 'var(--constraint-color-green)' },
-		linePathOptions: {
-			bezierRounding: { editable: false, value: 0.15 }
-		}
-	},
-
-	meta: {
-		description:
-			"Digits on a 'between line', which may include repeats, must be strictly between the values in the circles on the ends of that line. For the purposes of the between lines, digits on doublers count as double their value.",
-		usage: lineUsage(),
-		tags: [],
-		categories: doubleEndedLineDefaultCategories
-	},
-
-	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		return simpleMultipliersLineElement(model, element, 'between_line_p');
-	}
-};
-
-export const doublersDoubleArrowLineInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
-
-	toolId: TOOLS.DOUBLERS_DOUBLE_ARROW_LINE,
-
-	shape: {
-		type: SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS,
-		r: { editable: false, value: 0.35 },
-		strokeWidth: { editable: true, value: 0.04 },
-		stroke: { editable: true, value: 'var(--constraint-color-green)' },
-		linePathOptions: {
-			bezierRounding: { editable: false, value: 0.15 }
-		}
-	},
-
-	meta: {
-		description:
-			'The sum of the values on the line must equal the sum of the values in its end circles. Values may repeat if allowed by other rules. For the purposes of the double arrow lines, digits on doublers count as double their value.',
-		usage: lineUsage(),
-		tags: [],
-		categories: doubleEndedLineDefaultCategories
-	},
-
-	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		return simpleMultipliersLineElement(model, element, 'double_arrow_p');
 	}
 };

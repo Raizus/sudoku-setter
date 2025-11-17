@@ -2680,6 +2680,18 @@ function array[int,int] of var int: negators_value_grid_f(
         [if labels[i,j] then -1*grid[i,j] else grid[i,j] endif
          | i in index_set_1of2(grid), j in index_set_2of2(grid)]);
 
+function array[int,int] of var int: hot_cells_grid_f(
+    array[int,int] of var int: grid,
+    array[int,int] of var bool: labels
+) =  let {
+    constraint assert(index_set_1of2(grid) = index_set_1of2(labels) /\\
+       index_set_2of2(grid) = index_set_2of2(labels),
+       "Grid and labels must have same dimensions")
+} in
+    array2d(index_set_1of2(grid), index_set_2of2(grid),
+        [if labels[i,j] then grid[i,j]+1 else grid[i,j] endif
+         | i in index_set_1of2(grid), j in index_set_2of2(grid)]);
+
 predicate doublers_killer_cage_p(
     array[int] of var int: cells_vars,
     array[int] of var int: value_vars,

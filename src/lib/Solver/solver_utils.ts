@@ -25,6 +25,7 @@ export enum VAR_2D_NAMES {
 	DOUBLERS = 'doublers_grid',
 	INDEXER_CELLS_GRID = 'indexer_cells_grid',
 	NEGATORS = 'negators_grid',
+	HOT_CELLS = 'hot_cells_grid',
 	VALUES_GRID = 'values_grid',
 	SASHIGANE = 'sashigane',
 	SASHIGANE_BENDS = 'sashigane_bends',

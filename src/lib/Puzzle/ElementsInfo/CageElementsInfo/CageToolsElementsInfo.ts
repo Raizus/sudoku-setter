@@ -279,6 +279,13 @@ export const sumCageInfo: SquareCellElementInfo = {
 		categories: typableCageDefaultCategories
 	},
 
+	negative_constraints: [
+		{
+			toolId: TOOLS.USE_CELL_VALUES,
+			description: 'Sum Cage constraints use modified cell values instead of the cell digits.'
+		}
+	],
+
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
 		const result = valuedCageElement(model, element, 'sum_cage_p');
 		return result[0];
@@ -660,45 +667,6 @@ export const yinYangEqualSumCageInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: yinYangEqualSumCageElement
-};
-
-function doublersKillerCageConstraint(
-	model: PuzzleModel,
-	grid: Grid,
-	c_id: string,
-	constraint: CageToolI
-) {
-	const cells = cellsFromCoords(grid, constraint.cells);
-	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
-	const values_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.VALUES_GRID);
-
-	const value = constraint.value;
-	if (value) {
-		const val = parseInt(value);
-		const constraint_str = `constraint doublers_killer_cage_p(${vars_str}, ${values_vars_str}, ${val});\n`;
-		return constraint_str;
-	}
-	return '';
-}
-
-export const doublersKillerCageInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_CAGE_OPTIONS,
-
-	toolId: TOOLS.DOUBLERS_KILLER_CAGE,
-
-	shape: DEFAULT_CAGE_SHAPE,
-
-	meta: {
-		description:
-			'A digit in a doubler cell counts for twice its value for the purposes of all cage sums. Digits may not repeat in cages, though values might. (eg a cage may not contain a doubled 2 and a regular 2 but may contain a doubled 2 and a regular 4). The values in the cage must sum to the given total in the top left (if one exists).',
-		usage: typableCageUsage(),
-		tags: [],
-		categories: typableCageDefaultCategories
-	},
-
-	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		return simpleElementFunction(model, element, doublersKillerCageConstraint);
-	}
 };
 
 function negatorsKillerCageConstraint(

@@ -1,6 +1,7 @@
 import { type LineToolInputOptions, HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
 import {
 	cellsFromCoords,
+	cellsToGridVarsName,
 	cellsToGridVarsStr,
 	cellsToVarsName,
 	VAR_2D_NAMES,
@@ -10,7 +11,7 @@ import type { ParseOptions } from '$src/lib/Solver/value_parsing';
 import type { Grid } from '../../Grid/Grid';
 import type { ConstraintsElement, LineToolI } from '../../puzzle_schema';
 import { type EditableShapeI, SHAPE_TYPES } from '../../Shape/Shape';
-import { TOOL_CATEGORIES } from '../../Tools';
+import { TOOL_CATEGORIES, TOOLS } from '../../Tools';
 import { lineUsage } from '../../ToolUsage';
 
 export const simpleLineDefaultCategories = [
@@ -68,12 +69,18 @@ function getParsingResult(model: PuzzleModel, value: string, c_id: string) {
 	return result;
 }
 
-export function getLineVars(grid: Grid, constraint: LineToolI, use_set: boolean = false) {
+export function getLineVars(
+	grid: Grid,
+	constraint: LineToolI,
+	use_set: boolean = false,
+	use_values: boolean = false
+) {
 	let cells = cellsFromCoords(grid, constraint.cells);
 	if (use_set) {
 		cells = [...new Set(cells)];
 	}
-	const vars = cellsToVarsName(cells);
+	const grid_name = use_values ? VAR_2D_NAMES.VALUES_GRID : VAR_2D_NAMES.BOARD;
+	const vars = cellsToGridVarsName(cells, grid_name);
 	return vars;
 }
 
@@ -81,9 +88,10 @@ function simpleLineConstraint(
 	grid: Grid,
 	constraint: LineToolI,
 	predicate: string,
-	use_set: boolean = false
+	use_set: boolean = false,
+	use_values: boolean = false
 ) {
-	const vars = getLineVars(grid, constraint, use_set);
+	const vars = getLineVars(grid, constraint, use_set, use_values);
 	const vars_str = `[${vars.join(',')}]`;
 	const constraint_str: string = `constraint ${predicate}(${vars_str});\n`;
 	return constraint_str;
@@ -99,9 +107,18 @@ export function simpleLineElement(
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const mod_constraints = element.negative_constraints;
+	const use_values = mod_constraints ? !!mod_constraints[TOOLS.USE_CELL_VALUES] : false;
+
 	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
-		const constraint_str = simpleLineConstraint(grid, constraint as LineToolI, predicate, use_set);
+		const constraint_str = simpleLineConstraint(
+			grid,
+			constraint as LineToolI,
+			predicate,
+			use_set,
+			use_values
+		);
 		out_str += constraint_str;
 	}
 	return out_str;

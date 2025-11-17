@@ -223,12 +223,12 @@ function setBinaryHighlights(json: JsonT, grid: Grid) {
 function setOtherHighlights(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
 	const grid_vars_names = [
-		'doublers_grid',
-		'indexer_cells_grid',
-		'negators_grid',
-		'cell_center_loop',
+		VAR_2D_NAMES.HOT_CELLS,
+		VAR_2D_NAMES.DOUBLERS,
+		VAR_2D_NAMES.NEGATORS,
+		VAR_2D_NAMES.INDEXER_CELLS_GRID,
+		VAR_2D_NAMES.CELL_CENTER_LOOP,
 		'nexus'
-		// 'lits_shading'
 	];
 	const color_map: Map<number, number> = new Map([
 		[1, 4],

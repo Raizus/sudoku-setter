@@ -13,7 +13,6 @@ import {
 	shadedLineElement,
 	simpleLineDefaultCategories,
 	simpleLineElement,
-	simpleMultipliersLineElement,
 	valuedLineElement
 } from './helpers';
 import type { ConstraintsElement, LineToolI } from '../../puzzle_schema';
@@ -72,6 +71,13 @@ export const thermometerInfo: SquareCellElementInfo = {
 		...DEFAULT_META_1,
 		description: 'Numbers along a thermometer must increase from the bulb end.'
 	},
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.USE_CELL_VALUES,
+			description: 'Thermometer constraints use modified cell values instead of the cell digits.'
+		}
+	],
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
 		return simpleLineElement(model, element, 'strictly_increasing');
@@ -248,6 +254,13 @@ export const palindromeInfo: SquareCellElementInfo = {
 		tags: [],
 		categories: simpleLineDefaultCategories
 	},
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.USE_CELL_VALUES,
+			description: 'Palindrome constraints use modified cell values instead of the cell digits.'
+		}
+	],
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
 		const out_str = simpleLineElement(model, element, 'palindrome');
@@ -1846,39 +1859,6 @@ export const goldilocksZoneRegionSumLineInfo: SquareCellElementInfo = {
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
 		return simpleElementFunction(model, element, goldilocksZoneRegionSumLineConstraint);
-	}
-};
-
-export const doublersThermometerInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
-
-	toolId: TOOLS.DOUBLERS_THERMOMETER,
-
-	shape: {
-		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
-		strokeWidth: { editable: false, value: 0.15 },
-		r: { editable: false, value: 0.25 },
-		opacity: { editable: false, value: 0.9 },
-		stroke: { editable: false, value: 'var(--constraint-color-gray)' },
-		fill: { editable: false, value: 'var(--constraint-color-gray)' },
-		linePathOptions: {
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
-	},
-
-	meta: {
-		description:
-			'Values along a thermometer must increase from the bulb end. If a thermometer cell is a doubler it counts as twice its value for purposes of the thermometer.',
-		usage: lineUsage(),
-		tags: [],
-		categories: simpleLineDefaultCategories
-	},
-
-	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		const out_str = simpleMultipliersLineElement(model, element, 'strictly_increasing');
-		return out_str;
 	}
 };
 
