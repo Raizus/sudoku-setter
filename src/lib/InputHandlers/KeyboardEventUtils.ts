@@ -1,41 +1,5 @@
 import { TOOLS, type TOOLID, CELL_INPUT_TOOLS } from '$lib/Puzzle/Tools';
 
-// darkmode toggle shortcut
-export function eventIsAltShiftD(event: KeyboardEvent): boolean {
-	return (
-		event.altKey &&
-		event.shiftKey &&
-		!(event.ctrlKey || event.metaKey) &&
-		event.type === 'keydown' &&
-		!event.repeat &&
-		event.code === 'KeyD'
-	);
-}
-
-// undo shortcut
-export function eventIsCtrlZ(event: KeyboardEvent): boolean {
-	return (
-		!event.altKey &&
-		!event.shiftKey &&
-		(event.ctrlKey || event.metaKey) &&
-		event.type === 'keydown' &&
-		!event.repeat &&
-		event.code === 'KeyZ'
-	);
-}
-
-// redo shortcut
-export function eventIsCtrlY(event: KeyboardEvent): boolean {
-	return (
-		!event.altKey &&
-		!event.shiftKey &&
-		(event.ctrlKey || event.metaKey) &&
-		event.type === 'keydown' &&
-		!event.repeat &&
-		event.code === 'KeyY'
-	);
-}
-
 export function eventIsCtrlA(event: KeyboardEvent): boolean {
 	return (
 		(event.ctrlKey || event.metaKey) &&

@@ -1,11 +1,16 @@
 <script lang="ts">
-	export let description: string;
+	import { shortcutKeyToString, type Shortcut } from "../shortcuts";
+	import InfoShortcut from "./InfoShortcut.svelte";
+
+	export let shortcut: Shortcut;
 </script>
 
 <div class="info-shortcut-row">
-	<div class="description">{description}</div>
+	<div class="name">{shortcut.name}</div>
     <div class="shortcut-wrapper">
-        <slot></slot>
+		{#each shortcut.keys as key}
+			<InfoShortcut shortcut={shortcutKeyToString(key)}/>
+		{/each}
     </div>
 </div>
 
