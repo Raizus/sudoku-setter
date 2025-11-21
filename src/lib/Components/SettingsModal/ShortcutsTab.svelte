@@ -1,7 +1,7 @@
 <script lang="ts">
 	import InfoShortcutRow from '$components/SettingsModal/ShortcutsComponents/InfoShortcutRow.svelte';
 	import InfoTable from '$components/SettingsModal/ShortcutsComponents/InfoTable.svelte';
-	import { shortcutRegistry, toolShortcutRegistry } from './shortcuts';
+	import { shortcutRegistry, toolShortcutRegistry } from '../../InputHandlers/shortcuts';
 </script>
 
 <div class="settings-tab-layout">

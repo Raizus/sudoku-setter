@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { shortcutKeyToString, type Shortcut } from "../shortcuts";
+	import { shortcutKeyToString, type Shortcut } from "../../../InputHandlers/shortcuts";
 	import InfoShortcut from "./InfoShortcut.svelte";
 
 	export let shortcut: Shortcut;

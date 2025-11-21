@@ -1,4 +1,7 @@
 import { isAlphaNumeric } from '$input/KeyboardEventUtils';
+import { resetZoom } from '$stores/BoundingBoxStore';
+import { redo, undo } from '$stores/HistoryStore';
+import { toggleDarkmode } from '$stores/SettingsStore';
 
 interface EventKey {
 	altKey?: boolean;
@@ -11,6 +14,7 @@ interface EventKey {
 export interface Shortcut {
 	name: string;
 	keys: EventKey[];
+	func?: () => void;
 	unmodifiable?: boolean;
 }
 
@@ -39,7 +43,6 @@ export function matchShortcut(event: KeyboardEvent, shortcut: Shortcut): boolean
 	for (const key of shortcut.keys) {
 		if (matchKeyEvent(event, key)) return true;
 	}
-
 	return false;
 }
 
@@ -60,19 +63,22 @@ export function shortcutKeyToString(key: EventKey): string {
 
 export const undoSc: Shortcut = {
 	name: 'Undo',
-	keys: [{ ctrlKey: true, key: 'Z', type: 'keydown' }]
+	keys: [{ ctrlKey: true, key: 'Z', type: 'keydown' }],
+	func: undo
 };
 addShortcut(undoSc);
 
 export const redoSc: Shortcut = {
 	name: 'Redo',
-	keys: [{ ctrlKey: true, key: 'Y', type: 'keydown' }]
+	keys: [{ ctrlKey: true, key: 'Y', type: 'keydown' }],
+	func: redo
 };
 addShortcut(redoSc);
 
 export const toggleDarkmodeSc: Shortcut = {
 	name: 'Toggle Darkmode',
-	keys: [{ ctrlKey: true, key: 'D', type: 'keydown' }]
+	keys: [{ ctrlKey: true, key: 'D', type: 'keydown' }],
+	func: toggleDarkmode
 };
 addShortcut(toggleDarkmodeSc);
 
@@ -133,6 +139,13 @@ const selectAllCells: Shortcut = {
 	keys: [{ ctrlKey: true, key: 'A', type: 'keydown' }]
 };
 addShortcut2(selectAllCells);
+
+export const resetZoomSc: Shortcut = {
+	name: 'Reset Zoom',
+	keys: [{ shiftKey: true, key: 'Z', type: 'keydown' }],
+	func: resetZoom
+};
+addShortcut2(resetZoomSc);
 
 const toggleFog: Shortcut = {
 	name: 'Toggle Fog',

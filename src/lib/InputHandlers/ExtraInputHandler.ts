@@ -1,29 +1,17 @@
-import { matchShortcut, redoSc, toggleDarkmodeSc, undoSc } from '$components/SettingsModal/shortcuts';
-import { redo, undo } from '$stores/HistoryStore';
-import { toggleDarkmode } from '$stores/SettingsStore';
+import { matchShortcut, shortcutRegistry, type Shortcut } from '$input/shortcuts';
 
-function onDarkmodeShortcut(event: KeyboardEvent): boolean {
-	console.log(event);
-	if (!matchShortcut(event, toggleDarkmodeSc)) return false;
-	toggleDarkmode();
-	return true;
-}
-
-function onUndo(event: KeyboardEvent): boolean {
-	if (!matchShortcut(event, undoSc)) return false;
-	undo();
-	return true;
-}
-
-function onRedo(event: KeyboardEvent): boolean {
-	if (!matchShortcut(event, redoSc)) return false;
-	redo();
+function onShortcut(event: KeyboardEvent, shortcut: Shortcut) {
+	if (!matchShortcut(event, shortcut)) return false;
+	if (shortcut.func) shortcut.func();
 	return true;
 }
 
 export function onExtraInput(event: KeyboardEvent) {
-	if (onDarkmodeShortcut(event) || onUndo(event) || onRedo(event)) {
-		event.stopImmediatePropagation();
-		event.preventDefault();
+	for (const shortcut of shortcutRegistry.values()) {
+		if (onShortcut(event, shortcut)) {
+			event.stopImmediatePropagation();
+			event.preventDefault();
+			return;
+		}
 	}
 }
