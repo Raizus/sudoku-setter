@@ -16,7 +16,7 @@
 		updateToolAndCurrentConstraintStores,
 		updateToolOnRemoveGroup
 	} from '$stores/BoardStore';
-	import { addCommand } from '$stores/HistoryStore';
+	import { addCommand } from '$stores/CommandHistoryStore';
 	import { getUpdateElementCommand } from '$stores/LocalConstraintsStore';
 	import ElementEditor from './ElementEditor.svelte';
 	import MoreButton from './MoreButton.svelte';

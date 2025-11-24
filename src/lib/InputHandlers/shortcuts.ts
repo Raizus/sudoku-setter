@@ -1,6 +1,6 @@
 import { isAlphaNumeric } from '$input/KeyboardEventUtils';
 import { resetZoom } from '$stores/BoundingBoxStore';
-import { redo, undo } from '$stores/HistoryStore';
+import { redo, undo } from '$stores/CommandHistoryStore';
 import { toggleDarkmode } from '$stores/SettingsStore';
 
 interface EventKey {

@@ -21,7 +21,7 @@ import {
 	removeEdgeMarkerAction,
 	removeLineMarkersAction
 } from '$lib/reducers/PenToolReducer';
-import { addCommand } from '$stores/HistoryStore';
+import { addCommand } from '$stores/CommandHistoryStore';
 import { getPenToolCommand, penColorStore } from '$stores/PenToolStore';
 import { updatePenTool } from '$stores/PenToolStore';
 import { penToolStore } from '$stores/PenToolStore';

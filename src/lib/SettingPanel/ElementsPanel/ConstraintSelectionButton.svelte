@@ -9,7 +9,7 @@
 		addLocalConstraintAction,
 		removeLocalConstraintAction
 	} from '$src/lib/reducers/LocalConstraintsActions';
-	import { addCommand } from '$stores/HistoryStore';
+	import { addCommand } from '$stores/CommandHistoryStore';
 
 	export let constraint_id: string;
 	export let tool_id: TOOLID;

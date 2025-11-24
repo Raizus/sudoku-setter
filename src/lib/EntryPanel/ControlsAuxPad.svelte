@@ -4,7 +4,7 @@
 	import Select from '$icons/Select.svelte';
 	import Undo from '$icons/Undo.svelte';
 	import { selectOnStore } from '$stores/BoardStore';
-	import { commandHistoryStore, redo, undo } from '$stores/HistoryStore';
+	import { commandHistoryStore, redo, undo } from '$stores/CommandHistoryStore';
 
 	$: undoDisabled = $commandHistoryStore._undoStack.length === 0;
 	$: redoDisabled = $commandHistoryStore._redoStack.length === 0;

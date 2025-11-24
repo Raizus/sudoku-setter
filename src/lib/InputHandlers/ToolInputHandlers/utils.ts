@@ -8,7 +8,7 @@ import {
 	updateLocalConstraintAction
 } from '$src/lib/reducers/LocalConstraintsActions';
 import type { GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
-import { addCommand } from '$stores/HistoryStore';
+import { addCommand } from '$stores/CommandHistoryStore';
 import { getUpdateElementCommand } from '$stores/LocalConstraintsStore';
 
 function getSimilarHighlights(cell: Cell, grid: Grid) {

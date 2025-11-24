@@ -38,7 +38,7 @@ import { selectionStore } from '$stores/SelectionStore';
 import { throttle } from 'lodash';
 import { get } from 'svelte/store';
 import { getSimilarCells } from './utils';
-import { addCommands } from '$stores/HistoryStore';
+import { addCommands } from '$stores/CommandHistoryStore';
 
 const cellInputHandler = new CellPointerHandler();
 
