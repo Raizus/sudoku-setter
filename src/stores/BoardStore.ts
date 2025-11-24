@@ -47,6 +47,11 @@ export const elementsDictStore = writable<ElementsDict>(new ElementsDict());
 export const currentConstraintStore = writable<ConstraintAndId | null>(null);
 export const currentShapeStore = writable<ShapeI | undefined>(undefined);
 export const solutionStore = writable<Solution>(undefined);
+export const puzzleCreationTimestamp = writable<number>(Date.now());
+
+export function updateCreationTimestamp() {
+	puzzleCreationTimestamp.set(Date.now());
+}
 
 export function updatePuzzleMeta(meta: PuzzleMetaI) {
 	puzzleMetaStore.update(() => {
@@ -143,8 +148,8 @@ export function selectConstraint(id: string, toolId: TOOLID) {
 }
 
 export function createNewPuzzle(nRows: number, nCols: number, valid_digits: number[]) {
+	puzzleCreationTimestamp.set(Date.now());
 	const grid = new Grid(nRows, nCols);
-
 	gridStore.update(() => grid);
 	validDigitsStore.update(() => valid_digits);
 	elementsDictStore.update(() => new ElementsDict());
