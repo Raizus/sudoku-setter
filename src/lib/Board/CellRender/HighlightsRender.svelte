@@ -1,14 +1,14 @@
 <script lang="ts">
 	import type { Cell } from '$lib/Puzzle/Grid/Cell';
-	import { TOOLS } from '$lib/Puzzle/Tools';
+	import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';
 	import {
 		cellToCellCenterVector,
 		getSingleWedge,
 		pointsToPathStr
 	} from '$lib/utils/SquareCellGridRenderUtils';
-	import { toolStore } from '$stores/BoardStore';
 
 	export let cell: Cell;
+	export let tool: TOOLID | undefined = undefined;
 
 	function getWedges(_cell: Cell) {
 		const center = cellToCellCenterVector({ r: cell.r, c: cell.c });
@@ -26,7 +26,7 @@
 	}
 </script>
 
-{#if $toolStore !== TOOLS.REGIONS}
+{#if tool !== TOOLS.REGIONS}
 	{#if cell.highlights.length}
 		<g class="highlights-group">
 			{#each getWedges(cell) as { colorId, d }}
@@ -54,7 +54,7 @@
 		}
 	}
 
-	.highlights-group{
+	.highlights-group {
 		opacity: 0.8;
 	}
 </style>

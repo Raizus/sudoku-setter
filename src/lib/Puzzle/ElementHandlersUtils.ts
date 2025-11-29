@@ -18,7 +18,7 @@ export function getToolInfo<T extends AbstractElementInfo>(
 
 export type ElementFilterFunc = (key: TOOLID, elementInfo: AbstractElementInfo) => boolean;
 
-export function filterElements(
+export function filterElementInfo(
 	filterFun: ElementFilterFunc,
 	elementHandlers: AbstractElementHandlers
 ): { key: TOOLID; info: AbstractElementInfo }[] {
@@ -41,7 +41,7 @@ export function searchElements(
 	filterFun: ElementFilterFunc,
 	elementHandlers: AbstractElementHandlers
 ) {
-	const searchableElements = filterElements(filterFun, elementHandlers);
+	const searchableElements = filterElementInfo(filterFun, elementHandlers);
 	if (searchPattern.length === 0) {
 		return searchableElements;
 	}

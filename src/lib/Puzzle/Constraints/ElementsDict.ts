@@ -22,30 +22,29 @@ import {
 import { arrowConstraintFromJson } from './ArrowConstraints';
 import { type ArrowToolI } from '../puzzle_schema';
 import { cageConstraintFromJson } from './CageConstraints';
-import { type CageToolI } from "../puzzle_schema";
-import type { CloneToolI, ConstraintType } from "../puzzle_schema";
+import { type CageToolI } from '../puzzle_schema';
+import type { CloneToolI, ConstraintType } from '../puzzle_schema';
 import { cornerConstraintFromJson } from './CornerConstraints';
-import { type CornerToolI } from "../puzzle_schema";
+import { type CornerToolI } from '../puzzle_schema';
 import { edgeConstraintFromJson } from './EdgeConstraints';
-import { type EdgeToolI } from "../puzzle_schema";
+import { type EdgeToolI } from '../puzzle_schema';
 import { lineConstraintFromJson } from './LineConstraints';
-import { type LineToolI } from "../puzzle_schema";
-import {
-	outsideDirectionConstraintFromJson} from './OutsideDirectionConstraints';
-import { type OutsideDirectionToolI } from "../puzzle_schema";
+import { type LineToolI } from '../puzzle_schema';
+import { outsideDirectionConstraintFromJson } from './OutsideDirectionConstraints';
+import { type OutsideDirectionToolI } from '../puzzle_schema';
 
 import {
 	singleCellArrowConstraintFromJson,
 	singleCellConstraintFromJson,
-	singleCellMultiArrowConstraintFromJson} from './SingleCellConstraints';
-import { type SingleCellTool } from "../puzzle_schema";
+	singleCellMultiArrowConstraintFromJson
+} from './SingleCellConstraints';
+import { type SingleCellTool } from '../puzzle_schema';
 import { getShapeDiff } from '../Shape/Shape';
 import { getDefaultShape } from '../ElementHandlersUtils';
 import { elementInfoRegistry } from '../ElementsInfo/ElementInfoRegistry';
 import { parseShape } from '../utils';
-import {
-	centerCornerOrEdgeConstraintFromJson} from './CenterCornerOrEdgeConstraints';
-import { type CenterCornerOrEdgeToolI } from "../puzzle_schema";
+import { centerCornerOrEdgeConstraintFromJson } from './CenterCornerOrEdgeConstraints';
+import { type CenterCornerOrEdgeToolI } from '../puzzle_schema';
 import { valuedGlobalConstraintFromJson } from './ValuedGlobalConstraints';
 import { cornerLineConstraintFromJson } from './CornerLineConstraints';
 import { type CornerLineToolI } from '../puzzle_schema';
@@ -177,8 +176,8 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 			if (tool === undefined) continue;
 			if (!Object.keys(elementInfoRegistry).includes(tool)) {
 				console.log(`tool ${tool} not defined in squareCellElementHandlers`);
-				continue
-			};
+				continue;
+			}
 
 			// add element
 			local_constraints.addToDict(tool);
@@ -290,7 +289,7 @@ export function findAdjacentCellsArrowConstraint(
 
 		if (match) return entry;
 	}
-	return null;	
+	return null;
 }
 
 export function findCornerConstraint(
@@ -521,4 +520,16 @@ export function constraintToJson(constraint: ConstraintType) {
 	}
 
 	return jsonObj;
+}
+
+export function filterElements(
+	elements_dict: ElementsDict,
+	filter_f: (tool: TOOLID) => boolean
+): ConstraintsElement[] {
+	const elements: ConstraintsElement[] = [];
+	for (const [toolId, element] of elements_dict.entries()) {
+		if (!filter_f(toolId)) continue;
+		elements.push(element);
+	}
+	return elements;
 }

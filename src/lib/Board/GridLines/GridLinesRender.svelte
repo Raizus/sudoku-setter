@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { gridStore } from '$stores/BoardStore';
+	import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
 	
-	$: allCells = $gridStore.getAllCells();
+	export let cells: Cell[];
 </script>
 
 <g class="grid-lines">
-	{#each allCells as cell}
+	{#each cells as cell}
 		<rect
 			x={cell.c}
 			y={cell.r}

@@ -2,9 +2,12 @@ import { range } from 'lodash';
 import { ElementsDict, type ElementData } from './Constraints/ElementsDict';
 import type { CellRecord } from './Grid/Cell';
 import { Grid } from './Grid/Grid';
-import type { PuzzleMetaI } from "./puzzle_schema";
+import type { OutsideDirectionToolI, PuzzleMetaI } from './puzzle_schema';
 import { areArraysEqual } from '../utils/functionUtils';
 import type { Solution } from './puzzle_schema';
+import type { GridShape, Rectangle } from '../Types/types';
+import { isOutsideDirectionTool, type TOOLID } from './Tools';
+import { isCellOnGrid } from '../utils/SquareCellGridCoords';
 
 export interface PuzzleI {
 	grid: Grid;
@@ -88,4 +91,39 @@ export function blankPuzzle(): PuzzleI {
 		elementsDict: elements_dict
 	};
 	return puzzle;
+}
+
+function hasOutsideCells(elements_dict: ElementsDict, gridShape: GridShape): boolean {
+	for (const [toolId, elementGroup] of elements_dict.entries()) {
+		if (!isOutsideDirectionTool(toolId)) continue;
+
+		const hasCellOffGrid = Object.values(
+			elementGroup.constraints as Record<string, OutsideDirectionToolI>
+		).some((constraint) => {
+			return !isCellOnGrid(constraint.cell, gridShape);
+		});
+		if (hasCellOffGrid) return true;
+	}
+	return false;
+}
+
+export function getDefaultBoundingBox(
+	grid: Grid,
+	elements: ElementsDict,
+	tool: TOOLID | undefined = undefined
+) {
+	const gridShape = { nRows: grid.nRows, nCols: grid.nCols } as GridShape;
+	const outsideCells = hasOutsideCells(elements, gridShape);
+	const ousideTool = tool ? isOutsideDirectionTool(tool) : false;
+
+	const margin = outsideCells || ousideTool ? 1 : 0.2;
+
+	const x0 = -margin;
+	const y0 = -margin;
+	const width = gridShape.nCols + 2 * margin;
+	const height = gridShape.nRows + 2 * margin;
+
+	const bbox: Rectangle = { x: x0, y: y0, width, height };
+
+	return bbox;
 }

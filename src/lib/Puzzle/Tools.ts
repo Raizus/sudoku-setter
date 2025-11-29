@@ -703,7 +703,7 @@ export function isGlobalConstraint(toolId: TOOLID): boolean {
 
 export function isLocalConstraint(toolId: TOOLID): boolean {
 	const enumValues = Object.values(LOCAL_CONSTRAINTS) as string[];
-	const enumValues2 = Object.values(COSMETIC_TOOLS) as string[];	
+	const enumValues2 = Object.values(COSMETIC_TOOLS) as string[];
 	return enumValues.includes(toolId) || enumValues2.includes(toolId);
 }
 
@@ -824,7 +824,12 @@ export function isUnderlayTool(toolId: TOOLID): boolean {
 }
 
 export function isOverlayTool(toolId: TOOLID): boolean {
-	return isEdgeTool(toolId) || isCornerTool(toolId) || isCenterEdgeCornerTool(toolId);
+	return (
+		isEdgeTool(toolId) ||
+		isCornerTool(toolId) ||
+		isCenterEdgeCornerTool(toolId) ||
+		isCornerLineTool(toolId)
+	);
 }
 
 export const LOCAL_CONSTRAINTS_CATEGORIES = [

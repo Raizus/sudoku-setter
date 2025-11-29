@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { GridShape } from './../Types/types.ts';
 	import type { Rectangle } from '$lib/Types/types.js';
-	import { cellsStore, gridStore, toolStore } from '$stores/BoardStore';
+	import { cellsStore, enableFogMaskStore, gridStore, toolStore } from '$stores/BoardStore';
 	import CursorRender from './CursorRender.svelte';
 	import GridBorderRender from './GridLines/GridBorderRender.svelte';
 	import GridLinesRender from './GridLines/GridLinesRender.svelte';
@@ -31,13 +31,15 @@
 		cornerLineToolsStore,
 		cornerToolPreviewStore,
 		cornerToolsStore,
+		diagonalElementsStore,
 		edgeToolPreviewStore,
 		edgeToolsStore,
 		fogLightsStore,
 		outsideDirectionToolPreviewStore,
 		simpleCellToolPreviewStore,
 		singleCellArrowPreviewStore,
-		singleCellMultiArrowPreviewStore
+		singleCellMultiArrowPreviewStore,
+		underlayElementsStore
 	} from '$stores/ElementsStore.js';
 	import CornerToolRender from './Constraints/CornerToolRender.svelte';
 	import CenterCornerOrEdgeToolRender from './Constraints/CenterCornerOrEdgeToolRender.svelte';
@@ -81,14 +83,14 @@
 	<FogLightBulbDefs />
 	<FogDefs {gridShape} />
 
-	<BoardBackground grid={$gridStore} />
+	<BoardBackground {grid} />
 	<FogCover {gridShape} />
 
 	<GridBorderRender {gridShape} />
 
 	<g class="highlights-layer">
 		{#each $cellsStore as cell}
-			<HighlightsRender {cell} />
+			<HighlightsRender {cell} tool={$toolStore} />
 		{/each}
 	</g>
 
@@ -97,11 +99,14 @@
 	<FogLightsRender element={$fogLightsStore} />
 
 	<!-- underlay elements - below the grid lines -->
-	<UnderlayRender />
+	<UnderlayRender
+		underlay_elements={$underlayElementsStore}
+		enable_fog_mask={$enableFogMaskStore}
+	/>
+	<DiagonalElementsRender diagonal_elements={$diagonalElementsStore} />
 
-	<DiagonalElementsRender />
-	<GridLinesRender />
-	<GridRegionsRender />
+	<GridLinesRender cells={grid.getAllCells()} />
+	<GridRegionsRender cells={grid.getAllCells()} />
 
 	<!-- overlay elements - above the grid lines -->
 

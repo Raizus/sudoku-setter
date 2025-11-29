@@ -1,8 +1,8 @@
 <script lang="ts">
 	import DiagonalElementRender from './DiagonalElementRender.svelte';
-	import { diagonalElementsStore } from '$stores/ElementsStore';
+	import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
 
-	$: diagonal_elements = $diagonalElementsStore;
+	export let diagonal_elements: ConstraintsElement[];
 </script>
 
 {#each diagonal_elements as element}

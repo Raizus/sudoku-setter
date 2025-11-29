@@ -11,16 +11,17 @@ import {
 } from '$lib/Puzzle/Tools';
 import { derived, writable, type Readable } from 'svelte/store';
 import { elementsDictStore, toolStore } from './BoardStore';
-import type { CornerToolI } from "$src/lib/Puzzle/puzzle_schema";
-import type { SingleCellTool } from "$src/lib/Puzzle/puzzle_schema";
-import type { CellMultiArrowToolI } from "$src/lib/Puzzle/puzzle_schema";
-import type { CellArrowToolI } from "$src/lib/Puzzle/puzzle_schema";
-import type { CellToolI } from "$src/lib/Puzzle/puzzle_schema";
-import type { EdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
-import type { OutsideDirectionToolI } from "$src/lib/Puzzle/puzzle_schema";
-import type { CenterCornerOrEdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
+import type { CornerToolI } from '$src/lib/Puzzle/puzzle_schema';
+import type { SingleCellTool } from '$src/lib/Puzzle/puzzle_schema';
+import type { CellMultiArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
+import type { CellArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
+import type { CellToolI } from '$src/lib/Puzzle/puzzle_schema';
+import type { EdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
+import type { OutsideDirectionToolI } from '$src/lib/Puzzle/puzzle_schema';
+import type { CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
 import type { ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
+import { filterElements } from '$src/lib/Puzzle/Constraints/ElementsDict';
 
 export type Element<T extends ConstraintType> = {
 	toolId: TOOLID;
@@ -39,11 +40,7 @@ export const underlayElementsStore = derived(elementsDictStore, ($localConstrain
 
 function getElementsStore(filter_f: (tool: TOOLID) => boolean): Readable<ConstraintsElement[]> {
 	const store = derived(elementsDictStore, ($localConstraintsStore) => {
-		const elements: ConstraintsElement[] = [];
-		for (const [toolId, element] of $localConstraintsStore.entries()) {
-			if (!filter_f(toolId)) continue;
-			elements.push(element);
-		}
+		const elements = filterElements($localConstraintsStore, filter_f);
 		return elements;
 	});
 	return store;

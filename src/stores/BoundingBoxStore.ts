@@ -1,25 +1,8 @@
 import { derived, get, writable } from 'svelte/store';
 import { elementsDictStore, gridStore, toolStore } from './BoardStore';
-import type { ElementsDict } from '$src/lib/Puzzle/Constraints/ElementsDict';
-import { isOutsideDirectionTool } from '$src/lib/Puzzle/Tools';
-import type { OutsideDirectionToolI } from "$src/lib/Puzzle/puzzle_schema";
-import { isCellOnGrid } from '$src/lib/utils/SquareCellGridCoords';
-import type { GridShape, Rectangle } from '$src/lib/Types/types';
+import type { Rectangle } from '$src/lib/Types/types';
 import type { PointerEventInfo, WheelEventInfo } from '$input/PointerHandlers/WheelHandler';
-
-function hasOutsideCells(elements_dict: ElementsDict, gridShape: GridShape): boolean {
-	for (const [toolId, elementGroup] of elements_dict.entries()) {
-		if (!isOutsideDirectionTool(toolId)) continue;
-
-		const hasCellOffGrid = Object.values(
-			elementGroup.constraints as Record<string, OutsideDirectionToolI>
-		).some((constraint) => {
-			return !isCellOnGrid(constraint.cell, gridShape);
-		});
-		if (hasCellOffGrid) return true;
-	}
-	return false;
-}
+import { getDefaultBoundingBox } from '$src/lib/Puzzle/Puzzle';
 
 function _updateBoundingBoxOnZoom(
 	default_bbox: Rectangle,
@@ -94,20 +77,7 @@ export const currentScaleStore = writable<number>(1);
 export const defaultBoundingBoxStore = derived(
 	[elementsDictStore, toolStore, gridStore],
 	([$elementsDictStore, $toolStore, $gridStore]) => {
-		const gridShape = { nRows: $gridStore.nRows, nCols: $gridStore.nCols } as GridShape;
-		const outsideCells = hasOutsideCells($elementsDictStore, gridShape);
-		const ousideTool = isOutsideDirectionTool($toolStore);
-
-		const margin = outsideCells || ousideTool ? 1 : 0.2;
-
-		const x0 = -margin;
-		const y0 = -margin;
-		const width = gridShape.nCols + 2 * margin;
-		const height = gridShape.nRows + 2 * margin;
-
-		const bbox: Rectangle = { x: x0, y: y0, width, height };
-
-		return bbox;
+		return getDefaultBoundingBox($gridStore, $elementsDictStore, $toolStore);
 	}
 );
 

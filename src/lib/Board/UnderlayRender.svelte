@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { underlayElementsStore } from '$stores/ElementsStore';
 	import {
 		isArrowTool,
 		isCageTool,
@@ -15,7 +14,10 @@
 	import CageToolRender from './Constraints/CageToolRender.svelte';
 	import CloneToolRender from './Constraints/CloneToolRender.svelte';
 	import OutsideDirectionToolRender from './Constraints/OutsideDirectionToolRender.svelte';
-	import { enableFogMaskStore } from '$stores/BoardStore';
+	import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
+
+	export let underlay_elements: ConstraintsElement[];
+	export let enable_fog_mask: boolean;
 
 	const toolRenderers = [
 		{ check: isSingleCellTool, component: SingleCellToolRender },
@@ -29,9 +31,6 @@
 	function getToolRenderer(toolId: TOOLID) {
 		return toolRenderers.find((renderer) => renderer.check(toolId))?.component;
 	}
-
-	$: underlay_elements = $underlayElementsStore;
-	$: enable_fog_mask = $enableFogMaskStore;
 </script>
 
 <g class="underlay-layer" mask={enable_fog_mask ? 'url(#fog-mask-fog)' : null}>
