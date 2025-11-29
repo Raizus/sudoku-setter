@@ -19,6 +19,7 @@ import { updateSelection } from './SelectionStore';
 import { settingsStore } from './SettingsStore';
 import { GAME_MODE } from '$src/lib/Types/types';
 import { range } from 'lodash';
+import { puzzleToCompressedStr } from '$src/lib/SettingPanel/SavePuzzleModal/utils';
 
 interface ConstraintAndId {
 	id: string;
@@ -47,10 +48,15 @@ export const elementsDictStore = writable<ElementsDict>(new ElementsDict());
 export const currentConstraintStore = writable<ConstraintAndId | null>(null);
 export const currentShapeStore = writable<ShapeI | undefined>(undefined);
 export const solutionStore = writable<Solution>(undefined);
+
 export const puzzleCreationTimestamp = writable<number>(Date.now());
 
 export function updateCreationTimestamp() {
 	puzzleCreationTimestamp.set(Date.now());
+}
+
+export function setCreationTimestamp(timestamp: number) {
+	puzzleCreationTimestamp.set(timestamp);
 }
 
 export function updatePuzzleMeta(meta: PuzzleMetaI) {
@@ -246,3 +252,9 @@ export function updateSolution(solution: Solution) {
 		return solution;
 	});
 }
+
+export const puzzleUrlStore = derived(puzzleStore, ($puzzleStore) => {
+	const compressedStr = puzzleToCompressedStr($puzzleStore);
+	return compressedStr;
+});
+

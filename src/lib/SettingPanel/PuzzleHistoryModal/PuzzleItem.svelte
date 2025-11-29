@@ -1,0 +1,89 @@
+<script lang="ts">
+	import { getAuthorsStr } from '$src/lib/utils/functionUtils';
+	import { compressedStrToPuzzle } from '../SavePuzzleModal/utils';
+	import { formatTimestamp, type PuzzleHistoryItem } from './PuzzleHistory';
+	import { base } from '$app/paths';
+	import { resetUserState, setCreationTimestamp, setPuzzle, updateCreationTimestamp } from '$stores/BoardStore';
+	import { resetZoom } from '$stores/BoundingBoxStore';
+	import type { PuzzleI } from '$src/lib/Puzzle/Puzzle';
+
+	export let item: PuzzleHistoryItem;
+	export let item_id: number;
+	export let selected: number | undefined;
+	export let selected_puzzle: PuzzleI | undefined;
+	export let showModal: boolean;
+
+	const constraints: string = 'Given Digits, Regions';
+
+	$: compressedStr = item.encodedStr;
+	$: puzzle = compressedStrToPuzzle(compressedStr);
+
+	$: title = puzzle.puzzleMeta.title ? puzzle.puzzleMeta.title : 'Sudoku';
+	$: authors = getAuthorsStr(puzzle.puzzleMeta.authors);
+	$: creation_date = formatTimestamp(item.creationTimestamp);
+	$: update_date = formatTimestamp(item.lastUpdateTimestamp);
+
+	function clickCb() {
+		selected = item_id;
+		selected_puzzle = puzzle;
+	}
+
+	function dbClickCb() {
+		// close modal, clear user state, load new puzzle, clear command history
+		resetUserState();
+		resetZoom();
+		setCreationTimestamp(item.creationTimestamp);
+		setPuzzle(puzzle);
+		showModal = false;
+	}
+
+	$: active = selected === item_id;
+</script>
+
+<li class="item-container" class:active>
+	<a
+		class="link"
+		on:click|capture|stopPropagation|preventDefault={clickCb}
+		on:dblclick|capture|stopPropagation|preventDefault={dbClickCb}
+		href={`${base}/?puzzle=${compressedStr}`}
+	>
+		<div class="title">{title} by {authors}</div>
+		<div class="constraints">{constraints}</div>
+		<div class="date">Creation Date: {creation_date}</div>
+		<div class="date">Last Update: {update_date}</div>
+	</a>
+</li>
+
+<style lang="scss">
+	.link {
+		border-left: 0.5rem solid transparent;
+		border-top-left-radius: 0.5rem;
+		border-bottom-left-radius: 0.5rem;
+		text-decoration: none;
+		padding: 0.25rem 0.5rem;
+		display: block;
+	}
+
+	.item-container {
+		border: 0.1rem solid black;
+		border-radius: 0.5rem;
+
+		&:hover {
+			.title {
+				text-decoration: underline;
+			}
+			cursor: pointer;
+		}
+
+		&.active {
+			.link {
+				border-left-color: blue;
+			}
+		}
+	}
+
+	.title {
+		font-size: large;
+		font-weight: bold;
+	}
+</style>

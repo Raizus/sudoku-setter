@@ -1,7 +1,8 @@
 <script lang="ts">
 	import EditPuzzleMetaIconButton from './EditPuzzleMetaIconButton.svelte';
+	import HistoryButton from './HistoryButton.svelte';
 	import LoadPuzzleIconButton from './LoadPuzzleIconButton.svelte';
-import NewPuzzleIconButton from './NewPuzzleIconButton.svelte';
+	import NewPuzzleIconButton from './NewPuzzleIconButton.svelte';
 	import SavePuzzleconButton from './SavePuzzleconButton.svelte';
 	import SettingsIconButton from './SettingsIconButton.svelte';
 </script>
@@ -9,8 +10,9 @@ import NewPuzzleIconButton from './NewPuzzleIconButton.svelte';
 <div class="panel-container">
 	<NewPuzzleIconButton />
 	<SavePuzzleconButton />
-    <LoadPuzzleIconButton />
-    <EditPuzzleMetaIconButton />
+	<LoadPuzzleIconButton />
+	<EditPuzzleMetaIconButton />
+	<HistoryButton />
 	<SettingsIconButton />
 </div>
 
@@ -21,9 +23,9 @@ import NewPuzzleIconButton from './NewPuzzleIconButton.svelte';
 		border-radius: 0.25em;
 		padding: 0.5em;
 		background-color: var(--panel-background-color);
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        gap: 5px;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		gap: 5px;
 	}
 </style>

@@ -1,16 +1,11 @@
 <script lang="ts">
 	import Modal from '$lib/Components/Modal/Modal.svelte';
-	import { joinStrList } from '$lib/utils/functionUtils';
+	import { getAuthorsStr, joinStrList } from '$lib/utils/functionUtils';
 	import { puzzleMetaStore } from '$stores/BoardStore';
 	import Markdown from '@magidoc/plugin-svelte-marked';
 
 	export let showModal = false;
 	$: meta = $puzzleMetaStore;
-
-	function getAuthorsStr(authors?: string[]) {
-		const authorsStr = authors ? joinStrList(authors, ' & ', ', ') : 'Anonymous';
-		return authorsStr;
-	}
 
 	function getRulesetStr(ruleset?: string) {
 		const rulesetStr = ruleset && ruleset.length ? ruleset : 'No ruleset provided.';

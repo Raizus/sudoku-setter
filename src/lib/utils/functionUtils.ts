@@ -1,4 +1,4 @@
-import type { PuzzleMetaI } from "../Puzzle/puzzle_schema";
+import type { PuzzleMetaI } from '../Puzzle/puzzle_schema';
 
 export function threshold(val: number, min?: number, max?: number): number {
 	if (min !== undefined) val = Math.max(val, min);
@@ -112,4 +112,9 @@ export function* combinations<T>(input: T[], n: number): Generator<T[]> {
 			yield [first, ...combination];
 		}
 	}
+}
+
+export function getAuthorsStr(authors?: string[]) {
+	const authorsStr = authors ? joinStrList(authors, ' & ', ', ') : 'Anonymous';
+	return authorsStr;
 }

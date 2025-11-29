@@ -2,13 +2,7 @@
 	import { puzzleToJson } from '$src/lib/Puzzle/Puzzle';
 	import { encodeToBase64UrlSafe, getPuzzleFilename } from '$src/lib/utils/functionUtils';
 	import { puzzleMetaStore, puzzleStore } from '$stores/BoardStore';
-
-	const puzzleToJsonAux = (space?: string | number) => {
-		// console.log("puzzle", $puzzleStore);
-		const data = puzzleToJson($puzzleStore);
-		const jsonData = JSON.stringify(data, null, space);
-		return jsonData;
-	};
+	import { puzzleToCompressedStr, puzzleToJsonStr } from './utils';
 
 	const downloadPuzzleJson = (file_base_name = 'sudoku_by_anonymous') => {
 		// see https://stackoverflow.com/questions/34156282/how-do-i-save-json-to-local-text-file
@@ -21,14 +15,13 @@
 			URL.revokeObjectURL(a.href);
 		}
 
-		const jsonData = puzzleToJsonAux(2);
+		const jsonData = puzzleToJsonStr($puzzleStore, 2);
 		download(jsonData, `${file_base_name}.json`, 'text/plain');
 	};
 
 	const copyCompressedLink = () => {
-		const jsonData = puzzleToJsonAux(0);
-		const compressedStr = encodeToBase64UrlSafe(jsonData);
-		const url = `${window.location.host}/encpuzzle/${compressedStr}`;
+		const compressedStr = puzzleToCompressedStr($puzzleStore);
+		const url = `${window.location.host}/?puzzle=${compressedStr}`;
 		navigator.clipboard.writeText(url);
 
 		// const decompressedStr = decodeURIComponent(compressedStr);
