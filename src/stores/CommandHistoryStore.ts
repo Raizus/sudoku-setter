@@ -16,7 +16,7 @@ function newHistory(): CommandHistoryI {
 
 export const commandHistoryStore = writable<CommandHistoryI>(newHistory());
 
-export function clearHistory() {
+export function clearCommandHistory() {
     commandHistoryStore.update(() => newHistory())
 }
 
