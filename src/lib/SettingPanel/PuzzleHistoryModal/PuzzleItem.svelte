@@ -77,7 +77,7 @@
 
 		&.active {
 			.link {
-				border-left-color: blue;
+				border-left-color: var(--input-outline-color);
 			}
 		}
 	}
