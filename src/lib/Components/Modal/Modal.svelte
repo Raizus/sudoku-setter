@@ -85,7 +85,7 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		overflow: auto;
+		// overflow: auto;
 		margin-left: 1rem;
 		margin-right: 1rem;
 		margin-bottom: 1rem;
