@@ -7,7 +7,7 @@
 	import { clearPuzzleHistory } from '$stores/PuzzleHistoryStore';
 
 	export let selected: undefined | number;
-	export let selected_puzzle: undefined | PuzzleI;	
+	export let selected_puzzle: undefined | PuzzleI;
 
 	let dropdow_open = false;
 	let dropdown: DropdownMenu;
@@ -32,7 +32,12 @@
 </button>
 
 <DropdownMenu bind:this={dropdown} bind:open={dropdow_open} {buttonEl} let:close>
-	<DropdownMenuButton clickCb={clearHistoryCb}>
+	<DropdownMenuButton
+		clickCb={() => {
+			clearHistoryCb();
+			close();
+		}}
+	>
 		<Trash slot="icon" />
 		<svelte:fragment slot="label">Clear list</svelte:fragment>
 	</DropdownMenuButton>
