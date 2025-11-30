@@ -47,9 +47,9 @@
 		width: 100%;
 		margin: 0 auto;
 		height: 100%;
-    overflow-y: hidden;
-    display: flex;
-    flex-direction: column;
+		overflow-y: hidden;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.tab-header {
@@ -82,16 +82,16 @@
 		padding: 0.5rem 0.5rem;
 		height: 100%;
 		position: relative;
-    overflow-y: hidden;
-    display: flex;
-    flex-direction: column;
-  }
+		overflow-y: hidden;
+		display: flex;
+		flex-direction: column;
+	}
 
 	.tab-panel {
 		animation: fadeIn 0.3s ease;
 		position: relative;
 		height: 100%;
-    overflow-y: scroll;
+		overflow-y: scroll;
 	}
 
 	@keyframes fadeIn {
