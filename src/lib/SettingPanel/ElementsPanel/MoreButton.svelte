@@ -71,5 +71,6 @@
 
 	.header-button {
 		padding: 0 0.5em;
+		background-color: transparent;
 	}
 </style>

@@ -188,10 +188,10 @@
 	.constraints-ui.disabled .header {
 		background-image: repeating-linear-gradient(
 			-45deg,
-			transparent,
+			var(--panel-background-color),
+			var(--panel-background-color) 0.25rem,
 			transparent 0.25rem,
-			transparent 0.25rem,
-			#e0e0e085 0.5rem
+			var(--background-color) 0.5rem
 		);
 		cursor: default;
 	}
