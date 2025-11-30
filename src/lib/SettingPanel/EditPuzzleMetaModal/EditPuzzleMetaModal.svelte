@@ -144,6 +144,7 @@
 		flex-direction: column;
 		padding: 0.4em;
 		max-height: 100%;
+		overflow-y: scroll;
 	}
 
 	.generate-button {
