@@ -2,7 +2,7 @@ import type { PuzzleHistoryItem } from '$src/lib/SettingPanel/PuzzleHistoryModal
 import { get } from 'svelte/store';
 import { puzzleCreationTimestamp, puzzleUrlStore } from './BoardStore';
 import { createPersistentStore } from './store_utils';
-import { puzzleToCompressedStr } from '$src/lib/SettingPanel/SavePuzzleModal/utils';
+import { puzzleToCompressedStr } from '$src/lib/SettingPanel/SavePuzzleModal/io_utils';
 import type { PuzzleI } from '$src/lib/Puzzle/Puzzle';
 import { Grid } from '$src/lib/Puzzle/Grid/Grid';
 import { range } from 'lodash';

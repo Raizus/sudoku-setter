@@ -2,7 +2,10 @@
 	import Modal from '$components/Modal/Modal.svelte';
 	import BoardPreview from '$src/lib/Board/BoardPreview.svelte';
 	import type { PuzzleI } from '$src/lib/Puzzle/Puzzle';
+	import { resetUserState, setCreationTimestamp, setPuzzle } from '$stores/BoardStore';
+	import { resetZoom } from '$stores/BoundingBoxStore';
 	import { MAX_HISTORY_SIZE, puzzleHistoryStore } from '$stores/PuzzleHistoryStore';
+	import { getCompressedLink } from '../SavePuzzleModal/io_utils';
 	import ManageHistoryButton from './ManageHistoryButton.svelte';
 	import PuzzleItem from './PuzzleItem.svelte';
 
@@ -11,6 +14,23 @@
 	let puzzle: PuzzleI | undefined = undefined;
 
 	$: puzzle_count = $puzzleHistoryStore.length;
+
+	function openCb() {
+		if (selected === undefined || puzzle === undefined) return;
+		const item = $puzzleHistoryStore[selected];
+
+		resetUserState();
+		resetZoom();
+		setCreationTimestamp(item.creationTimestamp);
+		setPuzzle(puzzle);
+		showModal = false;
+	}
+
+	function copyCp() {
+		if (!puzzle) return;
+		const url = getCompressedLink(puzzle);
+		navigator.clipboard.writeText(url);
+	}
 </script>
 
 <Modal bind:showModal title="Recent Puzzles">
@@ -39,6 +59,10 @@
 		<div class="right">
 			{#if puzzle}
 				<BoardPreview {puzzle} />
+				<div class="button-container">
+					<button class="form-button form-modal-button" on:click={copyCp}> Copy Link </button>
+					<button class="form-button form-modal-button" on:click={openCb}> Open </button>
+				</div>
 			{/if}
 		</div>
 	</div>
@@ -55,6 +79,7 @@
 
 	.recent-puzzles-content {
 		display: flex;
+		gap: 0.2rem;
 		flex-direction: row;
 		height: 100%;
 	}
@@ -66,6 +91,8 @@
 	}
 
 	.right {
+		display: flex;
+		flex-direction: column;
 		flex: 1 1 0px;
 	}
 
@@ -84,8 +111,15 @@
 		display: flex;
 		list-style: none;
 		flex-direction: column;
-		gap: 0.2rem;
-		padding-left: 0.2rem;
-		padding-right: 0.2rem;
+		gap: 0.3rem;
+		padding-left: 0.75rem;
+		padding-right: 0.75rem;
+	}
+
+	.button-container {
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
+		margin-top: 0.5rem;
 	}
 </style>

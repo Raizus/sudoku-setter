@@ -8,7 +8,7 @@
 	import type { PuzzleI } from '$src/lib/Puzzle/Puzzle';
 	import { clearPuzzleHistory, puzzleHistoryStore } from '$stores/PuzzleHistoryStore';
 	import { get } from 'svelte/store';
-	import { download } from '../SavePuzzleModal/utils';
+	import { download } from '../SavePuzzleModal/io_utils';
 
 	export let selected: undefined | number;
 	export let selected_puzzle: undefined | PuzzleI;

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getPuzzleFilename } from '$src/lib/utils/functionUtils';
 	import { puzzleMetaStore, puzzleStore } from '$stores/BoardStore';
-	import { download, puzzleToCompressedStr, puzzleToJsonStr } from './utils';
+	import { download, getCompressedLink, puzzleToCompressedStr, puzzleToJsonStr } from './io_utils';
 
 	const downloadPuzzleJson = (file_base_name = 'sudoku_by_anonymous') => {
 		const jsonData = puzzleToJsonStr($puzzleStore, 2);
@@ -9,8 +9,7 @@
 	};
 
 	const copyCompressedLink = () => {
-		const compressedStr = puzzleToCompressedStr($puzzleStore);
-		const url = `${window.location.host}/?puzzle=${compressedStr}`;
+		const url = getCompressedLink($puzzleStore);
 		navigator.clipboard.writeText(url);
 
 		// const decompressedStr = decodeURIComponent(compressedStr);

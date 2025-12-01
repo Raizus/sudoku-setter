@@ -20,6 +20,13 @@ export function compressedStrToPuzzle(str: string): PuzzleI {
 	return puzzle;
 }
 
+export function getCompressedLink(puzzle: PuzzleI): string {
+	const compressedStr = puzzleToCompressedStr(puzzle);
+	const url = `${window.location.host}/?puzzle=${compressedStr}`;
+
+	return url;
+};
+
 export function download(content: Blob | string, fileName: string, contentType: string) {
 	const a = document.createElement('a');
 	const file = content instanceof Blob ? content : new Blob([content], { type: contentType });
@@ -31,7 +38,7 @@ export function download(content: Blob | string, fileName: string, contentType: 
 
 	// Click after the current event loop completes
 	setTimeout(() => {
-		console.log("clicking a")
+		console.log('clicking a');
 		a.click();
 	}, 0);
 

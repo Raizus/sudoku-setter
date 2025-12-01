@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getPuzzleFilename } from '$src/lib/utils/functionUtils';
 	import { puzzleMetaStore, svgRefStore } from '$stores/BoardStore';
-	import { download } from './utils';
+	import { download } from './io_utils';
 
 	function getComputedStyles(node: Element) {
 		const styles = getComputedStyle(node);

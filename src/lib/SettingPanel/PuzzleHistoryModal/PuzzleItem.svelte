@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getAuthorsStr } from '$src/lib/utils/functionUtils';
-	import { compressedStrToPuzzle } from '../SavePuzzleModal/utils';
+	import { compressedStrToPuzzle } from '../SavePuzzleModal/io_utils';
 	import { formatTimestamp, type PuzzleHistoryItem } from './PuzzleHistory';
 	import { base } from '$app/paths';
 	import { resetUserState, setCreationTimestamp, setPuzzle, updateCreationTimestamp } from '$stores/BoardStore';

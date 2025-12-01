@@ -19,7 +19,7 @@ import { updateSelection } from './SelectionStore';
 import { settingsStore } from './SettingsStore';
 import { GAME_MODE } from '$src/lib/Types/types';
 import { range } from 'lodash';
-import { puzzleToCompressedStr } from '$src/lib/SettingPanel/SavePuzzleModal/utils';
+import { puzzleToCompressedStr } from '$src/lib/SettingPanel/SavePuzzleModal/io_utils';
 
 interface ConstraintAndId {
 	id: string;
