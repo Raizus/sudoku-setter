@@ -56,12 +56,11 @@
 
 <style lang="scss">
 	.link {
-		border-left: 0.5rem solid transparent;
-		border-top-left-radius: 0.5rem;
-		border-bottom-left-radius: 0.5rem;
+		border-radius: 0.5rem;
 		text-decoration: none;
 		padding: 0.25rem 0.5rem;
 		display: block;
+		padding-left: 1rem;
 	}
 
 	.item-container {
@@ -77,7 +76,7 @@
 
 		&.active {
 			.link {
-				border-left-color: var(--input-outline-color);
+				outline: 0.15rem solid var(--input-outline-color);
 			}
 		}
 	}
