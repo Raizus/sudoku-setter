@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { getPuzzleFilename } from "$src/lib/utils/functionUtils";
-	import { puzzleMetaStore, svgRefStore } from "$stores/BoardStore";
+	import { getPuzzleFilename } from '$src/lib/utils/functionUtils';
+	import { puzzleMetaStore, svgRefStore } from '$stores/BoardStore';
+	import { download } from './utils';
 
 	function getComputedStyles(node: Element) {
 		const styles = getComputedStyle(node);
@@ -62,21 +63,20 @@
 			canvas.height = svgHeight * scale;
 
 			const context = canvas.getContext('2d');
-			if (!context) return;
+			if (!context) {
+				URL.revokeObjectURL(url);
+				return;
+			}
+
 			// Scale everything up by our device pixel ratio
 			context.scale(scale, scale);
 			// Draw the image at the original SVG size
 			context.drawImage(img, 0, 0, svgWidth, svgHeight);
 
 			canvas.toBlob((blob) => {
+				URL.revokeObjectURL(url); // Clean up the SVG URL
 				if (!blob) return;
-				const pngUrl = URL.createObjectURL(blob);
-				const link = document.createElement('a');
-				link.href = pngUrl;
-				link.download = `${file_base_name}.png`;
-				link.click();
-
-				URL.revokeObjectURL(pngUrl);
+				download(blob, `${file_base_name}.png`, 'image/png');
 			});
 		};
 
@@ -97,23 +97,12 @@
 			svgString = '<?xml version="1.0" standalone="no"?>\r\n' + svgString;
 		}
 
-		// Create a blob with the SVG content
-		const blob = new Blob([svgString], { type: 'image/svg+xml' });
-		const url = URL.createObjectURL(blob);
-
-		// Create download link
-		const link = document.createElement('a');
-		link.href = url;
-		link.download = `${file_base_name}.svg`;
-		link.click();
-
-		// Clean up
-		URL.revokeObjectURL(url);
+		download(svgString, `${file_base_name}.svg`, 'image/svg+xml');
 	}
 
 	const previewScale = 1;
-    $: svgElement = $svgRefStore;
-    $: file_name = getPuzzleFilename($puzzleMetaStore);
+	$: svgElement = $svgRefStore;
+	$: file_name = getPuzzleFilename($puzzleMetaStore);
 </script>
 
 <div class="tab-container">
@@ -123,10 +112,16 @@
 		</svg>
 	</div>
 	<div class="form-row">
-		<button class="form-button form-modal-button" on:click={() => downloadAsPNG(svgElement, file_name)}>
+		<button
+			class="form-button form-modal-button"
+			on:click={() => downloadAsPNG(svgElement, file_name)}
+		>
 			Download PNG
 		</button>
-		<button class="form-button form-modal-button" on:click={() => downloadAsSVG(svgElement, file_name)}>
+		<button
+			class="form-button form-modal-button"
+			on:click={() => downloadAsSVG(svgElement, file_name)}
+		>
 			Download SVG
 		</button>
 	</div>

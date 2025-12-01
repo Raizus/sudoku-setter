@@ -19,3 +19,24 @@ export function compressedStrToPuzzle(str: string): PuzzleI {
 	const puzzle = puzzleFromJson(jsonData);
 	return puzzle;
 }
+
+export function download(content: Blob | string, fileName: string, contentType: string) {
+	const a = document.createElement('a');
+	const file = content instanceof Blob ? content : new Blob([content], { type: contentType });
+	a.href = URL.createObjectURL(file);
+	a.download = fileName;
+	a.style.display = 'none';
+
+	document.body.appendChild(a);
+
+	// Click after the current event loop completes
+	setTimeout(() => {
+		console.log("clicking a")
+		a.click();
+	}, 0);
+
+	setTimeout(() => {
+		document.body.removeChild(a);
+		URL.revokeObjectURL(a.href);
+	}, 100);
+}

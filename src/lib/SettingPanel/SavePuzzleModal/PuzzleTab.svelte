@@ -1,20 +1,9 @@
 <script lang="ts">
-	import { puzzleToJson } from '$src/lib/Puzzle/Puzzle';
-	import { encodeToBase64UrlSafe, getPuzzleFilename } from '$src/lib/utils/functionUtils';
+	import { getPuzzleFilename } from '$src/lib/utils/functionUtils';
 	import { puzzleMetaStore, puzzleStore } from '$stores/BoardStore';
-	import { puzzleToCompressedStr, puzzleToJsonStr } from './utils';
+	import { download, puzzleToCompressedStr, puzzleToJsonStr } from './utils';
 
 	const downloadPuzzleJson = (file_base_name = 'sudoku_by_anonymous') => {
-		// see https://stackoverflow.com/questions/34156282/how-do-i-save-json-to-local-text-file
-		function download(content: string, fileName: string, contentType: string) {
-			var a = document.createElement('a');
-			var file = new Blob([content], { type: contentType });
-			a.href = URL.createObjectURL(file);
-			a.download = fileName;
-			a.click();
-			URL.revokeObjectURL(a.href);
-		}
-
 		const jsonData = puzzleToJsonStr($puzzleStore, 2);
 		download(jsonData, `${file_base_name}.json`, 'text/plain');
 	};
