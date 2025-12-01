@@ -2,9 +2,13 @@
 	import DropdownMenu from '$components/DropdownMenu.svelte';
 	import DropdownMenuButton from '$components/DropdownMenuButton.svelte';
 	import Build from '$icons/Build.svelte';
+	import Download from '$icons/Download.svelte';
 	import Trash from '$icons/Trash.svelte';
+	import Upload from '$icons/Upload.svelte';
 	import type { PuzzleI } from '$src/lib/Puzzle/Puzzle';
-	import { clearPuzzleHistory } from '$stores/PuzzleHistoryStore';
+	import { clearPuzzleHistory, puzzleHistoryStore } from '$stores/PuzzleHistoryStore';
+	import { get } from 'svelte/store';
+	import { download } from '../SavePuzzleModal/utils';
 
 	export let selected: undefined | number;
 	export let selected_puzzle: undefined | PuzzleI;
@@ -17,6 +21,18 @@
 		selected = undefined;
 		selected_puzzle = undefined;
 		clearPuzzleHistory();
+	}
+
+	function importCb() {
+		selected = undefined;
+		selected_puzzle = undefined;
+	}
+
+	function exportCb() {
+		const data = get(puzzleHistoryStore);
+		const jsonData = JSON.stringify(data, null, 2);
+		console.log(jsonData);
+		download(jsonData, `puzzle_history.json`, 'text/plain');
 	}
 </script>
 
@@ -40,6 +56,24 @@
 	>
 		<Trash slot="icon" />
 		<svelte:fragment slot="label">Clear list</svelte:fragment>
+	</DropdownMenuButton>
+	<DropdownMenuButton
+		clickCb={() => {
+			importCb();
+			// close();
+		}}
+	>
+		<Upload slot="icon" />
+		<svelte:fragment slot="label">Import list</svelte:fragment>
+	</DropdownMenuButton>
+	<DropdownMenuButton
+		clickCb={() => {
+			exportCb();
+			// close();
+		}}
+	>
+		<Download slot="icon" />
+		<svelte:fragment slot="label">Export list</svelte:fragment>
 	</DropdownMenuButton>
 </DropdownMenu>
 
