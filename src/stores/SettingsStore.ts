@@ -21,7 +21,6 @@ export function toggleDarkmode() {
 }
 
 export function restoreSettings() {
-	console.log("restore")
 	const default_settings = getDefaultSettings();
 	settingsStore.set(default_settings);
 	// When restoring settings, also update localStorage
