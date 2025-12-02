@@ -13,6 +13,8 @@
 	export let selected: undefined | number;
 	export let selected_puzzle: undefined | PuzzleI;
 
+	let dropdownEl: HTMLDivElement | undefined = undefined;
+
 	let dropdow_open = false;
 	let dropdown: DropdownMenu;
 	let buttonEl: HTMLButtonElement;
@@ -31,8 +33,7 @@
 	function exportCb() {
 		const data = get(puzzleHistoryStore);
 		const jsonData = JSON.stringify(data, null, 2);
-		console.log(jsonData);
-		download(jsonData, `puzzle_history.json`, 'text/plain');
+		download(jsonData, `puzzle_history.json`, 'text/plain', dropdownEl);
 	}
 </script>
 
@@ -47,7 +48,7 @@
 	</div>
 </button>
 
-<DropdownMenu bind:this={dropdown} bind:open={dropdow_open} {buttonEl} let:close>
+<DropdownMenu bind:this={dropdown} bind:dropdownEl bind:open={dropdow_open} {buttonEl} let:close>
 	<DropdownMenuButton
 		clickCb={() => {
 			clearHistoryCb();
@@ -69,7 +70,7 @@
 	<DropdownMenuButton
 		clickCb={() => {
 			exportCb();
-			// close();
+			close();
 		}}
 	>
 		<Download slot="icon" />

@@ -4,7 +4,7 @@
 	export let open = false;
 	export let buttonEl: HTMLButtonElement | undefined = undefined;
 
-	let dropdownEl: HTMLDivElement;
+	export let dropdownEl: HTMLDivElement | undefined = undefined;
 	let portalContainer: HTMLElement;
 
 	// Position state
