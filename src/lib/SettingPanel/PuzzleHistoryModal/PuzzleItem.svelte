@@ -3,9 +3,11 @@
 	import { compressedStrToPuzzle } from '../SavePuzzleModal/io_utils';
 	import { formatTimestamp, type PuzzleHistoryItem } from './PuzzleHistory';
 	import { base } from '$app/paths';
-	import { resetUserState, setCreationTimestamp, setPuzzle, updateCreationTimestamp } from '$stores/BoardStore';
+	import { resetUserState, setCreationTimestamp, setPuzzle } from '$stores/BoardStore';
 	import { resetZoom } from '$stores/BoundingBoxStore';
 	import type { PuzzleI } from '$src/lib/Puzzle/Puzzle';
+	import Trash from '$icons/Trash.svelte';
+	import { removePuzzleFromHistory } from '$stores/PuzzleHistoryStore';
 
 	export let item: PuzzleHistoryItem;
 	export let item_id: number;
@@ -14,6 +16,7 @@
 	export let showModal: boolean;
 
 	const constraints: string = 'Given Digits, Regions';
+	export let confirm_selected: number | undefined = undefined;
 
 	$: compressedStr = item.encodedStr;
 	$: puzzle = compressedStrToPuzzle(compressedStr);
@@ -34,7 +37,17 @@
 		resetZoom();
 		setCreationTimestamp(item.creationTimestamp);
 		setPuzzle(puzzle);
+		confirm_selected = undefined;
 		showModal = false;
+	}
+
+	function destroyCb() {
+		if (confirm_selected != item_id) confirm_selected = item_id;
+		else {
+			// remove item from history
+			removePuzzleFromHistory(item_id);
+			confirm_selected = undefined;
+		}
 	}
 
 	$: active = selected === item_id;
@@ -43,11 +56,23 @@
 <li class="item-container" class:active>
 	<a
 		class="link"
-		on:click|capture|stopPropagation|preventDefault={clickCb}
-		on:dblclick|capture|stopPropagation|preventDefault={dbClickCb}
+		on:click|stopPropagation|preventDefault={clickCb}
+		on:dblclick|stopPropagation|preventDefault={dbClickCb}
 		href={`${base}/?puzzle=${compressedStr}`}
 	>
-		<div class="title">{title} by {authors}</div>
+		<div class="header">
+			<div class="title">{title} by {authors}</div>
+			<button
+				class="destroy-button icon"
+				class:confirm={confirm_selected === item_id}
+				on:click|stopPropagation|capture|preventDefault={destroyCb}
+			>
+				<Trash />
+				{#if confirm_selected === item_id}
+					<span> Confirm </span>
+				{/if}
+			</button>
+		</div>
 		<div class="constraints">{constraints}</div>
 		<div class="date">Creation Date: {creation_date}</div>
 		<div class="date">Last Update: {update_date}</div>
@@ -61,6 +86,32 @@
 		padding: 0.25rem 0.5rem;
 		display: block;
 		padding-left: 1rem;
+	}
+
+	.header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.destroy-button {
+		display: flex;
+		min-width: 1.5rem;
+		height: 1.5rem;
+		padding: 0.2rem;
+		border: 0;
+		border-radius: 0.2em;
+		background-color: var(--button-background-color);
+		transition: background .4s ease;
+
+		&.confirm {
+			background-color: #e6194b;
+		}
+
+		& span {
+			width: auto;
+			padding-right: 0.5rem;
+		}
 	}
 
 	.item-container {

@@ -11,6 +11,7 @@
 
 	export let showModal = false;
 	let selected: number | undefined = undefined;
+	let confirm_selected: number | undefined = undefined;
 	let puzzle: PuzzleI | undefined = undefined;
 
 	$: puzzle_count = $puzzleHistoryStore.length;
@@ -24,6 +25,7 @@
 		setCreationTimestamp(item.creationTimestamp);
 		setPuzzle(puzzle);
 		showModal = false;
+		confirm_selected = undefined;
 	}
 
 	function copyCp() {
@@ -50,6 +52,7 @@
 								bind:selected
 								bind:showModal
 								bind:selected_puzzle={puzzle}
+								bind:confirm_selected
 							/>
 						{/each}
 					</ol>

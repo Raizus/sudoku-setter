@@ -60,6 +60,13 @@ export function updateHistoryStore(item: PuzzleHistoryItem) {
 	});
 }
 
+export function removePuzzleFromHistory(item_id: number) {
+	puzzleHistoryStore.update((history) => {
+		history.splice(item_id, 1);
+		return history;
+	});
+}
+
 export function clearPuzzleHistory() {
 	puzzleHistoryStore.set([]);
 }
