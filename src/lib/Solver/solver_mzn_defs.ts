@@ -3021,15 +3021,16 @@ predicate fillomino_p(
 
     % 3. regions of size 1
     /\\ forall(r in rows, c in cols)(
-        grid[r,c] == 1 -> regions[r, c] = (r * n_cols + c + 1) /\\ when[r,c] == 1
-    )
-    /\\ forall(r in rows, c in cols)(
-        grid[r,c] == 1 -> forall(t in orth_adjacent_idxs(r,c) where in_bounds_2d(t.1, t.2, grid))(
+        grid[r,c] == 1 -> (
+          regions[r, c] = (r * n_cols + c + 1)
+          /\\ when[r,c] == 1
+          /\\ forall(t in orth_adjacent_idxs(r,c) where in_bounds_2d(t.1, t.2, grid))(
             regions[r,c] != regions[t.1, t.2] /\\ grid[t.1,t.2] != 1
+          )
         )
     )
 
-    % 4. small optimization to reduce search space
+    % 4. Distance-based region pruning
     /\\ forall(r in rows, c in cols, r2 in rows, c2 in cols where is_after(r,c,r2,c2)) (
         abs(r2-r) + abs(c2-c) >= grid[r,c] -> regions[r, c] != (r2) * n_cols + c2 + 1
     )
@@ -3041,8 +3042,8 @@ predicate fillomino_p(
         ) -> regions[r,c] = (r * n_cols + c + 1)
     )
 
-    % 6. lex-order roots
-    /\\ forall(r in rows, c in cols where regions[r, c] == (r * n_cols + c + 1)) (
+    % 6. Lex-order roots for symmetry breaking
+    /\\ forall(r in rows, c in cols where when[r, c] == 1) (
         forall(r2 in rows, c2 in cols) (
             (regions[r2, c2] = regions[r, c]) -> (r2 > r \\/ (r2 = r /\\ c2 >= c))
         )
@@ -3089,6 +3090,23 @@ predicate fillomino_p(
     )
 
     /\\ floodfill_p(regions, when)
+
+    % NEW CONSTRAINTS FOR SPEEDUP:
+    
+    % 13. Implied constraint: No two adjacent regions can have the same size
+    /\\ forall(r in rows, c in cols)(
+        forall(t in orth_adjacent_idxs(r,c) where in_bounds_2d(t.1, t.2, grid))(
+            regions[r,c] != regions[t.1,t.2] -> grid[r,c] != grid[t.1,t.2]
+        )
+    )
+    
+    % 14. Region boundary constraint: cells on region boundary must have different values
+    % This is redundant with constraint 7 but helps propagation
+    /\\ forall(r in rows, c in cols)(
+        forall(t in orth_adjacent_idxs(r,c) where in_bounds_2d(t.1, t.2, grid))(
+            grid[r,c] != grid[t.1,t.2] -> regions[r,c] != regions[t.1,t.2]
+        )
+    )
 );
 
 predicate yin_yang_fillomino_parity_p(
