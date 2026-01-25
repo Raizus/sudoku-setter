@@ -2986,18 +2986,12 @@ predicate floodfill_p(
     set of int: rows = index_set_1of2(regions);
     set of int: cols = index_set_2of2(regions); 
 } in (
-    % Improved connectivity constraint with earlier propagation
     forall(r in rows, c in cols where when[r, c] > 1) (
         exists(t in orth_adjacent_idxs(r, c) where in_bounds_2d(t.1, t.2, regions)) (
-            regions[r, c] = regions[t.1, t.2] /\\ when[r, c] = when[t.1, t.2] + 1
+            regions[r, c] = regions[t.1, t.2]
+            /\\ when[t.1, t.2] < when[r, c]
         )
     )
-    
-    % Restrict floodfill growth to ensure unique solution
-    /\\ forall(r in rows, c in cols where when[r, c] > 1) (
-        when[r, c] = 1 + min([when[t.1, t.2] | 
-            t in orth_adjacent_idxs(r, c) where in_bounds_2d(t.1, t.2, regions) /\\ regions[r, c] = regions[t.1, t.2]])
-    ) 
 );
 
 predicate fillomino_p(
