@@ -18,7 +18,7 @@ import { updatePenTool } from './PenToolStore';
 import { updateSelection } from './SelectionStore';
 import { settingsStore } from './SettingsStore';
 import { GAME_MODE } from '$src/lib/Types/types';
-import { range } from 'lodash';
+import { debounce, range } from 'lodash';
 import { puzzleToCompressedStr } from '$src/lib/SettingPanel/SavePuzzleModal/io_utils';
 
 interface ConstraintAndId {
@@ -253,8 +253,7 @@ export function updateSolution(solution: Solution) {
 	});
 }
 
-export const puzzleUrlStore = derived(puzzleStore, ($puzzleStore) => {
+export const puzzleUrlStore = derived(puzzleStore, debounce(($puzzleStore) => {
 	const compressedStr = puzzleToCompressedStr($puzzleStore);
 	return compressedStr;
-});
-
+}, 200));

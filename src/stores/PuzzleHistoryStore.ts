@@ -73,6 +73,7 @@ export function clearPuzzleHistory() {
 
 puzzleUrlStore.subscribe((value) => {
 	const creation_ts = get(puzzleCreationTimestamp);
+	if (!value) return;
 	if (value === DEFAULT_COMPRESSED_STR) return;
 
 	const item = createHistoryItem(creation_ts, value);
