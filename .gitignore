@@ -25,4 +25,4 @@ vite.config.ts.timestamp-*
 
 /data
 prompts.txt
-/git test_files
+test_files
