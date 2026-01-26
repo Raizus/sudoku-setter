@@ -19,6 +19,34 @@
 	let dropdown: DropdownMenu;
 	let buttonEl: HTMLButtonElement;
 
+	let inputRef: HTMLInputElement | null = null;
+	let files: FileList | null = null;
+
+	$: if (files && files.length) {
+		const file = files[0];
+		const fileReader = new FileReader();
+		fileReader.readAsText(file);
+
+		fileReader.onload = function (evt) {
+			if (!evt.target) {
+				alert(fileReader.error);
+				return;
+			}
+
+			// read file successfully
+			if (evt.target && evt.target.result) {
+				const result = evt.target.result;
+				if (typeof result !== 'string') return;
+				const obj = JSON.parse(result);
+
+				puzzleHistoryStore.set(obj);
+			}
+		};
+		fileReader.onerror = function () {
+			alert(fileReader.error);
+		};
+	}
+
 	function clearHistoryCb() {
 		selected = undefined;
 		selected_puzzle = undefined;
@@ -26,6 +54,8 @@
 	}
 
 	function importCb() {
+		inputRef?.click();
+
 		selected = undefined;
 		selected_puzzle = undefined;
 	}
@@ -61,11 +91,14 @@
 	<DropdownMenuButton
 		clickCb={() => {
 			importCb();
-			// close();
+			close();
 		}}
 	>
 		<Upload slot="icon" />
-		<svelte:fragment slot="label">Import list</svelte:fragment>
+		<svelte:fragment slot="label">
+			Import list
+			<input bind:this={inputRef} type="file" accept=".json" bind:files />
+		</svelte:fragment>
 	</DropdownMenuButton>
 	<DropdownMenuButton
 		clickCb={() => {
@@ -91,5 +124,14 @@
 		align-items: center;
 		width: 80%;
 		height: 80%;
+	}
+
+	input {
+		position: relative;
+		display: none;
+		appearance: none;
+		opacity: 0;
+		top: 0;
+		left: 0;
 	}
 </style>
