@@ -2,7 +2,7 @@
 	import { browser } from '$app/environment';
 	import { puzzleFromJson } from '$src/lib/Puzzle/Puzzle';
 	import Game from '$src/routes/Game.svelte';
-	import { resetUserState, setPuzzle } from '$stores/BoardStore';
+	import { resetUserState, setPuzzle, updateCreationTimestamp } from '$stores/BoardStore';
 	import { resetZoom } from '$stores/BoundingBoxStore';
 	import { onMount } from 'svelte';
 
@@ -17,6 +17,7 @@
 				// Delay store updates to ensure proper initialization
 				requestAnimationFrame(() => {
 					setPuzzle(newPuzzle);
+					updateCreationTimestamp();
 					resetZoom();
 					resetUserState();
 					initialized = true;
