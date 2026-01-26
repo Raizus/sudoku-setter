@@ -75,9 +75,9 @@ export function updateHistoryStore(item: PuzzleHistoryItem) {
 	});
 }
 
-export function removePuzzleFromHistory(item_id: number) {
+export function removePuzzleFromHistory(item_idx: number) {
 	puzzleHistoryStore.update((history) => {
-		history.splice(item_id, 1);
+		history.splice(item_idx, 1);
 		return history;
 	});
 }
