@@ -29,6 +29,17 @@ export function createHistoryItem(creationTimestamp: number, url: string): Puzzl
 	return item;
 }
 
+/**
+ * Updates or adds a puzzle history item based on its creation timestamp.
+ * 
+ * If an item with a matching creation timestamp exists in the history, it is removed from its current position
+ * and moved to the start of the list. If no match is found, the new item is added to the start of the list.
+ * If the history exceeds the maximum size after insertion, the oldest item is removed.
+ * 
+ * @param item - The puzzle history item to update or add
+ * @param history - The array of puzzle history items to modify
+ * @returns The updated history array
+ */
 export function updateHistory(item: PuzzleHistoryItem, history: PuzzleHistoryItem[]) {
 	// find item with the same creation time stamp
 
@@ -54,6 +65,10 @@ export function updateHistory(item: PuzzleHistoryItem, history: PuzzleHistoryIte
 	return history;
 }
 
+/**
+ * Updates the puzzle history store with a new or modified puzzle history item.
+ * @param item - The puzzle history item to add or update in the store. If Item with the same creation timestamp exists, it will be updated; otherwise, it will be added.
+**/
 export function updateHistoryStore(item: PuzzleHistoryItem) {
 	puzzleHistoryStore.update((history) => {
 		return updateHistory(item, history);
