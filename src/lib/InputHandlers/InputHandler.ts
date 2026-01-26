@@ -1,6 +1,4 @@
-import type { Grid } from "../Puzzle/Grid/Grid";
-import type { TOOLID } from "../Puzzle/Tools";
-import { isBackspace } from "./KeyboardEventUtils";
+import { isBackspace } from './KeyboardEventUtils';
 
 export interface InputHandler {
 	blur?(event: FocusEvent): void;
@@ -12,8 +10,6 @@ export interface InputHandler {
 	wheelEvent?(event: WheelEvent): void;
 	padClick?(event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }): void;
 }
-
-export type GetInputHandler = (svgRef: SVGSVGElement, grid: Grid, tool: TOOLID) => InputHandler;
 
 export interface ValueValidatorOptions {
 	allowInequalities?: boolean;
