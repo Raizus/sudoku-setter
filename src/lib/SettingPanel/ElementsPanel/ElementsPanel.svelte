@@ -28,7 +28,7 @@
 
 	// force the filter to update when a new constraint is added
 	$: localCFilterFun = (key: TOOLID, elementInfo: AbstractElementInfo): boolean => {
-		const exists = $elementsDictStore.has(key);
+		const exists = $elementsDictStore.hasTool(key);
 		const isLocal = elementInfo.meta?.categories.includes(TOOL_CATEGORIES.LOCAL_ELEMENT)
 			? true
 			: false;
@@ -48,7 +48,7 @@
 		<ElementButton tool_id={TOOLS.GIVEN} {elementHandlers} />
 		<ElementButton tool_id={TOOLS.REGIONS} {elementHandlers} />
 
-		{#each $elementsDictStore.entries() as [tool_id, value] (tool_id)}
+		{#each $elementsDictStore.entries() as [tool_id, element] (tool_id)}
 			{#if isElement(tool_id)}
 				<ElementButton {tool_id} {elementHandlers} />
 			{/if}

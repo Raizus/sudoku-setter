@@ -83,6 +83,13 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 		this.set(toolId, new_element);
 	}
 
+	hasTool(toolId: TOOLID): boolean {
+		for (const element of this.values()) {
+			if (element.tool_id === toolId) return true;
+		}
+		return false;
+	}
+
 	removeFromDict(toolId: TOOLID) {
 		const elementToRemove = this.get(toolId);
 		if (elementToRemove === undefined) return;
