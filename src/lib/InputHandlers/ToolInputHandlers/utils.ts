@@ -94,7 +94,7 @@ export function pushAddLocalConstraintCommand(
 	const action = addLocalConstraintAction(id, currentConstraint);
 	const reverse_action = removeLocalConstraintAction(id, tool);
 	const command = getUpdateElementCommand(action, reverse_action);
-	// add it to histoy but don't execute
+	// add it to history but don't execute
 	// the clone constraint was already added/updated but only when
 	// finishing dragging is the action 'complete'
 	addCommand(command, execute);
