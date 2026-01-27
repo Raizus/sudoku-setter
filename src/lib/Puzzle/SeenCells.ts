@@ -297,7 +297,7 @@ export function cellsSeenByCell(puzzle: PuzzleI, coords: GridCoordI): Set<Cell> 
 		(element) => element.tool_id === TOOLS.SUDOKU_RULES_DO_NOT_APPLY
 	);
 
-	if (not_sudoku_ele && !not_sudoku_ele.disabled) {
+	if (!not_sudoku_ele || not_sudoku_ele.disabled) {
 		seen = seen.union(seenByRow(grid, coords));
 		seen = seen.union(seenByCol(grid, coords));
 		seen = seen.union(seenByRegion(grid, coords));
