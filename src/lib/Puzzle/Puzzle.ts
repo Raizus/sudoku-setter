@@ -85,9 +85,9 @@ export function blankPuzzle(): PuzzleI {
 	const elements_dict = new ElementsDict();
 	const puzzle: PuzzleI = {
 		grid,
-		solution: undefined,
 		valid_digits: range(1, 10),
 		puzzleMeta: {},
+		solution: undefined,
 		elementsDict: elements_dict
 	};
 	return puzzle;
