@@ -94,11 +94,12 @@ export function blankPuzzle(): PuzzleI {
 }
 
 function hasOutsideCells(elements_dict: ElementsDict, gridShape: GridShape): boolean {
-	for (const [toolId, elementGroup] of elements_dict.entries()) {
-		if (!isOutsideDirectionTool(toolId)) continue;
+	for (const element of elements_dict.values()) {
+		const tool_id = element.tool_id;
+		if (!isOutsideDirectionTool(tool_id)) continue;
 
 		const hasCellOffGrid = Object.values(
-			elementGroup.constraints as Record<string, OutsideDirectionToolI>
+			element.constraints as Record<string, OutsideDirectionToolI>
 		).some((constraint) => {
 			return !isCellOnGrid(constraint.cell, gridShape);
 		});
@@ -109,16 +110,16 @@ function hasOutsideCells(elements_dict: ElementsDict, gridShape: GridShape): boo
 
 /**
  * Calculates the default bounding box for a Sudoku puzzle grid with optional margins for outside cells or tools.
- * 
+ *
  * @param grid - The grid containing row and column dimensions
  * @param elements - Dictionary of puzzle elements
  * @param tool - Optional tool ID to check if the current tool is an outside direction tool
  * @returns A Rectangle object representing the bounding box with x, y coordinates, width, and height
- * 
+ *
  * @remarks
  * The function applies a margin of 1 unit if the grid has outside cells or an outside direction tool is selected,
  * otherwise applies a margin of 0.2 units for padding.
-**/
+ **/
 export function getDefaultBoundingBox(
 	grid: Grid,
 	elements: ElementsDict,
