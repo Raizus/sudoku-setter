@@ -38,19 +38,19 @@ function seenByRegion(grid: Grid, cell: GridCoordI) {
  * @param cell - The cell from which to calculate knight's move visibility
  * @returns A Set of cells that are reachable by a knight's move from the given cell
  */
-function seenByKnightsMove(grid: Grid, cell: Cell) {
+function seenByKnightsMove(grid: Grid, cell: Cell): Set<Cell> {
 	const knight_cells = grid.getCellsByKnightMove(cell);
 	const seen: Set<Cell> = new Set(knight_cells);
 	return seen;
 }
 
-function seenByKingsMove(grid: Grid, cell: Cell) {
+function seenByKingsMove(grid: Grid, cell: Cell): Set<Cell> {
 	const king_cells = grid.getNeighboorCells(cell);
 	const seen: Set<Cell> = new Set(king_cells);
 	return seen;
 }
 
-function seenByDisjointGroup(grid: Grid, cell: Cell) {
+function seenByDisjointGroup(grid: Grid, cell: Cell): Set<Cell> {
 	const group_idx = grid.getDisjointGroupIdx(cell);
 	const disjoint_group = grid.getDisjointGroup(group_idx);
 	const seen: Set<Cell> = new Set(disjoint_group);
@@ -58,7 +58,7 @@ function seenByDisjointGroup(grid: Grid, cell: Cell) {
 	return seen;
 }
 
-function seenByPositiveDiagonal(grid: Grid, cell: Cell) {
+function seenByPositiveDiagonal(grid: Grid, cell: Cell): Set<Cell> {
 	const seen: Set<Cell> = new Set();
 	const diag_cells = grid.getPositiveDiagonal();
 	if (diag_cells.find((cell2) => cell2 === cell)) {
@@ -68,7 +68,7 @@ function seenByPositiveDiagonal(grid: Grid, cell: Cell) {
 	return seen;
 }
 
-function seenByNegativeDiagonal(grid: Grid, cell: Cell) {
+function seenByNegativeDiagonal(grid: Grid, cell: Cell): Set<Cell> {
 	const seen: Set<Cell> = new Set();
 
 	const diag_cells = grid.getNegativeDiagonal();
@@ -158,7 +158,7 @@ function seenByBetweenLines(grid: Grid, cell: Cell, constraint: LineToolI): Set<
 	return seen;
 }
 
-function seenByRenban(grid: Grid, cell: Cell, constraint: LineToolI) {
+function seenByRenban(grid: Grid, cell: Cell, constraint: LineToolI): Set<Cell> {
 	let seen: Set<Cell> = new Set();
 
 	const line_coords = constraint.cells;
@@ -180,7 +180,7 @@ function seenByRenban(grid: Grid, cell: Cell, constraint: LineToolI) {
 	return seen;
 }
 
-function seenByKillerCage(grid: Grid, cell: Cell, constraint: CageToolI) {
+function seenByKillerCage(grid: Grid, cell: Cell, constraint: CageToolI): Set<Cell> {
 	let seen: Set<Cell> = new Set();
 
 	const cage_coords = constraint.cells;
@@ -242,7 +242,7 @@ export function cellsSeenByLocalConstraints(
 	grid: Grid,
 	elements_dict: ElementsDict,
 	coords: GridCoordI
-) {
+): Set<Cell> {
 	let seen: Set<Cell> = new Set();
 
 	const cell = grid.getCell(coords.r, coords.c);
@@ -287,14 +287,17 @@ export function cellsSeenByLocalConstraints(
 	return seen;
 }
 
-export function cellsSeenByCell(puzzle: PuzzleI, coords: GridCoordI) {
+export function cellsSeenByCell(puzzle: PuzzleI, coords: GridCoordI): Set<Cell> {
 	let seen: Set<Cell> = new Set();
 
 	const grid = puzzle.grid;
 	const elements_dict = puzzle.elementsDict;
 
-	const sudoku = !elements_dict.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY);
-	if (sudoku) {
+	const not_sudoku_ele = elements_dict.values().find(
+		(element) => element.tool_id === TOOLS.SUDOKU_RULES_DO_NOT_APPLY
+	);
+
+	if (not_sudoku_ele && !not_sudoku_ele.disabled) {
 		seen = seen.union(seenByRow(grid, coords));
 		seen = seen.union(seenByCol(grid, coords));
 		seen = seen.union(seenByRegion(grid, coords));
