@@ -47,18 +47,19 @@ export function getSingleCellMultiArrowToolInputHandler(
 	let id: string | null = null;
 
 	function handle(event: CellEdgeCornerEvent) {
-		const localConstraints = get(elementsDictStore);
 		const coords = event.cell;
-
+		
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
-
+		
 		let mode = get(toolModeStore);
-
+		
 		if (mode === BASIC_TOOL_MODE.DYNAMIC && event.event.altKey) mode = BASIC_TOOL_MODE.DELETE;
-
+		
 		const direction = idxToDirection(event.direction);
-		const match = findSingleCellConstraint<CellMultiArrowToolI>(localConstraints, tool, coords);
+
+		const elements = get(elementsDictStore);
+		const match = findSingleCellConstraint<CellMultiArrowToolI>(elements, tool, coords);
 
 		// create new constraint
 		if (!match && mode !== BASIC_TOOL_MODE.DELETE) {

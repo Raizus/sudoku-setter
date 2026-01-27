@@ -38,15 +38,15 @@ export function getCornerLineToolInputHandler(
 	let mode = CORNER_LINE_TOOL_MODE.DYNAMIC;
 
 	function handle(event: CellCornerTapEvent) {
-		const localConstraints = get(elementsDictStore);
-
+		
 		const coord = event.coord;
 		const onGrid = areCoordsOnGrid(coord, gridShape);
 		if (!onGrid) return;
-
+		
+		const elements = get(elementsDictStore);
 		let match: [string, ConstraintType] | null = null;
 		if (mode === CORNER_LINE_TOOL_MODE.DYNAMIC) {
-			match = findCornerLineConstraint(localConstraints, tool, coord);
+			match = findCornerLineConstraint(elements, tool, coord);
 			mode = match ? CORNER_LINE_TOOL_MODE.DELETE : CORNER_LINE_TOOL_MODE.ADD_EDIT;
 		}
 		// remove constraint

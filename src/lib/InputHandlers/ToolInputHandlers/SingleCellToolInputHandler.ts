@@ -39,23 +39,23 @@ export function getSingleCellToolInputHandler(
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	function handle(event: CellDragTapEvent) {
-		const localConstraints = get(elementsDictStore);
 		const coords = event.cell;
-
+		
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
-
+		
 		let mode = get(toolModeStore);
-
+		
 		// determine if adding or removing
-		const match = findSingleCellConstraint<CellToolI>(localConstraints, tool, coords);
+		const elements = get(elementsDictStore);
+		const match = findSingleCellConstraint<CellToolI>(elements, tool, coords);
 		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
 			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
 
 		if (options?.oppositeConstraintId) {
 			const oppositeConstraintMatch = findSingleCellConstraint<CellToolI>(
-				localConstraints,
+				elements,
 				options.oppositeConstraintId,
 				coords
 			);
@@ -100,8 +100,8 @@ export function getSingleCellToolInputHandler(
 		}
 
 		const mode = get(toolModeStore);
-		const localConstraints = get(elementsDictStore);
-		const match = findSingleCellConstraint<CellToolI>(localConstraints, tool, event.cell);
+		const elements = get(elementsDictStore);
+		const match = findSingleCellConstraint<CellToolI>(elements, tool, event.cell);
 		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
 			simpleCellToolPreviewStore.set(undefined);
 			return;

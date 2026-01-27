@@ -64,9 +64,9 @@ export function getArrowToolInputHandler(
 		if (!onGrid) return;
 
 		if (mode === ARROW_TOOL_MODE.DYNAMIC) {
-			const localConstraints = get(elementsDictStore);
+			const elements = get(elementsDictStore);
 
-			const matchLine = findArrowLineConstraint(localConstraints, tool, coords);
+			const matchLine = findArrowLineConstraint(elements, tool, coords);
 			if (matchLine) {
 				const arrow = removeLineFromArrow(matchLine.arrow, matchLine.matchLineIdx);
 				pushUpdateLocalConstraintCommand(matchLine.id, matchLine.arrow, arrow, tool, true);
@@ -74,7 +74,7 @@ export function getArrowToolInputHandler(
 				return;
 			}
 
-			const bulbMatch = findArrowBulbConstraint(localConstraints, tool, coords);
+			const bulbMatch = findArrowBulbConstraint(elements, tool, coords);
 			if (!bulbMatch) {
 				bypassTap = true;
 				mode = ARROW_TOOL_MODE.EDIT_BULB;
@@ -142,10 +142,10 @@ export function getArrowToolInputHandler(
 		if (bypassTap) return;
 
 		const coords = event.cell;
-		const localConstraints = get(elementsDictStore);
+		const elements = get(elementsDictStore);
 
 		// on bulb tap remove Arrow
-		const matchBulb = findArrowBulbConstraint(localConstraints, tool, coords);
+		const matchBulb = findArrowBulbConstraint(elements, tool, coords);
 		if (matchBulb) {
 			// push command to history
 			pushRemoveLocalConstraintCommand(id, currentConstraint, tool);

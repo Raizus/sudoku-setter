@@ -87,8 +87,8 @@ export function getLineToolInputHandler(
 		if (mode === BASIC_TOOL_MODE.ADD_EDIT) return;
 
 		const coords = event.cell;
-		const localConstraints = get(elementsDictStore);
-		const match = findLineConstraint(localConstraints, tool, coords);
+		const elements = get(elementsDictStore);
+		const match = findLineConstraint(elements, tool, coords);
 		if (match) {
 			const [id, constraint] = match;
 			pushRemoveLocalConstraintCommand(id, constraint, tool);

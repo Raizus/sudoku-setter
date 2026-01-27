@@ -42,15 +42,15 @@ export function getCageToolInputHandler(
 	let id: string | null = null;
 
 	function handle(event: CellDragTapEvent) {
-		const localConstraints = get(elementsDictStore);
 		const coords = event.cell;
-
+		
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
-
+		
 		// if shift click on an existing cage or mode is add/edit, set it as current constraint,
 		// if there is no current constraint
-		const match = findCageConstraint(localConstraints, tool, coords);
+		const elements = get(elementsDictStore);
+		const match = findCageConstraint(elements, tool, coords);
 		if (
 			id === null &&
 			currentConstraint === null &&

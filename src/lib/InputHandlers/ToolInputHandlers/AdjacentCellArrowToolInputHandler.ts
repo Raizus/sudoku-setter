@@ -59,8 +59,8 @@ export function getDirectedAdjacentCellsToolInputHandler(
 
 		// if draging over an existing arrow and mode is dynamic, remove the existing arrow
 		newConstraint = updateDirectedAdjacentCellsConstraint(newConstraint, coords);
-		const localConstraints = get(elementsDictStore);
-		const match = findEdgeConstraint(localConstraints, tool, newConstraint.cells);
+		const elements = get(elementsDictStore);
+		const match = findEdgeConstraint(elements, tool, newConstraint.cells);
 		const mode = get(toolModeStore);
 		if (match && mode === BASIC_TOOL_MODE.DYNAMIC) {
 			removeLocalConstraint(tool, id);
@@ -86,8 +86,8 @@ export function getDirectedAdjacentCellsToolInputHandler(
 		if (mode === BASIC_TOOL_MODE.ADD_EDIT) return;
 
 		const coords = event.cell;
-		const localConstraints = get(elementsDictStore);
-		const match = findEdgeConstraint(localConstraints, tool, [coords]);
+		const elements = get(elementsDictStore);
+		const match = findEdgeConstraint(elements, tool, [coords]);
 		if (match) {
 			const [id, constraint] = match;
 			pushRemoveLocalConstraintCommand(id, constraint, tool);

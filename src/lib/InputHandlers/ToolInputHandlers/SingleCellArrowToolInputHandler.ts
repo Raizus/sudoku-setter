@@ -51,18 +51,18 @@ export function getSingleCellArrowToolInputHandler(
 	let id: string | null = null;
 
 	function handle(event: CellEdgeCornerEvent) {
-		const localConstraints = get(elementsDictStore);
 		const coords = event.cell;
-
+		
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
-
+		
 		let mode = get(toolModeStore);
-
+		
 		// determine if adding or removing
 		if (event.event.altKey) mode = BASIC_TOOL_MODE.DELETE;
-
-		const match = findSingleCellConstraint<CellArrowToolI>(localConstraints, tool, coords);
+		
+		const elements = get(elementsDictStore);
+		const match = findSingleCellConstraint<CellArrowToolI>(elements, tool, coords);
 		const direction = idxToDirection(event.direction);
 
 		// create new constraint
@@ -125,8 +125,8 @@ export function getSingleCellArrowToolInputHandler(
 		const constraint_preview = singleCellArrowConstraint(tool, event.cell, direction);
 
 		const mode = get(toolModeStore);
-		const localConstraints = get(elementsDictStore);
-		const match = findSingleCellConstraint<CellArrowToolI>(localConstraints, tool, event.cell);
+		const elements = get(elementsDictStore);
+		const match = findSingleCellConstraint<CellArrowToolI>(elements, tool, event.cell);
 		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
 			singleCellArrowPreviewStore.set(undefined);
 			return;

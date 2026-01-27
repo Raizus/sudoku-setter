@@ -39,7 +39,6 @@ export function getEdgeToolInputHandler(
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	function handle(event: CellEdgeTapEvent) {
-		const localConstraints = get(elementsDictStore);
 		const edge = event.coord;
 
 		let mode = get(toolModeStore);
@@ -50,8 +49,9 @@ export function getEdgeToolInputHandler(
 		if (!onGrid) return;
 
 		// determine if adding or removing
+		const elements = get(elementsDictStore);
 		let match: [string, ConstraintType] | null = null;
-		match = findEdgeConstraint(localConstraints, tool, cellsCoords);
+		match = findEdgeConstraint(elements, tool, cellsCoords);
 		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
 			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
@@ -108,8 +108,8 @@ export function getEdgeToolInputHandler(
 			constraint_preview.shape = { ...currentShape };
 		}
 
-		const localConstraints = get(elementsDictStore);
-		const match = findEdgeConstraint(localConstraints, tool, cellsCoords);
+		const elements = get(elementsDictStore);
+		const match = findEdgeConstraint(elements, tool, cellsCoords);
 		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
 			edgeToolPreviewStore.set(undefined);
 			return;

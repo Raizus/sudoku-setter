@@ -44,17 +44,17 @@ export function getCenterCornerOrEdgeToolInputHandler(
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	function handle(event: CellEdgeCornerEvent) {
-		const localConstraints = get(elementsDictStore);
 		const cell = event.cell;
 		const coords = event.closest;
-
+		
 		let mode = get(toolModeStore);
-
+		
 		const onGrid = isCellOnGrid(cell, gridShape);
 		if (!onGrid) return;
-
+		
 		// determine if adding or removing
-		const match = findCenterCornerOrEdgeConstraint(localConstraints, tool, coords);
+		const elements = get(elementsDictStore);
+		const match = findCenterCornerOrEdgeConstraint(elements, tool, coords);
 		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
 			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
@@ -111,8 +111,8 @@ export function getCenterCornerOrEdgeToolInputHandler(
 			constraint_preview.shape = { ...currentShape };
 		}
 
-		const localConstraints = get(elementsDictStore);
-		const match = findCenterCornerOrEdgeConstraint(localConstraints, tool, event.closest);
+		const elements = get(elementsDictStore);
+		const match = findCenterCornerOrEdgeConstraint(elements, tool, event.closest);
 		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
 			centerCornerOrEdgeToolPreviewStore.set(undefined);
 			return;

@@ -58,21 +58,20 @@ export function getCloneToolInputHandler(
 	let mode = get(toolModeStore);
 
 	function handle(event: CellDragTapEvent) {
-		const localConstraints = get(elementsDictStore);
 		const coords = event.cell;
-
+		
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
-
+		
 		// if shift click on an existing cage, add cells to it
 		// const match = findCloneConstraint(localConstraints, tool, coords);
 		// if (mode === CLONE_TOOL_MODE.DYNAMIC) {
-		// 	if (match) {
-		// 		id = match[0];
-		// 		currentConstraint = match[1];
-		// 		mode = CLONE_TOOL_MODE.MOVE;
-		// 		moveStart = coords;
-
+			// 	if (match) {
+				// 		id = match[0];
+				// 		currentConstraint = match[1];
+				// 		mode = CLONE_TOOL_MODE.MOVE;
+				// 		moveStart = coords;
+				
 		// 		// which group is moving, cells1 or cell2
 		// 		const match2 = currentConstraint.cells2.some((_cell) => areCoordsEqual(_cell, coords));
 		// 		movingGroup = match2 ? 'cells2' : 'cells';
@@ -81,7 +80,8 @@ export function getCloneToolInputHandler(
 		// 	}
 		// }
 
-		const match = findCloneConstraint(localConstraints, tool, coords);
+		const elements = get(elementsDictStore);
+		const match = findCloneConstraint(elements, tool, coords);
 		if (match) {
 			id = match[0];
 			currentConstraint = match[1];
@@ -105,7 +105,7 @@ export function getCloneToolInputHandler(
 		// create new clone or add to existing
 		if (mode === CLONE_TOOL_MODE.SELECT && id === null) {
 			id = uniqueId();
-			const usedLabels = findUsedCloneLabels(localConstraints, tool);
+			const usedLabels = findUsedCloneLabels(elements, tool);
 			const label = getNewLabel(usedLabels);
 			currentConstraint = cloneConstraint(tool, [coords], label);
 			addLocalConstraint(id, currentConstraint);

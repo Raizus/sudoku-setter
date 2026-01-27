@@ -40,19 +40,19 @@ export function getCornerToolInputHandler(
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	function handle(event: CellCornerTapEvent) {
-		const localConstraints = get(elementsDictStore);
 		const corner = event.coord;
-
+		
 		let mode = get(toolModeStore);
-
+		
 		const cellsCoords = cornerCoordToAdjCellCoords(corner);
-
+		
 		const onGrid = cellsCoords.every((coord) => isCellOnGrid(coord, gridShape));
 		if (!onGrid) return;
-
+		
 		// determine if adding or removing
+		const elements = get(elementsDictStore);
 		let match: [string, ConstraintType] | null = null;
-		match = findCornerConstraint(localConstraints, tool, corner);
+		match = findCornerConstraint(elements, tool, corner);
 		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
 			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
@@ -109,8 +109,8 @@ export function getCornerToolInputHandler(
 			constraint_preview.shape = { ...currentShape };
 		}
 
-		const localConstraints = get(elementsDictStore);
-		const match = findCornerConstraint(localConstraints, tool, event.coord);
+		const elements = get(elementsDictStore);
+		const match = findCornerConstraint(elements, tool, event.coord);
 		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
 			cornerToolPreviewStore.set(undefined);
 			return;
