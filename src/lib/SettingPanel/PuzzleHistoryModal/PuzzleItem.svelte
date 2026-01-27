@@ -7,7 +7,7 @@
 	import { resetZoom } from '$stores/BoundingBoxStore';
 	import type { PuzzleI } from '$src/lib/Puzzle/Puzzle';
 	import Trash from '$icons/Trash.svelte';
-	import { removePuzzleFromHistory } from '$stores/PuzzleHistoryStore';
+	import { puzzleHistoryStore, removePuzzleFromHistory } from '$stores/PuzzleHistoryStore';
 
 	export let item: PuzzleHistoryItem;
 	export let item_id: number;
@@ -47,6 +47,22 @@
 			// remove item from history
 			removePuzzleFromHistory(item_id);
 			confirm_selected = undefined;
+			const puzzle_count = $puzzleHistoryStore.length;
+
+			// select next or previous item
+			if (item_id < puzzle_count) {
+				selected = item_id;
+				const item = $puzzleHistoryStore[selected];
+				selected_puzzle = compressedStrToPuzzle(item.encodedStr);
+			} else if(item_id > 0) {
+				selected = item_id - 1;
+				const item = $puzzleHistoryStore[selected];
+				selected_puzzle = compressedStrToPuzzle(item.encodedStr);
+			}
+			else {
+				selected = undefined;
+				selected_puzzle = undefined;
+			}
 		}
 	}
 
@@ -102,7 +118,7 @@
 		border: 0;
 		border-radius: 0.2em;
 		background-color: var(--button-background-color);
-		transition: background .4s ease;
+		transition: background 0.4s ease;
 
 		&.confirm {
 			background-color: #e6194b;
