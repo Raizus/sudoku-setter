@@ -113,8 +113,8 @@ export function cellsSeenByGlobalConstraints(
 
 	for (const element of element_dict.values()) {
 		const tool_id = element.tool_id;
-
 		if (!(tool_id in tool_function_map)) continue;
+		if (element.disabled) continue;
 
 		const func = tool_function_map[tool_id];
 		seen = seen.union(func(grid, cell));
@@ -229,6 +229,7 @@ function seenByLocalElement<T extends ConstraintType>(
 	let seen: Set<Cell> = new Set();
 
 	if (!element.constraints) return seen;
+	if (element.disabled) return seen;
 
 	for (const constraint of Object.values(element.constraints)) {
 		const seen_by_c = func(grid, cell, constraint as T);
