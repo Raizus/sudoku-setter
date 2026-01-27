@@ -30,7 +30,8 @@ export type Element<T extends ConstraintType> = {
 
 export const underlayElementsStore = derived(elementsDictStore, ($localConstraintsStore) => {
 	const elements: ConstraintsElement[] = [];
-	for (const [toolId, element] of $localConstraintsStore.entries()) {
+	for (const element of $localConstraintsStore.values()) {
+		const toolId = element.tool_id;
 		if (!isUnderlayTool(toolId)) continue;
 
 		elements.push(element);
@@ -50,8 +51,8 @@ export function getToolStore<T extends ConstraintType>(
 	tool_id: TOOLID
 ): Readable<Record<string, T>> {
 	const store = derived(elementsDictStore, ($localConstraintsStore) => {
-		for (const [toolId, element] of $localConstraintsStore.entries()) {
-			if (toolId !== tool_id) continue;
+		for (const element of $localConstraintsStore.values()) {
+			if (tool_id !== element.tool_id) continue;
 			const record = element.constraints as Record<string, T>;
 			return record;
 		}
