@@ -6,8 +6,9 @@ import type { OutsideDirectionToolI, PuzzleMetaI } from './puzzle_schema';
 import { areArraysEqual } from '../utils/functionUtils';
 import type { Solution } from './puzzle_schema';
 import type { GridShape, Rectangle } from '../Types/types';
-import { isOutsideDirectionTool, type TOOLID } from './Tools';
+import { isOutsideDirectionTool, TOOLS, type TOOLID } from './Tools';
 import { isCellOnGrid } from '../utils/SquareCellGridCoords';
+import { elementInfoRegistry } from './ElementsInfo/ElementInfoRegistry';
 
 export interface PuzzleI {
 	grid: Grid;
@@ -139,4 +140,48 @@ export function getDefaultBoundingBox(
 	const bbox: Rectangle = { x: x0, y: y0, width, height };
 
 	return bbox;
+}
+
+export function generateDescription(elements: ElementsDict): string {
+	let description: string = '';
+	const elementHandlers = elementInfoRegistry;
+
+	// is sudoku?
+	const not_sudoku_ele = elements.values().find(
+		(element) => element.tool_id === TOOLS.SUDOKU_RULES_DO_NOT_APPLY
+	);
+	if (!not_sudoku_ele || not_sudoku_ele.disabled) {
+		description += 'Sudoku rules apply.\n\n';
+	} else {
+		description += 'Sudoku rules do not apply.\n\n';		
+	}
+
+	// local constraints descriptions
+	for (const element of elements.values()) {
+		const tool_id = element.tool_id;
+
+		// elements to ignore
+		if (tool_id === TOOLS.SUDOKU_RULES_DO_NOT_APPLY) continue;
+
+		const elementInfo = elementHandlers[tool_id];
+		const name = elementInfo.menu?.name ?? elementInfo.toolId;
+		const constraint_desc = elementInfo.meta?.description;
+		description += `**${name}**: ${constraint_desc}\n\n`;
+
+		// add negative constraints descriptions
+		if (!element.negative_constraints) continue;
+		for (const [neg_tool_id, value] of Object.entries(element.negative_constraints)) {
+			if (!value) continue;
+			const neg_constraint = elementInfo.negative_constraints?.find(
+				(neg_constraint) => neg_constraint.toolId === neg_tool_id
+			);
+			if (!neg_constraint) continue;
+
+			const name = neg_tool_id;
+			const constraint_desc = neg_constraint.description;
+			description += ` - **${name}**: ${constraint_desc}\n\n`;
+		}
+	}
+
+	return description.trim();
 }
