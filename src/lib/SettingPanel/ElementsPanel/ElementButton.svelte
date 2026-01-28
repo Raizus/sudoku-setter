@@ -1,8 +1,8 @@
 <script lang="ts">
 	import CaretDown from '$icons/CaretDown.svelte';
 	import CaretUp from '$icons/CaretUp.svelte';
-	import Trash from '$icons/Trash.svelte';
 	import { getToolInfo, type AbstractElementHandlers } from '$src/lib/Puzzle/ElementHandlersUtils';
+	import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
 	import { TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
 	import { getUsageDescription } from '$src/lib/Puzzle/ToolUsage';
 	import {
@@ -21,8 +21,10 @@
 	import ElementEditor from './ElementEditor.svelte';
 	import MoreButton from './MoreButton.svelte';
 
-	export let order: number | undefined = undefined;
 	export let tool_id: TOOLID;
+	export let element_id: number | undefined = undefined;
+	export let element: ConstraintsElement | undefined = undefined;
+
 	export let elementHandlers: AbstractElementHandlers;
 
 	const permanent: boolean = !!elementHandlers[tool_id].permanent;
@@ -30,8 +32,7 @@
 	let constraint_name = tool_id;
 
 	$: elementInfo = getToolInfo(tool_id, elementHandlers);
-	$: puzzle_element = $elementsDictStore.get(tool_id);
-	$: disabled = !!puzzle_element?.disabled;
+	$: disabled = !!element?.disabled;
 
 	function selectCb() {
 		if (selected) {
@@ -90,7 +91,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <div class="element-button-wrapper">
-	{#if order !== undefined}
+	{#if !permanent && element_id !== undefined}
 		<div class="reorder-buttons">
 			<button class="form-button reorder-button move-up" on:click={moveUp}>
 				<CaretUp />
@@ -104,7 +105,7 @@
 		class="constraints-ui"
 		class:clickable={true}
 		class:selected
-		class:disabled={puzzle_element?.disabled}
+		class:disabled={element?.disabled}
 	>
 		<div class="header" title={getTooltip()} on:click={selectCb}>
 			<div class="element-icon-container"></div>
@@ -114,9 +115,6 @@
 				</span>
 			</div>
 			{#if !permanent}
-				<!-- <button class="form-button icon header-button" on:click|stopPropagation={deleteElement}>
-					<Trash />
-				</button> -->
 				<MoreButton
 					display={!permanent}
 					deleteElementCb={deleteElement}

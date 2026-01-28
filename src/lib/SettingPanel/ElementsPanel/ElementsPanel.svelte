@@ -50,7 +50,7 @@
 
 		{#each $elementsDictStore.entries() as [tool_id, element] (tool_id)}
 			{#if isElement(tool_id)}
-				<ElementButton {tool_id} {elementHandlers} />
+				<ElementButton tool_id={element.tool_id} {elementHandlers} {element}/>
 			{/if}
 		{/each}
 	</svelte:fragment>
