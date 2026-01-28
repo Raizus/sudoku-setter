@@ -72,15 +72,10 @@ export interface ElementData {
 }
 
 export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
-	addToDict(toolId: TOOLID) {
-		if (this.has(toolId)) {
-			return;
-		}
-		const new_element: ConstraintsElement = {
-			tool_id: toolId,
-			constraints: {}
-		};
-		this.set(toolId, new_element);
+	addElementToDict(element: ConstraintsElement) {
+		if (this.has(element.tool_id)) return;
+
+		this.set(element.tool_id, element);
 	}
 
 	hasTool(toolId: TOOLID): boolean {
@@ -115,7 +110,8 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 
 	addConstraint<T extends ConstraintType>(toolId: TOOLID, constraintId: string, constraint: T) {
 		if (!this.get(toolId)) {
-			this.addToDict(toolId);
+			const element : ConstraintsElement = { tool_id: toolId, constraints: {} };
+			this.addElementToDict(element);
 		}
 
 		const element = this.get(toolId);
@@ -187,8 +183,8 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 			}
 
 			// add element
-			local_constraints.addToDict(tool);
-			const element = local_constraints.get(tool);
+			const element: ConstraintsElement = { tool_id: tool, constraints: {} };
+			local_constraints.addElementToDict(element);
 			if (!element) continue;
 
 			// parse negative constraints

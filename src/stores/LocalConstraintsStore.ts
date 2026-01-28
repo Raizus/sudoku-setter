@@ -17,7 +17,8 @@ import type { TOOLID } from '$src/lib/Puzzle/Tools';
 
 export function addGroupToLocalConstraint(toolId: TOOLID) {
 	elementsDictStore.update((localConstraintsDict) => {
-		localConstraintsDict.addToDict(toolId);
+		const element: ConstraintsElement = { tool_id: toolId, constraints: {} };
+		localConstraintsDict.addElementToDict(element);
 		return localConstraintsDict;
 	});
 }
