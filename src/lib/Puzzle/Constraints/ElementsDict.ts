@@ -521,8 +521,8 @@ export function filterElements(
 	filter_f: (tool: TOOLID) => boolean
 ): ConstraintsElement[] {
 	const elements: ConstraintsElement[] = [];
-	for (const [toolId, element] of elements_dict.entries()) {
-		if (!filter_f(toolId)) continue;
+	for (const element of elements_dict.values()) {
+		if (!filter_f(element.tool_id)) continue;
 		elements.push(element);
 	}
 	return elements;
