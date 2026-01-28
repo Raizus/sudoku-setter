@@ -280,25 +280,6 @@ export function findEdgeConstraint(
 	return null;
 }
 
-export function findAdjacentCellsArrowConstraint(
-	elementsDict: ElementsDict,
-	toolId: TOOLID,
-	cells: GridCoordI[]
-) {
-	const elements = elementsDict.get(toolId);
-	if (!elements || !elements.constraints) return null;
-
-	for (const entry of Object.entries(elements.constraints)) {
-		const constraint = entry[1] as EdgeToolI;
-		const match = cells.every((cell) =>
-			constraint.cells.some((cell2) => areCoordsEqual(cell, cell2))
-		);
-
-		if (match) return entry;
-	}
-	return null;
-}
-
 export function findCornerConstraint(
 	elementsDict: ElementsDict,
 	toolId: TOOLID,
@@ -471,7 +452,7 @@ export function findUsedCloneLabels(elementsDict: ElementsDict, toolId: TOOLID) 
 	return usedLabels;
 }
 
-export function constraintToJson(constraint: ConstraintType) {
+export function constraintToJson(constraint: ConstraintType): Record<string, unknown> {
 	const jsonObj: Record<string, unknown> = {};
 
 	if ('cells' in constraint) {
@@ -529,6 +510,12 @@ export function constraintToJson(constraint: ConstraintType) {
 	return jsonObj;
 }
 
+/**
+ * Filters elements from an ElementsDict based on a predicate function.
+ * @param elements_dict - The dictionary of constraint elements to filter
+ * @param filter_f - A predicate function that determines whether to include an element based on its tool ID
+ * @returns An array of constraint elements that pass the filter predicate
+ */
 export function filterElements(
 	elements_dict: ElementsDict,
 	filter_f: (tool: TOOLID) => boolean
