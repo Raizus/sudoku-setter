@@ -17,7 +17,6 @@ import type { GridShape } from '$lib/Types/types';
 import {
 	findCornerConstraint,
 	updateConstraintValue} from '$src/lib/Puzzle/Constraints/ElementsDict';
-import { type ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 import { cornerConstraint } from '$lib/Puzzle/Constraints/CornerConstraints';
 import { type CornerToolI } from "$src/lib/Puzzle/puzzle_schema";
 import { cornerCoordToAdjCellCoords, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
@@ -51,8 +50,7 @@ export function getCornerToolInputHandler(
 		
 		// determine if adding or removing
 		const elements = get(elementsDictStore);
-		let match: [string, ConstraintType] | null = null;
-		match = findCornerConstraint(elements, tool, corner);
+		const match = findCornerConstraint(elements, tool, corner);
 		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
 			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
