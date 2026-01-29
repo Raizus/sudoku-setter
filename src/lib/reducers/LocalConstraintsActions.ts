@@ -7,7 +7,9 @@ export enum ELEMENT_ACTIONS {
 	REMOVE_ELEMENT = 'REMOVE_ELEMENT',
 	RESTORE_ELEMENT = 'RESTORE_ELEMENT',
 	ENABLE_DISABLE_ELEMENT = 'ENABLE_DISABLE_ELEMENT',
-	UPDATE_LOCAL_CONSTRAINT = 'UPDATE_LOCAL_CONSTRAINT'
+	UPDATE_LOCAL_CONSTRAINT = 'UPDATE_LOCAL_CONSTRAINT',
+	MOVE_ELEMENT_UP = 'MOVE_ELEMENT_UP',
+	MOVE_ELEMENT_DOWN = 'MOVE_ELEMENT_DOWN'
 }
 
 type AddLocalConstraintAction = {
@@ -59,13 +61,29 @@ type UpdateLocalConstraintAction = {
 	};
 };
 
-export type LocalConstraintAction =
+type MoveElementUpAction = {
+	type: ELEMENT_ACTIONS.MOVE_ELEMENT_UP;
+	payload: {
+		element_id: number;
+	};
+};
+
+type MoveElementDownAction = {
+	type: ELEMENT_ACTIONS.MOVE_ELEMENT_DOWN;
+	payload: {
+		element_id: number;
+	};
+};
+
+export type ElementAction =
 	| AddLocalConstraintAction
 	| RemoveLocalConstraintAction
 	| RemoveElementAction
 	| RestoreElementAction
 	| UpdateLocalConstraintAction
-	| EnableDisableElementAction;
+	| EnableDisableElementAction
+	| MoveElementUpAction
+	| MoveElementDownAction;
 
 export const addLocalConstraintAction = (
 	element_id: number,
@@ -140,6 +158,24 @@ export const updateLocalConstraintAction = (
 		payload: {
 			constraintId: id,
 			constraint,
+			element_id
+		}
+	};
+};
+
+export const moveElementUpAction = (element_id: number): MoveElementUpAction => {
+	return {
+		type: ELEMENT_ACTIONS.MOVE_ELEMENT_UP,
+		payload: {
+			element_id
+		}
+	};
+};
+
+export const moveElementDownAction = (element_id: number): MoveElementDownAction => {
+	return {
+		type: ELEMENT_ACTIONS.MOVE_ELEMENT_DOWN,
+		payload: {
 			element_id
 		}
 	};

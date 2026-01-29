@@ -48,7 +48,7 @@
 		<ElementButton tool_id={TOOLS.GIVEN} {elementHandlers} />
 		<ElementButton tool_id={TOOLS.REGIONS} {elementHandlers} />
 
-		{#each $elementsDictStore.entries() as [element_id, element] (element_id)}
+		{#each $elementsDictStore.orderedEntries() as [element_id, element] (element_id)}
 			{#if isElement(element.tool_id)}
 				<ElementButton tool_id={element.tool_id} {elementHandlers} {element} {element_id}/>
 			{/if}

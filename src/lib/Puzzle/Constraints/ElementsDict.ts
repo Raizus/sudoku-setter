@@ -108,13 +108,24 @@ export interface ElementData {
 
 export class ElementsDict extends Map<number, ConstraintsElement> {
 	id_count: number = 0;
+	order: number[] = [];
 
 	addElementToDict(element: ConstraintsElement) {
 		const element_id = this.id_count;
 		this.set(this.id_count, element);
+		this.order.push(this.id_count);
 		this.id_count += 1;
 
 		return element_id;
+	}
+
+	*orderedEntries(): Generator<[number, ConstraintsElement], void, unknown> { 
+		for (const element_id of this.order) {
+			const element = this.get(element_id);
+			if (element) {
+				yield [element_id, element];
+			}
+		}
 	}
 
 	findElementsByTool(toolId: TOOLID): ConstraintsElement[] {
@@ -138,6 +149,8 @@ export class ElementsDict extends Map<number, ConstraintsElement> {
 		const elementToRemove = this.get(element_id);
 		if (elementToRemove === undefined) return;
 		this.delete(element_id);
+		const idx = this.order.indexOf(element_id);
+		this.order.splice(idx, 1);
 		return [element_id, elementToRemove];
 	}
 
@@ -172,6 +185,25 @@ export class ElementsDict extends Map<number, ConstraintsElement> {
 
 	setElement(element_id: number, element: ConstraintsElement) {
 		this.set(element_id, element);
+		this.order.push(element_id);
+	}
+
+	moveElementUp(element_id: number) { 
+		const idx = this.order.indexOf(element_id);
+		if (idx <= 0) return;
+		[this.order[idx - 1], this.order[idx]] = [this.order[idx], this.order[idx - 1]];
+	}
+
+	moveElementDown(element_id: number) { 
+		const idx = this.order.indexOf(element_id);
+		if (idx === -1 || idx >= this.order.length - 1) return;
+		[this.order[idx + 1], this.order[idx]] = [this.order[idx], this.order[idx + 1]];
+	}
+
+	enableDisableElement(element_id: number, value: boolean) { 
+		const element = this.get(element_id);
+		if (!element) return;
+		element.disabled = value;
 	}
 
 	removeConstraint(element_id: number, constraintId: string) {

@@ -7,6 +7,8 @@
 	import { getUsageDescription } from '$src/lib/Puzzle/ToolUsage';
 	import {
 		enableDisableElementAction,
+		moveElementDownAction,
+		moveElementUpAction,
 		removeElementAction,
 		restoreElementAction
 	} from '$src/lib/reducers/LocalConstraintsActions';
@@ -87,9 +89,21 @@
 		return description;
 	}
 
-	function moveUp() {}
+	function moveUp() {
+		if (element_id === null) return;
+		const action = moveElementUpAction(element_id);
+		const reverse_action = moveElementDownAction(element_id);
+		const command = getUpdateElementCommand(action, reverse_action);
+		addCommand(command);
+	}
 
-	function moveDown() {}
+	function moveDown() {
+		if (element_id === null) return;
+		const action = moveElementDownAction(element_id!);
+		const reverse_action = moveElementUpAction(element_id!);
+		const command = getUpdateElementCommand(action, reverse_action);
+		addCommand(command);
+	}
 
 	$: selected = element_id === $selectedElementIdStore && tool_id === $toolStore;
 </script>

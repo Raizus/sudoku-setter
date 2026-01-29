@@ -2,7 +2,7 @@ import { type ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 import { type ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
 import {
 	ELEMENT_ACTIONS,
-	type LocalConstraintAction
+	type ElementAction
 } from '$src/lib/reducers/LocalConstraintsActions';
 import type { CommandI } from '$src/lib/Types/types';
 import { get } from 'svelte/store';
@@ -14,6 +14,7 @@ import {
 	updateLocalConstraint
 } from './BoardStore';
 import type { TOOLID } from '$src/lib/Puzzle/Tools';
+
 
 export function addGroupToLocalConstraint(toolId: TOOLID) {
 	let element_id: number | null = null;
@@ -62,15 +63,12 @@ export function restoreElement(element_id: number, element: ConstraintsElement) 
 
 export function enableDisableElement(element_id: number, value: boolean) {
 	elementsDictStore.update((elementsDict) => {
-		const element = elementsDict.get(element_id);
-		if (!element) return elementsDict;
-		element.disabled = value;
-		elementsDict.setElement(element_id, element);
+		elementsDict.enableDisableElement(element_id, value);
 		return elementsDict;
 	});
 }
 
-export function updateElementAction(action: LocalConstraintAction): void {
+export function updateElementAction(action: ElementAction): void {
 	if (action.type === ELEMENT_ACTIONS.ADD_LOCAL_CONSTRAINT) {
 		addLocalConstraint(action.payload.element_id, action.payload.id, action.payload.constraint);
 	} else if (action.type === ELEMENT_ACTIONS.REMOVE_LOCAL_CONSTRAINT) {
@@ -87,12 +85,22 @@ export function updateElementAction(action: LocalConstraintAction): void {
 		);
 	} else if (action.type === ELEMENT_ACTIONS.ENABLE_DISABLE_ELEMENT) {
 		enableDisableElement(action.payload.element_id, action.payload.value);
+	} else if (action.type === ELEMENT_ACTIONS.MOVE_ELEMENT_UP) {
+		elementsDictStore.update((elementsDict) => {
+			elementsDict.moveElementUp(action.payload.element_id);
+			return elementsDict;
+		});
+	} else if (action.type === ELEMENT_ACTIONS.MOVE_ELEMENT_DOWN) {
+		elementsDictStore.update((elementsDict) => {
+			elementsDict.moveElementDown(action.payload.element_id);
+			return elementsDict;
+		});
 	}
 }
 
 export function getUpdateElementCommand(
-	action: LocalConstraintAction,
-	reverse_action: LocalConstraintAction
+	action: ElementAction,
+	reverse_action: ElementAction
 ): CommandI {
 	const command: CommandI = {
 		execute: () => {

@@ -10,7 +10,7 @@ import {
 	type TOOLID
 } from '$lib/Puzzle/Tools';
 import { derived, writable, type Readable } from 'svelte/store';
-import { elementsDictStore, toolStore } from './BoardStore';
+import { elementsDictStore, selectedElementIdStore } from './BoardStore';
 import type { CornerToolI } from '$src/lib/Puzzle/puzzle_schema';
 import type { SingleCellTool } from '$src/lib/Puzzle/puzzle_schema';
 import type { CellMultiArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
@@ -23,14 +23,9 @@ import type { ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
 import { filterElements } from '$src/lib/Puzzle/Constraints/ElementsDict';
 
-export type Element<T extends ConstraintType> = {
-	toolId: TOOLID;
-	constraints: Record<string, T>;
-};
-
-export const underlayElementsStore = derived(elementsDictStore, ($localConstraintsStore) => {
+export const underlayElementsStore = derived(elementsDictStore, ($elementsDictStore) => {
 	const elements: ConstraintsElement[] = [];
-	for (const element of $localConstraintsStore.values()) {
+	for (const [, element] of $elementsDictStore.orderedEntries()) {
 		const toolId = element.tool_id;
 		if (!isUnderlayTool(toolId)) continue;
 
@@ -40,8 +35,8 @@ export const underlayElementsStore = derived(elementsDictStore, ($localConstrain
 });
 
 function getElementsStore(filter_f: (tool: TOOLID) => boolean): Readable<ConstraintsElement[]> {
-	const store = derived(elementsDictStore, ($localConstraintsStore) => {
-		const elements = filterElements($localConstraintsStore, filter_f);
+	const store = derived(elementsDictStore, ($elementsDictStore) => {
+		const elements = filterElements($elementsDictStore, filter_f);
 		return elements;
 	});
 	return store;
@@ -50,8 +45,8 @@ function getElementsStore(filter_f: (tool: TOOLID) => boolean): Readable<Constra
 export function getToolStore<T extends ConstraintType>(
 	tool_id: TOOLID
 ): Readable<Record<string, T>> {
-	const store = derived(elementsDictStore, ($localConstraintsStore) => {
-		for (const element of $localConstraintsStore.values()) {
+	const store = derived(elementsDictStore, ($elementsDictStore) => {
+		for (const element of $elementsDictStore.values()) {
 			if (tool_id !== element.tool_id) continue;
 			const record = element.constraints as Record<string, T>;
 			return record;
@@ -135,10 +130,11 @@ export const centerCornerOrEdgeToolPreviewStore = writable<
 >(undefined);
 
 export const currentElementStore: Readable<ConstraintsElement | undefined> = derived(
-	[elementsDictStore, toolStore],
-	([$localConstraintsStore, $toolStore]) => {
-		const tool_id = $toolStore;
-		const element = $localConstraintsStore.get(tool_id);
+	[elementsDictStore, selectedElementIdStore],
+	([$elementsDictStore, $selectedElementIdStore]) => {
+		const selected_id = $selectedElementIdStore;
+		if (selected_id === null) return undefined;
+		const element = $elementsDictStore.get(selected_id);
 		return element;
 	}
 );
