@@ -157,7 +157,7 @@ export function generateDescription(elements: ElementsDict): string {
 	}
 
 	// local constraints descriptions
-	for (const element of elements.values()) {
+	for (const [, element] of elements.orderedEntries()) {
 		const tool_id = element.tool_id;
 
 		// elements to ignore
