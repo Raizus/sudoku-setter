@@ -3,6 +3,7 @@ import { isSingleCellArrowTool, type TOOLID } from '$lib/Puzzle/Tools';
 import {
 	currentConstraintStore,
 	selectConstraint,
+	selectedElementIdStore,
 	updateLocalConstraint
 } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
@@ -65,28 +66,31 @@ export function getSingleCellArrowToolInputHandler(
 		const match = findSingleCellConstraint<CellArrowToolI>(elements, tool, coords);
 		const direction = idxToDirection(event.direction);
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		// create new constraint
 		if (!match && mode !== BASIC_TOOL_MODE.DELETE) {
 			currentConstraint = singleCellArrowConstraint(tool, coords, direction);
 			id = uniqueId();
-			pushAddLocalConstraintCommand(id, currentConstraint, tool, true);
+			pushAddLocalConstraintCommand(element_id, id, currentConstraint, true);
 		} else if (match) {
 			// select
 			if (match[1].direction === direction && mode === BASIC_TOOL_MODE.ADD_EDIT) {
 				[id, currentConstraint] = match;
-				selectConstraint(match[0], tool);
+				selectConstraint(element_id, match[0]);
 			}
 			// remove
 			else if (
 				(match[1].direction === direction && mode === BASIC_TOOL_MODE.DYNAMIC) ||
 				mode === BASIC_TOOL_MODE.DELETE
 			) {
-				pushRemoveLocalConstraintCommand(match[0], match[1], tool);
+				pushRemoveLocalConstraintCommand(element_id, match[0], match[1]);
 			} else {
 				// update direction
 				id = match[0];
 				currentConstraint = { ...match[1], direction: direction } as CellArrowToolI;
-				updateLocalConstraint(tool, match[0], currentConstraint);
+				updateLocalConstraint(element_id, match[0], currentConstraint);
 			}
 		}
 	}
@@ -101,13 +105,16 @@ export function getSingleCellArrowToolInputHandler(
 		const constraint = selected.constraint;
 		if (!isSingleCellArrowTool(constraint.toolId)) return;
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		const idx = validDirections.indexOf((constraint as CellArrowToolI).direction);
 		const nextIdx = (idx + 1) % validDirections.length;
 		currentConstraint = {
 			...(constraint as CellArrowToolI),
 			direction: validDirections[nextIdx]
 		} as CellArrowToolI;
-		updateLocalConstraint(tool, id, currentConstraint);
+		updateLocalConstraint(element_id, id, currentConstraint);
 	}
 
 	pointerHandler.onDragStart = (event: CellEdgeCornerEvent): void => {

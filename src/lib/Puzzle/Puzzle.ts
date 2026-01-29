@@ -67,7 +67,7 @@ export function puzzleFromJson(puzzleJson: Record<string, unknown>) {
 	const solution = puzzleJson['solution'] as Solution;
 	// const grid = new Grid(nRows, nCols);
 
-	const local_constraints_data = puzzleJson['elements'] as Record<string, ElementData>;
+	const local_constraints_data = puzzleJson['elements'] as ElementData[];
 	const elements_dict = ElementsDict.fromJson(local_constraints_data);
 
 	const puzzle: PuzzleI = {

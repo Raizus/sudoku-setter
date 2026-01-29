@@ -1,6 +1,13 @@
 import { TOOLS } from '../Puzzle/Tools';
 import { hexedSudokuConstraint, sudokuConstraints } from './global_constraints';
-import { addHeader, cellToVarName, PuzzleModel, set_board_regions, type PuzzleAuxI } from './solver_utils';
+import {
+	addHeader,
+	cellToVarName,
+	hasEnabledElement,
+	PuzzleModel,
+	set_board_regions,
+	type PuzzleAuxI
+} from './solver_utils';
 import { defineFunctionsPredicates } from './solver_mzn_defs';
 import { range } from 'lodash';
 import { elementInfoRegistry } from '../Puzzle/ElementsInfo/ElementInfoRegistry';
@@ -31,15 +38,16 @@ export function elementConstraints(
 	const puzzle = model.puzzle;
 	const elements_map = puzzle.elementsDict;
 
-	for (const [tool_id, element] of elements_map.entries()) {
+	for (const [element_id, element] of elements_map.entries()) {
 		if (element.disabled) continue;
+		const tool_id = element.tool_id;
 
 		const element_info = element_handlers[tool_id];
 		const solver_func = element_info.solver_func;
 		if (!solver_func) continue;
 
 		let element_solver_str: string = solver_func(model, element);
-		element_solver_str = addHeader(element_solver_str, `${tool_id}`);
+		element_solver_str = addHeader(element_solver_str, `${tool_id}, element ID: ${element_id}`);
 		out_str += element_solver_str;
 	}
 
@@ -60,10 +68,9 @@ export function createMinizincModel(puzzle: PuzzleAuxI, randomize_search: boolea
 
 	const max_val = Math.max(nrows, ncols);
 	let allowed_digits_str = `1..${max_val}`;
-	const elements_dict = puzzle.elementsDict;
 
-	const fillomino = !!elements_dict.get(TOOLS.FILLOMINO);
-	const hexed_sudoku = !!elements_dict.get(TOOLS.HEXED_SUDOKU);
+	const fillomino = hasEnabledElement(puzzle, TOOLS.FILLOMINO);
+	const hexed_sudoku = hasEnabledElement(puzzle, TOOLS.HEXED_SUDOKU);
 
 	if (fillomino) {
 		allowed_digits_str = `1..${grid_size}`;

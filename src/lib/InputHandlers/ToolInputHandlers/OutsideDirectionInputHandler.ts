@@ -2,6 +2,7 @@ import type { InputHandler } from '../InputHandler';
 import {
 	currentConstraintStore,
 	selectConstraint,
+	selectedElementIdStore,
 	updateLocalConstraint
 } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
@@ -66,15 +67,18 @@ export function getOutsideDirectionToolInputHandler(
 			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		if (match && mode === BASIC_TOOL_MODE.DELETE) {
 			const [id, constraint] = match;
-			pushRemoveLocalConstraintCommand(id, constraint, tool);
+			pushRemoveLocalConstraintCommand(element_id, id, constraint);
 		} else if (!match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
 			const newConstraint = outsideDirectionConstraint(tool, cell, direction, '');
 			const id = uniqueId();
-			pushAddLocalConstraintCommand(id, newConstraint, tool, true);
+			pushAddLocalConstraintCommand(element_id, id, newConstraint, true);
 		} else if (match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
-			selectConstraint(match[0], tool);
+			selectConstraint(element_id, match[0]);
 		}
 	}
 
@@ -89,10 +93,13 @@ export function getOutsideDirectionToolInputHandler(
 		if (!keyboardInputDefaultValidator(event.key)) return;
 		if (!options?.valueUpdater) return;
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		const newValue = options.valueUpdater(constraint?.value, event.key);
 		if (newValue !== undefined && newValue !== constraint.value) {
 			constraint = updateConstraintValue(constraint, newValue);
-			updateLocalConstraint(tool, id, constraint);
+			updateLocalConstraint(element_id, id, constraint);
 		}
 	}
 

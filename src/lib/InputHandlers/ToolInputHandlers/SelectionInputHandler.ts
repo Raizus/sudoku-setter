@@ -222,7 +222,7 @@ export function getSelectionInputHandler(
 
 		if (event.type === 'keydown') {
 			const newTool = quickShift2EnterMode(event);
-			updateToolAndCurrentConstraintStores(newTool);
+			updateToolAndCurrentConstraintStores(newTool, null);
 			return true;
 		}
 		if (event.type === 'keyup') {
@@ -238,12 +238,12 @@ export function getSelectionInputHandler(
 		if (event.code === 'Space') {
 			const idx = tools.indexOf(tool);
 			const nextTool = tools[(idx + 1) % tools.length];
-			updateToolAndCurrentConstraintStores(nextTool);
+			updateToolAndCurrentConstraintStores(nextTool, null);
 			updatePreviousToolStore(nextTool);
 			return true;
 		} else {
 			const newTool = letterKey2EnterMode(event.code);
-			updateToolAndCurrentConstraintStores(newTool);
+			updateToolAndCurrentConstraintStores(newTool, null);
 			updatePreviousToolStore(newTool);
 			return true;
 		}

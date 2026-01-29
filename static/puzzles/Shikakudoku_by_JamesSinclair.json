@@ -1,141 +1,260 @@
 {
-	"puzzleInfo": {
-		"title": "Shikaku-doku",
-		"authors": ["James Sinclair"],
-		"ruleset": "Sudoku rules apply.\n\n**Positive Diagonal**: Numbers must not repeat on the positive diagonal.\n\n**Shikaku**: Divide the grid into rectangular regions of orthogonally connected cells, so that every cell is in a region and regions do not overlap.\n\n**Killer Cage**: Numbers must not repeat in a killer cage. The numbers in the cage must sum to the given total in the top left (if one exists).\n\n**Shikaku Region Size**: Each shikaku region contains exactly one circle, and a digit in a circle indicates the number of cells in its region.",
-		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=jxQHjZwGDGI",
-		"ctcUrl": "https://sudokupad.app/james-sinclair/shikaku-doku"
-	},
-	"nRows": 9,
-	"nCols": 9,
-	"grid": [
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}],
-		[{}, {}, {}, {}, {}, {}, {}, {}, {}]
-	],
-	"elements": {
-		"Positive Diagonal": {
-			"tool_id": "Positive Diagonal",
-			"constraints": []
-		},
-		"Shikaku": {
-			"tool_id": "Shikaku",
-			"constraints": [],
-			"negative_constraints": {
-				"Shikaku No Repeats In Region": true
-			}
-		},
-		"Killer Cage": {
-			"tool_id": "Killer Cage",
-			"constraints": [
-				{
-					"cells": ["R2C5", "R3C5"],
-					"value": "7"
-				},
-				{
-					"cells": ["R4C4", "R4C5"],
-					"value": "17"
-				},
-				{
-					"cells": ["R5C7", "R5C8"],
-					"value": "16"
-				},
-				{
-					"cells": ["R2C9", "R3C9"],
-					"value": "12"
-				},
-				{
-					"cells": ["R6C9", "R7C9"],
-					"value": "4"
-				},
-				{
-					"cells": ["R8C5", "R8C6"],
-					"value": "13"
-				},
-				{
-					"cells": ["R9C5", "R9C6"],
-					"value": "11"
-				},
-				{
-					"cells": ["R8C3", "R9C3"],
-					"value": "10"
-				},
-				{
-					"cells": ["R7C1", "R7C2"],
-					"value": "17"
-				}
-			]
-		},
-		"Shikaku Region Size": {
-			"tool_id": "Shikaku Region Size",
-			"constraints": [
-				{
-					"cell": "R1C2"
-				},
-				{
-					"cell": "R2C3"
-				},
-				{
-					"cell": "R1C9"
-				},
-				{
-					"cell": "R2C8"
-				},
-				{
-					"cell": "R3C7"
-				},
-				{
-					"cell": "R4C6"
-				},
-				{
-					"cell": "R5C5"
-				},
-				{
-					"cell": "R6C4"
-				},
-				{
-					"cell": "R7C3"
-				},
-				{
-					"cell": "R8C2"
-				},
-				{
-					"cell": "R9C1"
-				},
-				{
-					"cell": "R9C2"
-				},
-				{
-					"cell": "R8C1"
-				},
-				{
-					"cell": "R5C1"
-				},
-				{
-					"cell": "R8C6"
-				},
-				{
-					"cell": "R8C5"
-				},
-				{
-					"cell": "R9C4"
-				},
-				{
-					"cell": "R6C9"
-				},
-				{
-					"cell": "R7C9"
-				}
-			],
-			"negative_constraints": {
-				"Shikaku Each Regions Contains One Size Circle": true
-			}
-		}
-	}
+  "puzzleInfo": {
+    "title": "Shikaku-doku",
+    "authors": [
+      "James Sinclair"
+    ],
+    "ruleset": "Sudoku rules apply.\n\n**Positive Diagonal**: Numbers must not repeat on the positive diagonal.\n\n**Shikaku**: Divide the grid into rectangular regions of orthogonally connected cells, so that every cell is in a region and regions do not overlap.\n\n**Killer Cage**: Numbers must not repeat in a killer cage. The numbers in the cage must sum to the given total in the top left (if one exists).\n\n**Shikaku Region Size**: Each shikaku region contains exactly one circle, and a digit in a circle indicates the number of cells in its region.",
+    "ctcYoutubeUrl": "https://www.youtube.com/watch?v=jxQHjZwGDGI",
+    "ctcUrl": "https://sudokupad.app/james-sinclair/shikaku-doku"
+  },
+  "nRows": 9,
+  "nCols": 9,
+  "grid": [
+    [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ]
+  ],
+  "elements": [
+    {
+      "tool_id": "Positive Diagonal",
+      "constraints": []
+    },
+    {
+      "tool_id": "Shikaku",
+      "constraints": [],
+      "negative_constraints": {
+        "Shikaku No Repeats In Region": true
+      }
+    },
+    {
+      "tool_id": "Killer Cage",
+      "constraints": [
+        {
+          "cells": [
+            "R2C5",
+            "R3C5"
+          ],
+          "value": "7"
+        },
+        {
+          "cells": [
+            "R4C4",
+            "R4C5"
+          ],
+          "value": "17"
+        },
+        {
+          "cells": [
+            "R5C7",
+            "R5C8"
+          ],
+          "value": "16"
+        },
+        {
+          "cells": [
+            "R2C9",
+            "R3C9"
+          ],
+          "value": "12"
+        },
+        {
+          "cells": [
+            "R6C9",
+            "R7C9"
+          ],
+          "value": "4"
+        },
+        {
+          "cells": [
+            "R8C5",
+            "R8C6"
+          ],
+          "value": "13"
+        },
+        {
+          "cells": [
+            "R9C5",
+            "R9C6"
+          ],
+          "value": "11"
+        },
+        {
+          "cells": [
+            "R8C3",
+            "R9C3"
+          ],
+          "value": "10"
+        },
+        {
+          "cells": [
+            "R7C1",
+            "R7C2"
+          ],
+          "value": "17"
+        }
+      ]
+    },
+    {
+      "tool_id": "Shikaku Region Size",
+      "constraints": [
+        {
+          "cell": "R1C2"
+        },
+        {
+          "cell": "R2C3"
+        },
+        {
+          "cell": "R1C9"
+        },
+        {
+          "cell": "R2C8"
+        },
+        {
+          "cell": "R3C7"
+        },
+        {
+          "cell": "R4C6"
+        },
+        {
+          "cell": "R5C5"
+        },
+        {
+          "cell": "R6C4"
+        },
+        {
+          "cell": "R7C3"
+        },
+        {
+          "cell": "R8C2"
+        },
+        {
+          "cell": "R9C1"
+        },
+        {
+          "cell": "R9C2"
+        },
+        {
+          "cell": "R8C1"
+        },
+        {
+          "cell": "R5C1"
+        },
+        {
+          "cell": "R8C6"
+        },
+        {
+          "cell": "R8C5"
+        },
+        {
+          "cell": "R9C4"
+        },
+        {
+          "cell": "R6C9"
+        },
+        {
+          "cell": "R7C9"
+        }
+      ],
+      "negative_constraints": {
+        "Shikaku Each Regions Contains One Size Circle": true
+      }
+    }
+  ]
 }

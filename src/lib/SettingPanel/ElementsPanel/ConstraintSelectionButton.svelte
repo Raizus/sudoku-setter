@@ -1,6 +1,4 @@
 <script lang="ts">
-	import type { TOOLID } from '$lib/Puzzle/Tools';
-
 	import Trash from '$icons/Trash.svelte';
 	import { currentConstraintStore, selectConstraint, svgRefStore } from '$stores/BoardStore';
 	import { elementsDictStore } from '$stores/BoardStore';
@@ -12,20 +10,20 @@
 	import { addCommand } from '$stores/CommandHistoryStore';
 
 	export let constraint_id: string;
-	export let tool_id: TOOLID;
+	export let element_id: number;
 
 	function selectConstraintCb() {
 		//update current constraint
-		selectConstraint(constraint_id, tool_id);
+		selectConstraint(element_id, constraint_id);
 		if ($svgRefStore) $svgRefStore.focus();
 	}
 
 	function removeConstraint() {
 		// removeLocalConstraint(toolId, constraintId);
-		const constraint = $elementsDictStore.getConstraint(tool_id, constraint_id);
+		const constraint = $elementsDictStore.getConstraint(element_id, constraint_id);
 		if (!constraint) return;
-		const action = removeLocalConstraintAction(constraint_id, tool_id);
-		const reverse_action = addLocalConstraintAction(constraint_id, constraint);
+		const action = removeLocalConstraintAction(element_id, constraint_id);
+		const reverse_action = addLocalConstraintAction(element_id, constraint_id, constraint);
 		const command = getUpdateElementCommand(action, reverse_action);
 		addCommand(command);
 	}

@@ -1,5 +1,5 @@
 import type { InputHandler } from '../InputHandler';
-import { updateLocalConstraint } from '$stores/BoardStore';
+import { selectedElementIdStore, updateLocalConstraint } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
 import { removeLocalConstraint } from '$stores/LocalConstraintsStore';
 import { addLocalConstraint } from '$stores/LocalConstraintsStore';
@@ -50,8 +50,11 @@ export function getLineToolInputHandler(
 		const coords = event.cell;
 		if (!eventOnGrid(event)) return;
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		newConstraint = updateLineConstraintCells(newConstraint, coords, allowSelfIntersection);
-		updateLocalConstraint(tool, id, newConstraint);
+		updateLocalConstraint(element_id, id, newConstraint);
 	}
 
 	pointerHandler.onDragStart = (event: CellDragTapEvent): void => {
@@ -59,10 +62,13 @@ export function getLineToolInputHandler(
 
 		if (!eventOnGrid(event)) return;
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		if (mode !== BASIC_TOOL_MODE.DELETE) {
 			id = uniqueId();
 			newConstraint = lineConstraint(tool, [], options?.defaultValue);
-			addLocalConstraint(id, newConstraint);
+			addLocalConstraint(element_id, id, newConstraint);
 			handle(event);
 		}
 	};
@@ -72,11 +78,14 @@ export function getLineToolInputHandler(
 	};
 
 	pointerHandler.onDragEnd = () => {
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		if (id && newConstraint && newConstraint.cells.length <= 1) {
-			removeLocalConstraint(tool, id);
+			removeLocalConstraint(element_id, id);
 		} else if (id && newConstraint) {
 			// push command to history stack
-			pushAddLocalConstraintCommand(id, newConstraint, tool, false);
+			pushAddLocalConstraintCommand(element_id, id, newConstraint, false);
 		}
 
 		id = null;
@@ -89,9 +98,13 @@ export function getLineToolInputHandler(
 		const coords = event.cell;
 		const elements = get(elementsDictStore);
 		const match = findLineConstraint(elements, tool, coords);
+
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		if (match) {
 			const [id, constraint] = match;
-			pushRemoveLocalConstraintCommand(id, constraint, tool);
+			pushRemoveLocalConstraintCommand(element_id, id, constraint);
 		}
 	};
 

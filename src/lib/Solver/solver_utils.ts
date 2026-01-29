@@ -1,6 +1,6 @@
 import type { ConstraintType } from '../Puzzle/puzzle_schema';
 import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
-import type { SingleCellTool } from "../Puzzle/puzzle_schema";
+import type { SingleCellTool } from '../Puzzle/puzzle_schema';
 import type { Cell } from '../Puzzle/Grid/Cell';
 import type { Grid } from '../Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '../Puzzle/Tools';
@@ -107,6 +107,15 @@ export function addHeader(block: string, header: string) {
 	return block;
 }
 
+export function hasEnabledElement(puzzle: PuzzleAuxI, toolId: TOOLID): boolean {
+	for (const element of puzzle.elementsDict.values()) {
+		if (element.tool_id === toolId && !element.disabled) {
+			return true;
+		}
+	}
+	return false;
+}
+
 export function getDirectionCells(grid: Grid, cell: Cell) {
 	const directions = [DIRECTION.N, DIRECTION.S, DIRECTION.W, DIRECTION.E];
 	const cells2: Cell[][] = [];
@@ -135,7 +144,7 @@ export function getDirectionsVars(
 export interface PuzzleAuxI {
 	grid: Grid;
 	valid_digits: number[];
-	elementsDict: Map<TOOLID, ConstraintsElement>;
+	elementsDict: Map<number, ConstraintsElement>;
 }
 
 export interface ModelI {
@@ -302,24 +311,6 @@ export function simpleElementFunction<T extends ConstraintType>(
 		const constraint_str = func(model, grid, c_id, constraint as T);
 		out_str += constraint_str;
 	}
-	return out_str;
-}
-
-export function constraintsBuilder(
-	model: PuzzleModel,
-	element: ConstraintsElement,
-	tool_map: Map<string, ElementF>
-) {
-	let out_str = '';
-	if (element.disabled) return out_str;
-
-	const tool_id = element.tool_id;
-	const elementF = tool_map.get(tool_id);
-	if (elementF) {
-		const element_str = elementF(model, element);
-		out_str += element_str;
-	}
-
 	return out_str;
 }
 
@@ -537,7 +528,7 @@ export function set_board_regions(model: PuzzleModel, grid: Grid) {
 	}
 
 	const array_str = format_2d_array(regions_arr);
-	model.add(`set of int: REGION_IDXS = {${regions.join(',')}};\n`)
+	model.add(`set of int: REGION_IDXS = {${regions.join(',')}};\n`);
 	model.add(
 		`array[ROW_IDXS, COL_IDXS] of var ${min_r - 1}..${max_r}: ${VAR_2D_NAMES.BOARD_REGIONS} = array2d(ROW_IDXS, COL_IDXS, ${array_str});\n`
 	);
@@ -549,7 +540,9 @@ export function set_board_regions(model: PuzzleModel, grid: Grid) {
 	// }
 }
 
-export function groupConstraintsByValue<T extends ConstraintType>(constraints: T[]) {
+export function groupConstraintsByValue<T extends ConstraintType>(
+	constraints: T[]
+): Map<string, T[]> {
 	const groups = new Map<string, T[]>();
 	for (const constraint of constraints) {
 		const value = constraint.value ?? '';
@@ -614,10 +607,9 @@ export function exactlyNPerRegion(
 	grid_name: string
 ) {
 	const grid = puzzle.grid;
-
 	let out_str: string = '';
-	const elements = puzzle.elementsDict;
-	const chaos_construction = !!elements.get(TOOLS.CHAOS_CONSTRUCTION);
+
+	const chaos_construction = hasEnabledElement(puzzle, TOOLS.CHAOS_CONSTRUCTION);
 	if (!chaos_construction) {
 		out_str += `\n% Exactly ${n} per region \n`;
 		const regions = grid.getUsedRegions();

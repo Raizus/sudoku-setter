@@ -1,6 +1,6 @@
 import type { InputHandler } from '../InputHandler';
 import type { TOOLID } from '$lib/Puzzle/Tools';
-import { selectConstraint, updateLocalConstraint } from '$stores/BoardStore';
+import { selectConstraint, selectedElementIdStore, updateLocalConstraint } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
@@ -61,20 +61,23 @@ export function getSingleCellMultiArrowToolInputHandler(
 		const elements = get(elementsDictStore);
 		const match = findSingleCellConstraint<CellMultiArrowToolI>(elements, tool, coords);
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		// create new constraint
 		if (!match && mode !== BASIC_TOOL_MODE.DELETE) {
 			currentConstraint = singleCellMultiArrowConstraint(tool, coords, direction);
 			id = uniqueId();
-			pushAddLocalConstraintCommand(id, currentConstraint, tool, true);
+			pushAddLocalConstraintCommand(element_id, id, currentConstraint, true);
 		} else if (match) {
 			// select
 			if (match[1].directions.includes(direction) && mode !== BASIC_TOOL_MODE.DELETE) {
 				[id, currentConstraint] = match;
-				selectConstraint(match[0], tool);
+				selectConstraint(element_id, match[0]);
 			}
 			// remove constraint
 			if (match && mode === BASIC_TOOL_MODE.DELETE) {
-				pushRemoveLocalConstraintCommand(match[0], match[1], tool);
+				pushRemoveLocalConstraintCommand(element_id, match[0], match[1]);
 			}
 			// update directions, add/remove arrow (if empty remove constraint)
 			else {
@@ -85,9 +88,9 @@ export function getSingleCellMultiArrowToolInputHandler(
 						...match[1],
 						directions: newDirections
 					} as CellMultiArrowToolI;
-					updateLocalConstraint(tool, match[0], currentConstraint);
+					updateLocalConstraint(element_id, match[0], currentConstraint);
 				} else {
-					pushRemoveLocalConstraintCommand(match[0], match[1], tool);
+					pushRemoveLocalConstraintCommand(element_id, match[0], match[1]);
 				}
 			}
 		}

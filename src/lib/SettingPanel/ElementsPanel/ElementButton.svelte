@@ -12,6 +12,7 @@
 	} from '$src/lib/reducers/LocalConstraintsActions';
 	import {
 		elementsDictStore,
+		selectedElementIdStore,
 		toolStore,
 		updateToolAndCurrentConstraintStores,
 		updateToolOnRemoveGroup
@@ -22,7 +23,7 @@
 	import MoreButton from './MoreButton.svelte';
 
 	export let tool_id: TOOLID;
-	export let element_id: number | undefined = undefined;
+	export let element_id: number | null = null;
 	export let element: ConstraintsElement | undefined = undefined;
 
 	export let elementHandlers: AbstractElementHandlers;
@@ -36,30 +37,35 @@
 
 	function selectCb() {
 		if (selected) {
-			updateToolAndCurrentConstraintStores(TOOLS.DIGIT);
+			updateToolAndCurrentConstraintStores(TOOLS.DIGIT, null);
 		} else if (!disabled) {
-			updateToolAndCurrentConstraintStores(tool_id);
+			updateToolAndCurrentConstraintStores(tool_id, element_id);
 		}
 	}
 
 	function deleteElement() {
 		updateToolOnRemoveGroup(tool_id);
 
-		const constraints = $elementsDictStore.get(tool_id);
+		if(element_id === null) return;
+		
+		const constraints = $elementsDictStore.get(element_id);
 		if (!constraints) return;
-		const action = removeElementAction(tool_id);
-		const reverse_action = restoreElementAction(tool_id, constraints);
+
+		const action = removeElementAction(element_id);
+		const reverse_action = restoreElementAction(element_id, constraints);
 		const command = getUpdateElementCommand(action, reverse_action);
 		addCommand(command);
 	}
 
 	function enableDisableElement() {
-		const action = enableDisableElementAction(tool_id, !disabled);
-		const reverse_action = enableDisableElementAction(tool_id, disabled);
+		if(element_id === null) return;
+
+		const action = enableDisableElementAction(element_id, !disabled);
+		const reverse_action = enableDisableElementAction(element_id, disabled);
 		const command = getUpdateElementCommand(action, reverse_action);
 		addCommand(command);
 		if (!disabled) {
-			updateToolAndCurrentConstraintStores(TOOLS.DIGIT);
+			updateToolAndCurrentConstraintStores(TOOLS.DIGIT, null);
 		}
 	}
 
@@ -85,7 +91,7 @@
 
 	function moveDown() {}
 
-	$: selected = tool_id === $toolStore;
+	$: selected = element_id === $selectedElementIdStore && tool_id === $toolStore;
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -123,8 +129,8 @@
 				/>
 			{/if}
 		</div>
-		{#if selected}
-			<ElementEditor {tool_id} />
+		{#if selected && element_id !== null}
+			<ElementEditor {tool_id} {element_id}/>
 		{/if}
 	</div>
 </div>

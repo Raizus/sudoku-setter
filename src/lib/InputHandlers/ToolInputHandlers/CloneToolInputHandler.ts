@@ -1,5 +1,5 @@
 import type { InputHandler } from '../InputHandler';
-import { updateLocalConstraint } from '$stores/BoardStore';
+import { selectedElementIdStore, updateLocalConstraint } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
 import { removeLocalConstraint } from '$stores/LocalConstraintsStore';
 import { addLocalConstraint } from '$stores/LocalConstraintsStore';
@@ -102,18 +102,21 @@ export function getCloneToolInputHandler(
 			mode = CLONE_TOOL_MODE.SELECT;
 		}
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		// create new clone or add to existing
 		if (mode === CLONE_TOOL_MODE.SELECT && id === null) {
 			id = uniqueId();
 			const usedLabels = findUsedCloneLabels(elements, tool);
 			const label = getNewLabel(usedLabels);
 			currentConstraint = cloneConstraint(tool, [coords], label);
-			addLocalConstraint(id, currentConstraint);
+			addLocalConstraint(element_id, id, currentConstraint);
 			return;
 		} else if (mode === CLONE_TOOL_MODE.SELECT && id && currentConstraint) {
 			// add to current clone
 			currentConstraint = updateCloneConstraintCells(currentConstraint, coords);
-			updateLocalConstraint(tool, id, currentConstraint);
+			updateLocalConstraint(element_id, id, currentConstraint);
 			return;
 		} else if (mode === CLONE_TOOL_MODE.MOVE && id && currentConstraint && moveStart) {
 			const dv: GridCoordI = { r: coords.r - moveStart.r, c: coords.c - moveStart.c };
@@ -129,7 +132,7 @@ export function getCloneToolInputHandler(
 				currentConstraint = { ...currentConstraint, cells2: newCells };
 			}
 			moveStart = coords;
-			updateLocalConstraint(tool, id, currentConstraint);
+			updateLocalConstraint(element_id, id, currentConstraint);
 		}
 	}
 
@@ -149,17 +152,23 @@ export function getCloneToolInputHandler(
 		// push command to history stack
 		if (!(id && currentConstraint)) return;
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		if (mode === CLONE_TOOL_MODE.SELECT) {
-			pushAddLocalConstraintCommand(id, currentConstraint, tool);
+			pushAddLocalConstraintCommand(element_id, id, currentConstraint);
 		} else if (mode === CLONE_TOOL_MODE.MOVE) {
-			pushUpdateLocalConstraintCommand(id, oldConstraint, currentConstraint, tool);
+			pushUpdateLocalConstraintCommand(element_id, id, oldConstraint, currentConstraint);
 		}
 		oldConstraint = currentConstraint;
 	};
 
 	pointerHandler.onTap = (): void => {
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		if (id && mode !== CLONE_TOOL_MODE.SELECT) {
-			removeLocalConstraint(tool, id);
+			removeLocalConstraint(element_id, id);
 			id = null;
 			currentConstraint = null;
 		}

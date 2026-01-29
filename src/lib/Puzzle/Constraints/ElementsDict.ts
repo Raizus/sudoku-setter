@@ -63,6 +63,41 @@ export function updateConstraintName(
 	return { ...constraint, name };
 }
 
+function constraintFromJson(
+	tool: TOOLID,
+	constraint_data: Record<string, unknown>
+): ConstraintType | null {
+	let constraint: ConstraintType | null = null;
+	if (isToolOfType(tool, SIMPLE_SINGLE_CELL_CONSTRAINTS)) {
+		constraint = singleCellConstraintFromJson(tool, constraint_data);
+	} else if (isSingleCellArrowTool(tool)) {
+		constraint = singleCellArrowConstraintFromJson(tool, constraint_data);
+	} else if (isSingleCellMultiArrowTool(tool)) {
+		constraint = singleCellMultiArrowConstraintFromJson(tool, constraint_data);
+	} else if (isEdgeTool(tool)) {
+		constraint = edgeConstraintFromJson(tool, constraint_data);
+	} else if (isCornerTool(tool)) {
+		constraint = cornerConstraintFromJson(tool, constraint_data);
+	} else if (isLineTool(tool)) {
+		constraint = lineConstraintFromJson(tool, constraint_data);
+	} else if (isCornerLineTool(tool)) {
+		constraint = cornerLineConstraintFromJson(tool, constraint_data);
+	} else if (isArrowTool(tool)) {
+		constraint = arrowConstraintFromJson(tool, constraint_data);
+	} else if (isCageTool(tool)) {
+		constraint = cageConstraintFromJson(tool, constraint_data);
+	} else if (isOutsideDirectionTool(tool)) {
+		constraint = outsideDirectionConstraintFromJson(tool, constraint_data);
+	} else if (isValuedGlobalConstraint(tool)) {
+		constraint = valuedGlobalConstraintFromJson(tool, constraint_data);
+	} else if (tool === TOOLS.VARIABLE_CONSTRAINT) {
+		constraint = variableConstraintFromJson(constraint_data);
+	} else if (isCenterEdgeCornerTool(tool)) {
+		constraint = centerCornerOrEdgeConstraintFromJson(tool, constraint_data);
+	}
+	return constraint;
+}
+
 export interface ElementData {
 	tool_id: TOOLID;
 	name?: string;
@@ -71,11 +106,25 @@ export interface ElementData {
 	disabled?: boolean;
 }
 
-export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
-	addElementToDict(element: ConstraintsElement) {
-		if (this.has(element.tool_id)) return;
+export class ElementsDict extends Map<number, ConstraintsElement> {
+	id_count: number = 0;
 
-		this.set(element.tool_id, element);
+	addElementToDict(element: ConstraintsElement) {
+		const element_id = this.id_count;
+		this.set(this.id_count, element);
+		this.id_count += 1;
+
+		return element_id;
+	}
+
+	findElementsByTool(toolId: TOOLID): ConstraintsElement[] {
+		const elements: ConstraintsElement[] = [];
+		for (const element of this.values()) {
+			if (element.tool_id === toolId) {
+				elements.push(element);
+			}
+		}
+		return elements;
 	}
 
 	hasTool(toolId: TOOLID): boolean {
@@ -85,14 +134,15 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 		return false;
 	}
 
-	removeFromDict(toolId: TOOLID) {
-		const elementToRemove = this.get(toolId);
+	removeFromDict(element_id: number) {
+		const elementToRemove = this.get(element_id);
 		if (elementToRemove === undefined) return;
-		this.delete(toolId);
+		this.delete(element_id);
+		return [element_id, elementToRemove];
 	}
 
-	getConstraint<T extends ConstraintType>(toolId: TOOLID, constraintId: string) {
-		const element = this.get(toolId);
+	getConstraint<T extends ConstraintType>(element_id: number, constraintId: string) {
+		const element = this.get(element_id);
 		if (!element || !element.constraints) return null;
 		const constraint = element.constraints[constraintId];
 		if (!constraint) return null;
@@ -108,24 +158,24 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 		return null;
 	}
 
-	addConstraint<T extends ConstraintType>(toolId: TOOLID, constraintId: string, constraint: T) {
-		if (!this.get(toolId)) {
-			const element : ConstraintsElement = { tool_id: toolId, constraints: {} };
+	addConstraint<T extends ConstraintType>(element_id: number, constraintId: string, constraint: T) {
+		if (!this.get(element_id)) {
+			const element: ConstraintsElement = { tool_id: constraint.toolId, constraints: {} };
 			this.addElementToDict(element);
 		}
 
-		const element = this.get(toolId);
+		const element = this.get(element_id);
 		if (!element || !element.constraints) return;
 
 		element.constraints[constraintId] = constraint;
 	}
 
-	setElement(toolId: TOOLID, element: ConstraintsElement) {
-		this.set(toolId, element);
+	setElement(element_id: number, element: ConstraintsElement) {
+		this.set(element_id, element);
 	}
 
-	removeConstraint(toolId: TOOLID, constraintId: string) {
-		const element = this.get(toolId);
+	removeConstraint(element_id: number, constraintId: string) {
+		const element = this.get(element_id);
 		if (!element || !element.constraints) return;
 
 		if (element.constraints[constraintId]) {
@@ -133,8 +183,12 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 		}
 	}
 
-	updateConstraint<T extends ConstraintType>(toolId: TOOLID, constraintId: string, constraint: T) {
-		const element = this.get(toolId);
+	updateConstraint<T extends ConstraintType>(
+		element_id: number,
+		constraintId: string,
+		constraint: T
+	) {
+		const element = this.get(element_id);
 		if (!element || !element.constraints) return;
 
 		if (element.constraints[constraintId]) {
@@ -143,9 +197,9 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 	}
 
 	toJSON() {
-		const local_elements: Record<string, ElementData> = {};
+		const elements_data: ElementData[] = [];
 
-		for (const [toolId, element] of this.entries()) {
+		for (const [, element] of this.entries()) {
 			const constraints: Record<string, unknown>[] = [];
 			if (element.constraints) {
 				for (const constraint of Object.values(element.constraints)) {
@@ -153,7 +207,7 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 				}
 			}
 			const element_data: ElementData = {
-				tool_id: toolId,
+				tool_id: element.tool_id,
 				constraints
 			};
 			if (element.negative_constraints) {
@@ -163,15 +217,15 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 					element_data.negative_constraints[neg_tool_id] = value;
 				}
 			}
-			local_elements[toolId] = element_data;
+			elements_data.push(element_data);
 		}
-		return local_elements;
+		return elements_data;
 	}
 
-	static fromJson(data: Record<string, ElementData> | undefined) {
+	static fromJson(data: ElementData[] | undefined) {
 		const local_constraints = new ElementsDict();
 		if (!data) return local_constraints;
-		for (const element_data of Object.values(data)) {
+		for (const element_data of data) {
 			// read tool_id and verify tool is valid and defined in the element handlers
 			const tool_id_str = element_data['tool_id'];
 			if (typeof tool_id_str !== 'string') throw TypeError('tool_id_str must be of type string.');
@@ -184,7 +238,7 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 
 			// add element
 			const element: ConstraintsElement = { tool_id: tool, constraints: {} };
-			local_constraints.addElementToDict(element);
+			const element_id = local_constraints.addElementToDict(element);
 			if (!element) continue;
 
 			// parse negative constraints
@@ -199,40 +253,13 @@ export class ElementsDict extends Map<TOOLID, ConstraintsElement> {
 			// parse constraints
 			const constraints_data = element_data['constraints'];
 			for (const constraint_data of constraints_data) {
-				let constraint: ConstraintType | null = null;
-				if (isToolOfType(tool, SIMPLE_SINGLE_CELL_CONSTRAINTS)) {
-					constraint = singleCellConstraintFromJson(tool, constraint_data);
-				} else if (isSingleCellArrowTool(tool)) {
-					constraint = singleCellArrowConstraintFromJson(tool, constraint_data);
-				} else if (isSingleCellMultiArrowTool(tool)) {
-					constraint = singleCellMultiArrowConstraintFromJson(tool, constraint_data);
-				} else if (isEdgeTool(tool)) {
-					constraint = edgeConstraintFromJson(tool, constraint_data);
-				} else if (isCornerTool(tool)) {
-					constraint = cornerConstraintFromJson(tool, constraint_data);
-				} else if (isLineTool(tool)) {
-					constraint = lineConstraintFromJson(tool, constraint_data);
-				} else if (isCornerLineTool(tool)) {
-					constraint = cornerLineConstraintFromJson(tool, constraint_data);
-				} else if (isArrowTool(tool)) {
-					constraint = arrowConstraintFromJson(tool, constraint_data);
-				} else if (isCageTool(tool)) {
-					constraint = cageConstraintFromJson(tool, constraint_data);
-				} else if (isOutsideDirectionTool(tool)) {
-					constraint = outsideDirectionConstraintFromJson(tool, constraint_data);
-				} else if (isValuedGlobalConstraint(tool)) {
-					constraint = valuedGlobalConstraintFromJson(tool, constraint_data);
-				} else if (tool === TOOLS.VARIABLE_CONSTRAINT) {
-					constraint = variableConstraintFromJson(constraint_data);
-				} else if (isCenterEdgeCornerTool(tool)) {
-					constraint = centerCornerOrEdgeConstraintFromJson(tool, constraint_data);
-				}
+				const constraint = constraintFromJson(tool, constraint_data);
 
 				if (constraint !== null) {
-					const id = uniqueId();
+					const c_id = uniqueId();
 					const shape = parseShape(constraint_data, tool);
 					constraint.shape = shape;
-					local_constraints.addConstraint(tool, id, constraint);
+					local_constraints.addConstraint(element_id, c_id, constraint);
 				}
 			}
 		}
@@ -334,7 +361,7 @@ export function findArrowBulbConstraint(
 	toolId: TOOLID,
 	cell: GridCoordI
 ): [id: string, arrowTool: ArrowToolI] | null {
-	for(const [id, constraint] of constraintGenerator<ArrowToolI>(elementsDict, toolId)) {
+	for (const [id, constraint] of constraintGenerator<ArrowToolI>(elementsDict, toolId)) {
 		const match = constraint.cells.some((_cell) => areCoordsEqual(_cell, cell));
 
 		if (match) return [id, constraint];
@@ -347,7 +374,7 @@ export function findArrowLineConstraint(
 	toolId: TOOLID,
 	cell: GridCoordI
 ): { id: string; arrow: ArrowToolI; matchLineIdx: number } | null {
-	for(const [id, constraint] of constraintGenerator<ArrowToolI>(elementsDict, toolId)) {
+	for (const [id, constraint] of constraintGenerator<ArrowToolI>(elementsDict, toolId)) {
 		const arrow = constraint as ArrowToolI;
 		const matchLineIdx = arrow.lines.findIndex((line) =>
 			line.some((_cell, idx) => areCoordsEqual(_cell, cell) && idx > 0)
@@ -381,7 +408,10 @@ export function findCenterCornerOrEdgeConstraint(
 	toolId: TOOLID,
 	cell: GridCoordI
 ): [id: string, centerCornerOrEdgeTool: CenterCornerOrEdgeToolI] | null {
-	for(const [id, constraint] of constraintGenerator<CenterCornerOrEdgeToolI>(elementsDict, toolId)) {
+	for (const [id, constraint] of constraintGenerator<CenterCornerOrEdgeToolI>(
+		elementsDict,
+		toolId
+	)) {
 		if (areCoordsEqual(cell, constraint.cell)) return [id, constraint];
 	}
 	return null;
@@ -392,7 +422,7 @@ export function findCloneConstraint(
 	toolId: TOOLID,
 	cell: GridCoordI
 ): [id: string, cloneTool: CloneToolI] | null {
-	for(const [id, constraint] of constraintGenerator<CloneToolI>(elementsDict, toolId)) {
+	for (const [id, constraint] of constraintGenerator<CloneToolI>(elementsDict, toolId)) {
 		const match =
 			constraint.cells.some((_cell) => areCoordsEqual(_cell, cell)) ||
 			constraint.cells2.some((_cell) => areCoordsEqual(_cell, cell));
@@ -403,8 +433,8 @@ export function findCloneConstraint(
 
 export function findUsedCloneLabels(elementsDict: ElementsDict, toolId: TOOLID) {
 	const usedLabels: Set<string> = new Set();
-	
-	for(const [, constraint] of constraintGenerator<CloneToolI>(elementsDict, toolId)) {
+
+	for (const [, constraint] of constraintGenerator<CloneToolI>(elementsDict, toolId)) {
 		usedLabels.add(constraint.value);
 	}
 	return usedLabels;

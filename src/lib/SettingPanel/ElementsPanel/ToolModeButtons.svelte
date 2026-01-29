@@ -13,6 +13,7 @@
 	import { uniqueId } from 'lodash';
 
 	export let tool_id: TOOLID;
+	export let element_id: number;
 
 	$: modes = getToolModes(tool_id);
 
@@ -26,11 +27,11 @@
 		if (isValuedGlobalConstraint(tool_id)) {
 			const id = uniqueId();
 			const constraint = valuedGlobalConstraint(tool_id, '');
-			pushAddLocalConstraintCommand(id, constraint, tool_id, true);
+			pushAddLocalConstraintCommand(element_id, id, constraint, true);
 		} else if (tool_id === TOOLS.VARIABLE_CONSTRAINT) {
 			const id = uniqueId();
 			const constraint = variableConstraint('', '');
-			pushAddLocalConstraintCommand(id, constraint, tool_id, true);
+			pushAddLocalConstraintCommand(element_id, id, constraint, true);
 		}
 	}
 

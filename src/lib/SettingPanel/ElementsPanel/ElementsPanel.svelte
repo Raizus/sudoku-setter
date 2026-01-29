@@ -21,9 +21,9 @@
 	const categories = ELEMENTS_CATEGORIES;
 
 	const onAddTool = (toolId: TOOLID): void => {
-		addGroupToLocalConstraint(toolId);
+		const new_ele_id = addGroupToLocalConstraint(toolId);
 		// TODO split update tool and update current constraint
-		updateToolAndCurrentConstraintStores(toolId);
+		updateToolAndCurrentConstraintStores(toolId, new_ele_id);
 	};
 
 	// force the filter to update when a new constraint is added
@@ -48,9 +48,9 @@
 		<ElementButton tool_id={TOOLS.GIVEN} {elementHandlers} />
 		<ElementButton tool_id={TOOLS.REGIONS} {elementHandlers} />
 
-		{#each $elementsDictStore.entries() as [tool_id, element] (tool_id)}
-			{#if isElement(tool_id)}
-				<ElementButton tool_id={element.tool_id} {elementHandlers} {element}/>
+		{#each $elementsDictStore.entries() as [element_id, element] (element_id)}
+			{#if isElement(element.tool_id)}
+				<ElementButton tool_id={element.tool_id} {elementHandlers} {element} {element_id}/>
 			{/if}
 		{/each}
 	</svelte:fragment>

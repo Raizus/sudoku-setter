@@ -1,6 +1,6 @@
 import { get } from 'svelte/store';
 import type { InputHandler } from '../InputHandler';
-import { updateLocalConstraint } from '$stores/BoardStore';
+import { selectedElementIdStore, updateLocalConstraint } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
 import { addLocalConstraint } from '$stores/LocalConstraintsStore';
 import { uniqueId } from 'lodash';
@@ -63,13 +63,16 @@ export function getArrowToolInputHandler(
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		if (mode === ARROW_TOOL_MODE.DYNAMIC) {
 			const elements = get(elementsDictStore);
 
 			const matchLine = findArrowLineConstraint(elements, tool, coords);
 			if (matchLine) {
 				const arrow = removeLineFromArrow(matchLine.arrow, matchLine.matchLineIdx);
-				pushUpdateLocalConstraintCommand(matchLine.id, matchLine.arrow, arrow, tool, true);
+				pushUpdateLocalConstraintCommand(element_id, matchLine.id, matchLine.arrow, arrow, true);
 				bypassDragEnd = true;
 				return;
 			}
@@ -85,7 +88,7 @@ export function getArrowToolInputHandler(
 				id = bulbMatch[0];
 				currentConstraint = bulbMatch[1];
 				currentConstraint = arrowAddToLines(currentConstraint, coords);
-				updateLocalConstraint(tool, id, currentConstraint);
+				updateLocalConstraint(element_id, id, currentConstraint);
 				return;
 			}
 		}
@@ -93,15 +96,15 @@ export function getArrowToolInputHandler(
 		if (mode === ARROW_TOOL_MODE.EDIT_BULB && !id) {
 			id = uniqueId();
 			currentConstraint = arrowConstraint(tool, [coords]);
-			addLocalConstraint(id, currentConstraint);
+			addLocalConstraint(element_id, id, currentConstraint);
 			return;
 		} else if (mode === ARROW_TOOL_MODE.EDIT_BULB && id && currentConstraint) {
 			currentConstraint = arrowAddToBulb(currentConstraint, coords);
-			updateLocalConstraint(tool, id, currentConstraint);
+			updateLocalConstraint(element_id, id, currentConstraint);
 		} else if (mode === ARROW_TOOL_MODE.EDIT_ARROWS && id && currentConstraint) {
 			// add to arrow line
 			currentConstraint = arrowAddToLast(currentConstraint, coords, options?.allowSelfIntersection);
-			updateLocalConstraint(tool, id, currentConstraint);
+			updateLocalConstraint(element_id, id, currentConstraint);
 		}
 	}
 
@@ -120,19 +123,22 @@ export function getArrowToolInputHandler(
 			return;
 		}
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		if (mode === ARROW_TOOL_MODE.EDIT_ARROWS && id && currentConstraint) {
 			// remove last line if last line length <= 1;
 			if (arrowShouldRemoveLastLine(currentConstraint)) {
 				currentConstraint = arrowRemoveLastLine(currentConstraint);
-				updateLocalConstraint(tool, id, currentConstraint);
+				updateLocalConstraint(element_id, id, currentConstraint);
 			} else {
-				pushUpdateLocalConstraintCommand(id, oldConstraint, currentConstraint, tool);
+				pushUpdateLocalConstraintCommand(element_id, id, oldConstraint, currentConstraint);
 				oldConstraint = currentConstraint;
 			}
 		}
 		// push command to history
 		else if (mode === ARROW_TOOL_MODE.EDIT_BULB) {
-			pushAddLocalConstraintCommand(id, currentConstraint, tool);
+			pushAddLocalConstraintCommand(element_id, id, currentConstraint);
 			oldConstraint = currentConstraint;
 		}
 		mode = ARROW_TOOL_MODE.DYNAMIC;
@@ -141,14 +147,17 @@ export function getArrowToolInputHandler(
 	pointerHandler.onTap = (event: CellDragTapEvent) => {
 		if (bypassTap) return;
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		const coords = event.cell;
 		const elements = get(elementsDictStore);
-
+		
 		// on bulb tap remove Arrow
 		const matchBulb = findArrowBulbConstraint(elements, tool, coords);
 		if (matchBulb) {
 			// push command to history
-			pushRemoveLocalConstraintCommand(id, currentConstraint, tool);
+			pushRemoveLocalConstraintCommand(element_id, id, currentConstraint);
 			return;
 		}
 	};

@@ -8,7 +8,8 @@ import {
 	updateLocalConstraint,
 	elementsDictStore,
 	currentShapeStore,
-	selectConstraint
+	selectConstraint,
+	selectedElementIdStore
 } from '$stores/BoardStore';
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import { keyboardInputDefaultValidator } from '$src/lib/InputHandlers/KeyboardEventUtils';
@@ -55,18 +56,21 @@ export function getCornerToolInputHandler(
 			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		// remove constraint
 		if (match && mode === BASIC_TOOL_MODE.DELETE) {
 			const id = match[0];
-			pushRemoveLocalConstraintCommand(id, match[1], tool);
+			pushRemoveLocalConstraintCommand(element_id, id, match[1]);
 		}
 		// add constraint
 		else if (!match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
 			const newConstraint = cornerConstraint(tool, cellsCoords, options?.defaultValue);
 			const id = uniqueId();
-			pushAddLocalConstraintCommand(id, newConstraint, tool, true);
+			pushAddLocalConstraintCommand(element_id, id, newConstraint, true);
 		} else if (match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
-			selectConstraint(match[0], tool);
+			selectConstraint(element_id, match[0]);
 		}
 	}
 
@@ -81,10 +85,13 @@ export function getCornerToolInputHandler(
 		if (!keyboardInputDefaultValidator(event.key)) return;
 		if (!options?.valueUpdater) return;
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		const newValue = options.valueUpdater(constraint?.value, event.key);
 		if (newValue !== undefined && newValue !== constraint.value) {
 			constraint = updateConstraintValue(constraint, newValue);
-			updateLocalConstraint(tool, id, constraint);
+			updateLocalConstraint(element_id, id, constraint);
 		}
 	}
 

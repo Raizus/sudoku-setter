@@ -32,6 +32,7 @@ export const gameModeStore = writable<GAME_MODE>(GAME_MODE.SETTING);
 
 // user state
 export const selectOnStore = writable<boolean>(false);
+export const selectedElementIdStore = writable<number | null>(null);
 export const toolStore = writable<TOOLID>(TOOLS.DIGIT);
 export const previousToolStore = writable<TOOLID | null>(TOOLS.DIGIT);
 export const validDigitsStore = writable<number[]>(range(1, 10));
@@ -73,17 +74,23 @@ export function updateCurrentShape(shape: ShapeI | undefined) {
 	currentShapeStore.update(() => shape);
 }
 
-export function updateToolAndCurrentConstraintStores(tool: TOOLID): void {
+export function updateToolAndCurrentConstraintStores(
+	tool: TOOLID,
+	element_id: number | null
+): void {
 	const currTool = get(toolStore);
-	if (currTool === tool) return;
+	const currElementId = get(selectedElementIdStore);
+	if (currElementId === element_id && tool === currTool) return;
+
 	toolStore.update(() => tool);
 	setCurrentConstraint(null);
+	selectedElementIdStore.update(() => element_id);
 }
 
 export function restoreToolStoreOnQuickshift(): void {
 	const prevTool = get(previousToolStore);
 	if (!prevTool) return;
-	updateToolAndCurrentConstraintStores(prevTool);
+	updateToolAndCurrentConstraintStores(prevTool, null);
 }
 
 export function updatePreviousToolStore(tool: TOOLID): void {
@@ -94,18 +101,18 @@ export function updateToolOnRemoveGroup(toolId: TOOLID) {
 	// if tool is the same as current tool, set current tool to digit
 	const currTool = get(toolStore);
 	if (currTool === toolId) {
-		updateToolAndCurrentConstraintStores(TOOLS.DIGIT);
+		updateToolAndCurrentConstraintStores(TOOLS.DIGIT, null);
 	}
 }
 
 /**
  * Removes a constraint group from the local constraints dictionary.
  * For example, it removes all Renban constraints
- * @param toolId
+ * @param element_id
  */
-export function removeGroupFromLocalConstraint(toolId: TOOLID) {
+export function removeGroupFromLocalConstraint(element_id: number) {
 	elementsDictStore.update((localConstraintsDict) => {
-		localConstraintsDict.removeFromDict(toolId);
+		localConstraintsDict.removeFromDict(element_id);
 		return localConstraintsDict;
 	});
 
@@ -114,17 +121,17 @@ export function removeGroupFromLocalConstraint(toolId: TOOLID) {
 
 /**
  * Updates an existing local constraint (or cosmetic)
- * @param toolId
+ * @param element_id
  * @param id
  * @param newConstraint
  */
 export function updateLocalConstraint<T extends ConstraintType>(
-	toolId: TOOLID,
+	element_id: number,
 	id: string,
 	newConstraint: T
 ) {
 	elementsDictStore.update((localConstraintsDict) => {
-		localConstraintsDict.updateConstraint(toolId, id, newConstraint);
+		localConstraintsDict.updateConstraint(element_id, id, newConstraint);
 		return localConstraintsDict;
 	});
 	setCurrentConstraint({ id, constraint: newConstraint });
@@ -138,19 +145,20 @@ export function updateCurrentConstraintShape(newShape: ShapeI | undefined) {
 	updateCurrentShape(newShape);
 
 	if (!currentConstraint) return;
+	const element_id = get(selectedElementIdStore);
+	if (element_id === null) return;
 	const newConstraint = { ...currentConstraint.constraint, shape: newShape };
-	const toolId = currentConstraint.constraint.toolId;
-	updateLocalConstraint(toolId, currentConstraint.id, newConstraint);
+	updateLocalConstraint(element_id, currentConstraint.id, newConstraint);
 }
 
-export function selectConstraint(id: string, toolId: TOOLID) {
+export function selectConstraint(element_id: number, c_id: string) {
 	const localConstraintsDict = get(elementsDictStore);
-	const element = localConstraintsDict.get(toolId);
+	const element = localConstraintsDict.get(element_id);
 	if (!element || !element.constraints) return;
 
-	const constraint = element.constraints[id];
+	const constraint = element.constraints[c_id];
 	if (!constraint) return;
-	setCurrentConstraint({ id, constraint });
+	setCurrentConstraint({ id: c_id, constraint });
 }
 
 export function createNewPuzzle(nRows: number, nCols: number, valid_digits: number[]) {
@@ -189,7 +197,7 @@ export function resetPuzzle() {
 export function resetUserState() {
 	clearCommandHistory();
 	updatePenTool(resetAction());
-	updateToolAndCurrentConstraintStores(TOOLS.DIGIT);
+	updateToolAndCurrentConstraintStores(TOOLS.DIGIT, null);
 
 	const resetSelectionAction = selectionClearAction();
 	updateSelection(resetSelectionAction);
