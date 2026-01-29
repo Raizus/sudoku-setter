@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { flip } from 'svelte/animate';
 	import { type AbstractElementHandlers } from '$lib/Puzzle/ElementHandlersUtils';
 	import type { AbstractElementInfo } from '$lib/Puzzle/ElementInfo';
 	import {
@@ -48,10 +49,25 @@
 		<ElementButton tool_id={TOOLS.GIVEN} {elementHandlers} />
 		<ElementButton tool_id={TOOLS.REGIONS} {elementHandlers} />
 
-		{#each $elementsDictStore.orderedEntries() as [element_id, element] (element_id)}
-			{#if isElement(element.tool_id)}
-				<ElementButton tool_id={element.tool_id} {elementHandlers} {element} {element_id}/>
-			{/if}
+		{#each $elementsDictStore.orderedEntries() as [element_id, element], index (element_id)}
+			<li animate:flip>
+				{#if isElement(element.tool_id)}
+					<ElementButton
+						tool_id={element.tool_id}
+						{elementHandlers}
+						{element}
+						{element_id}
+						order={index}
+					/>
+				{/if}
+			</li>
 		{/each}
 	</svelte:fragment>
 </SettingToolsPanel>
+
+<style lang="scss">
+	li {
+		list-style: none;
+		margin-bottom: 0.05rem;
+	}
+</style>

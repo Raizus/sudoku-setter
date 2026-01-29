@@ -25,6 +25,7 @@
 	import MoreButton from './MoreButton.svelte';
 
 	export let tool_id: TOOLID;
+	export let order: number | null = null;
 	export let element_id: number | null = null;
 	export let element: ConstraintsElement | undefined = undefined;
 
@@ -48,8 +49,8 @@
 	function deleteElement() {
 		updateToolOnRemoveGroup(tool_id);
 
-		if(element_id === null) return;
-		
+		if (element_id === null) return;
+
 		const constraints = $elementsDictStore.get(element_id);
 		if (!constraints) return;
 
@@ -60,7 +61,7 @@
 	}
 
 	function enableDisableElement() {
-		if(element_id === null) return;
+		if (element_id === null) return;
 
 		const action = enableDisableElementAction(element_id, !disabled);
 		const reverse_action = enableDisableElementAction(element_id, disabled);
@@ -113,10 +114,18 @@
 <div class="element-button-wrapper">
 	{#if !permanent && element_id !== undefined}
 		<div class="reorder-buttons">
-			<button class="form-button reorder-button move-up" on:click={moveUp}>
+			<button
+				class="form-button reorder-button move-up"
+				on:click={moveUp}
+				disabled={order === 0 || order === null}
+			>
 				<CaretUp />
 			</button>
-			<button class="form-button reorder-button move-down" on:click={moveDown}>
+			<button
+				class="form-button reorder-button move-down"
+				on:click={moveDown}
+				disabled={order === null || order === $elementsDictStore.size - 1}
+			>
 				<CaretDown />
 			</button>
 		</div>
@@ -144,7 +153,7 @@
 			{/if}
 		</div>
 		{#if selected && element_id !== null}
-			<ElementEditor {tool_id} {element_id}/>
+			<ElementEditor {tool_id} {element_id} />
 		{/if}
 	</div>
 </div>
@@ -168,9 +177,6 @@
 		width: 2rem !important;
 		min-height: 0;
 		height: 1.5rem;
-		&:hover {
-			background-color: var(--button2-hover-background-color);
-		}
 		&.move-up {
 			border-bottom-left-radius: 0;
 			border-bottom-right-radius: 0;
@@ -180,6 +186,13 @@
 			border-top-left-radius: 0;
 			border-top-right-radius: 0;
 			border-top: 0.05rem solid black;
+		}
+		&:disabled {
+			opacity: 0.5;
+			cursor: default;
+		}
+		&:hover:not(:disabled) {
+			background-color: var(--button2-hover-background-color);
 		}
 	}
 
