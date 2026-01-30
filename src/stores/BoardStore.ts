@@ -5,7 +5,7 @@ import { Grid } from '$lib/Puzzle/Grid/Grid';
 import { type PuzzleI } from '$src/lib/Puzzle/Puzzle';
 import { type Solution } from '$src/lib/Puzzle/puzzle_schema';
 
-import type { PuzzleMetaI } from '$src/lib/Puzzle/puzzle_schema';
+import type { ConstraintAndId, PuzzleMetaI } from '$src/lib/Puzzle/puzzle_schema';
 import type { ShapeI } from '$lib/Puzzle/Shape/Shape';
 import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';
 
@@ -20,11 +20,6 @@ import { settingsStore } from './SettingsStore';
 import { GAME_MODE } from '$src/lib/Types/types';
 import { debounce, range } from 'lodash';
 import { puzzleToCompressedStr } from '$src/lib/SettingPanel/SavePuzzleModal/io_utils';
-
-interface ConstraintAndId {
-	id: string;
-	constraint: ConstraintType;
-}
 
 export const svgRefStore = writable<SVGSVGElement | null>(null);
 

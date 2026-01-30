@@ -133,5 +133,9 @@ export interface PuzzleMetaI {
 	ctcUrl?: string;
 	ctcYoutubeUrl?: string;
 }
+export interface ConstraintAndId {
+	id: string;
+	constraint: ConstraintType;
+}
 
 
