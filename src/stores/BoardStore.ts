@@ -261,7 +261,21 @@ export function updateSolution(solution: Solution) {
 	});
 }
 
-export const puzzleUrlStore = derived(puzzleStore, debounce(($puzzleStore) => {
-	const compressedStr = puzzleToCompressedStr($puzzleStore);
-	return compressedStr;
-}, 200));
+function updateUrlParams(compressedStr: string) {
+	if (typeof window === 'undefined') return;
+
+	const url = new URL(window.location.href);
+	url.searchParams.set('puzzle', compressedStr);
+
+	const newUrl = url.toString();
+	// window.history.replaceState({}, '', newUrl);
+}
+
+export const puzzleUrlStore = derived(
+	puzzleStore,
+	debounce(($puzzleStore) => {
+		const compressedStr = puzzleToCompressedStr($puzzleStore);
+		updateUrlParams(compressedStr);
+		return compressedStr;
+	}, 500)
+);
