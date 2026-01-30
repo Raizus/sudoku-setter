@@ -13,7 +13,6 @@ import type { TOOLID } from '$lib/Puzzle/Tools';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import type { GridShape } from '$lib/Types/types';
 import { findEdgeConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
-import { type ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 import {
 	CellEdgePointerHandler,
 	type CellEdgeTapEvent
@@ -55,8 +54,7 @@ export function getEdgeToolInputHandler(
 
 		// determine if adding or removing
 		const elements = get(elementsDictStore);
-		let match: [string, ConstraintType] | null = null;
-		match = findEdgeConstraint(elements, tool, cellsCoords);
+		const match = findEdgeConstraint(elements, tool, cellsCoords);
 		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
 			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
