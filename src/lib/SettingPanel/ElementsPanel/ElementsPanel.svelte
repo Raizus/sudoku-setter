@@ -50,7 +50,7 @@
 		<ElementButton tool_id={TOOLS.REGIONS} {elementHandlers} />
 
 		{#each $elementsDictStore.orderedEntries() as [element_id, element], index (element_id)}
-			<li animate:flip>
+			<li animate:flip={{ duration: 500 }}>
 				{#if isElement(element.tool_id)}
 					<ElementButton
 						tool_id={element.tool_id}
