@@ -59,6 +59,7 @@
 	import FogLightBulbDefs from './Fog/FogLightBulbDefs.svelte';
 	import FogDefs from './Fog/FogDefs.svelte';
 	import FogCover from './Fog/FogCover.svelte';
+	import OutsideDirectionToolPreviewRender from './Constraints/OutsideDirectionToolPreviewRender.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 
@@ -154,7 +155,7 @@
 
 	<!-- ConstraintPreviewRender -->
 	{#if isOutsideDirectionTool($toolStore) && $outsideDirectionToolPreviewStore}
-		<OutsideDirectionToolRender tool={$outsideDirectionToolPreviewStore} />
+		<OutsideDirectionToolPreviewRender tool_preview={$outsideDirectionToolPreviewStore} />
 	{/if}
 	{#if isSimpleSingleCellTool($toolStore) && $toolStore !== TOOLS.FOG_LIGHTS && $simpleCellToolPreviewStore}
 		<SimpleSingleCellToolPreviewRender tool_preview={$simpleCellToolPreviewStore} />

@@ -121,7 +121,7 @@ export const edgeToolPreviewStore = writable<undefined | ToolPreview<EdgeToolI>>
 
 export const cornerToolPreviewStore = writable<undefined | ToolPreview<CornerToolI>>(undefined);
 
-export const outsideDirectionToolPreviewStore = writable<undefined | OutsideDirectionToolI>(
+export const outsideDirectionToolPreviewStore = writable<undefined | ToolPreview<OutsideDirectionToolI>>(
 	undefined
 );
 
