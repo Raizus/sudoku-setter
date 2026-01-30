@@ -1,17 +1,26 @@
-import { matchShortcut, shortcutRegistry, type Shortcut } from '$input/shortcuts';
+import {
+	matchShortcut,
+	shortcutRegistry,
+	toolShortcutRegistry,
+	type Shortcut
+} from '$input/shortcuts';
 
-function onShortcut(event: KeyboardEvent, shortcut: Shortcut) {
+function onShortcut(shortcut: Shortcut, event: KeyboardEvent): boolean {
 	if (!matchShortcut(event, shortcut)) return false;
-	if (shortcut.func) shortcut.func();
+	if (!shortcut.func) return false;
+
+	shortcut.func();
+	event.stopImmediatePropagation();
+	event.preventDefault();
 	return true;
 }
 
 export function onExtraInput(event: KeyboardEvent) {
 	for (const shortcut of shortcutRegistry.values()) {
-		if (onShortcut(event, shortcut)) {
-			event.stopImmediatePropagation();
-			event.preventDefault();
-			return;
-		}
+		if (onShortcut(shortcut, event)) return;
+	}
+
+	for (const shortcut of toolShortcutRegistry.values()) {
+		if (onShortcut(shortcut, event)) return;
 	}
 }
