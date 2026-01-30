@@ -162,24 +162,6 @@ export interface ToolOptionsRegistry {
 // Automatically derived union type
 export type ToolHandlerOptions = ToolOptionsRegistry[keyof ToolOptionsRegistry];
 
-// export type ToolHandlerOptions =
-// 	| SelectionInputOptions
-// 	| SingleCellToolOptions
-// 	| SingleCellArrowToolOptions
-// 	| SingleCellMultiArrowToolOptions
-// 	| EdgeToolOptions
-// 	| DirectedAdjacentCellsToolOptions
-// 	| CornerToolOptions
-// 	| CageToolInputOptions
-// 	| CloneToolInputOptions
-// 	| LineToolInputOptions
-// 	| ArrowToolInputOptions
-// 	| CornerLineToolInputOptions
-// 	| CenterCornerOrEdgeToolInputOptions
-// 	| OutsideDirectionToolInputOptions
-// 	| PenToolInputOptions
-// 	| ValueToolInputOptions;
-
 export enum ARROW_TOOL_MODE {
 	DYNAMIC = 'Dynamic',
 	EDIT_BULB = 'Edit Bulb',
@@ -223,8 +205,8 @@ export type ToolModeT =
 	| VALUE_TOOL_MODE
 	| undefined;
 
-export function getToolModes(tool: TOOLID) {
-	if (
+function isBasicTool(tool: TOOLID): boolean {
+	return (
 		isSimpleSingleCellTool(tool) ||
 		isSingleCellArrowTool(tool) ||
 		isSingleCellMultiArrowTool(tool) ||
@@ -234,8 +216,11 @@ export function getToolModes(tool: TOOLID) {
 		isCageTool(tool) ||
 		isOutsideDirectionTool(tool) ||
 		isCenterEdgeCornerTool(tool)
-	)
-		return BASIC_TOOL_MODE;
+	);
+}
+
+export function getToolModes(tool: TOOLID) {
+	if (isBasicTool(tool)) return BASIC_TOOL_MODE;
 	if (isArrowTool(tool)) return ARROW_TOOL_MODE;
 	if (isCloneTool(tool)) return CLONE_TOOL_MODE;
 	if (isValuedGlobalConstraint(tool) || tool === TOOLS.VARIABLE_CONSTRAINT) return VALUE_TOOL_MODE;
@@ -243,18 +228,7 @@ export function getToolModes(tool: TOOLID) {
 }
 
 export function getDefaultToolMode(tool: TOOLID): ToolModeT {
-	if (
-		isSimpleSingleCellTool(tool) ||
-		isSingleCellArrowTool(tool) ||
-		isSingleCellMultiArrowTool(tool) ||
-		isLineTool(tool) ||
-		isEdgeTool(tool) ||
-		isCornerTool(tool) ||
-		isCageTool(tool) ||
-		isOutsideDirectionTool(tool) ||
-		isCenterEdgeCornerTool(tool)
-	)
-		return BASIC_TOOL_MODE.DYNAMIC;
+	if (isBasicTool(tool)) return BASIC_TOOL_MODE.DYNAMIC;
 	if (isArrowTool(tool)) return ARROW_TOOL_MODE.DYNAMIC;
 	if (isCloneTool(tool)) return CLONE_TOOL_MODE.DYNAMIC;
 	return undefined;
