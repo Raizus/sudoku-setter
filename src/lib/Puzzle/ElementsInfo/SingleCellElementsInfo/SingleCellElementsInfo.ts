@@ -124,7 +124,7 @@ export const oddInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description: 'Cell value is odd.',
+		description: 'Cells with gray circles have odd values.',
 		tags: [],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
@@ -148,7 +148,7 @@ export const evenInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description: 'Cell value is even.',
+		description: 'Cells with gray squares have even values.',
 		tags: [],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
@@ -1808,8 +1808,8 @@ export const chaosConstructionChessSumsInfo: SquareCellElementInfo = {
  - The sum of all digits that share its region and are a knight's move away
  - The sum of all digits that share its region and are a bishop's move away
 Clarifications:
- - Bishops can “see” past cells from other regions—cells from other regions do not block a bishop's vision.
- - Each Chess Sum is calculated separately. For example, a cell with a “2” clue that contains a 7 can see 4 and 3 by king's move, and can see 5 and 2 by knight's move—the king's move digits and the knight's move digits each sum to 7 separately.`,
+ - Bishops can 'see' past cells from other regions—cells from other regions do not block a bishop's vision.
+ - Each Chess Sum is calculated separately. For example, a cell with a '2' clue that contains a 7 can see 4 and 3 by king's move, and can see 5 and 2 by knight's move—the king's move digits and the knight's move digits each sum to 7 separately.`,
 		tags: [],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},

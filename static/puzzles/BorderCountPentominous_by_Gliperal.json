@@ -1,403 +1,407 @@
 {
-	"puzzleInfo": {
-		"title": "Border Count Pentominous",
-		"authors": ["Gliperal"],
-		"ruleset": "Sudoku rules do not apply.\n\n**Pentomino Tilling**: Divide the grid into pentominoes, such that no two pentominoes of the same shape (including rotations and reflections) touch orthogonally.\n\n**Pentomino Border Count**: Clues outside the grid indicate the number of borders between pentominoes present in that row or column.",
-		"ctcYoutubeUrl": "https://www.youtube.com/watch?v=eNmcbvdp1xI",
-		"ctcUrl": "https://app.crackingthecryptic.com/sudoku/9dR9Gtj6R8"
-	},
-	"nRows": 10,
-	"nCols": 10,
-	"valid_digits": [0],
-	"grid": [
-		[
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			}
-		],
-		[
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			}
-		],
-		[
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			}
-		],
-		[
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			}
-		],
-		[
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			}
-		],
-		[
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			}
-		],
-		[
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			}
-		],
-		[
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			}
-		],
-		[
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			}
-		],
-		[
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			},
-			{
-				"region": null
-			}
-		]
-	],
-	"elements": {
-		"Sudoku rules do not apply": {
-			"tool_id": "Sudoku rules do not apply",
-			"constraints": []
-		},
-		"Leave Empty Cells Empty": {
-			"tool_id": "Leave Empty Cells Empty",
-			"constraints": []
-		},
-		"Pentomino Tilling": {
-			"tool_id": "Pentomino Tilling",
-			"constraints": []
-		},
-		"Pentomino Border Count": {
-			"tool_id": "Pentomino Border Count",
-			"constraints": [
-				{
-					"cell": "R0C2",
-					"direction": "S",
-					"value": "3"
-				},
-				{
-					"cell": "R0C4",
-					"direction": "S",
-					"value": "3"
-				},
-				{
-					"cell": "R0C6",
-					"direction": "S",
-					"value": "3"
-				},
-				{
-					"cell": "R0C7",
-					"direction": "S",
-					"value": "5"
-				},
-				{
-					"cell": "R0C8",
-					"direction": "S",
-					"value": "5"
-				},
-				{
-					"cell": "R2C0",
-					"direction": "E",
-					"value": "2"
-				},
-				{
-					"cell": "R6C0",
-					"direction": "E",
-					"value": "7"
-				},
-				{
-					"cell": "R4C0",
-					"direction": "E",
-					"value": "4"
-				},
-				{
-					"cell": "R5C0",
-					"direction": "E",
-					"value": "7"
-				},
-				{
-					"cell": "R8C0",
-					"direction": "E",
-					"value": "9"
-				}
-			]
-		}
-	}
+  "puzzleInfo": {
+    "title": "Border Count Pentominous",
+    "authors": [
+      "Gliperal"
+    ],
+    "ruleset": "Sudoku rules do not apply.\n\n**Pentomino Tilling**: Divide the grid into pentominoes, such that no two pentominoes of the same shape (including rotations and reflections) touch orthogonally.\n\n**Pentomino Border Count**: Clues outside the grid indicate the number of borders between pentominoes present in that row or column.",
+    "ctcYoutubeUrl": "https://www.youtube.com/watch?v=eNmcbvdp1xI",
+    "ctcUrl": "https://app.crackingthecryptic.com/sudoku/9dR9Gtj6R8"
+  },
+  "nRows": 10,
+  "nCols": 10,
+  "valid_digits": [
+    0
+  ],
+  "grid": [
+    [
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      }
+    ],
+    [
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      }
+    ],
+    [
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      }
+    ],
+    [
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      }
+    ],
+    [
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      }
+    ],
+    [
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      }
+    ],
+    [
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      }
+    ],
+    [
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      }
+    ],
+    [
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      }
+    ],
+    [
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      },
+      {
+        "region": null
+      }
+    ]
+  ],
+  "elements": [
+    {
+      "tool_id": "Sudoku rules do not apply",
+      "constraints": []
+    },
+    {
+      "tool_id": "Leave Empty Cells Empty",
+      "constraints": []
+    },
+    {
+      "tool_id": "Pentomino Tilling",
+      "constraints": []
+    },
+    {
+      "tool_id": "Pentomino Border Count",
+      "constraints": [
+        {
+          "cell": "R0C2",
+          "direction": "S",
+          "value": "3"
+        },
+        {
+          "cell": "R0C4",
+          "direction": "S",
+          "value": "3"
+        },
+        {
+          "cell": "R0C6",
+          "direction": "S",
+          "value": "3"
+        },
+        {
+          "cell": "R0C7",
+          "direction": "S",
+          "value": "5"
+        },
+        {
+          "cell": "R0C8",
+          "direction": "S",
+          "value": "5"
+        },
+        {
+          "cell": "R2C0",
+          "direction": "E",
+          "value": "2"
+        },
+        {
+          "cell": "R6C0",
+          "direction": "E",
+          "value": "7"
+        },
+        {
+          "cell": "R4C0",
+          "direction": "E",
+          "value": "4"
+        },
+        {
+          "cell": "R5C0",
+          "direction": "E",
+          "value": "7"
+        },
+        {
+          "cell": "R8C0",
+          "direction": "E",
+          "value": "9"
+        }
+      ]
+    }
+  ]
 }

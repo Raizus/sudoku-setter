@@ -85,30 +85,30 @@ export function getSimilarCells(coords: GridCoordI, grid: Grid, toolId: TOOLID) 
 }
 
 export function pushAddLocalConstraintCommand(
+	element_id: number,
 	id: string | null,
 	currentConstraint: ConstraintType | null,
-	tool: TOOLID,
 	execute: boolean = false,
 ) {
 	if (!(id && currentConstraint)) return;
-	const action = addLocalConstraintAction(id, currentConstraint);
-	const reverse_action = removeLocalConstraintAction(id, tool);
+	const action = addLocalConstraintAction(element_id, id, currentConstraint);
+	const reverse_action = removeLocalConstraintAction(element_id, id);
 	const command = getUpdateElementCommand(action, reverse_action);
-	// add it to histoy but don't execute
+	// add it to history but don't execute
 	// the clone constraint was already added/updated but only when
 	// finishing dragging is the action 'complete'
 	addCommand(command, execute);
 }
 
 export function pushRemoveLocalConstraintCommand(
+	element_id: number,
 	id: string | null,
 	currentConstraint: ConstraintType | null,
-	tool: TOOLID,
 	execute: boolean = true
 ) {
 	if (!(id && currentConstraint)) return;
-	const action = removeLocalConstraintAction(id, tool);
-	const reverse_action = addLocalConstraintAction(id, currentConstraint);
+	const action = removeLocalConstraintAction(element_id, id);
+	const reverse_action = addLocalConstraintAction(element_id, id, currentConstraint);
 	const command = getUpdateElementCommand(action, reverse_action);
 	// add it to histoy but don't execute
 	// the clone constraint was already added/updated but only when
@@ -117,15 +117,15 @@ export function pushRemoveLocalConstraintCommand(
 }
 
 export function pushUpdateLocalConstraintCommand(
+	element_id: number,
 	id: string | null,
 	oldConstraint: ConstraintType | null,
 	currentConstraint: ConstraintType | null,
-	tool: TOOLID,
 	execute: boolean = false
 ) {
 	if (!(id && currentConstraint && oldConstraint)) return;
-	const action = updateLocalConstraintAction(tool, id, currentConstraint);
-	const reverse_action = updateLocalConstraintAction(tool, id, oldConstraint);
+	const action = updateLocalConstraintAction(element_id, id, currentConstraint);
+	const reverse_action = updateLocalConstraintAction(element_id, id, oldConstraint);
 	const command = getUpdateElementCommand(action, reverse_action);
 	// add it to histoy but don't execute
 	// the clone constraint was already added/updated but only when

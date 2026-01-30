@@ -2,6 +2,7 @@ import type { InputHandler } from '../InputHandler';
 import {
 	currentConstraintStore,
 	selectConstraint,
+	selectedElementIdStore,
 	updateLocalConstraint
 } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
@@ -46,35 +47,38 @@ export function getOutsideDirectionToolInputHandler(
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	function handle(event: CellEdgeCornerEvent) {
-		const localConstraints = get(elementsDictStore);
 		const cell = event.cell;
 		const direction_idx = event.direction;
 		const direction = idxToDirection(direction_idx);
-
+		
 		const onGrid = isCellOnGrid(cell, gridShape);
 		if (onGrid) return;
-
+		
 		const neighbour = gridCoordsNextInDirection(cell, direction);
 		const neighbourOnGrid = isCellOnGrid(neighbour, gridShape);
 		if (!neighbourOnGrid) return;
-
+		
 		let mode = get(toolModeStore);
-
+		
 		// determine if adding or removing
-		const match = findOutsideDirectionConstraint(localConstraints, tool, cell, direction);
+		const elements = get(elementsDictStore);
+		const match = findOutsideDirectionConstraint(elements, tool, cell, direction);
 		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
 			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		if (match && mode === BASIC_TOOL_MODE.DELETE) {
 			const [id, constraint] = match;
-			pushRemoveLocalConstraintCommand(id, constraint, tool);
+			pushRemoveLocalConstraintCommand(element_id, id, constraint);
 		} else if (!match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
 			const newConstraint = outsideDirectionConstraint(tool, cell, direction, '');
 			const id = uniqueId();
-			pushAddLocalConstraintCommand(id, newConstraint, tool, true);
+			pushAddLocalConstraintCommand(element_id, id, newConstraint, true);
 		} else if (match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
-			selectConstraint(match[0], tool);
+			selectConstraint(element_id, match[0]);
 		}
 	}
 
@@ -89,10 +93,13 @@ export function getOutsideDirectionToolInputHandler(
 		if (!keyboardInputDefaultValidator(event.key)) return;
 		if (!options?.valueUpdater) return;
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		const newValue = options.valueUpdater(constraint?.value, event.key);
 		if (newValue !== undefined && newValue !== constraint.value) {
 			constraint = updateConstraintValue(constraint, newValue);
-			updateLocalConstraint(tool, id, constraint);
+			updateLocalConstraint(element_id, id, constraint);
 		}
 	}
 
@@ -116,8 +123,8 @@ export function getOutsideDirectionToolInputHandler(
 		}
 
 		const mode = get(toolModeStore);
-		const localConstraints = get(elementsDictStore);
-		const match = findOutsideDirectionConstraint(localConstraints, tool, event.cell, direction);
+		const elements = get(elementsDictStore);
+		const match = findOutsideDirectionConstraint(elements, tool, event.cell, direction);
 		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
 			outsideDirectionToolPreviewStore.set(undefined);
 			return;

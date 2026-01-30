@@ -25,7 +25,7 @@ function addShortcut(shortcut: Shortcut) {
 	shortcutRegistry.set(shortcut.name, shortcut);
 }
 
-function addShortcut2(shortcut: Shortcut) {
+function addToolShortcut(shortcut: Shortcut) {
 	toolShortcutRegistry.set(shortcut.name, shortcut);
 }
 
@@ -86,43 +86,43 @@ const cycleTool: Shortcut = {
 	name: 'Cycle Tool',
 	keys: [{ key: 'Space', type: 'keydown' }]
 };
-addShortcut2(cycleTool);
+addToolShortcut(cycleTool);
 
 const setDigitTool: Shortcut = {
 	name: 'Set Digit Tool',
 	keys: [{ key: 'Z', type: 'keydown' }]
 };
-addShortcut2(setDigitTool);
+addToolShortcut(setDigitTool);
 
 const setCornerPencilmarkTool: Shortcut = {
 	name: 'Set Corner Pencilmark Tool',
 	keys: [{ key: 'X', type: 'keydown' }]
 };
-addShortcut2(setCornerPencilmarkTool);
+addToolShortcut(setCornerPencilmarkTool);
 
 const setCenterPencilmarkTool: Shortcut = {
 	name: 'Set Center Pencilmark Tool',
 	keys: [{ key: 'C', type: 'keydown' }]
 };
-addShortcut2(setCenterPencilmarkTool);
+addToolShortcut(setCenterPencilmarkTool);
 
 const setHighlightsTool: Shortcut = {
 	name: 'Set Highlights Tool',
 	keys: [{ key: 'V', type: 'keydown' }]
 };
-addShortcut2(setHighlightsTool);
+addToolShortcut(setHighlightsTool);
 
 const quickshiftToCornerPencilmarkTool: Shortcut = {
 	name: 'Quickshift To Corner Pencilmark Tool',
 	keys: [{ shiftKey: true, key: 'Shift', type: 'keydown' }]
 };
-addShortcut2(quickshiftToCornerPencilmarkTool);
+addToolShortcut(quickshiftToCornerPencilmarkTool);
 
 const quickshiftToCenterPencilmarkTool: Shortcut = {
 	name: 'Quickshift To Center Pencilmark Tool',
 	keys: [{ ctrlKey: true, key: 'Ctrl', type: 'keydown' }]
 };
-addShortcut2(quickshiftToCenterPencilmarkTool);
+addToolShortcut(quickshiftToCenterPencilmarkTool);
 
 const quickshiftToHighlightsTool: Shortcut = {
 	name: 'Quickshift To Highlight Tool',
@@ -132,20 +132,20 @@ const quickshiftToHighlightsTool: Shortcut = {
 		{ altKey: true, key: 'Alt', type: 'keydown' }
 	]
 };
-addShortcut2(quickshiftToHighlightsTool);
+addToolShortcut(quickshiftToHighlightsTool);
 
 const selectAllCells: Shortcut = {
 	name: 'Select All Cells',
 	keys: [{ ctrlKey: true, key: 'A', type: 'keydown' }]
 };
-addShortcut2(selectAllCells);
+addToolShortcut(selectAllCells);
 
 export const resetZoomSc: Shortcut = {
 	name: 'Reset Zoom',
-	keys: [{ shiftKey: true, key: 'Z', type: 'keydown' }],
+	keys: [{ altKey: true, key: 'Z', type: 'keydown' }],
 	func: resetZoom
 };
-addShortcut2(resetZoomSc);
+addToolShortcut(resetZoomSc);
 
 const toggleFog: Shortcut = {
 	name: 'Toggle Fog',

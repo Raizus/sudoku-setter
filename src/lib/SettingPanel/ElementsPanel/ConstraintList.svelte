@@ -1,17 +1,16 @@
 <script lang="ts">
-	import type { TOOLID } from '$src/lib/Puzzle/Tools';
 	import { elementsDictStore } from '$stores/BoardStore';
 	import ConstraintSelectionButton from './ConstraintSelectionButton.svelte';
 
-	export let tool_id: TOOLID;
-	$: constraints_element = $elementsDictStore.get(tool_id);
+	export let element_id: number;
+	$: constraints_element = $elementsDictStore.get(element_id);
 </script>
 
 {#if constraints_element && constraints_element.constraints && Object.entries(constraints_element.constraints).length}
 	<div class="constraint-list-wrapper">
 		<div class="constraint-list">
 			{#each Object.entries(constraints_element.constraints) as entry (entry[0])}
-				<ConstraintSelectionButton constraint_id={entry[0]} {tool_id} />
+				<ConstraintSelectionButton constraint_id={entry[0]} {element_id} />
 			{/each}
 		</div>
 	</div>

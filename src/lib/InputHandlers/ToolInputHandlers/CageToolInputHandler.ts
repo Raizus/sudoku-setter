@@ -1,6 +1,7 @@
 import type { InputHandler } from '../InputHandler';
 import {
 	currentConstraintStore,
+	selectedElementIdStore,
 	setCurrentConstraint,
 	updateLocalConstraint
 } from '$stores/BoardStore';
@@ -42,15 +43,15 @@ export function getCageToolInputHandler(
 	let id: string | null = null;
 
 	function handle(event: CellDragTapEvent) {
-		const localConstraints = get(elementsDictStore);
 		const coords = event.cell;
-
+		
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
-
+		
 		// if shift click on an existing cage or mode is add/edit, set it as current constraint,
 		// if there is no current constraint
-		const match = findCageConstraint(localConstraints, tool, coords);
+		const elements = get(elementsDictStore);
+		const match = findCageConstraint(elements, tool, coords);
 		if (
 			id === null &&
 			currentConstraint === null &&
@@ -68,8 +69,11 @@ export function getCageToolInputHandler(
 			mode_aux = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		if (match && mode_aux === BASIC_TOOL_MODE.DELETE) {
-			pushRemoveLocalConstraintCommand(match[0], match[1], tool);
+			pushRemoveLocalConstraintCommand(element_id, match[0], match[1]);
 			return;
 		}
 
@@ -77,7 +81,7 @@ export function getCageToolInputHandler(
 			// create new cage
 			currentConstraint = cageConstraint(tool, [coords]);
 			id = uniqueId();
-			addLocalConstraint(id, currentConstraint);
+			addLocalConstraint(element_id, id, currentConstraint);
 			return;
 		}
 
@@ -89,7 +93,7 @@ export function getCageToolInputHandler(
 				coords,
 				allowDiagonallyAdjacent
 			);
-			updateLocalConstraint(tool, id, currentConstraint);
+			updateLocalConstraint(element_id, id, currentConstraint);
 			return;
 		}
 	}
@@ -105,10 +109,13 @@ export function getCageToolInputHandler(
 		if (!keyboardInputDefaultValidator(event.key)) return;
 		if (!options?.valueUpdater) return;
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		const newValue = options.valueUpdater(constraint?.value, event.key);
 		if (newValue !== undefined && newValue !== constraint.value) {
 			constraint = updateCageValue(constraint, newValue);
-			updateLocalConstraint(tool, id, constraint);
+			updateLocalConstraint(element_id, id, constraint);
 		}
 	}
 
@@ -124,9 +131,12 @@ export function getCageToolInputHandler(
 	};
 
 	pointerHandler.onDragEnd = () => {
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		if (id && currentConstraint) {
 			// push command to history stack
-			pushAddLocalConstraintCommand(id, currentConstraint, tool, false);
+			pushAddLocalConstraintCommand(element_id, id, currentConstraint, false);
 		}
 
 		id = null;

@@ -4,6 +4,7 @@ import {
 	currentConstraintStore,
 	currentShapeStore,
 	selectConstraint,
+	selectedElementIdStore,
 	updateLocalConstraint
 } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
@@ -39,7 +40,6 @@ export function getEdgeToolInputHandler(
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	function handle(event: CellEdgeTapEvent) {
-		const localConstraints = get(elementsDictStore);
 		const edge = event.coord;
 
 		let mode = get(toolModeStore);
@@ -49,23 +49,26 @@ export function getEdgeToolInputHandler(
 		const onGrid = cellsCoords.every((cell) => isCellOnGrid(cell, gridShape));
 		if (!onGrid) return;
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
 		// determine if adding or removing
+		const elements = get(elementsDictStore);
 		let match: [string, ConstraintType] | null = null;
-		match = findEdgeConstraint(localConstraints, tool, cellsCoords);
+		match = findEdgeConstraint(elements, tool, cellsCoords);
 		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
 			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
 
 		if (match && mode === BASIC_TOOL_MODE.DELETE) {
 			const id = match[0];
-			pushRemoveLocalConstraintCommand(id, match[1], tool);
+			pushRemoveLocalConstraintCommand(element_id, id, match[1]);
 		} else if (!match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
 			const defaultValue = options?.defaultValue ?? '';
 			const currentConstraint = edgeConstraint(tool, cellsCoords, defaultValue);
 			const id = uniqueId();
-			pushAddLocalConstraintCommand(id, currentConstraint, tool, true);
+			pushAddLocalConstraintCommand(element_id, id, currentConstraint, true);
 		} else if (match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
-			selectConstraint(match[0], tool);
+			selectConstraint(element_id, match[0]);
 		}
 	}
 
@@ -80,10 +83,13 @@ export function getEdgeToolInputHandler(
 		if (!keyboardInputDefaultValidator(event.key)) return;
 		if (!options?.valueUpdater) return;
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		const newValue = options.valueUpdater(constraint?.value, event.key);
 		if (newValue !== undefined && newValue !== constraint.value) {
 			constraint = updateConstraintValue(constraint, newValue);
-			updateLocalConstraint(tool, id, constraint);
+			updateLocalConstraint(element_id, id, constraint);
 		}
 	}
 
@@ -108,8 +114,8 @@ export function getEdgeToolInputHandler(
 			constraint_preview.shape = { ...currentShape };
 		}
 
-		const localConstraints = get(elementsDictStore);
-		const match = findEdgeConstraint(localConstraints, tool, cellsCoords);
+		const elements = get(elementsDictStore);
+		const match = findEdgeConstraint(elements, tool, cellsCoords);
 		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
 			edgeToolPreviewStore.set(undefined);
 			return;

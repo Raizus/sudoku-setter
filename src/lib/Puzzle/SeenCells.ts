@@ -1,12 +1,11 @@
 import { type GridCoordI } from '$lib/utils/SquareCellGridCoords';
-import type { CageToolI } from "./puzzle_schema";
-import type { LineToolI } from "./puzzle_schema";
+import type { CageToolI, ConstraintsElement, ConstraintType } from './puzzle_schema';
+import type { LineToolI } from './puzzle_schema';
 import type { ElementsDict } from './Constraints/ElementsDict';
-import type { ConstraintsElement } from './puzzle_schema';
 import type { Cell } from './Grid/Cell';
 import type { Grid } from './Grid/Grid';
 import type { PuzzleI } from './Puzzle';
-import { TOOLS, type TOOLID } from './Tools';
+import { TOOLS } from './Tools';
 
 function seenByRow(grid: Grid, cell: GridCoordI) {
 	const row_cells = grid.getRow(cell.r);
@@ -30,19 +29,28 @@ function seenByRegion(grid: Grid, cell: GridCoordI) {
 	return seen;
 }
 
-function seenByKnightsMove(grid: Grid, cell: Cell) {
+/**
+ * Gets all cells that can be "seen" by a knight's move from the given cell.
+ * A knight's move is an L-shaped move: 2 squares in one direction and 1 square perpendicular,
+ * or 1 square in one direction and 2 squares perpendicular.
+ *
+ * @param grid - The puzzle grid containing the cell structure
+ * @param cell - The cell from which to calculate knight's move visibility
+ * @returns A Set of cells that are reachable by a knight's move from the given cell
+ */
+function seenByKnightsMove(grid: Grid, cell: Cell): Set<Cell> {
 	const knight_cells = grid.getCellsByKnightMove(cell);
 	const seen: Set<Cell> = new Set(knight_cells);
 	return seen;
 }
 
-function seenByKingsMove(grid: Grid, cell: Cell) {
+function seenByKingsMove(grid: Grid, cell: Cell): Set<Cell> {
 	const king_cells = grid.getNeighboorCells(cell);
 	const seen: Set<Cell> = new Set(king_cells);
 	return seen;
 }
 
-function seenByDisjointGroup(grid: Grid, cell: Cell) {
+function seenByDisjointGroup(grid: Grid, cell: Cell): Set<Cell> {
 	const group_idx = grid.getDisjointGroupIdx(cell);
 	const disjoint_group = grid.getDisjointGroup(group_idx);
 	const seen: Set<Cell> = new Set(disjoint_group);
@@ -50,7 +58,7 @@ function seenByDisjointGroup(grid: Grid, cell: Cell) {
 	return seen;
 }
 
-function seenByPositiveDiagonal(grid: Grid, cell: Cell) {
+function seenByPositiveDiagonal(grid: Grid, cell: Cell): Set<Cell> {
 	const seen: Set<Cell> = new Set();
 	const diag_cells = grid.getPositiveDiagonal();
 	if (diag_cells.find((cell2) => cell2 === cell)) {
@@ -60,7 +68,7 @@ function seenByPositiveDiagonal(grid: Grid, cell: Cell) {
 	return seen;
 }
 
-function seenByNegativeDiagonal(grid: Grid, cell: Cell) {
+function seenByNegativeDiagonal(grid: Grid, cell: Cell): Set<Cell> {
 	const seen: Set<Cell> = new Set();
 
 	const diag_cells = grid.getNegativeDiagonal();
@@ -71,9 +79,51 @@ function seenByNegativeDiagonal(grid: Grid, cell: Cell) {
 	return seen;
 }
 
-function seenByBetweenLines(grid: Grid, cell: Cell, constraint: LineToolI) {
-	// the cells seen by a clone are the cells seen by the cell itself
-	// plus the cells seen by it's clone
+/**
+ * Returns a set of cells that are "seen" by global constraints applied to a specific cell in the grid.
+ *
+ * This function iterates over all elements in the provided `element_dict` and, for each element whose
+ * `tool_id` matches a known global constraint, applies the corresponding function to determine which
+ * cells are affected by that constraint from the perspective of the given cell.
+ *
+ * @param grid - The Sudoku grid containing all cells.
+ * @param element_dict - A dictionary of puzzle elements.
+ * @param coords - The coordinates of the cell to check for seen cells.
+ * @returns A set of cells that are seen by the global constraints for the specified cell.
+ */
+export function cellsSeenByGlobalConstraints(
+	grid: Grid,
+	element_dict: ElementsDict,
+	coords: GridCoordI
+): Set<Cell> {
+	let seen: Set<Cell> = new Set();
+
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) {
+		return seen;
+	}
+
+	const tool_function_map: Record<string, (grid: Grid, cell: Cell) => Set<Cell>> = {
+		[TOOLS.ANTIKNIGHT]: seenByKnightsMove,
+		[TOOLS.ANTIKING]: seenByKingsMove,
+		[TOOLS.DISJOINT_GROUPS]: seenByDisjointGroup,
+		[TOOLS.NEGATIVE_DIAGONAL]: seenByNegativeDiagonal,
+		[TOOLS.POSITIVE_DIAGONAL]: seenByPositiveDiagonal
+	};
+
+	for (const element of element_dict.values()) {
+		const tool_id = element.tool_id;
+		if (!(tool_id in tool_function_map)) continue;
+		if (element.disabled) continue;
+
+		const func = tool_function_map[tool_id];
+		seen = seen.union(func(grid, cell));
+	}
+
+	return seen;
+}
+
+function seenByBetweenLines(grid: Grid, cell: Cell, constraint: LineToolI): Set<Cell> {
 	let seen: Set<Cell> = new Set();
 
 	const line_coords = constraint.cells;
@@ -88,26 +138,27 @@ function seenByBetweenLines(grid: Grid, cell: Cell, constraint: LineToolI) {
 	const match_ends = line_ends.findIndex((_cell) => _cell === cell);
 	if (match_ends !== -1) {
 		// if cell is on the end of a between line, then the cells in the middle and on the other end are different
-		seen = new Set([...seen, ...line_mids]);
+		seen = seen.union(new Set(line_mids));
+
 		if (line_mids.length > 0) {
 			const other_ends = line_ends.filter((_, idx) => idx !== match_ends);
-			seen = new Set([...seen, ...other_ends]);
+			seen = seen.union(new Set(other_ends));
 		}
 		return seen;
 	}
+
 	// match on line mids?
 	const match_mids = line_mids.findIndex((_cell) => _cell === cell);
 	if (match_mids !== -1) {
-		// if cell is on the between the ends of a between line,
-		// then the cells in the ends are different
-		seen = new Set([...seen, ...line_ends]);
+		// if cell is not at the ends of a between line, then the cells in the ends are different from it
+		seen = seen.union(new Set(line_ends));
 		return seen;
 	}
 
 	return seen;
 }
 
-function seenByRenban(grid: Grid, cell: Cell, constraint: LineToolI) {
+function seenByRenban(grid: Grid, cell: Cell, constraint: LineToolI): Set<Cell> {
 	let seen: Set<Cell> = new Set();
 
 	const line_coords = constraint.cells;
@@ -122,14 +173,14 @@ function seenByRenban(grid: Grid, cell: Cell, constraint: LineToolI) {
 	// cell sees all other cells in the renban
 	const other_cells = line_cells.filter((_cell) => _cell !== cell);
 	if (other_cells.length) {
-		seen = new Set([...seen, ...other_cells]);
+		seen = seen.union(new Set(other_cells));
 		return seen;
 	}
 
 	return seen;
 }
 
-function seenByKillerCage(grid: Grid, cell: Cell, constraint: CageToolI) {
+function seenByKillerCage(grid: Grid, cell: Cell, constraint: CageToolI): Set<Cell> {
 	let seen: Set<Cell> = new Set();
 
 	const cage_coords = constraint.cells;
@@ -144,7 +195,7 @@ function seenByKillerCage(grid: Grid, cell: Cell, constraint: CageToolI) {
 	// cell sees all other cells in the cage
 	const other_cells = cage_cells.filter((_cell) => _cell !== cell);
 	if (other_cells.length) {
-		seen = new Set([...seen, ...other_cells]);
+		seen = seen.union(new Set(other_cells));
 		return seen;
 	}
 
@@ -169,55 +220,20 @@ function seenByKillerCage(grid: Grid, cell: Cell, constraint: CageToolI) {
 // 	return seen;
 // }
 
-export function cellsSeenByGlobalConstraints(
+function seenByLocalElement<T extends ConstraintType>(
 	grid: Grid,
-	element_dict: ElementsDict,
-	coords: GridCoordI
-) {
+	cell: Cell,
+	element: ConstraintsElement,
+	func: ((grid: Grid, cell: Cell, constraint: T) => Set<Cell>)
+): Set<Cell> {
 	let seen: Set<Cell> = new Set();
 
-	const cell = grid.getCell(coords.r, coords.c);
-	if (!cell) {
-		return seen;
-	}
-
-	const antiknight = !!element_dict.get(TOOLS.ANTIKNIGHT);
-	if (antiknight) {
-		seen = seen.union(seenByKnightsMove(grid, cell));
-	}
-	const antiking = !!element_dict.get(TOOLS.ANTIKING);
-	if (antiking) {
-		seen = seen.union(seenByKingsMove(grid, cell));
-	}
-	const disjoint_groups = !!element_dict.get(TOOLS.DISJOINT_GROUPS);
-	if (disjoint_groups) {
-		seen = seen.union(seenByDisjointGroup(grid, cell));
-	}
-	const negative_diag = !!element_dict.get(TOOLS.NEGATIVE_DIAGONAL);
-	if (negative_diag) {
-		seen = seen.union(seenByNegativeDiagonal(grid, cell));
-	}
-	const positive_diag = !!element_dict.get(TOOLS.POSITIVE_DIAGONAL);
-	if (positive_diag) {
-		seen = seen.union(seenByPositiveDiagonal(grid, cell));
-	}
-
-	return seen;
-}
-
-function seenByCage(
-	grid: Grid,
-	element: ConstraintsElement,
-	cell: Cell,
-	tool: TOOLID,
-	seen: Set<Cell>
-) {
-	if (element.tool_id !== tool) return seen;
 	if (!element.constraints) return seen;
+	if (element.disabled) return seen;
 
 	for (const constraint of Object.values(element.constraints)) {
-		const seen_by_c = seenByKillerCage(grid, cell, constraint as CageToolI);
-		seen = new Set([...seen, ...seen_by_c]);
+		const seen_by_c = func(grid, cell, constraint as T);
+		seen = seen.union(new Set(seen_by_c));
 	}
 
 	return seen;
@@ -227,7 +243,7 @@ export function cellsSeenByLocalConstraints(
 	grid: Grid,
 	elements_dict: ElementsDict,
 	coords: GridCoordI
-) {
+): Set<Cell> {
 	let seen: Set<Cell> = new Set();
 
 	const cell = grid.getCell(coords.r, coords.c);
@@ -235,69 +251,78 @@ export function cellsSeenByLocalConstraints(
 		return seen;
 	}
 
+	const line_tool_function_map: Record<
+		string,
+		(grid: Grid, cell: Cell, constraint: LineToolI) => Set<Cell>
+	> = {
+		[TOOLS.BETWEEN_LINE]: seenByBetweenLines,
+		[TOOLS.RENBAN_LINE]: seenByRenban
+	};
+
+	const cage_tool_function_map: Record<
+		string,
+		(grid: Grid, cell: Cell, constraint: CageToolI) => Set<Cell>
+	> = {
+		[TOOLS.KILLER_CAGE]: seenByKillerCage,
+		[TOOLS.PARITY_BALANCE_CAGE]: seenByKillerCage,
+		[TOOLS.SPOTLIGHT_CAGE]: seenByKillerCage
+	};
+
 	for (const element of elements_dict.values()) {
 		const tool_id = element.tool_id;
 		if (!element.constraints) continue;
 
-		if (tool_id === TOOLS.BETWEEN_LINE) {
-			for (const constraint of Object.values(element.constraints)) {
-				const seen_by_c = seenByBetweenLines(grid, cell, constraint as LineToolI);
-				seen = new Set([...seen, ...seen_by_c]);
-			}
-		} else if (tool_id === TOOLS.RENBAN_LINE) {
-			for (const constraint of Object.values(element.constraints)) {
-				const seen_by_c = seenByRenban(grid, cell, constraint as LineToolI);
-				seen = new Set([...seen, ...seen_by_c]);
-			}
+		if (tool_id in line_tool_function_map) {
+			const func = line_tool_function_map[tool_id];
+			seen = seen.union(seenByLocalElement<LineToolI>(grid, cell, element, func));
+			continue;
 		}
-		seen = seenByCage(grid, element, cell, TOOLS.KILLER_CAGE, seen);
-		seen = seenByCage(grid, element, cell, TOOLS.PARITY_BALANCE_CAGE, seen);
-		seen = seenByCage(grid, element, cell, TOOLS.SPOTLIGHT_CAGE, seen);
+
+		if (tool_id in cage_tool_function_map) {
+			const func = cage_tool_function_map[tool_id];
+			seen = seen.union(seenByLocalElement<CageToolI>(grid, cell, element, func));
+			continue;
+		}
 	}
 
 	return seen;
 }
 
-export function cellsSeenByCell(puzzle: PuzzleI, coords: GridCoordI) {
+export function cellsSeenByCell(puzzle: PuzzleI, coords: GridCoordI): Set<Cell> {
 	let seen: Set<Cell> = new Set();
 
 	const grid = puzzle.grid;
 	const elements_dict = puzzle.elementsDict;
 
-	const sudoku = !elements_dict.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY);
-	if (sudoku) {
-		seen = new Set<Cell>([
-			...seenByRow(grid, coords),
-			...seenByCol(grid, coords),
-			...seenByRegion(grid, coords)
-		]);
+	const not_sudoku_ele = elements_dict.values().find(
+		(element) => element.tool_id === TOOLS.SUDOKU_RULES_DO_NOT_APPLY
+	);
+
+	if (!not_sudoku_ele || not_sudoku_ele.disabled) {
+		seen = seen.union(seenByRow(grid, coords));
+		seen = seen.union(seenByCol(grid, coords));
+		seen = seen.union(seenByRegion(grid, coords));
 	}
 
-	seen = new Set<Cell>([...seen, ...cellsSeenByGlobalConstraints(grid, elements_dict, coords)]);
-
-	seen = new Set<Cell>([...seen, ...cellsSeenByLocalConstraints(grid, elements_dict, coords)]);
+	seen = seen.union(cellsSeenByGlobalConstraints(grid, elements_dict, coords));
+	seen = seen.union(cellsSeenByLocalConstraints(grid, elements_dict, coords));
 
 	const cell2 = grid.getCell(coords.r, coords.c);
-	if (cell2) seen.delete(cell2);
+	if (cell2 && seen.has(cell2)) seen.delete(cell2);
 
 	return seen;
 }
 
 export function cellsSeenByCells(puzzle: PuzzleI, cells: GridCoordI[]): GridCoordI[] {
 	const seenCells: Set<Cell>[] = [];
-	if (cells.length == 0) {
-		const coords: GridCoordI[] = [];
-		return coords;
-	}
+	if (cells.length == 0) return [];
 
 	for (const cell of cells) {
 		seenCells.push(cellsSeenByCell(puzzle, cell));
 	}
 
 	const seenByAll = seenCells.reduce((prev, curr) => prev.intersection(curr));
-	const coords: GridCoordI[] = [];
-	for (const cell of seenByAll) {
-		coords.push(cell.toCoords());
-	}
+	
+	const coords: GridCoordI[] = [...seenByAll].map((cell) => cell.toCoords());
 	return coords;
 }

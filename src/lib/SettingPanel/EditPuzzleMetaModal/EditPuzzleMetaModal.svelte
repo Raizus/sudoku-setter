@@ -2,12 +2,11 @@
 	import Modal from '$lib/Components/Modal/Modal.svelte';
 	import ModalButtonsContainer from '$lib/Components/Modal/ModalButtonsContainer.svelte';
 	import ModalSectionHeader from '$lib/Components/Modal/ModalSectionHeader.svelte';
-	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import type { PuzzleMetaI } from '$src/lib/Puzzle/puzzle_schema';
 	import { joinStrList } from '$lib/utils/functionUtils';
 	import { puzzleMetaStore, updatePuzzleMeta } from '$stores/BoardStore';
 	import { elementsDictStore } from '$stores/BoardStore';
-	import { TOOLS } from '$src/lib/Puzzle/Tools';
+	import { generateDescription } from '$src/lib/Puzzle/Puzzle';
 
 	export let showModal = false;
 
@@ -50,48 +49,8 @@
 		return authors;
 	}
 
-	function generateDescription(): string {
-		let description: string = '';
-		const elementHandlers = elementInfoRegistry;
-		const elements_dict = $elementsDictStore;
-
-		// is sudoku?
-		const sudoku = !elements_dict.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY);
-		if (!sudoku) {
-			description += 'Sudoku rules do not apply.\n\n';
-		} else {
-			description += 'Sudoku rules apply.\n\n';
-		}
-
-		// local constraints descriptions
-		for (const [tool_id, element] of elements_dict.entries()) {
-			// elements to ignore
-			if (tool_id === TOOLS.SUDOKU_RULES_DO_NOT_APPLY) continue;
-
-			const elementInfo = elementHandlers[tool_id];
-			const name = elementInfo.menu?.name ?? elementInfo.toolId;
-			const constraint_desc = elementInfo.meta?.description;
-			description += `**${name}**: ${constraint_desc}\n\n`;
-
-			if (!element.negative_constraints) continue;
-			for (const [neg_tool_id, value] of Object.entries(element.negative_constraints)) {
-				if (!value) continue;
-				const neg_constraint = elementInfo.negative_constraints?.find(
-					(neg_constraint) => neg_constraint.toolId === neg_tool_id
-				);
-				if (!neg_constraint) continue;
-
-				const name = neg_tool_id;
-				const constraint_desc = neg_constraint.description;
-				description += ` - **${name}**: ${constraint_desc}\n\n`;
-			}
-		}
-
-		return description.trim();
-	}
-
 	function autoGenCb() {
-		const description = generateDescription();
+		const description = generateDescription($elementsDictStore);
 		rulesetStr = description;
 	}
 </script>

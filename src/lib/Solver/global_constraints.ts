@@ -2,13 +2,12 @@ import { TOOLS } from '../Puzzle/Tools';
 import {
 	cellsToVarsName,
 	allDifferentConstraint,
-	type PuzzleAuxI
+	type PuzzleAuxI,
+	hasEnabledElement
 } from './solver_utils';
 
 export function sudokuConstraints(puzzle: PuzzleAuxI) {
-	const elements_dict = puzzle.elementsDict;
-	const not_sudoku = !!elements_dict.get(TOOLS.SUDOKU_RULES_DO_NOT_APPLY);
-
+	const not_sudoku = hasEnabledElement(puzzle, TOOLS.SUDOKU_RULES_DO_NOT_APPLY);
 	if (not_sudoku) return '';
 
 	const grid = puzzle.grid;
@@ -35,7 +34,7 @@ export function sudokuConstraints(puzzle: PuzzleAuxI) {
 	}
 
 	// region constraints (digits do not repeat on regions)
-	const chaos_construction = !!elements_dict.get(TOOLS.CHAOS_CONSTRUCTION);
+	const chaos_construction = hasEnabledElement(puzzle, TOOLS.CHAOS_CONSTRUCTION);
 	if (!chaos_construction) {
 		out_str += '\n% region constraints (digits do not repeat on regions)\n';
 		const regions = grid.getUsedRegions();
@@ -51,11 +50,9 @@ export function sudokuConstraints(puzzle: PuzzleAuxI) {
 }
 
 export function hexedSudokuConstraint(puzzle: PuzzleAuxI) {
-	const elements_dict = puzzle.elementsDict;
-
 	const tool = TOOLS.HEXED_SUDOKU;
-	const hexed_sudoku = elements_dict.get(tool);
-	if (!hexed_sudoku || hexed_sudoku.disabled) return '';
+	const hexed_sudoku = hasEnabledElement(puzzle, tool);
+	if (!hexed_sudoku) return '';
 
 	let out_str = `\n% ${tool}\n`;
 	out_str += `constraint hexed_sudoku_p(board, ALLOWED_DIGITS);\n`;

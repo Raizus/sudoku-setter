@@ -48,7 +48,7 @@ export const leaveEmptyCellsEmptyInfo: SquareCellElementInfo = {
 
 	meta: {
 		description:
-			'This is for the solver and solution display purposes only. It will fill empty cells with all zeros when solving a puzzle, and leave those cells empty on the display.',
+			'This is for the solver and solution display purposes ONLY. It will fill empty cells with the same value when solving a puzzle, and leave those cells empty on the display.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
 	},

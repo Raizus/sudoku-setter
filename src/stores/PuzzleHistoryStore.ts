@@ -3,19 +3,10 @@ import { get } from 'svelte/store';
 import { puzzleCreationTimestamp, puzzleUrlStore } from './BoardStore';
 import { createPersistentStore } from './store_utils';
 import { puzzleToCompressedStr } from '$src/lib/SettingPanel/SavePuzzleModal/io_utils';
-import type { PuzzleI } from '$src/lib/Puzzle/Puzzle';
-import { Grid } from '$src/lib/Puzzle/Grid/Grid';
-import { range } from 'lodash';
-import { ElementsDict } from '$src/lib/Puzzle/Constraints/ElementsDict';
+import { blankPuzzle} from '$src/lib/Puzzle/Puzzle';
 
 export const MAX_HISTORY_SIZE = 100;
-const DEFAULT_PUZZLE: PuzzleI = {
-	grid: new Grid(9, 9),
-	valid_digits: range(1, 10),
-	puzzleMeta: {},
-	elementsDict: new ElementsDict()
-};
-const DEFAULT_COMPRESSED_STR = puzzleToCompressedStr(DEFAULT_PUZZLE);
+const DEFAULT_COMPRESSED_STR = puzzleToCompressedStr(blankPuzzle());
 
 export const puzzleHistoryStore = createPersistentStore<PuzzleHistoryItem[]>('puzzle-history', []);
 

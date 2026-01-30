@@ -8,7 +8,8 @@ import {
 	updateLocalConstraint,
 	elementsDictStore,
 	currentShapeStore,
-	selectConstraint
+	selectConstraint,
+	selectedElementIdStore
 } from '$stores/BoardStore';
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import { keyboardInputDefaultValidator } from '$src/lib/InputHandlers/KeyboardEventUtils';
@@ -17,7 +18,6 @@ import type { GridShape } from '$lib/Types/types';
 import {
 	findCornerConstraint,
 	updateConstraintValue} from '$src/lib/Puzzle/Constraints/ElementsDict';
-import { type ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 import { cornerConstraint } from '$lib/Puzzle/Constraints/CornerConstraints';
 import { type CornerToolI } from "$src/lib/Puzzle/puzzle_schema";
 import { cornerCoordToAdjCellCoords, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
@@ -40,35 +40,37 @@ export function getCornerToolInputHandler(
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	function handle(event: CellCornerTapEvent) {
-		const localConstraints = get(elementsDictStore);
 		const corner = event.coord;
-
+		
 		let mode = get(toolModeStore);
-
+		
 		const cellsCoords = cornerCoordToAdjCellCoords(corner);
-
+		
 		const onGrid = cellsCoords.every((coord) => isCellOnGrid(coord, gridShape));
 		if (!onGrid) return;
-
+		
 		// determine if adding or removing
-		let match: [string, ConstraintType] | null = null;
-		match = findCornerConstraint(localConstraints, tool, corner);
+		const elements = get(elementsDictStore);
+		const match = findCornerConstraint(elements, tool, corner);
 		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
 			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		// remove constraint
 		if (match && mode === BASIC_TOOL_MODE.DELETE) {
 			const id = match[0];
-			pushRemoveLocalConstraintCommand(id, match[1], tool);
+			pushRemoveLocalConstraintCommand(element_id, id, match[1]);
 		}
 		// add constraint
 		else if (!match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
 			const newConstraint = cornerConstraint(tool, cellsCoords, options?.defaultValue);
 			const id = uniqueId();
-			pushAddLocalConstraintCommand(id, newConstraint, tool, true);
+			pushAddLocalConstraintCommand(element_id, id, newConstraint, true);
 		} else if (match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
-			selectConstraint(match[0], tool);
+			selectConstraint(element_id, match[0]);
 		}
 	}
 
@@ -83,10 +85,13 @@ export function getCornerToolInputHandler(
 		if (!keyboardInputDefaultValidator(event.key)) return;
 		if (!options?.valueUpdater) return;
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		const newValue = options.valueUpdater(constraint?.value, event.key);
 		if (newValue !== undefined && newValue !== constraint.value) {
 			constraint = updateConstraintValue(constraint, newValue);
-			updateLocalConstraint(tool, id, constraint);
+			updateLocalConstraint(element_id, id, constraint);
 		}
 	}
 
@@ -109,8 +114,8 @@ export function getCornerToolInputHandler(
 			constraint_preview.shape = { ...currentShape };
 		}
 
-		const localConstraints = get(elementsDictStore);
-		const match = findCornerConstraint(localConstraints, tool, event.coord);
+		const elements = get(elementsDictStore);
+		const match = findCornerConstraint(elements, tool, event.coord);
 		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
 			cornerToolPreviewStore.set(undefined);
 			return;

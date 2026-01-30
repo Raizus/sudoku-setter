@@ -1,18 +1,19 @@
 <script lang="ts">
-	import { HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
 	import {
 		updateConstraintName,
 		updateConstraintValue
 	} from '$src/lib/Puzzle/Constraints/ElementsDict';
 	import { type VariableConstraintI } from '$src/lib/Puzzle/puzzle_schema';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
-	import { isLocalConstraint, TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
+	import { isLocalConstraint, type TOOLID } from '$src/lib/Puzzle/Tools';
 	import { currentConstraintStore, updateLocalConstraint } from '$stores/BoardStore';
 	import ConstraintCheckbox from './ConstraintCheckbox.svelte';
 	import ConstraintList from './ConstraintList.svelte';
 	import ToolModeButtons from './ToolModeButtons.svelte';
 
 	export let tool_id: TOOLID;
+	export let element_id: number;
+
 	const element_info = elementInfoRegistry[tool_id];
 	const negative_constraints = element_info.negative_constraints;
 	const has_negatives =
@@ -38,7 +39,7 @@
 		if (new_value === undefined) return;
 
 		const constraint = updateConstraintValue(constraint_and_id.constraint, new_value);
-		updateLocalConstraint(tool_id, constraint_and_id.id, constraint);
+		updateLocalConstraint(element_id, constraint_and_id.id, constraint);
 	}
 
 	function updateName(event: Event) {
@@ -52,7 +53,7 @@
 			constraint_and_id.constraint as VariableConstraintI,
 			value
 		);
-		updateLocalConstraint(tool_id, constraint_and_id.id, constraint);
+		updateLocalConstraint(element_id, constraint_and_id.id, constraint);
 	}
 </script>
 
@@ -96,8 +97,8 @@
 					</div>
 				{/if}
 			</div>
-			<ToolModeButtons {tool_id} />
-			<ConstraintList {tool_id} />
+			<ToolModeButtons {tool_id} {element_id}/>
+			<ConstraintList {element_id} />
 		</div>
 	</div>
 {/if}

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { flip } from 'svelte/animate';
 	import { type AbstractElementHandlers } from '$lib/Puzzle/ElementHandlersUtils';
 	import type { AbstractElementInfo } from '$lib/Puzzle/ElementInfo';
 	import {
@@ -21,14 +22,14 @@
 	const categories = ELEMENTS_CATEGORIES;
 
 	const onAddTool = (toolId: TOOLID): void => {
-		addGroupToLocalConstraint(toolId);
+		const new_ele_id = addGroupToLocalConstraint(toolId);
 		// TODO split update tool and update current constraint
-		updateToolAndCurrentConstraintStores(toolId);
+		updateToolAndCurrentConstraintStores(toolId, new_ele_id);
 	};
 
 	// force the filter to update when a new constraint is added
 	$: localCFilterFun = (key: TOOLID, elementInfo: AbstractElementInfo): boolean => {
-		const exists = $elementsDictStore.has(key);
+		const exists = $elementsDictStore.hasTool(key);
 		const isLocal = elementInfo.meta?.categories.includes(TOOL_CATEGORIES.LOCAL_ELEMENT)
 			? true
 			: false;
@@ -48,10 +49,25 @@
 		<ElementButton tool_id={TOOLS.GIVEN} {elementHandlers} />
 		<ElementButton tool_id={TOOLS.REGIONS} {elementHandlers} />
 
-		{#each $elementsDictStore.entries() as [tool_id, value] (tool_id)}
-			{#if isElement(tool_id)}
-				<ElementButton {tool_id} {elementHandlers} />
-			{/if}
+		{#each $elementsDictStore.orderedEntries() as [element_id, element], index (element_id)}
+			<li animate:flip={{ duration: 500 }}>
+				{#if isElement(element.tool_id)}
+					<ElementButton
+						tool_id={element.tool_id}
+						{elementHandlers}
+						{element}
+						{element_id}
+						order={index}
+					/>
+				{/if}
+			</li>
 		{/each}
 	</svelte:fragment>
 </SettingToolsPanel>
+
+<style lang="scss">
+	li {
+		list-style: none;
+		margin-bottom: 0.05rem;
+	}
+</style>
