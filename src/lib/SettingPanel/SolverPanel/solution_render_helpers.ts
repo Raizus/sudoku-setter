@@ -1,7 +1,6 @@
 import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
 import type { Grid } from '$src/lib/Puzzle/Grid/Grid';
 import type { CellMarker, LineMarker } from '$src/lib/Puzzle/PenTool';
-import type { PuzzleI } from '$src/lib/Puzzle/Puzzle';
 import { TOOLS } from '$src/lib/Puzzle/Tools';
 import {
 	addLineMarkersAction,
@@ -12,7 +11,7 @@ import {
 	restoreCellsHighlightsAction,
 	restoreCellsValueAction
 } from '$src/lib/reducers/UpdateCellsActions';
-import { VAR_2D_NAMES, type PuzzleModel } from '$src/lib/Solver/solver_utils';
+import { hasEnabledElement, VAR_2D_NAMES, type PuzzleAuxI, type PuzzleModel } from '$src/lib/Solver/solver_utils';
 import { areCoordsNeighbours, type GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
 import { executeUpdateCellsAction } from '$stores/CellsStore';
 import { updatePenTool } from '$stores/PenToolStore';
@@ -166,12 +165,14 @@ function solve_coloring(grid: number[][]): number[][] {
 	return result;
 }
 
-function setSolutionValues(json: JsonT, puzzle: PuzzleI) {
+function setSolutionValues(json: JsonT, puzzle: PuzzleAuxI) {
 	const grid = puzzle.grid;
-	const elements = puzzle.elementsDict;
 
-	const leave_empty_cells = !!elements.get(TOOLS.LEAVE_EMPTY_CELLS_EMPTY);
 	if (json === undefined) return;
+	
+	const leave_empty_cells = hasEnabledElement(puzzle, TOOLS.LEAVE_EMPTY_CELLS_EMPTY);
+	if (leave_empty_cells) return;
+
 	const board = json['board'] as number[][] | undefined;
 	if (board === undefined) return;
 
@@ -182,7 +183,6 @@ function setSolutionValues(json: JsonT, puzzle: PuzzleI) {
 		for (let c = 0; c < row.length; c++) {
 			const cell = grid.getCell(r, c);
 			if (!cell || cell.given) continue;
-			if (leave_empty_cells && !cell.given && cell.value === null) continue;
 
 			const value = row[c];
 			cells.push(cell);
