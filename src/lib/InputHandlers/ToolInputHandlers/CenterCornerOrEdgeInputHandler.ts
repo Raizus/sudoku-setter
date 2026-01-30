@@ -25,8 +25,8 @@ import {
 import { type CenterCornerOrEdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
 import type { CenterCornerOrEdgeToolInputOptions } from './types';
 import { toolModeStore } from '$stores/InputHandlerStore';
-import { keyDownUpdateValue, pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
-import { centerCornerOrEdgeToolPreviewStore, type ToolPreview } from '$stores/ElementsStore';
+import { keyDownUpdateValue, pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand, setConstraintPreviewOnMove } from './utils';
+import { centerCornerOrEdgeToolPreviewStore } from '$stores/ElementsStore';
 
 export function getCenterCornerOrEdgeToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -105,26 +105,15 @@ export function getCenterCornerOrEdgeToolInputHandler(
 		}
 
 		const elements = get(elementsDictStore);
+
 		const match = findCenterCornerOrEdgeConstraint(elements, tool, event.closest);
-		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
-			centerCornerOrEdgeToolPreviewStore.set(undefined);
-			return;
-		}
-
-		let preview_mode: 'add' | 'remove' = 'add';
-		let match_id: string | undefined = undefined;
-		if (match && (mode === BASIC_TOOL_MODE.DYNAMIC || mode === BASIC_TOOL_MODE.DELETE)) {
-			preview_mode = 'remove';
-			match_id = match[0];
-		}
-
-		const aux: ToolPreview<CenterCornerOrEdgeToolI> = {
-			tool: constraint_preview,
+		const match_id = match ? match[0] : undefined;
+		setConstraintPreviewOnMove<CenterCornerOrEdgeToolI>(
+			constraint_preview,
+			centerCornerOrEdgeToolPreviewStore,
 			match_id,
-			mode: preview_mode
-		};
-
-		centerCornerOrEdgeToolPreviewStore.set(aux);
+			mode
+		);
 	};
 
 	const inputHandler: InputHandler = {

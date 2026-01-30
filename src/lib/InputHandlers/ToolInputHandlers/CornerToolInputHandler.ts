@@ -24,9 +24,10 @@ import {
 import {
 	keyDownUpdateValue,
 	pushAddLocalConstraintCommand,
-	pushRemoveLocalConstraintCommand
+	pushRemoveLocalConstraintCommand,
+	setConstraintPreviewOnMove
 } from './utils';
-import { cornerToolPreviewStore, type ToolPreview } from '$stores/ElementsStore';
+import { cornerToolPreviewStore } from '$stores/ElementsStore';
 import { toolModeStore } from '$stores/InputHandlerStore';
 
 export function getCornerToolInputHandler(
@@ -49,15 +50,15 @@ export function getCornerToolInputHandler(
 		const onGrid = cellsCoords.every((coord) => isCellOnGrid(coord, gridShape));
 		if (!onGrid) return;
 
+		const element_id = get(selectedElementIdStore);
+		if (element_id === null) return;
+
 		// determine if adding or removing
 		const elements = get(elementsDictStore);
 		const match = findCornerConstraint(elements, tool, corner);
 		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
 			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
-
-		const element_id = get(selectedElementIdStore);
-		if (element_id === null) return;
 
 		// remove constraint
 		if (match && mode === BASIC_TOOL_MODE.DELETE) {
@@ -69,7 +70,9 @@ export function getCornerToolInputHandler(
 			const newConstraint = cornerConstraint(tool, cellsCoords, options?.defaultValue);
 			const id = uniqueId();
 			pushAddLocalConstraintCommand(element_id, id, newConstraint, true);
-		} else if (match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
+		}
+		// select existing constraint
+		else if (match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
 			selectConstraint(element_id, match[0]);
 		}
 	}
@@ -96,6 +99,7 @@ export function getCornerToolInputHandler(
 
 		const mode = get(toolModeStore);
 		const cellsCoords = cornerCoordToAdjCellCoords(event.coord);
+
 		const constraint_preview = cornerConstraint(tool, cellsCoords, options?.defaultValue);
 		const currentShape = get(currentShapeStore);
 		if (currentShape) {
@@ -103,26 +107,15 @@ export function getCornerToolInputHandler(
 		}
 
 		const elements = get(elementsDictStore);
+
 		const match = findCornerConstraint(elements, tool, event.coord);
-		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
-			cornerToolPreviewStore.set(undefined);
-			return;
-		}
-
-		let preview_mode: 'add' | 'remove' = 'add';
-		let match_id: string | undefined = undefined;
-		if (match && (mode === BASIC_TOOL_MODE.DYNAMIC || mode === BASIC_TOOL_MODE.DELETE)) {
-			preview_mode = 'remove';
-			match_id = match[0];
-		}
-
-		const aux: ToolPreview<CornerToolI> = {
-			tool: constraint_preview,
+		const match_id = match ? match[0] : undefined;
+		setConstraintPreviewOnMove<CornerToolI>(
+			constraint_preview,
+			cornerToolPreviewStore,
 			match_id,
-			mode: preview_mode
-		};
-
-		cornerToolPreviewStore.set(aux);
+			mode
+		);
 	};
 
 	const inputHandler: InputHandler = {

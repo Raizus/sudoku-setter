@@ -1,8 +1,9 @@
 import type { InputHandler } from '../InputHandler';
 import {
 	currentConstraintStore,
+	currentShapeStore,
 	selectConstraint,
-	selectedElementIdStore,
+	selectedElementIdStore
 } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
@@ -15,9 +16,7 @@ import {
 } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
 import { BASIC_TOOL_MODE, CornerOrEdge } from './types';
 import type { GridShape } from '$lib/Types/types';
-import {
-	findOutsideDirectionConstraint
-} from '$src/lib/Puzzle/Constraints/ElementsDict';
+import { findOutsideDirectionConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import {
 	gridCoordsNextInDirection,
 	idxToDirection,
@@ -31,7 +30,8 @@ import { toolModeStore } from '$stores/InputHandlerStore';
 import {
 	keyDownUpdateValue,
 	pushAddLocalConstraintCommand,
-	pushRemoveLocalConstraintCommand
+	pushRemoveLocalConstraintCommand,
+	setConstraintPreviewOnMove
 } from './utils';
 
 export function getOutsideDirectionToolInputHandler(
@@ -110,17 +110,24 @@ export function getOutsideDirectionToolInputHandler(
 			return;
 		}
 
-		const mode = get(toolModeStore);
-		const elements = get(elementsDictStore);
-		const match = findOutsideDirectionConstraint(elements, tool, event.cell, direction);
-		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
-			outsideDirectionToolPreviewStore.set(undefined);
-			return;
+		const constraint_preview = outsideDirectionConstraint(tool, event.cell, direction, '');
+		const currentShape = get(currentShapeStore);
+		if (currentShape) {
+			constraint_preview.shape = { ...currentShape };
 		}
 
-		const constraint_preview = outsideDirectionConstraint(tool, event.cell, direction, '');
+		const mode = get(toolModeStore);
 
-		outsideDirectionToolPreviewStore.set(constraint_preview);
+		const elements = get(elementsDictStore);
+		const match = findOutsideDirectionConstraint(elements, tool, event.cell, direction);
+
+		const match_id = match ? match[0] : undefined;
+		setConstraintPreviewOnMove<OutsideDirectionToolI>(
+			constraint_preview,
+			outsideDirectionToolPreviewStore,
+			match_id,
+			mode,
+		);
 	};
 
 	const inputHandler: InputHandler = {

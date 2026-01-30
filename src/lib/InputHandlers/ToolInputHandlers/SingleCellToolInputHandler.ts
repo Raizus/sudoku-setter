@@ -23,8 +23,8 @@ import {
 import {
 	singleCellConstraint} from '$lib/Puzzle/Constraints/SingleCellConstraints';
 import { type CellToolI } from "$src/lib/Puzzle/puzzle_schema";
-import { keyDownUpdateValue, pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
-import { simpleCellToolPreviewStore, type ToolPreview } from '$stores/ElementsStore';
+import { keyDownUpdateValue, pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand, setConstraintPreviewOnMove } from './utils';
+import { simpleCellToolPreviewStore } from '$stores/ElementsStore';
 import { toolModeStore } from '$stores/InputHandlerStore';
 
 export function getSingleCellToolInputHandler(
@@ -102,25 +102,15 @@ export function getSingleCellToolInputHandler(
 
 		const mode = get(toolModeStore);
 		const elements = get(elementsDictStore);
+
 		const match = findSingleCellConstraint<CellToolI>(elements, tool, event.cell);
-		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
-			simpleCellToolPreviewStore.set(undefined);
-			return;
-		}
-
-		let preview_mode: 'add' | 'remove' = 'add';
-		let match_id: string | undefined = undefined;
-		if (match && (mode === BASIC_TOOL_MODE.DELETE || mode === BASIC_TOOL_MODE.DYNAMIC)) {
-			preview_mode = 'remove';
-			match_id = match[0];
-		}
-
-		const aux: ToolPreview<CellToolI> = {
-			tool: constraint_preview,
+		const match_id = match ? match[0] : undefined;
+		setConstraintPreviewOnMove<CellToolI>(
+			constraint_preview,
+			simpleCellToolPreviewStore,
 			match_id,
-			mode: preview_mode
-		};
-		simpleCellToolPreviewStore.set(aux);
+			mode
+		);
 	};
 
 	function onKeyDown(event: KeyboardEvent) {
