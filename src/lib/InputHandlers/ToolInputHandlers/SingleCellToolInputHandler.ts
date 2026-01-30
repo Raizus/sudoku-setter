@@ -38,18 +38,14 @@ export function getSingleCellToolInputHandler(
 
 	function handle(event: CellDragTapEvent) {
 		const coords = event.cell;
-		
+
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
-		
+
 		let mode = get(toolModeStore);
-		
+
 		// determine if adding or removing
 		const elements = get(elementsDictStore);
-		const match = findSingleCellConstraint<CellToolI>(elements, tool, coords);
-		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
-			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
-		}
 
 		if (options?.oppositeConstraintId) {
 			const oppositeConstraintMatch = findSingleCellConstraint<CellToolI>(
@@ -63,14 +59,24 @@ export function getSingleCellToolInputHandler(
 		const element_id = get(selectedElementIdStore);
 		if (element_id === null) return;
 
+		const match = findSingleCellConstraint<CellToolI>(elements, tool, coords);
+		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
+			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
+		}
+
+		// remove constraint
 		if (match && mode === BASIC_TOOL_MODE.DELETE) {
 			const [id, constraint] = match;
 			pushRemoveLocalConstraintCommand(element_id, id, constraint);
-		} else if (!match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
+		}
+		// add constraint
+		else if (!match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
 			const newConstraint = singleCellConstraint(tool, coords, options?.defaultValue);
 			const id = uniqueId();
 			pushAddLocalConstraintCommand(element_id, id, newConstraint, true);
-		} else if (match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
+		}
+		// select existing constraint
+		else if (match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
 			selectConstraint(element_id, match[0]);
 		}
 	}
