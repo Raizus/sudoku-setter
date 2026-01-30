@@ -3,13 +3,11 @@ import {
 	currentConstraintStore,
 	selectConstraint,
 	selectedElementIdStore,
-	updateLocalConstraint
 } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
-import { keyboardInputDefaultValidator } from '$src/lib/InputHandlers/KeyboardEventUtils';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import {
 	CellFeaturePointerHandler,
@@ -18,7 +16,6 @@ import {
 import { BASIC_TOOL_MODE, CornerOrEdge } from './types';
 import type { GridShape } from '$lib/Types/types';
 import {
-	updateConstraintValue,
 	findOutsideDirectionConstraint
 } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import {
@@ -26,13 +23,16 @@ import {
 	idxToDirection,
 	isCellOnGrid
 } from '$lib/utils/SquareCellGridCoords';
-import {
-	outsideDirectionConstraint} from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
-import { type OutsideDirectionToolI } from "$src/lib/Puzzle/puzzle_schema";
+import { outsideDirectionConstraint } from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
+import { type OutsideDirectionToolI } from '$src/lib/Puzzle/puzzle_schema';
 import type { OutsideDirectionToolInputOptions } from './types';
 import { outsideDirectionToolPreviewStore } from '$stores/ElementsStore';
 import { toolModeStore } from '$stores/InputHandlerStore';
-import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
+import {
+	keyDownUpdateValue,
+	pushAddLocalConstraintCommand,
+	pushRemoveLocalConstraintCommand
+} from './utils';
 
 export function getOutsideDirectionToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -50,16 +50,16 @@ export function getOutsideDirectionToolInputHandler(
 		const cell = event.cell;
 		const direction_idx = event.direction;
 		const direction = idxToDirection(direction_idx);
-		
+
 		const onGrid = isCellOnGrid(cell, gridShape);
 		if (onGrid) return;
-		
+
 		const neighbour = gridCoordsNextInDirection(cell, direction);
 		const neighbourOnGrid = isCellOnGrid(neighbour, gridShape);
 		if (!neighbourOnGrid) return;
-		
+
 		let mode = get(toolModeStore);
-		
+
 		// determine if adding or removing
 		const elements = get(elementsDictStore);
 		const match = findOutsideDirectionConstraint(elements, tool, cell, direction);
@@ -83,24 +83,12 @@ export function getOutsideDirectionToolInputHandler(
 	}
 
 	function onKeyDown(event: KeyboardEvent) {
-		const currentConstraint = get(currentConstraintStore);
-		if (!currentConstraint) return;
-
-		let constraint = currentConstraint.constraint as OutsideDirectionToolI;
-		const id = currentConstraint.id;
-
-		if (constraint.value === undefined) return;
-		if (!keyboardInputDefaultValidator(event.key)) return;
-		if (!options?.valueUpdater) return;
-
-		const element_id = get(selectedElementIdStore);
-		if (element_id === null) return;
-
-		const newValue = options.valueUpdater(constraint?.value, event.key);
-		if (newValue !== undefined && newValue !== constraint.value) {
-			constraint = updateConstraintValue(constraint, newValue);
-			updateLocalConstraint(element_id, id, constraint);
-		}
+		keyDownUpdateValue<OutsideDirectionToolI>(
+			event,
+			currentConstraintStore,
+			get(selectedElementIdStore),
+			options?.valueUpdater
+		);
 	}
 
 	pointerHandler.onDragStart = (event: CellEdgeCornerEvent): void => {

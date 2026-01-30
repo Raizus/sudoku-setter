@@ -5,13 +5,11 @@ import {
 	currentConstraintStore,
 	currentShapeStore,
 	selectConstraint,
-	selectedElementIdStore,
-	updateLocalConstraint
+	selectedElementIdStore
 } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
-import { keyboardInputDefaultValidator } from '$src/lib/InputHandlers/KeyboardEventUtils';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import {
 	CellPointerHandler,
@@ -20,13 +18,12 @@ import {
 import type { GridShape } from '$lib/Types/types';
 import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import {
-	findSingleCellConstraint,
-	updateConstraintValue
+	findSingleCellConstraint
 } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import {
 	singleCellConstraint} from '$lib/Puzzle/Constraints/SingleCellConstraints';
 import { type CellToolI } from "$src/lib/Puzzle/puzzle_schema";
-import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
+import { keyDownUpdateValue, pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import { simpleCellToolPreviewStore, type ToolPreview } from '$stores/ElementsStore';
 import { toolModeStore } from '$stores/InputHandlerStore';
 
@@ -127,24 +124,12 @@ export function getSingleCellToolInputHandler(
 	};
 
 	function onKeyDown(event: KeyboardEvent) {
-		const currentConstraint = get(currentConstraintStore);
-		if (!currentConstraint) return;
-
-		let constraint = currentConstraint.constraint as CellToolI;
-		const id = currentConstraint.id;
-
-		if (constraint.value === undefined) return;
-		if (!keyboardInputDefaultValidator(event.key)) return;
-		if (!options?.valueUpdater) return;
-
-		const element_id = get(selectedElementIdStore);
-		if (element_id === null) return;
-
-		const newValue = options.valueUpdater(constraint?.value, event.key);
-		if (newValue !== undefined && newValue !== constraint.value) {
-			constraint = updateConstraintValue(constraint, newValue);
-			updateLocalConstraint(element_id, id, constraint);
-		}
+		keyDownUpdateValue<CellToolI>(
+			event,
+			currentConstraintStore,
+			get(selectedElementIdStore),
+			options?.valueUpdater
+		);
 	}
 
 	const inputHandler: InputHandler = {

@@ -28,13 +28,6 @@ export function updateCageConstraintCells(
 	return cage;
 }
 
-export function updateCageValue(cage: CageToolI, value: string): CageToolI {
-	return {
-		...cage,
-		value
-	};
-}
-
 export function cageConstraintFromJson(toolId: TOOLID, data: Record<string, unknown>): CageToolI {
 	const cells = parseCells(data, 'cells');
 	const value = parseValue(data);

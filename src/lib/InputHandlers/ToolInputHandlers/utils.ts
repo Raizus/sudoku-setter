@@ -1,4 +1,4 @@
-import type { ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
+import type { ConstraintAndId, ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
 import type { Grid } from '$src/lib/Puzzle/Grid/Grid';
 import { type TOOLID, TOOLS } from '$src/lib/Puzzle/Tools';
@@ -10,6 +10,11 @@ import {
 import type { GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
 import { addCommand } from '$stores/CommandHistoryStore';
 import { getUpdateElementCommand } from '$stores/LocalConstraintsStore';
+import { get, type Writable } from 'svelte/store';
+import { keyboardInputDefaultValidator } from '$input/KeyboardEventUtils';
+import type { ValueUpdaterI } from './types';
+import { updateConstraintValue } from '$src/lib/Puzzle/Constraints/ElementsDict';
+import { updateLocalConstraint } from '$stores/BoardStore';
 
 function getSimilarHighlights(cell: Cell, grid: Grid) {
 	const highlights = new Set(cell.highlights);
@@ -88,7 +93,7 @@ export function pushAddLocalConstraintCommand(
 	element_id: number,
 	id: string | null,
 	currentConstraint: ConstraintType | null,
-	execute: boolean = false,
+	execute: boolean = false
 ) {
 	if (!(id && currentConstraint)) return;
 	const action = addLocalConstraintAction(element_id, id, currentConstraint);
@@ -131,4 +136,44 @@ export function pushUpdateLocalConstraintCommand(
 	// the clone constraint was already added/updated but only when
 	// finishing dragging is the action 'complete'
 	addCommand(command, execute);
+}
+
+/**
+ * Handles keyboard input to update a constraint value.
+ * 
+ * @template T - The type of constraint being updated, must extend ConstraintType.
+ * @param event - The keyboard event triggered by user input.
+ * @param currentConstraintStore - A writable store containing the current constraint and its ID.
+ * @param element_id - The ID of the element being modified, or null if no element is selected.
+ * @param value_updater - Optional function that processes the keyboard input and returns the new constraint value.
+ * 
+ * @remarks
+ * This function validates that all required parameters are present before attempting to update the constraint.
+ * The constraint value is only updated if the value_updater returns a new value different from the current one.
+ * 
+ * @returns void
+ */
+export function keyDownUpdateValue<T extends ConstraintType>(
+	event: KeyboardEvent,
+	currentConstraintStore: Writable<ConstraintAndId | null>,
+	element_id: number | null,
+	value_updater: ValueUpdaterI | undefined
+) {
+	if (element_id === null) return;
+	if (!value_updater) return;
+
+	const currentConstraint = get(currentConstraintStore);
+	if (!currentConstraint) return;
+
+	let constraint = currentConstraint.constraint as T;
+	const id = currentConstraint.id;
+
+	if (constraint.value === undefined) return;
+	if (!keyboardInputDefaultValidator(event.key)) return;
+
+	const newValue = value_updater(constraint?.value, event.key);
+	if (newValue !== undefined && newValue !== constraint.value) {
+		constraint = updateConstraintValue(constraint, newValue);
+		updateLocalConstraint(element_id, id, constraint);
+	}
 }

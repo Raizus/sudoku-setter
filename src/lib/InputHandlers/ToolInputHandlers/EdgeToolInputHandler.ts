@@ -4,19 +4,17 @@ import {
 	currentConstraintStore,
 	currentShapeStore,
 	selectConstraint,
-	selectedElementIdStore,
-	updateLocalConstraint
+	selectedElementIdStore
 } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
-import { keyboardInputDefaultValidator } from '$src/lib/InputHandlers/KeyboardEventUtils';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import type { GridShape } from '$lib/Types/types';
 import {
-	updateConstraintValue,
-	findEdgeConstraint} from '$src/lib/Puzzle/Constraints/ElementsDict';
+	findEdgeConstraint
+} from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { type ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 import {
 	CellEdgePointerHandler,
@@ -24,8 +22,12 @@ import {
 } from '$src/lib/InputHandlers/PointerHandlers/CellEdgePointerHandler';
 import { cellEdgeToCellCoords, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { edgeConstraint } from '$lib/Puzzle/Constraints/EdgeConstraints';
-import { type EdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
-import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
+import { type EdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
+import {
+	keyDownUpdateValue,
+	pushAddLocalConstraintCommand,
+	pushRemoveLocalConstraintCommand
+} from './utils';
 import { edgeToolPreviewStore, type ToolPreview } from '$stores/ElementsStore';
 import { toolModeStore } from '$stores/InputHandlerStore';
 
@@ -73,24 +75,12 @@ export function getEdgeToolInputHandler(
 	}
 
 	function onKeyDown(event: KeyboardEvent) {
-		const currentConstraint = get(currentConstraintStore);
-		if (!currentConstraint) return;
-
-		let constraint = currentConstraint.constraint as EdgeToolI;
-		const id = currentConstraint.id;
-
-		if (constraint.value === undefined) return;
-		if (!keyboardInputDefaultValidator(event.key)) return;
-		if (!options?.valueUpdater) return;
-
-		const element_id = get(selectedElementIdStore);
-		if (element_id === null) return;
-
-		const newValue = options.valueUpdater(constraint?.value, event.key);
-		if (newValue !== undefined && newValue !== constraint.value) {
-			constraint = updateConstraintValue(constraint, newValue);
-			updateLocalConstraint(element_id, id, constraint);
-		}
+		keyDownUpdateValue<EdgeToolI>(
+			event,
+			currentConstraintStore,
+			get(selectedElementIdStore),
+			options?.valueUpdater
+		);
 	}
 
 	pointerHandler.onDragStart = (event: CellEdgeTapEvent): void => {
@@ -106,7 +96,7 @@ export function getEdgeToolInputHandler(
 
 		const mode = get(toolModeStore);
 		const cellsCoords = cellEdgeToCellCoords(event.coord);
-		
+
 		const defaultValue = options?.defaultValue ?? '';
 		const constraint_preview = edgeConstraint(tool, cellsCoords, defaultValue);
 		const currentShape = get(currentShapeStore);
@@ -121,7 +111,6 @@ export function getEdgeToolInputHandler(
 			return;
 		}
 
-		
 		let preview_mode: 'add' | 'remove' = 'add';
 		let match_id: string | undefined = undefined;
 		if (match && (mode === BASIC_TOOL_MODE.DYNAMIC || mode === BASIC_TOOL_MODE.DELETE)) {

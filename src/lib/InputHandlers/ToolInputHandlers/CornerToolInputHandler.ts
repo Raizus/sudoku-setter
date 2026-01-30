@@ -5,27 +5,27 @@ import type { InputHandler } from '../InputHandler';
 import { BASIC_TOOL_MODE, type CornerToolOptions } from './types';
 import {
 	currentConstraintStore,
-	updateLocalConstraint,
 	elementsDictStore,
 	currentShapeStore,
 	selectConstraint,
 	selectedElementIdStore
 } from '$stores/BoardStore';
 import type { TOOLID } from '$lib/Puzzle/Tools';
-import { keyboardInputDefaultValidator } from '$src/lib/InputHandlers/KeyboardEventUtils';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import type { GridShape } from '$lib/Types/types';
-import {
-	findCornerConstraint,
-	updateConstraintValue} from '$src/lib/Puzzle/Constraints/ElementsDict';
+import { findCornerConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { cornerConstraint } from '$lib/Puzzle/Constraints/CornerConstraints';
-import { type CornerToolI } from "$src/lib/Puzzle/puzzle_schema";
+import { type CornerToolI } from '$src/lib/Puzzle/puzzle_schema';
 import { cornerCoordToAdjCellCoords, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import {
 	CellCornerPointerHandler,
 	type CellCornerTapEvent
 } from '$src/lib/InputHandlers/PointerHandlers/CellCornerPointerHandler';
-import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
+import {
+	keyDownUpdateValue,
+	pushAddLocalConstraintCommand,
+	pushRemoveLocalConstraintCommand
+} from './utils';
 import { cornerToolPreviewStore, type ToolPreview } from '$stores/ElementsStore';
 import { toolModeStore } from '$stores/InputHandlerStore';
 
@@ -41,14 +41,14 @@ export function getCornerToolInputHandler(
 
 	function handle(event: CellCornerTapEvent) {
 		const corner = event.coord;
-		
+
 		let mode = get(toolModeStore);
-		
+
 		const cellsCoords = cornerCoordToAdjCellCoords(corner);
-		
+
 		const onGrid = cellsCoords.every((coord) => isCellOnGrid(coord, gridShape));
 		if (!onGrid) return;
-		
+
 		// determine if adding or removing
 		const elements = get(elementsDictStore);
 		const match = findCornerConstraint(elements, tool, corner);
@@ -75,24 +75,12 @@ export function getCornerToolInputHandler(
 	}
 
 	function onKeyDown(event: KeyboardEvent) {
-		const currentConstraint = get(currentConstraintStore);
-		if (!currentConstraint) return;
-
-		let constraint = currentConstraint.constraint as CornerToolI;
-		const id = currentConstraint.id;
-
-		if (constraint.value === undefined) return;
-		if (!keyboardInputDefaultValidator(event.key)) return;
-		if (!options?.valueUpdater) return;
-
-		const element_id = get(selectedElementIdStore);
-		if (element_id === null) return;
-
-		const newValue = options.valueUpdater(constraint?.value, event.key);
-		if (newValue !== undefined && newValue !== constraint.value) {
-			constraint = updateConstraintValue(constraint, newValue);
-			updateLocalConstraint(element_id, id, constraint);
-		}
+		keyDownUpdateValue<CornerToolI>(
+			event,
+			currentConstraintStore,
+			get(selectedElementIdStore),
+			options?.valueUpdater
+		);
 	}
 
 	pointerHandler.onDragStart = (event: CellCornerTapEvent): void => {
@@ -120,7 +108,7 @@ export function getCornerToolInputHandler(
 			cornerToolPreviewStore.set(undefined);
 			return;
 		}
-		
+
 		let preview_mode: 'add' | 'remove' = 'add';
 		let match_id: string | undefined = undefined;
 		if (match && (mode === BASIC_TOOL_MODE.DYNAMIC || mode === BASIC_TOOL_MODE.DELETE)) {

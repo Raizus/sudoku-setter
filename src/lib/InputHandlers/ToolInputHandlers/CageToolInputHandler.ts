@@ -9,14 +9,12 @@ import { elementsDictStore } from '$stores/BoardStore';
 import { addLocalConstraint } from '$stores/LocalConstraintsStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
-import { keyboardInputDefaultValidator } from '../KeyboardEventUtils';
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import type { GridShape } from '$lib/Types/types';
 import {
 	cageConstraint,
 	updateCageConstraintCells,
-	updateCageValue
 } from '$lib/Puzzle/Constraints/CageConstraints';
 import { type CageToolI } from '$src/lib/Puzzle/puzzle_schema';
 import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
@@ -25,7 +23,7 @@ import {
 	CellPointerHandler,
 	type CellDragTapEvent
 } from '$input/PointerHandlers/CellPointerHandler';
-import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
+import { keyDownUpdateValue, pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import { BASIC_TOOL_MODE, type CageToolInputOptions } from './types';
 import { toolModeStore } from '$stores/InputHandlerStore';
 
@@ -99,24 +97,12 @@ export function getCageToolInputHandler(
 	}
 
 	function handleKeyDown(event: KeyboardEvent): void {
-		const currentConstraint = get(currentConstraintStore);
-		if (!currentConstraint) return;
-
-		let constraint = currentConstraint.constraint as CageToolI;
-		const id = currentConstraint.id;
-
-		if (constraint.value === undefined) return;
-		if (!keyboardInputDefaultValidator(event.key)) return;
-		if (!options?.valueUpdater) return;
-
-		const element_id = get(selectedElementIdStore);
-		if (element_id === null) return;
-
-		const newValue = options.valueUpdater(constraint?.value, event.key);
-		if (newValue !== undefined && newValue !== constraint.value) {
-			constraint = updateCageValue(constraint, newValue);
-			updateLocalConstraint(element_id, id, constraint);
-		}
+		keyDownUpdateValue<CageToolI>(
+			event,
+			currentConstraintStore,
+			get(selectedElementIdStore),
+			options?.valueUpdater
+		);
 	}
 
 	pointerHandler.onDragStart = (event: CellDragTapEvent): void => {

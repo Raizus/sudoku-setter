@@ -3,14 +3,12 @@ import {
 	currentConstraintStore,
 	currentShapeStore,
 	selectConstraint,
-	selectedElementIdStore,
-	updateLocalConstraint
+	selectedElementIdStore
 } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
-import { keyboardInputDefaultValidator } from '$src/lib/InputHandlers/KeyboardEventUtils';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import {
 	CellFeaturePointerHandler,
@@ -19,7 +17,6 @@ import {
 import { BASIC_TOOL_MODE, CornerOrEdge } from './types';
 import type { GridShape } from '$lib/Types/types';
 import {
-	updateConstraintValue,
 	findCenterCornerOrEdgeConstraint
 } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
@@ -28,7 +25,7 @@ import {
 import { type CenterCornerOrEdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
 import type { CenterCornerOrEdgeToolInputOptions } from './types';
 import { toolModeStore } from '$stores/InputHandlerStore';
-import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
+import { keyDownUpdateValue, pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import { centerCornerOrEdgeToolPreviewStore, type ToolPreview } from '$stores/ElementsStore';
 
 export function getCenterCornerOrEdgeToolInputHandler(
@@ -79,24 +76,13 @@ export function getCenterCornerOrEdgeToolInputHandler(
 	}
 
 	function onKeyDown(event: KeyboardEvent) {
-		const currentConstraint = get(currentConstraintStore);
-		if (!currentConstraint) return;
 
-		let constraint = currentConstraint.constraint as CenterCornerOrEdgeToolI;
-		const id = currentConstraint.id;
-
-		if (constraint.value === undefined) return;
-		if (!keyboardInputDefaultValidator(event.key)) return;
-		if (!options?.valueUpdater) return;
-
-		const element_id = get(selectedElementIdStore);
-		if (element_id === null) return;
-
-		const newValue = options.valueUpdater(constraint?.value, event.key);
-		if (newValue !== undefined && newValue !== constraint.value) {
-			constraint = updateConstraintValue(constraint, newValue);
-			updateLocalConstraint(element_id, id, constraint);
-		}
+		keyDownUpdateValue<CenterCornerOrEdgeToolI>(
+			event,
+			currentConstraintStore,
+			get(selectedElementIdStore),
+			options?.valueUpdater
+		);
 	}
 
 	pointerHandler.onDragStart = (event: CellEdgeCornerEvent): void => {
