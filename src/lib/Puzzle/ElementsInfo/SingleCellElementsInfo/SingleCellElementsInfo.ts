@@ -124,7 +124,7 @@ export const oddInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description: 'Cell value is odd.',
+		description: 'Cells with gray circles have odd values.',
 		tags: [],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
@@ -148,7 +148,7 @@ export const evenInfo: SquareCellElementInfo = {
 	},
 
 	meta: {
-		description: 'Cell value is even.',
+		description: 'Cells with gray squares have even values.',
 		tags: [],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
