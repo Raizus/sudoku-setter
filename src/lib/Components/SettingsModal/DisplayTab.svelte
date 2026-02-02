@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { settingsStore, updateSettingsValue } from '$stores/SettingsStore';
+	import { settingsStore } from '$stores/SettingsStore';
 	import SettingsColorSelector from './SettingsColorSelector.svelte';
 
 	$: settings = $settingsStore;
@@ -11,35 +11,35 @@
 			name="Non-given value color:"
 			value={settings.non_given_color}
 			onChangeCb={(value) => {
-				updateSettingsValue('non_given_color', value);
+				settingsStore.updateSettingsValue('non_given_color', value);
 			}}
 		/>
 		<SettingsColorSelector
 			name="Seen cells color:"
 			value={settings.seen_cells_color}
 			onChangeCb={(value) => {
-				updateSettingsValue('seen_cells_color', value);
+				settingsStore.updateSettingsValue('seen_cells_color', value);
 			}}
 		/>
 		<SettingsColorSelector
 			name="Selection color:"
 			value={settings.selection_color}
 			onChangeCb={(value) => {
-				updateSettingsValue('selection_color', value);
+				settingsStore.updateSettingsValue('selection_color', value);
 			}}
 		/>
 		<SettingsColorSelector
 			name="Conflicting cells color:"
 			value={settings.conflict_cells_color}
 			onChangeCb={(value) => {
-				updateSettingsValue('conflict_cells_color', value);
+				settingsStore.updateSettingsValue('conflict_cells_color', value);
 			}}
 		/>
 		<SettingsColorSelector
 			name="Conflicting pencilmarks color:"
 			value={settings.conflict_marks_color}
 			onChangeCb={(value) => {
-				updateSettingsValue('conflict_marks_color', value);
+				settingsStore.updateSettingsValue('conflict_marks_color', value);
 			}}
 		/>
 	</div>

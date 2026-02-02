@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { settingsStore, updateSettingsValue } from '$stores/SettingsStore';
+	import { settingsStore } from '$stores/SettingsStore';
 	import SettingsToggle from './SettingsToggle.svelte';
 
 	$: settings = $settingsStore;
@@ -9,16 +9,16 @@
 	<SettingsToggle
 		name="Check Conflicts"
 		value={settings.checkConflicts}
-		updateCb={(value) => updateSettingsValue('checkConflicts', value)}
+		updateCb={(value) => settingsStore.updateSettingsValue('checkConflicts', value)}
 	/>
 	<SettingsToggle
 		name="Highlight Pencilmark Conflicts"
 		value={settings.highlightPencilmarkConflicts}
-		updateCb={(value) => updateSettingsValue('highlightPencilmarkConflicts', value)}
+		updateCb={(value) => settingsStore.updateSettingsValue('highlightPencilmarkConflicts', value)}
 	/>
 	<SettingsToggle
 		name="Highlight Cells Seen By Selection"
 		value={settings.highlightCellsSeenBySelection}
-		updateCb={(value) => updateSettingsValue('highlightCellsSeenBySelection', value)}
+		updateCb={(value) => settingsStore.updateSettingsValue('highlightCellsSeenBySelection', value)}
 	/>
 </div>
