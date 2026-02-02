@@ -21,12 +21,8 @@ export interface Shortcut {
 export const shortcutRegistry: Map<string, Shortcut> = new Map();
 export const toolShortcutRegistry: Map<string, Shortcut> = new Map();
 
-function addShortcut(shortcut: Shortcut) {
+function addShortcutToRegistry(shortcut: Shortcut, shortcutRegistry: Map<string, Shortcut>) {
 	shortcutRegistry.set(shortcut.name, shortcut);
-}
-
-function addToolShortcut(shortcut: Shortcut) {
-	toolShortcutRegistry.set(shortcut.name, shortcut);
 }
 
 export function matchKeyEvent(event: KeyboardEvent, key: EventKey): boolean {
@@ -66,63 +62,57 @@ export const undoSc: Shortcut = {
 	keys: [{ ctrlKey: true, key: 'Z', type: 'keydown' }],
 	func: undo
 };
-addShortcut(undoSc);
 
 export const redoSc: Shortcut = {
 	name: 'Redo',
 	keys: [{ ctrlKey: true, key: 'Y', type: 'keydown' }],
 	func: redo
 };
-addShortcut(redoSc);
 
 export const toggleDarkmodeSc: Shortcut = {
 	name: 'Toggle Darkmode',
 	keys: [{ ctrlKey: true, key: 'D', type: 'keydown' }],
 	func: toggleDarkmode
 };
-addShortcut(toggleDarkmodeSc);
+
+addShortcutToRegistry(undoSc, shortcutRegistry);
+addShortcutToRegistry(redoSc, shortcutRegistry);
+addShortcutToRegistry(toggleDarkmodeSc, shortcutRegistry);
 
 const cycleTool: Shortcut = {
 	name: 'Cycle Tool',
 	keys: [{ key: 'Space', type: 'keydown' }]
 };
-addToolShortcut(cycleTool);
 
 const setDigitTool: Shortcut = {
 	name: 'Set Digit Tool',
 	keys: [{ key: 'Z', type: 'keydown' }]
 };
-addToolShortcut(setDigitTool);
 
 const setCornerPencilmarkTool: Shortcut = {
 	name: 'Set Corner Pencilmark Tool',
 	keys: [{ key: 'X', type: 'keydown' }]
 };
-addToolShortcut(setCornerPencilmarkTool);
 
 const setCenterPencilmarkTool: Shortcut = {
 	name: 'Set Center Pencilmark Tool',
 	keys: [{ key: 'C', type: 'keydown' }]
 };
-addToolShortcut(setCenterPencilmarkTool);
 
 const setHighlightsTool: Shortcut = {
 	name: 'Set Highlights Tool',
 	keys: [{ key: 'V', type: 'keydown' }]
 };
-addToolShortcut(setHighlightsTool);
 
 const quickshiftToCornerPencilmarkTool: Shortcut = {
 	name: 'Quickshift To Corner Pencilmark Tool',
 	keys: [{ shiftKey: true, key: 'Shift', type: 'keydown' }]
 };
-addToolShortcut(quickshiftToCornerPencilmarkTool);
 
 const quickshiftToCenterPencilmarkTool: Shortcut = {
 	name: 'Quickshift To Center Pencilmark Tool',
 	keys: [{ ctrlKey: true, key: 'Ctrl', type: 'keydown' }]
 };
-addToolShortcut(quickshiftToCenterPencilmarkTool);
 
 const quickshiftToHighlightsTool: Shortcut = {
 	name: 'Quickshift To Highlight Tool',
@@ -132,22 +122,30 @@ const quickshiftToHighlightsTool: Shortcut = {
 		{ altKey: true, key: 'Alt', type: 'keydown' }
 	]
 };
-addToolShortcut(quickshiftToHighlightsTool);
 
 const selectAllCells: Shortcut = {
 	name: 'Select All Cells',
 	keys: [{ ctrlKey: true, key: 'A', type: 'keydown' }]
 };
-addToolShortcut(selectAllCells);
 
 export const resetZoomSc: Shortcut = {
 	name: 'Reset Zoom',
 	keys: [{ altKey: true, key: 'Z', type: 'keydown' }],
 	func: resetZoom
 };
-addToolShortcut(resetZoomSc);
 
 const toggleFog: Shortcut = {
 	name: 'Toggle Fog',
 	keys: [{ ctrlKey: true, shiftKey: true, key: 'F', type: 'keydown' }]
 };
+
+addShortcutToRegistry(cycleTool, toolShortcutRegistry);
+addShortcutToRegistry(setDigitTool, toolShortcutRegistry);
+addShortcutToRegistry(setCornerPencilmarkTool, toolShortcutRegistry);
+addShortcutToRegistry(setCenterPencilmarkTool, toolShortcutRegistry);
+addShortcutToRegistry(setHighlightsTool, toolShortcutRegistry);
+addShortcutToRegistry(quickshiftToCornerPencilmarkTool, toolShortcutRegistry);
+addShortcutToRegistry(quickshiftToCenterPencilmarkTool, toolShortcutRegistry);
+addShortcutToRegistry(quickshiftToHighlightsTool, toolShortcutRegistry);
+addShortcutToRegistry(selectAllCells, toolShortcutRegistry);
+addShortcutToRegistry(resetZoomSc, shortcutRegistry);
