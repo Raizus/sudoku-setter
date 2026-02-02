@@ -10,56 +10,32 @@
 	import BoardBackground from './BoardBackground.svelte';
 	import CellValuesRender from './CellRender/CellValuesRender.svelte';
 	import HighlightsRender from './CellRender/HighlightsRender.svelte';
-	import {
-		isCenterEdgeCornerTool,
-		isCornerTool,
-		isEdgeTool,
-		isOutsideDirectionTool,
-		isSimpleSingleCellTool,
-		isSingleCellArrowTool,
-		isSingleCellMultiArrowTool,
-		TOOLS
-	} from '$lib/Puzzle/Tools';
 	import PenToolRender from './PenToolRender/PenToolRender.svelte';
 	import SeenCellsRender from './SeenCellsRender.svelte';
 	import ConflictsRender from './ConflictsRender.svelte';
 	import SolutionRender from './SolutionRender.svelte';
 	import ToolsLayerRender from './Constraints/ToolsLayerRender.svelte';
 	import {
-		centerCornerOrEdgeToolPreviewStore,
 		centerCornerOrEdgeToolsStore,
 		cornerLineToolsStore,
-		cornerToolPreviewStore,
 		cornerToolsStore,
 		diagonalElementsStore,
-		edgeToolPreviewStore,
 		edgeToolsStore,
 		fogLightsStore,
-		outsideDirectionToolPreviewStore,
-		simpleCellToolPreviewStore,
-		singleCellArrowPreviewStore,
-		singleCellMultiArrowPreviewStore,
 		underlayElementsStore
 	} from '$stores/ElementsStore.js';
 	import CornerToolRender from './Constraints/CornerToolRender.svelte';
 	import CenterCornerOrEdgeToolRender from './Constraints/CenterCornerOrEdgeToolRender.svelte';
-	import OutsideDirectionToolRender from './Constraints/OutsideDirectionToolRender.svelte';
 	import CornerLineToolRender from './Constraints/CornerLineToolRender.svelte';
 	import EdgeToolRender from './Constraints/EdgeToolRender.svelte';
-	import SingleCellMultiArrowRender from './Constraints/SingleCellMultiArrowRender.svelte';
 	import FogLightsRender from './Constraints/FogLightsRender.svelte';
-	import EdgeToolPreviewRender from './Constraints/EdgeToolPreviewRender.svelte';
-	import CornerToolPreviewRender from './Constraints/CornerToolPreviewRender.svelte';
-	import SingleCellArrowPreviewRender from './Constraints/SingleCellArrowPreviewRender.svelte';
-	import SimpleSingleCellToolPreviewRender from './Constraints/SimpleSingleCellToolPreviewRender.svelte';
 	import UnderlayRender from './UnderlayRender.svelte';
-	import CenterCornerOrEdgeToolPreviewRender from './Constraints/CenterCornerOrEdgeToolPreviewRender.svelte';
 	import DiagonalElementsRender from './Constraints/DiagonalElementsRender.svelte';
 	import { boundingBoxStore } from '$stores/BoundingBoxStore.js';
 	import FogLightBulbDefs from './Fog/FogLightBulbDefs.svelte';
 	import FogDefs from './Fog/FogDefs.svelte';
 	import FogCover from './Fog/FogCover.svelte';
-	import OutsideDirectionToolPreviewRender from './Constraints/OutsideDirectionToolPreviewRender.svelte';
+	import ToolPreviewRender from './ToolPreviewRender.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 
@@ -153,28 +129,7 @@
 	<SolutionRender />
 	<ConflictsRender />
 
-	<!-- ConstraintPreviewRender -->
-	{#if isOutsideDirectionTool($toolStore) && $outsideDirectionToolPreviewStore}
-		<OutsideDirectionToolPreviewRender tool_preview={$outsideDirectionToolPreviewStore} />
-	{/if}
-	{#if isSimpleSingleCellTool($toolStore) && $toolStore !== TOOLS.FOG_LIGHTS && $simpleCellToolPreviewStore}
-		<SimpleSingleCellToolPreviewRender tool_preview={$simpleCellToolPreviewStore} />
-	{/if}
-	{#if isSingleCellArrowTool($toolStore) && $singleCellArrowPreviewStore}
-		<SingleCellArrowPreviewRender tool_preview={$singleCellArrowPreviewStore} />
-	{/if}
-	{#if isSingleCellMultiArrowTool($toolStore) && $singleCellMultiArrowPreviewStore}
-		<SingleCellMultiArrowRender tool={$singleCellMultiArrowPreviewStore} />
-	{/if}
-	{#if isEdgeTool($toolStore) && $edgeToolPreviewStore}
-		<EdgeToolPreviewRender tool_preview={$edgeToolPreviewStore} />
-	{/if}
-	{#if isCornerTool($toolStore) && $cornerToolPreviewStore}
-		<CornerToolPreviewRender tool_preview={$cornerToolPreviewStore} />
-	{/if}
-	{#if isCenterEdgeCornerTool($toolStore) && $centerCornerOrEdgeToolPreviewStore}
-		<CenterCornerOrEdgeToolPreviewRender tool_preview={$centerCornerOrEdgeToolPreviewStore} />
-	{/if}
+	<ToolPreviewRender />
 </svg>
 
 <style>
