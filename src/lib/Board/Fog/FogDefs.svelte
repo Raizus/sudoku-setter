@@ -1,8 +1,6 @@
 <script lang="ts">
-	import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
-	import type { CellToolI } from '$src/lib/Puzzle/puzzle_schema';
+	import type { ConstraintsElement, CellToolI, Solution } from '$src/lib/Puzzle/puzzle_schema';
 	import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
-	import type { Solution } from '$src/lib/Puzzle/puzzle_schema';
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 	import type { GridShape } from '$src/lib/Types/types';
 	import { getCagePathStr } from '$src/lib/utils/SquareCellGridRenderUtils';
