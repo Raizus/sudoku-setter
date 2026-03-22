@@ -79,6 +79,8 @@ export function updateToolAndCurrentConstraintStores(
 
 	toolStore.update(() => tool);
 	setCurrentConstraint(null);
+
+	if (element_id === currElementId) return
 	selectedElementIdStore.update(() => element_id);
 }
 
