@@ -4,17 +4,20 @@
 	import Select from '$icons/Select.svelte';
 	import Undo from '$icons/Undo.svelte';
 	import { selectOnStore } from '$stores/BoardStore';
-	import { commandHistoryStore, redo, undo } from '$stores/CommandHistoryStore';
+	import { commandHistoryStore } from '$stores/CommandHistoryStore';
 
-	$: undoDisabled = $commandHistoryStore._undoStack.length === 0;
-	$: redoDisabled = $commandHistoryStore._redoStack.length === 0;
+	const redo_stack_len_store = commandHistoryStore.redo_stack_length;
+	const undo_stack_len_store = commandHistoryStore.undo_stack_length;
+
+	$: undoDisabled = $undo_stack_len_store === 0;
+	$: redoDisabled = $redo_stack_len_store === 0;
 
 	function undoCb() {
-		undo();
+		commandHistoryStore.undo();
 	}
 
 	function redoCb() {
-		redo();
+		commandHistoryStore.redo();
 	}
 
 	function checkCb() {

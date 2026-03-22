@@ -19,7 +19,7 @@
 		updateToolAndCurrentConstraintStores,
 		updateToolOnRemoveGroup
 	} from '$stores/BoardStore';
-	import { addCommand } from '$stores/CommandHistoryStore';
+	import { commandHistoryStore } from '$stores/CommandHistoryStore';
 	import { getUpdateElementCommand } from '$stores/LocalConstraintsStore';
 	import ElementEditor from './ElementEditor.svelte';
 	import MoreButton from './MoreButton.svelte';
@@ -57,7 +57,7 @@
 		const action = removeElementAction(element_id);
 		const reverse_action = restoreElementAction(element_id, constraints);
 		const command = getUpdateElementCommand(action, reverse_action);
-		addCommand(command);
+		commandHistoryStore.addCommand(command);
 	}
 
 	function enableDisableElement() {
@@ -66,7 +66,7 @@
 		const action = enableDisableElementAction(element_id, !disabled);
 		const reverse_action = enableDisableElementAction(element_id, disabled);
 		const command = getUpdateElementCommand(action, reverse_action);
-		addCommand(command);
+		commandHistoryStore.addCommand(command);
 		if (!disabled) {
 			updateToolAndCurrentConstraintStores(TOOLS.DIGIT, null);
 		}
@@ -95,7 +95,7 @@
 		const action = moveElementUpAction(element_id);
 		const reverse_action = moveElementDownAction(element_id);
 		const command = getUpdateElementCommand(action, reverse_action);
-		addCommand(command);
+		commandHistoryStore.addCommand(command);
 	}
 
 	function moveDown() {
@@ -103,7 +103,7 @@
 		const action = moveElementDownAction(element_id!);
 		const reverse_action = moveElementUpAction(element_id!);
 		const command = getUpdateElementCommand(action, reverse_action);
-		addCommand(command);
+		commandHistoryStore.addCommand(command);
 	}
 
 	$: selected = element_id === $selectedElementIdStore && tool_id === $toolStore;

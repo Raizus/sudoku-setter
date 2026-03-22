@@ -38,7 +38,7 @@ import { selectionStore } from '$stores/SelectionStore';
 import { throttle } from 'lodash';
 import { get } from 'svelte/store';
 import { getSimilarCells } from './utils';
-import { addCommands } from '$stores/CommandHistoryStore';
+import { commandHistoryStore } from '$stores/CommandHistoryStore';
 
 const cellInputHandler = new CellPointerHandler();
 
@@ -156,7 +156,7 @@ function addUpdateCellsCommand(
 		// const sel_rev_action = selectionNoneAction();
 		const sel_command = getUpdateSelectionCommand(sel_action, sel_action);
 		const commands = [sel_command, command];
-		addCommands(commands);
+		commandHistoryStore.addCommands(commands);
 	}
 }
 

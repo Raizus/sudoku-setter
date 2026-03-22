@@ -1,6 +1,6 @@
 import { isAlphaNumeric } from '$input/KeyboardEventUtils';
 import { resetZoom } from '$stores/BoundingBoxStore';
-import { redo, undo } from '$stores/CommandHistoryStore';
+import { commandHistoryStore } from '$stores/CommandHistoryStore';
 import { toggleDarkmode } from '$stores/SettingsStore';
 
 interface EventKey {
@@ -60,13 +60,13 @@ export function shortcutKeyToString(key: EventKey): string {
 export const undoSc: Shortcut = {
 	name: 'Undo',
 	keys: [{ ctrlKey: true, key: 'Z', type: 'keydown' }],
-	func: undo
+	func: commandHistoryStore.undo
 };
 
 export const redoSc: Shortcut = {
 	name: 'Redo',
 	keys: [{ ctrlKey: true, key: 'Y', type: 'keydown' }],
-	func: redo
+	func: commandHistoryStore.redo
 };
 
 export const toggleDarkmodeSc: Shortcut = {

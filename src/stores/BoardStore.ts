@@ -13,7 +13,7 @@ import { selectionClearAction } from '$lib/reducers/SelectionReducer';
 import { resetAction } from '$src/lib/reducers/PenToolReducer';
 
 import { derived, get, writable } from 'svelte/store';
-import { clearCommandHistory } from './CommandHistoryStore';
+import { commandHistoryStore } from './CommandHistoryStore';
 import { updatePenTool } from './PenToolStore';
 import { updateSelection } from './SelectionStore';
 import { settingsStore } from './SettingsStore';
@@ -192,7 +192,7 @@ export function resetPuzzle() {
 }
 
 export function resetUserState() {
-	clearCommandHistory();
+	commandHistoryStore.clear();
 	updatePenTool(resetAction());
 	updateToolAndCurrentConstraintStores(TOOLS.DIGIT, null);
 

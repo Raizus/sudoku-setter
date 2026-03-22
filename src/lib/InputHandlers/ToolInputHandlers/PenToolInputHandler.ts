@@ -21,7 +21,7 @@ import {
 	removeEdgeMarkerAction,
 	removeLineMarkersAction
 } from '$lib/reducers/PenToolReducer';
-import { addCommand } from '$stores/CommandHistoryStore';
+import { commandHistoryStore } from '$stores/CommandHistoryStore';
 import { getPenToolCommand, penColorStore } from '$stores/PenToolStore';
 import { updatePenTool } from '$stores/PenToolStore';
 import { penToolStore } from '$stores/PenToolStore';
@@ -54,7 +54,7 @@ export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): Input
 				const action = addCellMarkerAction(cellMarker);
 				const reverse_action = removeCellMarkerAction(coord);
 				const command = getPenToolCommand(action, reverse_action);
-				addCommand(command);
+				commandHistoryStore.addCommand(command);
 			} else if (oldMarker.marker === 'X') {
 				const cellMarker: CellMarker = {
 					...coord,
@@ -64,12 +64,12 @@ export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): Input
 				const action = addCellMarkerAction(cellMarker);
 				const reverse_action = addCellMarkerAction(oldMarker);
 				const command = getPenToolCommand(action, reverse_action);
-				addCommand(command);
+				commandHistoryStore.addCommand(command);
 			} else {
 				const action = removeCellMarkerAction(coord);
 				const reverse_action = addCellMarkerAction(oldMarker);
 				const command = getPenToolCommand(action, reverse_action);
-				addCommand(command);
+				commandHistoryStore.addCommand(command);
 			}
 
 		} else if (event.type === 'edge') {
@@ -80,7 +80,7 @@ export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): Input
 				const action = removeEdgeMarkerAction(coord);
 				const reverse_action = addEdgeMarkerAction(marker);
 				const command = getPenToolCommand(action, reverse_action);
-				addCommand(command);
+				commandHistoryStore.addCommand(command);
 			} else {
 				const edgeMarker: EdgeMarker = {
 					...coord,
@@ -89,7 +89,7 @@ export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): Input
 				const action = addEdgeMarkerAction(edgeMarker);
 				const reverse_action = removeEdgeMarkerAction(coord);
 				const command = getPenToolCommand(action, reverse_action);
-				addCommand(command);
+				commandHistoryStore.addCommand(command);
 			}
 		}
 	};
@@ -124,7 +124,7 @@ export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): Input
 				const action = addLineMarkersAction(markers);
 				const reverse_action = removeLineMarkersAction(markers);
 				const command = getPenToolCommand(action, reverse_action);
-				addCommand(command);
+				commandHistoryStore.addCommand(command);
 			}
 		} else {
 			// only remove line markers if the markers in the draft
@@ -136,7 +136,7 @@ export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): Input
 				const action = removeLineMarkersAction(markers);
 				const reverse_action = addLineMarkersAction(markers);
 				const command = getPenToolCommand(action, reverse_action);
-				addCommand(command);
+				commandHistoryStore.addCommand(command);
 			}
 		}
 	};

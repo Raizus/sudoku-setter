@@ -8,7 +8,7 @@ import {
 	updateLocalConstraintAction
 } from '$src/lib/reducers/LocalConstraintsActions';
 import type { GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
-import { addCommand } from '$stores/CommandHistoryStore';
+import { commandHistoryStore } from '$stores/CommandHistoryStore';
 import { getUpdateElementCommand } from '$stores/LocalConstraintsStore';
 import { get, type Writable } from 'svelte/store';
 import { keyboardInputDefaultValidator } from '$input/KeyboardEventUtils';
@@ -103,7 +103,7 @@ export function pushAddLocalConstraintCommand(
 	// add it to history but don't execute
 	// the clone constraint was already added/updated but only when
 	// finishing dragging is the action 'complete'
-	addCommand(command, execute);
+	commandHistoryStore.addCommand(command, execute);
 }
 
 export function pushRemoveLocalConstraintCommand(
@@ -119,7 +119,7 @@ export function pushRemoveLocalConstraintCommand(
 	// add it to histoy but don't execute
 	// the clone constraint was already added/updated but only when
 	// finishing dragging is the action 'complete'
-	addCommand(command, execute);
+	commandHistoryStore.addCommand(command, execute);
 }
 
 export function pushUpdateLocalConstraintCommand(
@@ -136,7 +136,7 @@ export function pushUpdateLocalConstraintCommand(
 	// add it to histoy but don't execute
 	// the clone constraint was already added/updated but only when
 	// finishing dragging is the action 'complete'
-	addCommand(command, execute);
+	commandHistoryStore.addCommand(command, execute);
 }
 
 /**

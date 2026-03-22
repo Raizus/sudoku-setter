@@ -7,7 +7,7 @@
 		addLocalConstraintAction,
 		removeLocalConstraintAction
 	} from '$src/lib/reducers/LocalConstraintsActions';
-	import { addCommand } from '$stores/CommandHistoryStore';
+	import { commandHistoryStore } from '$stores/CommandHistoryStore';
 
 	export let constraint_id: string;
 	export let element_id: number;
@@ -25,7 +25,7 @@
 		const action = removeLocalConstraintAction(element_id, constraint_id);
 		const reverse_action = addLocalConstraintAction(element_id, constraint_id, constraint);
 		const command = getUpdateElementCommand(action, reverse_action);
-		addCommand(command);
+		commandHistoryStore.addCommand(command);
 	}
 
 	$: currentConstraintId = $currentConstraintStore?.id;
