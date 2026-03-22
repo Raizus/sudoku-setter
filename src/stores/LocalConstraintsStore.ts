@@ -9,9 +9,9 @@ import { get } from 'svelte/store';
 import {
 	currentShapeStore,
 	elementsDictStore,
-	removeGroupFromLocalConstraint,
+	removeGroupFromElementsDict,
 	setCurrentConstraint,
-	updateLocalConstraint
+	updateConstraint
 } from './BoardStore';
 import type { TOOLID } from '$src/lib/Puzzle/Tools';
 
@@ -27,7 +27,7 @@ export function addGroupToLocalConstraint(toolId: TOOLID) {
 	return element_id;
 }
 
-export function addLocalConstraint(element_id: number, id: string, constraint: ConstraintType) {
+export function addConstraint(element_id: number, id: string, constraint: ConstraintType) {
 	const currentShape = get(currentShapeStore);
 	if (currentShape) {
 		constraint.shape = { ...currentShape };
@@ -46,7 +46,7 @@ export function addLocalConstraint(element_id: number, id: string, constraint: C
  * @param id
  * @returns
  */
-export function removeLocalConstraint(element_id: number, id: string | null) {
+export function removeConstraint(element_id: number, id: string | null) {
 	if (!id) return;
 	elementsDictStore.update((localConstraintsDict) => {
 		localConstraintsDict.removeConstraint(element_id, id);
@@ -70,15 +70,15 @@ export function enableDisableElement(element_id: number, value: boolean) {
 
 export function updateElementAction(action: ElementAction): void {
 	if (action.type === ELEMENT_ACTIONS.ADD_LOCAL_CONSTRAINT) {
-		addLocalConstraint(action.payload.element_id, action.payload.id, action.payload.constraint);
+		addConstraint(action.payload.element_id, action.payload.id, action.payload.constraint);
 	} else if (action.type === ELEMENT_ACTIONS.REMOVE_LOCAL_CONSTRAINT) {
-		removeLocalConstraint(action.payload.element_id, action.payload.c_id);
+		removeConstraint(action.payload.element_id, action.payload.c_id);
 	} else if (action.type === ELEMENT_ACTIONS.REMOVE_ELEMENT) {
-		removeGroupFromLocalConstraint(action.payload.element_id);
+		removeGroupFromElementsDict(action.payload.element_id);
 	} else if (action.type === ELEMENT_ACTIONS.RESTORE_ELEMENT) {
 		restoreElement(action.payload.element_id, action.payload.constraints);
 	} else if (action.type === ELEMENT_ACTIONS.UPDATE_LOCAL_CONSTRAINT) {
-		updateLocalConstraint(
+		updateConstraint(
 			action.payload.element_id,
 			action.payload.constraintId,
 			action.payload.constraint

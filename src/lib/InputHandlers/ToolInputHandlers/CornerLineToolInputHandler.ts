@@ -1,7 +1,7 @@
 import type { InputHandler } from '../InputHandler';
-import { selectedElementIdStore, updateLocalConstraint } from '$stores/BoardStore';
+import { selectedElementIdStore, updateConstraint } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
-import { addLocalConstraint } from '$stores/LocalConstraintsStore';
+import { addConstraint } from '$stores/LocalConstraintsStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
@@ -63,13 +63,13 @@ export function getCornerLineToolInputHandler(
 		if (!currentConstraint && mode === CORNER_LINE_TOOL_MODE.ADD_EDIT) {
 			id = uniqueId();
 			currentConstraint = cornerLineConstraint(tool, [coord], options?.defaultValue);
-			addLocalConstraint(element_id, id, currentConstraint);
+			addConstraint(element_id, id, currentConstraint);
 			return;
 		}
 		// add to current cage
 		else if (currentConstraint && id && mode === CORNER_LINE_TOOL_MODE.ADD_EDIT) {
 			currentConstraint = updateCornerLineConstraintCoords(currentConstraint, coord);
-			updateLocalConstraint(element_id, id, currentConstraint);
+			updateConstraint(element_id, id, currentConstraint);
 			return;
 		}
 	}

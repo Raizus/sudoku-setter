@@ -14,7 +14,7 @@ import { get, type Writable } from 'svelte/store';
 import { keyboardInputDefaultValidator } from '$input/KeyboardEventUtils';
 import { BASIC_TOOL_MODE, type ToolModeT, type ValueUpdaterI } from './types';
 import { updateConstraintValue } from '$src/lib/Puzzle/Constraints/ElementsDict';
-import { updateLocalConstraint } from '$stores/BoardStore';
+import { updateConstraint } from '$stores/BoardStore';
 import type { ToolPreview } from '$stores/ElementsStore';
 
 function getSimilarHighlights(cell: Cell, grid: Grid) {
@@ -175,7 +175,7 @@ export function keyDownUpdateValue<T extends ConstraintType>(
 	const newValue = value_updater(constraint?.value, event.key);
 	if (newValue !== undefined && newValue !== constraint.value) {
 		constraint = updateConstraintValue(constraint, newValue);
-		updateLocalConstraint(element_id, id, constraint);
+		updateConstraint(element_id, id, constraint);
 	}
 }
 

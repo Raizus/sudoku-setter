@@ -6,7 +6,7 @@
 	import { type VariableConstraintI } from '$src/lib/Puzzle/puzzle_schema';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { isLocalConstraint, type TOOLID } from '$src/lib/Puzzle/Tools';
-	import { currentConstraintStore, updateLocalConstraint } from '$stores/BoardStore';
+	import { currentConstraintStore, updateConstraint } from '$stores/BoardStore';
 	import ConstraintCheckbox from './ConstraintCheckbox.svelte';
 	import ConstraintList from './ConstraintList.svelte';
 	import ToolModeButtons from './ToolModeButtons.svelte';
@@ -39,7 +39,7 @@
 		if (new_value === undefined) return;
 
 		const constraint = updateConstraintValue(constraint_and_id.constraint, new_value);
-		updateLocalConstraint(element_id, constraint_and_id.id, constraint);
+		updateConstraint(element_id, constraint_and_id.id, constraint);
 	}
 
 	function updateName(event: Event) {
@@ -53,7 +53,7 @@
 			constraint_and_id.constraint as VariableConstraintI,
 			value
 		);
-		updateLocalConstraint(element_id, constraint_and_id.id, constraint);
+		updateConstraint(element_id, constraint_and_id.id, constraint);
 	}
 </script>
 

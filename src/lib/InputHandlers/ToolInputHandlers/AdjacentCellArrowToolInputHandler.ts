@@ -1,7 +1,7 @@
 import type { InputHandler } from '../InputHandler';
-import { elementsDictStore, selectedElementIdStore, updateLocalConstraint } from '$stores/BoardStore';
-import { removeLocalConstraint } from '$stores/LocalConstraintsStore';
-import { addLocalConstraint } from '$stores/LocalConstraintsStore';
+import { elementsDictStore, selectedElementIdStore, updateConstraint } from '$stores/BoardStore';
+import { removeConstraint } from '$stores/LocalConstraintsStore';
+import { addConstraint } from '$stores/LocalConstraintsStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
@@ -52,7 +52,7 @@ export function getDirectedAdjacentCellsToolInputHandler(
 		if (mode !== BASIC_TOOL_MODE.DELETE) {
 			id = uniqueId();
 			newConstraint = edgeConstraint(tool, [event.cell], options?.defaultValue);
-			addLocalConstraint(element_id, id, newConstraint);
+			addConstraint(element_id, id, newConstraint);
 		}
 	};
 
@@ -69,10 +69,10 @@ export function getDirectedAdjacentCellsToolInputHandler(
 		const match = findEdgeConstraint(elements, tool, newConstraint.cells);
 		const mode = get(toolModeStore);
 		if (match && mode === BASIC_TOOL_MODE.DYNAMIC) {
-			removeLocalConstraint(element_id, id);
-			removeLocalConstraint(element_id, match[0]);
+			removeConstraint(element_id, id);
+			removeConstraint(element_id, match[0]);
 		} else {
-			updateLocalConstraint(element_id, id, newConstraint);
+			updateConstraint(element_id, id, newConstraint);
 		}
 	};
 
@@ -81,7 +81,7 @@ export function getDirectedAdjacentCellsToolInputHandler(
 		if (element_id === null) return;
 
 		if (id && newConstraint && newConstraint.cells.length !== 2) {
-			removeLocalConstraint(element_id, id);
+			removeConstraint(element_id, id);
 		} else if (id && newConstraint) {
 			// push command to history stack
 			pushAddLocalConstraintCommand(element_id, id, newConstraint, false);

@@ -1,8 +1,8 @@
 import type { InputHandler } from '../InputHandler';
-import { selectedElementIdStore, updateLocalConstraint } from '$stores/BoardStore';
+import { selectedElementIdStore, updateConstraint } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
-import { removeLocalConstraint } from '$stores/LocalConstraintsStore';
-import { addLocalConstraint } from '$stores/LocalConstraintsStore';
+import { removeConstraint } from '$stores/LocalConstraintsStore';
+import { addConstraint } from '$stores/LocalConstraintsStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
@@ -111,12 +111,12 @@ export function getCloneToolInputHandler(
 			const usedLabels = findUsedCloneLabels(elements, tool);
 			const label = getNewLabel(usedLabels);
 			currentConstraint = cloneConstraint(tool, [coords], label);
-			addLocalConstraint(element_id, id, currentConstraint);
+			addConstraint(element_id, id, currentConstraint);
 			return;
 		} else if (mode === CLONE_TOOL_MODE.SELECT && id && currentConstraint) {
 			// add to current clone
 			currentConstraint = updateCloneConstraintCells(currentConstraint, coords);
-			updateLocalConstraint(element_id, id, currentConstraint);
+			updateConstraint(element_id, id, currentConstraint);
 			return;
 		} else if (mode === CLONE_TOOL_MODE.MOVE && id && currentConstraint && moveStart) {
 			const dv: GridCoordI = { r: coords.r - moveStart.r, c: coords.c - moveStart.c };
@@ -132,7 +132,7 @@ export function getCloneToolInputHandler(
 				currentConstraint = { ...currentConstraint, cells2: newCells };
 			}
 			moveStart = coords;
-			updateLocalConstraint(element_id, id, currentConstraint);
+			updateConstraint(element_id, id, currentConstraint);
 		}
 	}
 
@@ -168,7 +168,7 @@ export function getCloneToolInputHandler(
 		if (element_id === null) return;
 
 		if (id && mode !== CLONE_TOOL_MODE.SELECT) {
-			removeLocalConstraint(element_id, id);
+			removeConstraint(element_id, id);
 			id = null;
 			currentConstraint = null;
 		}

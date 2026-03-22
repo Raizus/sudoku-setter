@@ -3,10 +3,10 @@ import {
 	currentConstraintStore,
 	selectedElementIdStore,
 	setCurrentConstraint,
-	updateLocalConstraint
+	updateConstraint
 } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
-import { addLocalConstraint } from '$stores/LocalConstraintsStore';
+import { addConstraint } from '$stores/LocalConstraintsStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
@@ -79,7 +79,7 @@ export function getCageToolInputHandler(
 			// create new cage
 			currentConstraint = cageConstraint(tool, [coords]);
 			id = uniqueId();
-			addLocalConstraint(element_id, id, currentConstraint);
+			addConstraint(element_id, id, currentConstraint);
 			return;
 		}
 
@@ -91,7 +91,7 @@ export function getCageToolInputHandler(
 				coords,
 				allowDiagonallyAdjacent
 			);
-			updateLocalConstraint(element_id, id, currentConstraint);
+			updateConstraint(element_id, id, currentConstraint);
 			return;
 		}
 	}

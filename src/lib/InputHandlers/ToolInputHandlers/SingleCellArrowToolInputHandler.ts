@@ -4,7 +4,7 @@ import {
 	currentConstraintStore,
 	selectConstraint,
 	selectedElementIdStore,
-	updateLocalConstraint
+	updateConstraint
 } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
@@ -90,7 +90,7 @@ export function getSingleCellArrowToolInputHandler(
 				// update direction
 				id = match[0];
 				currentConstraint = { ...match[1], direction: direction } as CellArrowToolI;
-				updateLocalConstraint(element_id, match[0], currentConstraint);
+				updateConstraint(element_id, match[0], currentConstraint);
 			}
 		}
 	}
@@ -114,7 +114,7 @@ export function getSingleCellArrowToolInputHandler(
 			...(constraint as CellArrowToolI),
 			direction: validDirections[nextIdx]
 		} as CellArrowToolI;
-		updateLocalConstraint(element_id, id, currentConstraint);
+		updateConstraint(element_id, id, currentConstraint);
 	}
 
 	pointerHandler.onDragStart = (event: CellEdgeCornerEvent): void => {

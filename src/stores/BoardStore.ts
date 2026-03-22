@@ -107,10 +107,10 @@ export function updateToolOnRemoveGroup(toolId: TOOLID) {
  * For example, it removes all Renban constraints
  * @param element_id
  */
-export function removeGroupFromLocalConstraint(element_id: number) {
-	elementsDictStore.update((localConstraintsDict) => {
-		localConstraintsDict.removeFromDict(element_id);
-		return localConstraintsDict;
+export function removeGroupFromElementsDict(element_id: number) {
+	elementsDictStore.update((elementsDict) => {
+		elementsDict.removeFromDict(element_id);
+		return elementsDict;
 	});
 
 	updateCurrentShape(undefined);
@@ -122,7 +122,7 @@ export function removeGroupFromLocalConstraint(element_id: number) {
  * @param id
  * @param newConstraint
  */
-export function updateLocalConstraint<T extends ConstraintType>(
+export function updateConstraint<T extends ConstraintType>(
 	element_id: number,
 	id: string,
 	newConstraint: T
@@ -145,7 +145,7 @@ export function updateCurrentConstraintShape(newShape: ShapeI | undefined) {
 	const element_id = get(selectedElementIdStore);
 	if (element_id === null) return;
 	const newConstraint = { ...currentConstraint.constraint, shape: newShape };
-	updateLocalConstraint(element_id, currentConstraint.id, newConstraint);
+	updateConstraint(element_id, currentConstraint.id, newConstraint);
 }
 
 export function selectConstraint(element_id: number, c_id: string) {

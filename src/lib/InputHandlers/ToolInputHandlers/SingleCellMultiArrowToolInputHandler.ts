@@ -1,6 +1,6 @@
 import type { InputHandler } from '../InputHandler';
 import type { TOOLID } from '$lib/Puzzle/Tools';
-import { selectConstraint, selectedElementIdStore, updateLocalConstraint } from '$stores/BoardStore';
+import { selectConstraint, selectedElementIdStore, updateConstraint } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
@@ -88,7 +88,7 @@ export function getSingleCellMultiArrowToolInputHandler(
 						...match[1],
 						directions: newDirections
 					} as CellMultiArrowToolI;
-					updateLocalConstraint(element_id, match[0], currentConstraint);
+					updateConstraint(element_id, match[0], currentConstraint);
 				} else {
 					pushRemoveLocalConstraintCommand(element_id, match[0], match[1]);
 				}

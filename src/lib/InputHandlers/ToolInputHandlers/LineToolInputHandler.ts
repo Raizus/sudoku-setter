@@ -1,8 +1,8 @@
 import type { InputHandler } from '../InputHandler';
-import { selectedElementIdStore, updateLocalConstraint } from '$stores/BoardStore';
+import { selectedElementIdStore, updateConstraint } from '$stores/BoardStore';
 import { elementsDictStore } from '$stores/BoardStore';
-import { removeLocalConstraint } from '$stores/LocalConstraintsStore';
-import { addLocalConstraint } from '$stores/LocalConstraintsStore';
+import { removeConstraint } from '$stores/LocalConstraintsStore';
+import { addConstraint } from '$stores/LocalConstraintsStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
@@ -54,7 +54,7 @@ export function getLineToolInputHandler(
 		if (element_id === null) return;
 
 		newConstraint = updateLineConstraintCells(newConstraint, coords, allowSelfIntersection);
-		updateLocalConstraint(element_id, id, newConstraint);
+		updateConstraint(element_id, id, newConstraint);
 	}
 
 	pointerHandler.onDragStart = (event: CellDragTapEvent): void => {
@@ -68,7 +68,7 @@ export function getLineToolInputHandler(
 		if (mode !== BASIC_TOOL_MODE.DELETE) {
 			id = uniqueId();
 			newConstraint = lineConstraint(tool, [], options?.defaultValue);
-			addLocalConstraint(element_id, id, newConstraint);
+			addConstraint(element_id, id, newConstraint);
 			handle(event);
 		}
 	};
@@ -82,7 +82,7 @@ export function getLineToolInputHandler(
 		if (element_id === null) return;
 
 		if (id && newConstraint && newConstraint.cells.length <= 1) {
-			removeLocalConstraint(element_id, id);
+			removeConstraint(element_id, id);
 		} else if (id && newConstraint) {
 			// push command to history stack
 			pushAddLocalConstraintCommand(element_id, id, newConstraint, false);
