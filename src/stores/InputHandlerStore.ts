@@ -10,12 +10,13 @@ export const InputHandlerStore = derived<
 	[typeof svgRefStore, typeof gridStore, typeof toolStore],
 	InputHandler | undefined
 >([svgRefStore, gridStore, toolStore], ([$svgRefStore, $gridStore, $toolStore]) => {
+	if ($svgRefStore === null) return undefined;
+	
 	const toolInfo = getToolInfo($toolStore, elementInfoRegistry);
 	if (toolInfo === undefined) {
 		console.warn(`Element handler for ${$toolStore} is not defined`);
 		return undefined;
 	}
-	if ($svgRefStore === null) return undefined;
 
 	const inputOpts = toolInfo.inputOptions;
 	const getInputHandler = inputOpts ? getInputHandlerF(inputOpts) : undefined;
