@@ -99,7 +99,7 @@
 		Component={CornerLineToolRender}
 	/>
 
-	<SelectionRender {gridShape} />
+	<SelectionRender {gridShape} tool={$toolStore}/>
 	<CursorRender tool={$toolStore} />
 
 	<!-- EdgeToolsRender -->
