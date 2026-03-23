@@ -13,7 +13,7 @@ export enum PEN_TOOL_ACTIONS {
 	REMOVE_LINE_MARKERS = 'REMOVE_LINE_MARKERS'
 }
 
-type ResetAction = {
+type ResetPenAction = {
 	type: PEN_TOOL_ACTIONS.RESET;
 };
 
@@ -42,7 +42,7 @@ type RemoveCellMarkerAction = {
 	payload: GridCoordI;
 };
 
-type DragAction = {
+type DragPenAction = {
 	type: PEN_TOOL_ACTIONS.DRAG;
 	payload: LineMarker;
 };
@@ -58,13 +58,13 @@ type RemoveLineMarkersAction = {
 };
 
 export type PenToolAction =
-	| ResetAction
+	| ResetPenAction
 	| AddEdgeMarkerAction
 	| RemoveEdgeMarkerAction
 	| AddCellMarkerAction
 	| SetCellMarkersAction
 	| RemoveCellMarkerAction
-	| DragAction
+	| DragPenAction
 	| AddLineMarkersAction
 	| RemoveLineMarkersAction;
 
@@ -103,7 +103,7 @@ export const removeCellMarkerAction = (coords: GridCoordI): RemoveCellMarkerActi
 	};
 };
 
-export const dragAction = (lineMarker: LineMarker): DragAction => {
+export const dragPenAction = (lineMarker: LineMarker): DragPenAction => {
 	return {
 		type: PEN_TOOL_ACTIONS.DRAG,
 		payload: lineMarker
@@ -124,7 +124,7 @@ export const removeLineMarkersAction = (lineMarkers: LineMarker[]): RemoveLineMa
 	};
 };
 
-export const resetAction = (): ResetAction => {
+export const resetPenAction = (): ResetPenAction => {
 	return {
 		type: PEN_TOOL_ACTIONS.RESET
 	}

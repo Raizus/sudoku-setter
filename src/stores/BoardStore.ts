@@ -10,7 +10,7 @@ import type { ShapeI } from '$lib/Puzzle/Shape/Shape';
 import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';
 
 import { selectionClearAction } from '$lib/reducers/SelectionReducer';
-import { resetAction } from '$src/lib/reducers/PenToolReducer';
+import { resetPenAction } from '$src/lib/reducers/PenToolReducer';
 
 import { derived, get, writable } from 'svelte/store';
 import { commandHistoryStore } from './CommandHistoryStore';
@@ -188,12 +188,12 @@ export function resetPuzzle() {
 	cellsStore.update(() => {
 		return grid.getAllCells();
 	});
-	updatePenTool(resetAction());
+	updatePenTool(resetPenAction());
 }
 
 export function resetUserState() {
 	commandHistoryStore.clear();
-	updatePenTool(resetAction());
+	updatePenTool(resetPenAction());
 	updateToolAndCurrentConstraintStores(TOOLS.DIGIT, null);
 
 	const resetSelectionAction = selectionClearAction();

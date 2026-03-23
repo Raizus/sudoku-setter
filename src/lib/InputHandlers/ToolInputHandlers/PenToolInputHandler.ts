@@ -16,7 +16,7 @@ import {
 	addCellMarkerAction,
 	addEdgeMarkerAction,
 	addLineMarkersAction,
-	dragAction,
+	dragPenAction,
 	removeCellMarkerAction,
 	removeEdgeMarkerAction,
 	removeLineMarkersAction
@@ -108,7 +108,7 @@ export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): Input
 				colorId
 			};
 			// create PenDragAction
-			const action = dragAction(lineMarker);
+			const action = dragPenAction(lineMarker);
 			updatePenTool(action);
 		}
 	};

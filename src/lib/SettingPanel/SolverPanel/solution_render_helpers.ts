@@ -4,7 +4,7 @@ import type { CellMarker, LineMarker } from '$src/lib/Puzzle/PenTool';
 import { TOOLS } from '$src/lib/Puzzle/Tools';
 import {
 	addLineMarkersAction,
-	resetAction,
+	resetPenAction,
 	setCellMarkersAction
 } from '$src/lib/reducers/PenToolReducer';
 import {
@@ -598,7 +598,7 @@ export function setBoardOnSolution(json: JsonT, puzzle_model: PuzzleModel) {
 	const puzzle = puzzle_model.puzzle;
 	const grid = puzzle.grid;
 
-	updatePenTool(resetAction());
+	updatePenTool(resetPenAction());
 	setSolutionValues(json, puzzle);
 
 	setUnknownRegionsHighlights(json, grid);
