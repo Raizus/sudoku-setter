@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { GridShape } from './../Types/types.ts';
 	import type { Rectangle } from '$lib/Types/types.js';
-	import { cellsStore, enableFogMaskStore } from '$stores/BoardStore';
+	import { enableFogMaskStore } from '$stores/BoardStore';
 	import CursorRender from './CursorRender.svelte';
 	import GridBorderRender from './GridLines/GridBorderRender.svelte';
 	import GridLinesRender from './GridLines/GridLinesRender.svelte';
@@ -42,6 +42,7 @@
 
 	const gridStore = stateStore.gridStore;
 	const toolStore = stateStore.toolStore;
+	const cellsStore = stateStore.cellsStore;
 
 	$: grid = $gridStore;
 	$: gridShape = { nRows: grid.nRows, nCols: grid.nCols } as GridShape;
