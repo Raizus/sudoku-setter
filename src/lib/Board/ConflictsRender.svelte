@@ -1,24 +1,27 @@
 <script lang="ts">
 	import { findConflicts } from '$lib/Puzzle/conflicts';
-	import { SHAPE_TYPES, type ShapeI } from '$lib/Puzzle/Shape/Shape';
-	import { cellsStore, gridStore, elementsDictStore, enableFogMaskStore } from '$stores/BoardStore';
+	import { enableFogMaskStore } from '$stores/BoardStore';
 	import { settingsStore } from '$stores/SettingsStore';
-	import type { Cell } from '$lib/Puzzle/Grid/Cell';
+	import { stateStore } from '$stores/StateStore';
+	import type { Grid } from '../Puzzle/Grid/Grid';
+	import type { ElementsDict } from '../Puzzle/Constraints/ElementsDict';
+
+	const gridStore = stateStore.gridStore;
+	const elementsDictStore = stateStore.elementsDictStore;
 
 	$: showConflicts = $settingsStore.checkConflicts;
 	$: grid = $gridStore;
 	$: element_dict = $elementsDictStore;
-	$: all_cells = $cellsStore;
 
-	const shape: ShapeI = {
-		type: SHAPE_TYPES.CAGE,
-		strokeWidth: 0,
-		stroke: 'none',
-		fill: 'rgba(255, 255, 0, 0.02)',
-		inset: 0
-	};
+	// const shape: ShapeI = {
+	// 	type: SHAPE_TYPES.CAGE,
+	// 	strokeWidth: 0,
+	// 	stroke: 'none',
+	// 	fill: 'rgba(255, 255, 0, 0.02)',
+	// 	inset: 0
+	// };
 
-	function getConflicts(cells: Cell[]) {
+	function getConflicts(grid: Grid, element_dict: ElementsDict) {
 		const conflict_cells = findConflicts(grid, element_dict);
 		const coords = conflict_cells.map((cell) => cell.toCoords());
 		return coords;
@@ -30,7 +33,7 @@
 
 {#if showConflicts}
 	<g class="conflicts-layer" mask={enable_fog_mask ? 'url(#fog-mask-fog)' : null}>
-		{#each getConflicts(all_cells) as coord}
+		{#each getConflicts(grid, element_dict) as coord}
 			<rect class="conflict" x={coord.c} y={coord.r} width={1} height={1} fill={fill_color} />
 		{/each}
 	</g>
