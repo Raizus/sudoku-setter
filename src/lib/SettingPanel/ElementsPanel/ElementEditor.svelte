@@ -64,7 +64,7 @@
 				{#if negative_constraints}
 					{#each negative_constraints as neg_const}
 						<ConstraintCheckbox
-							{tool_id}
+							{element_id}
 							neg_tool_id={neg_const.toolId}
 							description={neg_const.description}
 						/>
