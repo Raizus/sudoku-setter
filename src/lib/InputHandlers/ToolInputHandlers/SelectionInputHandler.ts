@@ -32,7 +32,7 @@ import {
 	updatePreviousToolStore,
 	updateToolAndCurrentConstraintStores
 } from '$stores/BoardStore';
-import { generateUpdateCellAction, getUpdateCellCommand } from '$stores/CellsStore';
+import { generateUpdateCellAction, getUpdateCellsCommand } from '$stores/CellsStore';
 import { getUpdateSelectionCommand, updateSelection } from '$stores/SelectionStore';
 import { selectionStore } from '$stores/SelectionStore';
 import { throttle } from 'lodash';
@@ -151,7 +151,7 @@ function addUpdateCellsCommand(
 	if (act_rev_act) {
 		const action = act_rev_act[0];
 		const reverse_action = act_rev_act[1];
-		const command = getUpdateCellCommand(action, reverse_action);
+		const command = getUpdateCellsCommand(action, reverse_action);
 		const sel_action = selectionSetCellsAction(selection);
 		// const sel_rev_action = selectionNoneAction();
 		const sel_command = getUpdateSelectionCommand(sel_action, sel_action);

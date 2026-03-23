@@ -173,7 +173,7 @@ export function executeUpdateCellsAction(action: UpdateCellsAction) {
 	}
 }
 
-export function getUpdateCellCommand(
+export function getUpdateCellsCommand(
 	action: UpdateCellsAction,
 	reverse_action: UpdateCellsAction
 ): CommandI {
