@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { getPuzzleFilename } from '$src/lib/utils/functionUtils';
-	import { puzzleMetaStore, puzzleStore } from '$stores/BoardStore';
+	import { puzzleStore } from '$stores/BoardStore';
+	import { stateStore } from '$stores/StateStore';
 	import { download, getCompressedLink, puzzleToCompressedStr, puzzleToJsonStr } from './io_utils';
+
+	const puzzleMetaStore = stateStore.puzzleMetaStore;
 
 	const downloadPuzzleJson = (file_base_name = 'sudoku_by_anonymous') => {
 		const jsonData = puzzleToJsonStr($puzzleStore, 2);

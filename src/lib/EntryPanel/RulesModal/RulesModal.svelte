@@ -1,8 +1,10 @@
 <script lang="ts">
 	import Modal from '$lib/Components/Modal/Modal.svelte';
-	import { getAuthorsStr, joinStrList } from '$lib/utils/functionUtils';
-	import { puzzleMetaStore } from '$stores/BoardStore';
+	import { getAuthorsStr } from '$lib/utils/functionUtils';
+	import { stateStore } from '$stores/StateStore';
 	import Markdown from '@magidoc/plugin-svelte-marked';
+
+	const puzzleMetaStore = stateStore.puzzleMetaStore;
 
 	export let showModal = false;
 	$: meta = $puzzleMetaStore;

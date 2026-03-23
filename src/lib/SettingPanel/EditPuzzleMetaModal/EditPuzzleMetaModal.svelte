@@ -4,11 +4,14 @@
 	import ModalSectionHeader from '$lib/Components/Modal/ModalSectionHeader.svelte';
 	import type { PuzzleMetaI } from '$src/lib/Puzzle/puzzle_schema';
 	import { joinStrList } from '$lib/utils/functionUtils';
-	import { puzzleMetaStore, updatePuzzleMeta } from '$stores/BoardStore';
+	import { updatePuzzleMeta } from '$stores/BoardStore';
 	import { elementsDictStore } from '$stores/BoardStore';
 	import { generateDescription } from '$src/lib/Puzzle/Puzzle';
+	import { stateStore } from '$stores/StateStore';
 
 	export let showModal = false;
+
+	const puzzleMetaStore = stateStore.puzzleMetaStore;
 
 	let titleStr: string = '';
 	let authorsStr: string = '';

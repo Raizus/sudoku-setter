@@ -2,10 +2,14 @@
 	import { get } from 'svelte/store';
 	import Modal from '$components/Modal/Modal.svelte';
 	import { createMinizincModel } from '$src/lib/Solver/solver';
-	import { puzzleMetaStore, puzzleStore } from '$stores/BoardStore';
+	import { puzzleStore } from '$stores/BoardStore';
 	import { getPuzzleFilename } from '$src/lib/utils/functionUtils';
 	import { pruneMinizincModel } from '$src/lib/Solver/solver_utils';
+	import { stateStore } from '$stores/StateStore';
+
 	export let showModal = false;
+
+	const puzzleMetaStore = stateStore.puzzleMetaStore;
 
 	function download(content: string, fileName: string, contentType: string) {
 		var a = document.createElement('a');
