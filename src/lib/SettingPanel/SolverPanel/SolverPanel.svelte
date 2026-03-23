@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { createMinizincModel } from '$src/lib/Solver/solver';
-	import { puzzleStore } from '$stores/BoardStore';
 	import Panel from '../Subpanel/Panel.svelte';
 	import PanelHeader from '../Subpanel/PanelHeader.svelte';
 	import * as MiniZinc from 'minizinc';
@@ -11,6 +10,8 @@
 	import { stateStore } from '$stores/StateStore';
 
 	let isOpen = true;
+	const puzzleStore = stateStore.puzzleStore;
+
 	$: puzzle = $puzzleStore;
 
 	let showModal = false;

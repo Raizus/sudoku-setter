@@ -3,8 +3,9 @@
 	import { cellsSeenByCell } from '$lib/Puzzle/SeenCells';
 	import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';
 	import { cellToCellCenterVector } from '$lib/utils/SquareCellGridRenderUtils';
-	import { enableFogMaskStore, puzzleStore } from '$stores/BoardStore';
+	import { enableFogMaskStore } from '$stores/BoardStore';
 	import { settingsStore } from '$stores/SettingsStore';
+	import { stateStore } from '$stores/StateStore';
 	import CenterMarksRender from './CenterMarksRender.svelte';
 	import CornerMarksRender from './CornerMarksRender.svelte';
 	import RenderRegionValue from './RenderRegionValue.svelte';
@@ -12,6 +13,7 @@
 	export let cell: Cell;
 	export let tool: TOOLID;
 
+	const puzzleStore = stateStore.puzzleStore;
 	const fontSize = 0.8;
 	const fontWeight = 400;
 

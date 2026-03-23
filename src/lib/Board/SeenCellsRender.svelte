@@ -3,13 +3,16 @@
 	import { SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
 	import { isCellInputTool, type TOOLID } from '$lib/Puzzle/Tools';
 	import type { GridCoordI } from '$lib/utils/SquareCellGridCoords';
-	import { enableFogMaskStore, puzzleStore } from '$stores/BoardStore';
+	import { enableFogMaskStore } from '$stores/BoardStore';
 	import { selectionStore } from '$stores/SelectionStore';
 	import { settingsStore } from '$stores/SettingsStore';
+	import { stateStore } from '$stores/StateStore';
 	import type { PuzzleI } from '../Puzzle/Puzzle';
 	import CageRender from './Constraints/CageRender.svelte';
 
 	export let tool: TOOLID;
+
+	const puzzleStore = stateStore.puzzleStore;
 
 	$: selection = $selectionStore.cells;
 	$: showSeen = $settingsStore.highlightCellsSeenBySelection;
