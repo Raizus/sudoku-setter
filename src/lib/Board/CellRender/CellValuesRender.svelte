@@ -1,15 +1,17 @@
 <script lang="ts">
 	import type { Cell } from '$lib/Puzzle/Grid/Cell';
 	import { cellsSeenByCell } from '$lib/Puzzle/SeenCells';
-	import { TOOLS } from '$lib/Puzzle/Tools';
+	import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';
 	import { cellToCellCenterVector } from '$lib/utils/SquareCellGridRenderUtils';
-	import { enableFogMaskStore, puzzleStore, toolStore } from '$stores/BoardStore';
+	import { enableFogMaskStore, puzzleStore } from '$stores/BoardStore';
 	import { settingsStore } from '$stores/SettingsStore';
 	import CenterMarksRender from './CenterMarksRender.svelte';
 	import CornerMarksRender from './CornerMarksRender.svelte';
 	import RenderRegionValue from './RenderRegionValue.svelte';
 
 	export let cell: Cell;
+	export let tool: TOOLID;
+
 	const fontSize = 0.8;
 	const fontWeight = 400;
 
@@ -45,7 +47,7 @@
 {#if !showSolution}
 	<g class="cell-values cell-digit-outline" class:hide-given={hide_given}>
 		<!-- render region values -->
-		{#if $toolStore === TOOLS.REGIONS}
+		{#if tool === TOOLS.REGIONS}
 			<RenderRegionValue {cell}/>
 		{:else if value !== null}
 			<!-- render cell values -->

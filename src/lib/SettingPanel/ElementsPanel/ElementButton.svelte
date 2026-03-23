@@ -15,12 +15,12 @@
 	import {
 		elementsDictStore,
 		selectedElementIdStore,
-		toolStore,
 		updateToolAndCurrentConstraintStores,
 		updateToolOnRemoveGroup
 	} from '$stores/BoardStore';
 	import { commandHistoryStore } from '$stores/CommandHistoryStore';
 	import { getUpdateElementCommand } from '$stores/LocalConstraintsStore';
+	import { stateStore } from '$stores/StateStore';
 	import ElementEditor from './ElementEditor.svelte';
 	import MoreButton from './MoreButton.svelte';
 
@@ -28,8 +28,9 @@
 	export let order: number | null = null;
 	export let element_id: number | null = null;
 	export let element: ConstraintsElement | undefined = undefined;
-
 	export let elementHandlers: AbstractElementHandlers;
+
+	const current_tool_store = stateStore.toolStore;
 
 	const permanent: boolean = !!elementHandlers[tool_id].permanent;
 	let selected: boolean = false;
@@ -106,7 +107,7 @@
 		commandHistoryStore.addCommand(command);
 	}
 
-	$: selected = element_id === $selectedElementIdStore && tool_id === $toolStore;
+	$: selected = element_id === $selectedElementIdStore && tool_id === $current_tool_store;
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->

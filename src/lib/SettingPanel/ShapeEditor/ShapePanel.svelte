@@ -6,7 +6,7 @@
 		shapeHasEditableProps,
 		SHAPE_TYPES
 	} from '$lib/Puzzle/Shape/Shape';
-	import { toolStore, currentConstraintStore, updateCurrentConstraintShape } from '$stores/BoardStore';
+	import { currentConstraintStore, updateCurrentConstraintShape } from '$stores/BoardStore';
 	import PropertyBlock from './PropertyBlock.svelte';
 	import SliderBlock from './SliderBlock.svelte';
 	import ShapeRadioBlock from './ShapeRadioBlock.svelte';
@@ -17,9 +17,12 @@
 		import type { ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 	import { getToolInfo, type AbstractElementHandlers } from '$lib/Puzzle/ElementHandlersUtils';
 	import ColorPicker from '$components/ColorPicker.svelte';
+	import { stateStore } from '$stores/StateStore';
+
+	export let elementHandlers: AbstractElementHandlers;
 
 	let isOpen = true;
-	export let elementHandlers: AbstractElementHandlers;
+	const toolStore = stateStore.toolStore;
 
 	function getShape(
 		currentConstraint: ConstraintType | null,

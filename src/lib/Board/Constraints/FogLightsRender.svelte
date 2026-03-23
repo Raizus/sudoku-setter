@@ -1,20 +1,20 @@
 <script lang="ts">
 	import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
 	import type { CellToolI } from '$src/lib/Puzzle/puzzle_schema';
-	import { TOOLS } from '$src/lib/Puzzle/Tools';
-	import { enableFogMaskStore, toolStore } from '$stores/BoardStore';
+	import { TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
+	import { enableFogMaskStore } from '$stores/BoardStore';
 	import SingleFogLightRender from './SingleFogLightRender.svelte';
 
 	export let element: ConstraintsElement | undefined;
+	export let tool: TOOLID;
 
-	$: tool_id = $toolStore;
 	$: show_lights = !$enableFogMaskStore;
 
 	$: constraints = element?.constraints as Record<string, CellToolI>;
 </script>
 
 {#if show_lights && !element?.disabled && constraints}
-	<g class="fog-lights-layer" class:inactive={tool_id !== TOOLS.FOG_LIGHTS}>
+	<g class="fog-lights-layer" class:inactive={tool !== TOOLS.FOG_LIGHTS}>
 		{#each Object.entries(constraints) as entry (entry[0])}
 			<SingleFogLightRender tool={entry[1]} c_id={entry[0]} />
 		{/each}

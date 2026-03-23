@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { isCellInputTool } from '$lib/Puzzle/Tools';
+	import { isCellInputTool, type TOOLID } from '$lib/Puzzle/Tools';
 	import { getCagePathStr } from '$lib/utils/SquareCellGridRenderUtils';
-	import { toolStore } from '$stores/BoardStore';
 	import { selectionStore } from '$stores/SelectionStore';
 	import { settingsStore } from '$stores/SettingsStore';
 	import type { GridShape } from '../Types/types';
 
 	export let gridShape: GridShape;
+	export let tool: TOOLID;
 
 	const inset = 0.1;
 	const innerRadius = 0.05;
@@ -17,7 +17,7 @@
 	$: fillPathStr = getCagePathStr(selection, 0);
 	$: maskPathStr = getCagePathStr(selection, inset);
 
-	$: showSelection = isCellInputTool($toolStore);
+	$: showSelection = isCellInputTool(tool);
 
 	$: selection_color = $settingsStore.selection_color;
 </script>

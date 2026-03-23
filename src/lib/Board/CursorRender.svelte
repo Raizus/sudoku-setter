@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { isCellInputTool } from '$lib/Puzzle/Tools';
+	import { isCellInputTool, type TOOLID } from '$lib/Puzzle/Tools';
 	import type { GridCoordI } from '$lib/utils/SquareCellGridCoords';
-	import { toolStore } from '$stores/BoardStore';
 	import { selectionStore } from '$stores/SelectionStore';
+
+	export let tool: TOOLID;
 
 	const cursorSize = 0.25;
 
-	$: showSelection = isCellInputTool($toolStore);
+	$: showSelection = isCellInputTool(tool);
 
 	function getCursorStr(coords: GridCoordI | null): string {
 		if (!coords) return '';

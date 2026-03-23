@@ -76,9 +76,9 @@
 		{/each}
 	</g>
 
-	<SeenCellsRender />
+	<SeenCellsRender tool={$toolStore} />
 
-	<FogLightsRender element={$fogLightsStore} />
+	<FogLightsRender element={$fogLightsStore} tool={$toolStore}/>
 
 	<!-- underlay elements - below the grid lines -->
 	<UnderlayRender
@@ -100,7 +100,7 @@
 	/>
 
 	<SelectionRender {gridShape} />
-	<CursorRender />
+	<CursorRender tool={$toolStore} />
 
 	<!-- EdgeToolsRender -->
 	<ToolsLayerRender
@@ -127,7 +127,7 @@
 
 	<g class="cell-values-layer">
 		{#each $cellsStore as cell}
-			<CellValuesRender {cell} />
+			<CellValuesRender {cell} tool={$toolStore} />
 		{/each}
 	</g>
 
