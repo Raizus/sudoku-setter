@@ -11,7 +11,7 @@ import {
 } from '$lib/Puzzle/Tools';
 import { derived, writable, type Readable } from 'svelte/store';
 import { elementsDictStore, selectedElementIdStore } from './BoardStore';
-import type { CornerToolI } from '$src/lib/Puzzle/puzzle_schema';
+import type { CornerToolI, ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
 import type { SingleCellTool } from '$src/lib/Puzzle/puzzle_schema';
 import type { CellMultiArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
 import type { CellArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
@@ -99,16 +99,8 @@ export const cornerToolsStore = getElementsStore(isCornerTool);
 export const cornerLineToolsStore = getElementsStore(isCornerLineTool);
 export const diagonalElementsStore = getElementsStore(isDiagonalConstraint);
 
-// export const lineToolsStore = getToolsStore<LineToolI>(isLineTool);
-
-export interface ToolPreview<T extends ConstraintType> {
-	tool: T;
-	match_id?: string;
-	mode: 'add' | 'remove';
-}
 
 export const simpleCellToolPreviewStore = writable<undefined | ToolPreview<CellToolI>>(undefined);
-
 export const singleCellArrowPreviewStore = writable<undefined | ToolPreview<CellArrowToolI>>(
 	undefined
 );

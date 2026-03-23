@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { OutsideDirectionToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { Vector2D } from '$src/lib/utils/Vector2D';
-	import type { ToolPreview } from '$stores/ElementsStore';
+		import type { ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
 	import OutsideDirectionToolRenderAux from './OutsideDirectionToolRenderAux.svelte';
 	import RemoveConstraintCrossPreview from './RemoveConstraintCrossPreview.svelte';
 

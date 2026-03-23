@@ -137,5 +137,12 @@ export interface ConstraintAndId {
 	id: string;
 	constraint: ConstraintType;
 }
+// export const lineToolsStore = getToolsStore<LineToolI>(isLineTool);
+
+export interface ToolPreview<T extends ConstraintType> {
+	tool: T;
+	match_id?: string;
+	mode: 'add' | 'remove';
+}
 
 

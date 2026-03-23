@@ -15,7 +15,7 @@ import { keyboardInputDefaultValidator } from '$input/KeyboardEventUtils';
 import { BASIC_TOOL_MODE, type ToolModeT, type ValueUpdaterI } from './types';
 import { updateConstraintValue } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { updateConstraint } from '$stores/BoardStore';
-import type { ToolPreview } from '$stores/ElementsStore';
+import type { ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
 
 function getSimilarHighlights(cell: Cell, grid: Grid) {
 	const highlights = new Set(cell.highlights);

@@ -2,7 +2,7 @@
 		import type { EdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import { cellsToVector2DPoints } from '$src/lib/utils/SquareCellGridRenderUtils';
 	import { vectorAverage } from '$src/lib/utils/Vector2D';
-	import type { ToolPreview } from '$stores/ElementsStore';
+			import type { ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
 	import EdgeToolRenderAux from './EdgeToolRenderAux.svelte';
 	import RemoveConstraintCrossPreview from './RemoveConstraintCrossPreview.svelte';
 

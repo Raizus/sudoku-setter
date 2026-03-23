@@ -1,6 +1,6 @@
 <script lang="ts">
 		import type { CellToolI } from "$src/lib/Puzzle/puzzle_schema";
-	import type { ToolPreview } from '$stores/ElementsStore';
+			import type { ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
 	import RemoveConstraintCrossPreview from './RemoveConstraintCrossPreview.svelte';
 	import SimpleSingleCellToolRenderAux from './SimpleSingleCellToolRenderAux.svelte';
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { CornerToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { Vector2D } from '$src/lib/utils/Vector2D';
-	import type { ToolPreview } from '$stores/ElementsStore';
+		import type { ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
 	import CornerToolRenderAux from './CornerToolRenderAux.svelte';
 	import RemoveConstraintCrossPreview from './RemoveConstraintCrossPreview.svelte';
 

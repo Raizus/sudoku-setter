@@ -24,7 +24,8 @@ import { idxToDirection, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { findSingleCellConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { DIRECTION } from '$lib/utils/directions';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
-import { singleCellArrowPreviewStore, type ToolPreview } from '$stores/ElementsStore';
+import { singleCellArrowPreviewStore } from '$stores/ElementsStore';
+import { type ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
 import { toolModeStore } from '$stores/InputHandlerStore';
 
 export function getSingleCellArrowToolInputHandler(
