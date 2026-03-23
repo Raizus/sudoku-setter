@@ -55,12 +55,6 @@ export function setCreationTimestamp(timestamp: number) {
 	puzzleCreationTimestamp.set(timestamp);
 }
 
-export function updatePuzzleMeta(meta: PuzzleMetaI) {
-	puzzleMetaStore.update(() => {
-		return meta;
-	});
-}
-
 export function setCurrentConstraint(constraintId: ConstraintAndId | null) {
 	currentConstraintStore.update(() => constraintId);
 }
