@@ -17,23 +17,16 @@ export function updateSelection(action: SelectionAction): void {
 	});
 }
 
-function executeUpdateSellectionAction(action: SelectionAction) {
-	if (!action) return;
-	selectionStore.update((selectionState) => {
-		return reducerSelection(selectionState, action);
-	});
-}
-
 export function getUpdateSelectionCommand(
 	action: SelectionAction,
 	reverse_action: SelectionAction
 ): CommandI {
 	const command: CommandI = {
 		execute: () => {
-			executeUpdateSellectionAction(action);
+			updateSelection(action);
 		},
 		unExecute: () => {
-			executeUpdateSellectionAction(reverse_action);
+			updateSelection(reverse_action);
 		}
 	};
 	return command;
