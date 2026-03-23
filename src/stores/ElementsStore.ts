@@ -10,14 +10,13 @@ import {
 	type TOOLID
 } from '$lib/Puzzle/Tools';
 import { derived, type Readable } from 'svelte/store';
-import { elementsDictStore, selectedElementIdStore } from './BoardStore';
 import type { SingleCellTool } from '$src/lib/Puzzle/puzzle_schema';
 import type { ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
 import { filterElements } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { stateStore } from './StateStore';
 
-export const underlayElementsStore = derived(elementsDictStore, ($elementsDictStore) => {
+export const underlayElementsStore = derived(stateStore.elementsDictStore, ($elementsDictStore) => {
 	const elements: ConstraintsElement[] = [];
 	for (const [, element] of $elementsDictStore.orderedEntries()) {
 		const toolId = element.tool_id;
@@ -31,8 +30,8 @@ export const underlayElementsStore = derived(elementsDictStore, ($elementsDictSt
 /**
  * Returns a store of elements filtered by the provided function and derived from the elementsDictStore.
  * Used to create stores for different types of tools.
- * @param filter_f 
- * @returns 
+ * @param filter_f
+ * @returns
  */
 function getElementsStore(filter_f: (tool: TOOLID) => boolean): Readable<ConstraintsElement[]> {
 	const store = derived(stateStore.elementsDictStore, ($elementsDictStore) => {
@@ -45,7 +44,7 @@ function getElementsStore(filter_f: (tool: TOOLID) => boolean): Readable<Constra
 export function getToolStore<T extends ConstraintType>(
 	tool_id: TOOLID
 ): Readable<Record<string, T>> {
-	const store = derived(elementsDictStore, ($elementsDictStore) => {
+	const store = derived(stateStore.elementsDictStore, ($elementsDictStore) => {
 		for (const element of $elementsDictStore.values()) {
 			if (tool_id !== element.tool_id) continue;
 			const record = element.constraints as Record<string, T>;
@@ -66,12 +65,15 @@ export const fogLightsStore = derived(singleCellToolsStore, ($singleCellToolsSto
 	return target_element;
 });
 
-export const customFogClearingStore = derived(stateStore.elementsDictStore, ($elementsDictStore) => {
-	for (const element of $elementsDictStore.values()) {
-		if (element.tool_id === TOOLS.CUSTOM_FOG_CLEARING) return element;
+export const customFogClearingStore = derived(
+	stateStore.elementsDictStore,
+	($elementsDictStore) => {
+		for (const element of $elementsDictStore.values()) {
+			if (element.tool_id === TOOLS.CUSTOM_FOG_CLEARING) return element;
+		}
+		return undefined;
 	}
-	return undefined;
-});
+);
 
 export const minimumConstraintsStore = derived(singleCellToolsStore, ($singleCellToolsStore) => {
 	const target_element = $singleCellToolsStore.find((element) => element.tool_id === TOOLS.MINIMUM);
@@ -100,7 +102,7 @@ export const cornerLineToolsStore = getElementsStore(isCornerLineTool);
 export const diagonalElementsStore = getElementsStore(isDiagonalConstraint);
 
 export const currentElementStore: Readable<ConstraintsElement | undefined> = derived(
-	[elementsDictStore, selectedElementIdStore],
+	[stateStore.elementsDictStore, stateStore.selectedElementIdStore],
 	([$elementsDictStore, $selectedElementIdStore]) => {
 		const selected_id = $selectedElementIdStore;
 		if (selected_id === null) return undefined;
