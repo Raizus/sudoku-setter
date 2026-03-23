@@ -2,10 +2,13 @@
 	import ControlsAuxPad from './ControlsAuxPad.svelte';
 	import NumberPad from './NumberPad.svelte';
 	import ToolPad from './ToolPad.svelte';
-	import { puzzleMetaStore, svgRefStore, toolStore } from '$stores/BoardStore';
+	import { puzzleMetaStore, toolStore } from '$stores/BoardStore';
 	import InfoSettingsPad from './ExtraControls/InfoSettingsPad.svelte';
 	import { joinStrList } from '../utils/functionUtils';
 	import Markdown from '@magidoc/plugin-svelte-marked';
+	import { stateStore } from '$stores/StateStore';
+
+	const svgRefStore = stateStore.svgRefStore;
 
 	function onClickCb(): void {
 		if ($svgRefStore) $svgRefStore.focus();

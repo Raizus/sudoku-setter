@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Trash from '$icons/Trash.svelte';
-	import { currentConstraintStore, selectConstraint, svgRefStore } from '$stores/BoardStore';
+	import { currentConstraintStore, selectConstraint } from '$stores/BoardStore';
 	import { elementsDictStore } from '$stores/BoardStore';
 	import { getUpdateElementCommand } from '$stores/LocalConstraintsStore';
 	import {
@@ -8,9 +8,12 @@
 		removeLocalConstraintAction
 	} from '$src/lib/reducers/LocalConstraintsActions';
 	import { commandHistoryStore } from '$stores/CommandHistoryStore';
+	import { stateStore } from '$stores/StateStore';
 
 	export let constraint_id: string;
 	export let element_id: number;
+
+	const svgRefStore = stateStore.svgRefStore;
 
 	function selectConstraintCb() {
 		//update current constraint
