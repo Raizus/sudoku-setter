@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { filterElements } from '../Puzzle/Constraints/ElementsDict';
-	import { getDefaultBoundingBox, type PuzzleI } from '../Puzzle/Puzzle';
+	import { type PuzzleI } from '../Puzzle/Puzzle';
+	import { getDefaultBoundingBox } from '../Puzzle/BoardBoundingBox';
 	import { isDiagonalConstraint, isOverlayTool, isUnderlayTool } from '../Puzzle/Tools';
 	import type { Rectangle } from '../Types/types';
 	import BoardBackground from './BoardBackground.svelte';

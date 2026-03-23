@@ -2,13 +2,13 @@ import { derived, get, writable } from 'svelte/store';
 import { elementsDictStore, gridStore, toolStore } from './BoardStore';
 import type { Rectangle } from '$src/lib/Types/types';
 import type { PointerEventInfo, WheelEventInfo } from '$input/PointerHandlers/WheelHandler';
-import { getDefaultBoundingBox } from '$src/lib/Puzzle/Puzzle';
+import { getDefaultBoundingBox } from '$src/lib/Puzzle/BoardBoundingBox';
 
-function _updateBoundingBoxOnZoom(
+export function _updateBoundingBoxOnZoom(
 	default_bbox: Rectangle,
 	bbox: Rectangle,
-	wheel_event: WheelEventInfo,
-	current_scale: number
+	current_scale: number,
+	wheel_event: WheelEventInfo
 ): Rectangle {
 	const zoom_factor = wheel_event.zoom_factor;
 
@@ -72,6 +72,79 @@ function _updateBoundingBoxOnZoom(
 	return bbox;
 }
 
+export function _updateBoundingBoxOnScroll(
+	current_bbox: Rectangle,
+	default_bbox: Rectangle,
+	scale: number,
+	wheel_event: WheelEventInfo
+): Rectangle | undefined {
+	if (wheel_event.ctrl) return;
+	if (scale < 1) return;
+
+	const delta = -(wheel_event.delta > 0 ? 1 : wheel_event.delta < 0 ? -1 : 0);
+	const min_y = default_bbox.y;
+	const max_y = min_y + default_bbox.height;
+
+	const delta_y = 0.5 * delta * scale;
+
+	// update y and height
+	let new_y = current_bbox.y + delta_y;
+	if (new_y < min_y) {
+		new_y = min_y;
+	}
+	if (new_y + current_bbox.height > max_y) {
+		new_y = max_y - current_bbox.height;
+	}
+	const new_bbox: Rectangle = {
+		x: current_bbox.x,
+		y: new_y,
+		height: current_bbox.height,
+		width: current_bbox.width
+	};
+
+	return new_bbox;
+}
+
+export function _updateBoundingBoxOnDrag(
+	current_bbox: Rectangle,
+	default_bbox: Rectangle,
+	scale: number,
+	event_info: PointerEventInfo
+) {
+	if (scale < 1) return;
+
+	const delta_v = event_info.point;
+	const min_x = default_bbox.x;
+	const max_x = min_x + default_bbox.width;
+	const min_y = default_bbox.y;
+	const max_y = min_y + default_bbox.height;
+
+	let new_x = current_bbox.x - ((0.012 * 1) / scale) * delta_v.x;
+	let new_y = current_bbox.y - ((0.012 * 1) / scale) * delta_v.y;
+
+	if (new_y < min_y) {
+		new_y = min_y;
+	}
+	if (new_y + current_bbox.height > max_y) {
+		new_y = max_y - current_bbox.height;
+	}
+	if (new_x < min_x) {
+		new_x = min_x;
+	}
+	if (new_x + current_bbox.width > max_x) {
+		new_x = max_x - current_bbox.width;
+	}
+
+	const new_bbox: Rectangle = {
+		x: new_x,
+		y: new_y,
+		height: current_bbox.height,
+		width: current_bbox.width
+	};
+
+	return new_bbox;
+}
+
 export const currentScaleStore = writable<number>(1);
 
 export const defaultBoundingBoxStore = derived(
@@ -85,7 +158,6 @@ export const boundingBoxStore = writable<Rectangle>(get(defaultBoundingBoxStore)
 
 export function resetZoom() {
 	currentScaleStore.set(1);
-
 	boundingBoxStore.set(get(defaultBoundingBoxStore));
 }
 
@@ -104,77 +176,31 @@ export function updateBoundindBoxOnZoom(wheel_event: WheelEventInfo) {
 
 	const default_bbox = get(defaultBoundingBoxStore);
 	boundingBoxStore.update((bbox) => {
-		return _updateBoundingBoxOnZoom(default_bbox, bbox, wheel_event, new_scale);
+		return _updateBoundingBoxOnZoom(default_bbox, bbox, new_scale, wheel_event);
 	});
 }
 
 export function updateBoundingBoxOnScroll(wheel_event: WheelEventInfo) {
-	if (wheel_event.ctrl) return;
 	const current_scale = get(currentScaleStore);
 	const default_bbox = get(defaultBoundingBoxStore);
-	if (current_scale < 1) return;
+	const current_bbox = get(boundingBoxStore);
 
-	const delta = -(wheel_event.delta > 0 ? 1 : wheel_event.delta < 0 ? -1 : 0);
-	const min_y = default_bbox.y;
-	const max_y = min_y + default_bbox.height;
-
-	boundingBoxStore.update((bbox) => {
-		const delta_y = 0.5 * delta * current_scale;
-
-		// update y and height
-		let new_y = bbox.y + delta_y;
-		if (new_y < min_y) {
-			new_y = min_y;
-		}
-		if (new_y + bbox.height > max_y) {
-			new_y = max_y - bbox.height;
-		}
-		const new_bbox: Rectangle = {
-			x: bbox.x,
-			y: new_y,
-			height: bbox.height,
-			width: bbox.width
-		};
-
-		return new_bbox;
-	});
+	const new_bbox = _updateBoundingBoxOnScroll(
+		current_bbox,
+		default_bbox,
+		current_scale,
+		wheel_event
+	);
+	if (!new_bbox) return;
+	boundingBoxStore.set(new_bbox);
 }
 
 export function updateBoundingBoxOnDrag(event_info: PointerEventInfo) {
 	const current_scale = get(currentScaleStore);
 	const default_bbox = get(defaultBoundingBoxStore);
-	if (current_scale < 1) return;
+	const current_bbox = get(boundingBoxStore);
 
-	const delta_v = event_info.point;
-	const min_x = default_bbox.x;
-	const max_x = min_x + default_bbox.width;
-	const min_y = default_bbox.y;
-	const max_y = min_y + default_bbox.height;
-
-	boundingBoxStore.update((bbox) => {
-		let new_x = bbox.x - 0.012 * 1/current_scale * delta_v.x;
-		let new_y = bbox.y - 0.012 * 1/current_scale * delta_v.y;
-
-		if (new_y < min_y) {
-			new_y = min_y;
-		}
-		if (new_y + bbox.height > max_y) {
-			new_y = max_y - bbox.height;
-		}
-		if (new_x < min_x) {
-			new_x = min_x;
-		}
-		if (new_x + bbox.width > max_x) {
-			new_x = max_x - bbox.width;
-		}
-
-		const new_bbox: Rectangle = {
-			x: new_x,
-			y: new_y,
-			height: bbox.height,
-			width: bbox.width
-		};
-
-		return new_bbox;
-	});
+	const new_bbox = _updateBoundingBoxOnDrag(current_bbox, default_bbox, current_scale, event_info);
+	if (!new_bbox) return;
+	boundingBoxStore.set(new_bbox);
 }
