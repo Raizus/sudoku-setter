@@ -167,7 +167,8 @@ export class StateStore {
 		this.setElementsDictStore(new ElementsDict());
 		this.setPuzzleMeta({});
 		this.setSolution(undefined);
-		// cellsStore.update(() => grid.getAllCells());
+
+		this._cellsStore.set(grid.getAllCells());
 	}
 
 	setPuzzle(puzzle: PuzzleI) {
@@ -177,18 +178,16 @@ export class StateStore {
 		this.setValidDigits(puzzle.valid_digits);
 		this.setElementsDictStore(puzzle.elementsDict);
 
-		// cellsStore.update(() => puzzle.grid.getAllCells());
+		this._cellsStore.set(puzzle.grid.getAllCells());
 	}
 
 	resetPuzzle() {
 		this._gridStore.update((grid) => {
 			grid.resetValues();
+			this._cellsStore.set(grid.getAllCells());
 			return grid;
 		});
 		this.updatePenTool(resetPenAction());
-		// cellsStore.update(() => {
-		//     return grid.getAllCells();
-		// });
 	}
 
 	/* -------------------------------------------------------------------------- */
