@@ -160,8 +160,8 @@ export class StateStore {
 
 	newBlankPuzzle(nRows: number, nCols: number, valid_digits: number[]) {
 		this.updateCreationTimestamp();
-		const grid = new Grid(nRows, nCols);
 
+		const grid = new Grid(nRows, nCols);
 		this.setGrid(grid);
 		this.setValidDigits(valid_digits);
 		this.setElementsDictStore(new ElementsDict());

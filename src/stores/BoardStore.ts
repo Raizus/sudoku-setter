@@ -152,19 +152,6 @@ export function selectConstraint(element_id: number, c_id: string) {
 	setCurrentConstraint({ id: c_id, constraint });
 }
 
-export function createNewPuzzle(nRows: number, nCols: number, valid_digits: number[]) {
-	puzzleCreationTimestamp.set(Date.now());
-	const grid = new Grid(nRows, nCols);
-	gridStore.update(() => grid);
-	validDigitsStore.update(() => valid_digits);
-	elementsDictStore.update(() => new ElementsDict());
-	puzzleMetaStore.update(() => {
-		return {};
-	});
-	updateSolution(undefined);
-	cellsStore.update(() => grid.getAllCells());
-}
-
 export function setPuzzle(puzzle: PuzzleI) {
 	gridStore.update(() => puzzle.grid);
 	puzzleMetaStore.update(() => puzzle.puzzleMeta);
