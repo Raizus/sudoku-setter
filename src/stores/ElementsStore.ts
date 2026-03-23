@@ -34,6 +34,12 @@ export const underlayElementsStore = derived(elementsDictStore, ($elementsDictSt
 	return elements;
 });
 
+/**
+ * Returns a store of elements filtered by the provided function and derived from the elementsDictStore.
+ * Used to create stores for different types of tools.
+ * @param filter_f 
+ * @returns 
+ */
 function getElementsStore(filter_f: (tool: TOOLID) => boolean): Readable<ConstraintsElement[]> {
 	const store = derived(elementsDictStore, ($elementsDictStore) => {
 		const elements = filterElements($elementsDictStore, filter_f);
@@ -104,22 +110,18 @@ export const simpleCellToolPreviewStore = writable<undefined | ToolPreview<CellT
 export const singleCellArrowPreviewStore = writable<undefined | ToolPreview<CellArrowToolI>>(
 	undefined
 );
-
 export const singleCellMultiArrowPreviewStore = writable<undefined | CellMultiArrowToolI>(
 	undefined
 );
-
 export const edgeToolPreviewStore = writable<undefined | ToolPreview<EdgeToolI>>(undefined);
-
 export const cornerToolPreviewStore = writable<undefined | ToolPreview<CornerToolI>>(undefined);
-
-export const outsideDirectionToolPreviewStore = writable<undefined | ToolPreview<OutsideDirectionToolI>>(
-	undefined
-);
-
+export const outsideDirectionToolPreviewStore = writable<
+	undefined | ToolPreview<OutsideDirectionToolI>
+>(undefined);
 export const centerCornerOrEdgeToolPreviewStore = writable<
 	undefined | ToolPreview<CenterCornerOrEdgeToolI>
 >(undefined);
+
 
 export const currentElementStore: Readable<ConstraintsElement | undefined> = derived(
 	[elementsDictStore, selectedElementIdStore],
