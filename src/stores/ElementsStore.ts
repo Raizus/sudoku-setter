@@ -9,19 +9,13 @@ import {
 	TOOLS,
 	type TOOLID
 } from '$lib/Puzzle/Tools';
-import { derived, writable, type Readable } from 'svelte/store';
+import { derived, type Readable } from 'svelte/store';
 import { elementsDictStore, selectedElementIdStore } from './BoardStore';
-import type { CornerToolI, ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
 import type { SingleCellTool } from '$src/lib/Puzzle/puzzle_schema';
-import type { CellMultiArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
-import type { CellArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
-import type { CellToolI } from '$src/lib/Puzzle/puzzle_schema';
-import type { EdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
-import type { OutsideDirectionToolI } from '$src/lib/Puzzle/puzzle_schema';
-import type { CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
 import type { ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
 import { filterElements } from '$src/lib/Puzzle/Constraints/ElementsDict';
+import { stateStore } from './StateStore';
 
 export const underlayElementsStore = derived(elementsDictStore, ($elementsDictStore) => {
 	const elements: ConstraintsElement[] = [];
@@ -41,7 +35,7 @@ export const underlayElementsStore = derived(elementsDictStore, ($elementsDictSt
  * @returns 
  */
 function getElementsStore(filter_f: (tool: TOOLID) => boolean): Readable<ConstraintsElement[]> {
-	const store = derived(elementsDictStore, ($elementsDictStore) => {
+	const store = derived(stateStore.elementsDictStore, ($elementsDictStore) => {
 		const elements = filterElements($elementsDictStore, filter_f);
 		return elements;
 	});
@@ -72,7 +66,7 @@ export const fogLightsStore = derived(singleCellToolsStore, ($singleCellToolsSto
 	return target_element;
 });
 
-export const customFogClearingStore = derived(elementsDictStore, ($elementsDictStore) => {
+export const customFogClearingStore = derived(stateStore.elementsDictStore, ($elementsDictStore) => {
 	for (const element of $elementsDictStore.values()) {
 		if (element.tool_id === TOOLS.CUSTOM_FOG_CLEARING) return element;
 	}
@@ -104,24 +98,6 @@ export const centerCornerOrEdgeToolsStore = getElementsStore(isCenterEdgeCornerT
 export const cornerToolsStore = getElementsStore(isCornerTool);
 export const cornerLineToolsStore = getElementsStore(isCornerLineTool);
 export const diagonalElementsStore = getElementsStore(isDiagonalConstraint);
-
-
-export const simpleCellToolPreviewStore = writable<undefined | ToolPreview<CellToolI>>(undefined);
-export const singleCellArrowPreviewStore = writable<undefined | ToolPreview<CellArrowToolI>>(
-	undefined
-);
-export const singleCellMultiArrowPreviewStore = writable<undefined | CellMultiArrowToolI>(
-	undefined
-);
-export const edgeToolPreviewStore = writable<undefined | ToolPreview<EdgeToolI>>(undefined);
-export const cornerToolPreviewStore = writable<undefined | ToolPreview<CornerToolI>>(undefined);
-export const outsideDirectionToolPreviewStore = writable<
-	undefined | ToolPreview<OutsideDirectionToolI>
->(undefined);
-export const centerCornerOrEdgeToolPreviewStore = writable<
-	undefined | ToolPreview<CenterCornerOrEdgeToolI>
->(undefined);
-
 
 export const currentElementStore: Readable<ConstraintsElement | undefined> = derived(
 	[elementsDictStore, selectedElementIdStore],

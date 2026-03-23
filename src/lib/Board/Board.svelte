@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { GridShape } from './../Types/types.ts';
 	import type { Rectangle } from '$lib/Types/types.js';
-	import { cellsStore, enableFogMaskStore, gridStore, toolStore } from '$stores/BoardStore';
+	import { cellsStore, enableFogMaskStore } from '$stores/BoardStore';
 	import CursorRender from './CursorRender.svelte';
 	import GridBorderRender from './GridLines/GridBorderRender.svelte';
 	import GridLinesRender from './GridLines/GridLinesRender.svelte';
@@ -36,8 +36,12 @@
 	import FogDefs from './Fog/FogDefs.svelte';
 	import FogCover from './Fog/FogCover.svelte';
 	import ToolPreviewRender from './ToolPreviewRender.svelte';
+	import { stateStore } from '$stores/StateStore.js';
 
 	export let svgRef: SVGSVGElement | null = null;
+
+	const gridStore = stateStore.gridStore;
+	const toolStore = stateStore.toolStore;
 
 	$: grid = $gridStore;
 	$: gridShape = { nRows: grid.nRows, nCols: grid.nCols } as GridShape;
@@ -129,7 +133,7 @@
 	<SolutionRender />
 	<ConflictsRender />
 
-	<ToolPreviewRender />
+	<ToolPreviewRender tool={$toolStore}/>
 </svg>
 
 <style>

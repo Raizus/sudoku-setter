@@ -17,9 +17,9 @@ import { findSingleCellConstraint } from '$src/lib/Puzzle/Constraints/ElementsDi
 import { idxToDirection, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import type { GridShape } from '$lib/Types/types';
 import type { DIRECTION } from '$lib/utils/directions';
-import { singleCellMultiArrowPreviewStore } from '$stores/ElementsStore';
 import { toolModeStore } from '$stores/InputHandlerStore';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
+import { stateStore } from '$stores/StateStore';
 
 function updateDirections(directions: DIRECTION[], dir: DIRECTION): DIRECTION[] {
 	directions = [...directions];
@@ -103,7 +103,7 @@ export function getSingleCellMultiArrowToolInputHandler(
 	pointerHandler.onMove = (event: CellEdgeCornerEvent): void => {
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) {
-			singleCellMultiArrowPreviewStore.set(undefined);
+			stateStore.singleCellMultiArrowPreviewStore.set(undefined);
 			return;
 		}
 
@@ -114,11 +114,11 @@ export function getSingleCellMultiArrowToolInputHandler(
 		// const localConstraints = get(localConstraintsStore);
 		// const match = findSingleCellConstraint<CellMultiArrowToolI>(localConstraints, tool, event.cell);
 		if (mode === BASIC_TOOL_MODE.DELETE) {
-			singleCellMultiArrowPreviewStore.set(undefined);
+			stateStore.singleCellMultiArrowPreviewStore.set(undefined);
 			return;
 		}
 
-		singleCellMultiArrowPreviewStore.set(constraint_preview);
+		stateStore.singleCellMultiArrowPreviewStore.set(constraint_preview);
 	};
 
 	const inputHandler: InputHandler = {

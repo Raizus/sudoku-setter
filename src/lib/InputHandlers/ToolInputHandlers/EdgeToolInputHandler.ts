@@ -26,8 +26,8 @@ import {
 	pushRemoveLocalConstraintCommand,
 	setConstraintPreviewOnMove
 } from './utils';
-import { edgeToolPreviewStore } from '$stores/ElementsStore';
 import { toolModeStore } from '$stores/InputHandlerStore';
+import { stateStore } from '$stores/StateStore';
 
 export function getEdgeToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -93,7 +93,7 @@ export function getEdgeToolInputHandler(
 	pointerHandler.onMove = (event: CellEdgeTapEvent): void => {
 		const onGrid = isCellOnGrid(event.coord, gridShape);
 		if (!onGrid) {
-			edgeToolPreviewStore.set(undefined);
+			stateStore.edgeToolPreviewStore.set(undefined);
 			return;
 		}
 
@@ -113,7 +113,7 @@ export function getEdgeToolInputHandler(
 		const match_id = match ? match[0] : undefined;
 		setConstraintPreviewOnMove<EdgeToolI>(
 			constraint_preview,
-			edgeToolPreviewStore,
+			stateStore.edgeToolPreviewStore,
 			match_id,
 			mode
 		);

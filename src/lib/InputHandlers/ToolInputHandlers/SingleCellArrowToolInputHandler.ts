@@ -24,9 +24,9 @@ import { idxToDirection, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { findSingleCellConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { DIRECTION } from '$lib/utils/directions';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
-import { singleCellArrowPreviewStore } from '$stores/ElementsStore';
 import { type ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
 import { toolModeStore } from '$stores/InputHandlerStore';
+import { stateStore } from '$stores/StateStore';
 
 export function getSingleCellArrowToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -125,7 +125,7 @@ export function getSingleCellArrowToolInputHandler(
 	pointerHandler.onMove = (event: CellEdgeCornerEvent): void => {
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) {
-			singleCellArrowPreviewStore.set(undefined);
+			stateStore.singleCellArrowPreviewStore.set(undefined);
 			return;
 		}
 
@@ -136,7 +136,7 @@ export function getSingleCellArrowToolInputHandler(
 		const elements = get(elementsDictStore);
 		const match = findSingleCellConstraint<CellArrowToolI>(elements, tool, event.cell);
 		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
-			singleCellArrowPreviewStore.set(undefined);
+			stateStore.singleCellArrowPreviewStore.set(undefined);
 			return;
 		}
 
@@ -157,7 +157,7 @@ export function getSingleCellArrowToolInputHandler(
 			mode: preview_mode
 		};
 
-		singleCellArrowPreviewStore.set(aux);
+		stateStore.singleCellArrowPreviewStore.set(aux);
 	};
 
 	const inputHandler: InputHandler = {

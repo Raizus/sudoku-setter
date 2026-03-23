@@ -27,8 +27,8 @@ import {
 	pushRemoveLocalConstraintCommand,
 	setConstraintPreviewOnMove
 } from './utils';
-import { cornerToolPreviewStore } from '$stores/ElementsStore';
 import { toolModeStore } from '$stores/InputHandlerStore';
+import { stateStore } from '$stores/StateStore';
 
 export function getCornerToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -93,7 +93,7 @@ export function getCornerToolInputHandler(
 	pointerHandler.onMove = (event: CellCornerTapEvent): void => {
 		const onGrid = isCellOnGrid(event.coord, gridShape);
 		if (!onGrid) {
-			cornerToolPreviewStore.set(undefined);
+			stateStore.cornerToolPreviewStore.set(undefined);
 			return;
 		}
 
@@ -112,7 +112,7 @@ export function getCornerToolInputHandler(
 		const match_id = match ? match[0] : undefined;
 		setConstraintPreviewOnMove<CornerToolI>(
 			constraint_preview,
-			cornerToolPreviewStore,
+			stateStore.cornerToolPreviewStore,
 			match_id,
 			mode
 		);

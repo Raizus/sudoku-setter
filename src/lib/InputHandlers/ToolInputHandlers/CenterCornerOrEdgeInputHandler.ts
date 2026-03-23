@@ -26,7 +26,7 @@ import { type CenterCornerOrEdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
 import type { CenterCornerOrEdgeToolInputOptions } from './types';
 import { toolModeStore } from '$stores/InputHandlerStore';
 import { keyDownUpdateValue, pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand, setConstraintPreviewOnMove } from './utils';
-import { centerCornerOrEdgeToolPreviewStore } from '$stores/ElementsStore';
+import { stateStore } from '$stores/StateStore';
 
 export function getCenterCornerOrEdgeToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -92,7 +92,7 @@ export function getCenterCornerOrEdgeToolInputHandler(
 	pointerHandler.onMove = (event: CellEdgeCornerEvent): void => {
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) {
-			centerCornerOrEdgeToolPreviewStore.set(undefined);
+			stateStore.centerCornerOrEdgeToolPreviewStore.set(undefined);
 			return;
 		}
 
@@ -110,7 +110,7 @@ export function getCenterCornerOrEdgeToolInputHandler(
 		const match_id = match ? match[0] : undefined;
 		setConstraintPreviewOnMove<CenterCornerOrEdgeToolI>(
 			constraint_preview,
-			centerCornerOrEdgeToolPreviewStore,
+			stateStore.centerCornerOrEdgeToolPreviewStore,
 			match_id,
 			mode
 		);

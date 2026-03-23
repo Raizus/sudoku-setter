@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { toolStore } from '$stores/BoardStore';
 	import {
 		isCenterEdgeCornerTool,
 		isCornerTool,
@@ -8,7 +7,8 @@
 		isSimpleSingleCellTool,
 		isSingleCellArrowTool,
 		isSingleCellMultiArrowTool,
-		TOOLS
+		TOOLS,
+		type TOOLID
 	} from '../Puzzle/Tools';
 	import CenterCornerOrEdgeToolPreviewRender from './Constraints/CenterCornerOrEdgeToolPreviewRender.svelte';
 	import CornerToolPreviewRender from './Constraints/CornerToolPreviewRender.svelte';
@@ -18,17 +18,17 @@
 	import SingleCellArrowPreviewRender from './Constraints/SingleCellArrowPreviewRender.svelte';
 	import SingleCellMultiArrowRender from './Constraints/SingleCellMultiArrowRender.svelte';
 
-	import {
-		centerCornerOrEdgeToolPreviewStore,
-		cornerToolPreviewStore,
-		edgeToolPreviewStore,
-		outsideDirectionToolPreviewStore,
-		simpleCellToolPreviewStore,
-		singleCellArrowPreviewStore,
-		singleCellMultiArrowPreviewStore
-	} from '$stores/ElementsStore.js';
+	import { stateStore } from '$stores/StateStore';
 
-	$: tool = $toolStore;
+	export let tool: TOOLID;
+
+	const outsideDirectionToolPreviewStore = stateStore.outsideDirectionToolPreviewStore;
+	const simpleCellToolPreviewStore = stateStore.simpleCellToolPreviewStore;
+	const singleCellArrowPreviewStore = stateStore.singleCellArrowPreviewStore;
+	const singleCellMultiArrowPreviewStore = stateStore.singleCellMultiArrowPreviewStore;
+	const edgeToolPreviewStore = stateStore.edgeToolPreviewStore;
+	const cornerToolPreviewStore = stateStore.cornerToolPreviewStore;
+	const centerCornerOrEdgeToolPreviewStore = stateStore.centerCornerOrEdgeToolPreviewStore;
 </script>
 
 {#if isOutsideDirectionTool(tool) && $outsideDirectionToolPreviewStore}

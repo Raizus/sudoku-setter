@@ -25,7 +25,6 @@ import {
 import { outsideDirectionConstraint } from '$lib/Puzzle/Constraints/OutsideDirectionConstraints';
 import { type OutsideDirectionToolI } from '$src/lib/Puzzle/puzzle_schema';
 import type { OutsideDirectionToolInputOptions } from './types';
-import { outsideDirectionToolPreviewStore } from '$stores/ElementsStore';
 import { toolModeStore } from '$stores/InputHandlerStore';
 import {
 	keyDownUpdateValue,
@@ -33,6 +32,7 @@ import {
 	pushRemoveLocalConstraintCommand,
 	setConstraintPreviewOnMove
 } from './utils';
+import { stateStore } from '$stores/StateStore';
 
 export function getOutsideDirectionToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -98,7 +98,7 @@ export function getOutsideDirectionToolInputHandler(
 	pointerHandler.onMove = (event: CellEdgeCornerEvent): void => {
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (onGrid) {
-			outsideDirectionToolPreviewStore.set(undefined);
+			stateStore.outsideDirectionToolPreviewStore.set(undefined);
 			return;
 		}
 
@@ -106,7 +106,7 @@ export function getOutsideDirectionToolInputHandler(
 		const neighbour = gridCoordsNextInDirection(event.cell, direction);
 		const neighbourOnGrid = isCellOnGrid(neighbour, gridShape);
 		if (!neighbourOnGrid) {
-			outsideDirectionToolPreviewStore.set(undefined);
+			stateStore.outsideDirectionToolPreviewStore.set(undefined);
 			return;
 		}
 
@@ -124,9 +124,9 @@ export function getOutsideDirectionToolInputHandler(
 		const match_id = match ? match[0] : undefined;
 		setConstraintPreviewOnMove<OutsideDirectionToolI>(
 			constraint_preview,
-			outsideDirectionToolPreviewStore,
+			stateStore.outsideDirectionToolPreviewStore,
 			match_id,
-			mode,
+			mode
 		);
 	};
 

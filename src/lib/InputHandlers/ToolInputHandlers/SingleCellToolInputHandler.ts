@@ -24,8 +24,8 @@ import {
 	singleCellConstraint} from '$lib/Puzzle/Constraints/SingleCellConstraints';
 import { type CellToolI } from "$src/lib/Puzzle/puzzle_schema";
 import { keyDownUpdateValue, pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand, setConstraintPreviewOnMove } from './utils';
-import { simpleCellToolPreviewStore } from '$stores/ElementsStore';
 import { toolModeStore } from '$stores/InputHandlerStore';
+import { stateStore } from '$stores/StateStore';
 
 export function getSingleCellToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -96,7 +96,7 @@ export function getSingleCellToolInputHandler(
 	pointerHandler.onMove = (event: CellDragTapEvent): void => {
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) {
-			simpleCellToolPreviewStore.set(undefined);
+			stateStore.simpleCellToolPreviewStore.set(undefined);
 			return;
 		}
 
@@ -113,7 +113,7 @@ export function getSingleCellToolInputHandler(
 		const match_id = match ? match[0] : undefined;
 		setConstraintPreviewOnMove<CellToolI>(
 			constraint_preview,
-			simpleCellToolPreviewStore,
+			stateStore.simpleCellToolPreviewStore,
 			match_id,
 			mode
 		);
