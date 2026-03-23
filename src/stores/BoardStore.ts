@@ -162,16 +162,6 @@ export function setPuzzle(puzzle: PuzzleI) {
 	cellsStore.update(() => puzzle.grid.getAllCells());
 }
 
-export function resetPuzzle() {
-	const grid = get(gridStore);
-	grid.resetValues();
-	gridStore.update(() => grid);
-	cellsStore.update(() => {
-		return grid.getAllCells();
-	});
-	updatePenTool(resetPenAction());
-}
-
 export function resetUserState() {
 	commandHistoryStore.clear();
 	updatePenTool(resetPenAction());

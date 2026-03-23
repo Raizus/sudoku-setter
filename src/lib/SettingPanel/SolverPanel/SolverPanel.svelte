@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createMinizincModel } from '$src/lib/Solver/solver';
-	import { gridStore, puzzleStore, resetPuzzle } from '$stores/BoardStore';
+	import { puzzleStore } from '$stores/BoardStore';
 	import Panel from '../Subpanel/Panel.svelte';
 	import PanelHeader from '../Subpanel/PanelHeader.svelte';
 	import * as MiniZinc from 'minizinc';
@@ -8,10 +8,10 @@
 	import SolverModal from './SolverModal.svelte';
 	import { setBoardOnSolution } from './solution_render_helpers';
 	import { createStopwatch } from '$stores/timer';
+	import { stateStore } from '$stores/StateStore';
 
 	let isOpen = true;
 	$: puzzle = $puzzleStore;
-	$: grid = $gridStore;
 
 	let showModal = false;
 	let solver: null | MiniZinc.SolveProgress = null;
@@ -62,7 +62,7 @@
 		// Initialize MiniZinc
 		const model = new MiniZinc.Model();
 
-		resetPuzzle();
+		stateStore.resetPuzzle();
 		// Define a simple MiniZinc model
 		const puzzle_model = createMinizincModel(puzzle);
 		model.addFile('test.mzn', puzzle_model.model_str);
