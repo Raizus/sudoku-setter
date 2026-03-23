@@ -5,6 +5,8 @@ import { writable } from 'svelte/store';
 
 
 export const penToolStore = writable<PenTool>(new PenTool());
+export const penColorStore = writable<number>(1);
+
 
 export function updatePenTool(action: PenToolAction): void {
 	penToolStore.update((penToolState) => {
@@ -12,7 +14,6 @@ export function updatePenTool(action: PenToolAction): void {
 	});
 }
 
-export const penColorStore = writable<number>(1);
 export function updatePenColor(colorId: number) {
 	penColorStore.update(() => {
 		return colorId;
