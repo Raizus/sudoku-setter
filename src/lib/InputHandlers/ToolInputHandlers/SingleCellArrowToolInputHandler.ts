@@ -1,6 +1,5 @@
 import type { InputHandler } from '../InputHandler';
 import { isSingleCellArrowTool, type TOOLID } from '$lib/Puzzle/Tools';
-import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import { eventIsAltR } from '$src/lib/InputHandlers/KeyboardEventUtils';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
@@ -18,7 +17,6 @@ import { findSingleCellConstraint } from '$src/lib/Puzzle/Constraints/ElementsDi
 import { DIRECTION } from '$lib/utils/directions';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import { type ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
-import { toolModeStore } from '$stores/InputHandlerStore';
 import { stateStore } from '$stores/StateStore';
 
 export function getSingleCellArrowToolInputHandler(
@@ -51,16 +49,16 @@ export function getSingleCellArrowToolInputHandler(
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
 		
-		let mode = get(toolModeStore);
+		let mode = stateStore.getCurrentToolMode();
 		
 		// determine if adding or removing
 		if (event.event.altKey) mode = BASIC_TOOL_MODE.DELETE;
 		
-		const elements = get(stateStore.elementsDictStore);
+		const elements = stateStore.getElementsDict();
 		const match = findSingleCellConstraint<CellArrowToolI>(elements, tool, coords);
 		const direction = idxToDirection(event.direction);
 
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		// create new constraint
@@ -92,14 +90,14 @@ export function getSingleCellArrowToolInputHandler(
 	function handleKeyDown(event: KeyboardEvent): void {
 		if (!eventIsAltR(event)) return;
 
-		const selected = get(stateStore.currentConstraintStore);
+		const selected = stateStore.getCurrentConstraint();
 		if (!selected) return;
 
 		const id = selected.id;
 		const constraint = selected.constraint;
 		if (!isSingleCellArrowTool(constraint.toolId)) return;
 
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		const idx = validDirections.indexOf((constraint as CellArrowToolI).direction);
@@ -125,8 +123,8 @@ export function getSingleCellArrowToolInputHandler(
 		const direction = idxToDirection(event.direction);
 		const constraint_preview = singleCellArrowConstraint(tool, event.cell, direction);
 
-		const mode = get(toolModeStore);
-		const elements = get(stateStore.elementsDictStore);
+		const mode = stateStore.getCurrentToolMode();
+		const elements = stateStore.getElementsDict();
 		const match = findSingleCellConstraint<CellArrowToolI>(elements, tool, event.cell);
 		if (!match && mode === BASIC_TOOL_MODE.DELETE) {
 			stateStore.singleCellArrowPreviewStore.set(undefined);

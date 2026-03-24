@@ -541,7 +541,7 @@ export function filterElements(
 	filter_f: (tool: TOOLID) => boolean
 ): ConstraintsElement[] {
 	const elements: ConstraintsElement[] = [];
-	for (const element of elements_dict.values()) {
+	for (const [, element] of elements_dict.orderedEntries()) {
 		if (!filter_f(element.tool_id)) continue;
 		elements.push(element);
 	}

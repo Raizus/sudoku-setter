@@ -4,7 +4,7 @@
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { defaultDiagonalShape } from '$src/lib/Puzzle/Shape/Shape';
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
-	import { stateStore } from '$stores/StateStore.js';
+	import { stateStore } from '$stores/StateStore';
 
 	export let element: ConstraintsElement;
 

@@ -4,11 +4,12 @@
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { getSingleCellMultiArrowPath } from '$lib/utils/SquareCellGridRenderUtils';
 	import type { CellMultiArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
-	import { currentConstraintStore } from '$stores/BoardStore';
+	import { stateStore } from '$stores/StateStore';
 
 	export let tool: CellMultiArrowToolI;
 	export let c_id: string | undefined = undefined;
 
+	const currentConstraintStore = stateStore.currentConstraintStore;
 	$: currentConstraintId = $currentConstraintStore?.id;
 
 	const outline = true;

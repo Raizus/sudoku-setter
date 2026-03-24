@@ -1,15 +1,17 @@
 <script lang="ts">
-		import type { CloneToolI } from "$src/lib/Puzzle/puzzle_schema";
+	import type { CloneToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { defaultCloneShape } from '$lib/Puzzle/Shape/Shape';
 	import CageRender from './CageRender.svelte';
 	import CellTextLabelRender from './CellTextLabelRender.svelte';
 	import { Vector2D } from '$src/lib/utils/Vector2D';
-	import { currentConstraintStore } from '$stores/BoardStore';
+	import { stateStore } from '$stores/StateStore';
 
 	export let tool: CloneToolI;
 	export let c_id: string;
+
+	const currentConstraintStore = stateStore.currentConstraintStore;
 
 	$: currentConstraintId = $currentConstraintStore?.id;
 

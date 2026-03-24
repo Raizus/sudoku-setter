@@ -11,12 +11,12 @@
 	import { directionToCoords, type GridCoordI } from '$lib/utils/SquareCellGridCoords';
 	import type { DIRECTION } from '$src/lib/utils/directions';
 	import { Vector2D } from '$src/lib/utils/Vector2D';
-	import { currentConstraintStore } from '$stores/BoardStore';
-	import { stateStore } from '$stores/StateStore.js';
+	import { stateStore } from '$stores/StateStore';
 
 	export let tool: OutsideDirectionToolI;
 	export let c_id: string | undefined = undefined;
 
+	const currentConstraintStore = stateStore.currentConstraintStore;
 	const gridStore = stateStore.gridStore;
 
 	$: currentConstraintId = $currentConstraintStore?.id;

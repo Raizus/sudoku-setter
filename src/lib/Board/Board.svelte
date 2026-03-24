@@ -1,7 +1,11 @@
 <script lang="ts">
-	import type { GridShape } from './../Types/types.ts';
-	import type { Rectangle } from '$lib/Types/types.js';
+	import type { GridShape } from './../Types/types';
+	import type { Rectangle } from '$lib/Types/types';
 	import { enableFogMaskStore } from '$stores/BoardStore';
+	import { boundingBoxStore } from '$stores/BoundingBoxStore';
+	import { stateStore } from '$stores/StateStore';
+
+	// components
 	import CursorRender from './CursorRender.svelte';
 	import GridBorderRender from './GridLines/GridBorderRender.svelte';
 	import GridLinesRender from './GridLines/GridLinesRender.svelte';
@@ -15,15 +19,6 @@
 	import ConflictsRender from './ConflictsRender.svelte';
 	import SolutionRender from './SolutionRender.svelte';
 	import ToolsLayerRender from './Constraints/ToolsLayerRender.svelte';
-	import {
-		centerCornerOrEdgeToolsStore,
-		cornerLineToolsStore,
-		cornerToolsStore,
-		diagonalElementsStore,
-		edgeToolsStore,
-		fogLightsStore,
-		underlayElementsStore
-	} from '$stores/ElementsStore.js';
 	import CornerToolRender from './Constraints/CornerToolRender.svelte';
 	import CenterCornerOrEdgeToolRender from './Constraints/CenterCornerOrEdgeToolRender.svelte';
 	import CornerLineToolRender from './Constraints/CornerLineToolRender.svelte';
@@ -31,18 +26,23 @@
 	import FogLightsRender from './Constraints/FogLightsRender.svelte';
 	import UnderlayRender from './UnderlayRender.svelte';
 	import DiagonalElementsRender from './Constraints/DiagonalElementsRender.svelte';
-	import { boundingBoxStore } from '$stores/BoundingBoxStore.js';
 	import FogLightBulbDefs from './Fog/FogLightBulbDefs.svelte';
 	import FogDefs from './Fog/FogDefs.svelte';
 	import FogCover from './Fog/FogCover.svelte';
 	import ToolPreviewRender from './ToolPreviewRender.svelte';
-	import { stateStore } from '$stores/StateStore.js';
 
 	export let svgRef: SVGSVGElement | null = null;
 
 	const gridStore = stateStore.gridStore;
 	const toolStore = stateStore.toolStore;
 	const cellsStore = stateStore.cellsStore;
+	const edgeToolsStore = stateStore.edgeToolsStore;
+	const cornerToolsStore = stateStore.cornerToolsStore;
+	const diagonalElementsStore = stateStore.diagonalElementsStore;
+	const centerCornerOrEdgeToolsStore = stateStore.centerCornerOrEdgeToolsStore;
+	const cornerLineToolsStore = stateStore.cornerLineToolsStore;
+	const fogLightsStore = stateStore.fogLightsStore;
+	const underlayElementsStore = stateStore.underlayElementsStore;
 
 	$: grid = $gridStore;
 	$: gridShape = { nRows: grid.nRows, nCols: grid.nCols } as GridShape;
@@ -78,7 +78,7 @@
 
 	<SeenCellsRender tool={$toolStore} />
 
-	<FogLightsRender element={$fogLightsStore} tool={$toolStore}/>
+	<FogLightsRender element={$fogLightsStore} tool={$toolStore} />
 
 	<!-- underlay elements - below the grid lines -->
 	<UnderlayRender
@@ -99,7 +99,7 @@
 		Component={CornerLineToolRender}
 	/>
 
-	<SelectionRender {gridShape} tool={$toolStore}/>
+	<SelectionRender {gridShape} tool={$toolStore} />
 	<CursorRender tool={$toolStore} />
 
 	<!-- EdgeToolsRender -->
@@ -134,7 +134,7 @@
 	<SolutionRender />
 	<ConflictsRender />
 
-	<ToolPreviewRender tool={$toolStore}/>
+	<ToolPreviewRender tool={$toolStore} />
 </svg>
 
 <style>

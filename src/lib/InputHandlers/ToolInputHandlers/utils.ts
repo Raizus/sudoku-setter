@@ -1,4 +1,4 @@
-import type { ConstraintAndId, ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
+import type { ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
 import type { Grid } from '$src/lib/Puzzle/Grid/Grid';
 import { type TOOLID, TOOLS } from '$src/lib/Puzzle/Tools';
@@ -8,14 +8,12 @@ import {
 	updateLocalConstraintAction
 } from '$src/lib/reducers/LocalConstraintsActions';
 import type { GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
-import { commandHistoryStore } from '$stores/CommandHistoryStore';
-import { getUpdateElementCommand } from '$stores/LocalConstraintsStore';
-import { get, type Writable } from 'svelte/store';
+import { type Writable } from 'svelte/store';
 import { keyboardInputDefaultValidator } from '$input/KeyboardEventUtils';
 import { BASIC_TOOL_MODE, type ToolModeT, type ValueUpdaterI } from './types';
 import { updateConstraintValue } from '$src/lib/Puzzle/Constraints/ElementsDict';
-import { updateConstraint } from '$stores/BoardStore';
 import type { ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
+import { stateStore, type StateStore } from '$stores/StateStore';
 
 function getSimilarHighlights(cell: Cell, grid: Grid) {
 	const highlights = new Set(cell.highlights);
@@ -99,11 +97,11 @@ export function pushAddLocalConstraintCommand(
 	if (!(id && currentConstraint)) return;
 	const action = addLocalConstraintAction(element_id, id, currentConstraint);
 	const reverse_action = removeLocalConstraintAction(element_id, id);
-	const command = getUpdateElementCommand(action, reverse_action);
+	const command = stateStore.getUpdateElementCommand(action, reverse_action);
 	// add it to history but don't execute
 	// the clone constraint was already added/updated but only when
 	// finishing dragging is the action 'complete'
-	commandHistoryStore.addCommand(command, execute);
+	stateStore.commandHistoryStore.addCommand(command, execute);
 }
 
 export function pushRemoveLocalConstraintCommand(
@@ -115,11 +113,11 @@ export function pushRemoveLocalConstraintCommand(
 	if (!(id && currentConstraint)) return;
 	const action = removeLocalConstraintAction(element_id, id);
 	const reverse_action = addLocalConstraintAction(element_id, id, currentConstraint);
-	const command = getUpdateElementCommand(action, reverse_action);
+	const command = stateStore.getUpdateElementCommand(action, reverse_action);
 	// add it to histoy but don't execute
 	// the clone constraint was already added/updated but only when
 	// finishing dragging is the action 'complete'
-	commandHistoryStore.addCommand(command, execute);
+	stateStore.commandHistoryStore.addCommand(command, execute);
 }
 
 export function pushUpdateLocalConstraintCommand(
@@ -132,11 +130,11 @@ export function pushUpdateLocalConstraintCommand(
 	if (!(id && currentConstraint && oldConstraint)) return;
 	const action = updateLocalConstraintAction(element_id, id, currentConstraint);
 	const reverse_action = updateLocalConstraintAction(element_id, id, oldConstraint);
-	const command = getUpdateElementCommand(action, reverse_action);
+	const command = stateStore.getUpdateElementCommand(action, reverse_action);
 	// add it to histoy but don't execute
 	// the clone constraint was already added/updated but only when
 	// finishing dragging is the action 'complete'
-	commandHistoryStore.addCommand(command, execute);
+	stateStore.commandHistoryStore.addCommand(command, execute);
 }
 
 /**
@@ -156,14 +154,14 @@ export function pushUpdateLocalConstraintCommand(
  */
 export function keyDownUpdateValue<T extends ConstraintType>(
 	event: KeyboardEvent,
-	currentConstraintStore: Writable<ConstraintAndId | null>,
-	element_id: number | null,
+	stateStore: StateStore,
 	value_updater: ValueUpdaterI | undefined
 ) {
+	const element_id = stateStore.getSelectedElementId();
 	if (element_id === null) return;
 	if (!value_updater) return;
 
-	const currentConstraint = get(currentConstraintStore);
+	const currentConstraint = stateStore.getCurrentConstraint();
 	if (!currentConstraint) return;
 
 	let constraint = currentConstraint.constraint as T;
@@ -175,7 +173,7 @@ export function keyDownUpdateValue<T extends ConstraintType>(
 	const newValue = value_updater(constraint?.value, event.key);
 	if (newValue !== undefined && newValue !== constraint.value) {
 		constraint = updateConstraintValue(constraint, newValue);
-		updateConstraint(element_id, id, constraint);
+		stateStore.updateConstraint(element_id, id, constraint);
 	}
 }
 

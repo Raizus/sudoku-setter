@@ -1,5 +1,4 @@
 import { isAlphaNumeric } from '$input/KeyboardEventUtils';
-import { commandHistoryStore } from '$stores/CommandHistoryStore';
 import { toggleDarkmode } from '$stores/SettingsStore';
 import { stateStore } from '$stores/StateStore';
 
@@ -16,13 +15,6 @@ export interface Shortcut {
 	keys: EventKey[];
 	func?: () => void;
 	unmodifiable?: boolean;
-}
-
-export const shortcutRegistry: Map<string, Shortcut> = new Map();
-export const toolShortcutRegistry: Map<string, Shortcut> = new Map();
-
-function addShortcutToRegistry(shortcut: Shortcut, shortcutRegistry: Map<string, Shortcut>) {
-	shortcutRegistry.set(shortcut.name, shortcut);
 }
 
 export function matchKeyEvent(event: KeyboardEvent, key: EventKey): boolean {
@@ -57,16 +49,23 @@ export function shortcutKeyToString(key: EventKey): string {
 	return out_str;
 }
 
+export const shortcutRegistry: Map<string, Shortcut> = new Map();
+export const toolShortcutRegistry: Map<string, Shortcut> = new Map();
+
+function addShortcutToRegistry(shortcut: Shortcut, shortcutRegistry: Map<string, Shortcut>) {
+	shortcutRegistry.set(shortcut.name, shortcut);
+}
+
 export const undoSc: Shortcut = {
 	name: 'Undo',
 	keys: [{ ctrlKey: true, key: 'Z', type: 'keydown' }],
-	func: commandHistoryStore.undo
+	func: stateStore.commandHistoryStore.undo
 };
 
 export const redoSc: Shortcut = {
 	name: 'Redo',
 	keys: [{ ctrlKey: true, key: 'Y', type: 'keydown' }],
-	func: commandHistoryStore.redo
+	func: stateStore.commandHistoryStore.redo
 };
 
 export const toggleDarkmodeSc: Shortcut = {

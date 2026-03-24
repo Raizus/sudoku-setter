@@ -5,16 +5,17 @@
 		VALUE_TOOL_MODE,
 		type ToolModeT
 	} from '$input/ToolInputHandlers/types';
-	import { pushAddLocalConstraintCommand } from '$input/ToolInputHandlers/utils.js';
-	import { valuedGlobalConstraint } from '$src/lib/Puzzle/Constraints/ValuedGlobalConstraints.js';
+	import { pushAddLocalConstraintCommand } from '$input/ToolInputHandlers/utils';
+	import { valuedGlobalConstraint } from '$src/lib/Puzzle/Constraints/ValuedGlobalConstraints';
 	import { variableConstraint } from '$src/lib/Puzzle/Constraints/VariableConstraints';
 	import { isValuedGlobalConstraint, TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
-	import { toolModeStore } from '$stores/InputHandlerStore';
 	import { uniqueId } from 'lodash';
+	import { stateStore } from '$stores/StateStore';
 
 	export let tool_id: TOOLID;
 	export let element_id: number;
 
+	const toolModeStore = stateStore.toolModeStore;
 	$: modes = getToolModes(tool_id);
 
 	$: currentMode = $toolModeStore;

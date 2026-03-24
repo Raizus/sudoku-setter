@@ -14,7 +14,7 @@ function newHistory(): CommandHistoryI {
 	return history;
 }
 
-class CommandHistoryStore {
+export class CommandHistoryStore {
 	private _command_history_store = writable<CommandHistoryI>(newHistory());
 
 	public undo_stack_length = derived(this._command_history_store, ($command_history_store) => {
@@ -87,5 +87,3 @@ class CommandHistoryStore {
 		});
 	}
 }
-
-export const commandHistoryStore = new CommandHistoryStore();

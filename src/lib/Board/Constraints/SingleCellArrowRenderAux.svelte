@@ -4,12 +4,13 @@
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { defaultSingleCellArrowShape } from '$lib/Puzzle/Shape/Shape';
 	import { cellToCellCenterVector } from '$lib/utils/SquareCellGridRenderUtils';
-	import { currentConstraintStore } from '$stores/BoardStore';
 	import CenteredArrowRender from '../SvgComponents/CenteredArrowRender.svelte';
+	import { stateStore } from '$stores/StateStore';
 
 	export let tool: CellArrowToolI;
 	export let c_id: string | undefined = undefined;
 
+	const currentConstraintStore = stateStore.currentConstraintStore;
 	$: currentConstraintId = $currentConstraintStore?.id;
 
 	const outline = true;

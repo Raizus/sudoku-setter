@@ -21,8 +21,6 @@ import {
 	removeEdgeMarkerAction,
 	removeLineMarkersAction
 } from '$lib/reducers/PenToolReducer';
-import { commandHistoryStore } from '$stores/CommandHistoryStore';
-import { get } from 'svelte/store';
 import { areCoordsOnGrid } from '$src/lib/utils/SquareCellGridCoords';
 import { stateStore } from '$stores/StateStore';
 
@@ -33,9 +31,10 @@ export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): Input
 
 	penToolPointerHandler.onTap = (event: PenToolTapEvent) => {
 		const coord = event.coords;
-		const colorId = get(stateStore.penColorStore);
+		const colorId = stateStore.getCurrentPenColor();
 
-		const penTool = get(stateStore.penToolStore);
+		const penTool = stateStore.getPenTool();
+		const commandHistoryStore = stateStore.commandHistoryStore;
 
 		if (event.type === 'cell center') {
 			const onGrid = areCoordsOnGrid(coord, gridShape);
@@ -94,7 +93,7 @@ export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): Input
 
 	penToolPointerHandler.onDrag = (event: PenToolDragEvent) => {
 		const coord = event.coords;
-		const colorId = get(stateStore.penColorStore);
+		const colorId = stateStore.getCurrentPenColor();
 
 		// const onGrid = areCoordsOnGrid(coord, gridShape);
 		// if (!onGrid) return;
@@ -112,7 +111,7 @@ export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): Input
 	};
 
 	penToolPointerHandler.onDragEnd = () => {
-		const penTool = get(stateStore.penToolStore);
+		const penTool = stateStore.getPenTool();
 		if (penTool.mode === 'add') {
 			// only add line markers if they don't overlap with existing markers
 			const markers = penTool.draftLine.filter(
@@ -122,7 +121,7 @@ export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): Input
 				const action = addLineMarkersAction(markers);
 				const reverse_action = removeLineMarkersAction(markers);
 				const command = stateStore.getPenToolCommand(action, reverse_action);
-				commandHistoryStore.addCommand(command);
+				stateStore.commandHistoryStore.addCommand(command);
 			}
 		} else {
 			// only remove line markers if the markers in the draft
@@ -134,7 +133,7 @@ export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): Input
 				const action = removeLineMarkersAction(markers);
 				const reverse_action = addLineMarkersAction(markers);
 				const command = stateStore.getPenToolCommand(action, reverse_action);
-				commandHistoryStore.addCommand(command);
+				stateStore.commandHistoryStore.addCommand(command);
 			}
 		}
 	};

@@ -1,9 +1,5 @@
 import type { InputHandler } from '../InputHandler';
 import { BASIC_TOOL_MODE, type EdgeToolOptions } from './types';
-import {
-	currentConstraintStore,
-} from '$stores/BoardStore';
-import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
@@ -22,7 +18,6 @@ import {
 	pushRemoveLocalConstraintCommand,
 	setConstraintPreviewOnMove
 } from './utils';
-import { toolModeStore } from '$stores/InputHandlerStore';
 import { stateStore } from '$stores/StateStore';
 
 export function getEdgeToolInputHandler(
@@ -38,18 +33,18 @@ export function getEdgeToolInputHandler(
 	function handle(event: CellEdgeTapEvent) {
 		const edge = event.coord;
 
-		let mode = get(toolModeStore);
+		let mode = stateStore.getCurrentToolMode();
 
 		const cellsCoords = cellEdgeToCellCoords(edge);
 
 		const onGrid = cellsCoords.every((cell) => isCellOnGrid(cell, gridShape));
 		if (!onGrid) return;
 
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		// determine if adding or removing
-		const elements = get(stateStore.elementsDictStore);
+		const elements = stateStore.getElementsDict();
 		const match = findEdgeConstraint(elements, tool, cellsCoords);
 		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
 			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
@@ -76,8 +71,7 @@ export function getEdgeToolInputHandler(
 	function onKeyDown(event: KeyboardEvent) {
 		keyDownUpdateValue<EdgeToolI>(
 			event,
-			currentConstraintStore,
-			get(stateStore.selectedElementIdStore),
+			stateStore,
 			options?.valueUpdater
 		);
 	}
@@ -93,17 +87,17 @@ export function getEdgeToolInputHandler(
 			return;
 		}
 
-		const mode = get(toolModeStore);
+		const mode = stateStore.getCurrentToolMode();
 		const cellsCoords = cellEdgeToCellCoords(event.coord);
 
 		const defaultValue = options?.defaultValue ?? '';
 		const constraint_preview = edgeConstraint(tool, cellsCoords, defaultValue);
-		const currentShape = get(stateStore.currentShapeStore);
+		const currentShape = stateStore.getCurrentShape();
 		if (currentShape) {
 			constraint_preview.shape = { ...currentShape };
 		}
 
-		const elements = get(stateStore.elementsDictStore);
+		const elements = stateStore.getElementsDict();
 
 		const match = findEdgeConstraint(elements, tool, cellsCoords);
 		const match_id = match ? match[0] : undefined;

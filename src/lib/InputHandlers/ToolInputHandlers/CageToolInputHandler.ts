@@ -1,6 +1,4 @@
 import type { InputHandler } from '../InputHandler';
-import { currentConstraintStore } from '$stores/BoardStore';
-import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
@@ -19,7 +17,6 @@ import {
 	pushRemoveLocalConstraintCommand
 } from './utils';
 import { BASIC_TOOL_MODE, type CageToolInputOptions } from './types';
-import { toolModeStore } from '$stores/InputHandlerStore';
 import { stateStore } from '$stores/StateStore';
 
 export function getCageToolInputHandler(
@@ -31,7 +28,7 @@ export function getCageToolInputHandler(
 	const pointerHandler = new CellPointerHandler();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
-	let mode_aux = get(toolModeStore);
+	let mode_aux = stateStore.getCurrentToolMode();
 	let currentConstraint: CageToolI | null = null;
 	let id: string | null = null;
 
@@ -43,7 +40,7 @@ export function getCageToolInputHandler(
 
 		// if shift click on an existing cage or mode is add/edit, set it as current constraint,
 		// if there is no current constraint
-		const elements = get(stateStore.elementsDictStore);
+		const elements = stateStore.getElementsDict();
 		const match = findCageConstraint(elements, tool, coords);
 		if (
 			id === null &&
@@ -62,7 +59,7 @@ export function getCageToolInputHandler(
 			mode_aux = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
 
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		if (match && mode_aux === BASIC_TOOL_MODE.DELETE) {
@@ -94,8 +91,7 @@ export function getCageToolInputHandler(
 	function handleKeyDown(event: KeyboardEvent): void {
 		keyDownUpdateValue<CageToolI>(
 			event,
-			currentConstraintStore,
-			get(stateStore.selectedElementIdStore),
+			stateStore,
 			options?.valueUpdater
 		);
 	}
@@ -103,7 +99,7 @@ export function getCageToolInputHandler(
 	pointerHandler.onDragStart = (event: CellDragTapEvent): void => {
 		id = null;
 		currentConstraint = null;
-		mode_aux = get(toolModeStore);
+		mode_aux = stateStore.getCurrentToolMode();
 		handle(event);
 	};
 
@@ -112,7 +108,7 @@ export function getCageToolInputHandler(
 	};
 
 	pointerHandler.onDragEnd = () => {
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		if (id && currentConstraint) {

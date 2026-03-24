@@ -27,10 +27,8 @@ import {
 import { isCellOnGrid, type GridCoordI } from '$lib/utils/SquareCellGridCoords';
 import { threshold } from '$lib/utils/functionUtils';
 import { throttle } from 'lodash';
-import { get } from 'svelte/store';
 import { getSimilarCells } from './utils';
-import { generateUpdateCellAction } from '$stores/CellsStore';
-import { commandHistoryStore } from '$stores/CommandHistoryStore';
+import { generateUpdateCellAction } from '$src/lib/reducers/UpdateCellsActions';
 import { stateStore } from '$stores/StateStore';
 
 const cellInputHandler = new CellPointerHandler();
@@ -149,7 +147,7 @@ function addUpdateCellsCommand(
 		// const sel_rev_action = selectionNoneAction();
 		const sel_command = stateStore.getUpdateSelectionCommand(sel_action, sel_action);
 		const commands = [sel_command, command];
-		commandHistoryStore.addCommands(commands);
+		stateStore.commandHistoryStore.addCommands(commands);
 	}
 }
 
@@ -182,7 +180,7 @@ export function getSelectionInputHandler(
 
 	cellInputHandler.onDragStart = (event: CellDragTapEvent): void => {
 		const onGrid = isCellOnGrid(event.cell, gridShape);
-		const select_on = get(stateStore.selectOnStore);
+		const select_on = stateStore.getSelectOn();
 		const mode = getSelectionMode(event.event, select_on);
 		const cell = onGrid ? event.cell : null;
 
@@ -246,7 +244,7 @@ export function getSelectionInputHandler(
 
 	function onArrowKey(event: KeyboardEvent): boolean {
 		if (!eventIsDirectionalKey(event)) return false;
-		const lastCell = get(stateStore.selectionStore).lastCell;
+		const lastCell = stateStore.getSelection().lastCell;
 
 		let newCoords: GridCoordI | null = null;
 		if (lastCell !== null) {
@@ -270,7 +268,7 @@ export function getSelectionInputHandler(
 		const value = parseDigit(key);
 		if (value === undefined) return false;
 
-		const selection = get(stateStore.selectionStore).cells;
+		const selection = stateStore.getSelection().cells;
 		const cells: Cell[] = [];
 		selection.forEach((coord) => {
 			const cell = grid.getCell(coord.r, coord.c);

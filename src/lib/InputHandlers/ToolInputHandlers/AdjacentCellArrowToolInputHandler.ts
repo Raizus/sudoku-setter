@@ -1,5 +1,4 @@
 import type { InputHandler } from '../InputHandler';
-import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
@@ -13,7 +12,6 @@ import {
 } from '$input/PointerHandlers/CellPointerHandler';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import { BASIC_TOOL_MODE, type DirectedAdjacentCellsToolOptions } from './types';
-import { toolModeStore } from '$stores/InputHandlerStore';
 import {
 	edgeConstraint,
 	updateDirectedAdjacentCellsConstraint
@@ -40,11 +38,11 @@ export function getDirectedAdjacentCellsToolInputHandler(
 	}
 
 	pointerHandler.onDragStart = (event: CellDragTapEvent): void => {
-		const mode = get(toolModeStore);
+		const mode = stateStore.getCurrentToolMode();
 
 		if (!eventOnGrid(event)) return;
 
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		if (mode !== BASIC_TOOL_MODE.DELETE) {
@@ -58,14 +56,14 @@ export function getDirectedAdjacentCellsToolInputHandler(
 		const coords = event.cell;
 		if (!eventOnGrid(event) || !newConstraint || !id) return;
 
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		// if draging over an existing arrow and mode is dynamic, remove the existing arrow
 		newConstraint = updateDirectedAdjacentCellsConstraint(newConstraint, coords);
-		const elements = get(stateStore.elementsDictStore);
+		const elements = stateStore.getElementsDict();
 		const match = findEdgeConstraint(elements, tool, newConstraint.cells);
-		const mode = get(toolModeStore);
+		const mode = stateStore.getCurrentToolMode();
 		if (match && mode === BASIC_TOOL_MODE.DYNAMIC) {
 			stateStore.removeConstraint(element_id, id);
 			stateStore.removeConstraint(element_id, match[0]);
@@ -75,7 +73,7 @@ export function getDirectedAdjacentCellsToolInputHandler(
 	};
 
 	pointerHandler.onDragEnd = () => {
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		if (id && newConstraint && newConstraint.cells.length !== 2) {
@@ -89,14 +87,14 @@ export function getDirectedAdjacentCellsToolInputHandler(
 	};
 
 	pointerHandler.onTap = (event: CellDragTapEvent) => {
-		const mode = get(toolModeStore);
+		const mode = stateStore.getCurrentToolMode();
 		if (mode === BASIC_TOOL_MODE.ADD_EDIT) return;
 
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
-		
+
 		const coords = event.cell;
-		const elements = get(stateStore.elementsDictStore);
+		const elements = stateStore.getElementsDict();
 		const match = findEdgeConstraint(elements, tool, [coords]);
 		if (match) {
 			const [id, constraint] = match;

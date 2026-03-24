@@ -1,15 +1,16 @@
 <script lang="ts">
 	import ValuedCageRender from './ValuedCageRender.svelte';
 	import { defaultCageShape } from '$lib/Puzzle/Shape/Shape';
-		import type { CageToolI } from "$src/lib/Puzzle/puzzle_schema";
+	import type { CageToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
-	import { currentConstraintStore } from '$stores/BoardStore';
 	import CageRender from './CageRender.svelte';
+	import { stateStore } from '$stores/StateStore';
 
 	export let tool: CageToolI;
 	export let c_id: string;
 
+	const currentConstraintStore = stateStore.currentConstraintStore;
 	const defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultCageShape;
 	$: shape = tool.shape ?? defaultShape;
 

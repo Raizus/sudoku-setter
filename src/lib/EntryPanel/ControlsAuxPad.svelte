@@ -3,22 +3,21 @@
 	import Redo from '$icons/Redo.svelte';
 	import Select from '$icons/Select.svelte';
 	import Undo from '$icons/Undo.svelte';
-	import { commandHistoryStore } from '$stores/CommandHistoryStore';
-	import { stateStore } from '$stores/StateStore.js';
+	import { stateStore } from '$stores/StateStore';
 
-	const redo_stack_len_store = commandHistoryStore.redo_stack_length;
-	const undo_stack_len_store = commandHistoryStore.undo_stack_length;
+	const redo_stack_len_store = stateStore.commandHistoryStore.redo_stack_length;
+	const undo_stack_len_store = stateStore.commandHistoryStore.undo_stack_length;
 	const selectOnStore = stateStore.selectOnStore;
 
 	$: undoDisabled = $undo_stack_len_store === 0;
 	$: redoDisabled = $redo_stack_len_store === 0;
 
 	function undoCb() {
-		commandHistoryStore.undo();
+		stateStore.commandHistoryStore.undo();
 	}
 
 	function redoCb() {
-		commandHistoryStore.redo();
+		stateStore.commandHistoryStore.redo();
 	}
 
 	function checkCb() {

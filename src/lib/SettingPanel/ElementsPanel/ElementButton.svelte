@@ -10,8 +10,6 @@
 		removeElementAction,
 		restoreElementAction
 	} from '$src/lib/reducers/LocalConstraintsActions';
-	import { commandHistoryStore } from '$stores/CommandHistoryStore';
-	import { getUpdateElementCommand } from '$stores/LocalConstraintsStore';
 	import { stateStore } from '$stores/StateStore';
 
 	import CaretDown from '$icons/CaretDown.svelte';
@@ -54,8 +52,8 @@
 
 		const action = removeElementAction(element_id);
 		const reverse_action = restoreElementAction(element_id, constraints);
-		const command = getUpdateElementCommand(action, reverse_action);
-		commandHistoryStore.addCommand(command);
+		const command = stateStore.getUpdateElementCommand(action, reverse_action);
+		stateStore.commandHistoryStore.addCommand(command);
 	}
 
 	function enableDisableElement() {
@@ -63,8 +61,8 @@
 
 		const action = enableDisableElementAction(element_id, !disabled);
 		const reverse_action = enableDisableElementAction(element_id, disabled);
-		const command = getUpdateElementCommand(action, reverse_action);
-		commandHistoryStore.addCommand(command);
+		const command = stateStore.getUpdateElementCommand(action, reverse_action);
+		stateStore.commandHistoryStore.addCommand(command);
 		if (!disabled) {
 			stateStore.updateToolAndCurrentConstraintStores(TOOLS.DIGIT, null);
 		}
@@ -92,16 +90,16 @@
 		if (element_id === null) return;
 		const action = moveElementUpAction(element_id);
 		const reverse_action = moveElementDownAction(element_id);
-		const command = getUpdateElementCommand(action, reverse_action);
-		commandHistoryStore.addCommand(command);
+		const command = stateStore.getUpdateElementCommand(action, reverse_action);
+		stateStore.commandHistoryStore.addCommand(command);
 	}
 
 	function moveDown() {
 		if (element_id === null) return;
-		const action = moveElementDownAction(element_id!);
-		const reverse_action = moveElementUpAction(element_id!);
-		const command = getUpdateElementCommand(action, reverse_action);
-		commandHistoryStore.addCommand(command);
+		const action = moveElementDownAction(element_id);
+		const reverse_action = moveElementUpAction(element_id);
+		const command = stateStore.getUpdateElementCommand(action, reverse_action);
+		stateStore.commandHistoryStore.addCommand(command);
 	}
 
 	$: selected = element_id === $selectedElementIdStore && tool_id === $current_tool_store;

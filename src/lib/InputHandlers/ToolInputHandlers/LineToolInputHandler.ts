@@ -1,5 +1,4 @@
 import type { InputHandler } from '../InputHandler';
-import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
@@ -17,7 +16,6 @@ import {
 } from '$input/PointerHandlers/CellPointerHandler';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import { BASIC_TOOL_MODE, type LineToolInputOptions } from './types';
-import { toolModeStore } from '$stores/InputHandlerStore';
 import { stateStore } from '$stores/StateStore';
 
 export function getLineToolInputHandler(
@@ -47,7 +45,7 @@ export function getLineToolInputHandler(
 		const coords = event.cell;
 		if (!eventOnGrid(event)) return;
 
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		newConstraint = updateLineConstraintCells(newConstraint, coords, allowSelfIntersection);
@@ -55,11 +53,11 @@ export function getLineToolInputHandler(
 	}
 
 	pointerHandler.onDragStart = (event: CellDragTapEvent): void => {
-		const mode = get(toolModeStore);
+		const mode = stateStore.getCurrentToolMode();
 
 		if (!eventOnGrid(event)) return;
 
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		if (mode !== BASIC_TOOL_MODE.DELETE) {
@@ -75,7 +73,7 @@ export function getLineToolInputHandler(
 	};
 
 	pointerHandler.onDragEnd = () => {
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		if (id && newConstraint && newConstraint.cells.length <= 1) {
@@ -89,14 +87,14 @@ export function getLineToolInputHandler(
 	};
 
 	pointerHandler.onTap = (event: CellDragTapEvent) => {
-		const mode = get(toolModeStore);
+		const mode = stateStore.getCurrentToolMode();
 		if (mode === BASIC_TOOL_MODE.ADD_EDIT) return;
 
 		const coords = event.cell;
-		const elements = get(stateStore.elementsDictStore);
+		const elements = stateStore.getElementsDict();
 		const match = findLineConstraint(elements, tool, coords);
 
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		if (match) {

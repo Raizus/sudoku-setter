@@ -5,7 +5,6 @@
 	import type { GridShape } from '$src/lib/Types/types';
 	import { getCagePathStr } from '$src/lib/utils/SquareCellGridRenderUtils';
 	import { enableFogMaskStore } from '$stores/BoardStore';
-	import { customFogClearingStore, fogLightsStore } from '$stores/ElementsStore';
 	import { stateStore } from '$stores/StateStore';
 
 	export let gridShape: GridShape;
@@ -13,6 +12,8 @@
 	const solutionStore = stateStore.solutionStore;
 	const gridStore = stateStore.gridStore;
 	const cellsStore = stateStore.cellsStore;
+	const fogLightsStore = stateStore.fogLightsStore;
+	const customFogClearingStore = stateStore.customFogClearingStore;
 
 	$: disable_fog_mask = !$enableFogMaskStore;
 	// $: has_fog = $hasFogStore;

@@ -5,13 +5,15 @@
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { cellsToVector2DPoints } from '$lib/utils/SquareCellGridRenderUtils';
 	import { vectorAverage } from '$lib/utils/Vector2D';
-	import { currentConstraintStore } from '$stores/BoardStore';
 	import { coordsToDirection, type GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
 	import CenteredArrowRender from '../SvgComponents/CenteredArrowRender.svelte';
 	import { DIRECTION } from '$src/lib/utils/directions';
+	import { stateStore } from '$stores/StateStore';
 
 	export let tool: EdgeToolI;
 	export let c_id: string | undefined = undefined;
+
+	const currentConstraintStore = stateStore.currentConstraintStore;
 
 	$: currentConstraintId = $currentConstraintStore?.id;
 

@@ -5,10 +5,12 @@
 		import type { CenterCornerOrEdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
 	import RenderShape from '$src/lib/Board/SvgComponents/RenderShape.svelte';
 	import CellTextLabelRender from './CellTextLabelRender.svelte';
-	import { currentConstraintStore } from '$stores/BoardStore';
+	import { stateStore } from '$stores/StateStore';
 
 	export let tool: CenterCornerOrEdgeToolI;
 	export let c_id: string | undefined = undefined;
+
+	const currentConstraintStore = stateStore.currentConstraintStore;
 
 	$: currentConstraintId = $currentConstraintStore?.id;
 

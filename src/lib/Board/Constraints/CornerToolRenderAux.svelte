@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
-		import type { CornerToolI } from "$src/lib/Puzzle/puzzle_schema";
+	import type { CornerToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { SHAPE_TYPES, defaultCornerCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 
@@ -8,15 +8,16 @@
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 	import QuadrupleTextRender from './QuadrupleTextRender.svelte';
 	import RenderShape from '$src/lib/Board/SvgComponents/RenderShape.svelte';
-	import { currentConstraintStore } from '$stores/BoardStore';
+	import { stateStore } from '$stores/StateStore';
 
 	export let tool: CornerToolI;
 	export let c_id: string | undefined = undefined;
 
+	const currentConstraintStore = stateStore.currentConstraintStore;
+
 	$: currentConstraintId = $currentConstraintStore?.id;
 
-	$: defaultShape =
-	getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultCornerCircleShape;
+	$: defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultCornerCircleShape;
 	$: shape = tool.shape ?? defaultShape;
 	$: type = shape?.type ?? SHAPE_TYPES.CIRCLE;
 	$: fontSize = shape?.fontSize ?? 0.2;

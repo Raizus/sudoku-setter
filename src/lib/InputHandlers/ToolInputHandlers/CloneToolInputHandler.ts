@@ -1,5 +1,4 @@
 import type { InputHandler } from '../InputHandler';
-import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
@@ -17,7 +16,6 @@ import { isCellOnGrid, type GridCoordI, areCoordsEqual } from '$lib/utils/Square
 import { findCloneConstraint, findUsedCloneLabels } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { pushAddLocalConstraintCommand, pushUpdateLocalConstraintCommand } from './utils';
 import { CLONE_TOOL_MODE } from './types';
-import { toolModeStore } from '$stores/InputHandlerStore';
 import { stateStore } from '$stores/StateStore';
 
 function makeLabel(x: number) {
@@ -53,7 +51,7 @@ export function getCloneToolInputHandler(
 	let id: string | null = null;
 	let moveStart: GridCoordI | null = null;
 	let movingGroup: 'cells2' | 'cells' = 'cells2';
-	let mode = get(toolModeStore);
+	let mode = stateStore.getCurrentToolMode();
 
 	function handle(event: CellDragTapEvent) {
 		const coords = event.cell;
@@ -78,7 +76,7 @@ export function getCloneToolInputHandler(
 		// 	}
 		// }
 
-		const elements = get(stateStore.elementsDictStore);
+		const elements = stateStore.getElementsDict();
 		const match = findCloneConstraint(elements, tool, coords);
 		if (match) {
 			id = match[0];
@@ -100,7 +98,7 @@ export function getCloneToolInputHandler(
 			mode = CLONE_TOOL_MODE.SELECT;
 		}
 
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		// create new clone or add to existing
@@ -135,7 +133,7 @@ export function getCloneToolInputHandler(
 	}
 
 	pointerHandler.onDragStart = (event: CellDragTapEvent): void => {
-		mode = get(toolModeStore);
+		mode = stateStore.getCurrentToolMode();
 		id = null;
 		currentConstraint = null;
 		moveStart = null;
@@ -150,7 +148,7 @@ export function getCloneToolInputHandler(
 		// push command to history stack
 		if (!(id && currentConstraint)) return;
 
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		if (mode === CLONE_TOOL_MODE.SELECT) {
@@ -162,7 +160,7 @@ export function getCloneToolInputHandler(
 	};
 
 	pointerHandler.onTap = (): void => {
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		if (id && mode !== CLONE_TOOL_MODE.SELECT) {

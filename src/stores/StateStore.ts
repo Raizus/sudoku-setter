@@ -1,4 +1,4 @@
-import { ElementsDict } from '$src/lib/Puzzle/Constraints/ElementsDict';
+import { ElementsDict, filterElements } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
 import { Grid } from '$src/lib/Puzzle/Grid/Grid';
 import { PenTool } from '$src/lib/Puzzle/PenTool';
@@ -16,11 +16,23 @@ import type {
 	EdgeToolI,
 	OutsideDirectionToolI,
 	PuzzleMetaI,
+	SingleCellTool,
 	Solution,
 	ToolPreview
 } from '$src/lib/Puzzle/puzzle_schema';
 import type { ShapeI } from '$src/lib/Puzzle/Shape/Shape';
-import { TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
+import {
+	isCenterEdgeCornerTool,
+	isCornerLineTool,
+	isCornerTool,
+	isDiagonalConstraint,
+	isEdgeTool,
+	isSingleCellTool,
+	isUnderlayTool,
+	TOOLS,
+	type TOOLID
+} from '$src/lib/Puzzle/Tools';
+
 import type { ToolModeT } from '$input/ToolInputHandlers/types';
 import { ELEMENT_ACTIONS, type ElementAction } from '$src/lib/reducers/LocalConstraintsActions';
 import {
@@ -30,8 +42,6 @@ import {
 } from '$src/lib/reducers/PenToolReducer';
 import { UPDATE_CELLS_ACTIONS, type UpdateCellsAction } from '$src/lib/reducers/UpdateCellsActions';
 import type { CommandI, Rectangle } from '$src/lib/Types/types';
-import { range } from 'lodash';
-import { derived, get, writable } from 'svelte/store';
 import {
 	initSelection,
 	reducerSelection,
@@ -40,10 +50,16 @@ import {
 	type SelectionState
 } from '$src/lib/reducers/SelectionReducer';
 
+import { range } from 'lodash';
+import { derived, get, writable } from 'svelte/store';
+import type { Readable } from 'svelte/store';
+import { CommandHistoryStore } from './CommandHistoryStore';
+
 export class StateStore {
 	public svgRefStore = writable<SVGSVGElement | null>(null);
 	public toolStore = writable<TOOLID>(TOOLS.DIGIT);
 	public selectOnStore = writable<boolean>(false);
+	public toolModeStore = writable<ToolModeT>(undefined);
 
 	private _selectedElementIdStore = writable<number | null>(null);
 	private _previousToolStore = writable<TOOLID | null>(TOOLS.DIGIT);
@@ -62,14 +78,14 @@ export class StateStore {
 	private _currentShapeStore = writable<ShapeI | undefined>(undefined);
 	private _solutionStore = writable<Solution>(undefined);
 
-	private _toolModeStore = writable<ToolModeT>(undefined);
-
 	private _currentScaleStore = writable<number>(1);
 
 	private _puzzleCreationTimestamp = writable<number>(Date.now());
 
+	public commandHistoryStore = new CommandHistoryStore();
+
 	/* -------------------------------------------------------------------------- */
-	/* ----- Public Stores ------------------------------------------------------ */
+	/* ----- Expose the subscribes of private stores ---------------------------- */
 
 	public selectedElementIdStore = { subscribe: this._selectedElementIdStore.subscribe };
 	public previousToolStore = { subscribe: this._previousToolStore.subscribe };
@@ -87,8 +103,6 @@ export class StateStore {
 	public currentConstraintStore = { subscribe: this._currentConstraintStore.subscribe };
 	public currentShapeStore = { subscribe: this._currentShapeStore.subscribe };
 	public solutionStore = { subscribe: this._solutionStore.subscribe };
-
-	public toolModeStore = { subscribe: this._toolModeStore.subscribe };
 
 	public puzzleCreationTimestamp = { subscribe: this._puzzleCreationTimestamp.subscribe };
 
@@ -131,6 +145,164 @@ export class StateStore {
 			return puzzle;
 		}
 	);
+
+	/**
+	 * Get a derived store for the constraints of a specific tool.
+	 * @param tool_id
+	 * @returns
+	 */
+	private getToolStore<T extends ConstraintType>(tool_id: TOOLID): Readable<Record<string, T>> {
+		const store = derived(stateStore.elementsDictStore, ($elementsDictStore) => {
+			for (const element of $elementsDictStore.values()) {
+				if (tool_id !== element.tool_id) continue;
+				const record = element.constraints as Record<string, T>;
+				return record;
+			}
+			const record: Record<string, T> = {};
+			return record;
+		});
+		return store;
+	}
+
+	/**
+	 * Returns a store of elements filtered by the provided function and derived from the elementsDictStore.
+	 * Used to create stores for different types of tools.
+	 * @param filter_f
+	 * @returns
+	 */
+	private getDerivedElementsStore(
+		filter_f: (tool: TOOLID) => boolean
+	): Readable<ConstraintsElement[]> {
+		const store = derived(this._elementsDictStore, ($elementsDictStore) => {
+			const elements = filterElements($elementsDictStore, filter_f);
+			return elements;
+		});
+		return store;
+	}
+
+	public underlayElementsStore = this.getDerivedElementsStore(isUnderlayTool);
+
+	public edgeToolsStore = this.getDerivedElementsStore(isEdgeTool);
+	public centerCornerOrEdgeToolsStore = this.getDerivedElementsStore(isCenterEdgeCornerTool);
+	public cornerToolsStore = this.getDerivedElementsStore(isCornerTool);
+	public cornerLineToolsStore = this.getDerivedElementsStore(isCornerLineTool);
+	public diagonalElementsStore = this.getDerivedElementsStore(isDiagonalConstraint);
+	public singleCellToolsStore = this.getDerivedElementsStore(isSingleCellTool);
+
+	public fogLightsStore = derived(this.singleCellToolsStore, ($singleCellToolsStore) => {
+		const target_element = $singleCellToolsStore.find(
+			(element) => element.tool_id === TOOLS.FOG_LIGHTS
+		);
+		return target_element;
+	});
+
+	public customFogClearingStore = derived(this.elementsDictStore, ($elementsDictStore) => {
+		for (const element of $elementsDictStore.values()) {
+			if (element.tool_id === TOOLS.CUSTOM_FOG_CLEARING) return element;
+		}
+		return undefined;
+	});
+
+	public minimumConstraintsStore = derived(this.singleCellToolsStore, ($singleCellToolsStore) => {
+		const target_element = $singleCellToolsStore.find(
+			(element) => element.tool_id === TOOLS.MINIMUM
+		);
+		if (target_element?.constraints) {
+			const record = target_element.constraints as Record<string, SingleCellTool>;
+			return record;
+		}
+		const record: Record<string, SingleCellTool> = {};
+		return record;
+	});
+
+	public maximumConstraintsStore = derived(this.singleCellToolsStore, ($singleCellToolsStore) => {
+		const target_element = $singleCellToolsStore.find(
+			(element) => element.tool_id === TOOLS.MAXIMUM
+		);
+		if (target_element?.constraints) {
+			const record = target_element.constraints as Record<string, SingleCellTool>;
+			return record;
+		}
+		const record: Record<string, SingleCellTool> = {};
+		return record;
+	});
+
+	private currentElementStore: Readable<ConstraintsElement | undefined> = derived(
+		[this._elementsDictStore, this._selectedElementIdStore],
+		([$elementsDictStore, $selectedElementIdStore]) => {
+			const selected_id = $selectedElementIdStore;
+			if (selected_id === null) return undefined;
+			const element = $elementsDictStore.get(selected_id);
+			return element;
+		}
+	);
+
+	/* -------------------------------------------------------------------------- */
+	/* ----- Store getters ------------------------------------------------------ */
+
+	getCurrentTool() {
+		return get(this.toolStore);
+	}
+
+	getSelectOn() {
+		return get(this.selectOnStore);
+	}
+
+	getCurrentGrid() {
+		return get(this._gridStore);
+	}
+
+	getCurrentElementsDict() {
+		return get(this._elementsDictStore);
+	}
+
+	getCurrentSolution() {
+		return get(this._solutionStore);
+	}
+
+	getCurrentPuzzleMeta() {
+		return get(this._puzzleMetaStore);
+	}
+
+	getCurrentValidDigits() {
+		return get(this._validDigitsStore);
+	}
+
+	getPenTool() {
+		return get(this._penToolStore);
+	}
+
+	getCurrentPenColor() {
+		return get(this._penColorStore);
+	}
+
+	getCurrentConstraint() {
+		return get(this._currentConstraintStore);
+	}
+
+	getCurrentShape() {
+		return get(this._currentShapeStore);
+	}
+
+	getCurrentToolMode() {
+		return get(this.toolModeStore);
+	}
+
+	getCurrentScale() {
+		return get(this._currentScaleStore);
+	}
+
+	getSelectedElementId() {
+		return get(this._selectedElementIdStore);
+	}
+
+	getElementsDict() {
+		return get(this._elementsDictStore);
+	}
+
+	getSelection() {
+		return get(this._selectionStore);
+	}
 
 	/* -------------------------------------------------------------------------- */
 	/* ----- Timestamp methods -------------------------------------------------- */
@@ -394,6 +566,19 @@ export class StateStore {
 		} else if (action.type === ELEMENT_ACTIONS.MOVE_ELEMENT_DOWN) {
 			this.moveElementDown(action.payload.element_id);
 		}
+	}
+
+	getUpdateElementCommand(action: ElementAction, reverse_action: ElementAction): CommandI {
+		const command: CommandI = {
+			execute: () => {
+				this.updateElementAction(action);
+			},
+			unExecute: () => {
+				this.updateElementAction(reverse_action);
+			}
+		};
+
+		return command;
 	}
 
 	updateCurrentConstraintShape(newShape: ShapeI | undefined) {

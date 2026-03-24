@@ -3,26 +3,27 @@
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { SHAPE_TYPES, defaultSingleCellCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import ValuedCageRender from './ValuedCageRender.svelte';
-		import type { CellToolI } from "$src/lib/Puzzle/puzzle_schema";
+	import type { CellToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 	import MinMaxRender from './MinMaxRender.svelte';
 	import RenderShape from '$src/lib/Board/SvgComponents/RenderShape.svelte';
 	import { Vector2D } from '$src/lib/utils/Vector2D';
 	import CellTextLabelRender from './CellTextLabelRender.svelte';
 	import ColoredCountingCircleRender from './ColoredCountingCircleRender.svelte';
-	import { currentConstraintStore } from '$stores/BoardStore';
 	import CageRender from './CageRender.svelte';
+	import { stateStore } from '$stores/StateStore';
 
 	export let tool: CellToolI;
 	export let c_id: string | undefined = undefined;
+
+	const currentConstraintStore = stateStore.currentConstraintStore;
 
 	$: currentConstraintId = $currentConstraintStore?.id;
 
 	const outline = true;
 
 	$: defaultShape =
-		getDefaultShape(tool.toolId, elementInfoRegistry) ??
-		defaultSingleCellCircleShape;
+		getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultSingleCellCircleShape;
 	$: shape = tool.shape ?? defaultShape;
 	$: type = shape?.type || SHAPE_TYPES.CIRCLE;
 
@@ -52,7 +53,7 @@
 		{#if c_id && c_id === currentConstraintId}
 			<RenderShape cx={center.x} cy={center.y} shape={selectedOutlineShape} />
 		{/if}
-		<ColoredCountingCircleRender x={center.x} y={center.y} {value} {shape}/>
+		<ColoredCountingCircleRender x={center.x} y={center.y} {value} {shape} />
 	{:else if type === SHAPE_TYPES.CAGE}
 		{#if c_id && c_id === currentConstraintId}
 			<CageRender cells={[tool.cell]} shape={selectedOutlineShape} />

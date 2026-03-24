@@ -2,7 +2,7 @@
 	import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';
 	import { SHAPE_TYPES, defaultEdgeCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
-		import type { EdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
+	import type { EdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import CircleRender from '$src/lib/Board/SvgComponents/CircleRender.svelte';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import {
@@ -12,16 +12,17 @@
 	import { vectorAverage } from '$lib/utils/Vector2D';
 	import BorderLineRender from './BorderLineRender.svelte';
 	import RenderShape from '$src/lib/Board/SvgComponents/RenderShape.svelte';
-	import { currentConstraintStore } from '$stores/BoardStore';
 	import DirectedAdjacentCellsRender from './DirectedAdjacentCellsRender.svelte';
+	import { stateStore } from '$stores/StateStore';
 
 	export let tool: EdgeToolI;
 	export let c_id: string | undefined = undefined;
 
+	const currentConstraintStore = stateStore.currentConstraintStore;
+
 	$: currentConstraintId = $currentConstraintStore?.id;
 
-	$: defaultShape =
-		getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultEdgeCircleShape;
+	$: defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultEdgeCircleShape;
 	$: shape = tool.shape ?? defaultShape;
 
 	// maybe adjust fontSize to shape size?

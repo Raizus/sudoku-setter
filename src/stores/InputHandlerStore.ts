@@ -1,8 +1,7 @@
 import type { InputHandler } from '$src/lib/InputHandlers/InputHandler';
 import { getToolInfo } from '$lib/Puzzle/ElementHandlersUtils';
-import { derived, writable } from 'svelte/store';
+import { derived } from 'svelte/store';
 import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
-import { type ToolModeT } from '$input/ToolInputHandlers/types';
 import { getInputHandlerF } from '$input/ToolInputHandlers/InputHandlerRegistry';
 import { stateStore, type StateStore } from './StateStore';
 
@@ -53,5 +52,3 @@ export const InputHandlerStore = derived<
 		return inputHandler;
 	}
 );
-
-export const toolModeStore = writable<ToolModeT>(undefined);

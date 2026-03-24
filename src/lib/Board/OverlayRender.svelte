@@ -6,7 +6,6 @@
 		isEdgeTool,
 		type TOOLID
 	} from '../Puzzle/Tools';
-	import { enableFogMaskStore } from '$stores/BoardStore';
 	import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 	import CenterCornerOrEdgeToolRender from './Constraints/CenterCornerOrEdgeToolRender.svelte';
 	import CornerToolRender from './Constraints/CornerToolRender.svelte';

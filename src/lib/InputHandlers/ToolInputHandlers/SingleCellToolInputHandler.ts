@@ -1,10 +1,6 @@
 import type { InputHandler } from '../InputHandler';
 import { BASIC_TOOL_MODE, type SingleCellToolOptions } from './types';
 import type { TOOLID } from '$lib/Puzzle/Tools';
-import {
-	currentConstraintStore,
-} from '$stores/BoardStore';
-import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import {
@@ -22,7 +18,6 @@ import {
 	pushRemoveLocalConstraintCommand,
 	setConstraintPreviewOnMove
 } from './utils';
-import { toolModeStore } from '$stores/InputHandlerStore';
 import { stateStore } from '$stores/StateStore';
 
 export function getSingleCellToolInputHandler(
@@ -40,10 +35,10 @@ export function getSingleCellToolInputHandler(
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
 
-		let mode = get(toolModeStore);
+		let mode = stateStore.getCurrentToolMode();
 
 		// determine if adding or removing
-		const elements = get(stateStore.elementsDictStore);
+		const elements = stateStore.getElementsDict();
 
 		if (options?.oppositeConstraintId) {
 			const oppositeConstraintMatch = findSingleCellConstraint<CellToolI>(
@@ -54,7 +49,7 @@ export function getSingleCellToolInputHandler(
 			if (oppositeConstraintMatch) return;
 		}
 
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		const match = findSingleCellConstraint<CellToolI>(elements, tool, coords);
@@ -99,13 +94,13 @@ export function getSingleCellToolInputHandler(
 		}
 
 		const constraint_preview = singleCellConstraint(tool, event.cell, options?.defaultValue);
-		const currentShape = get(stateStore.currentShapeStore);
+		const currentShape = stateStore.getCurrentShape();
 		if (currentShape) {
 			constraint_preview.shape = { ...currentShape };
 		}
 
-		const mode = get(toolModeStore);
-		const elements = get(stateStore.elementsDictStore);
+		const mode = stateStore.getCurrentToolMode();
+		const elements = stateStore.getElementsDict();
 
 		const match = findSingleCellConstraint<CellToolI>(elements, tool, event.cell);
 		const match_id = match ? match[0] : undefined;
@@ -120,8 +115,7 @@ export function getSingleCellToolInputHandler(
 	function onKeyDown(event: KeyboardEvent) {
 		keyDownUpdateValue<CellToolI>(
 			event,
-			currentConstraintStore,
-			get(stateStore.selectedElementIdStore),
+			stateStore,
 			options?.valueUpdater
 		);
 	}

@@ -1,8 +1,6 @@
 import { ElementsDict } from '$src/lib/Puzzle/Constraints/ElementsDict';
-import { type ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 import { Grid } from '$lib/Puzzle/Grid/Grid';
 
-import type { ConstraintAndId } from '$src/lib/Puzzle/puzzle_schema';
 import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';
 
 import { derived, writable } from 'svelte/store';
@@ -19,29 +17,6 @@ export const toolStore = writable<TOOLID>(TOOLS.DIGIT);
 export const gridStore = writable<Grid>(new Grid(9, 9));
 
 export const elementsDictStore = writable<ElementsDict>(new ElementsDict());
-export const currentConstraintStore = writable<ConstraintAndId | null>(null);
-
-export function setCurrentConstraint(constraintId: ConstraintAndId | null) {
-	currentConstraintStore.update(() => constraintId);
-}
-
-/**
- * Updates an existing local constraint (or cosmetic)
- * @param element_id
- * @param id
- * @param newConstraint
- */
-export function updateConstraint<T extends ConstraintType>(
-	element_id: number,
-	id: string,
-	newConstraint: T
-) {
-	elementsDictStore.update((localConstraintsDict) => {
-		localConstraintsDict.updateConstraint(element_id, id, newConstraint);
-		return localConstraintsDict;
-	});
-	setCurrentConstraint({ id, constraint: newConstraint });
-}
 
 export const hasFogStore = derived(elementsDictStore, ($elementsDictStore) => {
 	for (const element of $elementsDictStore.values()) {

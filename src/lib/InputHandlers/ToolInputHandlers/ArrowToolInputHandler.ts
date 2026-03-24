@@ -1,4 +1,3 @@
-import { get } from 'svelte/store';
 import type { InputHandler } from '../InputHandler';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
@@ -62,11 +61,11 @@ export function getArrowToolInputHandler(
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
 
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		if (mode === ARROW_TOOL_MODE.DYNAMIC) {
-			const elements = get(stateStore.elementsDictStore);
+			const elements = stateStore.getElementsDict();
 
 			const matchLine = findArrowLineConstraint(elements, tool, coords);
 			if (matchLine) {
@@ -122,7 +121,7 @@ export function getArrowToolInputHandler(
 			return;
 		}
 
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		if (mode === ARROW_TOOL_MODE.EDIT_ARROWS && id && currentConstraint) {
@@ -146,11 +145,11 @@ export function getArrowToolInputHandler(
 	pointerHandler.onTap = (event: CellDragTapEvent) => {
 		if (bypassTap) return;
 
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		const coords = event.cell;
-		const elements = get(stateStore.elementsDictStore);
+		const elements = stateStore.getElementsDict();
 
 		// on bulb tap remove Arrow
 		const matchBulb = findArrowBulbConstraint(elements, tool, coords);

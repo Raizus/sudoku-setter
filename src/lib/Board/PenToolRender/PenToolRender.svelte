@@ -3,7 +3,7 @@
 	import DraftLineRender from './DraftLineRender.svelte';
 	import EdgeMarkersRender from './EdgeMarkersRender.svelte';
 	import LineMarkersRender from './LineMarkersRender.svelte';
-	import { stateStore } from '$stores/StateStore.js';
+	import { stateStore } from '$stores/StateStore';
 
 	const penToolStore = stateStore.penToolStore;
 

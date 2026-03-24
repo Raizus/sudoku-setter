@@ -1,11 +1,14 @@
 <script lang="ts">
-		import type { SingleCellTool } from "$src/lib/Puzzle/puzzle_schema";
+	import type { SingleCellTool } from '$src/lib/Puzzle/puzzle_schema';
 	import { areCoordsEqual, type GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
 	import { minMaxShape, pointsToPathStr } from '$src/lib/utils/SquareCellGridRenderUtils';
-	import { maximumConstraintsStore, minimumConstraintsStore } from '$stores/ElementsStore';
+	import { stateStore } from '$stores/StateStore';
 
 	export let coord: GridCoordI;
 	export let minOrMax: 'min' | 'max';
+
+	const minimumConstraintsStore = stateStore.minimumConstraintsStore;
+	const maximumConstraintsStore = stateStore.maximumConstraintsStore;
 
 	function minMaxFilterMask(coord: GridCoordI, constraints: Record<string, SingleCellTool>) {
 		const mask = [true, true, true, true];
@@ -13,15 +16,15 @@
 			[0, -1],
 			[1, 0],
 			[0, 1],
-			[-1, 0],
+			[-1, 0]
 		];
 		for (let idx = 0; idx < offsets.length; idx++) {
 			let offset = offsets[idx];
 
 			// check if adjacent cell is outside of the grid or is another minimum
 			const neighbour: GridCoordI = { r: coord.r + offset[1], c: coord.c + offset[0] };
-			mask[idx] = !Object.values(constraints).some(
-				(constraint) => areCoordsEqual(neighbour, constraint.cell)
+			mask[idx] = !Object.values(constraints).some((constraint) =>
+				areCoordsEqual(neighbour, constraint.cell)
 			);
 		}
 		return mask;
@@ -40,12 +43,12 @@
 		max_constraints: Record<string, SingleCellTool>
 	) {
 		if (minOrMax === 'max') return max_constraints;
-        return min_constraints;
+		return min_constraints;
 	}
 
 	$: x = coord.c;
 	$: y = coord.r;
-    $: constraints = getConstraints($minimumConstraintsStore, $maximumConstraintsStore);
+	$: constraints = getConstraints($minimumConstraintsStore, $maximumConstraintsStore);
 </script>
 
 <g class="minmax-constraint">

@@ -1,6 +1,4 @@
 import type { InputHandler } from '../InputHandler';
-import { currentConstraintStore } from '$stores/BoardStore';
-import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
@@ -15,7 +13,6 @@ import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { centerCornerOrEdgeConstraint } from '$src/lib/Puzzle/Constraints/CenterCornerOrEdgeConstraints';
 import { type CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
 import type { CenterCornerOrEdgeToolInputOptions } from './types';
-import { toolModeStore } from '$stores/InputHandlerStore';
 import {
 	keyDownUpdateValue,
 	pushAddLocalConstraintCommand,
@@ -41,19 +38,19 @@ export function getCenterCornerOrEdgeToolInputHandler(
 		const cell = event.cell;
 		const coords = event.closest;
 
-		let mode = get(toolModeStore);
+		let mode = stateStore.getCurrentToolMode();
 
 		const onGrid = isCellOnGrid(cell, gridShape);
 		if (!onGrid) return;
 
 		// determine if adding or removing
-		const elements = get(stateStore.elementsDictStore);
+		const elements = stateStore.getElementsDict();
 		const match = findCenterCornerOrEdgeConstraint(elements, tool, coords);
 		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
 			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
 
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		// remove constraint
@@ -74,8 +71,7 @@ export function getCenterCornerOrEdgeToolInputHandler(
 	function onKeyDown(event: KeyboardEvent) {
 		keyDownUpdateValue<CenterCornerOrEdgeToolI>(
 			event,
-			currentConstraintStore,
-			get(stateStore.selectedElementIdStore),
+			stateStore,
 			options?.valueUpdater
 		);
 	}
@@ -91,15 +87,15 @@ export function getCenterCornerOrEdgeToolInputHandler(
 			return;
 		}
 
-		const mode = get(toolModeStore);
+		const mode = stateStore.getCurrentToolMode();
 
 		const constraint_preview = centerCornerOrEdgeConstraint(tool, event.closest, '');
-		const currentShape = get(stateStore.currentShapeStore);
+		const currentShape = stateStore.getCurrentShape();
 		if (currentShape) {
 			constraint_preview.shape = { ...currentShape };
 		}
 
-		const elements = get(stateStore.elementsDictStore);
+		const elements = stateStore.getElementsDict();
 
 		const match = findCenterCornerOrEdgeConstraint(elements, tool, event.closest);
 		const match_id = match ? match[0] : undefined;

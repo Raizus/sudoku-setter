@@ -1,5 +1,4 @@
 import type { InputHandler } from '../InputHandler';
-import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
@@ -40,14 +39,14 @@ export function getCornerLineToolInputHandler(
 		const onGrid = areCoordsOnGrid(coord, gridShape);
 		if (!onGrid) return;
 
-		const elements = get(stateStore.elementsDictStore);
+		const elements = stateStore.getElementsDict();
 		let match: [string, ConstraintType] | null = null;
 		if (mode === CORNER_LINE_TOOL_MODE.DYNAMIC) {
 			match = findCornerLineConstraint(elements, tool, coord);
 			mode = match ? CORNER_LINE_TOOL_MODE.DELETE : CORNER_LINE_TOOL_MODE.ADD_EDIT;
 		}
 
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		// remove constraint
@@ -84,7 +83,7 @@ export function getCornerLineToolInputHandler(
 	};
 
 	pointerHandler.onDragEnd = () => {
-		const element_id = get(stateStore.selectedElementIdStore);
+		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
 		if (id && currentConstraint) {
