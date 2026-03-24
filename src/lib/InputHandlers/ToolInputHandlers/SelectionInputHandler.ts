@@ -26,19 +26,12 @@ import {
 } from '$lib/reducers/SelectionReducer';
 import { isCellOnGrid, type GridCoordI } from '$lib/utils/SquareCellGridCoords';
 import { threshold } from '$lib/utils/functionUtils';
-import {
-	restoreToolStoreOnQuickshift,
-	selectOnStore,
-	updatePreviousToolStore,
-	updateToolAndCurrentConstraintStores
-} from '$stores/BoardStore';
-import { generateUpdateCellAction, getUpdateCellsCommand } from '$stores/CellsStore';
-import { getUpdateSelectionCommand, updateSelection } from '$stores/SelectionStore';
-import { selectionStore } from '$stores/SelectionStore';
 import { throttle } from 'lodash';
 import { get } from 'svelte/store';
 import { getSimilarCells } from './utils';
+import { generateUpdateCellAction } from '$stores/CellsStore';
 import { commandHistoryStore } from '$stores/CommandHistoryStore';
+import { stateStore } from '$stores/StateStore';
 
 const cellInputHandler = new CellPointerHandler();
 
@@ -151,10 +144,10 @@ function addUpdateCellsCommand(
 	if (act_rev_act) {
 		const action = act_rev_act[0];
 		const reverse_action = act_rev_act[1];
-		const command = getUpdateCellsCommand(action, reverse_action);
+		const command = stateStore.getUpdateCellsCommand(action, reverse_action);
 		const sel_action = selectionSetCellsAction(selection);
 		// const sel_rev_action = selectionNoneAction();
-		const sel_command = getUpdateSelectionCommand(sel_action, sel_action);
+		const sel_command = stateStore.getUpdateSelectionCommand(sel_action, sel_action);
 		const commands = [sel_command, command];
 		commandHistoryStore.addCommands(commands);
 	}
@@ -184,17 +177,17 @@ export function getSelectionInputHandler(
 		// depending on the current mode
 
 		const action = selectionSetCellsAction(similar_coords);
-		updateSelection(action);
+		stateStore.updateSelection(action);
 	};
 
 	cellInputHandler.onDragStart = (event: CellDragTapEvent): void => {
 		const onGrid = isCellOnGrid(event.cell, gridShape);
-		const select_on = get(selectOnStore);
+		const select_on = get(stateStore.selectOnStore);
 		const mode = getSelectionMode(event.event, select_on);
 		const cell = onGrid ? event.cell : null;
 
 		const action = selectionClickAction(cell, mode);
-		updateSelection(action);
+		stateStore.updateSelection(action);
 	};
 
 	cellInputHandler.onDrag = (event: CellDragTapEvent): void => {
@@ -202,7 +195,7 @@ export function getSelectionInputHandler(
 		const cell = onGrid ? event.cell : null;
 
 		const action = selectionDragAction(cell);
-		updateSelection(action);
+		stateStore.updateSelection(action);
 	};
 
 	function onSelectionShortcut(event: KeyboardEvent): boolean {
@@ -210,7 +203,7 @@ export function getSelectionInputHandler(
 		const cells: GridCoordI[] = grid.getAllCells().map((cell) => ({ r: cell.r, c: cell.c }));
 
 		const action = selectionSetCellsAction(cells);
-		updateSelection(action);
+		stateStore.updateSelection(action);
 		return true;
 	}
 
@@ -222,11 +215,11 @@ export function getSelectionInputHandler(
 
 		if (event.type === 'keydown') {
 			const newTool = quickShift2EnterMode(event);
-			updateToolAndCurrentConstraintStores(newTool, null);
+			stateStore.updateToolAndCurrentConstraintStores(newTool, null);
 			return true;
 		}
 		if (event.type === 'keyup') {
-			restoreToolStoreOnQuickshift();
+			stateStore.restoreToolStoreOnQuickshift();
 			return true;
 		}
 		return false;
@@ -238,13 +231,13 @@ export function getSelectionInputHandler(
 		if (event.code === 'Space') {
 			const idx = tools.indexOf(tool);
 			const nextTool = tools[(idx + 1) % tools.length];
-			updateToolAndCurrentConstraintStores(nextTool, null);
-			updatePreviousToolStore(nextTool);
+			stateStore.updateToolAndCurrentConstraintStores(nextTool, null);
+			stateStore.setPreviousToolStore(nextTool);
 			return true;
 		} else {
 			const newTool = letterKey2EnterMode(event.code);
-			updateToolAndCurrentConstraintStores(newTool, null);
-			updatePreviousToolStore(newTool);
+			stateStore.updateToolAndCurrentConstraintStores(newTool, null);
+			stateStore.setPreviousToolStore(newTool);
 			return true;
 		}
 
@@ -253,7 +246,7 @@ export function getSelectionInputHandler(
 
 	function onArrowKey(event: KeyboardEvent): boolean {
 		if (!eventIsDirectionalKey(event)) return false;
-		const lastCell = get(selectionStore).lastCell;
+		const lastCell = get(stateStore.selectionStore).lastCell;
 
 		let newCoords: GridCoordI | null = null;
 		if (lastCell !== null) {
@@ -269,7 +262,7 @@ export function getSelectionInputHandler(
 
 		const mode = getSelectionMode(event, false);
 		const action = selectionArrowKeyAction(newCoords, mode);
-		updateSelection(action);
+		stateStore.updateSelection(action);
 		return true;
 	}
 
@@ -277,7 +270,7 @@ export function getSelectionInputHandler(
 		const value = parseDigit(key);
 		if (value === undefined) return false;
 
-		const selection = get(selectionStore).cells;
+		const selection = get(stateStore.selectionStore).cells;
 		const cells: Cell[] = [];
 		selection.forEach((coord) => {
 			const cell = grid.getCell(coord.r, coord.c);

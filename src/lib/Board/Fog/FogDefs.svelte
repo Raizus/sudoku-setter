@@ -4,10 +4,15 @@
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 	import type { GridShape } from '$src/lib/Types/types';
 	import { getCagePathStr } from '$src/lib/utils/SquareCellGridRenderUtils';
-	import { cellsStore, enableFogMaskStore, gridStore, solutionStore } from '$stores/BoardStore';
+	import { enableFogMaskStore } from '$stores/BoardStore';
 	import { customFogClearingStore, fogLightsStore } from '$stores/ElementsStore';
+	import { stateStore } from '$stores/StateStore';
 
 	export let gridShape: GridShape;
+
+	const solutionStore = stateStore.solutionStore;
+	const gridStore = stateStore.gridStore;
+	const cellsStore = stateStore.cellsStore;
 
 	$: disable_fog_mask = !$enableFogMaskStore;
 	// $: has_fog = $hasFogStore;

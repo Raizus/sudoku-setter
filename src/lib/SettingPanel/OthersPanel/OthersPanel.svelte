@@ -1,26 +1,12 @@
 <script lang="ts">
-	import { get } from 'svelte/store';
-	import Panel from '../Subpanel/Panel.svelte';
+	import { stateStore } from '$stores/StateStore';
 	import PanelHeader from '../Subpanel/PanelHeader.svelte';
-	import { gridStore, updateSolution } from '$stores/BoardStore';
-	import type { Solution } from '$src/lib/Puzzle/puzzle_schema';
+	import Panel from '../Subpanel/Panel.svelte';
 
 	let isOpen = false;
 
 	function setSolution() {
-		const grid = get(gridStore);
-		const solution: Solution = [];
-		for (let i = 0; i < grid.nRows; i++) {
-			const line: Array<number | null> = [];
-			for (let j = 0; j < grid.nCols; j++) {
-				const cell = grid.getCell(i, j);
-				if (!cell) continue;
-				const val = cell.value;
-				line.push(val);
-			}
-			solution.push(line);
-		}
-		updateSolution(solution);
+		stateStore.setSolutionFromGridValues();
 	}
 </script>
 

@@ -1,11 +1,5 @@
 import type { InputHandler } from '../InputHandler';
-import {
-	currentConstraintStore,
-	currentShapeStore,
-	selectConstraint,
-	selectedElementIdStore
-} from '$stores/BoardStore';
-import { elementsDictStore } from '$stores/BoardStore';
+import { currentConstraintStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
@@ -16,16 +10,18 @@ import {
 } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
 import { BASIC_TOOL_MODE, CornerOrEdge } from './types';
 import type { GridShape } from '$lib/Types/types';
-import {
-	findCenterCornerOrEdgeConstraint
-} from '$src/lib/Puzzle/Constraints/ElementsDict';
+import { findCenterCornerOrEdgeConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
-import {
-	centerCornerOrEdgeConstraint} from '$src/lib/Puzzle/Constraints/CenterCornerOrEdgeConstraints';
-import { type CenterCornerOrEdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
+import { centerCornerOrEdgeConstraint } from '$src/lib/Puzzle/Constraints/CenterCornerOrEdgeConstraints';
+import { type CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
 import type { CenterCornerOrEdgeToolInputOptions } from './types';
 import { toolModeStore } from '$stores/InputHandlerStore';
-import { keyDownUpdateValue, pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand, setConstraintPreviewOnMove } from './utils';
+import {
+	keyDownUpdateValue,
+	pushAddLocalConstraintCommand,
+	pushRemoveLocalConstraintCommand,
+	setConstraintPreviewOnMove
+} from './utils';
 import { stateStore } from '$stores/StateStore';
 
 export function getCenterCornerOrEdgeToolInputHandler(
@@ -44,20 +40,20 @@ export function getCenterCornerOrEdgeToolInputHandler(
 	function handle(event: CellEdgeCornerEvent) {
 		const cell = event.cell;
 		const coords = event.closest;
-		
+
 		let mode = get(toolModeStore);
-		
+
 		const onGrid = isCellOnGrid(cell, gridShape);
 		if (!onGrid) return;
-		
+
 		// determine if adding or removing
-		const elements = get(elementsDictStore);
+		const elements = get(stateStore.elementsDictStore);
 		const match = findCenterCornerOrEdgeConstraint(elements, tool, coords);
 		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
 			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
 
-		const element_id = get(selectedElementIdStore);
+		const element_id = get(stateStore.selectedElementIdStore);
 		if (element_id === null) return;
 
 		// remove constraint
@@ -71,16 +67,15 @@ export function getCenterCornerOrEdgeToolInputHandler(
 			const id = uniqueId();
 			pushAddLocalConstraintCommand(element_id, id, newConstraint, true);
 		} else if (match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
-			selectConstraint(element_id, match[0]);
+			stateStore.selectConstraint(element_id, match[0]);
 		}
 	}
 
 	function onKeyDown(event: KeyboardEvent) {
-
 		keyDownUpdateValue<CenterCornerOrEdgeToolI>(
 			event,
 			currentConstraintStore,
-			get(selectedElementIdStore),
+			get(stateStore.selectedElementIdStore),
 			options?.valueUpdater
 		);
 	}
@@ -99,12 +94,12 @@ export function getCenterCornerOrEdgeToolInputHandler(
 		const mode = get(toolModeStore);
 
 		const constraint_preview = centerCornerOrEdgeConstraint(tool, event.closest, '');
-		const currentShape = get(currentShapeStore);
+		const currentShape = get(stateStore.currentShapeStore);
 		if (currentShape) {
 			constraint_preview.shape = { ...currentShape };
 		}
 
-		const elements = get(elementsDictStore);
+		const elements = get(stateStore.elementsDictStore);
 
 		const match = findCenterCornerOrEdgeConstraint(elements, tool, event.closest);
 		const match_id = match ? match[0] : undefined;

@@ -2,8 +2,7 @@
 	import MenuButton from './MenuButton.svelte';
 	import OpenFolder from '$icons/OpenFolder.svelte';
 	import { puzzleFromJson } from '$lib/Puzzle/Puzzle';
-	import { resetUserState, setPuzzle, updateCreationTimestamp } from '$stores/BoardStore';
-	import { resetZoom } from '$stores/BoundingBoxStore';
+	import { stateStore } from '$stores/StateStore';
 
 	let inputRef: HTMLInputElement | null = null;
 
@@ -25,10 +24,9 @@
 
 				const newPuzzle = puzzleFromJson(obj);
 				console.log(newPuzzle);
-				updateCreationTimestamp();
-				setPuzzle(newPuzzle);
-				resetZoom();
-				resetUserState();
+				stateStore.updateCreationTimestamp();
+				stateStore.setPuzzle(newPuzzle);
+				stateStore.resetUserState();
 			}
 		};
 

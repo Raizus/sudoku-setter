@@ -2,15 +2,16 @@
 	import Modal from '$lib/Components/Modal/Modal.svelte';
 	import ModalButtonsContainer from '$lib/Components/Modal/ModalButtonsContainer.svelte';
 	import ModalSectionHeader from '$lib/Components/Modal/ModalSectionHeader.svelte';
+
 	import type { PuzzleMetaI } from '$src/lib/Puzzle/puzzle_schema';
 	import { joinStrList } from '$lib/utils/functionUtils';
-	import { elementsDictStore } from '$stores/BoardStore';
 	import { generateDescription } from '$src/lib/Puzzle/Puzzle';
 	import { stateStore } from '$stores/StateStore';
 
 	export let showModal = false;
 
 	const puzzleMetaStore = stateStore.puzzleMetaStore;
+	const elementsDictStore = stateStore.elementsDictStore;
 
 	let titleStr: string = '';
 	let authorsStr: string = '';

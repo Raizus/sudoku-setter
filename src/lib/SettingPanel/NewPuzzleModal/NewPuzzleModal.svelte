@@ -3,8 +3,6 @@
 	import ModalButtonsContainer from '$components/Modal/ModalButtonsContainer.svelte';
 	import ModalSectionHeader from '$components/Modal/ModalSectionHeader.svelte';
 	import ValueSliderLabeled from '$components/ValueSliderLabeled.svelte';
-	import { resetUserState } from '$stores/BoardStore';
-	import { resetZoom } from '$stores/BoundingBoxStore';
 	import { stateStore } from '$stores/StateStore';
 	import { range } from 'lodash';
 
@@ -22,10 +20,8 @@
 	}
 
 	function confirmCb() {
-		resetUserState();
+		stateStore.resetUserState();
 		stateStore.newBlankPuzzle(height, width, allowed_digits.sort());
-		stateStore.resetZoom();
-		resetZoom();
 		showModal = false;
 	}
 

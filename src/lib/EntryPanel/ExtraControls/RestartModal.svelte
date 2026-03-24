@@ -1,9 +1,6 @@
 <script lang="ts">
 	import ModalButtonsContainer from '$components/Modal/ModalButtonsContainer.svelte';
 	import Modal from '$lib/Components/Modal/Modal.svelte';
-	import {
-		resetUserState,
-	} from '$stores/BoardStore';
 	import { stateStore } from '$stores/StateStore';
 
 	export let showModal = false;
@@ -15,9 +12,8 @@
 	function confirmCb() {
 		// reset grid and cells
         stateStore.resetPuzzle();
-
 		// reset user state
-		resetUserState();
+		stateStore.resetUserState();
 		showModal = false;
 	}
 </script>

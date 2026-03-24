@@ -1,6 +1,4 @@
 <script lang="ts">
-	import CaretDown from '$icons/CaretDown.svelte';
-	import CaretUp from '$icons/CaretUp.svelte';
 	import { getToolInfo, type AbstractElementHandlers } from '$src/lib/Puzzle/ElementHandlersUtils';
 	import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
 	import { TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
@@ -12,15 +10,12 @@
 		removeElementAction,
 		restoreElementAction
 	} from '$src/lib/reducers/LocalConstraintsActions';
-	import {
-		elementsDictStore,
-		selectedElementIdStore,
-		updateToolAndCurrentConstraintStores,
-		updateToolOnRemoveGroup
-	} from '$stores/BoardStore';
 	import { commandHistoryStore } from '$stores/CommandHistoryStore';
 	import { getUpdateElementCommand } from '$stores/LocalConstraintsStore';
 	import { stateStore } from '$stores/StateStore';
+
+	import CaretDown from '$icons/CaretDown.svelte';
+	import CaretUp from '$icons/CaretUp.svelte';
 	import ElementEditor from './ElementEditor.svelte';
 	import MoreButton from './MoreButton.svelte';
 
@@ -31,6 +26,8 @@
 	export let elementHandlers: AbstractElementHandlers;
 
 	const current_tool_store = stateStore.toolStore;
+	const selectedElementIdStore = stateStore.selectedElementIdStore;
+	const elementsDictStore = stateStore.elementsDictStore;
 
 	const permanent: boolean = !!elementHandlers[tool_id].permanent;
 	let selected: boolean = false;
@@ -41,14 +38,14 @@
 
 	function selectCb() {
 		if (selected) {
-			updateToolAndCurrentConstraintStores(TOOLS.DIGIT, null);
+			stateStore.updateToolAndCurrentConstraintStores(TOOLS.DIGIT, null);
 		} else if (!disabled) {
-			updateToolAndCurrentConstraintStores(tool_id, element_id);
+			stateStore.updateToolAndCurrentConstraintStores(tool_id, element_id);
 		}
 	}
 
 	function deleteElement() {
-		updateToolOnRemoveGroup(tool_id);
+		stateStore.updateToolOnRemoveGroup(tool_id);
 
 		if (element_id === null) return;
 
@@ -69,7 +66,7 @@
 		const command = getUpdateElementCommand(action, reverse_action);
 		commandHistoryStore.addCommand(command);
 		if (!disabled) {
-			updateToolAndCurrentConstraintStores(TOOLS.DIGIT, null);
+			stateStore.updateToolAndCurrentConstraintStores(TOOLS.DIGIT, null);
 		}
 	}
 

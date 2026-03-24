@@ -1,4 +1,3 @@
-import type { ToolModeT } from '$input/ToolInputHandlers/types';
 import { ElementsDict } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
 import { Grid } from '$src/lib/Puzzle/Grid/Grid';
@@ -6,9 +5,9 @@ import { PenTool } from '$src/lib/Puzzle/PenTool';
 import { type PuzzleI } from '$src/lib/Puzzle/Puzzle';
 import { getDefaultBoundingBox } from '$src/lib/Puzzle/BoardBoundingBox';
 import type {
-    CellArrowToolI,
-    CellMultiArrowToolI,
-    CellToolI,
+	CellArrowToolI,
+	CellMultiArrowToolI,
+	CellToolI,
 	CenterCornerOrEdgeToolI,
 	ConstraintAndId,
 	ConstraintsElement,
@@ -18,10 +17,11 @@ import type {
 	OutsideDirectionToolI,
 	PuzzleMetaI,
 	Solution,
-    ToolPreview
+	ToolPreview
 } from '$src/lib/Puzzle/puzzle_schema';
 import type { ShapeI } from '$src/lib/Puzzle/Shape/Shape';
 import { TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
+import type { ToolModeT } from '$input/ToolInputHandlers/types';
 import { ELEMENT_ACTIONS, type ElementAction } from '$src/lib/reducers/LocalConstraintsActions';
 import {
 	reducerPenTool,
@@ -32,12 +32,22 @@ import { UPDATE_CELLS_ACTIONS, type UpdateCellsAction } from '$src/lib/reducers/
 import type { CommandI, Rectangle } from '$src/lib/Types/types';
 import { range } from 'lodash';
 import { derived, get, writable } from 'svelte/store';
+import {
+	initSelection,
+	reducerSelection,
+	selectionClearAction,
+	type SelectionAction,
+	type SelectionState
+} from '$src/lib/reducers/SelectionReducer';
 
 export class StateStore {
-	private _svgRefStore = writable<SVGSVGElement | null>(null);
+	public svgRefStore = writable<SVGSVGElement | null>(null);
+	public toolStore = writable<TOOLID>(TOOLS.DIGIT);
+	public selectOnStore = writable<boolean>(false);
+
 	private _selectedElementIdStore = writable<number | null>(null);
-	private _toolStore = writable<TOOLID>(TOOLS.DIGIT);
 	private _previousToolStore = writable<TOOLID | null>(TOOLS.DIGIT);
+	private _selectionStore = writable<SelectionState>(initSelection());
 
 	private _gridStore = writable<Grid>(new Grid(9, 9));
 	private _cellsStore = writable<Cell[]>(get(this._gridStore).getAllCells());
@@ -61,16 +71,18 @@ export class StateStore {
 	/* -------------------------------------------------------------------------- */
 	/* ----- Public Stores ------------------------------------------------------ */
 
-	public svgRefStore = { subscribe: this._svgRefStore.subscribe };
 	public selectedElementIdStore = { subscribe: this._selectedElementIdStore.subscribe };
-	public toolStore = { subscribe: this._toolStore.subscribe };
 	public previousToolStore = { subscribe: this._previousToolStore.subscribe };
+	public selectionStore = { subscribe: this._selectionStore.subscribe };
 
 	public gridStore = { subscribe: this._gridStore.subscribe };
 	public cellsStore = { subscribe: this._cellsStore.subscribe };
 	public validDigitsStore = { subscribe: this._validDigitsStore.subscribe };
 	public puzzleMetaStore = { subscribe: this._puzzleMetaStore.subscribe };
 	public elementsDictStore = { subscribe: this._elementsDictStore.subscribe };
+
+	public penToolStore = { subscribe: this._penToolStore.subscribe };
+	public penColorStore = { subscribe: this._penColorStore.subscribe };
 
 	public currentConstraintStore = { subscribe: this._currentConstraintStore.subscribe };
 	public currentShapeStore = { subscribe: this._currentShapeStore.subscribe };
@@ -124,7 +136,7 @@ export class StateStore {
 	/* ----- Timestamp methods -------------------------------------------------- */
 
 	setSvgRefStore(ref: SVGSVGElement | null) {
-		this._svgRefStore.set(ref);
+		this.svgRefStore.set(ref);
 	}
 
 	updateCreationTimestamp() {
@@ -152,6 +164,22 @@ export class StateStore {
 
 	setSolution(solution: Solution) {
 		this._solutionStore.set(solution);
+	}
+
+	setSolutionFromGridValues() {
+		const grid = get(this._gridStore);
+		const solution: Solution = [];
+		for (let i = 0; i < grid.nRows; i++) {
+			const line: Array<number | null> = [];
+			for (let j = 0; j < grid.nCols; j++) {
+				const cell = grid.getCell(i, j);
+				if (!cell) continue;
+				const val = cell.value;
+				line.push(val);
+			}
+			solution.push(line);
+		}
+		this.setSolution(solution);
 	}
 
 	setPuzzleMeta(meta: PuzzleMetaI) {
@@ -194,7 +222,7 @@ export class StateStore {
 	/* ----- Constraints methods ------------------------------------------------ */
 
 	setTool(tool: TOOLID) {
-		this._toolStore.set(tool);
+		this.toolStore.set(tool);
 	}
 
 	setPreviousToolStore(tool: TOOLID): void {
@@ -224,7 +252,7 @@ export class StateStore {
 	}
 
 	updateToolAndCurrentConstraintStores(tool: TOOLID, element_id: number | null): void {
-		const currTool = get(this._toolStore);
+		const currTool = get(this.toolStore);
 		const currElementId = get(this._selectedElementIdStore);
 		if (currElementId === element_id && tool === currTool) return;
 
@@ -243,11 +271,22 @@ export class StateStore {
 
 	updateToolOnRemoveGroup(toolId: TOOLID) {
 		// if tool is the same as current tool, set current tool to digit
-		const currTool = get(this._toolStore);
+		const currTool = get(this.toolStore);
 
 		if (currTool === toolId) {
 			this.updateToolAndCurrentConstraintStores(TOOLS.DIGIT, null);
 		}
+	}
+
+	addGroupToElementsDict(toolId: TOOLID) {
+		let element_id: number | null = null;
+		this._elementsDictStore.update((elementsDict) => {
+			const element: ConstraintsElement = { tool_id: toolId, constraints: {} };
+			element_id = elementsDict.addElementToDict(element);
+			return elementsDict;
+		});
+
+		return element_id;
 	}
 
 	/**
@@ -381,6 +420,19 @@ export class StateStore {
 		this._penToolStore.update((penToolState) => {
 			return reducerPenTool(penToolState, action);
 		});
+	}
+
+	getPenToolCommand(action: PenToolAction, reverse_action: PenToolAction): CommandI {
+		const command: CommandI = {
+			execute: () => {
+				this.updatePenTool(action);
+			},
+			unExecute: () => {
+				this.updatePenTool(reverse_action);
+			}
+		};
+
+		return command;
 	}
 
 	/* -------------------------------------------------------------------------- */
@@ -529,6 +581,42 @@ export class StateStore {
 	resetZoom() {
 		this._currentScaleStore.set(1);
 		this.restoreBboxToDefault();
+	}
+
+	/* -------------------------------------------------------------------------- */
+	/* ----- Selection methods -------------------------------------------------- */
+
+	updateSelection(action: SelectionAction): void {
+		if (!action) return;
+
+		this._selectionStore.update((selectionState) => {
+			return reducerSelection(selectionState, action);
+		});
+	}
+
+	getUpdateSelectionCommand(action: SelectionAction, reverse_action: SelectionAction): CommandI {
+		const command: CommandI = {
+			execute: () => {
+				this.updateSelection(action);
+			},
+			unExecute: () => {
+				this.updateSelection(reverse_action);
+			}
+		};
+		return command;
+	}
+
+	resetUserState() {
+		// commandHistoryStore.clear();
+		this.resetZoom();
+		this.updatePenTool(resetPenAction());
+		this.updateToolAndCurrentConstraintStores(TOOLS.DIGIT, null);
+
+		const resetSelectionAction = selectionClearAction();
+		this.updateSelection(resetSelectionAction);
+
+		this.setCurrentShape(undefined);
+		this.setCurrentConstraint(null);
 	}
 }
 

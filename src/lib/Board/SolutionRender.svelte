@@ -1,8 +1,11 @@
 <script lang="ts">
-	import { gameModeStore, solutionStore } from '$stores/BoardStore';
+	import { gameModeStore } from '$stores/BoardStore';
 	import { settingsStore } from '$stores/SettingsStore';
+	import { stateStore } from '$stores/StateStore';
 	import { GAME_MODE } from '../Types/types';
 	import CellSolutionRender from './CellRender/CellSolutionRender.svelte';
+
+	const solutionStore = stateStore.solutionStore;
 
 	$: solution = $solutionStore;
     $: show_solution = $settingsStore.showSolution;

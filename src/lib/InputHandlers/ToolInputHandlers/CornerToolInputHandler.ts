@@ -1,14 +1,9 @@
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
-
 import type { InputHandler } from '../InputHandler';
 import { BASIC_TOOL_MODE, type CornerToolOptions } from './types';
 import {
-	currentConstraintStore,
-	elementsDictStore,
-	currentShapeStore,
-	selectConstraint,
-	selectedElementIdStore
+	currentConstraintStore
 } from '$stores/BoardStore';
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
@@ -50,11 +45,11 @@ export function getCornerToolInputHandler(
 		const onGrid = cellsCoords.every((coord) => isCellOnGrid(coord, gridShape));
 		if (!onGrid) return;
 
-		const element_id = get(selectedElementIdStore);
+		const element_id = get(stateStore.selectedElementIdStore);
 		if (element_id === null) return;
 
 		// determine if adding or removing
-		const elements = get(elementsDictStore);
+		const elements = get(stateStore.elementsDictStore);
 		const match = findCornerConstraint(elements, tool, corner);
 		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
 			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
@@ -73,7 +68,7 @@ export function getCornerToolInputHandler(
 		}
 		// select existing constraint
 		else if (match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
-			selectConstraint(element_id, match[0]);
+			stateStore.selectConstraint(element_id, match[0]);
 		}
 	}
 
@@ -81,7 +76,7 @@ export function getCornerToolInputHandler(
 		keyDownUpdateValue<CornerToolI>(
 			event,
 			currentConstraintStore,
-			get(selectedElementIdStore),
+			get(stateStore.selectedElementIdStore),
 			options?.valueUpdater
 		);
 	}
@@ -101,12 +96,12 @@ export function getCornerToolInputHandler(
 		const cellsCoords = cornerCoordToAdjCellCoords(event.coord);
 
 		const constraint_preview = cornerConstraint(tool, cellsCoords, options?.defaultValue);
-		const currentShape = get(currentShapeStore);
+		const currentShape = get(stateStore.currentShapeStore);
 		if (currentShape) {
 			constraint_preview.shape = { ...currentShape };
 		}
 
-		const elements = get(elementsDictStore);
+		const elements = get(stateStore.elementsDictStore);
 
 		const match = findCornerConstraint(elements, tool, event.coord);
 		const match_id = match ? match[0] : undefined;

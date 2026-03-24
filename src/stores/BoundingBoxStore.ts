@@ -156,11 +156,6 @@ export const defaultBoundingBoxStore = derived(
 
 export const boundingBoxStore = writable<Rectangle>(get(defaultBoundingBoxStore));
 
-export function resetZoom() {
-	currentScaleStore.set(1);
-	boundingBoxStore.set(get(defaultBoundingBoxStore));
-}
-
 export function updateBoundindBoxOnZoom(wheel_event: WheelEventInfo) {
 	if (!wheel_event.ctrl) return;
 	const current_scale = get(currentScaleStore);

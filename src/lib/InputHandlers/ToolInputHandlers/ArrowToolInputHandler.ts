@@ -1,8 +1,5 @@
 import { get } from 'svelte/store';
 import type { InputHandler } from '../InputHandler';
-import { selectedElementIdStore, updateConstraint } from '$stores/BoardStore';
-import { elementsDictStore } from '$stores/BoardStore';
-import { addConstraint } from '$stores/LocalConstraintsStore';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
@@ -17,7 +14,8 @@ import {
 	arrowConstraint,
 	arrowRemoveLastLine,
 	arrowShouldRemoveLastLine,
-	removeLineFromArrow} from '$lib/Puzzle/Constraints/ArrowConstraints';
+	removeLineFromArrow
+} from '$lib/Puzzle/Constraints/ArrowConstraints';
 import { type ArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
 import type { GridShape } from '$lib/Types/types';
 import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
@@ -31,6 +29,7 @@ import {
 	pushUpdateLocalConstraintCommand
 } from './utils';
 import { ARROW_TOOL_MODE, type ArrowToolInputOptions } from './types';
+import { stateStore } from '$stores/StateStore';
 
 export function getArrowToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -63,11 +62,11 @@ export function getArrowToolInputHandler(
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
 
-		const element_id = get(selectedElementIdStore);
+		const element_id = get(stateStore.selectedElementIdStore);
 		if (element_id === null) return;
 
 		if (mode === ARROW_TOOL_MODE.DYNAMIC) {
-			const elements = get(elementsDictStore);
+			const elements = get(stateStore.elementsDictStore);
 
 			const matchLine = findArrowLineConstraint(elements, tool, coords);
 			if (matchLine) {
@@ -88,7 +87,7 @@ export function getArrowToolInputHandler(
 				id = bulbMatch[0];
 				currentConstraint = bulbMatch[1];
 				currentConstraint = arrowAddToLines(currentConstraint, coords);
-				updateConstraint(element_id, id, currentConstraint);
+				stateStore.updateConstraint(element_id, id, currentConstraint);
 				return;
 			}
 		}
@@ -96,15 +95,15 @@ export function getArrowToolInputHandler(
 		if (mode === ARROW_TOOL_MODE.EDIT_BULB && !id) {
 			id = uniqueId();
 			currentConstraint = arrowConstraint(tool, [coords]);
-			addConstraint(element_id, id, currentConstraint);
+			stateStore.addConstraint(element_id, id, currentConstraint);
 			return;
 		} else if (mode === ARROW_TOOL_MODE.EDIT_BULB && id && currentConstraint) {
 			currentConstraint = arrowAddToBulb(currentConstraint, coords);
-			updateConstraint(element_id, id, currentConstraint);
+			stateStore.updateConstraint(element_id, id, currentConstraint);
 		} else if (mode === ARROW_TOOL_MODE.EDIT_ARROWS && id && currentConstraint) {
 			// add to arrow line
 			currentConstraint = arrowAddToLast(currentConstraint, coords, options?.allowSelfIntersection);
-			updateConstraint(element_id, id, currentConstraint);
+			stateStore.updateConstraint(element_id, id, currentConstraint);
 		}
 	}
 
@@ -123,14 +122,14 @@ export function getArrowToolInputHandler(
 			return;
 		}
 
-		const element_id = get(selectedElementIdStore);
+		const element_id = get(stateStore.selectedElementIdStore);
 		if (element_id === null) return;
 
 		if (mode === ARROW_TOOL_MODE.EDIT_ARROWS && id && currentConstraint) {
 			// remove last line if last line length <= 1;
 			if (arrowShouldRemoveLastLine(currentConstraint)) {
 				currentConstraint = arrowRemoveLastLine(currentConstraint);
-				updateConstraint(element_id, id, currentConstraint);
+				stateStore.updateConstraint(element_id, id, currentConstraint);
 			} else {
 				pushUpdateLocalConstraintCommand(element_id, id, oldConstraint, currentConstraint);
 				oldConstraint = currentConstraint;
@@ -147,12 +146,12 @@ export function getArrowToolInputHandler(
 	pointerHandler.onTap = (event: CellDragTapEvent) => {
 		if (bypassTap) return;
 
-		const element_id = get(selectedElementIdStore);
+		const element_id = get(stateStore.selectedElementIdStore);
 		if (element_id === null) return;
 
 		const coords = event.cell;
-		const elements = get(elementsDictStore);
-		
+		const elements = get(stateStore.elementsDictStore);
+
 		// on bulb tap remove Arrow
 		const matchBulb = findArrowBulbConstraint(elements, tool, coords);
 		if (matchBulb) {

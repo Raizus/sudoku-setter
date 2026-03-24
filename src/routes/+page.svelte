@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import Game from './Game.svelte';
 	import { blankPuzzle } from '$src/lib/Puzzle/Puzzle';
-	import { resetUserState, setPuzzle } from '$stores/BoardStore';
+	import { stateStore } from '$stores/StateStore';
 
 	let initialized = false;
 
@@ -13,8 +13,8 @@
 				// Delay store updates to ensure proper initialization
 				const newPuzzle = blankPuzzle();
 				requestAnimationFrame(() => {
-					setPuzzle(newPuzzle);
-					resetUserState();
+					stateStore.setPuzzle(newPuzzle);
+					stateStore.resetUserState();
 					initialized = true;
 				});
 			} catch (e) {

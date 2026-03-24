@@ -1,9 +1,10 @@
 import type { PuzzleHistoryItem } from '$src/lib/SettingPanel/PuzzleHistoryModal/PuzzleHistory';
 import { get } from 'svelte/store';
-import { puzzleCreationTimestamp, puzzleUrlStore } from './BoardStore';
+import { puzzleUrlStore } from './BoardStore';
 import { createPersistentStore } from './store_utils';
 import { puzzleToCompressedStr } from '$src/lib/SettingPanel/SavePuzzleModal/io_utils';
 import { blankPuzzle} from '$src/lib/Puzzle/Puzzle';
+import { stateStore } from './StateStore';
 
 export const MAX_HISTORY_SIZE = 100;
 const DEFAULT_COMPRESSED_STR = puzzleToCompressedStr(blankPuzzle());
@@ -78,7 +79,7 @@ export function clearPuzzleHistory() {
 }
 
 puzzleUrlStore.subscribe((value) => {
-	const creation_ts = get(puzzleCreationTimestamp);
+	const creation_ts = get(stateStore.puzzleCreationTimestamp);
 	if (!value) return;
 	if (value === DEFAULT_COMPRESSED_STR) return;
 

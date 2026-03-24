@@ -1,7 +1,7 @@
 import { isAlphaNumeric } from '$input/KeyboardEventUtils';
-import { resetZoom } from '$stores/BoundingBoxStore';
 import { commandHistoryStore } from '$stores/CommandHistoryStore';
 import { toggleDarkmode } from '$stores/SettingsStore';
+import { stateStore } from '$stores/StateStore';
 
 interface EventKey {
 	altKey?: boolean;
@@ -131,7 +131,7 @@ const selectAllCells: Shortcut = {
 export const resetZoomSc: Shortcut = {
 	name: 'Reset Zoom',
 	keys: [{ altKey: true, key: 'Z', type: 'keydown' }],
-	func: resetZoom
+	func: stateStore.resetZoom
 };
 
 const toggleFog: Shortcut = {

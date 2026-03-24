@@ -4,7 +4,6 @@
 	import { isCellInputTool, type TOOLID } from '$lib/Puzzle/Tools';
 	import type { GridCoordI } from '$lib/utils/SquareCellGridCoords';
 	import { enableFogMaskStore } from '$stores/BoardStore';
-	import { selectionStore } from '$stores/SelectionStore';
 	import { settingsStore } from '$stores/SettingsStore';
 	import { stateStore } from '$stores/StateStore';
 	import type { PuzzleI } from '../Puzzle/Puzzle';
@@ -13,6 +12,7 @@
 	export let tool: TOOLID;
 
 	const puzzleStore = stateStore.puzzleStore;
+	const selectionStore = stateStore.selectionStore;
 
 	$: selection = $selectionStore.cells;
 	$: showSeen = $settingsStore.highlightCellsSeenBySelection;

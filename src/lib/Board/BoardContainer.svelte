@@ -2,7 +2,7 @@
 	import { InputHandlerStore } from '$stores/InputHandlerStore';
 	import Board from './Board.svelte';
 	import { onExtraInput } from '$input/ExtraInputHandler';
-	import { currentScaleStore, resetZoom } from '$stores/BoundingBoxStore';
+	import { currentScaleStore } from '$stores/BoundingBoxStore';
 	import { getWheelInputHandler } from '$input/WheelInputHandler';
 	import { stateStore } from '$stores/StateStore';
 
@@ -27,7 +27,7 @@
 	}
 
 	function resetZoomCb() {
-		resetZoom();
+		stateStore.resetZoom();
 	}
 </script>
 

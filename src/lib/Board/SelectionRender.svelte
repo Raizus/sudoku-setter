@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { isCellInputTool, type TOOLID } from '$lib/Puzzle/Tools';
 	import { getCagePathStr } from '$lib/utils/SquareCellGridRenderUtils';
-	import { selectionStore } from '$stores/SelectionStore';
 	import { settingsStore } from '$stores/SettingsStore';
+	import { stateStore } from '$stores/StateStore';
 	import type { GridShape } from '../Types/types';
 
 	export let gridShape: GridShape;
 	export let tool: TOOLID;
 
+	const selectionStore = stateStore.selectionStore;
 	const inset = 0.1;
 	const innerRadius = 0.05;
 	const innerOpacity = '#080808';

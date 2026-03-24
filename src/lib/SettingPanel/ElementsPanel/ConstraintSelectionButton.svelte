@@ -1,7 +1,5 @@
 <script lang="ts">
 	import Trash from '$icons/Trash.svelte';
-	import { currentConstraintStore, selectConstraint } from '$stores/BoardStore';
-	import { elementsDictStore } from '$stores/BoardStore';
 	import { getUpdateElementCommand } from '$stores/LocalConstraintsStore';
 	import {
 		addLocalConstraintAction,
@@ -14,10 +12,12 @@
 	export let element_id: number;
 
 	const svgRefStore = stateStore.svgRefStore;
+	const elementsDictStore = stateStore.elementsDictStore;
+	const currentConstraintStore = stateStore.currentConstraintStore;
 
 	function selectConstraintCb() {
 		//update current constraint
-		selectConstraint(element_id, constraint_id);
+		stateStore.selectConstraint(element_id, constraint_id);
 		if ($svgRefStore) $svgRefStore.focus();
 	}
 

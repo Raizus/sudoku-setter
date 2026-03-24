@@ -6,7 +6,8 @@
 	import { type VariableConstraintI } from '$src/lib/Puzzle/puzzle_schema';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { isLocalConstraint, type TOOLID } from '$src/lib/Puzzle/Tools';
-	import { currentConstraintStore, updateConstraint } from '$stores/BoardStore';
+	import { stateStore } from '$stores/StateStore';
+
 	import ConstraintCheckbox from './ConstraintCheckbox.svelte';
 	import ConstraintList from './ConstraintList.svelte';
 	import ToolModeButtons from './ToolModeButtons.svelte';
@@ -22,6 +23,7 @@
 	// don't render editor if there's nothing to render
 	// i.e global constraints without negative_constraints
 	const render = is_local || has_negatives;
+	const currentConstraintStore = stateStore.currentConstraintStore;
 
 	$: constraint_and_id = $currentConstraintStore;
 	$: constraint = constraint_and_id?.constraint;
@@ -39,7 +41,7 @@
 		if (new_value === undefined) return;
 
 		const constraint = updateConstraintValue(constraint_and_id.constraint, new_value);
-		updateConstraint(element_id, constraint_and_id.id, constraint);
+		stateStore.updateConstraint(element_id, constraint_and_id.id, constraint);
 	}
 
 	function updateName(event: Event) {
@@ -53,7 +55,7 @@
 			constraint_and_id.constraint as VariableConstraintI,
 			value
 		);
-		updateConstraint(element_id, constraint_and_id.id, constraint);
+		stateStore.updateConstraint(element_id, constraint_and_id.id, constraint);
 	}
 </script>
 
@@ -97,7 +99,7 @@
 					</div>
 				{/if}
 			</div>
-			<ToolModeButtons {tool_id} {element_id}/>
+			<ToolModeButtons {tool_id} {element_id} />
 			<ConstraintList {element_id} />
 		</div>
 	</div>

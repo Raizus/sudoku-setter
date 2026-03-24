@@ -1,8 +1,4 @@
 import type { InputHandler } from '../InputHandler';
-import { selectedElementIdStore, updateConstraint } from '$stores/BoardStore';
-import { elementsDictStore } from '$stores/BoardStore';
-import { removeConstraint } from '$stores/LocalConstraintsStore';
-import { addConstraint } from '$stores/LocalConstraintsStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
@@ -22,6 +18,7 @@ import {
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import { BASIC_TOOL_MODE, type LineToolInputOptions } from './types';
 import { toolModeStore } from '$stores/InputHandlerStore';
+import { stateStore } from '$stores/StateStore';
 
 export function getLineToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -50,11 +47,11 @@ export function getLineToolInputHandler(
 		const coords = event.cell;
 		if (!eventOnGrid(event)) return;
 
-		const element_id = get(selectedElementIdStore);
+		const element_id = get(stateStore.selectedElementIdStore);
 		if (element_id === null) return;
 
 		newConstraint = updateLineConstraintCells(newConstraint, coords, allowSelfIntersection);
-		updateConstraint(element_id, id, newConstraint);
+		stateStore.updateConstraint(element_id, id, newConstraint);
 	}
 
 	pointerHandler.onDragStart = (event: CellDragTapEvent): void => {
@@ -62,13 +59,13 @@ export function getLineToolInputHandler(
 
 		if (!eventOnGrid(event)) return;
 
-		const element_id = get(selectedElementIdStore);
+		const element_id = get(stateStore.selectedElementIdStore);
 		if (element_id === null) return;
 
 		if (mode !== BASIC_TOOL_MODE.DELETE) {
 			id = uniqueId();
 			newConstraint = lineConstraint(tool, [], options?.defaultValue);
-			addConstraint(element_id, id, newConstraint);
+			stateStore.addConstraint(element_id, id, newConstraint);
 			handle(event);
 		}
 	};
@@ -78,11 +75,11 @@ export function getLineToolInputHandler(
 	};
 
 	pointerHandler.onDragEnd = () => {
-		const element_id = get(selectedElementIdStore);
+		const element_id = get(stateStore.selectedElementIdStore);
 		if (element_id === null) return;
 
 		if (id && newConstraint && newConstraint.cells.length <= 1) {
-			removeConstraint(element_id, id);
+			stateStore.removeConstraint(element_id, id);
 		} else if (id && newConstraint) {
 			// push command to history stack
 			pushAddLocalConstraintCommand(element_id, id, newConstraint, false);
@@ -96,10 +93,10 @@ export function getLineToolInputHandler(
 		if (mode === BASIC_TOOL_MODE.ADD_EDIT) return;
 
 		const coords = event.cell;
-		const elements = get(elementsDictStore);
+		const elements = get(stateStore.elementsDictStore);
 		const match = findLineConstraint(elements, tool, coords);
 
-		const element_id = get(selectedElementIdStore);
+		const element_id = get(stateStore.selectedElementIdStore);
 		if (element_id === null) return;
 
 		if (match) {

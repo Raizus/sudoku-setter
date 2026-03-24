@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { puzzleFromJson } from '$src/lib/Puzzle/Puzzle';
 	import { type PuzzleI } from '$src/lib/Puzzle/Puzzle';
 	import Game from '$src/routes/Game.svelte';
-	import { resetUserState, setPuzzle } from '$stores/BoardStore';
+	import { stateStore } from '$stores/StateStore';
 	import { onMount } from 'svelte';
 
 	export let data: { puzzle: PuzzleI };
@@ -16,8 +15,8 @@
 				const puzzle = data.puzzle;
 				// Delay store updates to ensure proper initialization
 				requestAnimationFrame(() => {
-					setPuzzle(puzzle);
-					resetUserState();
+					stateStore.setPuzzle(puzzle);
+					stateStore.resetUserState();
 					initialized = true;
 				});
 			} catch (e) {

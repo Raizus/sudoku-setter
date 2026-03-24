@@ -1,11 +1,16 @@
 <script lang="ts">
 	import Modal from '$lib/Components/Modal/Modal.svelte';
-	import { cellsStore, gridStore, solutionStore } from '$stores/BoardStore';
+	import { stateStore } from '$stores/StateStore';
 	import type { Cell } from '../Puzzle/Grid/Cell';
 	import type { Grid } from '../Puzzle/Grid/Grid';
 	import type { Solution } from '../Puzzle/puzzle_schema';
 
 	export let showModal = false;
+
+	const solutionStore = stateStore.solutionStore;
+	const gridStore = stateStore.gridStore;
+	const cellsStore = stateStore.cellsStore;
+
 	$: solution = $solutionStore;
 	$: grid = $gridStore;
 	$: cells = $cellsStore;

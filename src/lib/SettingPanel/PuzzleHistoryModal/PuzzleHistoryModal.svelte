@@ -2,9 +2,8 @@
 	import Modal from '$components/Modal/Modal.svelte';
 	import BoardPreview from '$src/lib/Board/BoardPreview.svelte';
 	import type { PuzzleI } from '$src/lib/Puzzle/Puzzle';
-	import { resetUserState, setCreationTimestamp, setPuzzle } from '$stores/BoardStore';
-	import { resetZoom } from '$stores/BoundingBoxStore';
 	import { MAX_HISTORY_SIZE, puzzleHistoryStore } from '$stores/PuzzleHistoryStore';
+	import { stateStore } from '$stores/StateStore';
 	import { getCompressedLink } from '../SavePuzzleModal/io_utils';
 	import ManageHistoryButton from './ManageHistoryButton.svelte';
 	import PuzzleItem from './PuzzleItem.svelte';
@@ -20,10 +19,9 @@
 		if (selected === undefined || puzzle === undefined) return;
 		const item = $puzzleHistoryStore[selected];
 
-		resetUserState();
-		resetZoom();
-		setCreationTimestamp(item.creationTimestamp);
-		setPuzzle(puzzle);
+		stateStore.resetUserState();
+		stateStore.setCreationTimestamp(item.creationTimestamp);
+		stateStore.setPuzzle(puzzle);
 		showModal = false;
 		confirm_selected = undefined;
 	}

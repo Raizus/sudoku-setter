@@ -1,113 +1,28 @@
 import { ElementsDict } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { type ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
-import type { Cell } from '$lib/Puzzle/Grid/Cell';
 import { Grid } from '$lib/Puzzle/Grid/Grid';
-import { type PuzzleI } from '$src/lib/Puzzle/Puzzle';
-import { type Solution } from '$src/lib/Puzzle/puzzle_schema';
 
-import type { ConstraintAndId, PuzzleMetaI } from '$src/lib/Puzzle/puzzle_schema';
-import type { ShapeI } from '$lib/Puzzle/Shape/Shape';
+import type { ConstraintAndId } from '$src/lib/Puzzle/puzzle_schema';
 import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';
 
-import { selectionClearAction } from '$lib/reducers/SelectionReducer';
-import { resetPenAction } from '$src/lib/reducers/PenToolReducer';
-
-import { derived, get, writable } from 'svelte/store';
-import { commandHistoryStore } from './CommandHistoryStore';
-import { updatePenTool } from './PenToolStore';
-import { updateSelection } from './SelectionStore';
+import { derived, writable } from 'svelte/store';
 import { settingsStore } from './SettingsStore';
 import { GAME_MODE } from '$src/lib/Types/types';
-import { debounce, range } from 'lodash';
+import { debounce } from 'lodash';
 import { puzzleToCompressedStr } from '$src/lib/SettingPanel/SavePuzzleModal/io_utils';
-
-export const svgRefStore = writable<SVGSVGElement | null>(null);
+import { stateStore } from './StateStore';
 
 export const gameModeStore = writable<GAME_MODE>(GAME_MODE.SETTING);
 
 // user state
-export const selectOnStore = writable<boolean>(false);
-export const selectedElementIdStore = writable<number | null>(null);
 export const toolStore = writable<TOOLID>(TOOLS.DIGIT);
-export const previousToolStore = writable<TOOLID | null>(TOOLS.DIGIT);
-export const validDigitsStore = writable<number[]>(range(1, 10));
 export const gridStore = writable<Grid>(new Grid(9, 9));
-export const cellsStore = writable<Cell[]>(
-	(() => {
-		const grid = get(gridStore);
-		return grid.getAllCells();
-	})()
-);
 
-export const puzzleMetaStore = writable<PuzzleMetaI>({});
 export const elementsDictStore = writable<ElementsDict>(new ElementsDict());
 export const currentConstraintStore = writable<ConstraintAndId | null>(null);
-export const currentShapeStore = writable<ShapeI | undefined>(undefined);
-export const solutionStore = writable<Solution>(undefined);
-
-export const puzzleCreationTimestamp = writable<number>(Date.now());
-
-export function updateCreationTimestamp() {
-	puzzleCreationTimestamp.set(Date.now());
-}
-
-export function setCreationTimestamp(timestamp: number) {
-	puzzleCreationTimestamp.set(timestamp);
-}
 
 export function setCurrentConstraint(constraintId: ConstraintAndId | null) {
 	currentConstraintStore.update(() => constraintId);
-}
-
-export function updateCurrentShape(shape: ShapeI | undefined) {
-	currentShapeStore.update(() => shape);
-}
-
-export function updateToolAndCurrentConstraintStores(
-	tool: TOOLID,
-	element_id: number | null
-): void {
-	const currTool = get(toolStore);
-	const currElementId = get(selectedElementIdStore);
-	if (currElementId === element_id && tool === currTool) return;
-
-	toolStore.update(() => tool);
-	setCurrentConstraint(null);
-
-	if (element_id === currElementId) return
-	selectedElementIdStore.update(() => element_id);
-}
-
-export function restoreToolStoreOnQuickshift(): void {
-	const prevTool = get(previousToolStore);
-	if (!prevTool) return;
-	updateToolAndCurrentConstraintStores(prevTool, null);
-}
-
-export function updatePreviousToolStore(tool: TOOLID): void {
-	previousToolStore.update(() => tool);
-}
-
-export function updateToolOnRemoveGroup(toolId: TOOLID) {
-	// if tool is the same as current tool, set current tool to digit
-	const currTool = get(toolStore);
-	if (currTool === toolId) {
-		updateToolAndCurrentConstraintStores(TOOLS.DIGIT, null);
-	}
-}
-
-/**
- * Removes a constraint group from the local constraints dictionary.
- * For example, it removes all Renban constraints
- * @param element_id
- */
-export function removeGroupFromElementsDict(element_id: number) {
-	elementsDictStore.update((elementsDict) => {
-		elementsDict.removeFromDict(element_id);
-		return elementsDict;
-	});
-
-	updateCurrentShape(undefined);
 }
 
 /**
@@ -126,52 +41,6 @@ export function updateConstraint<T extends ConstraintType>(
 		return localConstraintsDict;
 	});
 	setCurrentConstraint({ id, constraint: newConstraint });
-}
-
-export function updateCurrentConstraintShape(newShape: ShapeI | undefined) {
-	const currentConstraint = get(currentConstraintStore);
-
-	newShape = newShape ? { ...newShape } : undefined;
-
-	updateCurrentShape(newShape);
-
-	if (!currentConstraint) return;
-	const element_id = get(selectedElementIdStore);
-	if (element_id === null) return;
-	const newConstraint = { ...currentConstraint.constraint, shape: newShape };
-	updateConstraint(element_id, currentConstraint.id, newConstraint);
-}
-
-export function selectConstraint(element_id: number, c_id: string) {
-	const localConstraintsDict = get(elementsDictStore);
-	const element = localConstraintsDict.get(element_id);
-	if (!element || !element.constraints) return;
-
-	const constraint = element.constraints[c_id];
-	if (!constraint) return;
-	setCurrentConstraint({ id: c_id, constraint });
-}
-
-export function setPuzzle(puzzle: PuzzleI) {
-	gridStore.update(() => puzzle.grid);
-	puzzleMetaStore.update(() => puzzle.puzzleMeta);
-	updateSolution(puzzle.solution);
-	validDigitsStore.update(() => puzzle.valid_digits);
-	elementsDictStore.update(() => puzzle.elementsDict);
-
-	cellsStore.update(() => puzzle.grid.getAllCells());
-}
-
-export function resetUserState() {
-	commandHistoryStore.clear();
-	updatePenTool(resetPenAction());
-	updateToolAndCurrentConstraintStores(TOOLS.DIGIT, null);
-
-	const resetSelectionAction = selectionClearAction();
-	updateSelection(resetSelectionAction);
-
-	updateCurrentShape(undefined);
-	setCurrentConstraint(null);
 }
 
 export const hasFogStore = derived(elementsDictStore, ($elementsDictStore) => {
@@ -209,26 +78,6 @@ export const showFogStore = derived(
 	}
 );
 
-export const puzzleStore = derived(
-	[gridStore, puzzleMetaStore, elementsDictStore, solutionStore, validDigitsStore],
-	([$gridStore, $puzzleMetaStore, $localConstraintsStore, $solutionStore, $validDigitsStore]) => {
-		const puzzle: PuzzleI = {
-			grid: $gridStore,
-			solution: $solutionStore,
-			puzzleMeta: $puzzleMetaStore,
-			valid_digits: $validDigitsStore,
-			elementsDict: $localConstraintsStore
-		};
-		return puzzle;
-	}
-);
-
-export function updateSolution(solution: Solution) {
-	solutionStore.update(() => {
-		return solution;
-	});
-}
-
 function updateUrlParams(compressedStr: string) {
 	if (typeof window === 'undefined') return;
 
@@ -240,7 +89,7 @@ function updateUrlParams(compressedStr: string) {
 }
 
 export const puzzleUrlStore = derived(
-	puzzleStore,
+	stateStore.puzzleStore,
 	debounce(($puzzleStore) => {
 		const compressedStr = puzzleToCompressedStr($puzzleStore);
 		updateUrlParams(compressedStr);

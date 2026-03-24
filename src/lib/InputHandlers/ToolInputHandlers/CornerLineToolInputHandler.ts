@@ -1,26 +1,24 @@
 import type { InputHandler } from '../InputHandler';
-import { selectedElementIdStore, updateConstraint } from '$stores/BoardStore';
-import { elementsDictStore } from '$stores/BoardStore';
-import { addConstraint } from '$stores/LocalConstraintsStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import type { GridShape } from '$lib/Types/types';
 import { areCoordsOnGrid } from '$lib/utils/SquareCellGridCoords';
-import {
-	findCornerLineConstraint} from '$src/lib/Puzzle/Constraints/ElementsDict';
+import { findCornerLineConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { type ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import {
 	cornerLineConstraint,
-	updateCornerLineConstraintCoords} from '$src/lib/Puzzle/Constraints/CornerLineConstraints';
+	updateCornerLineConstraintCoords
+} from '$src/lib/Puzzle/Constraints/CornerLineConstraints';
 import { type CornerLineToolI } from '$src/lib/Puzzle/puzzle_schema';
 import {
 	CellCornerPointerHandler,
 	type CellCornerTapEvent
 } from '$input/PointerHandlers/CellCornerPointerHandler';
 import { CORNER_LINE_TOOL_MODE, type CornerLineToolInputOptions } from './types';
+import { stateStore } from '$stores/StateStore';
 
 export function getCornerLineToolInputHandler(
 	svgRef: SVGSVGElement,
@@ -38,19 +36,18 @@ export function getCornerLineToolInputHandler(
 	let mode = CORNER_LINE_TOOL_MODE.DYNAMIC;
 
 	function handle(event: CellCornerTapEvent) {
-		
 		const coord = event.coord;
 		const onGrid = areCoordsOnGrid(coord, gridShape);
 		if (!onGrid) return;
-		
-		const elements = get(elementsDictStore);
+
+		const elements = get(stateStore.elementsDictStore);
 		let match: [string, ConstraintType] | null = null;
 		if (mode === CORNER_LINE_TOOL_MODE.DYNAMIC) {
 			match = findCornerLineConstraint(elements, tool, coord);
 			mode = match ? CORNER_LINE_TOOL_MODE.DELETE : CORNER_LINE_TOOL_MODE.ADD_EDIT;
 		}
 
-		const element_id = get(selectedElementIdStore);
+		const element_id = get(stateStore.selectedElementIdStore);
 		if (element_id === null) return;
 
 		// remove constraint
@@ -63,13 +60,13 @@ export function getCornerLineToolInputHandler(
 		if (!currentConstraint && mode === CORNER_LINE_TOOL_MODE.ADD_EDIT) {
 			id = uniqueId();
 			currentConstraint = cornerLineConstraint(tool, [coord], options?.defaultValue);
-			addConstraint(element_id, id, currentConstraint);
+			stateStore.addConstraint(element_id, id, currentConstraint);
 			return;
 		}
 		// add to current cage
 		else if (currentConstraint && id && mode === CORNER_LINE_TOOL_MODE.ADD_EDIT) {
 			currentConstraint = updateCornerLineConstraintCoords(currentConstraint, coord);
-			updateConstraint(element_id, id, currentConstraint);
+			stateStore.updateConstraint(element_id, id, currentConstraint);
 			return;
 		}
 	}
@@ -87,7 +84,7 @@ export function getCornerLineToolInputHandler(
 	};
 
 	pointerHandler.onDragEnd = () => {
-		const element_id = get(selectedElementIdStore);
+		const element_id = get(stateStore.selectedElementIdStore);
 		if (element_id === null) return;
 
 		if (id && currentConstraint) {

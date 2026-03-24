@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { TOOLID } from '$lib/Puzzle/Tools';
-	import { updatePreviousToolStore } from '$stores/BoardStore';
-	// import { updatePreviousToolStore, updateToolStore } from '$stores/BoardStore';
+	import { stateStore } from '$stores/StateStore';
 
 	export let selectedTool: TOOLID;
 	export let value: TOOLID;
@@ -9,7 +8,7 @@
 
 	function handleOptionChange() {
 		// updateToolStore(value);
-		updatePreviousToolStore(value);
+		stateStore.setPreviousToolStore(value);
 	}
 </script>
 

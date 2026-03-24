@@ -3,11 +3,12 @@
 	import Redo from '$icons/Redo.svelte';
 	import Select from '$icons/Select.svelte';
 	import Undo from '$icons/Undo.svelte';
-	import { selectOnStore } from '$stores/BoardStore';
 	import { commandHistoryStore } from '$stores/CommandHistoryStore';
+	import { stateStore } from '$stores/StateStore.js';
 
 	const redo_stack_len_store = commandHistoryStore.redo_stack_length;
 	const undo_stack_len_store = commandHistoryStore.undo_stack_length;
+	const selectOnStore = stateStore.selectOnStore;
 
 	$: undoDisabled = $undo_stack_len_store === 0;
 	$: redoDisabled = $redo_stack_len_store === 0;

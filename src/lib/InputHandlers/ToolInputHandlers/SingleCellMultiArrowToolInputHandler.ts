@@ -1,7 +1,5 @@
 import type { InputHandler } from '../InputHandler';
 import type { TOOLID } from '$lib/Puzzle/Tools';
-import { selectConstraint, selectedElementIdStore, updateConstraint } from '$stores/BoardStore';
-import { elementsDictStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { Grid } from '$lib/Puzzle/Grid/Grid';
@@ -58,10 +56,10 @@ export function getSingleCellMultiArrowToolInputHandler(
 		
 		const direction = idxToDirection(event.direction);
 
-		const elements = get(elementsDictStore);
+		const elements = get(stateStore.elementsDictStore);
 		const match = findSingleCellConstraint<CellMultiArrowToolI>(elements, tool, coords);
 
-		const element_id = get(selectedElementIdStore);
+		const element_id = get(stateStore.selectedElementIdStore);
 		if (element_id === null) return;
 
 		// create new constraint
@@ -73,7 +71,7 @@ export function getSingleCellMultiArrowToolInputHandler(
 			// select
 			if (match[1].directions.includes(direction) && mode !== BASIC_TOOL_MODE.DELETE) {
 				[id, currentConstraint] = match;
-				selectConstraint(element_id, match[0]);
+				stateStore.selectConstraint(element_id, match[0]);
 			}
 			// remove constraint
 			if (match && mode === BASIC_TOOL_MODE.DELETE) {
@@ -88,7 +86,7 @@ export function getSingleCellMultiArrowToolInputHandler(
 						...match[1],
 						directions: newDirections
 					} as CellMultiArrowToolI;
-					updateConstraint(element_id, match[0], currentConstraint);
+					stateStore.updateConstraint(element_id, match[0], currentConstraint);
 				} else {
 					pushRemoveLocalConstraintCommand(element_id, match[0], match[1]);
 				}

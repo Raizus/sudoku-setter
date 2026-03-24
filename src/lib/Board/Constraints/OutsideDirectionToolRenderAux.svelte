@@ -4,24 +4,27 @@
 		getArrowHead,
 		linePointsToPathStr
 	} from '$lib/utils/SquareCellGridRenderUtils';
-		import type { OutsideDirectionToolI } from "$src/lib/Puzzle/puzzle_schema";
+	import type { OutsideDirectionToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { defaultOutsideShape } from '$lib/Puzzle/Shape/Shape';
 	import { directionToCoords, type GridCoordI } from '$lib/utils/SquareCellGridCoords';
 	import type { DIRECTION } from '$src/lib/utils/directions';
 	import { Vector2D } from '$src/lib/utils/Vector2D';
-	import { currentConstraintStore, gridStore } from '$stores/BoardStore';
+	import { currentConstraintStore } from '$stores/BoardStore';
+	import { stateStore } from '$stores/StateStore.js';
 
 	export let tool: OutsideDirectionToolI;
 	export let c_id: string | undefined = undefined;
+
+	const gridStore = stateStore.gridStore;
 
 	$: currentConstraintId = $currentConstraintStore?.id;
 
 	$: coords = tool.cell;
 	$: center = cellToCellCenterVector(coords);
 
-    $: cells = $gridStore.getCellsInDirection(tool.cell.r, tool.cell.c, tool.direction);
+	$: cells = $gridStore.getCellsInDirection(tool.cell.r, tool.cell.c, tool.direction);
 
 	$: defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultOutsideShape;
 	$: shape = tool.shape ?? defaultShape;
@@ -68,13 +71,13 @@
 </script>
 
 <g class="outside-direction-tool">
-    <!-- preview -->
-    {#if c_id === undefined}
-        {#each cells as cell}
-            <rect x={cell.c} y={cell.r} width={1} height={1} stroke="none" fill="#5373ea80"/>
-        {/each}
-    {/if}
-    <!-- current constraint highlight -->
+	<!-- preview -->
+	{#if c_id === undefined}
+		{#each cells as cell}
+			<rect x={cell.c} y={cell.r} width={1} height={1} stroke="none" fill="#5373ea80" />
+		{/each}
+	{/if}
+	<!-- current constraint highlight -->
 	{#if c_id && c_id === currentConstraintId}
 		<path
 			d={arrowPathStr}
@@ -83,11 +86,11 @@
 			stroke-width={selectedOutlineShape.strokeWidth}
 			stroke-linecap="round"
 		/>
-        {#each cells as cell}
-            <rect x={cell.c} y={cell.r} width={1} height={1} stroke="none" fill="#5373ea66"/>
-        {/each}
+		{#each cells as cell}
+			<rect x={cell.c} y={cell.r} width={1} height={1} stroke="none" fill="#5373ea66" />
+		{/each}
 	{/if}
-    <!-- constraint -->
+	<!-- constraint -->
 	<path
 		d={arrowPathStr}
 		fill="none"
@@ -112,4 +115,3 @@
         fill: #5373ea66;
     }
 </style> -->
-

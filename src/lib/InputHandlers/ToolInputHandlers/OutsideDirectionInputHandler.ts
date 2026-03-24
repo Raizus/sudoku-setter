@@ -1,11 +1,7 @@
 import type { InputHandler } from '../InputHandler';
 import {
 	currentConstraintStore,
-	currentShapeStore,
-	selectConstraint,
-	selectedElementIdStore
 } from '$stores/BoardStore';
-import { elementsDictStore } from '$stores/BoardStore';
 import { get } from 'svelte/store';
 import { uniqueId } from 'lodash';
 import type { TOOLID } from '$lib/Puzzle/Tools';
@@ -61,13 +57,13 @@ export function getOutsideDirectionToolInputHandler(
 		let mode = get(toolModeStore);
 
 		// determine if adding or removing
-		const elements = get(elementsDictStore);
+		const elements = get(stateStore.elementsDictStore);
 		const match = findOutsideDirectionConstraint(elements, tool, cell, direction);
 		if (mode === BASIC_TOOL_MODE.DYNAMIC) {
 			mode = match ? BASIC_TOOL_MODE.DELETE : BASIC_TOOL_MODE.ADD_EDIT;
 		}
 
-		const element_id = get(selectedElementIdStore);
+		const element_id = get(stateStore.selectedElementIdStore);
 		if (element_id === null) return;
 
 		if (match && mode === BASIC_TOOL_MODE.DELETE) {
@@ -78,7 +74,7 @@ export function getOutsideDirectionToolInputHandler(
 			const id = uniqueId();
 			pushAddLocalConstraintCommand(element_id, id, newConstraint, true);
 		} else if (match && mode === BASIC_TOOL_MODE.ADD_EDIT) {
-			selectConstraint(element_id, match[0]);
+			stateStore.selectConstraint(element_id, match[0]);
 		}
 	}
 
@@ -86,7 +82,7 @@ export function getOutsideDirectionToolInputHandler(
 		keyDownUpdateValue<OutsideDirectionToolI>(
 			event,
 			currentConstraintStore,
-			get(selectedElementIdStore),
+			get(stateStore.selectedElementIdStore),
 			options?.valueUpdater
 		);
 	}
@@ -111,14 +107,14 @@ export function getOutsideDirectionToolInputHandler(
 		}
 
 		const constraint_preview = outsideDirectionConstraint(tool, event.cell, direction, '');
-		const currentShape = get(currentShapeStore);
+		const currentShape = get(stateStore.currentShapeStore);
 		if (currentShape) {
 			constraint_preview.shape = { ...currentShape };
 		}
 
 		const mode = get(toolModeStore);
 
-		const elements = get(elementsDictStore);
+		const elements = get(stateStore.elementsDictStore);
 		const match = findOutsideDirectionConstraint(elements, tool, event.cell, direction);
 
 		const match_id = match ? match[0] : undefined;

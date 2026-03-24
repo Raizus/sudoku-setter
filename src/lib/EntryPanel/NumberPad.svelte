@@ -1,12 +1,14 @@
 <script lang="ts">
-	import { penColorStore } from '$stores/PenToolStore';
 	import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';
 	import { InputHandlerStore } from '$stores/InputHandlerStore';
 	import { settingsStore } from '$stores/SettingsStore';
+	import { stateStore } from '$stores/StateStore';
 
 	export let selectedTool: TOOLID;
 	const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 	const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'O'];
+	const penColorStore = stateStore.penColorStore;
+
 	let letterChecked = false;
 
 	function getLabels(numOrLetter: boolean) {

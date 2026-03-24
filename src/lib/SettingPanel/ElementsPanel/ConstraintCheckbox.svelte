@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { elementsDictStore } from '$stores/BoardStore';
-	import { restoreElement } from '$stores/LocalConstraintsStore';
+	import { stateStore } from '$stores/StateStore';
 
 	export let element_id: number;
 	export let neg_tool_id: string;
 	export let description: string;
+
+	const elementsDictStore = stateStore.elementsDictStore;
 
 	$: element = $elementsDictStore.get(element_id);
 	$: value = element?.negative_constraints ? !!element.negative_constraints[neg_tool_id] : false;
@@ -13,7 +14,7 @@
 		if (!element) return;
 		if (!element.negative_constraints) element.negative_constraints = {};
 		element.negative_constraints[neg_tool_id] = !value;
-		restoreElement(element_id, element);
+		stateStore.restoreElement(element_id, element);
 
 		// update current element negative constraint
 

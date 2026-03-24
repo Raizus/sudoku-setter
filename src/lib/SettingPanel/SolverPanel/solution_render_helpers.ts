@@ -13,8 +13,7 @@ import {
 } from '$src/lib/reducers/UpdateCellsActions';
 import { hasEnabledElement, VAR_2D_NAMES, type PuzzleAuxI, type PuzzleModel } from '$src/lib/Solver/solver_utils';
 import { areCoordsNeighbours, type GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
-import { executeUpdateCellsAction } from '$stores/CellsStore';
-import { updatePenTool } from '$stores/PenToolStore';
+import { stateStore } from '$stores/StateStore';
 
 type JsonT = { [variable: string]: unknown } | undefined;
 
@@ -50,7 +49,7 @@ function grid_coloring(
 		}
 	}
 	const action = restoreCellsHighlightsAction(cells, values);
-	executeUpdateCellsAction(action);
+	stateStore.executeUpdateCellsAction(action);
 }
 
 /**
@@ -190,7 +189,7 @@ function setSolutionValues(json: JsonT, puzzle: PuzzleAuxI) {
 		}
 	}
 	const action = restoreCellsValueAction(cells, values);
-	executeUpdateCellsAction(action);
+	stateStore.executeUpdateCellsAction(action);
 }
 
 function setBinaryHighlights(json: JsonT, grid: Grid) {
@@ -263,7 +262,7 @@ function setUnknownRegionsHighlights(json: JsonT, grid: Grid) {
 		}
 	}
 	const action = restoreCellsHighlightsAction(cells, values);
-	executeUpdateCellsAction(action);
+	stateStore.executeUpdateCellsAction(action);
 }
 
 function setGoldilocksRegionsHighlights(json: JsonT, grid: Grid) {
@@ -387,7 +386,7 @@ function setUnknownRegionsBorders(json: JsonT, grid: Grid) {
 			}
 		}
 		const action = addLineMarkersAction(line_markers);
-		updatePenTool(action);
+		stateStore.updatePenTool(action);
 		return;
 	}
 }
@@ -440,7 +439,7 @@ function setShadedBoundariesBorders(json: JsonT) {
 	}
 	if (line_markers.length) {
 		const action = addLineMarkersAction(line_markers);
-		updatePenTool(action);
+		stateStore.updatePenTool(action);
 	}
 }
 
@@ -476,7 +475,7 @@ function setOrthogonalPathOrLoopLines(json: JsonT, grid: Grid) {
 		}
 
 		const action = addLineMarkersAction(line_markers);
-		updatePenTool(action);
+		stateStore.updatePenTool(action);
 		return;
 	}
 }
@@ -516,7 +515,7 @@ function setColoring(json: JsonT, grid: Grid) {
 			}
 		}
 		const action = restoreCellsHighlightsAction(cells, values);
-		executeUpdateCellsAction(action);
+		stateStore.executeUpdateCellsAction(action);
 		return;
 	}
 }
@@ -555,7 +554,7 @@ function setStarBattlePenMarks(json: JsonT, grid: Grid) {
 		}
 
 		const action = setCellMarkersAction(cell_markers);
-		updatePenTool(action);
+		stateStore.updatePenTool(action);
 		return;
 	}
 }
@@ -591,14 +590,14 @@ function setDirectedPathPenMarks(json: JsonT, puzzle_model: PuzzleModel) {
 		line_markers.push(marker);
 	}
 	const action = addLineMarkersAction(line_markers);
-	updatePenTool(action);
+	stateStore.updatePenTool(action);
 }
 
 export function setBoardOnSolution(json: JsonT, puzzle_model: PuzzleModel) {
 	const puzzle = puzzle_model.puzzle;
 	const grid = puzzle.grid;
 
-	updatePenTool(resetPenAction());
+	stateStore.updatePenTool(resetPenAction());
 	setSolutionValues(json, puzzle);
 
 	setUnknownRegionsHighlights(json, grid);

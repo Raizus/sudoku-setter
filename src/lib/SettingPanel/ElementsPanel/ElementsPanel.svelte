@@ -9,22 +9,22 @@
 		isElement,
 		ELEMENTS_CATEGORIES
 	} from '$lib/Puzzle/Tools';
-	import { elementsDictStore, updateToolAndCurrentConstraintStores } from '$stores/BoardStore';
 
 	import SettingToolsPanel from '../Subpanel/SettingToolsPanel.svelte';
-
 	import Local from '$icons/Local.svelte';
-	import { addGroupToLocalConstraint } from '$stores/LocalConstraintsStore';
 	import ElementButton from './ElementButton.svelte';
+
+	import { stateStore } from '$stores/StateStore';
 
 	export let elementHandlers: AbstractElementHandlers;
 
+	const elementsDictStore = stateStore.elementsDictStore;
 	const categories = ELEMENTS_CATEGORIES;
 
 	const onAddTool = (toolId: TOOLID): void => {
-		const new_ele_id = addGroupToLocalConstraint(toolId);
+		const new_ele_id = stateStore.addGroupToElementsDict(toolId);
 		// TODO split update tool and update current constraint
-		updateToolAndCurrentConstraintStores(toolId, new_ele_id);
+		stateStore.updateToolAndCurrentConstraintStores(toolId, new_ele_id);
 	};
 
 	// force the filter to update when a new constraint is added

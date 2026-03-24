@@ -3,11 +3,10 @@
 	import { compressedStrToPuzzle } from '../SavePuzzleModal/io_utils';
 	import { formatTimestamp, type PuzzleHistoryItem } from './PuzzleHistory';
 	import { base } from '$app/paths';
-	import { resetUserState, setCreationTimestamp, setPuzzle } from '$stores/BoardStore';
-	import { resetZoom } from '$stores/BoundingBoxStore';
 	import type { PuzzleI } from '$src/lib/Puzzle/Puzzle';
 	import Trash from '$icons/Trash.svelte';
 	import { puzzleHistoryStore, removePuzzleFromHistory } from '$stores/PuzzleHistoryStore';
+	import { stateStore } from '$stores/StateStore';
 
 	export let item: PuzzleHistoryItem;
 	export let item_id: number;
@@ -33,10 +32,9 @@
 
 	function dbClickCb() {
 		// close modal, clear user state, load new puzzle, clear command history
-		resetUserState();
-		resetZoom();
-		setCreationTimestamp(item.creationTimestamp);
-		setPuzzle(puzzle);
+		stateStore.resetUserState();
+		stateStore.setCreationTimestamp(item.creationTimestamp);
+		stateStore.setPuzzle(puzzle);
 		confirm_selected = undefined;
 		showModal = false;
 	}

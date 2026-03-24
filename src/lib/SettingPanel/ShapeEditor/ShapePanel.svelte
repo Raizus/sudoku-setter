@@ -6,17 +6,18 @@
 		shapeHasEditableProps,
 		SHAPE_TYPES
 	} from '$lib/Puzzle/Shape/Shape';
-	import { currentConstraintStore, updateCurrentConstraintShape } from '$stores/BoardStore';
+
+	import type { ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
+	import { getToolInfo, type AbstractElementHandlers } from '$lib/Puzzle/ElementHandlersUtils';
+
 	import PropertyBlock from './PropertyBlock.svelte';
 	import SliderBlock from './SliderBlock.svelte';
 	import ShapeRadioBlock from './ShapeRadioBlock.svelte';
-
 	import Brush from '$icons/Brush.svelte';
 	import Panel from '../Subpanel/Panel.svelte';
 	import PanelHeader from '../Subpanel/PanelHeader.svelte';
-		import type { ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
-	import { getToolInfo, type AbstractElementHandlers } from '$lib/Puzzle/ElementHandlersUtils';
 	import ColorPicker from '$components/ColorPicker.svelte';
+
 	import { stateStore } from '$stores/StateStore';
 
 	export let elementHandlers: AbstractElementHandlers;
@@ -24,12 +25,14 @@
 	let isOpen = true;
 	const toolStore = stateStore.toolStore;
 
+	const currentConstraintStore = stateStore.currentConstraintStore;
+
 	function getShape(
 		currentConstraint: ConstraintType | null,
 		eShape?: EditableShapeI
 	): ShapeI | undefined {
 		const _shape = currentConstraint?.shape ?? (eShape ? editableShapeToShape(eShape) : undefined);
-		updateCurrentConstraintShape(_shape);
+		stateStore.updateCurrentConstraintShape(_shape);
 		return _shape;
 	}
 
@@ -42,14 +45,14 @@
 	function updateShape<K extends keyof ShapeI>(key: K, value: ShapeI[K]) {
 		if (!shape) return;
 		shape[key] = value;
-		updateCurrentConstraintShape(shape);
+		stateStore.updateCurrentConstraintShape(shape);
 		// console.log(shape);
 	}
 
 	function resetShape() {
 		if (!editableShape) return;
 		shape = editableShapeToShape(editableShape);
-		updateCurrentConstraintShape(shape);
+		stateStore.updateCurrentConstraintShape(shape);
 	}
 
 	function shapeHasR(shapeType: SHAPE_TYPES | undefined) {
@@ -194,7 +197,10 @@
 			{/if}
 			{#if shape?.fontColor !== undefined && editableShape?.fontColor?.editable}
 				<PropertyBlock name="Font Color">
-					<ColorPicker value={shape.fontColor} onChangeCb={(val) => updateShape('fontColor', val)} />
+					<ColorPicker
+						value={shape.fontColor}
+						onChangeCb={(val) => updateShape('fontColor', val)}
+					/>
 				</PropertyBlock>
 			{/if}
 		{/if}

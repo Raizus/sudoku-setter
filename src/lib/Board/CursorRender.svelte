@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { isCellInputTool, type TOOLID } from '$lib/Puzzle/Tools';
 	import type { GridCoordI } from '$lib/utils/SquareCellGridCoords';
-	import { selectionStore } from '$stores/SelectionStore';
+	import { stateStore } from '$stores/StateStore';
 
 	export let tool: TOOLID;
 
 	const cursorSize = 0.25;
+	const selectionStore = stateStore.selectionStore;
 
 	$: showSelection = isCellInputTool(tool);
 
