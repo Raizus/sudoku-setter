@@ -1,10 +1,10 @@
 import type { PuzzleHistoryItem } from '$src/lib/SettingPanel/PuzzleHistoryModal/PuzzleHistory';
-import { get } from 'svelte/store';
-import { puzzleUrlStore } from './BoardStore';
+import { derived, get } from 'svelte/store';
 import { createPersistentStore } from './store_utils';
 import { puzzleToCompressedStr } from '$src/lib/SettingPanel/SavePuzzleModal/io_utils';
 import { blankPuzzle} from '$src/lib/Puzzle/Puzzle';
 import { stateStore } from './StateStore';
+import { debounce } from 'lodash';
 
 export const MAX_HISTORY_SIZE = 100;
 const DEFAULT_COMPRESSED_STR = puzzleToCompressedStr(blankPuzzle());
@@ -86,6 +86,27 @@ class PuzzleHistoryStore {
 }
 
 export const puzzleHistoryStore = new PuzzleHistoryStore();
+
+function updateUrlParams(compressedStr: string) {
+	if (typeof window === 'undefined') return;
+
+	const url = new URL(window.location.href);
+	url.searchParams.set('puzzle', compressedStr);
+
+	// We use replaceState instead of pushState to avoid adding a new entry to the browser history every time the puzzle changes
+	const newUrl = url.toString();
+	// window.history.replaceState({}, '', newUrl);
+}
+
+export const puzzleUrlStore = derived(
+	stateStore.puzzleStore,
+	debounce(($puzzleStore) => {
+		const compressedStr = puzzleToCompressedStr($puzzleStore);
+		updateUrlParams(compressedStr);
+		return compressedStr;
+	}, 1000)
+);
+
 
 puzzleUrlStore.subscribe((value) => {
 	const creation_ts = get(stateStore.puzzleCreationTimestamp);

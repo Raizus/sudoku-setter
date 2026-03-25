@@ -5,9 +5,6 @@ import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';
 import { derived, writable } from 'svelte/store';
 import { settingsStore } from './SettingsStore';
 import { GAME_MODE } from '$src/lib/Types/types';
-import { debounce } from 'lodash';
-import { puzzleToCompressedStr } from '$src/lib/SettingPanel/SavePuzzleModal/io_utils';
-import { stateStore } from './StateStore';
 
 export const gameModeStore = writable<GAME_MODE>(GAME_MODE.SETTING);
 
@@ -49,23 +46,4 @@ export const showFogStore = derived(
 		const show_fog = !hide_fog && $gameModeStore === GAME_MODE.SETTING;
 		return show_fog;
 	}
-);
-
-function updateUrlParams(compressedStr: string) {
-	if (typeof window === 'undefined') return;
-
-	const url = new URL(window.location.href);
-	url.searchParams.set('puzzle', compressedStr);
-
-	const newUrl = url.toString();
-	// window.history.replaceState({}, '', newUrl);
-}
-
-export const puzzleUrlStore = derived(
-	stateStore.puzzleStore,
-	debounce(($puzzleStore) => {
-		const compressedStr = puzzleToCompressedStr($puzzleStore);
-		updateUrlParams(compressedStr);
-		return compressedStr;
-	}, 500)
 );
