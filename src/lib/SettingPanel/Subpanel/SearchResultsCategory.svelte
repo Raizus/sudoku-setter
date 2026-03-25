@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CollapsibleDiv from '$lib/Components/CollapsibleDiv.svelte';
+	import CollapsibleDiv from '$components/ReusableComponents/CollapsibleDiv.svelte';
 	import ModalSectionHeader from '$lib/Components/Modal/ModalSectionHeader.svelte';
 	import type { AbstractElementInfo } from '$lib/Puzzle/ElementInfo';
 	import type { TOOL_CATEGORIES, TOOLID } from '$lib/Puzzle/Tools';
@@ -16,7 +16,7 @@
 </script>
 
 {#if filtered.length}
-	<ModalSectionHeader title={category} bind:isOpen isCollapsible={true}/>
+	<ModalSectionHeader title={category} bind:isOpen isCollapsible={true} />
 	<CollapsibleDiv {isOpen}>
 		<ol>
 			{#each filtered as { key, info }}

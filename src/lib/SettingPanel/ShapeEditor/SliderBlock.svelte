@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ValueSlider from '$lib/Components/ValueSlider.svelte';
+	import ValueSlider from "$components/ReusableComponents/ValueSlider.svelte";
 	import PropertyBlock from "./PropertyBlock.svelte";
 
     export let name: string;

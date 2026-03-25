@@ -1,6 +1,4 @@
 <script lang="ts">
-	import DropdownMenu from '$components/DropdownMenu.svelte';
-	import DropdownMenuButton from '$components/DropdownMenuButton.svelte';
 	import Build from '$icons/Build.svelte';
 	import Download from '$icons/Download.svelte';
 	import Trash from '$icons/Trash.svelte';
@@ -10,6 +8,8 @@
 	import { get } from 'svelte/store';
 	import { download } from '../SavePuzzleModal/io_utils';
 	import type { PuzzleHistoryItem } from './PuzzleHistory';
+	import DropdownMenu from '$components/ReusableComponents/DropdownMenu.svelte';
+	import DropdownMenuButton from '$components/ReusableComponents/DropdownMenuButton.svelte';
 
 	export let selected: undefined | number;
 	export let selected_puzzle: undefined | PuzzleI;

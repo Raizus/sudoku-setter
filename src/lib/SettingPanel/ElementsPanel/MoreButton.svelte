@@ -1,6 +1,6 @@
 <script lang="ts">
-	import DropdownMenu from '$components/DropdownMenu.svelte';
-	import DropdownMenuButton from '$components/DropdownMenuButton.svelte';
+	import DropdownMenu from '$components/ReusableComponents/DropdownMenu.svelte';
+	import DropdownMenuButton from '$components/ReusableComponents/DropdownMenuButton.svelte';
 	import MoreVertical from '$icons/MoreVertical.svelte';
 	import Trash from '$icons/Trash.svelte';
 	import Visibility from '$icons/Visibility.svelte';

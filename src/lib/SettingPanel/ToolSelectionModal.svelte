@@ -1,18 +1,18 @@
 <script lang="ts">
+	import SearchBar from '$components/ReusableComponents/SearchBar.svelte';
 	import Modal from '$lib/Components/Modal/Modal.svelte';
-	import SearchBar from '$lib/Components/SearchBar.svelte';
 	import type { AbstractElementHandlers } from '../Puzzle/ElementHandlersUtils';
 	import type { AbstractElementInfo } from '../Puzzle/ElementInfo';
 	import type { TOOL_CATEGORIES, TOOLID } from '../Puzzle/Tools';
 	import ToolSearchResults from './Subpanel/ToolSearchResults.svelte';
 
 	export let showModal: boolean;
-	export let title: string = "Elements";
+	export let title: string = 'Elements';
 	export let categories: TOOL_CATEGORIES[];
 	export let elementHandlers: AbstractElementHandlers;
 	export let onAddTool: (toolId: TOOLID) => void;
 	export let elementHandlerFilterFunc: (key: TOOLID, elementInfo: AbstractElementInfo) => boolean;
-	
+
 	let searchPattern = '';
 
 	const addToolWrapper = (toolId: TOOLID): void => {

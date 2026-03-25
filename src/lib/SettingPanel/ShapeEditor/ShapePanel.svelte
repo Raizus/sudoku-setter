@@ -16,9 +16,9 @@
 	import Brush from '$icons/Brush.svelte';
 	import Panel from '../Subpanel/Panel.svelte';
 	import PanelHeader from '../Subpanel/PanelHeader.svelte';
-	import ColorPicker from '$components/ColorPicker.svelte';
 
 	import { stateStore } from '$stores/StateStore';
+	import ColorPicker from '$components/ReusableComponents/ColorPicker.svelte';
 
 	export let elementHandlers: AbstractElementHandlers;
 

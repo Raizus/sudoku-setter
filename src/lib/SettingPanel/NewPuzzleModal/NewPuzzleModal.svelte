@@ -2,7 +2,7 @@
 	import Modal from '$components/Modal/Modal.svelte';
 	import ModalButtonsContainer from '$components/Modal/ModalButtonsContainer.svelte';
 	import ModalSectionHeader from '$components/Modal/ModalSectionHeader.svelte';
-	import ValueSliderLabeled from '$components/ValueSliderLabeled.svelte';
+	import ValueSliderLabeled from '$components/ReusableComponents/ValueSliderLabeled.svelte';
 	import { stateStore } from '$stores/StateStore';
 	import { range } from 'lodash';
 
