@@ -1,6 +1,5 @@
 import type { InputHandler } from '$input/InputHandler';
-import type { Grid } from '$src/lib/Puzzle/Grid/Grid';
-import type { TOOLID } from '$src/lib/Puzzle/Tools';
+import type { StateStore } from '$stores/StateStore';
 import { getDirectedAdjacentCellsToolInputHandler } from './AdjacentCellArrowToolInputHandler';
 import { getArrowToolInputHandler } from './ArrowToolInputHandler';
 import { getCageToolInputHandler } from './CageToolInputHandler';
@@ -35,117 +34,105 @@ import {
 
 export type InputHandlerFactory<T extends ToolOptionsI> = (
 	svgRef: SVGSVGElement,
-	grid: Grid,
-	tool: TOOLID,
+	stateStore: StateStore,
 	options: T
 ) => ReturnType<GetInputHandler>;
 
 const inputHandlerFactoryRegistry: {
 	[K in keyof ToolOptionsRegistry]: InputHandlerFactory<ToolOptionsRegistry[K]>;
 } = {
-	[HANDLER_TOOL_TYPE.SELECTION]: (svgRef: SVGSVGElement, grid: Grid, tool: TOOLID) => {
-		return getSelectionInputHandler(svgRef, grid, tool);
+	[HANDLER_TOOL_TYPE.SELECTION]: (svgRef: SVGSVGElement, stateStore: StateStore) => {
+		return getSelectionInputHandler(svgRef, stateStore);
 	},
 	[HANDLER_TOOL_TYPE.SINGLE_CELL]: (
 		svgRef: SVGSVGElement,
-		grid: Grid,
-		tool: TOOLID,
+		stateStore: StateStore,
 		options: SingleCellToolOptions
 	) => {
-		return getSingleCellToolInputHandler(svgRef, grid, tool, options);
+		return getSingleCellToolInputHandler(svgRef, stateStore, options);
 	},
 	[HANDLER_TOOL_TYPE.SINGLE_CELL_ARROW]: (
 		svgRef: SVGSVGElement,
-		grid: Grid,
-		tool: TOOLID,
+		stateStore: StateStore,
 		options: SingleCellArrowToolOptions
 	) => {
-		return getSingleCellArrowToolInputHandler(svgRef, grid, tool, options);
+		return getSingleCellArrowToolInputHandler(svgRef, stateStore, options);
 	},
 	[HANDLER_TOOL_TYPE.SINGLE_CELL_MULTI_ARROW]: (
 		svgRef: SVGSVGElement,
-		grid: Grid,
-		tool: TOOLID,
+		stateStore: StateStore,
 		options: SingleCellMultiArrowToolOptions
 	) => {
-		return getSingleCellMultiArrowToolInputHandler(svgRef, grid, tool, options);
+		return getSingleCellMultiArrowToolInputHandler(svgRef, stateStore, options);
 	},
 	[HANDLER_TOOL_TYPE.EDGE]: (
 		svgRef: SVGSVGElement,
-		grid: Grid,
-		tool: TOOLID,
+		stateStore: StateStore,
 		options: EdgeToolOptions
 	) => {
-		return getEdgeToolInputHandler(svgRef, grid, tool, options);
+		return getEdgeToolInputHandler(svgRef, stateStore, options);
 	},
 	[HANDLER_TOOL_TYPE.DIRECTED_ADJACENT_CELLS]: (
 		svgRef: SVGSVGElement,
-		grid: Grid,
-		tool: TOOLID,
+		stateStore: StateStore,
 		options: DirectedAdjacentCellsToolOptions
 	) => {
-		return getDirectedAdjacentCellsToolInputHandler(svgRef, grid, tool, options);
+		return getDirectedAdjacentCellsToolInputHandler(svgRef, stateStore, options);
 	},
 	[HANDLER_TOOL_TYPE.CORNER]: (
 		svgRef: SVGSVGElement,
-		grid: Grid,
-		tool: TOOLID,
+		stateStore: StateStore,
 		options: CornerToolOptions
 	) => {
-		return getCornerToolInputHandler(svgRef, grid, tool, options);
+		return getCornerToolInputHandler(svgRef, stateStore, options);
 	},
 	[HANDLER_TOOL_TYPE.LINE]: (
 		svgRef: SVGSVGElement,
-		grid: Grid,
-		tool: TOOLID,
+		stateStore: StateStore,
 		options: LineToolInputOptions
 	) => {
-		return getLineToolInputHandler(svgRef, grid, tool, options);
+		return getLineToolInputHandler(svgRef, stateStore, options);
 	},
 	[HANDLER_TOOL_TYPE.ARROW]: (
 		svgRef: SVGSVGElement,
-		grid: Grid,
-		tool: TOOLID,
+		stateStore: StateStore,
 		options: ArrowToolInputOptions
 	) => {
-		return getArrowToolInputHandler(svgRef, grid, tool, options);
+		return getArrowToolInputHandler(svgRef, stateStore, options);
 	},
 	[HANDLER_TOOL_TYPE.CAGE]: (
 		svgRef: SVGSVGElement,
-		grid: Grid,
-		tool: TOOLID,
+		stateStore: StateStore,
 		options: CageToolInputOptions
 	) => {
-		return getCageToolInputHandler(svgRef, grid, tool, options);
+		return getCageToolInputHandler(svgRef, stateStore, options);
 	},
-	[HANDLER_TOOL_TYPE.CLONE]: (svgRef: SVGSVGElement, grid: Grid, tool: TOOLID) => {
-		return getCloneToolInputHandler(svgRef, grid, tool);
+	[HANDLER_TOOL_TYPE.CLONE]: (svgRef: SVGSVGElement, stateStore: StateStore) => {
+		return getCloneToolInputHandler(svgRef, stateStore);
 	},
 	[HANDLER_TOOL_TYPE.CENTER_CORNER_OR_EDGE]: (
 		svgRef: SVGSVGElement,
-		grid: Grid,
-		tool: TOOLID,
+		stateStore: StateStore,
 		options: CenterCornerOrEdgeToolInputOptions
 	) => {
-		return getCenterCornerOrEdgeToolInputHandler(svgRef, grid, tool, options);
+		return getCenterCornerOrEdgeToolInputHandler(svgRef, stateStore, options);
 	},
 	[HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION]: (
 		svgRef: SVGSVGElement,
-		grid: Grid,
-		tool: TOOLID,
+		stateStore: StateStore,
 		options: OutsideDirectionToolInputOptions
 	) => {
-		return getOutsideDirectionToolInputHandler(svgRef, grid, tool, options);
+		return getOutsideDirectionToolInputHandler(svgRef, stateStore, options);
 	},
-	[HANDLER_TOOL_TYPE.PEN]: (svgRef: SVGSVGElement, grid: Grid) => {
-		return getPenToolInputHandler(svgRef, grid);
+	[HANDLER_TOOL_TYPE.PEN]: (svgRef: SVGSVGElement, stateStore: StateStore) => {
+		return getPenToolInputHandler(svgRef, stateStore);
 	},
-	[HANDLER_TOOL_TYPE.VALUE_TOOL]: (svgRef: SVGSVGElement, grid: Grid, tool: TOOLID) => {
-		return getSelectionInputHandler(svgRef, grid, tool);
+	[HANDLER_TOOL_TYPE.VALUE_TOOL]: (svgRef: SVGSVGElement, stateStore: StateStore) => {
+		return getSelectionInputHandler(svgRef, stateStore);
 	}
 };
 
-export type GetInputHandler = (svgRef: SVGSVGElement, grid: Grid, tool: TOOLID) => InputHandler;
+export type GetInputHandler = (svgRef: SVGSVGElement, stateStore: StateStore) => InputHandler;
 
 export function getInputHandlerF(options: ToolHandlerOptions): GetInputHandler | undefined {
 	const factory = inputHandlerFactoryRegistry[options.type] as InputHandlerFactory<typeof options>;
@@ -154,7 +141,7 @@ export function getInputHandlerF(options: ToolHandlerOptions): GetInputHandler |
 		return undefined;
 	}
 
-	return (svgRef: SVGSVGElement, grid: Grid, tool: TOOLID) => {
-		return factory(svgRef, grid, tool, options);
+	return (svgRef: SVGSVGElement, stateStore: StateStore) => {
+		return factory(svgRef, stateStore, options);
 	};
 }

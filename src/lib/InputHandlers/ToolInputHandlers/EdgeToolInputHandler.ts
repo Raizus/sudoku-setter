@@ -1,8 +1,6 @@
 import type { InputHandler } from '../InputHandler';
 import { BASIC_TOOL_MODE, type EdgeToolOptions } from './types';
 import { uniqueId } from 'lodash';
-import type { TOOLID } from '$lib/Puzzle/Tools';
-import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import type { GridShape } from '$lib/Types/types';
 import { findEdgeConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import {
@@ -18,16 +16,18 @@ import {
 	pushRemoveLocalConstraintCommand,
 	setConstraintPreviewOnMove
 } from './utils';
-import { stateStore } from '$stores/StateStore';
+import { StateStore } from '$stores/StateStore';
 
 export function getEdgeToolInputHandler(
 	svgRef: SVGSVGElement,
-	grid: Grid,
-	tool: TOOLID,
+	stateStore: StateStore,
 	options?: EdgeToolOptions
 ): InputHandler {
 	// console.log('getEdgeToolInputHandler');
 	const pointerHandler = new CellEdgePointerHandler();
+
+	const grid = stateStore.getGrid();
+	const tool = stateStore.getCurrentTool();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	function handle(event: CellEdgeTapEvent) {
@@ -69,11 +69,7 @@ export function getEdgeToolInputHandler(
 	}
 
 	function onKeyDown(event: KeyboardEvent) {
-		keyDownUpdateValue<EdgeToolI>(
-			event,
-			stateStore,
-			options?.valueUpdater
-		);
+		keyDownUpdateValue<EdgeToolI>(event, stateStore, options?.valueUpdater);
 	}
 
 	pointerHandler.onDragStart = (event: CellEdgeTapEvent): void => {

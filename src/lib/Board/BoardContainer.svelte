@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { InputHandlerStore } from '$stores/InputHandlerStore';
+	import { inputHandlerStore } from '$stores/InputHandlerStore';
 	import Board from './Board.svelte';
 	import { onExtraInput } from '$input/ExtraInputHandler';
 	import { getWheelInputHandler } from '$input/WheelInputHandler';
@@ -10,7 +10,7 @@
 	const svgRefStore = stateStore.svgRefStore;
 	const currentScaleStore = stateStore.currentScaleStore;
 
-	$: inputHandler = $InputHandlerStore;
+	$: inputHandler = $inputHandlerStore;
 	$: wheelInputHandler = getWheelInputHandler($svgRefStore);
 
 	function wrapListener<T>(onEvent?: (event: T) => void): (event: T) => void {

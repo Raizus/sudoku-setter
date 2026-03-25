@@ -1,7 +1,5 @@
 import type { InputHandler } from '../InputHandler';
 import { uniqueId } from 'lodash';
-import type { TOOLID } from '$lib/Puzzle/Tools';
-import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import {
 	CellPointerHandler,
 	type CellDragTapEvent
@@ -28,16 +26,18 @@ import {
 	pushUpdateLocalConstraintCommand
 } from './utils';
 import { ARROW_TOOL_MODE, type ArrowToolInputOptions } from './types';
-import { stateStore } from '$stores/StateStore';
+import { StateStore } from '$stores/StateStore';
 
 export function getArrowToolInputHandler(
 	svgRef: SVGSVGElement,
-	grid: Grid,
-	tool: TOOLID,
+	stateStore: StateStore,
 	options?: ArrowToolInputOptions
 ): InputHandler {
 	// console.log('getArrowToolInputHandler');
 	const pointerHandler = new CellPointerHandler();
+
+	const grid = stateStore.getGrid();
+	const tool = stateStore.getCurrentTool();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	let currentConstraint: ArrowToolI | null = null;

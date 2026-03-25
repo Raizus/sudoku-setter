@@ -4,7 +4,6 @@ import {
 	type PenToolDragEvent,
 	type PenToolTapEvent
 } from '$src/lib/InputHandlers/PointerHandlers/PenToolPointerHandler';
-import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import {
 	lineMarkersOverlap,
 	type CellMarker,
@@ -22,10 +21,15 @@ import {
 	removeLineMarkersAction
 } from '$lib/reducers/PenToolReducer';
 import { areCoordsOnGrid } from '$src/lib/utils/SquareCellGridCoords';
-import { stateStore } from '$stores/StateStore';
+import { StateStore } from '$stores/StateStore';
 
-export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): InputHandler {
+export function getPenToolInputHandler(
+	svgRef: SVGSVGElement,
+	stateStore: StateStore
+): InputHandler {
 	// console.log('getPenToolInputHandler');
+
+	const grid = stateStore.getGrid();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 	const penToolPointerHandler = new PenToolPointerHandler();
 
@@ -39,7 +43,7 @@ export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): Input
 		if (event.type === 'cell center') {
 			const onGrid = areCoordsOnGrid(coord, gridShape);
 			if (!onGrid) return;
-			
+
 			// create PenTapAction
 			const oldMarker = penTool.getCellMarker(coord);
 			if (!oldMarker) {
@@ -68,7 +72,6 @@ export function getPenToolInputHandler(svgRef: SVGSVGElement, grid: Grid): Input
 				const command = stateStore.getPenToolCommand(action, reverse_action);
 				commandHistoryStore.addCommand(command);
 			}
-
 		} else if (event.type === 'edge') {
 			// create PenTapAction
 			const marker = penTool.getEdgeMarker(coord);

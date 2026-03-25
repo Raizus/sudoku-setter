@@ -1,21 +1,18 @@
 import type { InputHandler } from '../InputHandler';
-import type { TOOLID } from '$lib/Puzzle/Tools';
 import { uniqueId } from 'lodash';
-import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import {
 	CellFeaturePointerHandler,
 	type CellEdgeCornerEvent
 } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
 import { BASIC_TOOL_MODE, type SingleCellMultiArrowToolOptions } from './types';
-import {
-	singleCellMultiArrowConstraint} from '$lib/Puzzle/Constraints/SingleCellConstraints';
-import { type CellMultiArrowToolI } from "$src/lib/Puzzle/puzzle_schema";
+import { singleCellMultiArrowConstraint } from '$lib/Puzzle/Constraints/SingleCellConstraints';
+import { type CellMultiArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
 import { findSingleCellConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { idxToDirection, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import type { GridShape } from '$lib/Types/types';
 import type { DIRECTION } from '$lib/utils/directions';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
-import { stateStore } from '$stores/StateStore';
+import { StateStore } from '$stores/StateStore';
 
 function updateDirections(directions: DIRECTION[], dir: DIRECTION): DIRECTION[] {
 	directions = [...directions];
@@ -31,12 +28,14 @@ function updateDirections(directions: DIRECTION[], dir: DIRECTION): DIRECTION[] 
 
 export function getSingleCellMultiArrowToolInputHandler(
 	svgRef: SVGSVGElement,
-	grid: Grid,
-	tool: TOOLID,
+	stateStore: StateStore,
 	options: SingleCellMultiArrowToolOptions
 ): InputHandler {
 	// console.log('getSingleCellMultiArrowToolInputHandler');
 	const pointerHandler = new CellFeaturePointerHandler(options.cornerOrEdge);
+
+	const grid = stateStore.getGrid();
+	const tool = stateStore.getCurrentTool();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	let currentConstraint: CellMultiArrowToolI | null = null;
@@ -44,14 +43,14 @@ export function getSingleCellMultiArrowToolInputHandler(
 
 	function handle(event: CellEdgeCornerEvent) {
 		const coords = event.cell;
-		
+
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
-		
+
 		let mode = stateStore.getCurrentToolMode();
-		
+
 		if (mode === BASIC_TOOL_MODE.DYNAMIC && event.event.altKey) mode = BASIC_TOOL_MODE.DELETE;
-		
+
 		const direction = idxToDirection(event.direction);
 
 		const elements = stateStore.getElementsDict();
@@ -105,7 +104,7 @@ export function getSingleCellMultiArrowToolInputHandler(
 
 		const direction = idxToDirection(event.direction);
 		const constraint_preview = singleCellMultiArrowConstraint(tool, event.cell, direction);
-		
+
 		const mode = stateStore.getCurrentToolMode();
 		// const localConstraints = get(localConstraintsStore);
 		// const match = findSingleCellConstraint<CellMultiArrowToolI>(localConstraints, tool, event.cell);

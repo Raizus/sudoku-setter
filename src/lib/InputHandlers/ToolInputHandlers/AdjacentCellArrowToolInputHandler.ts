@@ -1,7 +1,5 @@
 import type { InputHandler } from '../InputHandler';
 import { uniqueId } from 'lodash';
-import type { TOOLID } from '$lib/Puzzle/Tools';
-import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import type { GridShape } from '$lib/Types/types';
 import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { type EdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
@@ -16,16 +14,19 @@ import {
 	edgeConstraint,
 	updateDirectedAdjacentCellsConstraint
 } from '$src/lib/Puzzle/Constraints/EdgeConstraints';
-import { stateStore } from '$stores/StateStore';
+import { StateStore } from '$stores/StateStore';
 
 export function getDirectedAdjacentCellsToolInputHandler(
 	svgRef: SVGSVGElement,
-	grid: Grid,
-	tool: TOOLID,
+	stateStore: StateStore,
 	options?: DirectedAdjacentCellsToolOptions
 ): InputHandler {
 	// console.log('getLineToolInputHandler');
 	const pointerHandler = new CellPointerHandler();
+
+	const grid = stateStore.getGrid();
+	const tool = stateStore.getCurrentTool();
+
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	let newConstraint: EdgeToolI | null = null;

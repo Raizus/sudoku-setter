@@ -1,7 +1,5 @@
 import type { InputHandler } from '../InputHandler';
 import { uniqueId } from 'lodash';
-import type { TOOLID } from '$lib/Puzzle/Tools';
-import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import {
 	CellFeaturePointerHandler,
 	type CellEdgeCornerEvent
@@ -19,12 +17,11 @@ import {
 	pushRemoveLocalConstraintCommand,
 	setConstraintPreviewOnMove
 } from './utils';
-import { stateStore } from '$stores/StateStore';
+import { StateStore } from '$stores/StateStore';
 
 export function getCenterCornerOrEdgeToolInputHandler(
 	svgRef: SVGSVGElement,
-	grid: Grid,
-	tool: TOOLID,
+	stateStore: StateStore,
 	options?: CenterCornerOrEdgeToolInputOptions
 ): InputHandler {
 	// console.log('getCenterCornerOrEdgeToolInputHandler');
@@ -32,6 +29,8 @@ export function getCenterCornerOrEdgeToolInputHandler(
 	const targets = options?.targets ?? CornerOrEdge.CLOSEST;
 	const pointerHandler = new CellFeaturePointerHandler(targets);
 
+	const grid = stateStore.getGrid();
+	const tool = stateStore.getCurrentTool();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	function handle(event: CellEdgeCornerEvent) {

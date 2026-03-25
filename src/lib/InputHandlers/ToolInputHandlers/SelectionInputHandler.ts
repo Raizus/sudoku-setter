@@ -14,7 +14,6 @@ import {
 	type CellDragTapEvent
 } from '$input/PointerHandlers/CellPointerHandler';
 import type { Cell } from '$lib/Puzzle/Grid/Cell';
-import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';
 import type { GridShape } from '$lib/Types/types';
 import {
@@ -29,7 +28,7 @@ import { threshold } from '$lib/utils/functionUtils';
 import { throttle } from 'lodash';
 import { getSimilarCells } from './utils';
 import { generateUpdateCellAction } from '$src/lib/reducers/UpdateCellsActions';
-import { stateStore } from '$stores/StateStore';
+import { StateStore, stateStore } from '$stores/StateStore';
 
 const cellInputHandler = new CellPointerHandler();
 
@@ -153,12 +152,14 @@ function addUpdateCellsCommand(
 
 export function getSelectionInputHandler(
 	svgRef: SVGSVGElement,
-	grid: Grid,
-	tool: TOOLID
+	stateStore: StateStore
 ): InputHandler {
 	// console.log('getSelectionInputHandler');
 
 	const tools: TOOLID[] = [TOOLS.DIGIT, TOOLS.CORNER_PM, TOOLS.CENTER_PM, TOOLS.HIGHLIGHTS];
+
+	const grid = stateStore.getGrid();
+	const tool = stateStore.getCurrentTool();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	cellInputHandler.onTap = (event: CellDragTapEvent): void => {

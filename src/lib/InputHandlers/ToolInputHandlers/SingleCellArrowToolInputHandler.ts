@@ -1,28 +1,25 @@
 import type { InputHandler } from '../InputHandler';
-import { isSingleCellArrowTool, type TOOLID } from '$lib/Puzzle/Tools';
+import { isSingleCellArrowTool } from '$lib/Puzzle/Tools';
 import { uniqueId } from 'lodash';
 import { eventIsAltR } from '$src/lib/InputHandlers/KeyboardEventUtils';
-import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import {
 	CellFeaturePointerHandler,
 	type CellEdgeCornerEvent
 } from '$src/lib/InputHandlers/PointerHandlers/CellEdgeCornerPointerHandler';
 import { BASIC_TOOL_MODE, type SingleCellArrowToolOptions } from './types';
 import type { GridShape } from '$lib/Types/types';
-import {
-	singleCellArrowConstraint} from '$lib/Puzzle/Constraints/SingleCellConstraints';
-import { type CellArrowToolI } from "$src/lib/Puzzle/puzzle_schema";
+import { singleCellArrowConstraint } from '$lib/Puzzle/Constraints/SingleCellConstraints';
+import { type CellArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
 import { idxToDirection, isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { findSingleCellConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { DIRECTION } from '$lib/utils/directions';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import { type ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
-import { stateStore } from '$stores/StateStore';
+import { StateStore } from '$stores/StateStore';
 
 export function getSingleCellArrowToolInputHandler(
 	svgRef: SVGSVGElement,
-	grid: Grid,
-	tool: TOOLID,
+	stateStore: StateStore,
 	options: SingleCellArrowToolOptions
 ): InputHandler {
 	// console.log('getSingleCellArrowToolInputHandler');
@@ -38,6 +35,9 @@ export function getSingleCellArrowToolInputHandler(
 	];
 
 	const pointerHandler = new CellFeaturePointerHandler(options.cornerOrEdge);
+
+	const grid = stateStore.getGrid();
+	const tool = stateStore.getCurrentTool();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	let currentConstraint: CellArrowToolI | null = null;
@@ -45,15 +45,15 @@ export function getSingleCellArrowToolInputHandler(
 
 	function handle(event: CellEdgeCornerEvent) {
 		const coords = event.cell;
-		
+
 		const onGrid = isCellOnGrid(event.cell, gridShape);
 		if (!onGrid) return;
-		
+
 		let mode = stateStore.getCurrentToolMode();
-		
+
 		// determine if adding or removing
 		if (event.event.altKey) mode = BASIC_TOOL_MODE.DELETE;
-		
+
 		const elements = stateStore.getElementsDict();
 		const match = findSingleCellConstraint<CellArrowToolI>(elements, tool, coords);
 		const direction = idxToDirection(event.direction);

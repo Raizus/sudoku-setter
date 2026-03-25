@@ -6,12 +6,16 @@ import { getInputHandlerF } from '$input/ToolInputHandlers/InputHandlerRegistry'
 import { stateStore, type StateStore } from './StateStore';
 
 export function createInputHandlerStore(stateStore: StateStore) {
+	const svgRefStore = stateStore.svgRefStore;
+	const gridStore = stateStore.gridStore;
+	const toolStore = stateStore.toolStore;
+
 	const inputHandlerStore = derived<
-		[typeof stateStore.svgRefStore, typeof stateStore.gridStore, typeof stateStore.toolStore],
+		[typeof svgRefStore, typeof gridStore, typeof toolStore],
 		InputHandler | undefined
 	>(
-		[stateStore.svgRefStore, stateStore.gridStore, stateStore.toolStore],
-		([$svgRefStore, $gridStore, $toolStore]) => {
+		[svgRefStore, gridStore, toolStore],
+		([$svgRefStore, , $toolStore]) => {
 			if ($svgRefStore === null) return undefined;
 
 			const toolInfo = getToolInfo($toolStore, elementInfoRegistry);
@@ -23,7 +27,7 @@ export function createInputHandlerStore(stateStore: StateStore) {
 			const inputOpts = toolInfo.inputOptions;
 			const getInputHandler = inputOpts ? getInputHandlerF(inputOpts) : undefined;
 			if (!getInputHandler) return undefined;
-			const inputHandler = getInputHandler($svgRefStore, $gridStore, $toolStore);
+			const inputHandler = getInputHandler($svgRefStore, stateStore);
 
 			return inputHandler;
 		}
@@ -32,25 +36,4 @@ export function createInputHandlerStore(stateStore: StateStore) {
 	return inputHandlerStore;
 }
 
-export const InputHandlerStore = derived<
-	[typeof stateStore.svgRefStore, typeof stateStore.gridStore, typeof stateStore.toolStore],
-	InputHandler | undefined
->(
-	[stateStore.svgRefStore, stateStore.gridStore, stateStore.toolStore],
-	([$svgRefStore, $gridStore, $toolStore]) => {
-		if ($svgRefStore === null) return undefined;
-
-		const toolInfo = getToolInfo($toolStore, elementInfoRegistry);
-		if (toolInfo === undefined) {
-			console.warn(`Element handler for ${$toolStore} is not defined`);
-			return undefined;
-		}
-
-		const inputOpts = toolInfo.inputOptions;
-		const getInputHandler = inputOpts ? getInputHandlerF(inputOpts) : undefined;
-		if (!getInputHandler) return undefined;
-		const inputHandler = getInputHandler($svgRefStore, $gridStore, $toolStore);
-
-		return inputHandler;
-	}
-);
+export const inputHandlerStore = createInputHandlerStore(stateStore);

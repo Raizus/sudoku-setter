@@ -1,8 +1,6 @@
 import { uniqueId } from 'lodash';
 import type { InputHandler } from '../InputHandler';
 import { BASIC_TOOL_MODE, type CornerToolOptions } from './types';
-import type { TOOLID } from '$lib/Puzzle/Tools';
-import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import type { GridShape } from '$lib/Types/types';
 import { findCornerConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { cornerConstraint } from '$lib/Puzzle/Constraints/CornerConstraints';
@@ -18,16 +16,18 @@ import {
 	pushRemoveLocalConstraintCommand,
 	setConstraintPreviewOnMove
 } from './utils';
-import { stateStore } from '$stores/StateStore';
+import { StateStore } from '$stores/StateStore';
 
 export function getCornerToolInputHandler(
 	svgRef: SVGSVGElement,
-	grid: Grid,
-	tool: TOOLID,
+	stateStore: StateStore,
 	options?: CornerToolOptions
 ): InputHandler {
 	// console.log('getCornerToolInputHandler');
 	const pointerHandler = new CellCornerPointerHandler();
+
+	const grid = stateStore.getGrid();
+	const tool = stateStore.getCurrentTool();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	function handle(event: CellCornerTapEvent) {
@@ -68,11 +68,7 @@ export function getCornerToolInputHandler(
 	}
 
 	function onKeyDown(event: KeyboardEvent) {
-		keyDownUpdateValue<CornerToolI>(
-			event,
-			stateStore,
-			options?.valueUpdater
-		);
+		keyDownUpdateValue<CornerToolI>(event, stateStore, options?.valueUpdater);
 	}
 
 	pointerHandler.onDragStart = (event: CellCornerTapEvent): void => {

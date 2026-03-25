@@ -1,7 +1,5 @@
 import type { InputHandler } from '../InputHandler';
 import { uniqueId } from 'lodash';
-import type { TOOLID } from '$lib/Puzzle/Tools';
-import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import type { GridShape } from '$lib/Types/types';
 import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
 import {
@@ -16,16 +14,18 @@ import {
 } from '$input/PointerHandlers/CellPointerHandler';
 import { pushAddLocalConstraintCommand, pushRemoveLocalConstraintCommand } from './utils';
 import { BASIC_TOOL_MODE, type LineToolInputOptions } from './types';
-import { stateStore } from '$stores/StateStore';
+import { StateStore } from '$stores/StateStore';
 
 export function getLineToolInputHandler(
 	svgRef: SVGSVGElement,
-	grid: Grid,
-	tool: TOOLID,
+	stateStore: StateStore,
 	options?: LineToolInputOptions
 ): InputHandler {
 	// console.log('getLineToolInputHandler');
 	const pointerHandler = new CellPointerHandler();
+
+	const grid = stateStore.getGrid();
+	const tool = stateStore.getCurrentTool();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	const allowSelfIntersection = options?.allowSelfIntersection ?? false;

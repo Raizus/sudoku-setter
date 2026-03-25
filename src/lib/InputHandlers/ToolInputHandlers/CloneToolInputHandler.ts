@@ -1,7 +1,5 @@
 import type { InputHandler } from '../InputHandler';
 import { uniqueId } from 'lodash';
-import type { TOOLID } from '$lib/Puzzle/Tools';
-import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import type { GridShape } from '$lib/Types/types';
 import {
 	CellPointerHandler,
@@ -16,7 +14,7 @@ import { isCellOnGrid, type GridCoordI, areCoordsEqual } from '$lib/utils/Square
 import { findCloneConstraint, findUsedCloneLabels } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import { pushAddLocalConstraintCommand, pushUpdateLocalConstraintCommand } from './utils';
 import { CLONE_TOOL_MODE } from './types';
-import { stateStore } from '$stores/StateStore';
+import { StateStore } from '$stores/StateStore';
 
 function makeLabel(x: number) {
 	x++;
@@ -40,10 +38,12 @@ function getNewLabel(usedLabels: Set<string>): string {
 
 export function getCloneToolInputHandler(
 	svgRef: SVGSVGElement,
-	grid: Grid,
-	tool: TOOLID
+	stateStore: StateStore,
 ): InputHandler {
 	const pointerHandler = new CellPointerHandler();
+
+	const grid = stateStore.getGrid();
+	const tool = stateStore.getCurrentTool();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	let currentConstraint: CloneToolI | null = null;

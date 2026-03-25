@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';
-	import { InputHandlerStore } from '$stores/InputHandlerStore';
+	import { inputHandlerStore } from '$stores/InputHandlerStore';
 	import { settingsStore } from '$stores/SettingsStore';
 	import { stateStore } from '$stores/StateStore';
 
@@ -59,7 +59,7 @@
 			<button
 				class="entry-panel-button number-pad-button"
 				value={label}
-				on:click={$InputHandlerStore && $InputHandlerStore.padClick}
+				on:click={$inputHandlerStore && $inputHandlerStore.padClick}
 			>
 				<div class="digit-button-text">{label}</div>
 				<div class="digit-button-color"></div>
@@ -86,7 +86,7 @@
 		class="entry-panel-button delete-button"
 		class:letter-tool={letterToolActive}
 		value="Delete"
-		on:click={$InputHandlerStore && $InputHandlerStore.padClick}
+		on:click={$inputHandlerStore && $inputHandlerStore.padClick}
 	>
 		<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960" fill="currentColor">
 			<path

@@ -1,8 +1,6 @@
 import type { InputHandler } from '../InputHandler';
 import { BASIC_TOOL_MODE, type SingleCellToolOptions } from './types';
-import type { TOOLID } from '$lib/Puzzle/Tools';
 import { uniqueId } from 'lodash';
-import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import {
 	CellPointerHandler,
 	type CellDragTapEvent
@@ -18,15 +16,17 @@ import {
 	pushRemoveLocalConstraintCommand,
 	setConstraintPreviewOnMove
 } from './utils';
-import { stateStore } from '$stores/StateStore';
+import { StateStore } from '$stores/StateStore';
 
 export function getSingleCellToolInputHandler(
 	svgRef: SVGSVGElement,
-	grid: Grid,
-	tool: TOOLID,
+	stateStore: StateStore,
 	options?: SingleCellToolOptions
 ): InputHandler {
 	const pointerHandler = new CellPointerHandler();
+
+	const grid = stateStore.getGrid();
+	const tool = stateStore.getCurrentTool();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	function handle(event: CellDragTapEvent) {
@@ -113,11 +113,7 @@ export function getSingleCellToolInputHandler(
 	};
 
 	function onKeyDown(event: KeyboardEvent) {
-		keyDownUpdateValue<CellToolI>(
-			event,
-			stateStore,
-			options?.valueUpdater
-		);
+		keyDownUpdateValue<CellToolI>(event, stateStore, options?.valueUpdater);
 	}
 
 	const inputHandler: InputHandler = {

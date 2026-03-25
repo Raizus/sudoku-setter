@@ -1,7 +1,5 @@
 import type { InputHandler } from '../InputHandler';
 import { uniqueId } from 'lodash';
-import type { TOOLID } from '$lib/Puzzle/Tools';
-import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import {
 	CellFeaturePointerHandler,
 	type CellEdgeCornerEvent
@@ -23,18 +21,18 @@ import {
 	pushRemoveLocalConstraintCommand,
 	setConstraintPreviewOnMove
 } from './utils';
-import { stateStore } from '$stores/StateStore';
+import { StateStore } from '$stores/StateStore';
 
 export function getOutsideDirectionToolInputHandler(
 	svgRef: SVGSVGElement,
-	grid: Grid,
-	tool: TOOLID,
+	stateStore: StateStore,
 	options?: OutsideDirectionToolInputOptions
 ): InputHandler {
-	// console.log('getOutsideEdgeToolInputHandler');
-
 	const cornerOrEdge = options?.cornerOrEdge ?? CornerOrEdge.CORNER_OR_EDGE;
 	const pointerHandler = new CellFeaturePointerHandler(cornerOrEdge);
+
+	const grid = stateStore.getGrid();
+	const tool = stateStore.getCurrentTool();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	function handle(event: CellEdgeCornerEvent) {
@@ -74,11 +72,7 @@ export function getOutsideDirectionToolInputHandler(
 	}
 
 	function onKeyDown(event: KeyboardEvent) {
-		keyDownUpdateValue<OutsideDirectionToolI>(
-			event,
-			stateStore,
-			options?.valueUpdater
-		);
+		keyDownUpdateValue<OutsideDirectionToolI>(event, stateStore, options?.valueUpdater);
 	}
 
 	pointerHandler.onDragStart = (event: CellEdgeCornerEvent): void => {

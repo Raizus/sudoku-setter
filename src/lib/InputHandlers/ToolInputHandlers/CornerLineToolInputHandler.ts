@@ -1,7 +1,5 @@
 import type { InputHandler } from '../InputHandler';
 import { uniqueId } from 'lodash';
-import type { TOOLID } from '$lib/Puzzle/Tools';
-import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import type { GridShape } from '$lib/Types/types';
 import { areCoordsOnGrid } from '$lib/utils/SquareCellGridCoords';
 import { findCornerLineConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
@@ -17,16 +15,18 @@ import {
 	type CellCornerTapEvent
 } from '$input/PointerHandlers/CellCornerPointerHandler';
 import { CORNER_LINE_TOOL_MODE, type CornerLineToolInputOptions } from './types';
-import { stateStore } from '$stores/StateStore';
+import { StateStore } from '$stores/StateStore';
 
 export function getCornerLineToolInputHandler(
 	svgRef: SVGSVGElement,
-	grid: Grid,
-	tool: TOOLID,
+	stateStore: StateStore,
 	options?: CornerLineToolInputOptions
 ): InputHandler {
 	// console.log('getRCLineToolInputHandler');
 	const pointerHandler = new CellCornerPointerHandler();
+
+	const grid = stateStore.getGrid();
+	const tool = stateStore.getCurrentTool();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	let currentConstraint: CornerLineToolI | null = null;

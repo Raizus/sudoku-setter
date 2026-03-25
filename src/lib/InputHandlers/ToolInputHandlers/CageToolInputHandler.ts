@@ -1,7 +1,5 @@
 import type { InputHandler } from '../InputHandler';
 import { uniqueId } from 'lodash';
-import type { TOOLID } from '$lib/Puzzle/Tools';
-import type { Grid } from '$lib/Puzzle/Grid/Grid';
 import type { GridShape } from '$lib/Types/types';
 import { cageConstraint, updateCageConstraintCells } from '$lib/Puzzle/Constraints/CageConstraints';
 import { type CageToolI } from '$src/lib/Puzzle/puzzle_schema';
@@ -17,15 +15,17 @@ import {
 	pushRemoveLocalConstraintCommand
 } from './utils';
 import { BASIC_TOOL_MODE, type CageToolInputOptions } from './types';
-import { stateStore } from '$stores/StateStore';
+import { StateStore } from '$stores/StateStore';
 
 export function getCageToolInputHandler(
 	svgRef: SVGSVGElement,
-	grid: Grid,
-	tool: TOOLID,
+	stateStore: StateStore,
 	options?: CageToolInputOptions
 ): InputHandler {
 	const pointerHandler = new CellPointerHandler();
+
+	const grid = stateStore.getGrid();
+	const tool = stateStore.getCurrentTool();
 	const gridShape: GridShape = { nRows: grid.nRows, nCols: grid.nCols };
 
 	let mode_aux = stateStore.getCurrentToolMode();
