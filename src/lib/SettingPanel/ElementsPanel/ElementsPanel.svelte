@@ -93,6 +93,8 @@
 		border-radius: 0.2rem;
 		height: 2rem;
 		cursor: pointer;
+		margin-top: 0.3rem;
+		margin-bottom: 0.3rem;
 
 		&:hover {
 			background-color: #515151;
