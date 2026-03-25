@@ -2,7 +2,7 @@ import { ElementsDict, filterElements } from '$src/lib/Puzzle/Constraints/Elemen
 import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
 import { Grid } from '$src/lib/Puzzle/Grid/Grid';
 import { PenTool } from '$src/lib/Puzzle/PenTool';
-import { type PuzzleI } from '$src/lib/Puzzle/Puzzle';
+import { blankPuzzle, type PuzzleI } from '$src/lib/Puzzle/Puzzle';
 import { getDefaultBoundingBox } from '$src/lib/Puzzle/BoardBoundingBox';
 import type {
 	CellArrowToolI,
@@ -69,7 +69,7 @@ function updateUrlParams(compressedStr: string) {
 export class StateStore {
 	public svgRefStore = writable<SVGSVGElement | null>(null);
 	public gameModeStore = writable<GAME_MODE>(GAME_MODE.SETTING);
-	
+
 	public toolStore = writable<TOOLID>(TOOLS.DIGIT);
 	public selectOnStore = writable<boolean>(false);
 	public toolModeStore = writable<ToolModeT>(undefined);
@@ -381,19 +381,6 @@ export class StateStore {
 		this._puzzleMetaStore.set(meta);
 	}
 
-	newBlankPuzzle(nRows: number, nCols: number, valid_digits: number[]) {
-		this.updateCreationTimestamp();
-
-		const grid = new Grid(nRows, nCols);
-		this.setGrid(grid);
-		this.setValidDigits(valid_digits);
-		this.setElementsDictStore(new ElementsDict());
-		this.setPuzzleMeta({});
-		this.setSolution(undefined);
-
-		this._cellsStore.set(grid.getAllCells());
-	}
-
 	setPuzzle(puzzle: PuzzleI) {
 		this.setGrid(puzzle.grid);
 		this.setPuzzleMeta(puzzle.puzzleMeta);
@@ -402,6 +389,13 @@ export class StateStore {
 		this.setElementsDictStore(puzzle.elementsDict);
 
 		this._cellsStore.set(puzzle.grid.getAllCells());
+	}
+
+	newBlankPuzzle(nRows: number, nCols: number, valid_digits: number[]) {
+		this.updateCreationTimestamp();
+
+		const blank_puzzle = blankPuzzle(nRows, nCols, valid_digits);
+		this.setPuzzle(blank_puzzle);
 	}
 
 	resetPuzzle() {

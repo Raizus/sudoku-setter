@@ -81,12 +81,12 @@ export function puzzleFromJson(puzzleJson: Record<string, unknown>) {
 	return puzzle;
 }
 
-export function blankPuzzle(): PuzzleI {
-	const grid = new Grid(9, 9);
+export function blankPuzzle(nrows: number = 9, ncols: number = 9, valid_digits: number[] = range(1, 10)): PuzzleI {
+	const grid = new Grid(nrows, ncols);
 	const elements_dict = new ElementsDict();
 	const puzzle: PuzzleI = {
 		grid,
-		valid_digits: range(1, 10),
+		valid_digits: valid_digits,
 		puzzleMeta: {},
 		solution: undefined,
 		elementsDict: elements_dict
