@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getColor, isTransparent, isValidColor } from "$lib/utils/functionUtils";
+	import { getColor, isTransparent, isValidColor } from '$lib/utils/functionUtils';
 
 	export let value: string;
 	export let onChangeCb: ((val: string) => void) | undefined = undefined;
@@ -13,7 +13,7 @@
 
 	function changeWrapper(val: string) {
 		const aux = getColor(val);
-		aux && onChangeCb && onChangeCb(aux);
+		if (aux && onChangeCb) onChangeCb(aux);
 	}
 </script>
 
@@ -66,7 +66,8 @@
 			background: repeating-conic-gradient(#3e3e3e 0% 25%, transparent 0% 50%) 50% / 14px 14px !important;
 		}
 
-		&:focus, &:focus-within {
+		&:focus,
+		&:focus-within {
 			outline: transparent;
 			box-shadow: var(--focus-shadow);
 		}

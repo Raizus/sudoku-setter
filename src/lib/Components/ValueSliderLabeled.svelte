@@ -18,16 +18,16 @@
 		{step}
 		bind:value
 		on:change={() => {
-			onChangeCb && onChangeCb(value);
+			if (onChangeCb) onChangeCb(value);
 		}}
 		on:input={() => {
-			onInputCb && onInputCb(value);
+			if (onInputCb) onInputCb(value);
 		}}
 	/>
 </div>
 
 <style>
-	.slider-container{
+	.slider-container {
 		display: flex;
 		flex-direction: column;
 	}
