@@ -15,9 +15,6 @@
 		e.currentTarget.click();
 	}}
 >
-	<div class="add-button-container">
-		<slot name="add-button" />
-	</div>
 	<span class="panel-header-title">
 		<div class="title-icon-wrapper">
 			<slot name="title-icon" />
@@ -64,12 +61,6 @@
 		justify-content: center;
 		margin-left: auto;
 		padding-left: 0.5rem;
-	}
-
-	.add-button-container {
-		height: 1.5rem;
-		width: 1.5rem;
-		margin-right: 1rem;
 	}
 
 	.title-icon-wrapper {

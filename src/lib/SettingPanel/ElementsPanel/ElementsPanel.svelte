@@ -17,9 +17,11 @@
 	import { stateStore } from '$stores/StateStore';
 	import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
 	import { removeElementAction, restoreElementAction } from '$src/lib/reducers/ElementsActions';
+	import ToolSelectionModal from '../ToolSelectionModal.svelte';
 
 	export let elementHandlers: AbstractElementHandlers;
 
+	let showModal: boolean;
 	const elementsDictStore = stateStore.elementsDictStore;
 	const categories = ELEMENTS_CATEGORIES;
 
@@ -47,15 +49,19 @@
 	};
 </script>
 
-<SettingToolsPanel
-	title="Elements"
-	{onAddTool}
-	{categories}
-	elementHandlerFilterFunc={localCFilterFun}
-	{elementHandlers}
->
+<SettingToolsPanel title="Elements">
 	<Local slot="title-icon" />
 	<svelte:fragment slot="panel-content">
+		<ToolSelectionModal
+			bind:showModal
+			{categories}
+			{onAddTool}
+			{elementHandlers}
+			elementHandlerFilterFunc={localCFilterFun}
+		/>
+		<button class="add-button" title="Add Element" on:click={() => (showModal = true)}>
+			Add Element
+		</button>
 		<ElementButton tool_id={TOOLS.GIVEN} {elementHandlers} />
 		<ElementButton tool_id={TOOLS.REGIONS} {elementHandlers} />
 
@@ -79,5 +85,17 @@
 	li {
 		list-style: none;
 		margin-bottom: 0.05rem;
+	}
+
+	.add-button {
+		background-color: #3c3c3c;
+		border: 1px solid #515151;
+		border-radius: 0.2rem;
+		height: 2rem;
+		cursor: pointer;
+
+		&:hover {
+			background-color: #515151;
+		}
 	}
 </style>
