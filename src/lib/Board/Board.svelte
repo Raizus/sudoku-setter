@@ -2,7 +2,6 @@
 	import type { GridShape } from './../Types/types';
 	import type { Rectangle } from '$lib/Types/types';
 	import { enableFogMaskStore } from '$stores/BoardStore';
-	import { boundingBoxStore } from '$stores/BoundingBoxStore';
 	import { stateStore } from '$stores/StateStore';
 
 	// components
@@ -43,6 +42,7 @@
 	const cornerLineToolsStore = stateStore.cornerLineToolsStore;
 	const fogLightsStore = stateStore.fogLightsStore;
 	const underlayElementsStore = stateStore.underlayElementsStore;
+	const boundingBoxStore = stateStore.boundingBoxStore;
 
 	$: grid = $gridStore;
 	$: gridShape = { nRows: grid.nRows, nCols: grid.nCols } as GridShape;

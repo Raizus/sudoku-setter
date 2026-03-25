@@ -5,7 +5,7 @@
 	import { base } from '$app/paths';
 	import type { PuzzleI } from '$src/lib/Puzzle/Puzzle';
 	import Trash from '$icons/Trash.svelte';
-	import { puzzleHistoryStore, removePuzzleFromHistory } from '$stores/PuzzleHistoryStore';
+	import { puzzleHistoryStore } from '$stores/PuzzleHistoryStore';
 	import { stateStore } from '$stores/StateStore';
 
 	export let item: PuzzleHistoryItem;
@@ -13,9 +13,10 @@
 	export let selected: number | undefined;
 	export let selected_puzzle: PuzzleI | undefined;
 	export let showModal: boolean;
+	export let confirm_selected: number | undefined = undefined;
 
 	const constraints: string = 'Given Digits, Regions';
-	export let confirm_selected: number | undefined = undefined;
+	const historyStore = puzzleHistoryStore.history_store;
 
 	$: compressedStr = item.encodedStr;
 	$: puzzle = compressedStrToPuzzle(compressedStr);
@@ -43,18 +44,18 @@
 		if (confirm_selected != item_id) confirm_selected = item_id;
 		else {
 			// remove item from history
-			removePuzzleFromHistory(item_id);
+			puzzleHistoryStore.removeItem(item_id);
 			confirm_selected = undefined;
-			const puzzle_count = $puzzleHistoryStore.length;
+			const puzzle_count = $historyStore.length;
 
 			// select next or previous item
 			if (item_id < puzzle_count) {
 				selected = item_id;
-				const item = $puzzleHistoryStore[selected];
+				const item = $historyStore[selected];
 				selected_puzzle = compressedStrToPuzzle(item.encodedStr);
 			} else if(item_id > 0) {
 				selected = item_id - 1;
-				const item = $puzzleHistoryStore[selected];
+				const item = $historyStore[selected];
 				selected_puzzle = compressedStrToPuzzle(item.encodedStr);
 			}
 			else {

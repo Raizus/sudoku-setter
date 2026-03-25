@@ -6,13 +6,15 @@
 	import Trash from '$icons/Trash.svelte';
 	import Upload from '$icons/Upload.svelte';
 	import type { PuzzleI } from '$src/lib/Puzzle/Puzzle';
-	import { clearPuzzleHistory, puzzleHistoryStore } from '$stores/PuzzleHistoryStore';
+	import { puzzleHistoryStore } from '$stores/PuzzleHistoryStore';
 	import { get } from 'svelte/store';
 	import { download } from '../SavePuzzleModal/io_utils';
+	import type { PuzzleHistoryItem } from './PuzzleHistory';
 
 	export let selected: undefined | number;
 	export let selected_puzzle: undefined | PuzzleI;
 
+	const history_store = puzzleHistoryStore.history_store;
 	let dropdownEl: HTMLDivElement | undefined = undefined;
 
 	let dropdow_open = false;
@@ -38,8 +40,8 @@
 				const result = evt.target.result;
 				if (typeof result !== 'string') return;
 				const obj = JSON.parse(result);
-
-				puzzleHistoryStore.set(obj);
+				// TODO: validation
+				puzzleHistoryStore.set(obj as PuzzleHistoryItem[]);
 			}
 		};
 		fileReader.onerror = function () {
@@ -50,7 +52,7 @@
 	function clearHistoryCb() {
 		selected = undefined;
 		selected_puzzle = undefined;
-		clearPuzzleHistory();
+		puzzleHistoryStore.clear();
 	}
 
 	function importCb() {
@@ -61,7 +63,7 @@
 	}
 
 	function exportCb() {
-		const data = get(puzzleHistoryStore);
+		const data = get(history_store);
 		const jsonData = JSON.stringify(data, null, 2);
 		download(jsonData, `puzzle_history.json`, 'text/plain', dropdownEl);
 	}

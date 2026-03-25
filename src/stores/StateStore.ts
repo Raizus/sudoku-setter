@@ -41,7 +41,7 @@ import {
 	type PenToolAction
 } from '$src/lib/reducers/PenToolReducer';
 import { UPDATE_CELLS_ACTIONS, type UpdateCellsAction } from '$src/lib/reducers/UpdateCellsActions';
-import type { CommandI, Rectangle } from '$src/lib/Types/types';
+import  { type CommandI, GAME_MODE, type Rectangle } from '$src/lib/Types/types';
 import {
 	initSelection,
 	reducerSelection,
@@ -50,13 +50,26 @@ import {
 	type SelectionState
 } from '$src/lib/reducers/SelectionReducer';
 
-import { range } from 'lodash';
+import { debounce, range } from 'lodash';
 import { derived, get, writable } from 'svelte/store';
 import type { Readable } from 'svelte/store';
 import { CommandHistoryStore } from './CommandHistoryStore';
+import { puzzleToCompressedStr } from '$src/lib/SettingPanel/SavePuzzleModal/io_utils';
+
+function updateUrlParams(compressedStr: string) {
+	if (typeof window === 'undefined') return;
+
+	const url = new URL(window.location.href);
+	url.searchParams.set('puzzle', compressedStr);
+
+	// const newUrl = url.toString();
+	// window.history.replaceState({}, '', newUrl);
+}
 
 export class StateStore {
 	public svgRefStore = writable<SVGSVGElement | null>(null);
+	public gameModeStore = writable<GAME_MODE>(GAME_MODE.SETTING);
+	
 	public toolStore = writable<TOOLID>(TOOLS.DIGIT);
 	public selectOnStore = writable<boolean>(false);
 	public toolModeStore = writable<ToolModeT>(undefined);
@@ -103,6 +116,8 @@ export class StateStore {
 	public currentConstraintStore = { subscribe: this._currentConstraintStore.subscribe };
 	public currentShapeStore = { subscribe: this._currentShapeStore.subscribe };
 	public solutionStore = { subscribe: this._solutionStore.subscribe };
+
+	public currentScaleStore = { subscribe: this._currentScaleStore.subscribe };
 
 	public puzzleCreationTimestamp = { subscribe: this._puzzleCreationTimestamp.subscribe };
 
@@ -302,6 +317,14 @@ export class StateStore {
 
 	getSelection() {
 		return get(this._selectionStore);
+	}
+
+	getDefaultBoundingBox() {
+		return get(this.defaultBoundingBoxStore);
+	}
+
+	getBoundingBox() {
+		return get(this.boundingBoxStore);
 	}
 
 	/* -------------------------------------------------------------------------- */
@@ -759,12 +782,20 @@ export class StateStore {
 	/* -------------------------------------------------------------------------- */
 	/* ----- Zoom methods ------------------------------------------------------- */
 
+	setScale(val: number) {
+		this._currentScaleStore.set(val);
+	}
+
+	setBbox(bbox: Rectangle) {
+		this.boundingBoxStore.set(bbox);
+	}
+
 	restoreBboxToDefault() {
-		this.boundingBoxStore.set(get(this.defaultBoundingBoxStore));
+		this.setBbox(get(this.defaultBoundingBoxStore));
 	}
 
 	resetZoom() {
-		this._currentScaleStore.set(1);
+		this.setScale(1);
 		this.restoreBboxToDefault();
 	}
 
@@ -803,6 +834,15 @@ export class StateStore {
 		this.setCurrentShape(undefined);
 		this.setCurrentConstraint(null);
 	}
+
+	puzzleUrlStore = derived(
+		this.puzzleStore,
+		debounce(($puzzleStore) => {
+			const compressedStr = puzzleToCompressedStr($puzzleStore);
+			updateUrlParams(compressedStr);
+			return compressedStr;
+		}, 500)
+	);
 }
 
 export const stateStore = new StateStore();

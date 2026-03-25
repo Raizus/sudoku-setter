@@ -1,5 +1,4 @@
 import { ElementsDict } from '$src/lib/Puzzle/Constraints/ElementsDict';
-import { Grid } from '$lib/Puzzle/Grid/Grid';
 
 import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';
 
@@ -14,7 +13,6 @@ export const gameModeStore = writable<GAME_MODE>(GAME_MODE.SETTING);
 
 // user state
 export const toolStore = writable<TOOLID>(TOOLS.DIGIT);
-export const gridStore = writable<Grid>(new Grid(9, 9));
 
 export const elementsDictStore = writable<ElementsDict>(new ElementsDict());
 

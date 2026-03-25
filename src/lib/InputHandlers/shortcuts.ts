@@ -59,13 +59,17 @@ function addShortcutToRegistry(shortcut: Shortcut, shortcutRegistry: Map<string,
 export const undoSc: Shortcut = {
 	name: 'Undo',
 	keys: [{ ctrlKey: true, key: 'Z', type: 'keydown' }],
-	func: stateStore.commandHistoryStore.undo
+	func: () => {
+		stateStore.commandHistoryStore.undo();
+	}
 };
 
 export const redoSc: Shortcut = {
 	name: 'Redo',
 	keys: [{ ctrlKey: true, key: 'Y', type: 'keydown' }],
-	func: stateStore.commandHistoryStore.redo
+	func: () => {
+		stateStore.commandHistoryStore.redo();
+	}
 };
 
 export const toggleDarkmodeSc: Shortcut = {

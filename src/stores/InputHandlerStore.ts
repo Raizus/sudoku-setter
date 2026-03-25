@@ -6,7 +6,7 @@ import { getInputHandlerF } from '$input/ToolInputHandlers/InputHandlerRegistry'
 import { stateStore, type StateStore } from './StateStore';
 
 export function createInputHandlerStore(stateStore: StateStore) {
-	return derived<
+	const inputHandlerStore = derived<
 		[typeof stateStore.svgRefStore, typeof stateStore.gridStore, typeof stateStore.toolStore],
 		InputHandler | undefined
 	>(
@@ -28,6 +28,8 @@ export function createInputHandlerStore(stateStore: StateStore) {
 			return inputHandler;
 		}
 	);
+
+	return inputHandlerStore;
 }
 
 export const InputHandlerStore = derived<

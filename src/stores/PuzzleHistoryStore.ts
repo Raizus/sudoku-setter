@@ -9,8 +9,6 @@ import { stateStore } from './StateStore';
 export const MAX_HISTORY_SIZE = 100;
 const DEFAULT_COMPRESSED_STR = puzzleToCompressedStr(blankPuzzle());
 
-export const puzzleHistoryStore = createPersistentStore<PuzzleHistoryItem[]>('puzzle-history', []);
-
 export function createHistoryItem(creationTimestamp: number, url: string): PuzzleHistoryItem {
 	const item: PuzzleHistoryItem = {
 		creationTimestamp,
@@ -57,26 +55,37 @@ export function updateHistory(item: PuzzleHistoryItem, history: PuzzleHistoryIte
 	return history;
 }
 
-/**
- * Updates the puzzle history store with a new or modified puzzle history item.
- * @param item - The puzzle history item to add or update in the store. If Item with the same creation timestamp exists, it will be updated; otherwise, it will be added.
-**/
-export function updateHistoryStore(item: PuzzleHistoryItem) {
-	puzzleHistoryStore.update((history) => {
-		return updateHistory(item, history);
-	});
+class PuzzleHistoryStore {
+	private _history_store = createPersistentStore<PuzzleHistoryItem[]>('puzzle-history', []);
+	public history_store = { subscribe: this._history_store.subscribe };
+
+	clear() {
+		this._history_store.set([]);
+	}
+
+	/**
+	 * Updates the puzzle history store with a new or modified puzzle history item.
+	 * @param item - The puzzle history item to add or update in the store. If Item with the same creation timestamp exists, it will be updated; otherwise, it will be added.
+	 **/
+	addOrUpdateItem(item: PuzzleHistoryItem) {
+		this._history_store.update((history) => {
+			return updateHistory(item, history);
+		});
+	}
+
+	removeItem(item_idx: number) {
+		this._history_store.update((history) => {
+			history.splice(item_idx, 1);
+			return history;
+		});
+	}
+
+	set(history: PuzzleHistoryItem[]) {
+		this._history_store.set(history);
+	}
 }
 
-export function removePuzzleFromHistory(item_idx: number) {
-	puzzleHistoryStore.update((history) => {
-		history.splice(item_idx, 1);
-		return history;
-	});
-}
-
-export function clearPuzzleHistory() {
-	puzzleHistoryStore.set([]);
-}
+export const puzzleHistoryStore = new PuzzleHistoryStore();
 
 puzzleUrlStore.subscribe((value) => {
 	const creation_ts = get(stateStore.puzzleCreationTimestamp);
@@ -84,5 +93,5 @@ puzzleUrlStore.subscribe((value) => {
 	if (value === DEFAULT_COMPRESSED_STR) return;
 
 	const item = createHistoryItem(creation_ts, value);
-	updateHistoryStore(item);
+	puzzleHistoryStore.addOrUpdateItem(item);
 });

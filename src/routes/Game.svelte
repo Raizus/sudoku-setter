@@ -4,12 +4,13 @@
 	import SettingPanel from '$src/lib/SettingPanel/SettingPanel.svelte';
 	import BoardContainer from '$src/lib/Board/BoardContainer.svelte';
 	import EntryPanel from '$src/lib/EntryPanel/EntryPanel.svelte';
-	import { gameModeStore } from '$stores/BoardStore';
 	import { onMount } from 'svelte';
 	import * as MiniZinc from 'minizinc';
 	import { base } from '$app/paths';
 	import { isPortraitStore } from '$stores/OrientationStore';
+	import { stateStore } from '$stores/StateStore';
 
+	const gameModeStore = stateStore.gameModeStore;
 	$: game_mode = $gameModeStore;
 
 	onMount(async () => {

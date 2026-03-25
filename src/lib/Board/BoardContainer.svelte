@@ -2,13 +2,14 @@
 	import { InputHandlerStore } from '$stores/InputHandlerStore';
 	import Board from './Board.svelte';
 	import { onExtraInput } from '$input/ExtraInputHandler';
-	import { currentScaleStore } from '$stores/BoundingBoxStore';
 	import { getWheelInputHandler } from '$input/WheelInputHandler';
 	import { stateStore } from '$stores/StateStore';
 
 	let boardContainerRef: HTMLDivElement | null = null;
 
 	const svgRefStore = stateStore.svgRefStore;
+	const currentScaleStore = stateStore.currentScaleStore;
+
 	$: inputHandler = $InputHandlerStore;
 	$: wheelInputHandler = getWheelInputHandler($svgRefStore);
 

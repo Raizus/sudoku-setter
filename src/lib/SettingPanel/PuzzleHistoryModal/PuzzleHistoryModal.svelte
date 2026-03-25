@@ -12,12 +12,13 @@
 	let selected: number | undefined = undefined;
 	let confirm_selected: number | undefined = undefined;
 	let puzzle: PuzzleI | undefined = undefined;
+	const history_store = puzzleHistoryStore.history_store;
 
-	$: puzzle_count = $puzzleHistoryStore.length;
+	$: puzzle_count = $history_store.length;
 
 	function openCb() {
 		if (selected === undefined || puzzle === undefined) return;
-		const item = $puzzleHistoryStore[selected];
+		const item = $history_store[selected];
 
 		stateStore.resetUserState();
 		stateStore.setCreationTimestamp(item.creationTimestamp);
@@ -43,7 +44,7 @@
 			<div class="scroller-container">
 				<div class="scroller">
 					<ol class="list">
-						{#each $puzzleHistoryStore as item, i}
+						{#each $history_store as item, i}
 							<PuzzleItem
 								{item}
 								item_id={i}
