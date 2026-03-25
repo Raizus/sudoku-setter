@@ -15,6 +15,8 @@
 	import ElementButton from './ElementButton.svelte';
 
 	import { stateStore } from '$stores/StateStore';
+	import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
+	import { removeElementAction, restoreElementAction } from '$src/lib/reducers/ElementsActions';
 
 	export let elementHandlers: AbstractElementHandlers;
 
@@ -22,7 +24,15 @@
 	const categories = ELEMENTS_CATEGORIES;
 
 	const onAddTool = (toolId: TOOLID): void => {
-		const new_ele_id = stateStore.addGroupToElementsDict(toolId);
+		const new_element: ConstraintsElement = { tool_id: toolId, constraints: {} };
+		const new_ele_id = stateStore.addGroupToElementsDict(new_element);
+
+		const action = restoreElementAction(new_ele_id, new_element);
+		const reverse_action = removeElementAction(new_ele_id);
+		const command = stateStore.getUpdateElementCommand(action, reverse_action);
+
+		stateStore.commandHistoryStore.addCommand(command, false);
+
 		// TODO split update tool and update current constraint
 		stateStore.updateToolAndCurrentConstraintStores(toolId, new_ele_id);
 	};

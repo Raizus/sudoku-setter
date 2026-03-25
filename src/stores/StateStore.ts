@@ -34,14 +34,14 @@ import {
 } from '$src/lib/Puzzle/Tools';
 
 import type { ToolModeT } from '$input/ToolInputHandlers/types';
-import { ELEMENT_ACTIONS, type ElementAction } from '$src/lib/reducers/LocalConstraintsActions';
+import { ELEMENT_ACTIONS, type ElementAction } from '$src/lib/reducers/ElementsActions';
 import {
 	reducerPenTool,
 	resetPenAction,
 	type PenToolAction
 } from '$src/lib/reducers/PenToolReducer';
 import { UPDATE_CELLS_ACTIONS, type UpdateCellsAction } from '$src/lib/reducers/UpdateCellsActions';
-import  { type CommandI, GAME_MODE, type Rectangle } from '$src/lib/Types/types';
+import { type CommandI, GAME_MODE, type Rectangle } from '$src/lib/Types/types';
 import {
 	initSelection,
 	reducerSelection,
@@ -53,7 +53,7 @@ import {
 import { debounce, range } from 'lodash';
 import { derived, get, writable } from 'svelte/store';
 import type { Readable } from 'svelte/store';
-import { CommandHistoryStore } from './CommandHistoryStore';
+import { CommandHistoryStore, createCommand } from './CommandHistoryStore';
 import { puzzleToCompressedStr } from '$src/lib/SettingPanel/SavePuzzleModal/io_utils';
 
 function updateUrlParams(compressedStr: string) {
@@ -263,7 +263,7 @@ export class StateStore {
 		return get(this.selectOnStore);
 	}
 
-	getCurrentGrid() {
+	getGrid() {
 		return get(this._gridStore);
 	}
 
@@ -467,12 +467,12 @@ export class StateStore {
 		}
 	}
 
-	addGroupToElementsDict(toolId: TOOLID) {
-		let element_id: number | null = null;
-		this._elementsDictStore.update((elementsDict) => {
-			const element: ConstraintsElement = { tool_id: toolId, constraints: {} };
-			element_id = elementsDict.addElementToDict(element);
-			return elementsDict;
+	addGroupToElementsDict(element: ConstraintsElement): number {
+		const elements_dict = this.getElementsDict();
+		const element_id = elements_dict.addElementToDict(element);
+
+		this._elementsDictStore.update(() => {
+			return elements_dict;
 		});
 
 		return element_id;
@@ -562,14 +562,16 @@ export class StateStore {
 	}
 
 	updateElementAction(action: ElementAction): void {
-		if (action.type === ELEMENT_ACTIONS.ADD_LOCAL_CONSTRAINT) {
+		if (action.type === ELEMENT_ACTIONS.ADD_CONSTRAINT) {
 			this.addConstraint(action.payload.element_id, action.payload.id, action.payload.constraint);
-		} else if (action.type === ELEMENT_ACTIONS.REMOVE_LOCAL_CONSTRAINT) {
+		} else if (action.type === ELEMENT_ACTIONS.REMOVE_CONSTRAINT) {
 			this.removeConstraint(action.payload.element_id, action.payload.c_id);
+		} else if (action.type === ELEMENT_ACTIONS.ADD_ELEMENT) {
+			this.addGroupToElementsDict(action.payload.element);
 		} else if (action.type === ELEMENT_ACTIONS.REMOVE_ELEMENT) {
 			this.removeGroupFromElementsDict(action.payload.element_id);
 		} else if (action.type === ELEMENT_ACTIONS.RESTORE_ELEMENT) {
-			this.restoreElement(action.payload.element_id, action.payload.constraints);
+			this.restoreElement(action.payload.element_id, action.payload.element);
 		} else if (action.type === ELEMENT_ACTIONS.UPDATE_LOCAL_CONSTRAINT) {
 			this.updateConstraint(
 				action.payload.element_id,
@@ -586,14 +588,10 @@ export class StateStore {
 	}
 
 	getUpdateElementCommand(action: ElementAction, reverse_action: ElementAction): CommandI {
-		const command: CommandI = {
-			execute: () => {
-				this.updateElementAction(action);
-			},
-			unExecute: () => {
-				this.updateElementAction(reverse_action);
-			}
-		};
+		const command = createCommand(
+			() => this.updateElementAction(action),
+			() => this.updateElementAction(reverse_action)
+		);
 
 		return command;
 	}
@@ -625,14 +623,10 @@ export class StateStore {
 	}
 
 	getPenToolCommand(action: PenToolAction, reverse_action: PenToolAction): CommandI {
-		const command: CommandI = {
-			execute: () => {
-				this.updatePenTool(action);
-			},
-			unExecute: () => {
-				this.updatePenTool(reverse_action);
-			}
-		};
+		const command = createCommand(
+			() => this.updatePenTool(action),
+			() => this.updatePenTool(reverse_action)
+		);
 
 		return command;
 	}
@@ -746,14 +740,10 @@ export class StateStore {
 	}
 
 	getUpdateCellsCommand(action: UpdateCellsAction, reverse_action: UpdateCellsAction): CommandI {
-		const command: CommandI = {
-			execute: () => {
-				this.executeUpdateCellsAction(action);
-			},
-			unExecute: () => {
-				this.executeUpdateCellsAction(reverse_action);
-			}
-		};
+		const command = createCommand(
+			() => this.executeUpdateCellsAction(action),
+			() => this.executeUpdateCellsAction(reverse_action)
+		);
 
 		return command;
 	}

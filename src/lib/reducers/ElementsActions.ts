@@ -2,8 +2,9 @@ import type { ConstraintType } from '../Puzzle/puzzle_schema';
 import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 
 export enum ELEMENT_ACTIONS {
-	ADD_LOCAL_CONSTRAINT = 'ADD_LOCAL_CONSTRAINT',
-	REMOVE_LOCAL_CONSTRAINT = 'REMOVE_LOCAL_CONSTRAINT',
+	ADD_CONSTRAINT = 'ADD_CONSTRAINT',
+	REMOVE_CONSTRAINT = 'REMOVE_CONSTRAINT',
+	ADD_ELEMENT = 'ADD_ELEMENT',
 	REMOVE_ELEMENT = 'REMOVE_ELEMENT',
 	RESTORE_ELEMENT = 'RESTORE_ELEMENT',
 	ENABLE_DISABLE_ELEMENT = 'ENABLE_DISABLE_ELEMENT',
@@ -12,8 +13,8 @@ export enum ELEMENT_ACTIONS {
 	MOVE_ELEMENT_DOWN = 'MOVE_ELEMENT_DOWN'
 }
 
-type AddLocalConstraintAction = {
-	type: ELEMENT_ACTIONS.ADD_LOCAL_CONSTRAINT;
+type AddConstraintAction = {
+	type: ELEMENT_ACTIONS.ADD_CONSTRAINT;
 	payload: {
 		element_id: number;
 		id: string;
@@ -21,11 +22,18 @@ type AddLocalConstraintAction = {
 	};
 };
 
-type RemoveLocalConstraintAction = {
-	type: ELEMENT_ACTIONS.REMOVE_LOCAL_CONSTRAINT;
+type RemoveConstraintAction = {
+	type: ELEMENT_ACTIONS.REMOVE_CONSTRAINT;
 	payload: {
 		element_id: number;
 		c_id: string;
+	};
+};
+
+type AddElementAction = {
+	type: ELEMENT_ACTIONS.ADD_ELEMENT;
+	payload: {
+		element: ConstraintsElement;
 	};
 };
 
@@ -40,7 +48,7 @@ type RestoreElementAction = {
 	type: ELEMENT_ACTIONS.RESTORE_ELEMENT;
 	payload: {
 		element_id: number;
-		constraints: ConstraintsElement;
+		element: ConstraintsElement;
 	};
 };
 
@@ -76,8 +84,9 @@ type MoveElementDownAction = {
 };
 
 export type ElementAction =
-	| AddLocalConstraintAction
-	| RemoveLocalConstraintAction
+	| AddConstraintAction
+	| RemoveConstraintAction
+	| AddElementAction
 	| RemoveElementAction
 	| RestoreElementAction
 	| UpdateLocalConstraintAction
@@ -85,13 +94,13 @@ export type ElementAction =
 	| MoveElementUpAction
 	| MoveElementDownAction;
 
-export const addLocalConstraintAction = (
+export const addConstraintAction = (
 	element_id: number,
 	id: string,
 	constraint: ConstraintType
-): AddLocalConstraintAction => {
+): AddConstraintAction => {
 	return {
-		type: ELEMENT_ACTIONS.ADD_LOCAL_CONSTRAINT,
+		type: ELEMENT_ACTIONS.ADD_CONSTRAINT,
 		payload: {
 			element_id,
 			id,
@@ -100,15 +109,24 @@ export const addLocalConstraintAction = (
 	};
 };
 
-export const removeLocalConstraintAction = (
+export const removeConstraintAction = (
 	element_id: number,
 	id: string
-): RemoveLocalConstraintAction => {
+): RemoveConstraintAction => {
 	return {
-		type: ELEMENT_ACTIONS.REMOVE_LOCAL_CONSTRAINT,
+		type: ELEMENT_ACTIONS.REMOVE_CONSTRAINT,
 		payload: {
 			element_id,
 			c_id: id
+		}
+	};
+};
+
+export const addElementAction = (element: ConstraintsElement): AddElementAction => {
+	return {
+		type: ELEMENT_ACTIONS.ADD_ELEMENT,
+		payload: {
+			element
 		}
 	};
 };
@@ -130,7 +148,7 @@ export const restoreElementAction = (
 		type: ELEMENT_ACTIONS.RESTORE_ELEMENT,
 		payload: {
 			element_id,
-			constraints: element
+			element: element
 		}
 	};
 };

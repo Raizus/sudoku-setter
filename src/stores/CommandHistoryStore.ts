@@ -14,6 +14,19 @@ function newHistory(): CommandHistoryI {
 	return history;
 }
 
+export function createCommand(func: () => void, reverse_func: () => void): CommandI {
+	const command: CommandI = {
+		execute: () => {
+			func();
+		},
+		unExecute: () => {
+			reverse_func();
+		}
+	};
+
+	return command;
+}
+
 export class CommandHistoryStore {
 	private _command_history_store = writable<CommandHistoryI>(newHistory());
 

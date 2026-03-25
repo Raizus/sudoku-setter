@@ -1,9 +1,9 @@
 <script lang="ts">
 	import Trash from '$icons/Trash.svelte';
 	import {
-		addLocalConstraintAction,
-		removeLocalConstraintAction
-	} from '$src/lib/reducers/LocalConstraintsActions';
+		addConstraintAction,
+		removeConstraintAction
+	} from '$src/lib/reducers/ElementsActions';
 	import { stateStore } from '$stores/StateStore';
 
 	export let constraint_id: string;
@@ -23,8 +23,8 @@
 		// removeLocalConstraint(toolId, constraintId);
 		const constraint = $elementsDictStore.getConstraint(element_id, constraint_id);
 		if (!constraint) return;
-		const action = removeLocalConstraintAction(element_id, constraint_id);
-		const reverse_action = addLocalConstraintAction(element_id, constraint_id, constraint);
+		const action = removeConstraintAction(element_id, constraint_id);
+		const reverse_action = addConstraintAction(element_id, constraint_id, constraint);
 		const command = stateStore.getUpdateElementCommand(action, reverse_action);
 		stateStore.commandHistoryStore.addCommand(command);
 	}

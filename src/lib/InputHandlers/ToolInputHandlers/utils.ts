@@ -3,10 +3,10 @@ import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
 import type { Grid } from '$src/lib/Puzzle/Grid/Grid';
 import { type TOOLID, TOOLS } from '$src/lib/Puzzle/Tools';
 import {
-	addLocalConstraintAction,
-	removeLocalConstraintAction,
+	addConstraintAction,
+	removeConstraintAction,
 	updateLocalConstraintAction
-} from '$src/lib/reducers/LocalConstraintsActions';
+} from '$src/lib/reducers/ElementsActions';
 import type { GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
 import { type Writable } from 'svelte/store';
 import { keyboardInputDefaultValidator } from '$input/KeyboardEventUtils';
@@ -95,8 +95,8 @@ export function pushAddLocalConstraintCommand(
 	execute: boolean = false
 ) {
 	if (!(id && currentConstraint)) return;
-	const action = addLocalConstraintAction(element_id, id, currentConstraint);
-	const reverse_action = removeLocalConstraintAction(element_id, id);
+	const action = addConstraintAction(element_id, id, currentConstraint);
+	const reverse_action = removeConstraintAction(element_id, id);
 	const command = stateStore.getUpdateElementCommand(action, reverse_action);
 	// add it to history but don't execute
 	// the clone constraint was already added/updated but only when
@@ -111,8 +111,8 @@ export function pushRemoveLocalConstraintCommand(
 	execute: boolean = true
 ) {
 	if (!(id && currentConstraint)) return;
-	const action = removeLocalConstraintAction(element_id, id);
-	const reverse_action = addLocalConstraintAction(element_id, id, currentConstraint);
+	const action = removeConstraintAction(element_id, id);
+	const reverse_action = addConstraintAction(element_id, id, currentConstraint);
 	const command = stateStore.getUpdateElementCommand(action, reverse_action);
 	// add it to histoy but don't execute
 	// the clone constraint was already added/updated but only when

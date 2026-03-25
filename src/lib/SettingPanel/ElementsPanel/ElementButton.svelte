@@ -9,7 +9,7 @@
 		moveElementUpAction,
 		removeElementAction,
 		restoreElementAction
-	} from '$src/lib/reducers/LocalConstraintsActions';
+	} from '$src/lib/reducers/ElementsActions';
 	import { stateStore } from '$stores/StateStore';
 
 	import CaretDown from '$icons/CaretDown.svelte';
