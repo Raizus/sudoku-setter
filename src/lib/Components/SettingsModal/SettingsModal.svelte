@@ -19,17 +19,6 @@
 <Modal bind:showModal title="Settings">
 	<div class="settings-content">
 		<TabbedMenu {tabs} />
-		<!-- 
-		{#if $gameModeStore === GAME_MODE.SETTING}
-			<SettingsGroup title="Setting Mode Display">
-				<SettingsToggle
-					name="Hide Fog"
-					value={settings.hideFog}
-					updateCb={(value) => updateSettingsValue('hideFog', value)}
-				/>
-			</SettingsGroup>
-		{/if}
-		 -->
 	</div>
 </Modal>
 
