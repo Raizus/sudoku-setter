@@ -37,11 +37,6 @@
 		return seen_values;
 	}
 
-	function getFogString(value: boolean | null) {
-		if (value) return '1';
-		return '0';
-	}
-
 	$: seen_values = getSeenValues(highlightPMconflicts, cell);
 	$: hide_given = cell.given && $enableFogMaskStore;
 </script>
