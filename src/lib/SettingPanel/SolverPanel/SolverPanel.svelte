@@ -15,7 +15,7 @@
 
 	let showModal = false;
 	let solver: null | MiniZinc.SolveProgress = null;
-	$: solver_button_label = 'Solve';
+	let is_solving = false;
 
 	let max_sols = 100;
 	let max_sols_str = '100';
@@ -24,6 +24,8 @@
 
 	const timer = createStopwatchStore();
 	$: ellapsed = $timer;
+
+	$: is_solving = isSolverRunning(solver);
 
 	function getSolText(sol_count: number | null): string {
 		if (sol_count === null) return '';
@@ -53,7 +55,7 @@
 		}
 	}
 
-	function isSolverRunning(): boolean {
+	function isSolverRunning(solver: MiniZinc.SolveProgress | null): boolean {
 		return solver !== null && solver.isRunning();
 	}
 
@@ -61,13 +63,11 @@
 		if (solver === null || !solver.isRunning()) return;
 
 		status = 'IDLE';
-		solver_button_label = 'Solve';
 		timer.stop();
 		solver.cancel();
 	}
 
 	function onSolverError(error: MiniZinc.ErrorMessage) {
-		solver_button_label = 'Solve';
 		status = 'ERROR';
 		console.log(error.message);
 		timer.stop();
@@ -81,8 +81,8 @@
 
 	function onSolverCompletion(result: MiniZinc.SolveResult) {
 		status = result.status;
-		solver_button_label = 'Solve';
 		timer.stop();
+		is_solving = false;
 	}
 
 	async function solvePuzzle() {
@@ -158,22 +158,18 @@
 		solver.then(onSolverCompletion);
 	}
 
+	function stopSolverCb() {
+		if (is_solving) stopSolver();
+	}
+
 	function solveCb() {
-		if (!isSolverRunning()) solvePuzzle();
-		else if (isSolverRunning()) stopSolver();
+		if (!isSolverRunning(solver)) solvePuzzle();
+		else if (isSolverRunning(solver)) stopSolver();
 	}
 
 	function findAllCandidatesCb() {
-		if (!isSolverRunning()) findAllCandidates();
-		else if (isSolverRunning()) stopSolver();
-	}
-
-	$: if (solver) {
-		if (solver !== null && solver.isRunning()) {
-			solver_button_label = 'Stop';
-		} else {
-			solver_button_label = 'Solve';
-		}
+		if (!isSolverRunning(solver)) findAllCandidates();
+		else if (isSolverRunning(solver)) stopSolver();
 	}
 </script>
 
@@ -182,8 +178,11 @@
 	<svelte:fragment slot="panel-content">
 		<button class="panel-button" on:click={minizincFileCb}> Minizinc File... </button>
 		<SolverModal bind:showModal />
-		<button class="panel-button" on:click={solveCb}> {solver_button_label} </button>
-		<button class="panel-button" on:click={findAllCandidatesCb}> Find all candidates </button>
+		<button class="panel-button" disabled={is_solving} on:click={solveCb}> Solve </button>
+		<button class="panel-button" disabled={is_solving} on:click={findAllCandidatesCb}>
+			Find all candidates
+		</button>
+		<button class="panel-button" disabled={!is_solving} on:click={stopSolverCb}> Stop </button>
 		<span class="text-field">{`Max. Solutions: ${max_sols}`}</span>
 		<div class="input-container">
 			<input
@@ -202,7 +201,6 @@
 </Panel>
 
 <style lang="scss">
-
 	.text-field {
 		display: flex;
 		text-align: left;

@@ -211,8 +211,13 @@ main {
 	margin-top: 0.3rem;
 	margin-bottom: 0.3rem;
 
-	&:hover {
+	&:hover:not([disabled]) {
 		background-color: #515151;
+	}
+
+	&:disabled {
+		opacity: 0.5;
+		cursor: default;
 	}
 }
 
