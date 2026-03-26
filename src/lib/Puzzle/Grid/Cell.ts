@@ -1,16 +1,7 @@
 import type { GridCoordI } from '$lib/utils/SquareCellGridCoords';
+import type { CellRecord } from '../puzzle_schema';
 import { TOOLS, type TOOLID } from '../Tools';
 import { getRegionIndex } from './gridSizes';
-
-export interface CellRecord {
-	outside?: boolean;
-	value?: number;
-	given?: boolean;
-	centerMarks?: number[];
-	cornerMarks?: number[];
-	highlights?: number[];
-	region?: number | null;
-}
 
 export interface CellI {
 	r: number;

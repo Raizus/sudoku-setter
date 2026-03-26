@@ -1,7 +1,8 @@
 import { counter } from '$lib/utils/functionUtils';
 import type { DIRECTION } from '$src/lib/utils/directions';
 import { directionToCoords } from '$src/lib/utils/SquareCellGridCoords';
-import { Cell, type CellRecord } from './Cell';
+import { Cell } from './Cell';
+import { type CellRecord } from '../puzzle_schema';
 import { getRegionIndex } from './gridSizes';
 
 interface GridI {

@@ -124,7 +124,7 @@ export interface ConstraintsElement {
 	disabled?: boolean;
 }
 
-export type Solution = undefined | Array<Array<null | number>>;
+export type Solution = undefined | (null | number)[][];
 
 export interface PuzzleMetaI {
 	title?: string;
@@ -133,6 +133,27 @@ export interface PuzzleMetaI {
 	ctcUrl?: string;
 	ctcYoutubeUrl?: string;
 }
+
+export interface CellRecord {
+	outside?: boolean;
+	value?: number;
+	given?: boolean;
+	centerMarks?: number[];
+	cornerMarks?: number[];
+	highlights?: number[];
+	region?: number | null;
+}
+
+export interface PuzzleJson {
+	valid_digits: number[];
+	puzzleInfo: PuzzleMetaI;
+	nRows: number;
+	nCols: number;
+	grid: CellRecord[][];
+	solution?: Solution;
+	// elements: ConstraintsElement;
+}
+
 export interface ConstraintAndId {
 	id: string;
 	constraint: ConstraintType;
@@ -144,5 +165,3 @@ export interface ToolPreview<T extends ConstraintType> {
 	match_id?: string;
 	mode: 'add' | 'remove';
 }
-
-

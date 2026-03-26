@@ -1,6 +1,6 @@
 import { range } from 'lodash';
 import { ElementsDict, type ElementData } from './Constraints/ElementsDict';
-import type { CellRecord } from './Grid/Cell';
+import type { CellRecord } from './puzzle_schema';
 import { Grid } from './Grid/Grid';
 import type { OutsideDirectionToolI, PuzzleMetaI } from './puzzle_schema';
 import { areArraysEqual } from '../utils/functionUtils';
