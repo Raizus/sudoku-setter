@@ -6,10 +6,6 @@
 
 	export let showModal = false;
 
-	function cancelCb() {
-		showModal = false;
-	}
-
 	const tabs = [
 		{ label: 'Project', component: PuzzleTab },
 		{ label: 'Image', component: ImageTab }
