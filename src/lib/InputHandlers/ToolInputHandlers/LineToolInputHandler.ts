@@ -47,7 +47,6 @@ export function getLineToolInputHandler(
 
 		newConstraint = updateLineConstraintCells(newConstraint, coords, allowSelfIntersection);
 		stateStore.updateConstraint(element_id, id, newConstraint);
-		console.log(newConstraint.shape);
 	}
 
 	pointerHandler.onDragStart = (event: CellDragTapEvent): void => {
