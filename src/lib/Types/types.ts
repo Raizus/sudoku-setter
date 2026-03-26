@@ -1,3 +1,4 @@
+
 export interface GridShape {
 	nRows: number;
 	nCols: number;
@@ -20,11 +21,7 @@ export enum GAME_MODE {
 	SOLVING,
 }
 
-export interface PuzzleInfo {
+export interface PuzzleResults {
 	id: string;
-	title: string;
-	authors: string[];
-	description: string;
-	thumbnail: string;
-	difficulty?: string;
+	puzzle: Record<string, unknown>;
 }

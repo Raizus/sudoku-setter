@@ -1,23 +1,33 @@
 <script lang="ts">
-	import type { PuzzleInfo } from '../Types/types';
+	import type { PuzzleResults } from '../Types/types';
 	import { base } from '$app/paths';
+	import BoardPreview from '../Board/BoardPreview.svelte';
+	import { puzzleFromJson } from '../Puzzle/Puzzle';
 	
-	export let puzzle: PuzzleInfo;
+	export let puzzle_result: PuzzleResults;
+
+	const puzzle_json = puzzle_result.puzzle;
+	const puzzle = puzzleFromJson(puzzle_json);
+
+	const title = puzzle.puzzleMeta.title;
+	const authors = puzzle.puzzleMeta.authors || ["Anonymous"];
+	const description = puzzle.puzzleMeta.ruleset || "Sudoku";
 </script>
 
-<a href="{base}/puzzle/{puzzle.id}" class="card">
+<a href="{base}/puzzle/{puzzle_result.id}" class="card">
 	<div class="thumbnail">
-		<img src={puzzle.thumbnail} alt="{puzzle.title} thumbnail" />
+		<!-- <img src={puzzle.thumbnail} alt="{puzzle.title} thumbnail" /> -->
+		<BoardPreview {puzzle} />
 	</div>
 	<div class="content">
-		<h3>{puzzle.title}</h3>
+		<h3>{title}</h3>
 		<div class="meta">
-			<span class="authors">By {puzzle.authors.join('; ')}</span>
-			{#if puzzle.difficulty}
+			<span class="authors">By {authors.join('; ')}</span>
+			<!-- {#if puzzle.difficulty}
 				<span class="difficulty">{puzzle.difficulty}</span>
-			{/if}
+			{/if} -->
 		</div>
-		<p class="description">{puzzle.description.slice(0, 200)}...</p>
+		<p class="description">{description.slice(0, 200)}...</p>
 	</div>
 </a>
 
@@ -48,15 +58,15 @@
 		aspect-ratio: 1; /* Makes container square */
 	}
 
-	.thumbnail img {
+	/* .thumbnail img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		object-position: center top; /* Focuses on the top portion of the image */
+		object-position: center top;
 		position: absolute;
 		top: 0;
 		left: 0;
-	}
+	} */
 
 	.content {
 		flex: 1;
@@ -74,9 +84,9 @@
 		margin-bottom: 0.5rem;
 	}
 
-	.difficulty {
+	/* .difficulty {
 		text-transform: capitalize;
-	}
+	} */
 
 	.description {
 		color: #444;
