@@ -1,9 +1,9 @@
 import { writable } from 'svelte/store';
 
-export function createStopwatch() {
+export function createStopwatchStore() {
 	const { subscribe, set } = writable(0);
 
-    const update_time = 100;
+    const update_time_milliseconds = 100;
 	let startTime: number = Date.now();
 	let intervalId: number;
 	let elapsedTime = 0;
@@ -16,7 +16,7 @@ export function createStopwatch() {
 			intervalId = setInterval(() => {
 				elapsedTime = Date.now() - startTime;
 				set(elapsedTime);
-			}, update_time);
+			}, update_time_milliseconds);
 		}
 	};
 
