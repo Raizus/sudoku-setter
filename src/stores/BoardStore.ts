@@ -1,28 +1,12 @@
-import { ElementsDict } from '$src/lib/Puzzle/Constraints/ElementsDict';
+import { TOOLS } from '$lib/Puzzle/Tools';
 
-import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';
-
-import { derived, writable } from 'svelte/store';
+import { derived } from 'svelte/store';
 import { settingsStore } from './SettingsStore';
 import { GAME_MODE } from '$src/lib/Types/types';
-
-export const gameModeStore = writable<GAME_MODE>(GAME_MODE.SETTING);
-
-// user state
-export const toolStore = writable<TOOLID>(TOOLS.DIGIT);
-
-export const elementsDictStore = writable<ElementsDict>(new ElementsDict());
-
-export const hasFogStore = derived(elementsDictStore, ($elementsDictStore) => {
-	for (const element of $elementsDictStore.values()) {
-		const tool_id = element.tool_id;
-		if (tool_id === TOOLS.FOG_LIGHTS || tool_id === TOOLS.CUSTOM_FOG_CLEARING) return true;
-	}
-	return false;
-});
+import { stateStore } from './StateStore';
 
 export const enableFogMaskStore = derived(
-	[settingsStore, hasFogStore, gameModeStore, toolStore],
+	[settingsStore, stateStore.hasFogStore, stateStore.gameModeStore, stateStore.toolStore],
 	([$settingsStore, $hasFogStore, $gameModeStore, $toolStore]) => {
 		const hide_fog = $settingsStore.hideFog;
 		const has_fog = $hasFogStore;
@@ -40,7 +24,7 @@ export const enableFogMaskStore = derived(
 );
 
 export const showFogStore = derived(
-	[settingsStore, gameModeStore],
+	[settingsStore, stateStore.gameModeStore],
 	([$settingsStore, $gameModeStore]) => {
 		const hide_fog = $settingsStore.hideFog;
 		const show_fog = !hide_fog && $gameModeStore === GAME_MODE.SETTING;
