@@ -327,6 +327,10 @@ export class StateStore {
 		return get(this.boundingBoxStore);
 	}
 
+	getPuzzle() {
+		return get(this.puzzleStore);
+	}
+
 	/* -------------------------------------------------------------------------- */
 	/* ----- Timestamp methods -------------------------------------------------- */
 

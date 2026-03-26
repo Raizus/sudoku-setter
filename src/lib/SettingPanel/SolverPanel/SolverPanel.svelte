@@ -10,9 +10,8 @@
 	import { stateStore } from '$stores/StateStore';
 
 	let isOpen = true;
-	const puzzleStore = stateStore.puzzleStore;
 
-	$: puzzle = $puzzleStore;
+	let puzzle = stateStore.getPuzzle();
 
 	let showModal = false;
 	let solver: null | MiniZinc.SolveProgress = null;
@@ -45,7 +44,7 @@
 		return `${minutes}:${formattedSeconds}.${millis}`;
 	}
 
-	function clickCb() {
+	function minizincFileCb() {
 		showModal = true;
 	}
 
@@ -59,6 +58,8 @@
 	async function solveModel() {
 		sol_count = 0;
 		status = 'SOLVING...';
+
+		puzzle = stateStore.getPuzzle();
 
 		// Initialize MiniZinc
 		const model = new MiniZinc.Model();
@@ -127,7 +128,7 @@
 <Panel bind:isOpen>
 	<PanelHeader slot="panel-header" title="Solver" bind:isOpen />
 	<svelte:fragment slot="panel-content">
-		<button class="entry-panel-button" on:click={clickCb}> Minizinc File... </button>
+		<button class="entry-panel-button" on:click={minizincFileCb}> Minizinc File... </button>
 		<SolverModal bind:showModal />
 		<button class="entry-panel-button" on:click={solveCb}> {solverLabel} </button>
 		<span class="text-field">{`Max. Solutions: ${max_sols}`}</span>
