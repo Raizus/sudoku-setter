@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PathOptions, ShapeI } from '$lib/Puzzle/Shape/Shape';
+	import type { ShapeI } from '$lib/Puzzle/Shape/Shape';
 	import { linePointsToPathStr } from '$lib/utils/SquareCellGridRenderUtils';
 	import type { Vector2D } from '$lib/utils/Vector2D';
 
