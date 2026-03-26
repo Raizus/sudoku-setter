@@ -26,10 +26,10 @@
 	import UnderlayRender from './UnderlayRender.svelte';
 	import DiagonalElementsRender from './Constraints/DiagonalElementsRender.svelte';
 	import FogLightBulbDefs from './Fog/FogLightBulbDefs.svelte';
-	import FogDefs from './Fog/FogDefs.svelte';
 	import FogCover from './Fog/FogCover.svelte';
 	import ToolPreviewRender from './ToolPreviewRender.svelte';
 	import { setContext } from 'svelte';
+	import CreateFogDefs from './Fog/CreateFogDefs.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 
@@ -66,7 +66,7 @@
 	viewBox={getViewbox(boundingBox)}
 >
 	<FogLightBulbDefs />
-	<FogDefs {gridShape} />
+	<CreateFogDefs {gridShape} />
 
 	<BoardBackground {grid} />
 	<FogCover {gridShape} />
