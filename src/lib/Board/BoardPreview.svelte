@@ -5,7 +5,6 @@
 	import { isDiagonalConstraint, isOverlayTool, isUnderlayTool } from '../Puzzle/Tools';
 	import type { Rectangle } from '../Types/types';
 	import BoardBackground from './BoardBackground.svelte';
-	import CellValuesRender from './CellRender/CellValuesRender.svelte';
 	import HighlightsRender from './CellRender/HighlightsRender.svelte';
 	import DiagonalElementsRender from './Constraints/DiagonalElementsRender.svelte';
 	import FogLightBulbDefs from './Fog/FogLightBulbDefs.svelte';
@@ -14,6 +13,7 @@
 	import GridRegionsRender from './GridLines/GridRegionsRender.svelte';
 	import OverlayRender from './OverlayRender.svelte';
 	import UnderlayRender from './UnderlayRender.svelte';
+	import CellValuesPreviewRender from './CellRender/CellValuesPreviewRender.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 	export let puzzle: PuzzleI;
@@ -73,7 +73,7 @@
 
 	<g class="cell-values-layer">
 		{#each cells as cell}
-			<CellValuesRender {cell} />
+			<CellValuesPreviewRender {cell} {enable_fog_mask}/>
 		{/each}
 	</g>
 </svg>
