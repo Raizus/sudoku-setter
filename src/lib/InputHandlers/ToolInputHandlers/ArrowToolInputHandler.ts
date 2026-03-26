@@ -94,7 +94,7 @@ export function getArrowToolInputHandler(
 		if (mode === ARROW_TOOL_MODE.EDIT_BULB && !id) {
 			id = uniqueId();
 			currentConstraint = arrowConstraint(tool, [coords]);
-			stateStore.addConstraint(element_id, id, currentConstraint);
+			stateStore.setShapeAndAddConstraint(element_id, id, currentConstraint);
 			return;
 		} else if (mode === ARROW_TOOL_MODE.EDIT_BULB && id && currentConstraint) {
 			currentConstraint = arrowAddToBulb(currentConstraint, coords);

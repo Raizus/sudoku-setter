@@ -49,7 +49,7 @@ export function getDirectedAdjacentCellsToolInputHandler(
 		if (mode !== BASIC_TOOL_MODE.DELETE) {
 			id = uniqueId();
 			newConstraint = edgeConstraint(tool, [event.cell], options?.defaultValue);
-			stateStore.addConstraint(element_id, id, newConstraint);
+			stateStore.setShapeAndAddConstraint(element_id, id, newConstraint);
 		}
 	};
 

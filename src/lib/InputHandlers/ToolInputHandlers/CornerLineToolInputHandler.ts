@@ -59,7 +59,7 @@ export function getCornerLineToolInputHandler(
 		if (!currentConstraint && mode === CORNER_LINE_TOOL_MODE.ADD_EDIT) {
 			id = uniqueId();
 			currentConstraint = cornerLineConstraint(tool, [coord], options?.defaultValue);
-			stateStore.addConstraint(element_id, id, currentConstraint);
+			stateStore.setShapeAndAddConstraint(element_id, id, currentConstraint);
 			return;
 		}
 		// add to current cage

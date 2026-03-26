@@ -71,7 +71,7 @@ export function getCageToolInputHandler(
 			// create new cage
 			currentConstraint = cageConstraint(tool, [coords]);
 			id = uniqueId();
-			stateStore.addConstraint(element_id, id, currentConstraint);
+			stateStore.setShapeAndAddConstraint(element_id, id, currentConstraint);
 			return;
 		}
 

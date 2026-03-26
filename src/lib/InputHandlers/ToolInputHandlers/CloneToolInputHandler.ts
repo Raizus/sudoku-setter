@@ -107,7 +107,7 @@ export function getCloneToolInputHandler(
 			const usedLabels = findUsedCloneLabels(elements, tool);
 			const label = getNewLabel(usedLabels);
 			currentConstraint = cloneConstraint(tool, [coords], label);
-			stateStore.addConstraint(element_id, id, currentConstraint);
+			stateStore.setShapeAndAddConstraint(element_id, id, currentConstraint);
 			return;
 		} else if (mode === CLONE_TOOL_MODE.SELECT && id && currentConstraint) {
 			// add to current clone

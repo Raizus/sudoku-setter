@@ -2,11 +2,8 @@ import type { InputHandler } from '../InputHandler';
 import { uniqueId } from 'lodash';
 import type { GridShape } from '$lib/Types/types';
 import { isCellOnGrid } from '$lib/utils/SquareCellGridCoords';
-import {
-	updateLineConstraintCells,
-	lineConstraint
-} from '$lib/Puzzle/Constraints/LineConstraints';
-import { type LineToolI } from "$src/lib/Puzzle/puzzle_schema";
+import { updateLineConstraintCells, lineConstraint } from '$lib/Puzzle/Constraints/LineConstraints';
+import { type LineToolI } from '$src/lib/Puzzle/puzzle_schema';
 import { findLineConstraint } from '$src/lib/Puzzle/Constraints/ElementsDict';
 import {
 	CellPointerHandler,
@@ -50,6 +47,7 @@ export function getLineToolInputHandler(
 
 		newConstraint = updateLineConstraintCells(newConstraint, coords, allowSelfIntersection);
 		stateStore.updateConstraint(element_id, id, newConstraint);
+		console.log(newConstraint.shape);
 	}
 
 	pointerHandler.onDragStart = (event: CellDragTapEvent): void => {
@@ -63,7 +61,7 @@ export function getLineToolInputHandler(
 		if (mode !== BASIC_TOOL_MODE.DELETE) {
 			id = uniqueId();
 			newConstraint = lineConstraint(tool, [], options?.defaultValue);
-			stateStore.addConstraint(element_id, id, newConstraint);
+			stateStore.setShapeAndAddConstraint(element_id, id, newConstraint);
 			handle(event);
 		}
 	};

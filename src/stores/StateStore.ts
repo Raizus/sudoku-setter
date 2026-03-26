@@ -535,16 +535,20 @@ export class StateStore {
 	}
 
 	addConstraint(element_id: number, id: string, constraint: ConstraintType) {
-		const currentShape = get(this._currentShapeStore);
-		if (currentShape) {
-			constraint.shape = { ...currentShape };
-		}
-
 		this._elementsDictStore.update((elementsDict) => {
 			elementsDict.addConstraint(element_id, id, constraint);
 			return elementsDict;
 		});
 		this.setCurrentConstraint({ id, constraint });
+	}
+
+	setShapeAndAddConstraint(element_id: number, id: string, constraint: ConstraintType) {
+		const currentShape = get(this._currentShapeStore);
+		if (currentShape) {
+			constraint.shape = { ...currentShape };
+		}
+
+		this.addConstraint(element_id, id, constraint);
 	}
 
 	/**
@@ -563,7 +567,11 @@ export class StateStore {
 
 	updateElementAction(action: ElementAction): void {
 		if (action.type === ELEMENT_ACTIONS.ADD_CONSTRAINT) {
-			this.addConstraint(action.payload.element_id, action.payload.id, action.payload.constraint);
+			this.addConstraint(
+				action.payload.element_id,
+				action.payload.id,
+				action.payload.constraint
+			);
 		} else if (action.type === ELEMENT_ACTIONS.REMOVE_CONSTRAINT) {
 			this.removeConstraint(action.payload.element_id, action.payload.c_id);
 		} else if (action.type === ELEMENT_ACTIONS.ADD_ELEMENT) {
