@@ -1,5 +1,5 @@
 <script lang="ts">
-		import type { OutsideDirectionToolI } from "$src/lib/Puzzle/puzzle_schema";
+	import type { OutsideDirectionToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import OutsideDirectionToolRenderAux from './OutsideDirectionToolRenderAux.svelte';
 
 	export let tool: OutsideDirectionToolI;
@@ -13,5 +13,5 @@
 {:else}
 	<g class="outside-direction-preview" opacity={0.5}>
 		<OutsideDirectionToolRenderAux {tool} />
-	</g>    
+	</g>
 {/if}

@@ -7,6 +7,6 @@
 
 {#each diagonal_elements as element}
 	{#if !element.disabled}
-		<DiagonalElementRender {element} />	
+		<DiagonalElementRender {element} />
 	{/if}
 {/each}

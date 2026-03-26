@@ -1,5 +1,5 @@
 <script lang="ts">
-		import type { ArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
+	import type { ArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { defaultArrowShape } from '$lib/Puzzle/Shape/Shape';

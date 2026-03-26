@@ -1,5 +1,5 @@
 <script lang="ts">
-		import type { CellMultiArrowToolI } from "$src/lib/Puzzle/puzzle_schema";
+	import type { CellMultiArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import SingleCellMultiArrowRenderAux from './SingleCellMultiArrowRenderAux.svelte';
 
 	export let tool: CellMultiArrowToolI;
@@ -13,5 +13,5 @@
 {:else}
 	<g class="single-cell-multi-arrow-tool-preview" opacity={0.5}>
 		<SingleCellMultiArrowRenderAux {tool} />
-	</g>    
+	</g>
 {/if}

@@ -2,14 +2,14 @@
 	import { Vector2D } from '$lib/utils/Vector2D';
 	import { afterUpdate } from 'svelte';
 
-    export let value = '';
+	export let value = '';
 	export let fontSize = 0.2;
 
 	export let x: number;
 	export let y: number;
 	export let position: 'TL' | 'TR' | 'BL' | 'BR' = 'TL';
 
-	export let fontColor = "var(--text-primary-color)";
+	export let fontColor = 'var(--text-primary-color)';
 	export let fontWeight = 400;
 
 	let textRef: SVGTextElement | null = null;
@@ -19,20 +19,20 @@
 		const top = ['TL', 'TR'].includes(_position);
 		const left = ['TL', 'BL'].includes(_position);
 
-		const x = left ? _x + 0.05: _x;
+		const x = left ? _x + 0.05 : _x;
 		const y = top ? _y : _y;
 
 		const textPos = new Vector2D(x, y);
 		return textPos;
 	}
 
-	function getAnchor( _position: 'TL' | 'TR' | 'BL' | 'BR'): string {
-		const anchor = ["TL", "BL"].includes(_position) ? "start" : "end";
+	function getAnchor(_position: 'TL' | 'TR' | 'BL' | 'BR'): string {
+		const anchor = ['TL', 'BL'].includes(_position) ? 'start' : 'end';
 		return anchor;
 	}
 
-	function getBaseline( _position: 'TL' | 'TR' | 'BL' | 'BR'): string {
-		const baseline = ["TL", "TR"].includes(_position) ? "text-before-edge" : "";
+	function getBaseline(_position: 'TL' | 'TR' | 'BL' | 'BR'): string {
+		const baseline = ['TL', 'TR'].includes(_position) ? 'text-before-edge' : '';
 		return baseline;
 	}
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-		import type { CellToolI } from "$src/lib/Puzzle/puzzle_schema";
-			import type { ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
+	import type { CellToolI } from '$src/lib/Puzzle/puzzle_schema';
+	import type { ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
 	import RemoveConstraintCrossPreview from './RemoveConstraintCrossPreview.svelte';
 	import SimpleSingleCellToolRenderAux from './SimpleSingleCellToolRenderAux.svelte';
 
@@ -14,7 +14,7 @@
 </script>
 
 <g class="single-cell-tool-preview" opacity={0.5}>
-    <SimpleSingleCellToolRenderAux {tool} />
+	<SimpleSingleCellToolRenderAux {tool} />
 </g>
 
 <!-- {#if mode === 'remove' && c_id}
@@ -26,4 +26,3 @@
 		<SimpleSingleCellToolRenderAux {tool} />
 	</g>
 {/if} -->
-

@@ -4,9 +4,17 @@
 	import { getCagePathStr } from '$lib/utils/SquareCellGridRenderUtils';
 
 	export let cells: GridCoordI[];
-    export let shape: ShapeI = defaultCageShape;
+	export let shape: ShapeI = defaultCageShape;
 
-	type Linejoin = "inherit" | "miter" | "arcs" | "miter-clip" | "round" | "bevel" | null | undefined;
+	type Linejoin =
+		| 'inherit'
+		| 'miter'
+		| 'arcs'
+		| 'miter-clip'
+		| 'round'
+		| 'bevel'
+		| null
+		| undefined;
 
 	$: inset = shape.inset ?? 0.06;
 	$: stroke = shape.stroke ?? 'black';
@@ -17,9 +25,8 @@
 
 	$: maskPathStr = getCagePathStr(cells, inset, connectDiag);
 
-	$: strokeLinejoin = (shape.strokeLinejoin ?? "miter") as Linejoin;
-    const strokeLinecap = "square";
-
+	$: strokeLinejoin = (shape.strokeLinejoin ?? 'miter') as Linejoin;
+	const strokeLinecap = 'square';
 </script>
 
 <path
@@ -29,6 +36,5 @@
 	{fill}
 	stroke-dasharray={strokeDasharray}
 	stroke-linejoin={strokeLinejoin}
-    stroke-linecap={strokeLinecap}
+	stroke-linecap={strokeLinecap}
 />
-

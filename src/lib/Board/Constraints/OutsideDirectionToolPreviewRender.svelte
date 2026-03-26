@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { OutsideDirectionToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { Vector2D } from '$src/lib/utils/Vector2D';
-		import type { ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
+	import type { ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
 	import OutsideDirectionToolRenderAux from './OutsideDirectionToolRenderAux.svelte';
 	import RemoveConstraintCrossPreview from './RemoveConstraintCrossPreview.svelte';
 
@@ -21,6 +21,6 @@
 	</g>
 {:else}
 	<g class="outside-direction-tool-preview" opacity={0.5}>
-        <OutsideDirectionToolRenderAux {tool} />
+		<OutsideDirectionToolRenderAux {tool} />
 	</g>
 {/if}

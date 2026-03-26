@@ -29,6 +29,7 @@
 	import FogDefs from './Fog/FogDefs.svelte';
 	import FogCover from './Fog/FogCover.svelte';
 	import ToolPreviewRender from './ToolPreviewRender.svelte';
+	import { setContext } from 'svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 
@@ -43,6 +44,8 @@
 	const fogLightsStore = stateStore.fogLightsStore;
 	const underlayElementsStore = stateStore.underlayElementsStore;
 	const boundingBoxStore = stateStore.boundingBoxStore;
+
+	setContext('currentConstraint', stateStore.currentConstraintStore);
 
 	$: grid = $gridStore;
 	$: gridShape = { nRows: grid.nRows, nCols: grid.nCols } as GridShape;

@@ -2,7 +2,7 @@
 	import { TOOLS, type TOOLID } from '$lib/Puzzle/Tools';
 	import { SHAPE_TYPES, defaultEdgeCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
-	import type { EdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
+	import type { ConstraintAndId, EdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import CircleRender from '$src/lib/Board/SvgComponents/CircleRender.svelte';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import {
@@ -13,12 +13,14 @@
 	import BorderLineRender from './BorderLineRender.svelte';
 	import RenderShape from '$src/lib/Board/SvgComponents/RenderShape.svelte';
 	import DirectedAdjacentCellsRender from './DirectedAdjacentCellsRender.svelte';
-	import { stateStore } from '$stores/StateStore';
+	import { getContext } from 'svelte';
+	import { readable, type Readable } from 'svelte/store';
 
 	export let tool: EdgeToolI;
 	export let c_id: string | undefined = undefined;
 
-	const currentConstraintStore = stateStore.currentConstraintStore;
+	const currentConstraintStore =
+		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
 
 	$: currentConstraintId = $currentConstraintStore?.id;
 

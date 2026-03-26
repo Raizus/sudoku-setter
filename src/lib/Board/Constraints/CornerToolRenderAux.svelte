@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
-	import type { CornerToolI } from '$src/lib/Puzzle/puzzle_schema';
+	import type { ConstraintAndId, CornerToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { SHAPE_TYPES, defaultCornerCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 
@@ -8,12 +8,14 @@
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 	import QuadrupleTextRender from './QuadrupleTextRender.svelte';
 	import RenderShape from '$src/lib/Board/SvgComponents/RenderShape.svelte';
-	import { stateStore } from '$stores/StateStore';
+	import { getContext } from 'svelte';
+	import { readable, type Readable } from 'svelte/store';
 
 	export let tool: CornerToolI;
 	export let c_id: string | undefined = undefined;
 
-	const currentConstraintStore = stateStore.currentConstraintStore;
+	const currentConstraintStore =
+		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
 
 	$: currentConstraintId = $currentConstraintStore?.id;
 

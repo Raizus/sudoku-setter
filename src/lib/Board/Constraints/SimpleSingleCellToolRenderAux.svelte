@@ -3,7 +3,7 @@
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { SHAPE_TYPES, defaultSingleCellCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import ValuedCageRender from './ValuedCageRender.svelte';
-	import type { CellToolI } from '$src/lib/Puzzle/puzzle_schema';
+	import type { CellToolI, ConstraintAndId } from '$src/lib/Puzzle/puzzle_schema';
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 	import MinMaxRender from './MinMaxRender.svelte';
 	import RenderShape from '$src/lib/Board/SvgComponents/RenderShape.svelte';
@@ -11,12 +11,14 @@
 	import CellTextLabelRender from './CellTextLabelRender.svelte';
 	import ColoredCountingCircleRender from './ColoredCountingCircleRender.svelte';
 	import CageRender from './CageRender.svelte';
-	import { stateStore } from '$stores/StateStore';
+	import { getContext } from 'svelte';
+	import { readable, type Readable } from 'svelte/store';
 
 	export let tool: CellToolI;
 	export let c_id: string | undefined = undefined;
 
-	const currentConstraintStore = stateStore.currentConstraintStore;
+	const currentConstraintStore =
+		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
 
 	$: currentConstraintId = $currentConstraintStore?.id;
 

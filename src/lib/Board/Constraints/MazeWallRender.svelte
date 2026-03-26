@@ -6,10 +6,10 @@
 	import { cloneDeep } from 'lodash';
 
 	export let linePoints: Vector2D[];
-    export let shape: ShapeI;
+	export let shape: ShapeI;
 
 	$: len = linePoints.length;
-	$: is_closed = len > 1 && linePoints[0].equals(linePoints[len-1]);
+	$: is_closed = len > 1 && linePoints[0].equals(linePoints[len - 1]);
 	$: head = len >= 0 ? linePoints[0] : undefined;
 	$: tail = len >= 0 ? linePoints[len - 1] : undefined;
 
@@ -23,7 +23,6 @@
 	}
 
 	$: shape2 = buildShape(shape);
-
 </script>
 
 <LineRender {linePoints} {shape} />

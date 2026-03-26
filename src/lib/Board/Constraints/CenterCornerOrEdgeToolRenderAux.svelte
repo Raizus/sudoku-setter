@@ -2,21 +2,20 @@
 	import { SHAPE_TYPES, defaultEdgeCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
-		import type { CenterCornerOrEdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
+	import type { CenterCornerOrEdgeToolI, ConstraintAndId } from '$src/lib/Puzzle/puzzle_schema';
 	import RenderShape from '$src/lib/Board/SvgComponents/RenderShape.svelte';
 	import CellTextLabelRender from './CellTextLabelRender.svelte';
-	import { stateStore } from '$stores/StateStore';
+	import { readable, type Readable } from 'svelte/store';
+	import { getContext } from 'svelte';
 
 	export let tool: CenterCornerOrEdgeToolI;
 	export let c_id: string | undefined = undefined;
 
-	const currentConstraintStore = stateStore.currentConstraintStore;
-
+	const currentConstraintStore =
+		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
 	$: currentConstraintId = $currentConstraintStore?.id;
 
-	$: defaultShape =
-		getDefaultShape(tool.toolId, elementInfoRegistry) ??
-		defaultEdgeCircleShape;
+	$: defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultEdgeCircleShape;
 	$: shape = tool.shape ?? defaultShape;
 
 	$: selectedOutlineShape = {
@@ -41,26 +40,26 @@
 </script>
 
 {#if c_id === currentConstraintId}
-    <RenderShape cx={center.c} cy={center.r} shape={selectedOutlineShape}  />
+	<RenderShape cx={center.c} cy={center.r} shape={selectedOutlineShape} />
 {/if}
 <RenderShape cx={center.c} cy={center.r} {shape} />
 {#if isCellCenter}
-    <CellTextLabelRender
-        value = {getText(tool, type)}
-        x={Math.floor(center.c)}
-        y={Math.floor(center.r)}
-        position="TL"
-        {fontColor}
-    />
+	<CellTextLabelRender
+		value={getText(tool, type)}
+		x={Math.floor(center.c)}
+		y={Math.floor(center.r)}
+		position="TL"
+		{fontColor}
+	/>
 {:else}
-    <text
-        x={center.c}
-        y={center.r}
-        text-anchor="middle"
-        dominant-baseline="central"
-        font-size={fontSize}
-        fill={fontColor}
-    >
-        {getText(tool, type)}
-    </text>
+	<text
+		x={center.c}
+		y={center.r}
+		text-anchor="middle"
+		dominant-baseline="central"
+		font-size={fontSize}
+		fill={fontColor}
+	>
+		{getText(tool, type)}
+	</text>
 {/if}

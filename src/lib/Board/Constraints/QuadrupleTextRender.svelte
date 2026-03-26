@@ -1,5 +1,5 @@
 <script lang="ts">
-		import type { CornerToolI } from "$src/lib/Puzzle/puzzle_schema";
+	import type { CornerToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$src/lib/Puzzle/ElementHandlersUtils';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { defaultCornerCircleShape } from '$src/lib/Puzzle/Shape/Shape';

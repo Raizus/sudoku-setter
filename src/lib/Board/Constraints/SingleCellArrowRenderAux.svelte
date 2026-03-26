@@ -1,16 +1,19 @@
 <script lang="ts">
-	import type { CellArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
+	import type { CellArrowToolI, ConstraintAndId } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { defaultSingleCellArrowShape } from '$lib/Puzzle/Shape/Shape';
 	import { cellToCellCenterVector } from '$lib/utils/SquareCellGridRenderUtils';
 	import CenteredArrowRender from '../SvgComponents/CenteredArrowRender.svelte';
-	import { stateStore } from '$stores/StateStore';
+	import { getContext } from 'svelte';
+	import type { Readable } from 'svelte/motion';
+	import { readable } from 'svelte/store';
 
 	export let tool: CellArrowToolI;
 	export let c_id: string | undefined = undefined;
 
-	const currentConstraintStore = stateStore.currentConstraintStore;
+	const currentConstraintStore =
+		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
 	$: currentConstraintId = $currentConstraintStore?.id;
 
 	const outline = true;

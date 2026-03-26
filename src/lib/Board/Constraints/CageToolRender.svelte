@@ -1,20 +1,22 @@
 <script lang="ts">
 	import ValuedCageRender from './ValuedCageRender.svelte';
 	import { defaultCageShape } from '$lib/Puzzle/Shape/Shape';
-	import type { CageToolI } from '$src/lib/Puzzle/puzzle_schema';
+	import type { CageToolI, ConstraintAndId } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import CageRender from './CageRender.svelte';
-	import { stateStore } from '$stores/StateStore';
+	import { getContext } from 'svelte';
+	import { readable, type Readable } from 'svelte/store';
 
 	export let tool: CageToolI;
 	export let c_id: string;
 
-	const currentConstraintStore = stateStore.currentConstraintStore;
+	const currentConstraintStore =
+		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
+	$: currentConstraintId = $currentConstraintStore?.id;
+
 	const defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultCageShape;
 	$: shape = tool.shape ?? defaultShape;
-
-	$: currentConstraintId = $currentConstraintStore?.id;
 
 	$: selectedOutlineShape = {
 		...shape,

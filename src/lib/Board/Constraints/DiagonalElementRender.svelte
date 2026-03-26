@@ -1,5 +1,5 @@
 <script lang="ts">
-		import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
+	import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$src/lib/Puzzle/ElementHandlersUtils';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { defaultDiagonalShape } from '$src/lib/Puzzle/Shape/Shape';
@@ -11,8 +11,7 @@
 	const gridStore = stateStore.gridStore;
 
 	$: tool = element.tool_id;
-	$: defaultShape =
-		getDefaultShape(element.tool_id, elementInfoRegistry) ?? defaultDiagonalShape;
+	$: defaultShape = getDefaultShape(element.tool_id, elementInfoRegistry) ?? defaultDiagonalShape;
 	$: strokeWidth = defaultShape?.strokeWidth ?? 0.02;
 	$: stroke = defaultShape?.stroke ?? 'black';
 
@@ -28,7 +27,7 @@
 	const tl_y = 0;
 	const tr_y = 0;
 	const bl_x = 0;
-    
+
 	$: tr_x = grid.nCols;
 	$: bl_y = grid.nRows;
 	$: br_x = grid.nCols;

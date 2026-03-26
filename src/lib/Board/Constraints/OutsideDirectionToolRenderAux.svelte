@@ -4,7 +4,7 @@
 		getArrowHead,
 		linePointsToPathStr
 	} from '$lib/utils/SquareCellGridRenderUtils';
-	import type { OutsideDirectionToolI } from '$src/lib/Puzzle/puzzle_schema';
+	import type { ConstraintAndId, OutsideDirectionToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { defaultOutsideShape } from '$lib/Puzzle/Shape/Shape';
@@ -12,11 +12,14 @@
 	import type { DIRECTION } from '$src/lib/utils/directions';
 	import { Vector2D } from '$src/lib/utils/Vector2D';
 	import { stateStore } from '$stores/StateStore';
+	import { getContext } from 'svelte';
+	import { readable, type Readable } from 'svelte/store';
 
 	export let tool: OutsideDirectionToolI;
 	export let c_id: string | undefined = undefined;
 
-	const currentConstraintStore = stateStore.currentConstraintStore;
+	const currentConstraintStore =
+		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
 	const gridStore = stateStore.gridStore;
 
 	$: currentConstraintId = $currentConstraintStore?.id;

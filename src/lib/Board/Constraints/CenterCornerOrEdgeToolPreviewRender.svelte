@@ -1,6 +1,6 @@
 <script lang="ts">
-		import type { CenterCornerOrEdgeToolI } from "$src/lib/Puzzle/puzzle_schema";
-			import type { ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
+	import type { CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
+	import type { ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
 	import CenterCornerOrEdgeToolRenderAux from './CenterCornerOrEdgeToolRenderAux.svelte';
 	import RemoveConstraintCrossPreview from './RemoveConstraintCrossPreview.svelte';
 

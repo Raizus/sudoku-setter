@@ -3,13 +3,15 @@
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { getSingleCellMultiArrowPath } from '$lib/utils/SquareCellGridRenderUtils';
-	import type { CellMultiArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
-	import { stateStore } from '$stores/StateStore';
+	import type { CellMultiArrowToolI, ConstraintAndId } from '$src/lib/Puzzle/puzzle_schema';
+	import { getContext } from 'svelte';
+	import { readable, type Readable } from 'svelte/store';
 
 	export let tool: CellMultiArrowToolI;
 	export let c_id: string | undefined = undefined;
 
-	const currentConstraintStore = stateStore.currentConstraintStore;
+	const currentConstraintStore =
+		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
 	$: currentConstraintId = $currentConstraintStore?.id;
 
 	const outline = true;
