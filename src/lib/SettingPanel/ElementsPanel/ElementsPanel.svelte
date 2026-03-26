@@ -59,7 +59,7 @@
 			{elementHandlers}
 			elementHandlerFilterFunc={localCFilterFun}
 		/>
-		<button class="add-button" title="Add Element" on:click={() => (showModal = true)}>
+		<button class="add-button panel-button" title="Add Element" on:click={() => (showModal = true)}>
 			Add Element
 		</button>
 		<ElementButton tool_id={TOOLS.GIVEN} {elementHandlers} />
@@ -88,16 +88,8 @@
 	}
 
 	.add-button {
-		background-color: #3c3c3c;
-		border: 1px solid #515151;
-		border-radius: 0.2rem;
 		height: 2rem;
-		cursor: pointer;
 		margin-top: 0.3rem;
 		margin-bottom: 0.3rem;
-
-		&:hover {
-			background-color: #515151;
-		}
 	}
 </style>

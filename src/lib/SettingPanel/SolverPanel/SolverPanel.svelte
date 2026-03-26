@@ -5,8 +5,8 @@
 	import * as MiniZinc from 'minizinc';
 	// import * as MiniZinc from 'https://cdn.jsdelivr.net/npm/minizinc/dist/minizinc.mjs';
 	import SolverModal from './SolverModal.svelte';
-	import { setBoardOnSolution } from './solution_render_helpers';
-	import { createStopwatch } from '$stores/timer';
+	import { setBoardOnSolution, updateCandidatesOnSolution } from './solution_render_helpers';
+	import { createStopwatchStore } from '$stores/timer';
 	import { stateStore } from '$stores/StateStore';
 
 	let isOpen = true;
@@ -15,16 +15,14 @@
 
 	let showModal = false;
 	let solver: null | MiniZinc.SolveProgress = null;
-	$: solverLabel = 'Solve';
+	$: solver_button_label = 'Solve';
 
-	let startTime = Date.now();
-	let endTime: number | null = null;
 	let max_sols = 100;
 	let max_sols_str = '100';
 	let sol_count: number | null = null;
 	let status: string = 'IDLE';
 
-	const timer = createStopwatch();
+	const timer = createStopwatchStore();
 	$: ellapsed = $timer;
 
 	function getSolText(sol_count: number | null): string {
@@ -38,10 +36,10 @@
 		const millis = Math.floor((milliseconds % 1000) / 100);
 
 		// Format seconds to have two digits
-		const formattedSeconds = seconds.toString().padStart(2, '0');
+		const formatted_seconds = seconds.toString().padStart(2, '0');
 
 		// Return the formatted string
-		return `${minutes}:${formattedSeconds}.${millis}`;
+		return `${minutes}:${formatted_seconds}.${millis}`;
 	}
 
 	function minizincFileCb() {
@@ -55,16 +53,49 @@
 		}
 	}
 
-	async function solveModel() {
+	function isSolverRunning(): boolean {
+		return solver !== null && solver.isRunning();
+	}
+
+	function stopSolver() {
+		if (solver === null || !solver.isRunning()) return;
+
+		status = 'IDLE';
+		solver_button_label = 'Solve';
+		timer.stop();
+		solver.cancel();
+	}
+
+	function onSolverError(error: MiniZinc.ErrorMessage) {
+		solver_button_label = 'Solve';
+		status = 'ERROR';
+		console.log(error.message);
+		timer.stop();
+		if (solver) solver.cancel();
+	}
+
+	function onSolverWarning(warning: MiniZinc.WarningMessage) {
+		status = 'WARNING';
+		console.log(warning.message);
+	}
+
+	function onSolverCompletion(result: MiniZinc.SolveResult) {
+		status = result.status;
+		solver_button_label = 'Solve';
+		timer.stop();
+	}
+
+	async function solvePuzzle() {
 		sol_count = 0;
 		status = 'SOLVING...';
 
+		// reset grid values before building the models, only given values will be used
+		stateStore.resetPuzzle();
 		puzzle = stateStore.getPuzzle();
 
 		// Initialize MiniZinc
 		const model = new MiniZinc.Model();
 
-		stateStore.resetPuzzle();
 		// Define a simple MiniZinc model
 		const puzzle_model = createMinizincModel(puzzle);
 		model.addFile('test.mzn', puzzle_model.model_str);
@@ -86,41 +117,62 @@
 			setBoardOnSolution(json, puzzle_model);
 		});
 
-		solver.on('error', (error) => {
-			solverLabel = 'Solve';
-			status = 'ERROR';
-			console.log(error.message);
-			timer.stop();
-			if (solver) solver.cancel();
+		solver.on('error', onSolverError);
+		solver.on('warning', onSolverWarning);
+		solver.then(onSolverCompletion);
+	}
+
+	async function findAllCandidates() {
+		sol_count = 0;
+		status = 'SOLVING...';
+
+		// reset grid values before building the models, only given values will be used
+		stateStore.resetPuzzle();
+		puzzle = stateStore.getPuzzle();
+
+		// Initialize MiniZinc
+		const model = new MiniZinc.Model();
+
+		// Define a simple MiniZinc model
+		const puzzle_model = createMinizincModel(puzzle);
+		model.addFile('test.mzn', puzzle_model.model_str);
+
+		timer.reset();
+		timer.start();
+
+		solver = model.solve({
+			options: {
+				solver: 'chuffed',
+				'num-solutions': max_sols
+			}
 		});
 
-		solver.on('warning', (warning) => {
-			status = 'WARNING';
-			console.log(warning.message);
+		solver.on('solution', (solution) => {
+			const json = solution.output.json;
+			if (solution.type === 'solution' && sol_count !== null) sol_count += 1;
+			updateCandidatesOnSolution(json, puzzle_model);
 		});
 
-		solver.then((result) => {
-			status = result.status;
-			solverLabel = 'Solve';
-			timer.stop();
-		});
+		solver.on('error', onSolverError);
+		solver.on('warning', onSolverWarning);
+		solver.then(onSolverCompletion);
 	}
 
 	function solveCb() {
-		if (solver === null || !solver.isRunning()) solveModel();
-		else if (solver !== null && solver.isRunning()) {
-			status = 'IDLE';
-			solverLabel = 'Solve';
-			timer.stop();
-			solver.cancel();
-		}
+		if (!isSolverRunning()) solvePuzzle();
+		else if (isSolverRunning()) stopSolver();
+	}
+
+	function findAllCandidatesCb() {
+		if (!isSolverRunning()) findAllCandidates();
+		else if (isSolverRunning()) stopSolver();
 	}
 
 	$: if (solver) {
 		if (solver !== null && solver.isRunning()) {
-			solverLabel = 'Stop';
+			solver_button_label = 'Stop';
 		} else {
-			solverLabel = 'Solve';
+			solver_button_label = 'Solve';
 		}
 	}
 </script>
@@ -128,9 +180,10 @@
 <Panel bind:isOpen>
 	<PanelHeader slot="panel-header" title="Solver" bind:isOpen />
 	<svelte:fragment slot="panel-content">
-		<button class="entry-panel-button" on:click={minizincFileCb}> Minizinc File... </button>
+		<button class="panel-button" on:click={minizincFileCb}> Minizinc File... </button>
 		<SolverModal bind:showModal />
-		<button class="entry-panel-button" on:click={solveCb}> {solverLabel} </button>
+		<button class="panel-button" on:click={solveCb}> {solver_button_label} </button>
+		<button class="panel-button" on:click={findAllCandidatesCb}> Find all candidates </button>
 		<span class="text-field">{`Max. Solutions: ${max_sols}`}</span>
 		<div class="input-container">
 			<input
@@ -149,20 +202,6 @@
 </Panel>
 
 <style lang="scss">
-	.entry-panel-button {
-		position: relative;
-		// border: 1px solid var(--panel-radio-border-color);
-		border: 1px solid transparent;
-		border-radius: 4px;
-		background-color: transparent;
-		cursor: pointer;
-		height: 2rem;
-		text-align: left;
-
-		&:hover {
-			background-color: var(--panel-radio-background-hover);
-		}
-	}
 
 	.text-field {
 		display: flex;

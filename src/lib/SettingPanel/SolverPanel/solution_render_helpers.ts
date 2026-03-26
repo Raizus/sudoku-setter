@@ -9,9 +9,15 @@ import {
 } from '$src/lib/reducers/PenToolReducer';
 import {
 	restoreCellsHighlightsAction,
+	restoreCellsPencilmarksAction,
 	restoreCellsValueAction
 } from '$src/lib/reducers/UpdateCellsActions';
-import { hasEnabledElement, VAR_2D_NAMES, type PuzzleAuxI, type PuzzleModel } from '$src/lib/Solver/solver_utils';
+import {
+	hasEnabledElement,
+	VAR_2D_NAMES,
+	type PuzzleAuxI,
+	type PuzzleModel
+} from '$src/lib/Solver/solver_utils';
 import { areCoordsNeighbours, type GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
 import { stateStore } from '$stores/StateStore';
 
@@ -168,7 +174,7 @@ function setSolutionValues(json: JsonT, puzzle: PuzzleAuxI) {
 	const grid = puzzle.grid;
 
 	if (json === undefined) return;
-	
+
 	const leave_empty_cells = hasEnabledElement(puzzle, TOOLS.LEAVE_EMPTY_CELLS_EMPTY);
 	if (leave_empty_cells) return;
 
@@ -545,7 +551,7 @@ function setStarBattlePenMarks(json: JsonT, grid: Grid) {
 
 				const marker: CellMarker = {
 					colorId: color,
-					marker: marker_symb as "X" | "O",
+					marker: marker_symb as 'X' | 'O',
 					r: cell1.r + 0.5,
 					c: cell1.c + 0.5
 				};
@@ -613,4 +619,56 @@ export function setBoardOnSolution(json: JsonT, puzzle_model: PuzzleModel) {
 	setDirectedPathPenMarks(json, puzzle_model);
 	setConnectFourHighlights(json, grid);
 	setShadedBoundariesBorders(json);
+}
+
+function updateCandidates(json: JsonT, puzzle: PuzzleAuxI) {
+	const grid = puzzle.grid;
+
+	if (json === undefined) return;
+
+	const leave_empty_cells = hasEnabledElement(puzzle, TOOLS.LEAVE_EMPTY_CELLS_EMPTY);
+	if (leave_empty_cells) return;
+
+	const board = json['board'] as number[][] | undefined;
+	if (board === undefined) return;
+
+	// set the pencilmarks
+	let cells: Cell[] = [];
+	const pm_values: number[][] = [];
+	for (let r = 0; r < board.length; r++) {
+		const row = board[r];
+		for (let c = 0; c < row.length; c++) {
+			const cell = grid.getCell(r, c);
+			if (!cell || cell.given) continue;
+
+			const value = row[c];
+			const pencilmarks = cell.centerMarks;
+			const new_pencilamrks = new Set([...pencilmarks, value]);
+			cells.push(cell);
+			pm_values.push([...new_pencilamrks]);
+		}
+	}
+	const action = restoreCellsPencilmarksAction(cells, pm_values, TOOLS.CENTER_PM);
+	stateStore.executeUpdateCellsAction(action);
+
+	// set cell values
+	cells = [];
+	const values: (number | null)[] = [];
+	for (const cell of grid.getAllCells()) {
+		if (cell.given) continue;
+		const pms = cell.centerMarks;
+		let val: number | null = null;
+		if (pms.length === 1) val = pms[0];
+		cells.push(cell);
+		values.push(val);
+	}
+
+	const action2 = restoreCellsValueAction(cells, values);
+	stateStore.executeUpdateCellsAction(action2);
+}
+
+export function updateCandidatesOnSolution(json: JsonT, puzzle_model: PuzzleModel) {
+	const puzzle = puzzle_model.puzzle;
+
+	updateCandidates(json, puzzle);
 }
