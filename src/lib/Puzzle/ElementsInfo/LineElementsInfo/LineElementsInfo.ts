@@ -1,4 +1,8 @@
-import { SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
+import {
+	SHAPE_TYPES,
+	type EditablePathOptions,
+	type EditableShapeI
+} from '$lib/Puzzle/Shape/Shape';
 import { TOOLS } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '$lib/Puzzle/ElementInfo';
 import { lineUsage } from '../../ToolUsage';
@@ -48,12 +52,8 @@ function splitLineByRegion(line: Cell[]) {
 	return regions;
 }
 
-export const thermometerInfo: SquareCellElementInfo = {
-	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
-
-	toolId: TOOLS.THERMOMETER,
-
-	shape: {
+function defaultThermoEditableShape() {
+	const shape: EditableShapeI = {
 		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
 		strokeWidth: { editable: false, value: 0.15 },
 		r: { editable: false, value: 0.25 },
@@ -65,7 +65,27 @@ export const thermometerInfo: SquareCellElementInfo = {
 			bezierRounding: { editable: false, value: 0.15 },
 			closeLoops: { editable: false, value: true }
 		}
-	},
+	};
+	return shape;
+}
+
+function defaultEditableLineOptions() {
+	const linePathOptions: EditablePathOptions = {
+		shortenHead: { editable: false, value: 0.15 },
+		shortenTail: { editable: false, value: 0.15 },
+		bezierRounding: { editable: false, value: 0.15 },
+		closeLoops: { editable: false, value: true }
+	};
+
+	return linePathOptions;
+}
+
+export const thermometerInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
+
+	toolId: TOOLS.THERMOMETER,
+
+	shape: defaultThermoEditableShape(),
 
 	meta: {
 		...DEFAULT_META_1,
@@ -93,19 +113,7 @@ export const customThermometerInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.CUSTOM_THERMOMETER,
 
-	shape: {
-		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
-		strokeWidth: { editable: false, value: 0.15 },
-		r: { editable: false, value: 0.25 },
-		opacity: { editable: false, value: 0.9 },
-		stroke: { editable: false, value: 'var(--constraint-color-gray)' },
-		fill: { editable: false, value: 'var(--constraint-color-gray)' },
-		linePathOptions: {
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
-	},
+	shape: defaultThermoEditableShape(),
 
 	meta: {
 		...DEFAULT_META_1,
@@ -153,17 +161,8 @@ export const slowThermometerInfo: SquareCellElementInfo = {
 	toolId: TOOLS.SLOW_THERMOMETER,
 
 	shape: {
-		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
-		strokeWidth: { editable: false, value: 0.15 },
-		r: { editable: false, value: 0.25 },
-		opacity: { editable: false, value: 0.9 },
-		stroke: { editable: false, value: 'var(--constraint-color-gray)' },
-		fill: { editable: false, value: 'var(--constraint-color-light-blue)' },
-		linePathOptions: {
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		...defaultThermoEditableShape(),
+		fill: { editable: false, value: 'var(--constraint-color-light-blue)' }
 	},
 
 	meta: {
@@ -215,17 +214,10 @@ export const rowCyclethermometerInfo: SquareCellElementInfo = {
 	toolId: TOOLS.ROW_CYCLE_THERMOMETER,
 
 	shape: {
-		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
-		strokeWidth: { editable: false, value: 0.15 },
-		r: { editable: false, value: 0.25 },
+		...defaultThermoEditableShape(),
 		opacity: { editable: false, value: 1 },
 		stroke: { editable: false, value: 'var(--constraint-color-light-blue)' },
-		fill: { editable: false, value: 'var(--constraint-color-light-blue)' },
-		linePathOptions: {
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		fill: { editable: false, value: 'var(--constraint-color-light-blue)' }
 	},
 
 	meta: {
@@ -338,12 +330,7 @@ export const doubleRenbanLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.15 },
 		stroke: { editable: true, value: 'var(--constraint-color-purple)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -368,12 +355,7 @@ export const renrenbanbanLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.15 },
 		stroke: { editable: true, value: 'var(--constraint-color-purple)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -402,12 +384,7 @@ export const nConsecutiveRenbanLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.25 },
 		stroke: { editable: true, value: 'var(--constraint-color-purple)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -431,12 +408,7 @@ export const nabnerLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.15 },
 		stroke: { editable: true, value: 'var(--constraint-color-orange)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -465,12 +437,7 @@ export const whispersLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.15 },
 		stroke: { editable: true, value: 'var(--constraint-color-green)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -498,12 +465,7 @@ export const dutchWhispersInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.15 },
 		stroke: { editable: true, value: 'var(--constraint-color-orange)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -531,12 +493,7 @@ export const maximumAdjacentDifferenceLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.15 },
 		stroke: { editable: true, value: 'var(--constraint-color-orange)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -565,12 +522,7 @@ export const renbanOrWhispersLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.15 },
 		stroke: { editable: true, value: 'var(--constraint-color-orange)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -629,12 +581,7 @@ export const outOfOrderConsecutiveLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.15 },
 		stroke: { editable: true, value: 'var(--constraint-color-purple)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -760,12 +707,7 @@ export const sumLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-light-blue)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -789,12 +731,7 @@ export const arithmeticSequenceLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-light-gray)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -819,12 +756,7 @@ export const sameParityLineLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-pink)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -852,12 +784,7 @@ export const modularLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-dark-blue)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -886,12 +813,7 @@ export const unimodularLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-dark-blue)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -920,12 +842,7 @@ export const modularOrUnimodularLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-dark-blue)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -950,12 +867,7 @@ export const oddEvenOscilatorLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-red)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -983,12 +895,7 @@ export const highLowOscilatorLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-red)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -1025,12 +932,7 @@ export const entropicLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-orange)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -1067,12 +969,7 @@ export const entropicOrModularLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-blue)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -1101,12 +998,7 @@ export const indexingColumnIsXLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-orange)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -1131,12 +1023,7 @@ export const indexingRowIsXLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-blue)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -1157,12 +1044,7 @@ export const repeatedDigitsLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-orange)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -1187,12 +1069,7 @@ export const superfuzzyArrowInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-gray)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -1217,12 +1094,7 @@ export const ambiguousArrowInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-gray)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -1276,12 +1148,7 @@ export const xvLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-yellow)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -1382,12 +1249,7 @@ export const atLeastXLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-gray)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -1415,12 +1277,7 @@ export const nConsecutiveFuzzySumLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-gray)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -1445,12 +1302,7 @@ export const adjacentCellSumIsPrimeLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-light-blue)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -1474,12 +1326,7 @@ export const productLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-light-gray)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -1503,12 +1350,7 @@ export const adjacentMultiplesLineInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.LINE,
 		strokeWidth: { editable: true, value: 0.1 },
 		stroke: { editable: true, value: 'var(--constraint-color-gold)' },
-		linePathOptions: {
-			shortenHead: { editable: false, value: 0.15 },
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		linePathOptions: defaultEditableLineOptions()
 	},
 
 	meta: {
@@ -1727,17 +1569,7 @@ export const thermoOrAverageArrowInfo: SquareCellElementInfo = {
 	toolId: TOOLS.THERMO_OR_AVERAGE_ARROW,
 
 	shape: {
-		type: SHAPE_TYPES.THERMO_WITH_CIRCLE,
-		strokeWidth: { editable: false, value: 0.15 },
-		r: { editable: false, value: 0.25 },
-		opacity: { editable: false, value: 0.9 },
-		stroke: { editable: false, value: 'var(--constraint-color-gray)' },
-		fill: { editable: false, value: 'var(--constraint-color-gray)' },
-		linePathOptions: {
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.15 },
-			closeLoops: { editable: false, value: true }
-		}
+		...defaultThermoEditableShape()
 	},
 
 	meta: {
