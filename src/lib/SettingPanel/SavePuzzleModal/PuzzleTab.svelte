@@ -34,10 +34,10 @@
 		</svg>
 	</div>
 	<div class="form-row">
-		<button class="form-button panel-button" on:click={() => downloadPuzzleJson(file_name)}>
+		<button class="panel-button" on:click={() => downloadPuzzleJson(file_name)}>
 			Download JSON
 		</button>
-        <button class="form-button panel-button" on:click={copyCompressedLink}>Copy Link</button>
+        <button class="panel-button" on:click={copyCompressedLink}>Copy Link</button>
 	</div>
 </div>
 

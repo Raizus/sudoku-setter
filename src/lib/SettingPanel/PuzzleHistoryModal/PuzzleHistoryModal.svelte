@@ -62,8 +62,8 @@
 			{#if puzzle}
 				<BoardPreview {puzzle} />
 				<div class="button-container">
-					<button class="form-button panel-button" on:click={copyCp}> Copy Link </button>
-					<button class="form-button panel-button" on:click={openCb}> Open </button>
+					<button class="panel-button" on:click={copyCp}> Copy Link </button>
+					<button class="panel-button" on:click={openCb}> Open </button>
 				</div>
 			{/if}
 		</div>

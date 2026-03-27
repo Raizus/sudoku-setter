@@ -71,7 +71,7 @@
 
 <button
 	bind:this={buttonEl}
-	class="form-button icon edit-history"
+	class="panel-button icon edit-history"
 	on:click|stopPropagation={() => dropdown?.toggle()}
 	aria-label="Manage history"
 >
