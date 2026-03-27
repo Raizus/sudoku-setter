@@ -44,7 +44,7 @@
 >
 	<!-- pen tool color selection buttons -->
 	{#if selectedTool === TOOLS.PEN_TOOL && penToolActive}
-		{#each numbers as num, i}
+		{#each numbers as num}
 			<label
 				class="entry-panel-label number-pad-button number-pad-selector"
 				class:active={$penColorStore === num}
@@ -55,7 +55,7 @@
 			</label>
 		{/each}
 	{:else}
-		{#each getLabels(letterChecked) as label, i}
+		{#each getLabels(letterChecked) as label}
 			<button
 				class="entry-panel-button number-pad-button"
 				value={label}
