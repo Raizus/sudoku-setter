@@ -27,7 +27,7 @@ const defaultCategories = [
 	TOOL_CATEGORIES.LOCAL_ELEMENT
 ];
 
-const defaultShape: EditableShapeI = {
+const DEFAULT_BLACK_ARROW: EditableShapeI = {
 	type: SHAPE_TYPES.CELL_ARROW,
 	strokeWidth: { editable: true, value: 0.03, lb: 0.01, ub: 0.2, step: 0.01 },
 	stroke: { editable: true, value: 'black' }
@@ -82,7 +82,7 @@ export const sameGalaxyUnobstructedCountArrowsInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS,
 
-	shape: defaultShape,
+	shape: DEFAULT_BLACK_ARROW,
 
 	meta: {
 		description:
@@ -132,7 +132,7 @@ export const yinYangCountUniqueFillominoSameShadingInfo: SquareCellElementInfo =
 
 	toolId: TOOLS.YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS,
 
-	shape: defaultShape,
+	shape: DEFAULT_BLACK_ARROW,
 
 	meta: {
 		description:
@@ -176,7 +176,7 @@ export const loopCellCountArrowsInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.LOOP_CELL_COUNT_ARROWS,
 
-	shape: defaultShape,
+	shape: DEFAULT_BLACK_ARROW,
 
 	meta: {
 		description:
@@ -215,7 +215,7 @@ export const yinYangSumOfCellsOfOppositeColorInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR,
 
-	shape: defaultShape,
+	shape: DEFAULT_BLACK_ARROW,
 
 	meta: {
 		description:
@@ -298,7 +298,7 @@ export const yinYangCountShadedCellsInfo: SquareCellElementInfo = {
 		}
 	],
 
-	shape: defaultShape,
+	shape: DEFAULT_BLACK_ARROW,
 
 	meta: {
 		description:
@@ -339,7 +339,7 @@ export const yinYangCombinedShadedCellsCountExceptItselfInfo: SquareCellElementI
 
 	toolId: TOOLS.YIN_YANG_COMBINED_SHADED_CELLS_COUNT_EXCEPT_ITSELF,
 
-	shape: defaultShape,
+	shape: DEFAULT_BLACK_ARROW,
 
 	meta: {
 		description:
@@ -382,7 +382,7 @@ export const countCellsNotInTheSameRegionArrowsInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_COUNT_CELLS_NOT_IN_THE_SAME_REGION_ARROWS,
 
-	shape: defaultShape,
+	shape: DEFAULT_BLACK_ARROW,
 
 	meta: {
 		description:
@@ -425,7 +425,7 @@ export const chaosCountSeenCellsInTheSameRegionArrowsInfo: SquareCellElementInfo
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_COUNT_SEEN_CELLS_IN_THE_SAME_REGION_ARROWS,
 
-	shape: defaultShape,
+	shape: DEFAULT_BLACK_ARROW,
 
 	meta: {
 		description:
@@ -552,7 +552,7 @@ export const nurikabeCountIslandCellsArrowsInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.NURIKABE_COUNT_ISLAND_CELLS_ARROWS,
 
-	shape: defaultShape,
+	shape: DEFAULT_BLACK_ARROW,
 
 	meta: {
 		description:
@@ -594,7 +594,7 @@ export const connectFourCountCellsOfSameColorInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.CONNECT_FOUR_COUNT_CELLS_OF_SAME_COLOR,
 
-	shape: defaultShape,
+	shape: DEFAULT_BLACK_ARROW,
 
 	meta: {
 		description:
@@ -636,7 +636,7 @@ export const nextNumberedRegionDistanceArrowsInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.NEXT_NUMBERED_REGION_DISTANCE_ARROWS,
 
-	shape: defaultShape,
+	shape: DEFAULT_BLACK_ARROW,
 
 	meta: {
 		description:
@@ -708,7 +708,7 @@ export const shadedBoundariesCombinedCountArrowsInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.SHADED_BOUNDARIES_COMBINED_COUNT_ARROWS,
 
-	shape: defaultShape,
+	shape: DEFAULT_BLACK_ARROW,
 
 	meta: {
 		description:

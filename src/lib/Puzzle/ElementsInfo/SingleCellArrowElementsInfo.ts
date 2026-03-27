@@ -15,7 +15,7 @@ import type { SquareCellElementInfo } from '../ElementInfo';
 import type { Cell } from '../Grid/Cell';
 import type { Grid } from '../Grid/Grid';
 import type { CellArrowToolI, ConstraintsElement } from '../puzzle_schema';
-import { SHAPE_TYPES } from '../Shape/Shape';
+import { SHAPE_TYPES, type EditableShapeI } from '../Shape/Shape';
 import { TOOL_CATEGORIES, TOOLS } from '../Tools';
 
 export const DEFAULT_SINGLE_CELL_ARROW_CATEGORIES = [
@@ -28,6 +28,12 @@ export const DEFAULT_SINGLE_CELL_ARROW_CATEGORIES = [
 export const DEFAULT_SINGLE_CELL_ARROW_OPTIONS: SingleCellArrowToolOptions = {
 	type: HANDLER_TOOL_TYPE.SINGLE_CELL_ARROW,
 	cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
+};
+
+const DEFAULT_GRAY_ARROW: EditableShapeI = {
+	type: SHAPE_TYPES.CELL_ARROW,
+	strokeWidth: { editable: false, value: 0.05 },
+	stroke: { editable: true, value: 'gray' }
 };
 
 function simpleCellArrowElement(
@@ -72,11 +78,7 @@ export const sashiganeArrowPointsToBendInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.SASHIGANE_ARROW_POINTS_TO_BEND,
 
-	shape: {
-		type: SHAPE_TYPES.CELL_ARROW,
-		strokeWidth: { editable: false, value: 0.05 },
-		stroke: { editable: true, value: 'gray' }
-	},
+	shape: DEFAULT_GRAY_ARROW,
 
 	meta: {
 		description:
@@ -113,11 +115,7 @@ export const thermoSightlineLoopArrowInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.THERMO_SIGHTLINE_LOOP_ARROW,
 
-	shape: {
-		type: SHAPE_TYPES.CELL_ARROW,
-		strokeWidth: { editable: false, value: 0.05 },
-		stroke: { editable: true, value: 'gray' }
-	},
+	shape: DEFAULT_GRAY_ARROW,
 
 	meta: {
 		description:
@@ -154,11 +152,7 @@ export const internalLoopSkyscrapersInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.INTERNAL_LOOP_SKYSCRAPERS,
 
-	shape: {
-		type: SHAPE_TYPES.CELL_ARROW,
-		strokeWidth: { editable: false, value: 0.05 },
-		stroke: { editable: true, value: 'gray' }
-	},
+	shape: DEFAULT_GRAY_ARROW,
 
 	meta: {
 		description:
@@ -192,11 +186,7 @@ export const skyscrapersArrowInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.SKYSCRAPERS_ARROW,
 
-	shape: {
-		type: SHAPE_TYPES.CELL_ARROW,
-		strokeWidth: { editable: false, value: 0.05 },
-		stroke: { editable: true, value: 'gray' }
-	},
+	shape: DEFAULT_GRAY_ARROW,
 
 	meta: {
 		description:

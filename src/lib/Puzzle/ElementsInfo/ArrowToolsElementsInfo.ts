@@ -1,4 +1,4 @@
-import { SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
+import { SHAPE_TYPES, type EditableShapeI } from '$lib/Puzzle/Shape/Shape';
 import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { arrowUsage } from '../ToolUsage';
@@ -21,6 +21,17 @@ const DEFAULT_ARROW_CATEGORIES = [
 	TOOL_CATEGORIES.ARROW_TOOL,
 	TOOL_CATEGORIES.LOCAL_ELEMENT
 ];
+
+const DEFAULT_GRAY_ARROW: EditableShapeI = {
+	type: SHAPE_TYPES.LINE,
+	r: { editable: false, value: 0.35 },
+	strokeWidth: { editable: true, value: 0.05 },
+	stroke: { editable: true, value: 'var(--constraint-color-gray)' },
+	linePathOptions: {
+		shortenTail: { editable: false, value: 0.15 },
+		bezierRounding: { editable: false, value: 0.25 }
+	}
+};
 
 function getArrowPillVars(grid: Grid, constraint: ArrowToolI) {
 	const cells_coords = constraint.cells;
@@ -68,16 +79,7 @@ export const arrowInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.ARROW,
 
-	shape: {
-		type: SHAPE_TYPES.LINE,
-		r: { editable: false, value: 0.35 },
-		strokeWidth: { editable: true, value: 0.05 },
-		stroke: { editable: true, value: 'var(--constraint-color-gray)' },
-		linePathOptions: {
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.25 }
-		}
-	},
+	shape: DEFAULT_GRAY_ARROW,
 
 	meta: {
 		description:
@@ -177,16 +179,7 @@ export const squareRootArrowInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.SQUARE_ROOT_ARROW,
 
-	shape: {
-		type: SHAPE_TYPES.LINE,
-		r: { editable: false, value: 0.35 },
-		strokeWidth: { editable: true, value: 0.05 },
-		stroke: { editable: true, value: 'var(--constraint-color-gray)' },
-		linePathOptions: {
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.25 }
-		}
-	},
+	shape: DEFAULT_GRAY_ARROW,
 
 	meta: {
 		description:
@@ -229,16 +222,7 @@ export const chaosConstructionArrowInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_ARROW,
 
-	shape: {
-		type: SHAPE_TYPES.LINE,
-		r: { editable: false, value: 0.35 },
-		strokeWidth: { editable: true, value: 0.05 },
-		stroke: { editable: true, value: 'var(--constraint-color-gray)' },
-		linePathOptions: {
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.25 }
-		}
-	},
+	shape: DEFAULT_GRAY_ARROW,
 
 	meta: {
 		description:
@@ -314,16 +298,7 @@ export const loopPointerArrowInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.LOOP_POINTER_ARROW,
 
-	shape: {
-		type: SHAPE_TYPES.LINE,
-		r: { editable: false, value: 0.35 },
-		strokeWidth: { editable: true, value: 0.05 },
-		stroke: { editable: true, value: 'var(--constraint-color-gray)' },
-		linePathOptions: {
-			shortenTail: { editable: false, value: 0.15 },
-			bezierRounding: { editable: false, value: 0.25 }
-		}
-	},
+	shape: DEFAULT_GRAY_ARROW,
 
 	meta: {
 		description: ` - Digits along an arrow must sum to the digit in that arrow's bulb, and all bulbs are on the loop.

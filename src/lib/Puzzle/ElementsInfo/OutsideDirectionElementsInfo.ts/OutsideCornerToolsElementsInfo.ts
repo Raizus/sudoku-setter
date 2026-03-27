@@ -30,6 +30,13 @@ const outsideCornerDefaultCategories = [
 	TOOL_CATEGORIES.LOCAL_ELEMENT
 ];
 
+const DEFAULT_META = {
+	description: '',
+	usage: outsideCornerUsage(),
+	tags: [],
+	categories: outsideCornerDefaultCategories
+};
+
 const DEFAULT_OUTSIDE_CORNER_OPTIONS: OutsideDirectionToolInputOptions = {
 	type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
 	valueUpdater: (oldValue: string | undefined, key: string) =>
@@ -46,11 +53,9 @@ export const littleKillerSumInfo: SquareCellElementInfo = {
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
+		...DEFAULT_META,
 		description:
-			'A clue with an arrow outside the grid shows the sum of the numbers along the indicated diagonal.',
-		usage: outsideCornerUsage(),
-		tags: [],
-		categories: outsideCornerDefaultCategories
+			'A clue with an arrow outside the grid shows the sum of the numbers along the indicated diagonal.'
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -66,11 +71,9 @@ export const littleKillerProductInfo: SquareCellElementInfo = {
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
+		...DEFAULT_META,
 		description:
-			'A clue with an arrow outside the grid shows the product of the numbers along the indicated diagonal.',
-		usage: outsideCornerUsage(),
-		tags: [],
-		categories: outsideCornerDefaultCategories
+			'A clue with an arrow outside the grid shows the product of the numbers along the indicated diagonal.'
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -86,11 +89,9 @@ export const littleKillerLookAndSayInfo: SquareCellElementInfo = {
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
+		...DEFAULT_META,
 		description:
-			"A clue outside the grid should be read as a 'look-and-say' number. Each number says which digits are in the respective diagonal. Eg if a diagonal clue is 1221, this means there is one 2 and two 1s in the indicated diagonal.",
-		usage: outsideCornerUsage(),
-		tags: [],
-		categories: outsideCornerDefaultCategories
+			"A clue outside the grid should be read as a 'look-and-say' number. Each number says which digits are in the respective diagonal. Eg if a diagonal clue is 1221, this means there is one 2 and two 1s in the indicated diagonal."
 	}
 };
 
@@ -102,11 +103,9 @@ export const xOmitLittleKillerSumInfo: SquareCellElementInfo = {
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
+		...DEFAULT_META,
 		description:
 			'Numbers outside the grid indicate the sum of the digits along the indicated diagonal while omitting the Xth digit from the sum, where X is the digit in the first cell along the indicated diagonal. Note: X cannot be larger than the length of the diagonal.',
-		usage: outsideCornerUsage(),
-		tags: [],
-		categories: outsideCornerDefaultCategories
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -122,11 +121,9 @@ export const littleKillerRegionSumProductInfo: SquareCellElementInfo = {
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
+		...DEFAULT_META,
 		description:
 			'Clues outside the grid give the multiplication of the box sums that the diagonal passes through. Eg a 1000 clue on the SW-NE diagonal at R0C10 means that (R1C9 + R2C8 + R3C7) * (R4C6 + R5C5 + R6C4) * (R7C3 + R8C2 + R9C1) = 1000.',
-		usage: outsideCornerUsage(),
-		tags: [],
-		categories: outsideCornerDefaultCategories
 	}
 };
 
@@ -159,11 +156,9 @@ export const negatorsLittleKillerSumInfo: SquareCellElementInfo = {
 	shape: OUTSIDE_DEFAULT_SHAPE,
 
 	meta: {
+		...DEFAULT_META,
 		description:
 			'Digits along indicated diagonals must add to the indicated total. Repeats are permitted along such diagonals. A digit in a negator cell must be subtracted rather than added to achieve the given diagonal total.',
-		usage: outsideCornerUsage(),
-		tags: [],
-		categories: outsideCornerDefaultCategories
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
