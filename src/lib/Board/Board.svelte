@@ -30,6 +30,7 @@
 	import ToolPreviewRender from './ToolPreviewRender.svelte';
 	import { setContext } from 'svelte';
 	import CreateFogDefs from './Fog/CreateFogDefs.svelte';
+	import OutlineFilterDefs from './OutlineFilterDefs.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 
@@ -65,6 +66,7 @@
 	tabindex="-1"
 	viewBox={getViewbox(boundingBox)}
 >
+	<OutlineFilterDefs grid_shape={gridShape} />
 	<FogLightBulbDefs />
 	<CreateFogDefs {gridShape} />
 

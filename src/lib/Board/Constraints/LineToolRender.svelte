@@ -35,9 +35,19 @@
 		stroke: 'var(--constraint-selected-color)',
 		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.07 : 0.07
 	};
+	$: is_selected = c_id === currentConstraintId;
+	$: filter_url =
+		outline && is_selected
+			? 'url(#filter-both)'
+			: outline
+				? 'url(#filter-bg-only)'
+				: is_selected
+					? 'url(#filter-sel-only)'
+					: null;
 </script>
 
-<g class="line-tool" {opacity}>
+<!-- filter={filter_url} -->
+<g class="line-tool" {opacity} filter={filter_url}>
 	{#if type === SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS}
 		{#if outline}
 			<LineWithCircleEndsToolRender {linePoints} shape={outlineShape} />
@@ -63,12 +73,12 @@
 		{/if}
 		<ThermoRender {linePoints} {shape} />
 	{:else}
-		{#if outline}
+		<!-- {#if outline}
 			<LineRender {linePoints} shape={outlineShape} />
 		{/if}
 		{#if c_id === currentConstraintId}
 			<LineRender {linePoints} shape={selectedOutlineShape} />
-		{/if}
+		{/if} -->
 		<LineRender {linePoints} {shape} />
 	{/if}
 </g>
