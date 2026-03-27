@@ -3,27 +3,24 @@
 	import LineWithCircleEndsToolRender from '$src/lib/Board/SvgComponents/LineWithCircleEndsToolRender.svelte';
 	import LineWithPolygonEndsRender from '$src/lib/Board/SvgComponents/LineWithPolygonEndsRender.svelte';
 	import ThermoRender from '$src/lib/Board/SvgComponents/ThermoRender.svelte';
-	import type { ConstraintAndId, LineToolI } from '$src/lib/Puzzle/puzzle_schema';
+	import type { LineToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { SHAPE_TYPES, defaultLineShape } from '$lib/Puzzle/Shape/Shape';
 	import { cellsToVector2DPoints } from '$lib/utils/SquareCellGridRenderUtils';
-	import { getContext } from 'svelte';
-	import { readable, type Readable } from 'svelte/store';
-	import { getOutlineFilterUrl } from './utils';
+	import { getCurrentConstraintStore, getOutlineFilterUrl } from './utils';
 
 	export let tool: LineToolI;
 	export let c_id: string;
+
+	const defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultLineShape;
+	const currentConstraintStore = getCurrentConstraintStore();
+	const outline = true;
 
 	$: linePoints = cellsToVector2DPoints(tool.cells);
 	$: shape = tool.shape ?? defaultShape;
 	$: type = shape?.type || SHAPE_TYPES.LINE;
 	$: opacity = shape?.opacity ?? 1;
-
-	const currentConstraintStore =
-		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
-	const defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultLineShape;
-	const outline = true;
 
 	$: currentConstraintId = $currentConstraintStore?.id;
 	$: is_selected = c_id === currentConstraintId;

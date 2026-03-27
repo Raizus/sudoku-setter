@@ -1,22 +1,18 @@
 <script lang="ts">
-	import type { ArrowToolI, ConstraintAndId } from '$src/lib/Puzzle/puzzle_schema';
+	import type { ArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { defaultArrowShape, SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
 	import BulbousArrowRender from './BulbousArrowRender.svelte';
 	import SimpleArrowToolRender from './SimpleArrowToolRender.svelte';
-	import { getContext } from 'svelte';
-	import { readable } from 'svelte/store';
-	import type { Readable } from 'svelte/motion';
-	import { getOutlineFilterUrl } from './utils';
+	import { getCurrentConstraintStore, getOutlineFilterUrl } from './utils';
 
 	export let tool: ArrowToolI;
 	export let c_id: string;
 
 	const outline = true;
 	const defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultArrowShape;
-	const currentConstraintStore =
-		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
+	const currentConstraintStore = getCurrentConstraintStore();
 	$: currentConstraintId = $currentConstraintStore?.id;
 
 	$: shape = tool.shape ?? defaultShape;

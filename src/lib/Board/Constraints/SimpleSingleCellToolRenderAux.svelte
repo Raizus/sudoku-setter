@@ -3,23 +3,19 @@
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { SHAPE_TYPES, defaultSingleCellCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import ValuedCageRender from './ValuedCageRender.svelte';
-	import type { CellToolI, ConstraintAndId } from '$src/lib/Puzzle/puzzle_schema';
+	import type { CellToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 	import MinMaxRender from './MinMaxRender.svelte';
 	import RenderShape from '$src/lib/Board/SvgComponents/RenderShape.svelte';
 	import { Vector2D } from '$src/lib/utils/Vector2D';
 	import CellTextLabelRender from './CellTextLabelRender.svelte';
 	import ColoredCountingCircleRender from './ColoredCountingCircleRender.svelte';
-	import { getContext } from 'svelte';
-	import { readable, type Readable } from 'svelte/store';
-	import { getOutlineFilterUrl } from './utils';
+	import { getCurrentConstraintStore, getOutlineFilterUrl } from './utils';
 
 	export let tool: CellToolI;
 	export let c_id: string | undefined = undefined;
 
-	const currentConstraintStore =
-		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
-
+	const currentConstraintStore = getCurrentConstraintStore();
 	const outline = true;
 
 	$: defaultShape =

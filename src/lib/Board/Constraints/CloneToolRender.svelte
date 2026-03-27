@@ -1,14 +1,12 @@
 <script lang="ts">
-	import type { CloneToolI, ConstraintAndId } from '$src/lib/Puzzle/puzzle_schema';
+	import type { CloneToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { defaultCloneShape } from '$lib/Puzzle/Shape/Shape';
 	import CageRender from './CageRender.svelte';
 	import CellTextLabelRender from './CellTextLabelRender.svelte';
 	import { Vector2D } from '$src/lib/utils/Vector2D';
-	import { getContext } from 'svelte';
-	import { readable, type Readable } from 'svelte/store';
-	import { getOutlineFilterUrl } from './utils';
+	import { getCurrentConstraintStore, getOutlineFilterUrl } from './utils';
 
 	export let tool: CloneToolI;
 	export let c_id: string;
@@ -28,8 +26,7 @@
 
 	const outline = true;
 
-	const currentConstraintStore =
-		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
+	const currentConstraintStore = getCurrentConstraintStore();
 	$: currentConstraintId = $currentConstraintStore?.id;
 	$: is_selected = c_id !== undefined && c_id === currentConstraintId;
 	$: filter_url = getOutlineFilterUrl(outline, is_selected);

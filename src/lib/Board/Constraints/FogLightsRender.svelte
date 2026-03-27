@@ -9,7 +9,6 @@
 	export let tool: TOOLID;
 
 	$: show_lights = !$enableFogMaskStore;
-
 	$: constraints = element?.constraints as Record<string, CellToolI>;
 </script>
 
