@@ -25,8 +25,6 @@
 	const timer = createStopwatchStore();
 	$: ellapsed = $timer;
 
-	$: is_solving = isSolverRunning(solver);
-
 	function getSolText(sol_count: number | null): string {
 		if (sol_count === null) return '';
 		return String(sol_count);
@@ -63,6 +61,7 @@
 		if (solver === null || !solver.isRunning()) return;
 
 		status = 'IDLE';
+		is_solving = false;
 		timer.stop();
 		solver.cancel();
 	}
@@ -70,6 +69,7 @@
 	function onSolverError(error: MiniZinc.ErrorMessage) {
 		status = 'ERROR';
 		console.log(error.message);
+		is_solving = false;
 		timer.stop();
 		if (solver) solver.cancel();
 	}
@@ -102,6 +102,7 @@
 
 		timer.reset();
 		timer.start();
+		is_solving = true;
 
 		solver = model.solve({
 			options: {
@@ -139,6 +140,7 @@
 
 		timer.reset();
 		timer.start();
+		is_solving = true;
 
 		solver = model.solve({
 			options: {
