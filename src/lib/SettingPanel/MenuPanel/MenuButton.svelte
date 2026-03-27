@@ -16,4 +16,12 @@
 		width: 80%;
 		height: 80%;
 	}
+
+	.panel-button {
+		margin-top: 0;
+		margin-bottom: 0;
+
+		width: 2.5rem;
+		height: 2.5rem;
+	}
 </style>
