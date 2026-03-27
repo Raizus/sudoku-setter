@@ -100,6 +100,12 @@ export function allDifferentConstraint(vars: string[]): string {
 	return constraint;
 }
 
+/**
+ * Add a comment string above the block, with `% ${header}`, and return the result
+ * @param block 
+ * @param header 
+ * @returns 
+ */
 export function addHeader(block: string, header: string) {
 	if (block) {
 		block = `\n% ${header}\n` + block;

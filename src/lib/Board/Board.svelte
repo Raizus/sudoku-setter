@@ -66,6 +66,7 @@
 	tabindex="-1"
 	viewBox={getViewbox(boundingBox)}
 >
+	<!-- TODO: NOTE that the outline filters make the rendering considerably slower, compared with rendering outline components -->
 	<OutlineFilterDefs grid_shape={gridShape} />
 	<FogLightBulbDefs />
 	<CreateFogDefs {gridShape} />
