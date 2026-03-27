@@ -12,6 +12,7 @@
 	import ColoredCountingCircleRender from './ColoredCountingCircleRender.svelte';
 	import { getContext } from 'svelte';
 	import { readable, type Readable } from 'svelte/store';
+	import { getOutlineFilterUrl } from './utils';
 
 	export let tool: CellToolI;
 	export let c_id: string | undefined = undefined;
@@ -31,15 +32,8 @@
 	$: value = tool.value;
 
 	$: currentConstraintId = $currentConstraintStore?.id;
-	$: is_selected = c_id && c_id === currentConstraintId;
-	$: filter_url =
-		outline && is_selected
-			? 'url(#filter-both)'
-			: outline
-				? 'url(#filter-bg-only)'
-				: is_selected
-					? 'url(#filter-sel-only)'
-					: null;
+	$: is_selected = c_id !== undefined && c_id === currentConstraintId;
+	$: filter_url = getOutlineFilterUrl(outline, is_selected);
 </script>
 
 <g class="single-cell-tool" data-id={`${c_id}`} filter={filter_url}>

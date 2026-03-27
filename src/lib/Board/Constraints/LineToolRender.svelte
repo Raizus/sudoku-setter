@@ -10,9 +10,15 @@
 	import { cellsToVector2DPoints } from '$lib/utils/SquareCellGridRenderUtils';
 	import { getContext } from 'svelte';
 	import { readable, type Readable } from 'svelte/store';
+	import { getOutlineFilterUrl } from './utils';
 
 	export let tool: LineToolI;
 	export let c_id: string;
+
+	$: linePoints = cellsToVector2DPoints(tool.cells);
+	$: shape = tool.shape ?? defaultShape;
+	$: type = shape?.type || SHAPE_TYPES.LINE;
+	$: opacity = shape?.opacity ?? 1;
 
 	const currentConstraintStore =
 		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
@@ -20,20 +26,8 @@
 	const outline = true;
 
 	$: currentConstraintId = $currentConstraintStore?.id;
-
-	$: linePoints = cellsToVector2DPoints(tool.cells);
-	$: shape = tool.shape ?? defaultShape;
-	$: type = shape?.type || SHAPE_TYPES.LINE;
-	$: opacity = shape?.opacity ?? 1;
 	$: is_selected = c_id === currentConstraintId;
-	$: filter_url =
-		outline && is_selected
-			? 'url(#filter-both)'
-			: outline
-				? 'url(#filter-bg-only)'
-				: is_selected
-					? 'url(#filter-sel-only)'
-					: null;
+	$: filter_url = getOutlineFilterUrl(outline, is_selected);
 </script>
 
 <g class="line-tool" {opacity} filter={filter_url}>

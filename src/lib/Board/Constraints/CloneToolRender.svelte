@@ -8,6 +8,7 @@
 	import { Vector2D } from '$src/lib/utils/Vector2D';
 	import { getContext } from 'svelte';
 	import { readable, type Readable } from 'svelte/store';
+	import { getOutlineFilterUrl } from './utils';
 
 	export let tool: CloneToolI;
 	export let c_id: string;
@@ -30,15 +31,8 @@
 	const currentConstraintStore =
 		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
 	$: currentConstraintId = $currentConstraintStore?.id;
-	$: is_selected = c_id && c_id === currentConstraintId;
-	$: filter_url =
-		outline && is_selected
-			? 'url(#filter-both)'
-			: outline
-				? 'url(#filter-bg-only)'
-				: is_selected
-					? 'url(#filter-sel-only)'
-					: null;
+	$: is_selected = c_id !== undefined && c_id === currentConstraintId;
+	$: filter_url = getOutlineFilterUrl(outline, is_selected);
 </script>
 
 <g class="clone-tool" filter={filter_url}>

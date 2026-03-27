@@ -8,6 +8,7 @@
 	import { getContext } from 'svelte';
 	import { readable } from 'svelte/store';
 	import type { Readable } from 'svelte/motion';
+	import { getOutlineFilterUrl } from './utils';
 
 	export let tool: ArrowToolI;
 	export let c_id: string;
@@ -21,14 +22,7 @@
 	$: shape = tool.shape ?? defaultShape;
 
 	$: is_selected = c_id === currentConstraintId;
-	$: filter_url =
-		outline && is_selected
-			? 'url(#filter-both)'
-			: outline
-				? 'url(#filter-bg-only)'
-				: is_selected
-					? 'url(#filter-sel-only)'
-					: null;
+	$: filter_url = getOutlineFilterUrl(outline, is_selected);
 </script>
 
 <g class="arrow-tool" filter={filter_url}>

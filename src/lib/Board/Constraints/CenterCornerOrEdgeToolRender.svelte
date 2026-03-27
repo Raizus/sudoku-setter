@@ -3,6 +3,7 @@
 	import { getContext } from 'svelte';
 	import CenterCornerOrEdgeToolRenderAux from './CenterCornerOrEdgeToolRenderAux.svelte';
 	import { readable, type Readable } from 'svelte/store';
+	import { getOutlineFilterUrl } from './utils';
 
 	export let tool: CenterCornerOrEdgeToolI;
 	export let c_id: string | undefined = undefined;
@@ -12,15 +13,8 @@
 	const currentConstraintStore =
 		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
 	$: currentConstraintId = $currentConstraintStore?.id;
-	$: is_selected = c_id && c_id === currentConstraintId;
-	$: filter_url =
-		outline && is_selected
-			? 'url(#filter-both)'
-			: outline
-				? 'url(#filter-bg-only)'
-				: is_selected
-					? 'url(#filter-sel-only)'
-					: null;
+	$: is_selected = c_id !== undefined && c_id === currentConstraintId;
+	$: filter_url = getOutlineFilterUrl(outline, is_selected);
 </script>
 
 {#if c_id !== undefined}
