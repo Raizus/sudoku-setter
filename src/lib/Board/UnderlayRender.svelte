@@ -9,10 +9,10 @@
 		type TOOLID
 	} from '../Puzzle/Tools';
 	import SingleCellToolRender from './Constraints/SingleCellToolRender.svelte';
-	import LineToolRender from './Constraints/LineToolRender.svelte';
-	import ArrowToolRender from './Constraints/ArrowToolRender.svelte';
-	import CageToolRender from './Constraints/CageToolRender.svelte';
-	import CloneToolRender from './Constraints/CloneToolRender.svelte';
+	import LineToolRender from './Constraints/LineToolGroupRender.svelte';
+	import ArrowToolRender from './Constraints/ArrowToolGroupRender.svelte';
+	import CageToolRender from './Constraints/CageToolGroupRender.svelte';
+	import CloneToolRender from './Constraints/CloneToolGroupRender.svelte';
 	import OutsideDirectionToolRender from './Constraints/OutsideDirectionToolRender.svelte';
 	import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 

@@ -7,7 +7,7 @@
 	$: center = { x: tool.cell.c + 0.5, y: tool.cell.r + 0.5 };
 </script>
 
-<g class="fog-lights" transform={`translate(${center.x} ${center.y})`}>
+<g class="fog-lights" data-id={c_id} transform={`translate(${center.x} ${center.y})`}>
 	<use href="#fog-bulb" />
 </g>
 

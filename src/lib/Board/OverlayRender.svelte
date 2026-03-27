@@ -7,9 +7,9 @@
 		type TOOLID
 	} from '../Puzzle/Tools';
 	import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
-	import CenterCornerOrEdgeToolRender from './Constraints/CenterCornerOrEdgeToolRender.svelte';
-	import CornerToolRender from './Constraints/CornerToolRender.svelte';
-	import EdgeToolRender from './Constraints/EdgeToolRender.svelte';
+	import CenterCornerOrEdgeToolRender from './Constraints/CenterCornerOrEdgeToolGroupRender.svelte';
+	import CornerToolRender from './Constraints/CornerToolGroupRender.svelte';
+	import EdgeToolRender from './Constraints/EdgeToolGroupRender.svelte';
 	import CornerLineToolRender from './Constraints/CornerLineToolRender.svelte';
 
 	export let overlay_elements: ConstraintsElement[];

@@ -16,7 +16,7 @@
 	import OutsideDirectionToolPreviewRender from './Constraints/OutsideDirectionToolPreviewRender.svelte';
 	import SimpleSingleCellToolPreviewRender from './Constraints/SimpleSingleCellToolPreviewRender.svelte';
 	import SingleCellArrowPreviewRender from './Constraints/SingleCellArrowPreviewRender.svelte';
-	import SingleCellMultiArrowRender from './Constraints/SingleCellMultiArrowRender.svelte';
+	import SingleCellMultiArrowRender from './Constraints/SingleCellMultiArrowToolGroupRender.svelte';
 
 	import { stateStore } from '$stores/StateStore';
 

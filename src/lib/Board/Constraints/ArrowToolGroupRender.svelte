@@ -13,10 +13,9 @@
 	const outline = true;
 	const defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultArrowShape;
 	const currentConstraintStore = getCurrentConstraintStore();
+
 	$: currentConstraintId = $currentConstraintStore?.id;
-
 	$: shape = tool.shape ?? defaultShape;
-
 	$: is_selected = c_id === currentConstraintId;
 	$: filter_url = getOutlineFilterUrl(outline, is_selected);
 </script>

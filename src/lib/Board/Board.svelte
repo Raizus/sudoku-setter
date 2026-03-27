@@ -18,10 +18,10 @@
 	import ConflictsRender from './ConflictsRender.svelte';
 	import SolutionRender from './SolutionRender.svelte';
 	import ToolsLayerRender from './Constraints/ToolsLayerRender.svelte';
-	import CornerToolRender from './Constraints/CornerToolRender.svelte';
-	import CenterCornerOrEdgeToolRender from './Constraints/CenterCornerOrEdgeToolRender.svelte';
+	import CornerToolRender from './Constraints/CornerToolGroupRender.svelte';
+	import CenterCornerOrEdgeToolRender from './Constraints/CenterCornerOrEdgeToolGroupRender.svelte';
 	import CornerLineToolRender from './Constraints/CornerLineToolRender.svelte';
-	import EdgeToolRender from './Constraints/EdgeToolRender.svelte';
+	import EdgeToolRender from './Constraints/EdgeToolGroupRender.svelte';
 	import FogLightsRender from './Constraints/FogLightsRender.svelte';
 	import UnderlayRender from './UnderlayRender.svelte';
 	import DiagonalElementsRender from './Constraints/DiagonalElementsRender.svelte';

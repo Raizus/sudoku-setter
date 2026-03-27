@@ -32,7 +32,7 @@
 	$: filter_url = getOutlineFilterUrl(outline, is_selected);
 </script>
 
-<g class="clone-tool" filter={filter_url}>
+<g class="clone-tool" data-id={c_id} filter={filter_url}>
 	<CageRender cells={tool.cells} {shape} />
 	<CellTextLabelRender
 		value={label}

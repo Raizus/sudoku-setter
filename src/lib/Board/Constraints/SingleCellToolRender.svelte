@@ -1,7 +1,7 @@
 <script lang="ts">
-	import SingleCellArrowRender from './SingleCellArrowRender.svelte';
-	import SingleCellMultiArrowRender from './SingleCellMultiArrowRender.svelte';
-	import SimpleSingleCellToolRender from './SimpleSingleCellToolRender.svelte';
+	import SingleCellArrowRender from './SingleCellArrowGroupRender.svelte';
+	import SingleCellMultiArrowRender from './SingleCellMultiArrowToolGroupRender.svelte';
+	import SimpleSingleCellToolRender from './SimpleSingleCellToolGroupRender.svelte';
 	import type { SingleCellTool } from '$src/lib/Puzzle/puzzle_schema';
 	import { TOOLS } from '$src/lib/Puzzle/Tools';
 

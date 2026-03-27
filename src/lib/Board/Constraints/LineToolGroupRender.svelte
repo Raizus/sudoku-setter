@@ -27,7 +27,7 @@
 	$: filter_url = getOutlineFilterUrl(outline, is_selected);
 </script>
 
-<g class="line-tool" {opacity} filter={filter_url}>
+<g class="line-tool" data-id={c_id} {opacity} filter={filter_url}>
 	{#if type === SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS}
 		<LineWithCircleEndsToolRender {linePoints} {shape} />
 	{:else if type === SHAPE_TYPES.LINE_WITH_POLYGON_ENDS}
