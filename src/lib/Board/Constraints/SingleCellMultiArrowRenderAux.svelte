@@ -3,58 +3,15 @@
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { getSingleCellMultiArrowPath } from '$lib/utils/SquareCellGridRenderUtils';
-	import type { CellMultiArrowToolI, ConstraintAndId } from '$src/lib/Puzzle/puzzle_schema';
-	import { getContext } from 'svelte';
-	import { readable, type Readable } from 'svelte/store';
+	import type { CellMultiArrowToolI } from '$src/lib/Puzzle/puzzle_schema';
 
 	export let tool: CellMultiArrowToolI;
-	export let c_id: string | undefined = undefined;
-
-	const currentConstraintStore =
-		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
-	$: currentConstraintId = $currentConstraintStore?.id;
-
-	const outline = true;
 
 	$: defaultShape =
 		getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultSingleCellMultiArrowShape;
 	$: shape = tool.shape ?? defaultShape;
-
-	$: outlineShape = {
-		...shape,
-		stroke: 'var(--grid-background-color)',
-		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.03 : 0.03
-	};
-
-	$: selectedOutlineShape = {
-		...shape,
-		stroke: 'var(--constraint-selected-color)',
-		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.05 : 0.05
-	};
 </script>
 
-{#if outline}
-	{#each tool.directions as direction}
-		<path
-			d={getSingleCellMultiArrowPath(tool.cell, direction)}
-			fill="none"
-			stroke={outlineShape.stroke}
-			stroke-width={outlineShape.strokeWidth}
-			stroke-linecap="round"
-		/>
-	{/each}
-{/if}
-{#if c_id && c_id === currentConstraintId}
-	{#each tool.directions as direction}
-		<path
-			d={getSingleCellMultiArrowPath(tool.cell, direction)}
-			fill="none"
-			stroke={selectedOutlineShape.stroke}
-			stroke-width={selectedOutlineShape.strokeWidth}
-			stroke-linecap="round"
-		/>
-	{/each}
-{/if}
 {#each tool.directions as direction}
 	<path
 		d={getSingleCellMultiArrowPath(tool.cell, direction)}

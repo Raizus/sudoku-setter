@@ -12,38 +12,36 @@
 	export let tool: CloneToolI;
 	export let c_id: string;
 
-	const currentConstraintStore =
-		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
-
-	$: currentConstraintId = $currentConstraintStore?.id;
-
 	const defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultCloneShape;
 	$: shape = tool.shape ?? defaultShape;
 
-	$: selectedOutlineShape = {
-		...shape,
-		stroke: 'var(--constraint-selected-color)',
-		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.07 : 0.07
-	};
-
 	$: inset = shape.inset ?? 0.15;
-	$: strokeWidth = shape.strokeWidth ?? 0.07;
 	$: textColor = shape.fontColor ?? shape.stroke ?? 'black';
 	const fontWeight = 800;
-	const fontSize = 0.3;
 
 	const label = tool.value;
 	$: cell1 = tool.cells[tool.cells.length - 1];
 	$: cell2 = tool.cells2[tool.cells2.length - 1];
 	$: cell1TL = new Vector2D(cell1.c + 1 - inset - 0.05, cell1.r + 1 - inset - 0.05);
 	$: cell2TL = new Vector2D(cell2.c + 1 - inset - 0.05, cell2.r + 1 - inset - 0.05);
+
+	const outline = true;
+
+	const currentConstraintStore =
+		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
+	$: currentConstraintId = $currentConstraintStore?.id;
+	$: is_selected = c_id && c_id === currentConstraintId;
+	$: filter_url =
+		outline && is_selected
+			? 'url(#filter-both)'
+			: outline
+				? 'url(#filter-bg-only)'
+				: is_selected
+					? 'url(#filter-sel-only)'
+					: null;
 </script>
 
-<g class="clone-tool">
-	{#if c_id === currentConstraintId}
-		<CageRender cells={tool.cells} shape={selectedOutlineShape} />
-		<CageRender cells={tool.cells2} shape={selectedOutlineShape} />
-	{/if}
+<g class="clone-tool" filter={filter_url}>
 	<CageRender cells={tool.cells} {shape} />
 	<CellTextLabelRender
 		value={label}

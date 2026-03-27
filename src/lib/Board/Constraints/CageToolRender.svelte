@@ -4,7 +4,6 @@
 	import type { CageToolI, ConstraintAndId } from '$src/lib/Puzzle/puzzle_schema';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
-	import CageRender from './CageRender.svelte';
 	import { getContext } from 'svelte';
 	import { readable, type Readable } from 'svelte/store';
 
@@ -18,16 +17,18 @@
 	const defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultCageShape;
 	$: shape = tool.shape ?? defaultShape;
 
-	$: selectedOutlineShape = {
-		...shape,
-		stroke: 'var(--constraint-selected-color)',
-		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.07 : 0.07
-	};
+	const outline = true;
+	$: is_selected = c_id === currentConstraintId;
+	$: filter_url =
+		outline && is_selected
+			? 'url(#filter-both)'
+			: outline
+				? 'url(#filter-bg-only)'
+				: is_selected
+					? 'url(#filter-sel-only)'
+					: null;
 </script>
 
-<g class="cage-tool">
-	{#if c_id === currentConstraintId}
-		<CageRender cells={tool.cells} shape={selectedOutlineShape} />
-	{/if}
+<g class="cage-tool" filter={filter_url}>
 	<ValuedCageRender cells={tool.cells} {shape} value={tool.value} />
 </g>

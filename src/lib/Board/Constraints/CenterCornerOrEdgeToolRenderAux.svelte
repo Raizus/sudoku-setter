@@ -2,27 +2,14 @@
 	import { SHAPE_TYPES, defaultEdgeCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
-	import type { CenterCornerOrEdgeToolI, ConstraintAndId } from '$src/lib/Puzzle/puzzle_schema';
+	import type { CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import RenderShape from '$src/lib/Board/SvgComponents/RenderShape.svelte';
 	import CellTextLabelRender from './CellTextLabelRender.svelte';
-	import { readable, type Readable } from 'svelte/store';
-	import { getContext } from 'svelte';
 
 	export let tool: CenterCornerOrEdgeToolI;
-	export let c_id: string | undefined = undefined;
-
-	const currentConstraintStore =
-		getContext<Readable<ConstraintAndId | null>>('currentConstraint') ?? readable(null);
-	$: currentConstraintId = $currentConstraintStore?.id;
 
 	$: defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultEdgeCircleShape;
 	$: shape = tool.shape ?? defaultShape;
-
-	$: selectedOutlineShape = {
-		...shape,
-		stroke: 'var(--constraint-selected-color)',
-		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.07 : 0.07
-	};
 
 	$: center = tool.cell;
 	$: type = shape?.type || SHAPE_TYPES.CIRCLE;
@@ -39,9 +26,6 @@
 	}
 </script>
 
-{#if c_id === currentConstraintId}
-	<RenderShape cx={center.c} cy={center.r} shape={selectedOutlineShape} />
-{/if}
 <RenderShape cx={center.c} cy={center.r} {shape} />
 {#if isCellCenter}
 	<CellTextLabelRender

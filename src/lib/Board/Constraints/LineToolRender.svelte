@@ -25,16 +25,6 @@
 	$: shape = tool.shape ?? defaultShape;
 	$: type = shape?.type || SHAPE_TYPES.LINE;
 	$: opacity = shape?.opacity ?? 1;
-	$: outlineShape = {
-		...shape,
-		stroke: 'var(--grid-background-color)',
-		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.06 : 0.06
-	};
-	$: selectedOutlineShape = {
-		...shape,
-		stroke: 'var(--constraint-selected-color)',
-		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.07 : 0.07
-	};
 	$: is_selected = c_id === currentConstraintId;
 	$: filter_url =
 		outline && is_selected
@@ -46,39 +36,14 @@
 					: null;
 </script>
 
-<!-- filter={filter_url} -->
 <g class="line-tool" {opacity} filter={filter_url}>
 	{#if type === SHAPE_TYPES.LINE_WITH_CIRCLE_ENDS}
-		{#if outline}
-			<LineWithCircleEndsToolRender {linePoints} shape={outlineShape} />
-		{/if}
-		{#if c_id === currentConstraintId}
-			<LineWithCircleEndsToolRender {linePoints} shape={selectedOutlineShape} />
-		{/if}
 		<LineWithCircleEndsToolRender {linePoints} {shape} />
 	{:else if type === SHAPE_TYPES.LINE_WITH_POLYGON_ENDS}
-		{#if outline}
-			<LineWithPolygonEndsRender {linePoints} shape={outlineShape} />
-		{/if}
-		{#if c_id === currentConstraintId}
-			<LineWithPolygonEndsRender {linePoints} shape={selectedOutlineShape} />
-		{/if}
 		<LineWithPolygonEndsRender {linePoints} {shape} />
 	{:else if type === SHAPE_TYPES.THERMO_WITH_CIRCLE || type === SHAPE_TYPES.THERMO_WITH_POLYGON}
-		{#if outline}
-			<ThermoRender {linePoints} shape={outlineShape} />
-		{/if}
-		{#if c_id === currentConstraintId}
-			<ThermoRender {linePoints} shape={selectedOutlineShape} />
-		{/if}
 		<ThermoRender {linePoints} {shape} />
 	{:else}
-		<!-- {#if outline}
-			<LineRender {linePoints} shape={outlineShape} />
-		{/if}
-		{#if c_id === currentConstraintId}
-			<LineRender {linePoints} shape={selectedOutlineShape} />
-		{/if} -->
 		<LineRender {linePoints} {shape} />
 	{/if}
 </g>
