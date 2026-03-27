@@ -85,7 +85,7 @@ export class StateStore {
 	private _elementsDictStore = writable<ElementsDict>(new ElementsDict());
 
 	private _penToolStore = writable<PenTool>(new PenTool());
-	private _penColorStore = writable<number>(1);
+	public penColorStore = writable<number>(1);
 
 	private _currentConstraintStore = writable<ConstraintAndId | null>(null);
 	private _currentShapeStore = writable<ShapeI | undefined>(undefined);
@@ -111,7 +111,6 @@ export class StateStore {
 	public elementsDictStore = { subscribe: this._elementsDictStore.subscribe };
 
 	public penToolStore = { subscribe: this._penToolStore.subscribe };
-	public penColorStore = { subscribe: this._penColorStore.subscribe };
 
 	public currentConstraintStore = { subscribe: this._currentConstraintStore.subscribe };
 	public currentShapeStore = { subscribe: this._currentShapeStore.subscribe };
@@ -288,7 +287,7 @@ export class StateStore {
 	}
 
 	getCurrentPenColor() {
-		return get(this._penColorStore);
+		return get(this.penColorStore);
 	}
 
 	getCurrentConstraint() {
@@ -625,7 +624,7 @@ export class StateStore {
 	/* ----- Pen Tool methods --------------------------------------------------- */
 
 	setPenColor(colorId: number) {
-		this._penColorStore.set(colorId);
+		this.penColorStore.set(colorId);
 	}
 
 	updatePenTool(action: PenToolAction): void {
