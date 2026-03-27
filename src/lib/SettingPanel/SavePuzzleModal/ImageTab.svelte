@@ -116,13 +116,13 @@
 	</div>
 	<div class="form-row">
 		<button
-			class="form-button form-modal-button"
+			class="panel-button"
 			on:click={() => downloadAsPNG(svgElement, file_name)}
 		>
 			Download PNG
 		</button>
 		<button
-			class="form-button form-modal-button"
+			class="panel-button"
 			on:click={() => downloadAsSVG(svgElement, file_name)}
 		>
 			Download SVG

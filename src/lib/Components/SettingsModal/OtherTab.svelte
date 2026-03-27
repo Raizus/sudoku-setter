@@ -27,7 +27,9 @@
 		value={settings.showSolution}
 		updateCb={(value) => settingsStore.updateSettingsValue('showSolution', value)}
 	/>
-	<button class="form-button form-modal-button" on:click={settingsStore.restoreSettings}> Restore default settings </button>
+	<button class="panel-button" on:click={settingsStore.restoreSettings}>
+		Restore default settings
+	</button>
 </div>
 
 <style lang="scss">

@@ -53,10 +53,10 @@
 
 <Modal bind:showModal title="Minizinc File">
 	<div class="new-puzzle-content">
-		<button class="modal-button" on:click={copyCb}>Copy to clipboard</button>
-		<button class="modal-button" on:click={copyPrunedCb}>Copy pruned version to clipboard</button>
-		<button class="modal-button" on:click={downloadCb}>Download Minizinc File</button>
-		<button class="modal-button" on:click={downloadPrunedCb}>Download Pruned Minizinc File</button>
+		<button class="panel-button" on:click={copyCb}>Copy to clipboard</button>
+		<button class="panel-button" on:click={copyPrunedCb}>Copy pruned version to clipboard</button>
+		<button class="panel-button" on:click={downloadCb}>Download Minizinc File</button>
+		<button class="panel-button" on:click={downloadPrunedCb}>Download Pruned Minizinc File</button>
 		<p>Note: You can play with the minizinc model 
 			<a href={'https://play.minizinc.dev/'} target="_blank" rel="noreferrer noopener">
 				here
@@ -79,16 +79,8 @@
         gap: 10px;
 	}
 
-	.modal-button {
+	.panel-button {
 		width: 50%;
-
-		&:hover {
-			background: $button-hover-background;
-		}
-
-		&:focus {
-			outline: transparent;
-			box-shadow: var(--focus-shadow);
-		}
+		height: 3rem;
 	}
 </style>

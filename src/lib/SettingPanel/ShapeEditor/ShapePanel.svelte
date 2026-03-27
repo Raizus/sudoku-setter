@@ -85,7 +85,7 @@
 	<svelte:fragment slot="panel-content">
 		{#if editableShape}
 			{#if shapeHasEditableProps(editableShape)}
-				<button class="reset-shape" on:click={resetShape}>Reset to default</button>
+				<button class="panel-button" on:click={resetShape}>Reset to default</button>
 			{/if}
 			{#if editableShape.allowedTypes && editableShape.allowedTypes.length && shape?.type}
 				<ShapeRadioBlock
@@ -207,25 +207,3 @@
 	</svelte:fragment>
 </Panel>
 
-<style lang="scss">
-	.reset-shape {
-		background-color: var(--button-hover-background-color);
-		border-radius: 5px;
-		border: 1px solid transparent;
-		height: 2rem;
-		cursor: pointer;
-
-		&:active {
-			border-color: var(--panel-radio-border-active);
-		}
-
-		&:hover {
-			background-color: var(--button2-hover-background-color);
-		}
-
-		&:focus {
-			outline: transparent;
-			box-shadow: var(--focus-shadow);
-		}
-	}
-</style>

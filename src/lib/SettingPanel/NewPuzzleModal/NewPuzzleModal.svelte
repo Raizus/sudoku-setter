@@ -71,8 +71,8 @@
 			on:input={() => inputCb(inputStr)}
 		/>
 		<ModalButtonsContainer>
-			<button class="modal-button" on:click={confirmCb}>Confirm</button>
-			<button class="modal-button" on:click={cancelCb}>Cancel</button>
+			<button class="panel-button" on:click={confirmCb}>Confirm</button>
+			<button class="panel-button" on:click={cancelCb}>Cancel</button>
 		</ModalButtonsContainer>
 	</div>
 </Modal>
@@ -84,5 +84,9 @@
 		flex-direction: column;
 		padding: 0.4em;
 		max-height: 100%;
+	}
+
+	.panel-button {
+		height: 3rem;
 	}
 </style>

@@ -70,7 +70,7 @@
 			bind:value={authorsStr}
 		/>
 		<ModalSectionHeader title="Ruleset">
-			<button class="generate-button" on:click={autoGenCb}>Auto-Generate</button>
+			<button class="panel-button" on:click={autoGenCb}>Auto-Generate</button>
 		</ModalSectionHeader>
 		<textarea
 			class="text-input input-ruleset"
@@ -93,8 +93,8 @@
 			bind:value={ctcYoutubeUrlStr}
 		/>
 		<ModalButtonsContainer>
-			<button class="modal-button" on:click={applyCb}>Apply</button>
-			<button class="modal-button" on:click={cancelCb}>Cancel</button>
+			<button class="panel-button large-button" on:click={applyCb}>Apply</button>
+			<button class="panel-button large-button" on:click={cancelCb}>Cancel</button>
 		</ModalButtonsContainer>
 	</div>
 </Modal>
@@ -109,26 +109,7 @@
 		overflow-y: scroll;
 	}
 
-	.generate-button {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-		background: var(--button-background-color);
-		border-radius: 5px;
-		border: 0;
-		padding: 0.5rem;
-
-		margin-bottom: 0.2rem;
-		margin-top: 0.2rem;
-
-		&:hover {
-			background: var(--button-hover-background-color);
-		}
-
-		&:focus {
-			outline: transparent;
-			box-shadow: var(--focus-shadow);
-		}
+	.large-button {
+		height: 3rem;
 	}
 </style>
