@@ -45,7 +45,7 @@ export interface PathOptions {
 	closeLoops?: boolean;
 }
 
-interface EditablePathOptions {
+export interface EditablePathOptions {
 	shortenHead?: EditableNumber;
 	shortenTail?: EditableNumber;
 	bezierRounding?: EditableNumber;
