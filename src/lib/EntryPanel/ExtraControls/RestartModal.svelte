@@ -22,8 +22,8 @@
 	<div class="restart-content">
 		<h3>Are you sure you want to restart? All progress will be lost!</h3>
 		<ModalButtonsContainer>
-			<button class="modal-button" on:click={confirmCb}>Confirm</button>
-			<button class="modal-button" on:click={cancelCb}>Cancel</button>
+			<button class="panel-button" on:click={confirmCb}>Confirm</button>
+			<button class="panel-button" on:click={cancelCb}>Cancel</button>
 		</ModalButtonsContainer>
 	</div>
 </Modal>
@@ -45,6 +45,10 @@
 	h3 {
 		text-align: center;
 		margin: 0;
+	}
+
+	.panel-button {
+		height: 3rem;
 	}
 
 </style>
