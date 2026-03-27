@@ -1,6 +1,6 @@
 # Sudoku Setter
 
-A Sudoku variant setter and solver using svelte. The solver uses minizinc-wasm.
+A Sudoku variant setter and solver implemented with svelte. The solver uses minizinc-wasm.
 
 https://raizus.github.io/sudoku-setter/
 
