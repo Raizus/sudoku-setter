@@ -20,15 +20,6 @@
 			max-width: 50%;
 			flex-grow: 1;
 			flex-basis: 0;
-
-			&:hover {
-				background: $button-hover-background;
-			}
-
-			&:focus {
-				outline: transparent;
-				box-shadow: var(--focus-shadow);
-			}
 		}
 	}
 </style>
