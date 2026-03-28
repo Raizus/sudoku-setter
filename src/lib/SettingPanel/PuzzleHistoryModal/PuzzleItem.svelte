@@ -64,6 +64,21 @@
 		}
 	}
 
+	// Svelte action: fires callback when a click happens outside the node
+	function clickOutside(node: HTMLElement, callback: () => void) {
+		function handleClick(event: MouseEvent) {
+			if (!node.contains(event.target as Node)) {
+				callback();
+			}
+		}
+		document.addEventListener('click', handleClick, true);
+		return {
+			destroy() {
+				document.removeEventListener('click', handleClick, true);
+			}
+		};
+	}
+
 	$: active = selected === item_id;
 </script>
 
@@ -80,12 +95,15 @@
 				class="panel-button icon"
 				class:confirm={confirm_selected === item_id}
 				on:click|stopPropagation|capture|preventDefault={destroyCb}
+				use:clickOutside={() => {
+					if (confirm_selected === item_id) confirm_selected = undefined;
+				}}
 			>
 				<div class="icon-wrapper">
 					<Trash />
 				</div>
 				{#if confirm_selected === item_id}
-					<span> Confirm </span>
+					<span class="confirm-label"> Confirm </span>
 				{/if}
 			</button>
 		</div>
@@ -119,11 +137,27 @@
 	.panel-button {
 		margin-top: 0;
 		margin-bottom: 0;
+		width: auto;
 		transition: all 0.5s ease;
 
+		.confirm-label {
+			max-width: 0;
+			opacity: 0;
+			overflow: hidden;
+			white-space: nowrap;
+			transition:
+				max-width 0.4s ease,
+				opacity 0.3s ease;
+		}
+
 		&.confirm {
-			width: auto;
+			max-width: 10rem;
 			background-color: #e6194b;
+
+			.confirm-label {
+				max-width: 6rem;
+				opacity: 1;
+			}
 		}
 	}
 
