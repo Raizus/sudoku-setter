@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { CornerToolI } from '$src/lib/Puzzle/puzzle_schema';
-	import CornerToolRenderAux from './CornerToolRenderAux.svelte';
+	import type { EdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
+	import EdgeConstraintRenderAux from './EdgeConstraintRenderAux.svelte';
 	import { getCurrentConstraintStore, getOutlineFilterUrl } from './utils';
 
-	export let tool: CornerToolI;
+	export let tool: EdgeToolI;
 	export let c_id: string | undefined = undefined;
 
 	const outline = true;
@@ -15,7 +15,7 @@
 </script>
 
 {#if c_id !== undefined}
-	<g class="corner-tool" data-id={`${c_id}`} filter={filter_url}>
-		<CornerToolRenderAux {tool} />
+	<g class="edge-constraint" id={`c-${c_id}`} data-id={`${c_id}`} filter={filter_url}>
+		<EdgeConstraintRenderAux {tool} />
 	</g>
 {/if}

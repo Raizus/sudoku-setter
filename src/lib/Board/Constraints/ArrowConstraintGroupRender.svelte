@@ -4,7 +4,7 @@
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import { defaultArrowShape, SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
 	import BulbousArrowRender from './BulbousArrowRender.svelte';
-	import SimpleArrowToolRender from './SimpleArrowToolRender.svelte';
+	import SimpleArrowConstraintRender from './SimpleArrowConstraintRender.svelte';
 	import { getCurrentConstraintStore, getOutlineFilterUrl } from './utils';
 
 	export let tool: ArrowToolI;
@@ -20,10 +20,10 @@
 	$: filter_url = getOutlineFilterUrl(outline, is_selected);
 </script>
 
-<g class="arrow-tool" filter={filter_url}>
+<g class="arrow-constraint" id={`c-${c_id}`} filter={filter_url}>
 	{#if shape.type === SHAPE_TYPES.BULBOUS_ARROW}
 		<BulbousArrowRender {tool} arrowId={c_id} />
 	{:else}
-		<SimpleArrowToolRender {tool} {c_id} {shape} />
+		<SimpleArrowConstraintRender {tool} {c_id} {shape} />
 	{/if}
 </g>

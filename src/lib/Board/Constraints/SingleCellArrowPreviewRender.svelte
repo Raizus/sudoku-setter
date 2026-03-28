@@ -14,11 +14,11 @@
 </script>
 
 {#if mode === 'remove' && c_id}
-	<g class="single-cell-arrow-tool-remove-preview" opacity={0.5}>
+	<g class="single-cell-arrow-constraint-remove-preview" opacity={0.5}>
 		<RemoveConstraintCrossPreview cx={center.x} cy={center.y} {c_id} />
 	</g>
 {:else}
-	<g class="single-cell-arrow-tool-preview" opacity={0.5}>
+	<g class="single-cell-arrow-constraint-preview" opacity={0.5}>
 		<SingleCellArrowRenderAux {tool} />
 	</g>
 {/if}

@@ -8,18 +8,18 @@
 	} from '../Puzzle/Tools';
 	import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 	import CenterCornerOrEdgeToolRender from './Constraints/CenterCornerOrEdgeToolGroupRender.svelte';
-	import CornerToolRender from './Constraints/CornerToolGroupRender.svelte';
-	import EdgeToolRender from './Constraints/EdgeToolGroupRender.svelte';
-	import CornerLineToolRender from './Constraints/CornerLineToolRender.svelte';
+	import CornerConstraintGroupRender from './Constraints/CornerConstraintGroupRender.svelte';
+	import EdgeConstraintGroupRender from './Constraints/EdgeConstraintGroupRender.svelte';
+	import CornerLineConstraintGroupRender from './Constraints/CornerLineConstraintGroupRender.svelte';
 
 	export let overlay_elements: ConstraintsElement[];
 	export let enable_fog_mask: boolean;
 
 	const toolRenderers = [
 		{ check: isCenterEdgeCornerTool, component: CenterCornerOrEdgeToolRender },
-		{ check: isCornerTool, component: CornerToolRender },
-		{ check: isEdgeTool, component: EdgeToolRender },
-		{ check: isCornerLineTool, component: CornerLineToolRender }
+		{ check: isCornerTool, component: CornerConstraintGroupRender },
+		{ check: isEdgeTool, component: EdgeConstraintGroupRender },
+		{ check: isCornerLineTool, component: CornerLineConstraintGroupRender }
 	];
 
 	function getToolRenderer(toolId: TOOLID) {

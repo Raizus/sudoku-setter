@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
-	import CenterCornerOrEdgeToolRenderAux from './CenterCornerOrEdgeToolRenderAux.svelte';
+	import CenterCornerOrEdgeConstraintRenderAux from './CenterCornerOrEdgeConstraintRenderAux.svelte';
 	import { getCurrentConstraintStore, getOutlineFilterUrl } from './utils';
 
 	export let tool: CenterCornerOrEdgeToolI;
@@ -15,7 +15,7 @@
 </script>
 
 {#if c_id !== undefined}
-	<g class="center-corner-or-edge-tool" data-id={`${c_id}`} filter={filter_url}>
-		<CenterCornerOrEdgeToolRenderAux {tool} />
+	<g class="center-corner-or-edge-constraint" id={`c-${c_id}`} data-id={`${c_id}`} filter={filter_url}>
+		<CenterCornerOrEdgeConstraintRenderAux {tool} />
 	</g>
 {/if}

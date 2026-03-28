@@ -7,7 +7,7 @@
 </script>
 
 {#if c_id !== undefined}
-	<g class="single-cell-tool" data-id={`${c_id}`}>
+	<g class="single-cell-tool" id={`c-${c_id}`} data-id={`${c_id}`}>
 		<SimpleSingleCellToolRenderAux {tool} {c_id} />
 	</g>
 {/if}

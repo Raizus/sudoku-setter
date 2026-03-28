@@ -16,7 +16,7 @@
 	$: opacity = shape?.opacity ?? 1;
 </script>
 
-<g class="corner-line-tool" {opacity}>
+<g class="corner-line-constraint" {opacity}>
 	{#if type === SHAPE_TYPES.MAZE_WALL}
 		<MazeWallRender {linePoints} {shape} />
 	{:else}

@@ -2,7 +2,7 @@
 	import type { CornerToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import { Vector2D } from '$src/lib/utils/Vector2D';
 	import type { ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
-	import CornerToolRenderAux from './CornerToolRenderAux.svelte';
+	import CornerConstraintRenderAux from './CornerConstraintRenderAux.svelte';
 	import RemoveConstraintCrossPreview from './RemoveConstraintCrossPreview.svelte';
 
 	export let tool_preview: ToolPreview<CornerToolI>;
@@ -16,11 +16,11 @@
 </script>
 
 {#if mode === 'remove' && c_id}
-	<g class="corner-tool-remove-preview" opacity={0.5}>
+	<g class="corner-constraint-remove-preview" opacity={0.5}>
 		<RemoveConstraintCrossPreview cx={center.x} cy={center.y} {c_id} />
 	</g>
 {:else}
-	<g class="corner-tool-preview" opacity={0.5}>
-		<CornerToolRenderAux {tool} />
+	<g class="corner-constraint-preview" opacity={0.5}>
+		<CornerConstraintRenderAux {tool} />
 	</g>
 {/if}

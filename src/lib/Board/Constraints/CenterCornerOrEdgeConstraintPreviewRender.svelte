@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { CenterCornerOrEdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
 	import type { ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
-	import CenterCornerOrEdgeToolRenderAux from './CenterCornerOrEdgeToolRenderAux.svelte';
+	import CenterCornerOrEdgeConstraintRenderAux from './CenterCornerOrEdgeConstraintRenderAux.svelte';
 	import RemoveConstraintCrossPreview from './RemoveConstraintCrossPreview.svelte';
 
 	export let tool_preview: ToolPreview<CenterCornerOrEdgeToolI>;
@@ -14,18 +14,12 @@
 </script>
 
 {#if mode === 'remove' && c_id}
-	<g class="center-corner-or-edge-tool-remove-preview" opacity={0.5}>
+	<g class="center-corner-or-edge-constraint-remove-preview" opacity={0.5}>
 		<RemoveConstraintCrossPreview cx={center.c} cy={center.r} {c_id} />
 	</g>
 {:else}
-	<g class="center-corner-or-edge-tool-preview" opacity={0.5}>
-		<CenterCornerOrEdgeToolRenderAux {tool} />
+	<g class="center-corner-or-edge-constraint-preview" opacity={0.5}>
+		<CenterCornerOrEdgeConstraintRenderAux {tool} />
 	</g>
 {/if}
 
-<style>
-	.center-corner-or-edge-tool-remove-preview {
-		fill: none;
-		stroke: rgb(255, 0, 0);
-	}
-</style>

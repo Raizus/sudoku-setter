@@ -19,6 +19,6 @@
 	$: filter_url = getOutlineFilterUrl(outline, is_selected);
 </script>
 
-<g class="cage-tool" filter={filter_url}>
+<g class="cage-constraint" filter={filter_url}>
 	<ValuedCageRender cells={tool.cells} {shape} value={tool.value} />
 </g>

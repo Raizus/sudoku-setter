@@ -19,7 +19,7 @@
 		<SingleCellMultiArrowRenderAux {tool} />
 	</g>
 {:else}
-	<g class="single-cell-multi-arrow-tool-preview" opacity={0.5}>
+	<g class="single-cell-multi-arrow-constraint-preview" opacity={0.5}>
 		<SingleCellMultiArrowRenderAux {tool} />
 	</g>
 {/if}

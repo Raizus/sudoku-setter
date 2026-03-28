@@ -16,11 +16,11 @@
 </script>
 
 {#if mode === 'remove' && c_id}
-	<g class="outside-direction-tool-remove-preview" opacity={0.5}>
+	<g class="outside-direction-constraint-remove-preview" opacity={0.5}>
 		<RemoveConstraintCrossPreview cx={center.x} cy={center.y} {c_id} />
 	</g>
 {:else}
-	<g class="outside-direction-tool-preview" opacity={0.5}>
+	<g class="outside-direction-constraint-preview" opacity={0.5}>
 		<OutsideDirectionToolRenderAux {tool} />
 	</g>
 {/if}

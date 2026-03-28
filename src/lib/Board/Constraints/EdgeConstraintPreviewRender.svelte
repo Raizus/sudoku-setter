@@ -3,7 +3,7 @@
 	import { cellsToVector2DPoints } from '$src/lib/utils/SquareCellGridRenderUtils';
 	import { vectorAverage } from '$src/lib/utils/Vector2D';
 	import type { ToolPreview } from '$src/lib/Puzzle/puzzle_schema';
-	import EdgeToolRenderAux from './EdgeToolRenderAux.svelte';
+	import EdgeConstraintRenderAux from './EdgeConstraintRenderAux.svelte';
 	import RemoveConstraintCrossPreview from './RemoveConstraintCrossPreview.svelte';
 
 	export let tool_preview: ToolPreview<EdgeToolI>;
@@ -17,18 +17,11 @@
 </script>
 
 {#if mode === 'remove' && c_id}
-	<g class="edge-tool-remove-preview" opacity={0.5}>
+	<g class="edge-constraint-remove-preview" opacity={0.5}>
 		<RemoveConstraintCrossPreview cx={center.x} cy={center.y} {c_id} />
 	</g>
 {:else}
-	<g class="edge-tool-preview" opacity={0.5}>
-		<EdgeToolRenderAux {tool} />
+	<g class="edge-constraint-preview" opacity={0.5}>
+		<EdgeConstraintRenderAux {tool} />
 	</g>
 {/if}
-
-<style>
-	.edge-tool-remove-preview {
-		fill: none;
-		stroke: rgb(255, 0, 0);
-	}
-</style>

@@ -10,10 +10,10 @@
 		TOOLS,
 		type TOOLID
 	} from '../Puzzle/Tools';
-	import CenterCornerOrEdgeToolPreviewRender from './Constraints/CenterCornerOrEdgeToolPreviewRender.svelte';
-	import CornerToolPreviewRender from './Constraints/CornerToolPreviewRender.svelte';
-	import EdgeToolPreviewRender from './Constraints/EdgeToolPreviewRender.svelte';
-	import OutsideDirectionToolPreviewRender from './Constraints/OutsideDirectionToolPreviewRender.svelte';
+	import CenterCornerOrEdgeConstraintPreviewRender from './Constraints/CenterCornerOrEdgeConstraintPreviewRender.svelte';
+	import CornerConstraintPreviewRender from './Constraints/CornerConstraintPreviewRender.svelte';
+	import EdgeConstraintPreviewRender from './Constraints/EdgeConstraintPreviewRender.svelte';
+	import OutsideDirectionToolPreviewRender from './Constraints/OutsideDirectionConstraintPreviewRender.svelte';
 	import SimpleSingleCellToolPreviewRender from './Constraints/SimpleSingleCellToolPreviewRender.svelte';
 	import SingleCellArrowPreviewRender from './Constraints/SingleCellArrowPreviewRender.svelte';
 	import SingleCellMultiArrowRender from './Constraints/SingleCellMultiArrowToolGroupRender.svelte';
@@ -44,11 +44,11 @@
 	<SingleCellMultiArrowRender tool={$singleCellMultiArrowPreviewStore} />
 {/if}
 {#if isEdgeTool(tool) && $edgeToolPreviewStore}
-	<EdgeToolPreviewRender tool_preview={$edgeToolPreviewStore} />
+	<EdgeConstraintPreviewRender tool_preview={$edgeToolPreviewStore} />
 {/if}
 {#if isCornerTool(tool) && $cornerToolPreviewStore}
-	<CornerToolPreviewRender tool_preview={$cornerToolPreviewStore} />
+	<CornerConstraintPreviewRender tool_preview={$cornerToolPreviewStore} />
 {/if}
 {#if isCenterEdgeCornerTool(tool) && $centerCornerOrEdgeToolPreviewStore}
-	<CenterCornerOrEdgeToolPreviewRender tool_preview={$centerCornerOrEdgeToolPreviewStore} />
+	<CenterCornerOrEdgeConstraintPreviewRender tool_preview={$centerCornerOrEdgeToolPreviewStore} />
 {/if}

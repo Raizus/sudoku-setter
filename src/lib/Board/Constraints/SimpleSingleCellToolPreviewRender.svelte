@@ -13,16 +13,16 @@
 	$: center = { x: tool.cell.c + 0.5, y: tool.cell.r + 0.5 };
 </script>
 
-<g class="single-cell-tool-preview" opacity={0.5}>
+<g class="single-cell-constraint-preview" opacity={0.5}>
 	<SimpleSingleCellToolRenderAux {tool} />
 </g>
 
 <!-- {#if mode === 'remove' && c_id}
-	<g class="single-cell-tool-remove-preview" opacity={0.5}>
+	<g class="single-cell-constraint-remove-preview" opacity={0.5}>
 		<RemoveConstraintCrossPreview cx={center.x} cy={center.y} {c_id} />
 	</g>
 {:else}
-	<g class="single-cell-tool-preview" opacity={0.5}>
+	<g class="single-cell-constraint-preview" opacity={0.5}>
 		<SimpleSingleCellToolRenderAux {tool} />
 	</g>
 {/if} -->

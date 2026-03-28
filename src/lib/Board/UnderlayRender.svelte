@@ -8,24 +8,24 @@
 		isSingleCellTool,
 		type TOOLID
 	} from '../Puzzle/Tools';
-	import SingleCellToolRender from './Constraints/SingleCellToolRender.svelte';
-	import LineToolRender from './Constraints/LineToolGroupRender.svelte';
-	import ArrowToolRender from './Constraints/ArrowToolGroupRender.svelte';
-	import CageToolRender from './Constraints/CageToolGroupRender.svelte';
-	import CloneToolRender from './Constraints/CloneToolGroupRender.svelte';
-	import OutsideDirectionToolRender from './Constraints/OutsideDirectionToolRender.svelte';
+	import SingleCellConstraintRender from './Constraints/SingleCellConstraintRender.svelte';
+	import LineConstraintGroupRender from './Constraints/LineConstraintGroupRender.svelte';
+	import ArrowConstraintGroupRender from './Constraints/ArrowConstraintGroupRender.svelte';
+	import CageConstraintGroupRender from './Constraints/CageConstraintGroupRender.svelte';
+	import CloneConstraintGroupRender from './Constraints/CloneConstraintGroupRender.svelte';
+	import OutsideDirectionConstraintGroupRender from './Constraints/OutsideDirectionConstraintGroupRender.svelte';
 	import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 
 	export let underlay_elements: ConstraintsElement[];
 	export let enable_fog_mask: boolean;
 
 	const toolRenderers = [
-		{ check: isSingleCellTool, component: SingleCellToolRender },
-		{ check: isLineTool, component: LineToolRender },
-		{ check: isArrowTool, component: ArrowToolRender },
-		{ check: isCageTool, component: CageToolRender },
-		{ check: isCloneTool, component: CloneToolRender },
-		{ check: isOutsideDirectionTool, component: OutsideDirectionToolRender }
+		{ check: isSingleCellTool, component: SingleCellConstraintRender },
+		{ check: isLineTool, component: LineConstraintGroupRender },
+		{ check: isArrowTool, component: ArrowConstraintGroupRender },
+		{ check: isCageTool, component: CageConstraintGroupRender },
+		{ check: isCloneTool, component: CloneConstraintGroupRender },
+		{ check: isOutsideDirectionTool, component: OutsideDirectionConstraintGroupRender }
 	];
 
 	function getToolRenderer(toolId: TOOLID) {

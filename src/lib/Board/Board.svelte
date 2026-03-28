@@ -18,10 +18,10 @@
 	import ConflictsRender from './ConflictsRender.svelte';
 	import SolutionRender from './SolutionRender.svelte';
 	import ToolsLayerRender from './Constraints/ToolsLayerRender.svelte';
-	import CornerToolRender from './Constraints/CornerToolGroupRender.svelte';
+	import CornerConstraintGroupRender from './Constraints/CornerConstraintGroupRender.svelte';
 	import CenterCornerOrEdgeToolRender from './Constraints/CenterCornerOrEdgeToolGroupRender.svelte';
-	import CornerLineToolRender from './Constraints/CornerLineToolRender.svelte';
-	import EdgeToolRender from './Constraints/EdgeToolGroupRender.svelte';
+	import CornerLineConstraintGroupRender from './Constraints/CornerLineConstraintGroupRender.svelte';
+	import EdgeToolRender from './Constraints/EdgeConstraintGroupRender.svelte';
 	import FogLightsRender from './Constraints/FogLightsRender.svelte';
 	import UnderlayRender from './UnderlayRender.svelte';
 	import DiagonalElementsRender from './Constraints/DiagonalElementsRender.svelte';
@@ -102,7 +102,7 @@
 	<ToolsLayerRender
 		elements={$cornerLineToolsStore}
 		g_name={'corner-line-tools-layer'}
-		Component={CornerLineToolRender}
+		Component={CornerLineConstraintGroupRender}
 	/>
 
 	<SelectionRender {gridShape} tool={$toolStore} />
@@ -119,7 +119,7 @@
 	<ToolsLayerRender
 		elements={$cornerToolsStore}
 		g_name={'corner-tools-layer'}
-		Component={CornerToolRender}
+		Component={CornerConstraintGroupRender}
 	/>
 
 	<!-- CenterCornerOrEdgeToolsRender -->
