@@ -6,13 +6,13 @@ const CDN = 'https://cdn.jsdelivr.net/npm/minizinc/dist';
 let initialized = false;
 
 export async function initMiniZinc() {
-    if (initialized) return;
+	if (initialized) return;
 
-    const origin = window.location.origin;
-    const baseUrl = base === '' ? origin : `${origin}/${base}`;    
-    // const baseUrl = CDN;
+	const origin = window.location.origin;
+	const baseUrl = base === '' ? origin : `${origin}/${base}`;
+	// const baseUrl = CDN;
 
-    try {
+	try {
 		await MiniZinc.init({
 			workerURL: `${baseUrl}/minizinc-worker.js`,
 			wasmURL: `${baseUrl}/minizinc.wasm`,
