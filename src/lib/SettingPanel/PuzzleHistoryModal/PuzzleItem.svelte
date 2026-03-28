@@ -53,12 +53,11 @@
 				selected = item_id;
 				const item = $historyStore[selected];
 				selected_puzzle = compressedStrToPuzzle(item.encodedStr);
-			} else if(item_id > 0) {
+			} else if (item_id > 0) {
 				selected = item_id - 1;
 				const item = $historyStore[selected];
 				selected_puzzle = compressedStrToPuzzle(item.encodedStr);
-			}
-			else {
+			} else {
 				selected = undefined;
 				selected_puzzle = undefined;
 			}
@@ -78,11 +77,13 @@
 		<div class="header">
 			<div class="title">{title} by {authors}</div>
 			<button
-				class="destroy-button icon"
+				class="panel-button icon"
 				class:confirm={confirm_selected === item_id}
 				on:click|stopPropagation|capture|preventDefault={destroyCb}
 			>
-				<Trash />
+				<div class="icon-wrapper">
+					<Trash />
+				</div>
 				{#if confirm_selected === item_id}
 					<span> Confirm </span>
 				{/if}
@@ -109,23 +110,20 @@
 		align-items: center;
 	}
 
-	.destroy-button {
+	.icon-wrapper {
+		width: 1-2rem;
+		height: 1.2rem;
 		display: flex;
-		min-width: 1.5rem;
-		height: 1.5rem;
-		padding: 0.2rem;
-		border: 0;
-		border-radius: 0.2em;
-		background-color: var(--button-background-color);
-		transition: background 0.4s ease;
+	}
+
+	.panel-button {
+		margin-top: 0;
+		margin-bottom: 0;
+		transition: all 0.5s ease;
 
 		&.confirm {
-			background-color: #e6194b;
-		}
-
-		& span {
 			width: auto;
-			padding-right: 0.5rem;
+			background-color: #e6194b;
 		}
 	}
 
