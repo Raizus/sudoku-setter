@@ -11,7 +11,7 @@
 
 	const currentConstraintStore = getCurrentConstraintStore();
 	const defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultCageShape;
-	const outline = true;
+	const outline = false;
 
 	$: currentConstraintId = $currentConstraintStore?.id;
 	$: shape = tool.shape ?? defaultShape;
