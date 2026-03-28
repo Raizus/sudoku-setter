@@ -112,12 +112,11 @@
 		// reset grid values before building the models, only given values will be used
 		stateStore.resetPuzzle();
 		puzzle = stateStore.getPuzzle();
+		const puzzle_model = createMinizincModel(puzzle);
 
 		// Initialize MiniZinc
 		const model = new MiniZinc.Model();
-
 		// Define a simple MiniZinc model
-		const puzzle_model = createMinizincModel(puzzle);
 		model.addFile('test.mzn', puzzle_model.model_str);
 
 		timer.reset();
