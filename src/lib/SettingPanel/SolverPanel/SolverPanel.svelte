@@ -79,10 +79,30 @@
 		console.log(warning.message);
 	}
 
+	function onExit(e: MiniZinc.ExitMessage) {
+		// solver finished with no problems
+		if (e.code === 0) return;
+
+		// solver exited with an error
+		if (e.code !== null) {
+			status = 'EXIT WITH CODE ' + e.code;
+			console.log('Solver exited:', e);
+		}
+
+		is_solving = false;
+		timer.stop();
+		stopSolver();
+	}
+
 	function onSolverCompletion(result: MiniZinc.SolveResult) {
 		status = result.status;
 		timer.stop();
 		is_solving = false;
+	}
+
+	function onSolverRejection(e: MiniZinc.ExitMessage) {
+		if (e?.type === 'exit' && e?.code === null) return;
+		console.error('Solver promise rejected unexpectedly:', e);
 	}
 
 	async function solvePuzzle() {
@@ -118,9 +138,10 @@
 			setBoardOnSolution(json, puzzle_model);
 		});
 
+		solver.on('exit', onExit);
 		solver.on('error', onSolverError);
 		solver.on('warning', onSolverWarning);
-		solver.then(onSolverCompletion);
+		solver.then(onSolverCompletion, onSolverRejection);
 	}
 
 	async function findAllCandidates() {
@@ -155,23 +176,22 @@
 			updateCandidatesOnSolution(json, puzzle_model);
 		});
 
+		solver.on('exit', onExit);
 		solver.on('error', onSolverError);
 		solver.on('warning', onSolverWarning);
-		solver.then(onSolverCompletion);
+		solver.then(onSolverCompletion, onSolverRejection);
 	}
 
 	function stopSolverCb() {
-		if (is_solving) stopSolver();
+		stopSolver();
 	}
 
 	function solveCb() {
 		if (!isSolverRunning(solver)) solvePuzzle();
-		else if (isSolverRunning(solver)) stopSolver();
 	}
 
 	function findAllCandidatesCb() {
 		if (!isSolverRunning(solver)) findAllCandidates();
-		else if (isSolverRunning(solver)) stopSolver();
 	}
 </script>
 
