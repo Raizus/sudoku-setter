@@ -5,28 +5,15 @@
 	import BoardContainer from '$src/lib/Board/BoardContainer.svelte';
 	import EntryPanel from '$src/lib/EntryPanel/EntryPanel.svelte';
 	import { onMount } from 'svelte';
-	import * as MiniZinc from 'minizinc';
-	import { base } from '$app/paths';
 	import { isPortraitStore } from '$stores/OrientationStore';
 	import { stateStore } from '$stores/StateStore';
+	import { initMiniZinc } from '$src/lib/Solver/minizinc_init';
 
 	const gameModeStore = stateStore.gameModeStore;
 	$: game_mode = $gameModeStore;
 
 	onMount(async () => {
-		const origin = window.location.origin;
-		const baseUrl = base === '' ? origin : `${origin}/${base}`;
-
-		try {
-			await MiniZinc.init({
-				workerURL: `${baseUrl}/minizinc-worker.js`,
-				wasmURL: `${baseUrl}/minizinc.wasm`,
-				dataURL: `${baseUrl}/minizinc.data`
-			});
-		} catch (e) {
-			const error = 'Failed to initialize MiniZinc: ' + e.message;
-			console.log(error);
-		}
+		initMiniZinc();
 	});
 
 	$: isPortrait = $isPortraitStore;
