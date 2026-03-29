@@ -560,6 +560,8 @@ predicate connected_region(array[int,int] of var int: grid, var int: x) =
         array[1..num_edges] of var bool: es
       
     } in (
+        % set up es (edges var array). Jf two adjacent cells have the same region value,
+        % then the corresponding edge is true, otherwise it's false
         graph_edges_connected_region_p(grid, es, x) /\\
         % Apply connected constraint
         connected(from, to, ns, es)
