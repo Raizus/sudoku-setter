@@ -5335,6 +5335,8 @@ predicate connect_four_yellow_p(
 % -------------------------------------------------------------------------------- % 
 % ------ NORINORI CONSTRAINTS ---------------------------------------------------- %
 
+% Shade two cells in each region such that all shaded cells are part of dominoes 
+% and no two dominoes touch each other orthogonally (but may touch diagonally).
 predicate norinori_p(
     array[int, int] of var int: regions,
     array[int, int] of var 0..1: shading
@@ -5368,6 +5370,8 @@ predicate norinori_star_battle_not_on_shaded_p(
 % -------------------------------------------------------------------------------- % 
 % ------ SHIKAKU CONSTRAINTS ----------------------------------------------------- %
 
+% Divide the grid into rectangular regions of orthogonally connected cells, 
+% so that every cell is in a region and regions do not overlap.
 predicate shikaku_p(
     array[int, int] of var int: shikaku_grid,
     array[int, int] of var int: shikaku_width,
