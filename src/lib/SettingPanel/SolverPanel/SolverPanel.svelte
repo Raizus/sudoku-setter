@@ -8,6 +8,7 @@
 	import { setBoardOnSolution, updateCandidatesOnSolution } from './solution_render_helpers';
 	import { createStopwatchStore } from '$stores/timer';
 	import { stateStore } from '$stores/StateStore';
+	import type { PuzzleModel } from '$src/lib/Solver/solver_utils';
 
 	let isOpen = true;
 
@@ -17,13 +18,25 @@
 	let solver: null | MiniZinc.SolveProgress = null;
 	let is_solving = false;
 
+	// for the next solution feature
+	let solutionQueue: MiniZinc.SolutionMessage[] = [];
+	let pendingResolve: (() => void) | null = null;
+
 	let max_sols = 100;
 	let max_sols_str = '100';
 	let sol_count: number | null = null;
 	let status: string = 'IDLE';
 
+	let puzzle_model: PuzzleModel | null = null;
+
 	const timer = createStopwatchStore();
 	$: ellapsed = $timer;
+
+	function setPuzzleModel() {
+		stateStore.resetPuzzle();
+		puzzle = stateStore.getPuzzle();
+		puzzle_model = createMinizincModel(puzzle);
+	}
 
 	function getSolText(sol_count: number | null): string {
 		if (sol_count === null) return '';
@@ -40,6 +53,11 @@
 
 		// Return the formatted string
 		return `${minutes}:${formatted_seconds}.${millis}`;
+	}
+
+	function clearQueue() {
+		solutionQueue = [];
+		pendingResolve = null;
 	}
 
 	function minizincFileCb() {
@@ -64,6 +82,7 @@
 		is_solving = false;
 		timer.stop();
 		solver.cancel();
+		pendingResolve = null;
 	}
 
 	function onSolverError(error: MiniZinc.ErrorMessage) {
@@ -98,6 +117,7 @@
 		status = result.status;
 		timer.stop();
 		is_solving = false;
+		pendingResolve = null;
 	}
 
 	function onSolverRejection(e: MiniZinc.ExitMessage) {
@@ -105,7 +125,15 @@
 		console.error('Solver promise rejected unexpectedly:', e);
 	}
 
+	function setSolverCallbacks(solver: MiniZinc.SolveProgress) {
+		solver.on('exit', onExit);
+		solver.on('error', onSolverError);
+		solver.on('warning', onSolverWarning);
+		solver.then(onSolverCompletion, onSolverRejection);
+	}
+
 	async function solvePuzzle() {
+		clearQueue();
 		sol_count = 0;
 		status = 'SOLVING...';
 
@@ -137,13 +165,11 @@
 			setBoardOnSolution(json, puzzle_model);
 		});
 
-		solver.on('exit', onExit);
-		solver.on('error', onSolverError);
-		solver.on('warning', onSolverWarning);
-		solver.then(onSolverCompletion, onSolverRejection);
+		setSolverCallbacks(solver);
 	}
 
 	async function findAllCandidates() {
+		clearQueue();
 		sol_count = 0;
 		status = 'SOLVING...';
 
@@ -175,10 +201,71 @@
 			updateCandidatesOnSolution(json, puzzle_model);
 		});
 
-		solver.on('exit', onExit);
-		solver.on('error', onSolverError);
-		solver.on('warning', onSolverWarning);
-		solver.then(onSolverCompletion, onSolverRejection);
+		setSolverCallbacks(solver);
+	}
+
+	function initNextSolutionSolver() {
+		setPuzzleModel();
+		if (puzzle_model === null) return;
+
+		clearQueue();
+		sol_count = 0;
+		status = 'SOLVING...';
+
+		// Initialize MiniZinc
+		const model = new MiniZinc.Model();
+		// Define a simple MiniZinc model
+		model.addFile('test.mzn', puzzle_model.model_str);
+
+		timer.reset();
+		timer.start();
+		is_solving = true;
+
+		solver = model.solve({
+			options: {
+				solver: 'chuffed',
+				'num-solutions': max_sols
+			}
+		});
+
+		solver.on('solution', (solution) => {
+			if (solution.type !== 'solution') return;
+			if (!puzzle_model) return;
+			if (sol_count !== null) sol_count += 1;
+
+			if (pendingResolve) {
+				// "Next" was already clicked and is waiting — deliver immediately
+				setBoardOnSolution(solution.output.json, puzzle_model);
+				pendingResolve();
+				pendingResolve = null;
+				return;
+			}
+
+			// No one is waiting yet — queue it
+			solutionQueue.push(solution);
+		});
+
+		setSolverCallbacks(solver);
+	}
+
+	async function nextSolution() {
+		if (!is_solving && solutionQueue.length === 0) {
+			initNextSolutionSolver();
+		}
+
+		if (!puzzle_model) return;
+
+		if (solutionQueue.length > 0) {
+			// Solution already arrived, consume it immediately
+			const solution = solutionQueue.shift()!;
+			setBoardOnSolution(solution.output.json, puzzle_model);
+			return;
+		}
+
+		// No solution yet, wait for the next one
+		await new Promise<void>((resolve) => {
+			pendingResolve = resolve;
+		});
 	}
 
 	function stopSolverCb() {
@@ -203,6 +290,7 @@
 		<button class="panel-button" disabled={is_solving} on:click={findAllCandidatesCb}>
 			Find all candidates
 		</button>
+		<button class="panel-button" on:click={nextSolution}> Next Solution </button>
 		<button class="panel-button" disabled={!is_solving} on:click={stopSolverCb}> Stop </button>
 		<span class="text-field">{`Max. Solutions: ${max_sols}`}</span>
 		<div class="input-container">
