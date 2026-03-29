@@ -1,6 +1,5 @@
 import {
 	SHAPE_TYPES,
-	type EditablePathOptions,
 	type EditableShapeI
 } from '$lib/Puzzle/Shape/Shape';
 import { TOOLS } from '$lib/Puzzle/Tools';
@@ -12,6 +11,7 @@ import {
 	DEFAULT_LINE_OPTIONS_INTERSECT,
 	DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 	DEFAULT_META_1,
+	defaultEditableLineOptions,
 	getLineVars,
 	REGION_SUM_LINE_SHAPE,
 	shadedLineElement,
@@ -67,17 +67,6 @@ function defaultThermoEditableShape() {
 		}
 	};
 	return shape;
-}
-
-function defaultEditableLineOptions() {
-	const linePathOptions: EditablePathOptions = {
-		shortenHead: { editable: false, value: 0.15 },
-		shortenTail: { editable: false, value: 0.15 },
-		bezierRounding: { editable: false, value: 0.15 },
-		closeLoops: { editable: false, value: true }
-	};
-
-	return linePathOptions;
 }
 
 export const thermometerInfo: SquareCellElementInfo = {

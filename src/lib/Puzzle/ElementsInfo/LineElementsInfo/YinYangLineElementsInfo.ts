@@ -12,6 +12,7 @@ import { SHAPE_TYPES } from '../../Shape/Shape';
 import { TOOLS, type TOOLID } from '../../Tools';
 import { lineUsage } from '../../ToolUsage';
 import {
+	DEFAULT_GRAY_LINE,
 	DEFAULT_LINE_OPTIONS_INTERSECT,
 	DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 	REGION_SUM_LINE_SHAPE,
@@ -219,11 +220,10 @@ export const yinYangCalifornianMountainSnakeInfo: SquareCellElementInfo = {
 
 function yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(
 	puzzle: PuzzleAuxI,
+	element: ConstraintsElement,
 	toolId: TOOLID
 ): string {
 	const grid = puzzle.grid;
-	const local_constraints = puzzle.elementsDict;
-	const element = local_constraints.get(TOOLS.YIN_YANG_REGION_SUM_LINE);
 	if (!element || !element.constraints) return '';
 
 	let out_str: string = `\n% ${toolId}\n`;
@@ -254,6 +254,7 @@ function yinYangRegionSumLineElement(model: PuzzleModel, element: ConstraintsEle
 	if (lines_must_cross_colors) {
 		out_str += yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(
 			model.puzzle,
+			element,
 			TOOLS.YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE
 		);
 	}
@@ -325,4 +326,33 @@ export const yinYangIndexingLineColoringInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: yinYangIndexingLineColoringElement
+};
+
+function yinYangParityLineElement(model: PuzzleModel, element: ConstraintsElement) {
+	const out_str = shadedLineElement(
+		model,
+		element,
+		VAR_2D_NAMES.YIN_YANG,
+		'yin_yang_parity_line_p'
+	);
+
+	return out_str;
+}
+
+export const yinYangParityLineInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
+
+	toolId: TOOLS.YIN_YANG_PARITY_LINE,
+
+	shape: DEFAULT_GRAY_LINE,
+
+	meta: {
+		description:
+			'Along each gray line, all odd digits are one color and all even digits are another color.',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	},
+
+	solver_func: yinYangParityLineElement
 };

@@ -218,7 +218,8 @@ import {
 	yinYangCalifornianMountainSnakeInfo,
 	yinYangUnshadedModularLineInfo,
 	yinYangUnshadedEntropicLineInfo,
-	yinYangShadedWhispersLineInfo
+	yinYangShadedWhispersLineInfo,
+	yinYangParityLineInfo
 } from './LineElementsInfo/YinYangLineElementsInfo';
 import {
 	littleKillerLookAndSayInfo,
@@ -650,6 +651,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 
 	// Yin Yang Lines
 	[TOOLS.YIN_YANG_INDEXING_LINE_COLORING]: yinYangIndexingLineColoringInfo,
+	[TOOLS.YIN_YANG_PARITY_LINE]: yinYangParityLineInfo,
 	[TOOLS.YIN_YANG_SHADED_WHISPERS_LINE]: yinYangShadedWhispersLineInfo,
 	[TOOLS.YIN_YANG_UNSHADED_ENTROPIC_LINE]: yinYangUnshadedEntropicLineInfo,
 	[TOOLS.YIN_YANG_UNSHADED_MODULAR_LINE]: yinYangUnshadedModularLineInfo,

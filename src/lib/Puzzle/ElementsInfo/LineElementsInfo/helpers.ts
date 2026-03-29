@@ -10,7 +10,7 @@ import {
 import type { ParseOptions } from '$src/lib/Solver/value_parsing';
 import type { Grid } from '../../Grid/Grid';
 import type { ConstraintsElement, LineToolI } from '../../puzzle_schema';
-import { type EditableShapeI, SHAPE_TYPES } from '../../Shape/Shape';
+import { type EditablePathOptions, type EditableShapeI, SHAPE_TYPES } from '../../Shape/Shape';
 import { TOOL_CATEGORIES, TOOLS } from '../../Tools';
 import { lineUsage } from '../../ToolUsage';
 
@@ -46,16 +46,29 @@ export const DEFAULT_LINE_OPTIONS_NO_INTERSECT: LineToolInputOptions = {
 	allowSelfIntersection: false
 };
 
-export const REGION_SUM_LINE_SHAPE: EditableShapeI = {
-	type: SHAPE_TYPES.LINE,
-	strokeWidth: { editable: true, value: 0.15 },
-	stroke: { editable: true, value: 'var(--constraint-color-light-blue)' },
-	linePathOptions: {
+export function defaultEditableLineOptions() {
+	const linePathOptions: EditablePathOptions = {
 		shortenHead: { editable: false, value: 0.15 },
 		shortenTail: { editable: false, value: 0.15 },
 		bezierRounding: { editable: false, value: 0.15 },
 		closeLoops: { editable: false, value: true }
-	}
+	};
+
+	return linePathOptions;
+}
+
+export const REGION_SUM_LINE_SHAPE: EditableShapeI = {
+	type: SHAPE_TYPES.LINE,
+	strokeWidth: { editable: true, value: 0.15 },
+	stroke: { editable: true, value: 'var(--constraint-color-light-blue)' },
+	linePathOptions: defaultEditableLineOptions(),
+};
+
+export const DEFAULT_GRAY_LINE: EditableShapeI = {
+	type: SHAPE_TYPES.LINE,
+	strokeWidth: { editable: true, value: 0.15 },
+	stroke: { editable: true, value: 'var(--constraint-color-gray)' },
+	linePathOptions: defaultEditableLineOptions(),
 };
 
 function getParsingResult(model: PuzzleModel, value: string, c_id: string) {

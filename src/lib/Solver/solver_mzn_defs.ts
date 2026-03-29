@@ -2214,6 +2214,24 @@ predicate yin_yang_region_sum_line_p(
     unknown_regions_region_sum_line_p(arr, labels)
 );
 
+predicate yin_yang_parity_line_p(
+    array[int] of var int: arr,
+    array[int] of var 0..1: labels
+) = let {
+    set of int: idxs = index_set(labels);
+    array[int] of var 0..1: parity = [x mod 2 | x in arr];
+} in (
+    assert(
+        index_set(arr) = index_set(labels),
+        "Arrays must have same index set"
+    )
+    % For each label, all elements with that label must have the same parity
+    % all 0's are odd and all 1's are even or vice versa.
+    /\\ forall(i in idxs, j in idxs where i != j) (
+        parity[i] = parity[j] <-> labels[i] = labels[j]
+    )
+);
+
 function var int: yin_yang_sum_of_opposite_color_f(
     var int: yin_yang_var, 
     array[int] of var int: arr, 

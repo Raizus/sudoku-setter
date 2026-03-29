@@ -393,6 +393,7 @@ export enum LINE_CONSTRAINTS {
 	// yin yang lines
 	YIN_YANG_INDEXING_LINE_COLORING = 'Yin Yang Indexing Line Coloring',
 	YIN_YANG_REGION_SUM_LINE = 'Yin Yang Region Sum Line',
+	YIN_YANG_PARITY_LINE = 'Yin Yang Parity Line',
 	YIN_YANG_SHADED_WHISPERS_LINE = 'Yin Yang Shaded Whispers Line',
 	YIN_YANG_UNSHADED_ENTROPIC_LINE = 'Yin Yang Unshaded Entropic Line',
 	YIN_YANG_UNSHADED_MODULAR_LINE = 'Yin Yang Unshaded Modular Line',
