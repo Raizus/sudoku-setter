@@ -119,7 +119,7 @@ export class ElementsDict extends Map<number, ConstraintsElement> {
 		return element_id;
 	}
 
-	*orderedEntries(): Generator<[number, ConstraintsElement], void, unknown> { 
+	*orderedEntries(): Generator<[number, ConstraintsElement], void, unknown> {
 		for (const element_id of this.order) {
 			const element = this.get(element_id);
 			if (element) {
@@ -184,23 +184,27 @@ export class ElementsDict extends Map<number, ConstraintsElement> {
 	}
 
 	setElement(element_id: number, element: ConstraintsElement) {
-		this.set(element_id, element);
-		this.order.push(element_id);
+		if (this.has(element_id)) {
+			this.set(element_id, element);
+		} else {
+			this.set(element_id, element);
+			this.order.push(element_id);
+		}
 	}
 
-	moveElementUp(element_id: number) { 
+	moveElementUp(element_id: number) {
 		const idx = this.order.indexOf(element_id);
 		if (idx <= 0) return;
 		[this.order[idx - 1], this.order[idx]] = [this.order[idx], this.order[idx - 1]];
 	}
 
-	moveElementDown(element_id: number) { 
+	moveElementDown(element_id: number) {
 		const idx = this.order.indexOf(element_id);
 		if (idx === -1 || idx >= this.order.length - 1) return;
 		[this.order[idx + 1], this.order[idx]] = [this.order[idx], this.order[idx + 1]];
 	}
 
-	enableDisableElement(element_id: number, value: boolean) { 
+	enableDisableElement(element_id: number, value: boolean) {
 		const element = this.get(element_id);
 		if (!element) return;
 		element.disabled = value;
