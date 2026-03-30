@@ -415,7 +415,9 @@ function countSeenCellsInTheSameRegionConstraint(grid: Grid, constraint: CellMul
 		vars_list.push(vars);
 	}
 
-	const aux = vars_list.map((vars) => `count_uninterrupted(${vars}, ${region_var})`).join(' + ');
+	const aux = vars_list
+		.map((vars) => `count_first_run_uninterrupted(${vars}, ${region_var})`)
+		.join(' + ');
 	const constraint_str = `constraint ${aux} + 1 == ${cell_var};\n`;
 	return constraint_str;
 }

@@ -1,6 +1,9 @@
 % -------------------------------------------------------------------------------- % 
 % ------ POLIOMINOES ------------------------------------------------------------- % 
 
+% Defining poliominoes as as array of tuple coordinates, 
+% for all possible rotations and reflections, with the top-left cell as (0, 0).
+
 array[int] of array[int] of tuple(int, int): P3_I = [
     [(0, 0), (0, 1), (0, 2)],
     [(0, 0), (1, 0), (2, 0)],
@@ -149,6 +152,7 @@ array[int] of array[int] of tuple(int, int): P5_Y = [
 % -------------------------------------------------------------------------------- % 
 % ------ TESTS ------------------------------------------------------------------- % 
 
+% (r1, c1) and (r2, c2) are orthogonally adjacent if they share a side (not diagonal).
 predicate orth_adjacent_2d(
     var int: r1, var int: c1, 
     var int: r2, var int: c2
@@ -157,6 +161,7 @@ predicate orth_adjacent_2d(
     var int: d2 = abs(c2-c1);
 } in d1 <= 1 /\ d2 <= 1 /\ d1 + d2 = 1;
 
+% (r1, c1) and (r2, c2) are diagonally adjacent if they touch at a corner but do not share a side.
 predicate diag_adjacent_2d(
     var int: r1, var int: c1, 
     var int: r2, var int: c2
@@ -185,9 +190,12 @@ test is_after(int: r1, int: c1, int: r2, int: c2) =
 % -------------------------------------------------------------------------------- % 
 % ------ HELPERS ----------------------------------------------------------------- % 
 
+% Returns the coordinates of the 4 orthogonally adjacent cells to (r, c).
 function array[1..4] of tuple(int, int): orth_adjacent_idxs(int: r, int: c) =
     [(r-1,c),(r+1,c),(r,c-1),(r,c+1)];
 
+% Returns the coordinates of the orthogonally adjacent cells to (r, c) that 
+% are within the bounds of the grid.
 function array[int] of tuple(int, int): orth_adjacent_idxs_in_bounds(
     int: r,
     int: c,
@@ -197,12 +205,15 @@ function array[int] of tuple(int, int): orth_adjacent_idxs_in_bounds(
 } in
     [idx | idx in idxs where in_bounds_2d(idx.1, idx.2, grid)];
 
+% Returns the coordinates of the 8 orthogonally or diagonally adjacent cells to (r, c).
 function array[1..8] of tuple(int, int): orth_or_diag_adjacent_idxs(int: r, int: c) =
     [(r-1,c-1),(r-1,c),(r-1,c+1),(r,c-1),(r,c+1),(r+1,c-1),(r+1,c),(r+1,c+1)];
-    
+
+% Returns the number of odd values in the array.    
 function var int: odd_count(array[int] of var int: arr) =
     sum(i in index_set(arr))(bool2int(arr[i] mod 2 = 1));
 
+% Returns the number of even values in the array.
 function var int: even_count(array[int] of var int: arr) =
     sum(i in index_set(arr))(bool2int(arr[i] mod 2 = 0));
 
@@ -211,7 +222,9 @@ function var bool: are_all_even(array[int] of var int: arr) =
 	
 function var bool: are_all_odd(array[int] of var int: arr) =
     forall(i in index_set(arr))(arr[i] mod 2 = 1);
-	
+
+% Returns the number of unique values in the array. 
+% Note: this is not very efficient, but it is generic and works with var int arrays.
 function var int: count_unique_values(array[int] of var int: arr) =
     if length(index_set(arr)) = 0 then 0
     else
@@ -224,6 +237,8 @@ function var int: count_unique_values(array[int] of var int: arr) =
         sum(i in index_set(arr))(bool2int(is_unique[i]))
     endif;
 
+% Returns an array of booleans where each element is true if the corresponding element in arr is 
+% "sandwiched" between a and b in the array (in either order).
 function array[int] of var bool: sandwich_bools_f(array[int] of var int: arr, var int: a, var int: b) =
     [exists(j in index_set(arr) where j < i)(
          exists(k in index_set(arr) where k > i)(
@@ -243,7 +258,9 @@ predicate count_uninterrupted_counts_p(array[int] of var $$T: arr, array[int] of
         endif
     );
 
-function var int: count_uninterrupted(
+% Returns the length of the run of uninterrupted values equal to x from the starting at the beginning of the array.
+% For example, if arr = [1, 1, 2, 1] and x = 1, then the result is 2, since the first two elements are 1 but the run is interrupted by the 2. On the other and if arr = [1, 1, 2, 1] and x = 3, then the result is 0, because there's no run of 2 starting at the beginning of the array.
+function var int: count_first_run_uninterrupted(
     array[int] of var int: arr, 
     var int: x
 ) = (
@@ -265,7 +282,7 @@ function var int: count_seen_orth_directions_f(
 	array[int] of var int: arr4,
     var int: val
 ) = 
-  count_uninterrupted(arr1, val) + count_uninterrupted(arr2, val) + count_uninterrupted(arr3, val) + count_uninterrupted(arr4, val);
+  count_first_run_uninterrupted(arr1, val) + count_first_run_uninterrupted(arr2, val) + count_first_run_uninterrupted(arr3, val) + count_first_run_uninterrupted(arr4, val);
     
 function var int: count_different(array[int] of var int: arr, var int: x) =
     let {
@@ -3384,7 +3401,7 @@ function var int: cave_clue_f(
 	array[int] of var 0..1: shading4,
     var 0..1: cell_shading
 ) = (
-    count_uninterrupted(shading1, cell_shading) + count_uninterrupted(shading2, cell_shading) + count_uninterrupted(shading3, cell_shading) + count_uninterrupted(shading4, cell_shading)
+    count_first_run_uninterrupted(shading1, cell_shading) + count_first_run_uninterrupted(shading2, cell_shading) + count_first_run_uninterrupted(shading3, cell_shading) + count_first_run_uninterrupted(shading4, cell_shading)
 );
 
 predicate cave_clue_p(
