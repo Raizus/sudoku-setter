@@ -15,7 +15,7 @@ import {
 	DEFAULT_GRAY_LINE,
 	DEFAULT_LINE_OPTIONS_INTERSECT,
 	DEFAULT_LINE_OPTIONS_NO_INTERSECT,
-	REGION_SUM_LINE_SHAPE,
+	DEFAULT_LIGHT_BLUE_LINE_SHAPE,
 	shadedLineElement,
 	simpleLineDefaultCategories
 } from './helpers';
@@ -274,7 +274,7 @@ export const yinYangRegionSumLineInfo: SquareCellElementInfo = {
 		}
 	],
 
-	shape: REGION_SUM_LINE_SHAPE,
+	shape: DEFAULT_LIGHT_BLUE_LINE_SHAPE,
 
 	meta: {
 		description:

@@ -203,7 +203,9 @@ import {
 	adjacentCellsAreMultiplesOfDifferenceLineInfo,
 	indexerCellsRegionSubsetLineInfo,
 	peapodsLineInfo,
-	nurikabeRegionSumLineInfo
+	nurikabeRegionSumLineInfo,
+	notConsecutiveLineInfo,
+	regionSumArithmeticSequenceLineInfo
 } from './LineElementsInfo/LineElementsInfo';
 import {
 	doubleArrowLineInfo,
@@ -612,6 +614,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.RENBAN_OR_WHISPERS_LINE]: renbanOrWhispersLineInfo,
 	[TOOLS.RENBAN_OR_NABNER_LINE]: renbanOrNabnerLineInfo,
 	[TOOLS.OUT_OF_ORDER_CONSECUTIVE_LINE]: outOfOrderConsecutiveLineInfo,
+	[TOOLS.NOT_CONSECUTIVE_LINE]: notConsecutiveLineInfo,
 
 	[TOOLS.INDEX_LINE]: indexLineInfo,
 	[TOOLS.UNIQUE_VALUES_LINE]: uniqueValuesLineInfo,
@@ -632,6 +635,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.ADJACENT_DIFFERENCES_COUNT_LINE]: adjacentDifferencesCountLineInfo,
 	[TOOLS.LOOK_AND_SAY_LINE]: lookandSayLineInfo,
 	[TOOLS.ARITHMETIC_SEQUENCE_LINE]: arithmeticSequenceLineInfo,
+	[TOOLS.REGION_SUM_ARITHMETIC_SEQUENCE_LINE]: regionSumArithmeticSequenceLineInfo,
 	[TOOLS.ZIPPER_LINE]: zipperLineInfo,
 	[TOOLS.SEGMENTED_SUM_LINE]: segmentedSumLineInfo,
 	[TOOLS.SEGMENTED_SUM_AND_RENBAN_LINE]: segmentedSumAndRenbanLineInfo,

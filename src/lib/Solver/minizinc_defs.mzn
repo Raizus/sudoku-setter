@@ -1264,6 +1264,12 @@ predicate out_of_order_consecutive_line_p(
         ];
     } in renban(arr) /\ not all_equal(differences);
 
+predicate non_consecutive_line_p(
+    array[int] of var int: arr
+) = forall(i in index_set(arr) where i < max(index_set(arr))) (
+    not consecutive_p(arr[i], arr[i + 1])
+);
+
 predicate zipper_line_p(array[int] of var int: arr) =
     let {
         int: n = length(arr);

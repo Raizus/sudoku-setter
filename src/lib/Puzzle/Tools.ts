@@ -350,11 +350,13 @@ export enum LINE_CONSTRAINTS {
 	RENBAN_OR_WHISPERS_LINE = 'Renban Or Whispers Line',
 	RENBAN_OR_NABNER_LINE = 'Renban Or Nabner Line',
 	OUT_OF_ORDER_CONSECUTIVE_LINE = 'Out Of Order Consecutive Line',
+	NOT_CONSECUTIVE_LINE = 'Not Consecutive Line',
 
 	INDEX_LINE = 'Index Line',
 	UNIQUE_VALUES_LINE = 'Unique Values Line',
 	REGION_SUM_LINE = 'Region Sum Line',
 	ARITHMETIC_SEQUENCE_LINE = 'Arithmetic Sequence Line',
+	REGION_SUM_ARITHMETIC_SEQUENCE_LINE = 'Region Sum Arithmetic Sequence Line',
 	SUM_LINE = 'Sum Line',
 	XV_LINE = 'XV Line',
 	ROW_SUM_LINE = 'Row Sum Line',

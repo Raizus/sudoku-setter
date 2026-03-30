@@ -1,7 +1,4 @@
-import {
-	SHAPE_TYPES,
-	type EditableShapeI
-} from '$lib/Puzzle/Shape/Shape';
+import { SHAPE_TYPES, type EditableShapeI } from '$lib/Puzzle/Shape/Shape';
 import { TOOLS } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '$lib/Puzzle/ElementInfo';
 import { lineUsage } from '../../ToolUsage';
@@ -13,7 +10,7 @@ import {
 	DEFAULT_META_1,
 	defaultEditableLineOptions,
 	getLineVars,
-	REGION_SUM_LINE_SHAPE,
+	DEFAULT_LIGHT_BLUE_LINE_SHAPE,
 	shadedLineElement,
 	simpleLineDefaultCategories,
 	simpleLineElement,
@@ -586,6 +583,23 @@ export const outOfOrderConsecutiveLineInfo: SquareCellElementInfo = {
 	}
 };
 
+export const notConsecutiveLineInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
+	toolId: TOOLS.NOT_CONSECUTIVE_LINE,
+	shape: DEFAULT_LIGHT_BLUE_LINE_SHAPE,
+
+	meta: {
+		description: 'Adjacent digits on a light blue line must not be consecutive.',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'non_consecutive_line_p');
+	}
+};
+
 export const indexLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
@@ -668,7 +682,7 @@ export const regionSumLineInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.REGION_SUM_LINE,
 
-	shape: REGION_SUM_LINE_SHAPE,
+	shape: DEFAULT_LIGHT_BLUE_LINE_SHAPE,
 
 	meta: {
 		description:
@@ -733,6 +747,49 @@ export const arithmeticSequenceLineInfo: SquareCellElementInfo = {
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
 		return simpleLineElement(model, element, 'arithmetic_sequence_line_p');
+	}
+};
+
+function regionSumArithmeticSequenceLineConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: LineToolI
+) {
+	let out_str = '';
+	const cells = cellsFromCoords(grid, constraint.cells);
+
+	const cell_regions = splitLineByRegion(cells);
+	const n = cell_regions.length;
+	if (n === 0) return '';
+
+	const sum_var = `segment_sum_${c_id}`;
+	out_str += `array[0..${n - 1}] of var int: ${sum_var};\n`;
+	for (let i = 0; i < n; i++) {
+		const cell_region = cell_regions[i];
+		const vars_str = cellsToGridVarsStr(cell_region, VAR_2D_NAMES.BOARD);
+		const constraint_str = `constraint sum(${vars_str}) == ${sum_var}[${i}];\n`;
+		out_str += constraint_str;
+	}
+	out_str += `constraint arithmetic_sequence_line_p(${sum_var});\n`;
+	return out_str;
+}
+
+export const regionSumArithmeticSequenceLineInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
+	toolId: TOOLS.REGION_SUM_ARITHMETIC_SEQUENCE_LINE,
+	shape: DEFAULT_LIGHT_BLUE_LINE_SHAPE,
+
+	meta: {
+		description:
+			"The 3x3 box borders divide the blue line into segments. Each segment's total is found by summing the digits on that segment. The segment totals must increase by the same amount, from one end of the line to another.",
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, regionSumArithmeticSequenceLineConstraint);
 	}
 };
 
@@ -1668,7 +1725,7 @@ export const goldilocksZoneRegionSumLineInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.GOLDILOCKS_ZONE_REGION_SUM,
 
-	shape: REGION_SUM_LINE_SHAPE,
+	shape: DEFAULT_LIGHT_BLUE_LINE_SHAPE,
 
 	meta: {
 		description:
@@ -1688,7 +1745,7 @@ export const nurikabeRegionSumLineInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.NURIKABE_REGION_SUM_LINE,
 
-	shape: REGION_SUM_LINE_SHAPE,
+	shape: DEFAULT_LIGHT_BLUE_LINE_SHAPE,
 
 	meta: {
 		description:

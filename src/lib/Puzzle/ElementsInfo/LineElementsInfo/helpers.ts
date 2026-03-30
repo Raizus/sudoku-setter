@@ -57,7 +57,7 @@ export function defaultEditableLineOptions() {
 	return linePathOptions;
 }
 
-export const REGION_SUM_LINE_SHAPE: EditableShapeI = {
+export const DEFAULT_LIGHT_BLUE_LINE_SHAPE: EditableShapeI = {
 	type: SHAPE_TYPES.LINE,
 	strokeWidth: { editable: true, value: 0.15 },
 	stroke: { editable: true, value: 'var(--constraint-color-light-blue)' },
