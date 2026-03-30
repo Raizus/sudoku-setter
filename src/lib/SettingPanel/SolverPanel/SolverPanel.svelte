@@ -145,7 +145,7 @@
 		// Initialize MiniZinc
 		const model = new MiniZinc.Model();
 		// Define a simple MiniZinc model
-		model.addFile('test.mzn', puzzle_model.model_str);
+		model.addFile('puzzle.mzn', puzzle_model.model_str);
 
 		timer.reset();
 		timer.start();
@@ -182,7 +182,7 @@
 
 		// Define a simple MiniZinc model
 		const puzzle_model = createMinizincModel(puzzle);
-		model.addFile('test.mzn', puzzle_model.model_str);
+		model.addFile('puzzle.mzn', puzzle_model.model_str);
 
 		timer.reset();
 		timer.start();
@@ -215,7 +215,7 @@
 		// Initialize MiniZinc
 		const model = new MiniZinc.Model();
 		// Define a simple MiniZinc model
-		model.addFile('test.mzn', puzzle_model.model_str);
+		model.addFile('puzzle.mzn', puzzle_model.model_str);
 
 		timer.reset();
 		timer.start();
