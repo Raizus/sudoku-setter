@@ -2483,6 +2483,42 @@ predicate yin_yang_californian_mountaint_snake_p(
     )
 );
 
+predicate yin_yang_shaded_different_mod_n_p(
+    array[int] of var int: arr,
+    array[int] of var 0..1: labels,
+    int: n
+) = let {
+    set of int: idxs = index_set(labels);
+    array[int] of var 0..(n-1): mod_res = [x mod n | x in arr];
+} in (
+    assert(
+        index_set(arr) = index_set(labels),
+        "Arrays must have same index set"
+    )
+    % shaded -> label = 1
+    % if two vars have label = 1 -> vars have different mod
+    /\ forall(i in idxs, j in idxs where j > i) (
+        (labels[i] = 1 /\ labels[j] = 1) -> mod_res[i] != mod_res[j]
+    )
+);
+
+predicate yin_yang_2x2_shaded_different_mod_3_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: shading
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    assert(index_sets_agree(grid, shading), "grid and shading must have the same indexes") /\
+    % for every 2x2 box shaded cells must have different mod 3
+    forall(r in rows where r < max(rows), c in cols where c < max(cols))(
+        let {
+            array[1..4] of var int: cells = [grid[r,c], grid[r,c+1], grid[r+1,c], grid[r+1,c+1]];
+            array[1..4] of var int: cell_shading = [shading[r,c], shading[r,c+1], shading[r+1,c], shading[r+1,c+1]];
+        } in yin_yang_shaded_different_mod_n_p(cells, cell_shading, 3)
+    )
+);
+
 % -------------------------------------------------------------------------------- % 
 % ------ TWO CONTIGUOUS REGIONS CONSTRAINTS -------------------------------------- %
 

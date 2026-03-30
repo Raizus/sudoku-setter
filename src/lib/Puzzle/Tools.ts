@@ -129,7 +129,8 @@ export enum GLOBAL_YIN_YANG_CONSTRAINTS {
 	YIN_YANG_NEIGHBOUR_GREATER_THAN_ONE_WITHIN_REGION_SHADED = 'Yin Yang Neighbour Greater Than One Within Region Shaded',
 	YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS = 'Yin Yang Shaded Cells Are German Whispers',
 	YIN_YANG_IDENTICAL_DIGITS_DIAGONALLY_BELONG_TO_THE_SAME_REGION = 'Ying Yang Identical Digits Diagonally Belong To Same The Region',
-	YIN_YANG_CHAOS_CONSTRUCTION_FULLY_SHADED_OR_FULLY_UNSHADED = 'Yin Yang Chaos Construction Fully Shaded Or Fully Unshaded'
+	YIN_YANG_CHAOS_CONSTRUCTION_FULLY_SHADED_OR_FULLY_UNSHADED = 'Yin Yang Chaos Construction Fully Shaded Or Fully Unshaded',
+	YIN_YANG_2X2_SHADED_DIFFERENT_MOD_3 = 'Yin Yang 2x2 Shaded Different Mod 3',
 }
 
 export enum GLOBAL_DIRECTED_PATH_CONSTRAINTS {

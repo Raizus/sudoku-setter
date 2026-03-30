@@ -100,6 +100,12 @@ export function yinYangElement(model: PuzzleModel, element: ConstraintsElement) 
 		);
 	}
 
+	const two_by_two_shaded_different_mod_3 =
+		!!element.negative_constraints[TOOLS.YIN_YANG_2X2_SHADED_DIFFERENT_MOD_3];
+	if (two_by_two_shaded_different_mod_3) {
+		out_str += `constraint yin_yang_2x2_shaded_different_mod_3_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.YIN_YANG});\n`;
+	}
+
 	return out_str;
 }
 
@@ -121,6 +127,11 @@ export const yinYangInfo: SquareCellElementInfo = {
 			toolId: TOOLS.YIN_YANG_IDENTICAL_DIGITS_DIAGONALLY_BELONG_TO_THE_SAME_REGION,
 			description:
 				'Identical digits which see each other by a bishops move (diagonally) must be the same color.'
+		},
+		{
+			toolId: TOOLS.YIN_YANG_2X2_SHADED_DIFFERENT_MOD_3,
+			description:
+				'For every 2x2 area in the puzzle, no two shaded cells can be from the same modulo 3 set. In other words, in any given 2x2 area, there can only be one shaded cell with a digit from [147], one from [258], and one from [369].'
 		}
 	],
 
