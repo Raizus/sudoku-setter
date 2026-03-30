@@ -32,7 +32,9 @@ export enum SIMPLE_GLOBAL_CONSTRAINTS {
 	CONSECUTIVE_CLOSE_NEIGHBORS = 'Consecutive Close Neighbors',
 
 	ALL_ODD_DIGITS_ARE_ORTHOGONALLY_CONNECTED = 'All Odd Digits Are Orthogonally Connected',
-	NOT_ALL_ODD_IN_A_2X2_SQUARE = 'Not All Odd In A 2x2 Square'
+	NOT_ALL_ODD_IN_A_2X2_SQUARE = 'Not All Odd In A 2x2 Square',
+
+	RANKED_2X2_BOX_NUMBERS = 'Ranked 2x2 Box Numbers',
 }
 
 export enum DIAGONAL_CONSTRAINTS {
@@ -323,7 +325,8 @@ export enum CORNER_CONSTRAINTS {
 	CHAOS_CONSTRUCTION_CORNER_CELLS_BELONG_TO_SAME_REGION = 'Chaos Construction Corner Cells Belong To Same Region',
 	PRODUCT_SQUARE = 'Product Square',
 	EQUAL_DIAGONAL_DIFFERENCES = 'Equal Diagonal Differences',
-	DIFFERENT_CORNER_DIAGONAL_SUMS = 'Different Corner Diagonal Sums'
+	DIFFERENT_CORNER_DIAGONAL_SUMS = 'Different Corner Diagonal Sums',
+	BOX_2X2_NUMBER_RANKING = 'Box 2x2 Number Ranking'
 }
 
 export enum LINE_CONSTRAINTS {

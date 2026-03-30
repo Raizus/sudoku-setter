@@ -171,12 +171,11 @@ export const antikingInfo: SquareCellElementInfo = {
 	solver_func: antikingElement
 };
 
-function disjointGroupsElement(model: PuzzleModel, element: ConstraintsElement): string {
+function disjointGroupsElement(model: PuzzleModel): string {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
-	const tool = element.tool_id;
 
-	let out_str: string = `\n% ${tool}\n`;
+	let out_str: string = '';
 	const num_regions = [...grid.getUsedRegions()].length;
 	for (let group_idx = 0; group_idx < num_regions; group_idx++) {
 		const disjoint_group = grid.getDisjointGroup(group_idx);
@@ -474,4 +473,23 @@ export const yinYangChaosConstructionFullyShadedOrFullyUnshadedInfo: SquareCellE
 	},
 
 	solver_func: yinYangChaosConstructionFullyShadedOrFullyUnshadedElement
+};
+
+function ranked2x2BoxNumbersElement(): string {
+	let out_str = `array[int,int] of var int: box_2x2_numbers = box_2x2_numbers_f(${VAR_2D_NAMES.BOARD});\n`;
+	out_str += `array[int,int] of var int: ${VAR_2D_NAMES.RANKED_2X2_NUMBERS_GRID} = rank_numbers_grid_f(box_2x2_numbers);\n`;
+	return out_str;
+}
+
+export const ranked2x2BoxNumbersInfo: SquareCellElementInfo = {
+	toolId: TOOLS.RANKED_2X2_BOX_NUMBERS,
+
+	meta: {
+		description:
+			'All the 2x2 areas of the grid, when read in normal reading order, make a total of 64 four-digit numbers. One or more equal numbers are considered to be at rank N when there are N-1 numbers of strictly lower rank. (Eg, if there are three equal numbers which have 19 numbers lower than them then these three numbers would be rank 20 and the next rank will be 23, i.e. the ranks could go ..., 19, 20, 20, 20, 23, ...)',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	},
+
+	solver_func: ranked2x2BoxNumbersElement
 };

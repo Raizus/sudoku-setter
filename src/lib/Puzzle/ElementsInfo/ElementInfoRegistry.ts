@@ -48,10 +48,11 @@ import {
 	cornerEvenCountInfo,
 	cornerSumInfo,
 	cornerSumOfThreeEqualsTheOtherInfo,
-	differentCornerDiagonalSumsInfo,
+	box2x2NumberRankingInfo,
 	equalDiagonalDifferencesInfo,
 	productSquareInfo,
-	quadrupleInfo
+	quadrupleInfo,
+	differentCornerDiagonalSumsInfo
 } from './CornerToolsElementsInfo';
 import {
 	cosmeticArrowInfo,
@@ -103,6 +104,7 @@ import {
 	nonconsecutiveInfo,
 	nonratioInfo,
 	notAllOddIn2x2SquareInfo,
+	ranked2x2BoxNumbersInfo,
 	sudokuRulesDoNotApplyInfo,
 	tangoInfo,
 	yinYangChaosConstructionFullyShadedOrFullyUnshadedInfo
@@ -389,6 +391,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.BOX_ROWS_AND_COLUMNS_FORM_MODULARITY_AND_ENTROPY_SETS]:
 		boxRowsAndColumnsFormModularityAndEntropySetInfo,
 	[TOOLS.CONSECUTIVE_CLOSE_NEIGHBORS]: consecutiveCloseNeighborsInfo,
+	[TOOLS.RANKED_2X2_BOX_NUMBERS]: ranked2x2BoxNumbersInfo,
 
 	[TOOLS.NEGATIVE_DIAGONAL]: negativeDiagonalInfo,
 	[TOOLS.POSITIVE_DIAGONAL]: positiveDiagonalInfo,
@@ -586,6 +589,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 		chaosConstructionCornerCellsBelongToExacltyThreeRegionsInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_CORNER_CELLS_BELONG_TO_SAME_REGION]:
 		chaosConstructionCornerCellsBelongToSameRegionsInfo,
+	[TOOLS.BOX_2X2_NUMBER_RANKING]: box2x2NumberRankingInfo,
 
 	// Line Constraints
 	[TOOLS.THERMOMETER]: thermometerInfo,

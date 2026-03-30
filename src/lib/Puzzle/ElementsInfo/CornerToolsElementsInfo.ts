@@ -18,7 +18,8 @@ import {
 } from '$src/lib/Solver/solver_utils';
 import type { ConstraintsElement, CornerToolI } from '../puzzle_schema';
 import type { Grid } from '../Grid/Grid';
-import { parseVarList } from '$src/lib/Solver/value_parsing';
+import { parseVarList, type ParseOptions } from '$src/lib/Solver/value_parsing';
+import { combinations } from '$src/lib/utils/functionUtils';
 
 const DEFAULT_UNTYPABLE_CORNER_CATEGORIES = [
 	TOOL_CATEGORIES.CORNER_CONSTRAINT,
@@ -93,6 +94,18 @@ function simpleCornerElement(grid: Grid, element: ConstraintsElement, predicate:
 		out_str += constraint_str;
 	}
 	return out_str;
+}
+
+export function getParsingResult(model: PuzzleModel, value: string, c_id: string) {
+	const parse_opts: ParseOptions = {
+		allow_var: true,
+		allow_interval: false,
+		allow_int_list: false,
+		allow_var_list: false
+	};
+	const default_name = `corner_var_${c_id}`;
+	const result = model.getOrSetSharedVar(value, default_name, parse_opts);
+	return result;
 }
 
 function valuedCornerConstraint(
@@ -493,4 +506,67 @@ export const differentCornerDiagonalSumsInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: differentCornerDiagonalSumsElement
+};
+
+function box2x2NumberRankingElement(model: PuzzleModel, element: ConstraintsElement) {
+	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
+	const values: Set<string> = new Set();
+	for (const [c_id, constraint] of Object.entries(constraints)) {
+		const cells = (constraint as CornerToolI).cells;
+		const first = cells[0];
+		const var_str = `${VAR_2D_NAMES.RANKED_2X2_NUMBERS_GRID}[${first.r},${first.c}]`;
+		const value = constraint.value || '';
+		const result = getParsingResult(model, value, c_id);
+		if (!result) continue;
+
+		values.add(result[1]);
+		const constraint_str = `constraint ${var_str} = ${result[1]};\n`;
+		out_str += result[0];
+		out_str += constraint_str;
+	}
+
+	// if values are equal -> cells around the corner are equal (redundant but might speed things up)
+	const grid = model.puzzle.grid;
+	for (const value of values) {
+		const target_constraints = Object.values(constraints).filter(
+			(constraint) => constraint.value === value
+		) as CornerToolI[];
+		
+		if (target_constraints.length <= 1) continue;
+		for (const [c1, c2] of combinations(target_constraints, 2)) {
+			const cells1 = cellsFromCoords(grid, c1.cells);
+			const cells2 = cellsFromCoords(grid, c2.cells);
+			const vars1 = cellsToGridVarsStr(cells1, VAR_2D_NAMES.BOARD);
+			const vars2 = cellsToGridVarsStr(cells2, VAR_2D_NAMES.BOARD);
+			out_str += `constraint pairwise_equal_p(${vars1},${vars2});\n`;
+		}
+	}
+
+	return out_str;
+}
+
+export const box2x2NumberRankingInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_CORNER_OPTIONS,
+	toolId: TOOLS.BOX_2X2_NUMBER_RANKING,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		r: { editable: false, value: 0.15 },
+		strokeWidth: { editable: false, value: 0.023 },
+		stroke: { editable: false, value: 'black' },
+		fill: { editable: false, value: 'var(--grid-background-color)' }
+	},
+
+	meta: {
+		description:
+			'Clues in the centre of a 2x2 area show its rank among those 64 numbers, where the lowest is 1 and the highest is 64.',
+		tags: [],
+		usage: cornerUsage(),
+		categories: DEFAULT_TYPABLE_CORNER_CATEGORIES
+	},
+
+	solver_func: box2x2NumberRankingElement
 };

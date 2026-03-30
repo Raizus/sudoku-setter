@@ -12,6 +12,7 @@ import { defineFunctionsPredicates } from './solver_mzn_defs';
 import { range } from 'lodash';
 import { elementInfoRegistry } from '../Puzzle/ElementsInfo/ElementInfoRegistry';
 import type { SquareCellElementInfo } from '../Puzzle/ElementInfo';
+import minizincDefs from './minizinc_defs.mzn?raw';
 
 function givenConstraints(puzzle: PuzzleAuxI) {
 	const grid = puzzle.grid;
@@ -64,7 +65,7 @@ export function createMinizincModel(puzzle: PuzzleAuxI, randomize_search: boolea
 
 	model.add('include "globals.mzn";\n');
 	model.add('include "alldifferent.mzn";\n\n');
-	model.add(defineFunctionsPredicates());
+	model.add(minizincDefs);
 
 	const max_val = Math.max(nrows, ncols);
 	let allowed_digits_str = `1..${max_val}`;

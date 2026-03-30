@@ -796,6 +796,17 @@ predicate subset_p(
     sum([1 | i in index_set(ms1) where ms1[i] == elem])
 );
 
+predicate pairwise_equal_p(
+    array[int] of var int: arr1,
+    array[int] of var int: arr2   
+) = (
+    % Ensure arrays have same size
+    assert(index_set(arr1) = index_set(arr2), "Arrays must have same index set")
+    /\ forall(i in index_set(arr1))(
+        arr1[i] = arr2[i]
+    )
+);
+
 % -------------------------------------------------------------------------------- % 
 % ------ SINGLE CELL CONSTRAINTS ------------------------------------------------- %
 
@@ -4095,6 +4106,45 @@ predicate yin_yang_chaos_construction_same_shading_p(
     assert(index_sets_agree(regions, shading), "regions and shading must have the same indexes.") /\
     forall(r1 in rows, c1 in cols, r2 in rows, c2 in cols where is_after(r1,c1,r2,c2)) (
         (regions[r1,c1] = regions[r2,c2] -> shading[r1,c1] = shading[r2,c2])
+    )
+);
+
+function array[int, int] of var int: box_2x2_numbers_f(
+    array[int, int] of var int: grid
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: rmin = min(rows);
+    int: cmin = min(cols);
+    int: rmax = max(rows);
+    int: cmax = max(cols);
+} in (
+    array2d(
+        rmin..rmax-1,
+        cmin..cmax-1,
+        [
+            grid[r, c    ] * 1000 +
+            grid[r, c + 1] *  100 +
+            grid[r + 1, c] *   10 +
+            grid[r + 1, c + 1]
+        | r in rmin..rmax-1, c in cmin..cmax-1]
+    )
+);
+
+function array[int, int] of var int: rank_numbers_grid_f(
+    array[int, int] of var int: numbers
+) = let {
+    set of int: rows = index_set_1of2(numbers);
+    set of int: cols = index_set_2of2(numbers);
+} in (
+    array2d(
+        rows,
+        cols,
+        [
+            1 + sum(r2 in rows, c2 in cols)(
+                bool2int(numbers[r2, c2] < numbers[r, c])
+            )
+        | r in rows, c in cols]
     )
 );
 

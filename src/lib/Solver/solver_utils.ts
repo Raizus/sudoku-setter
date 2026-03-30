@@ -51,7 +51,8 @@ export enum VAR_2D_NAMES {
 	SHADED_BOUNDARIES_VERTICAL = 'shaded_boundaries_vertical',
 	SHADED_BOUNDARIES_HORIZONTAL = 'shaded_boundaries_horizontal',
 	SHADED_ROW_COLUMN_BOX_COUNTERS = 'shaded_row_column_box_counters',
-	SHADED_ROW_COLUMN_BOX_COUNTERS_SHADED_GRID = 'shaded_row_column_box_counters_shaded_grid'
+	SHADED_ROW_COLUMN_BOX_COUNTERS_SHADED_GRID = 'shaded_row_column_box_counters_shaded_grid',
+	RANKED_2X2_NUMBERS_GRID = 'ranked_2x2_numbers_grid'
 }
 
 export function cellToGridVarName(cell: Cell, name: string): string {
@@ -102,9 +103,9 @@ export function allDifferentConstraint(vars: string[]): string {
 
 /**
  * Add a comment string above the block, with `% ${header}`, and return the result
- * @param block 
- * @param header 
- * @returns 
+ * @param block
+ * @param header
+ * @returns
  */
 export function addHeader(block: string, header: string) {
 	if (block) {
@@ -202,6 +203,7 @@ export class PuzzleModel implements ModelI {
 
 		const parsed_value = parseValue(value, parse_opts);
 		if (!parsed_value) return null;
+		
 		// parse number
 		if (parsed_value.type === 'number') {
 			const value = parsed_value.parsed;
