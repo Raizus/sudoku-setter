@@ -3,15 +3,16 @@
 	import { enableFogMaskStore } from '$stores/BoardStore';
 	import { settingsStore } from '$stores/SettingsStore';
 	import { stateStore } from '$stores/StateStore';
-	import type { Grid } from '../Puzzle/Grid/Grid';
-	import type { ElementsDict } from '../Puzzle/Constraints/ElementsDict';
+	import type { Cell } from '../Puzzle/Grid/Cell';
 
 	const gridStore = stateStore.gridStore;
+	const cellsStore = stateStore.cellsStore;
 	const elementsDictStore = stateStore.elementsDictStore;
 
 	$: showConflicts = $settingsStore.checkConflicts;
 	$: grid = $gridStore;
 	$: element_dict = $elementsDictStore;
+	$: all_cells = $cellsStore;
 
 	// const shape: ShapeI = {
 	// 	type: SHAPE_TYPES.CAGE,
@@ -21,7 +22,7 @@
 	// 	inset: 0
 	// };
 
-	function getConflicts(grid: Grid, element_dict: ElementsDict) {
+	function getConflicts(cells: Cell[]) {
 		const conflict_cells = findConflicts(grid, element_dict);
 		const coords = conflict_cells.map((cell) => cell.toCoords());
 		return coords;
@@ -33,7 +34,7 @@
 
 {#if showConflicts}
 	<g class="conflicts-layer" mask={enable_fog_mask ? 'url(#fog-mask-fog)' : null}>
-		{#each getConflicts(grid, element_dict) as coord}
+		{#each getConflicts(all_cells) as coord}
 			<rect class="conflict" x={coord.c} y={coord.r} width={1} height={1} fill={fill_color} />
 		{/each}
 	</g>
