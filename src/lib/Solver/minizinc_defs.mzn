@@ -2745,6 +2745,20 @@ predicate chaos_construction_regions_count(
     endif)
 );
 
+predicate chaos_construction_kreska_line_p(
+    array[int] of var int: cells,
+    array[int] of var int: regions,
+) = let {
+    set of int: idxs = index_set(cells);
+} in (
+    assert(index_sets_agree(cells, regions), "cells and regions must have the same indexes")
+    % Adjacent digits along a line must either be consecutive and belong to a different region or have a 1:2 ratio and belong to the same region. (Digits have a 1:2 ratio if one is double the other.) If 1 and 2 are adjacent along a line, they can satisfy either condition.
+    /\ forall(i in idxs where i < max(idxs))(
+        (ratio_p(cells[i], cells[i+1], 2) /\ regions[i] = regions[i+1]) \/
+        (consecutive_p(cells[i], cells[i+1]) /\ regions[i] != regions[i+1])
+    )
+);
+
 predicate shaded_row_col_box_counters_p(
     array[int, int] of var int: board,
     array[int, int] of var int: regions,

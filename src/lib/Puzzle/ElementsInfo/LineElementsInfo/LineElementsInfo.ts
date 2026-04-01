@@ -14,7 +14,8 @@ import {
 	shadedLineElement,
 	simpleLineDefaultCategories,
 	simpleLineElement,
-	valuedLineElement
+	valuedLineElement,
+	DEFAULT_GRAY_LINE
 } from './helpers';
 import type { ConstraintsElement, LineToolI } from '../../puzzle_schema';
 import {
@@ -1761,6 +1762,30 @@ export const nurikabeRegionSumLineInfo: SquareCellElementInfo = {
 			element,
 			VAR_2D_NAMES.NURIKABE_SHADING,
 			'nurikabe_region_sum_line_p'
+		);
+	}
+};
+
+export const chaosConstructionKreskaLineInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
+
+	toolId: TOOLS.CHAOS_CONSTRUCTION_KRESKA_LINE,
+	shape: DEFAULT_GRAY_LINE,
+
+	meta: {
+		description:
+			'Adjacent digits along a line must either be consecutive and belong to a different region or have a 1:2 ratio and belong to the same region. (Digits have a 1:2 ratio if one is double the other.) If 1 and 2 are adjacent along a line, they can satisfy either condition.',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return shadedLineElement(
+			model,
+			element,
+			VAR_2D_NAMES.UNKNOWN_REGIONS,
+			'chaos_construction_kreska_line_p'
 		);
 	}
 };

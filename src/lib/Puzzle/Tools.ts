@@ -176,6 +176,7 @@ export enum GLOBAL_CONNECT_FOUR_CONSTRAINTS {
 }
 
 export enum GLOBAL_LOOP_CONSTRAINTS {
+	CELL_CENTER_LOOP = 'Cell Center Loop',
 	CELL_CENTER_LOOP_NO_TOUCHING = 'Cell Center Loop No Touching',
 	CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY = 'Cell Center Loop Can Touch Diagonally',
 	NOT_LOOP_SIZED_REGIONS = 'Not Loop Sized Regions',
@@ -408,6 +409,7 @@ export enum LINE_CONSTRAINTS {
 	YIN_YANG_CALIFORNIAN_MOUNTAIN_SNAKE = 'Yin Yang Californian Mountain Snake',
 
 	NURIKABE_REGION_SUM_LINE = 'Nurikabe Region Sum Line',
+	CHAOS_CONSTRUCTION_KRESKA_LINE = 'Chaos Construction Kreska Line',
 
 	// goldilocks
 	GOLDILOCKS_ZONE_REGION_SUM = 'Goldilocks Zone Region Sum',

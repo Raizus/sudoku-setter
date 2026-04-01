@@ -205,7 +205,8 @@ import {
 	peapodsLineInfo,
 	nurikabeRegionSumLineInfo,
 	notConsecutiveLineInfo,
-	regionSumArithmeticSequenceLineInfo
+	regionSumArithmeticSequenceLineInfo,
+	chaosConstructionKreskaLineInfo
 } from './LineElementsInfo/LineElementsInfo';
 import {
 	doubleArrowLineInfo,
@@ -668,6 +669,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 
 	[TOOLS.GOLDILOCKS_ZONE_REGION_SUM]: goldilocksZoneRegionSumLineInfo,
 
+	[TOOLS.CHAOS_CONSTRUCTION_KRESKA_LINE]: chaosConstructionKreskaLineInfo,
 	[TOOLS.NURIKABE_REGION_SUM_LINE]: nurikabeRegionSumLineInfo,
 
 	// Line with Circle ends Constraints
