@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, tick } from 'svelte';
+	import { onMount, setContext, tick } from 'svelte';
 
 	export let open = false;
 	export let buttonEl: HTMLButtonElement | undefined = undefined;
@@ -39,6 +39,8 @@
 	export function close() {
 		open = false;
 	}
+
+	setContext('closeDropdown', close);
 
 	// Handle clicks outside the dropdown to close it
 	function handleClickOutside(event: MouseEvent) {
