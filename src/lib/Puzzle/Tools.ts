@@ -116,7 +116,9 @@ export enum GLOBAL_SHIKAKU_CONSTRAINTS {
 
 export enum GLOBAL_NURIKABE_CONSTRAINTS {
 	NURIKABE = 'Nurikabe',
-	NURIKABE_NO_REPEATS_IN_ISLANDS = 'Nurikabe No Repeats In Islands'
+	NURIKABE_NO_REPEATS_IN_ISLANDS = 'Nurikabe No Repeats In Islands',
+	NURIKABE_ISLANDS_CANNOT_TOUCH_DIAGONALLY = 'Nurikabe Islands Cannot Touch Diagonally',
+	NURIKABE_2X2_CONTAINS_ISLAND_AND_WATER = 'Nurikabe 2x2 Contains Island And Water'
 }
 
 export enum GLOBAL_NURIMISAKI_CONSTRAINTS {

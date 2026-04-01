@@ -241,6 +241,18 @@ function nurikabeElement(model: PuzzleModel, element: ConstraintsElement) {
 		out_str += nurikabeNoRepeatsInIslandsConstraint(model, TOOLS.NURIKABE_NO_REPEATS_IN_ISLANDS);
 	}
 
+	const nurikabe_islands_cannot_touch_diagonally =
+		!!element.negative_constraints[TOOLS.NURIKABE_ISLANDS_CANNOT_TOUCH_DIAGONALLY];
+	if (nurikabe_islands_cannot_touch_diagonally) {
+		out_str += `constraint nurikabe_islands_cannot_touch_diagonally_p(nurikabe_regions);\n`;
+	}
+
+	const nurikabe_2x2_contains_island_and_water =
+		!!element.negative_constraints[TOOLS.NURIKABE_2X2_CONTAINS_ISLAND_AND_WATER];
+	if (nurikabe_2x2_contains_island_and_water) {
+		out_str += `constraint nurikabe_2x2_contains_water_and_island_p(nurikabe_shading);\n`;
+	}
+
 	return out_str;
 }
 
@@ -251,6 +263,14 @@ export const nurikabeInfo: SquareCellElementInfo = {
 		{
 			toolId: TOOLS.NURIKABE_NO_REPEATS_IN_ISLANDS,
 			description: 'Digits may not repeat within a nurikabe island.'
+		},
+		{
+			toolId: TOOLS.NURIKABE_ISLANDS_CANNOT_TOUCH_DIAGONALLY,
+			description: 'Nurikabe islands cannot touch diagonally.'
+		},
+		{
+			toolId: TOOLS.NURIKABE_2X2_CONTAINS_ISLAND_AND_WATER,
+			description: 'Each 2x2 region in the grid contains at least one cell of water and one cell of island.'
 		}
 	],
 

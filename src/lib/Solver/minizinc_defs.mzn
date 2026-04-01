@@ -5229,6 +5229,39 @@ predicate nurikabe_no_repeats_in_islands_p(
     )
 );
 
+predicate nurikabe_islands_cannot_touch_diagonally_p(
+    array[int, int] of var int: regions
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+} in (
+    % if one of the cells in the diagonal is != 0 (island cell), 
+    % then the other in the diagonal is 0 (is water) or equal to the other cell
+    forall(r in rows, c in cols)(
+        forall(r2 in rows, c2 in cols where diag_adjacent_2d(r,c,r2,c2))(
+            let {
+                var int: reg1 = regions[r,c];
+                var int: reg2 = regions[r2,c2];
+            } in (
+                (reg1 != 0 /\ reg2 != 0) -> reg1 = reg2
+            )
+        )
+    )
+);
+
+predicate nurikabe_2x2_contains_water_and_island_p(
+    array[int, int] of var 0..1: shading
+) = let {
+    set of int: rows = index_set_1of2(shading);
+    set of int: cols = index_set_2of2(shading);
+} in (
+    forall(r in rows where r < max(rows), c in cols where c < max(cols))(
+        let {
+            array[1..4] of var int: cell_shading = [shading[r,c], shading[r,c+1], shading[r+1,c], shading[r+1,c+1]];
+        } in not all_equal(cell_shading)
+    )
+);
+
 predicate nurikabe_island_product_of_sum_and_size_p(
     array[int, int] of var int: grid,
     array[int, int] of var int: regions,
