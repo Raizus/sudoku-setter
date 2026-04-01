@@ -3,13 +3,6 @@
 	import type { ConstraintsElement } from '$src/lib/Puzzle/puzzle_schema';
 	import { TOOLS, type TOOLID } from '$src/lib/Puzzle/Tools';
 	import { getUsageDescription } from '$src/lib/Puzzle/ToolUsage';
-	import {
-		enableDisableElementAction,
-		moveElementDownAction,
-		moveElementUpAction,
-		removeElementAction,
-		restoreElementAction
-	} from '$src/lib/reducers/ElementsActions';
 	import { stateStore } from '$stores/StateStore';
 
 	import CaretDown from '$icons/CaretDown.svelte';
@@ -44,25 +37,11 @@
 
 	function deleteElement() {
 		stateStore.updateToolOnRemoveGroup(tool_id);
-
-		if (element_id === null) return;
-
-		const constraints = $elementsDictStore.get(element_id);
-		if (!constraints) return;
-
-		const action = removeElementAction(element_id);
-		const reverse_action = restoreElementAction(element_id, constraints);
-		const command = stateStore.getUpdateElementCommand(action, reverse_action);
-		stateStore.commandHistoryStore.addCommand(command);
+		stateStore.removeElementCommand(element_id);
 	}
 
 	function enableDisableElement() {
-		if (element_id === null) return;
-
-		const action = enableDisableElementAction(element_id, !disabled);
-		const reverse_action = enableDisableElementAction(element_id, disabled);
-		const command = stateStore.getUpdateElementCommand(action, reverse_action);
-		stateStore.commandHistoryStore.addCommand(command);
+		stateStore.toggleDisableElementCommand(element_id);
 		if (!disabled) {
 			stateStore.updateToolAndCurrentConstraintStores(TOOLS.DIGIT, null);
 		}
@@ -87,19 +66,11 @@
 	}
 
 	function moveUp() {
-		if (element_id === null) return;
-		const action = moveElementUpAction(element_id);
-		const reverse_action = moveElementDownAction(element_id);
-		const command = stateStore.getUpdateElementCommand(action, reverse_action);
-		stateStore.commandHistoryStore.addCommand(command);
+		stateStore.moveElementUpCommand(element_id);
 	}
 
 	function moveDown() {
-		if (element_id === null) return;
-		const action = moveElementDownAction(element_id);
-		const reverse_action = moveElementUpAction(element_id);
-		const command = stateStore.getUpdateElementCommand(action, reverse_action);
-		stateStore.commandHistoryStore.addCommand(command);
+		stateStore.moveElementDownCommand(element_id);
 	}
 
 	$: selected = element_id === $selectedElementIdStore && tool_id === $current_tool_store;

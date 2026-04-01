@@ -34,7 +34,7 @@ import {
 } from '$src/lib/Puzzle/Tools';
 
 import type { ToolModeT } from '$input/ToolInputHandlers/types';
-import { ELEMENT_ACTIONS, type ElementAction } from '$src/lib/reducers/ElementsActions';
+import { ELEMENT_ACTIONS, enableDisableElementAction, moveElementDownAction, moveElementUpAction, removeElementAction, restoreElementAction, type ElementAction } from '$src/lib/reducers/ElementsActions';
 import {
 	reducerPenTool,
 	resetPenAction,
@@ -568,13 +568,16 @@ export class StateStore {
 		});
 	}
 
+	setNegativeConstraint(element_id: number, neg_tool_id: TOOLID, value: boolean) {
+		const element = this.getElementsDict().get(element_id);
+		if (!element) return;
+		if (!element.negative_constraints) element.negative_constraints = {};
+		element.negative_constraints[neg_tool_id] = value;
+	}
+
 	updateElementAction(action: ElementAction): void {
 		if (action.type === ELEMENT_ACTIONS.ADD_CONSTRAINT) {
-			this.addConstraint(
-				action.payload.element_id,
-				action.payload.id,
-				action.payload.constraint
-			);
+			this.addConstraint(action.payload.element_id, action.payload.id, action.payload.constraint);
 		} else if (action.type === ELEMENT_ACTIONS.REMOVE_CONSTRAINT) {
 			this.removeConstraint(action.payload.element_id, action.payload.c_id);
 		} else if (action.type === ELEMENT_ACTIONS.ADD_ELEMENT) {
@@ -605,6 +608,45 @@ export class StateStore {
 		);
 
 		return command;
+	}
+
+	removeElementCommand(element_id: number | null) {
+		if (element_id === null) return;
+		const element = this.getElementsDict().get(element_id);
+		if (!element) return;
+
+		const action = removeElementAction(element_id);
+		const reverse_action = restoreElementAction(element_id, element);
+		const command = this.getUpdateElementCommand(action, reverse_action);
+		this.commandHistoryStore.addCommand(command);
+	}
+
+	toggleDisableElementCommand(element_id: number | null) {
+		if (element_id === null) return;
+		const element = this.getElementsDict().get(element_id);
+		if (!element) return;
+
+		const disabled = element.disabled ?? false;
+		const action = enableDisableElementAction(element_id, !disabled);
+		const reverse_action = enableDisableElementAction(element_id, disabled);
+		const command = this.getUpdateElementCommand(action, reverse_action);
+		this.commandHistoryStore.addCommand(command);
+	}
+
+	moveElementUpCommand(element_id: number | null) {
+		if (element_id === null) return;
+		const action = moveElementUpAction(element_id);
+		const reverse_action = moveElementDownAction(element_id);
+		const command = this.getUpdateElementCommand(action, reverse_action);
+		this.commandHistoryStore.addCommand(command);
+	}
+
+	moveElementDownCommand(element_id: number | null) {
+		if (element_id === null) return;
+		const action = moveElementDownAction(element_id);
+		const reverse_action = moveElementUpAction(element_id);
+		const command = this.getUpdateElementCommand(action, reverse_action);
+		this.commandHistoryStore.addCommand(command);
 	}
 
 	updateCurrentConstraintShape(newShape: ShapeI | undefined) {
