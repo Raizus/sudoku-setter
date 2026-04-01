@@ -8,7 +8,7 @@
 	import CaretDown from '$icons/CaretDown.svelte';
 	import CaretUp from '$icons/CaretUp.svelte';
 	import ElementEditor from './ElementEditor.svelte';
-	import MoreButton from './MoreButton.svelte';
+	import ElementsMoreButton from './ElementsMoreButton.svelte';
 
 	export let tool_id: TOOLID;
 	export let order: number | null = null;
@@ -111,7 +111,7 @@
 				</span>
 			</div>
 			{#if !permanent}
-				<MoreButton
+				<ElementsMoreButton
 					display={!permanent}
 					deleteElementCb={deleteElement}
 					{disabled}
