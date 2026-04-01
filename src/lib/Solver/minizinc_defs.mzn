@@ -206,10 +206,10 @@ function array[int] of tuple(int, int): orth_adjacent_idxs_in_bounds(
     [idx | idx in idxs where in_bounds_2d(idx.1, idx.2, grid)];
 
 
-function array[int] of var int: get_adjacent_values(
+function array[int] of var $$E: get_adjacent_values(
     int: r,
     int: c,
-    array[int, int] of var int: grid
+    array[int, int] of var $$E: grid
 ) = let {
     array[int] of tuple(int, int): idxs = orth_adjacent_idxs_in_bounds(r,c,grid);
 } in
@@ -3687,33 +3687,33 @@ predicate cell_center_loop_no_diagonal_touching_p(array[int, int] of var 0..1: g
         )
     );
 
+predicate cell_center_loop_no_orthogonal_touching_p(
+    array[int, int] of var 0..1: grid
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    forall(i in rows, j in cols)(
+        let {
+            array[int] of var int: adj_values = get_adjacent_values(i, j, grid)
+        } in (
+            grid[i,j] = 0 \/ (grid[i,j] = 1 /\ sum(adj_values) = 2)
+        )
+    )
+);
+
 % draw a 1-cell wide loop of orthogonally connected cells which does not branch or touch itself, even diagonally
 predicate cell_center_loop_p(array[int, int] of var 0..1: grid, bool: diag_touch) =
     let {
         set of int: rows = index_set_1of2(grid);
         set of int: cols = index_set_2of2(grid);
     } in (
-        connected_region(grid, 1) /\
+        connected_region(grid, 1)
         % no diagonal touching
-        (if diag_touch then
-            true
-        else
-            cell_center_loop_no_diagonal_touching_p(grid)
-        endif) /\
+        /\ (diag_touch \/ cell_center_loop_no_diagonal_touching_p(grid))
         % If cell is on the loop then then there are exactly two edges attached to it
         % Count orthogonally adjacent 1s (must be exactly 2)
-        forall(i in rows, j in cols)(
-            if grid[i,j] = 1 then
-                sum([
-                    if i-1 in rows then grid[i-1,j] else 0 endif +  % Up
-                    if i+1 in rows then grid[i+1,j] else 0 endif +  % Down
-                    if j-1 in cols then grid[i,j-1] else 0 endif +  % Left
-                    if j+1 in cols then grid[i,j+1] else 0 endif    % Right
-                    ]) = 2
-            else
-                true
-            endif
-        )
+        /\ cell_center_loop_no_orthogonal_touching_p(grid)
     );
 
 predicate cell_center_loop_regions_p(
