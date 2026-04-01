@@ -205,6 +205,16 @@ function array[int] of tuple(int, int): orth_adjacent_idxs_in_bounds(
 } in
     [idx | idx in idxs where in_bounds_2d(idx.1, idx.2, grid)];
 
+
+function array[int] of var int: get_adjacent_values(
+    int: r,
+    int: c,
+    array[int, int] of var int: grid
+) = let {
+    array[int] of tuple(int, int): idxs = orth_adjacent_idxs_in_bounds(r,c,grid);
+} in
+    [grid[idx.1, idx.2] | idx in idxs];
+
 % Returns the coordinates of the 8 orthogonally or diagonally adjacent cells to (r, c).
 function array[1..8] of tuple(int, int): orth_or_diag_adjacent_idxs(int: r, int: c) =
     [(r-1,c-1),(r-1,c),(r-1,c+1),(r,c-1),(r,c+1),(r+1,c-1),(r+1,c),(r+1,c+1)];
@@ -1419,6 +1429,7 @@ predicate headless_arrow_p(array[int] of var int: arr) =
         (arr[min_i] = sum(i in index_set(arr) where i != min_i)(arr[i])) \/ 
         (arr[max_i] = sum(i in index_set(arr) where i != max_i)(arr[i]));
 
+% line contains two equal-sized sets of consecutive digits.
 predicate double_renban_p(array[int] of var int: arr) =
     let {
         int: n = length(index_set(arr)) div 2,  % Half the length of the array
@@ -1436,21 +1447,19 @@ predicate renrenbanban_p(array[int] of var int: arr) =
         var int: unique_count = count_unique_values(arr),
         var int: start = min(arr),
         var int: end = max(arr)
-    } in
-        end == start + unique_count - 1 /\
-        
-        forall(i in index_set(arr)) (
+    } in (
+        end == start + unique_count - 1 
+        /\ forall(i in index_set(arr)) (
             count(arr, arr[i]) >= 2
-        ) /\
-        
-        forall(i in index_set(arr)) (
+        ) 
+        /\ forall(i in index_set(arr)) (
             arr[i] >= start /\ arr[i] <= end
-        );
+        )
+    );
 
 predicate knabner_p(array[int] of var int: arr) =
     % Ensure all elements in the array are different
     alldifferent(arr) /\
-    
     % For all distinct pairs of indices (i, j), the values at arr[i] and arr[j]
     % are not consecutive.
     forall(i in index_set(arr), j in index_set(arr) where i != j)(
@@ -1591,7 +1600,11 @@ function var int: cycle_order_f(
     );
     var int: target_idx = first_idx(transitions, start)
 } in target_idx;
- 
+
+% Divide each grey line into at least two non-overlapping segments. 
+% The digits on each segment of a line sum to the same total. 
+% (Different lines may have different totals.) Additionally each segment 
+% individually forms a set of non-repeating consecutive digits in any order.
 predicate segmented_sum_and_renban_line_p(
     array[int] of var int: arr
 ) = let {
@@ -1601,7 +1614,6 @@ predicate segmented_sum_and_renban_line_p(
     array[idxs] of var bool: split_after;
     array[idxs] of var 1..n: segments;
     array[idxs] of var 0..n: segment_sizes;
-    
     array[idxs] of var int: segment_sum;
     var int: sum_var;
 } in (
@@ -1667,15 +1679,15 @@ predicate between_line_p(array[int] of var int: arr) =
     let {
         int: start_index = min(index_set(arr)), 
         int: end_index = max(index_set(arr))    
-    } in
-    % Enforce one of the two conditions
-    (forall(j in index_set(arr) where j > start_index /\ j < end_index)(
-        arr[start_index] < arr[j] /\ arr[j] < arr[end_index]
-    ))
-    \/
-    (forall(j in index_set(arr) where j > start_index /\ j < end_index)(
-        arr[end_index] < arr[j] /\ arr[j] < arr[start_index]
-    ));
+    } in (
+        % Enforce one of the two conditions
+        (forall(j in index_set(arr) where j > start_index /\ j < end_index)(
+            arr[start_index] < arr[j] /\ arr[j] < arr[end_index]
+        )) \/
+        (forall(j in index_set(arr) where j > start_index /\ j < end_index)(
+            arr[end_index] < arr[j] /\ arr[j] < arr[start_index]
+        ))
+    );
 
 predicate tightrope_line_p(array[int] of var int: arr) =
     let {
@@ -1829,8 +1841,15 @@ predicate vaulted_cage_p(
 % -------------------------------------------------------------------------------- % 
 % ------ OUTSIDE EDGE CONSTRAINTS ------------------------------------------------ %
 
-function var int: sandwich_sum(array[int] of var int: arr, var int: a, var int: b) =
-    sum(i in index_set(arr)) (arr[i] * bool2int(sandwich_bools_f(arr, a, b)[i]));
+function var int: sandwich_sum(
+    array[int] of var int: arr,
+    var int: a,
+    var int: b
+) = let {
+    array[int] of var bool: sandwich_bools = sandwich_bools_f(arr, a, b);
+} in (
+    sum(i in index_set(arr)) (arr[i] * bool2int(sandwich_bools[i]))
+);
 
 predicate sandwich_sum_p(array[int] of var int: arr, var int: val, var int: a, var int: b) =
     val == sandwich_sum(arr, a, b);
@@ -2023,7 +2042,11 @@ predicate x_omit_little_killer_sum_p(array[int] of var int: arr, var int: val) =
 	let {
         % default indexing starts at 1!!
 		var int: x = arr[min(index_set(arr))]
-	} in x >= min(index_set(arr)) /\ x <= max(index_set(arr)) /\ sum(i in index_set(arr) where i != x)(arr[i]) == val;
+	} in (
+        x >= min(index_set(arr)) /\ 
+        x <= max(index_set(arr)) /\ 
+        sum(i in index_set(arr) where i != x)(arr[i]) == val
+    );
 
 % -------------------------------------------------------------------------------- % 
 % ------ CLONE CONSTRAINTS ------------------------------------------------------- %
@@ -2255,44 +2278,42 @@ predicate yin_yang_shaded_whispers_line_p(array[int] of var int: arr, array[int]
 predicate yin_yang_unshaded_entropic_line_p(
     array[int] of var int: arr,
     array[int] of var 0..1: labels
-) =
+) = (
     % Ensure arrays have same size
     index_set(arr) = index_set(labels)
-    /\
     % For three consecutive unshaded elements, enforce entropic constraint
-    forall(i in min(index_set(arr))..max(index_set(arr))-2)(
+    /\ forall(i in min(index_set(arr))..max(index_set(arr))-2)(
         (labels[i] = 0 /\ labels[i+1] = 0 /\ labels[i+2] = 0) ->
         entropic_line_p([arr[i], arr[i+1], arr[i+2]], {1,2,3}, {4,5,6}, {7,8,9})
     )
-    /\
     % For two consecutive unshaded elements, they must be from different groups
-    forall(i in min(index_set(arr))..max(index_set(arr))-1)(
+    /\ forall(i in min(index_set(arr))..max(index_set(arr))-1)(
         (labels[i] = 0 /\ labels[i+1] = 0) ->
         (
             not (arr[i] in {1,2,3} /\ arr[i+1] in {1,2,3}) /\
             not (arr[i] in {4,5,6} /\ arr[i+1] in {4,5,6}) /\
             not (arr[i] in {7,8,9} /\ arr[i+1] in {7,8,9})
         )
-    );
+    )
+);
     
 predicate yin_yang_unshaded_modular_line_p(
     array[int] of var int: arr,
     array[int] of var 0..1: labels,
     int: val
-) =
+) = (
     % Ensure arrays have same size
-    index_set(arr) = index_set(labels)
-    /\
+    index_set(arr) = index_set(labels) 
     % For three consecutive unshaded elements, enforce modular constraint
-    forall(i in min(index_set(arr))..max(index_set(arr))-2)(
+    /\ forall(i in min(index_set(arr))..max(index_set(arr))-2)(
         (labels[i] = 0 /\ labels[i+1] = 0 /\ labels[i+2] = 0) ->
         modular_line_p([arr[i], arr[i+1], arr[i+2]], val)
-    )
-    /\
+    ) 
     % For two consecutive unshaded elements, they must be from different groups
-    forall(i in min(index_set(arr))..max(index_set(arr))-1)(
+    /\ forall(i in min(index_set(arr))..max(index_set(arr))-1)(
         (labels[i] = 0 /\ labels[i+1] = 0) -> arr[i] mod val != arr[i+1] mod val
-    );
+    )
+);
 
 predicate yin_yang_region_sum_line_p(
     array[int] of var int: arr,
@@ -2369,9 +2390,9 @@ predicate yin_yang_shaded_cells_are_german_whispers_p(
     % adjacent shaded cells must be german whispers (horiz adjacent)
     /\ forall (r in rows, c in cols where c > min(cols)) (
         (shading[r,c] = 1 /\ shading[r, c - 1] = 1) -> abs(grid[r,c] - grid[r, c-1]) >= 5
-    ) /\
+    ) 
     % adjacent shaded cells must be german whispers (vertical adjacent)
-    forall (r in rows, c in cols where r > min(rows)) (
+    /\ forall (r in rows, c in cols where r > min(rows)) (
         (shading[r,c] = 1 /\ shading[r-1, c] = 1) -> abs(grid[r,c] - grid[r-1, c]) >= 5
     )
 );
@@ -2664,13 +2685,13 @@ predicate chaos_construction_arrow_knots_p(
         } in (
             chaos_construction_arrow_knots_in_arrow_p(in_arrow) /\
             if sum(in_arrow) > 0 then
-                arrow_sum == cell_var /\
+                arrow_sum == cell_var
                 % cells in arrow are part of the same region as the circle
-                forall(i in idxs) (
+                /\ forall(i in idxs) (
                     in_arrow[i] -> regions[i] == target_region
-                ) /\
+                )
                 % If an arrow doesn't reach the edge of the grid, the cell directly after the tip must be in a different region than the arrow.
-                forall(i in idxs where i > min_i) (
+                /\ forall(i in idxs where i > min_i) (
                     not in_arrow[i] /\ in_arrow[i-1] -> regions[i] != target_region
                 )
             else
@@ -2697,9 +2718,9 @@ predicate chaos_construction_arrow_p(
     set of int: idxs1 = index_set(circle_regions);
     set of int: idxs2 = index_set(arrow_regions);
 } in (
-    all_equal(arrow_regions) /\ 
-    all_equal(circle_regions) /\ 
-    circle_regions[min(idxs1)] != arrow_regions[min(idxs2)]
+    all_equal(arrow_regions) 
+    /\ all_equal(circle_regions) 
+    /\ circle_regions[min(idxs1)] != arrow_regions[min(idxs2)]
 );
 
 predicate chaos_construction_neighbour_cells_same_region_count_p(
@@ -2799,10 +2820,8 @@ predicate odd_even_grid_p(
     array[int, int] of var int: grid,
     array[int, int] of var 0..1: labels
 ) =
-    assert(index_set_1of2(grid) = index_set_1of2(labels) /\
-       index_set_2of2(grid) = index_set_2of2(labels),
-       "Grid and labels must have same dimensions") /\
-    forall(i in index_set_1of2(grid)) (
+    assert(index_sets_agree(grid, labels), "grid and labels must have the same indexes")
+    /\ forall(i in index_set_1of2(grid)) (
         forall(j in index_set_2of2(grid)) (
             if grid[i, j] mod 2 == 0 then labels[i,j] == 0 else labels[i,j] == 1 endif
         )
@@ -2815,9 +2834,7 @@ function array[int,int] of var int: doublers_value_grid_f(
     array[int,int] of var int: grid,
     array[int,int] of var bool: labels
 ) =  let {
-    constraint assert(index_set_1of2(grid) = index_set_1of2(labels) /\
-       index_set_2of2(grid) = index_set_2of2(labels),
-       "Grid and labels must have same dimensions")
+    constraint assert(index_sets_agree(grid, labels), "grid and labels must have the same indexes");
 } in
     array2d(index_set_1of2(grid), index_set_2of2(grid),
         [if labels[i,j] then 2*grid[i,j] else grid[i,j] endif
@@ -2827,9 +2844,7 @@ function array[int,int] of var int: negators_value_grid_f(
     array[int,int] of var int: grid,
     array[int,int] of var bool: labels
 ) =  let {
-    constraint assert(index_set_1of2(grid) = index_set_1of2(labels) /\
-       index_set_2of2(grid) = index_set_2of2(labels),
-       "Grid and labels must have same dimensions")
+    constraint assert(index_sets_agree(grid, labels), "grid and labels must have the same indexes");
 } in
     array2d(index_set_1of2(grid), index_set_2of2(grid),
         [if labels[i,j] then -1*grid[i,j] else grid[i,j] endif
@@ -2839,9 +2854,7 @@ function array[int,int] of var int: hot_cells_grid_f(
     array[int,int] of var int: grid,
     array[int,int] of var bool: labels
 ) =  let {
-    constraint assert(index_set_1of2(grid) = index_set_1of2(labels) /\
-       index_set_2of2(grid) = index_set_2of2(labels),
-       "Grid and labels must have same dimensions")
+    constraint assert(index_sets_agree(grid, labels), "grid and labels must have the same indexes");
 } in
     array2d(index_set_1of2(grid), index_set_2of2(grid),
         [if labels[i,j] then grid[i,j]+1 else grid[i,j] endif
@@ -2938,14 +2951,11 @@ function var int: count_same_adjacent(
     int: r, 
     int: c
 ) = let {
-    set of int: rows = index_set_1of2(grid),
-    set of int: cols = index_set_2of2(grid),
+    array[int] of var int: adj_values = get_adjacent_values(r, c, grid)
 } in sum([
-        if r-1 in rows then grid[r-1,c] = grid[r,c] else false endif,
-        if r+1 in rows then grid[r+1,c] = grid[r,c] else false endif,
-        if c-1 in cols then grid[r,c-1] = grid[r,c] else false endif,
-        if c+1 in cols then grid[r,c+1] = grid[r,c] else false endif
-    ]);
+        if adj_values[i] == grid[r,c] then 1 else 0 endif
+        | i in index_set(adj_values)]
+        );
 
 % Helper function to count vertically adjacent cells with same value
 function var int: count_vertical_adjacent_same(
@@ -2986,34 +2996,34 @@ function int: flat_index(int: r, int: c, set of int: rows, set of int: cols) =
 predicate sashigane_bend_bools_p(
     array[int, int] of var int: regions, 
     array[int, int] of var bool: bends
-) =
-    assert(index_set_1of2(regions) = index_set_1of2(bends) /\
-       index_set_2of2(regions) = index_set_2of2(bends),
-       "regions and bends must have same dimensions") /\
-    forall(i in index_set_1of2(regions)) (
+) = 
+    assert(index_sets_agree(regions, bends), "regions and bends must have the same indexes")
+    /\ forall(i in index_set_1of2(regions)) (
         forall(j in index_set_2of2(regions)) (
             is_sashigane_bend(regions, i, j) <-> bends[i, j] == true
         )
     );  
 
-predicate sashigane_adjacency_p(array[int, int] of var int: regions) = 
-    let {
-        set of int: ROWS = index_set_1of2(regions);
-        set of int: COLS = index_set_2of2(regions);
-    } in
+predicate sashigane_adjacency_p(
+    array[int, int] of var int: regions
+) = let {
+    set of int: ROWS = index_set_1of2(regions);
+    set of int: COLS = index_set_2of2(regions);
+} in (
     % Constraint 1: Each element has 1-2 orthogonally adjacent same values
     forall(r in ROWS, c in COLS)(
         let {
             var int: adj_count = count_same_adjacent(regions, r, c)
         } in
         adj_count >= 1 /\ adj_count <= 2
-    ) /\
-    forall(r in ROWS, c in COLS)(
+    )
+    /\ forall(r in ROWS, c in COLS)(
         not is_sashigane_bend(regions, r,c) -> (count_horizontal_adjacent_same(regions, r, c) == 0 \/ count_vertical_adjacent_same(regions, r, c) == 0)
-    ) /\
-    forall(r in ROWS, c in COLS)(
+    )
+    /\ forall(r in ROWS, c in COLS)(
         is_sashigane_bend(regions, r,c) -> regions[r,c] = flat_index(r, c, ROWS, COLS)
-    );
+    )
+);
 
 predicate sashigane_links_to_bends_aux_p(
     array[int] of var int: sashigane_vars,
@@ -3344,32 +3354,32 @@ predicate cave_nurikabe_helper_p(
     set of int: cols = index_set_2of2(shading);
 } in (
     % water cells / cave cells (= 0), must be all orthogonally connected
-    connected_region(shading, 0) /\
-    sum(r in rows, c in cols)(bool2int(shading[r,c] = 0)) > 1 /\
+    connected_region(shading, 0)
+    /\ sum(r in rows, c in cols)(bool2int(shading[r,c] = 0)) > 1
     % label shading = 0 region with 0
-    forall(r in rows, c in cols) (
+    /\ forall(r in rows, c in cols) (
         shading[r,c] = 0 <-> regions[r, c] = 0
-    ) /\
-    forall(r in rows, c in cols) (
+    )
+    /\ forall(r in rows, c in cols) (
         shading[r,c] = 1 <-> regions[r, c] != 0
-    ) /\
+    )
     
     % adjacent shading = 1 cells must belong to the same region (horiz adjacent)
-    forall (r in rows, c in cols where c > min(cols)) (
+    /\ forall (r in rows, c in cols where c > min(cols)) (
         let { 
             var int: id1 = regions[r, c - 1], 
             var int: id2 = regions[r, c] 
         } in (shading[r,c] = 1 /\ shading[r, c - 1] = 1) -> id1 = id2
-    ) /\
+    )
     
     % adjacent shading = 1 cells must belong to the same region (vertical adjacent)
-    forall (r in rows, c in cols where r > min(rows)) (
+    /\ forall (r in rows, c in cols where r > min(rows)) (
         let { var int: id1 = regions[r - 1, c], var int: id2 = regions[r, c] } in
         (shading[r,c] = 1 /\ shading[r - 1, c] = 1) -> id1 = id2
-    ) /\
+    )
     % we need to remove ambiguity from the region numbering 
     % use the numbering each region by the id of the first element of that region
-    cave_floodfill_p(regions)
+    /\ cave_floodfill_p(regions)
 );
 
 predicate cave_p(
@@ -3396,8 +3406,8 @@ predicate twilight_cave_fillomino_region_shading(
 } in (
     forall (r in rows, c in cols where c > 0) (
         (regions[r, c] == regions[r, c - 1]) -> (shading[r, c] == shading[r, c - 1])
-    ) /\
-    forall (r in rows, c in cols where r > 0) (
+    )
+    /\ forall (r in rows, c in cols where r > 0) (
         (regions[r, c] == regions[r - 1, c]) -> (shading[r, c] == shading[r - 1, c])
     )
 );
