@@ -9,7 +9,7 @@
 	export let deleteElementCb: (() => void) | null = null;
 	export let enableDisableElementCb: (() => void) | null = null;
 
-	const close = getContext<() => void>('closeDropdown'); // Ensure we have access to the close function from context
+	const close = getContext<() => void>('closeDropdown');
 </script>
 
 {#if enableDisableElementCb}
