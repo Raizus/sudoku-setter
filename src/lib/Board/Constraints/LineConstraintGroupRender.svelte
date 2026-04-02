@@ -30,10 +30,8 @@
 	};
 
 	$: is_selected = c_id === $currentConstraintStore?.id;
-	// $: filter_url = getOutlineFilterUrl(outline, is_selected);
 </script>
 
-<!-- filter={filter_url} -->
 <g class="line-constraint" id={`c-${c_id}`} data-id={c_id} {opacity}>
 	{#if outline}
 		<LineConstraintRender {linePoints} shape={outlineShape} />
