@@ -251,7 +251,7 @@ function setOtherHighlights(json: JsonT, grid: Grid) {
 
 function setUnknownRegionsHighlights(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
-	const unknown_regions = json['unknown_regions'] as number[][] | undefined;
+	const unknown_regions = json[VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS] as number[][] | undefined;
 
 	if (unknown_regions === undefined) return;
 
@@ -332,13 +332,13 @@ function setConnectFourHighlights(json: JsonT, grid: Grid) {
 function setUnknownRegionsBorders(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
 	const grid_vars_names = [
-		'unknown_regions',
-		'sashigane',
-		'shikaku_regions',
+		VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS,
+		VAR_2D_NAMES.SASHIGANE,
+		VAR_2D_NAMES.SHIKAKU_REGIONS,
 		'fillomino_area',
-		'galaxy_regions',
-		'suguru_regions',
-		'pentomino_regions'
+		VAR_2D_NAMES.GALAXY_REGIONS,
+		VAR_2D_NAMES.SUGURU_REGIONS,
+		VAR_2D_NAMES.PENTOMINO_REGIONS,
 		// 'lits_regions'
 	];
 

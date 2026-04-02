@@ -513,7 +513,7 @@ function chaosConstructionSumOfFirstEachRegionConstraint(
 	const cells = grid.getCellsInDirection(cell_coord.r, cell_coord.c, direction);
 
 	const cell_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
-	const region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 
 	const value = constraint.value;
 	const result = getParsingResult(model, value, cell_coord, cell);
@@ -564,7 +564,7 @@ function chaosConstructionXIndexRegionConstraint(
 	const cells = grid.getCellsInDirection(cell_coord.r, cell_coord.c, direction);
 	const first_cell = cells[0];
 	const first_var = cellToGridVarName(first_cell, VAR_2D_NAMES.BOARD);
-	const region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 
 	const out_str: string = `constraint chaos_construction_x_index_region_p(${first_var}, ${region_vars});\n`;
 
@@ -606,7 +606,7 @@ function chaosConstructionXSumRegionBordersConstraint(
 	const cells = grid.getCellsInDirection(cell_coord.r, cell_coord.c, direction);
 
 	const cell_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
-	const region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 
 	const value = constraint.value;
 	const result = getParsingResult(model, value, cell_coord, cell);

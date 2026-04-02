@@ -362,13 +362,13 @@ function countCellsNotInTheSameRegionConstraint(grid: Grid, constraint: CellMult
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
 	const cell_var = cellToVarName(cell);
-	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 
 	const directions = constraint.directions;
 	const vars_list: string[] = [];
 	for (const direction of directions) {
 		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
-		const vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+		const vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 		vars_list.push(vars);
 	}
 
@@ -405,13 +405,13 @@ function countSeenCellsInTheSameRegionConstraint(grid: Grid, constraint: CellMul
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
 	const cell_var = cellToVarName(cell);
-	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 
 	const directions = constraint.directions;
 	const vars_list: string[] = [];
 	for (const direction of directions) {
 		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
-		const vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+		const vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 		vars_list.push(vars);
 	}
 
@@ -619,13 +619,13 @@ function nextNumberedRegionDistanceArrowsConstraint(grid: Grid, constraint: Cell
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
 	const cell_var = cellToVarName(cell);
-	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 
 	const directions = constraint.directions;
 	let out_str: string = '';
 	for (const direction of directions) {
 		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
-		const region_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+		const region_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 
 		out_str += `constraint next_numbered_region_distance_arrow_p(${cell_var}, ${region_var}, ${region_vars_str});\n`;
 	}

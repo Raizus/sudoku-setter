@@ -201,14 +201,14 @@ function chaosConstructionArrowConstraint(
 	const circle_cells = constraint.cells
 		.map((coord) => grid.getCell(coord.r, coord.c))
 		.filter((cell) => !!cell);
-	const circle_region_vars = cellsToGridVarsStr(circle_cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const circle_region_vars = cellsToGridVarsStr(circle_cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 	const lines_cells = constraint.lines.map((line) =>
 		line.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
 	);
 
 	for (const line of lines_cells) {
 		if (line.length <= 1) continue;
-		const arrow_vars = cellsToGridVarsStr(line.slice(1), VAR_2D_NAMES.UNKNOWN_REGIONS);
+		const arrow_vars = cellsToGridVarsStr(line.slice(1), VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 		out_str += `constraint chaos_construction_arrow_p(${circle_region_vars}, ${arrow_vars});\n`;
 	}
 

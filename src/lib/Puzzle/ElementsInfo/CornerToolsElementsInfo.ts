@@ -324,7 +324,7 @@ function chaosConstructionCornerCellsBelongToExacltyThreeRegionsConstraint(
 	constraint: CornerToolI
 ) {
 	const cells = cellsFromCoords(grid, constraint.cells);
-	const region_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const region_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 
 	const constraint_str = `constraint chaos_construction_regions_count(${region_vars_str}, 3);\n`;
 	return constraint_str;
@@ -373,7 +373,7 @@ function chaosConstructionCornerCellsBelongToSameRegionConstraint(
 	constraint: CornerToolI
 ) {
 	const cells = cellsFromCoords(grid, constraint.cells);
-	const region_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const region_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 
 	const constraint_str = `constraint chaos_construction_regions_count(${region_vars_str}, 1);\n`;
 	return constraint_str;

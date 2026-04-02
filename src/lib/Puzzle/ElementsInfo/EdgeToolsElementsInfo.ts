@@ -917,7 +917,7 @@ export const unknownRegionBorderInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		return regionBorderElement(model.puzzle.grid, element, VAR_2D_NAMES.UNKNOWN_REGIONS);
+		return regionBorderElement(model.puzzle.grid, element, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 	}
 };
 

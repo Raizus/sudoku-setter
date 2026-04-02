@@ -77,7 +77,7 @@ function numberedChaosConstructionElement(model: PuzzleModel, element: Constrain
 		return '';
 	}
 
-	const grid_name = VAR_2D_NAMES.UNKNOWN_REGIONS;
+	const grid_name = VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS;
 
 	const n_regions = Math.max(grid.nCols, grid.nRows);
 	const reg_idxs = range(1, n_regions + 1);

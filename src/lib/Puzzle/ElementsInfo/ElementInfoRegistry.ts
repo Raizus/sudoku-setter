@@ -311,7 +311,7 @@ import {
 	caveShadedRegionSizeUnshadedSeenOrthogonallyClueInfo,
 	BYOKCageSizeInfo,
 	BYOKNotCageCellInfo,
-	chaosConstructionNeighbourCellsSameRegionCountInfo,
+	chaosConstructionCountSameRegionNeighborCellsInfo,
 	cellShadedRowColumnBoxNotCounterInfo
 } from './SingleCellElementsInfo/SingleCellElementsInfo';
 import {
@@ -514,8 +514,8 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS]: chaosConstructionChessSumsInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_ARROW_KNOTS]: chaosConstructionArrowKnotsInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT]: chaosConstructionSeenSameRegionCountInfo,
-	[TOOLS.CHAOS_CONSTRUCTION_NEIGHBOUR_CELLS_SAME_REGION_COUNT]:
-		chaosConstructionNeighbourCellsSameRegionCountInfo,
+	[TOOLS.CHAOS_CONSTRUCTION_COUNT_SAME_REGION_NEIGHBOR_CELLS]:
+		chaosConstructionCountSameRegionNeighborCellsInfo,
 
 	[TOOLS.BYOK_CAGE_SIZE]: BYOKCageSizeInfo,
 	[TOOLS.BYOK_NOT_CAGE_CELL]: BYOKNotCageCellInfo,

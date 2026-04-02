@@ -1784,7 +1784,7 @@ export const chaosConstructionKreskaLineInfo: SquareCellElementInfo = {
 		return shadedLineElement(
 			model,
 			element,
-			VAR_2D_NAMES.UNKNOWN_REGIONS,
+			VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS,
 			'chaos_construction_kreska_line_p'
 		);
 	}

@@ -458,7 +458,7 @@ export const consecutiveCloseNeighborsInfo: SquareCellElementInfo = {
 };
 
 function yinYangChaosConstructionFullyShadedOrFullyUnshadedElement(): string {
-	const out_str = `constraint yin_yang_chaos_construction_same_shading_p(${VAR_2D_NAMES.UNKNOWN_REGIONS}, ${VAR_2D_NAMES.YIN_YANG});\n`;
+	const out_str = `constraint yin_yang_chaos_construction_same_shading_p(${VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS}, ${VAR_2D_NAMES.YIN_YANG});\n`;
 	return out_str;
 }
 

@@ -1313,8 +1313,8 @@ function seenRegionBordersCountConstraint(
 
 	const row_cells = grid.getRow(cell.r);
 	const col_cells = grid.getCol(cell.c);
-	const row_region_vars = cellsToGridVarsStr(row_cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
-	const col_region_vars = cellsToGridVarsStr(col_cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const row_region_vars = cellsToGridVarsStr(row_cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
+	const col_region_vars = cellsToGridVarsStr(col_cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 
 	const constraint_str = `constraint unknown_regions_seen_region_border_count_p(${row_region_vars}, ${col_region_vars}, ${cell_var});\n`;
 	return constraint_str;
@@ -1749,13 +1749,13 @@ function chaosConstructionChessSumsConstraint(
 
 	let out_str = '';
 	const cell_var = cellToVarName(cell);
-	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 
 	// king sum
 	out_str += `\n% chess sum ${c_id}\n`;
 	const king_cells = grid.getNeighboorCells(cell);
 	const king_vars = cellsToGridVarsStr(king_cells, VAR_2D_NAMES.BOARD);
-	const king_region_vars = cellsToGridVarsStr(king_cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const king_region_vars = cellsToGridVarsStr(king_cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 	out_str += `var int: king_sum_${c_id};\n`;
 	out_str += `constraint king_sum_${c_id} = conditional_sum_f(${king_vars}, ${king_region_vars}, ${region_var});\n`;
 	out_str += `var bool: king_${c_id};\n`;
@@ -1764,7 +1764,7 @@ function chaosConstructionChessSumsConstraint(
 	// knight sum
 	const knight_cells = grid.getCellsByKnightMove(cell);
 	const knight_vars = cellsToGridVarsStr(knight_cells, VAR_2D_NAMES.BOARD);
-	const knight_region_vars = cellsToGridVarsStr(knight_cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const knight_region_vars = cellsToGridVarsStr(knight_cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 	out_str += `var int: knight_sum_${c_id};\n`;
 	out_str += `constraint knight_sum_${c_id} = conditional_sum_f(${knight_vars}, ${knight_region_vars}, ${region_var});\n`;
 	out_str += `var bool: knight_${c_id};\n`;
@@ -1778,7 +1778,7 @@ function chaosConstructionChessSumsConstraint(
 		cells.forEach((_cell) => bishop_cells.push(_cell));
 	}
 	const bishop_vars = cellsToGridVarsStr(bishop_cells, VAR_2D_NAMES.BOARD);
-	const bishop_region_vars = cellsToGridVarsStr(bishop_cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const bishop_region_vars = cellsToGridVarsStr(bishop_cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 	out_str += `var int: bishop_sum_${c_id};\n`;
 	out_str += `constraint bishop_sum_${c_id} = conditional_sum_f(${bishop_vars}, ${bishop_region_vars}, ${region_var});\n`;
 	out_str += `var bool: bishop_${c_id};\n`;
@@ -1834,9 +1834,9 @@ function chaosConstructionArrowKnotsConstraint(
 
 	let out_str = '';
 	const cell_var = cellToVarName(cell);
-	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 	const adj_cells = grid.getOrthogonallyAdjacentCells(cell);
-	const adj_region_vars = cellsToGridVarsStr(adj_cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const adj_region_vars = cellsToGridVarsStr(adj_cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 	out_str += `\n% arrow knot ${c_id}\n`;
 	out_str += `constraint count_eq(${adj_region_vars}, ${region_var}) >= ${val};\n`;
 
@@ -1847,7 +1847,7 @@ function chaosConstructionArrowKnotsConstraint(
 		if (!cells.length) continue;
 
 		const cells_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
-		const region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+		const region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 		const in_arrow_var = `in_arrow_${c_id}_${direction}`;
 		const first_arrow_var = `in_arrow_${c_id}_${direction}[1]`;
 		arrow_vars.push(first_arrow_var);
@@ -1893,7 +1893,7 @@ function chaosConstructionSeenSameRegionCountConstraint(
 	const constraint_str = orthogonalRegionSeenCountConstraint(
 		grid,
 		constraint,
-		VAR_2D_NAMES.UNKNOWN_REGIONS,
+		VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS,
 		'chaos_costruction_seen_same_region_count_p'
 	);
 	return constraint_str;
@@ -1917,7 +1917,7 @@ export const chaosConstructionSeenSameRegionCountInfo: SquareCellElementInfo = {
 	}
 };
 
-function chaosConstructionNeighbourCellsSameRegionCountConstraint(
+function chaosConstructionCountSameRegionNeighborCellsConstraint(
 	model: PuzzleModel,
 	grid: Grid,
 	c_id: string,
@@ -1928,20 +1928,20 @@ function chaosConstructionNeighbourCellsSameRegionCountConstraint(
 	if (!cell) return '';
 
 	const cell_var = cellToVarName(cell);
-	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 	const neighbour_cells = grid.getNeighboorCells(cell);
 	const cells = [...neighbour_cells];
 
-	const region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.UNKNOWN_REGIONS);
+	const region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
 
 	const constraint_str = `constraint chaos_construction_neighbour_cells_same_region_count_p(${cell_var}, ${region_var}, ${region_vars});\n`;
 	return constraint_str;
 }
 
-export const chaosConstructionNeighbourCellsSameRegionCountInfo: SquareCellElementInfo = {
+export const chaosConstructionCountSameRegionNeighborCellsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
-	toolId: TOOLS.CHAOS_CONSTRUCTION_NEIGHBOUR_CELLS_SAME_REGION_COUNT,
+	toolId: TOOLS.CHAOS_CONSTRUCTION_COUNT_SAME_REGION_NEIGHBOR_CELLS,
 
 	shape: DEFAULT_CIRCLE_SHAPE,
 
@@ -1955,7 +1955,7 @@ export const chaosConstructionNeighbourCellsSameRegionCountInfo: SquareCellEleme
 		return simpleElementFunction(
 			model,
 			element,
-			chaosConstructionNeighbourCellsSameRegionCountConstraint
+			chaosConstructionCountSameRegionNeighborCellsConstraint
 		);
 	}
 };
