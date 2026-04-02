@@ -10,7 +10,7 @@
 	import { Vector2D } from '$src/lib/utils/Vector2D';
 	import CellTextLabelRender from './CellTextLabelRender.svelte';
 	import ColoredCountingCircleRender from './ColoredCountingCircleRender.svelte';
-	import { getCurrentConstraintStore, getOutlineFilterUrl } from './utils';
+	import { getCurrentConstraintStore } from './utils';
 
 	export let tool: CellToolI;
 	export let c_id: string | undefined = undefined;
@@ -23,25 +23,48 @@
 	$: shape = tool.shape ?? defaultShape;
 	$: type = shape?.type || SHAPE_TYPES.CIRCLE;
 
+	$: outlineShape = {
+		...shape,
+		stroke: 'var(--grid-background-color)',
+		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.06 : 0.06
+	};
+	$: selectedOutlineShape = {
+		...shape,
+		stroke: 'var(--constraint-selected-color)',
+		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.07 : 0.07
+	};
+
 	$: center = { x: tool.cell.c + 0.5, y: tool.cell.r + 0.5 };
 	$: cellTLCorner = new Vector2D(tool.cell.c, tool.cell.r);
 	$: value = tool.value;
 
 	$: currentConstraintId = $currentConstraintStore?.id;
 	$: is_selected = c_id !== undefined && c_id === currentConstraintId;
-	$: filter_url = getOutlineFilterUrl(outline, is_selected);
 </script>
 
-<g class="single-cell-tool" data-id={`${c_id}`} filter={filter_url}>
+<!-- filter={filter_url} -->
+<g class="single-cell-tool" data-id={`${c_id}`}>
 	{#if tool.toolId === TOOLS.MINIMUM}
 		<MinMaxRender coord={tool.cell} minOrMax={'min'} />
 	{:else if tool.toolId === TOOLS.MAXIMUM}
 		<MinMaxRender coord={tool.cell} minOrMax={'max'} />
 	{:else if tool.toolId === TOOLS.COLORED_COUNTING_CIRCLES}
+		{#if outline}
+			<ColoredCountingCircleRender x={center.x} y={center.y} {value} shape={outlineShape} />
+		{/if}
+		{#if is_selected}
+			<ColoredCountingCircleRender x={center.x} y={center.y} {value} shape={selectedOutlineShape} />
+		{/if}
 		<ColoredCountingCircleRender x={center.x} y={center.y} {value} {shape} />
 	{:else if type === SHAPE_TYPES.CAGE}
 		<ValuedCageRender cells={[tool.cell]} {shape} value={tool.value} />
 	{:else}
+		{#if outline}
+			<RenderShape cx={center.x} cy={center.y} shape={outlineShape} />
+		{/if}
+		{#if is_selected}
+			<RenderShape cx={center.x} cy={center.y} shape={selectedOutlineShape} />
+		{/if}
 		<RenderShape cx={center.x} cy={center.y} {shape} />
 	{/if}
 	{#if type !== SHAPE_TYPES.CAGE && tool.toolId !== TOOLS.COLORED_COUNTING_CIRCLES && value}
