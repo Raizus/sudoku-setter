@@ -1960,6 +1960,47 @@ export const chaosConstructionCountSameRegionNeighborCellsInfo: SquareCellElemen
 	}
 };
 
+function chaosConstructionCountSameRegionNeighborCellsAndSelfConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const cell_var = cellToVarName(cell);
+	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
+	const neighbour_cells = grid.getNeighboorCells(cell);
+	const cells = [cell, ...neighbour_cells];
+
+	const region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
+
+	const constraint_str = `constraint chaos_construction_neighbour_cells_same_region_count_p(${cell_var}, ${region_var}, ${region_vars});\n`;
+	return constraint_str;
+}
+
+export const chaosConstructionCountSameRegionNeighborCellsAndSelfInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+	toolId: TOOLS.CHAOS_CONSTRUCTION_COUNT_SAME_REGION_NEIGHBOR_CELLS_AND_SELF,
+	shape: DEFAULT_CIRCLE_SHAPE,
+
+	meta: {
+		description: `A digit in a circle shows the amount of cells touching it, orthogonally and diagonally, including itself, which are part of the same region.`,
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(
+			model,
+			element,
+			chaosConstructionCountSameRegionNeighborCellsAndSelfConstraint
+		);
+	}
+};
+
 function directedPathStartConstraint(
 	model: PuzzleModel,
 	grid: Grid,

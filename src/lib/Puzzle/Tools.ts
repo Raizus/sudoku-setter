@@ -250,7 +250,8 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	CHAOS_CONSTRUCTION_CHESS_SUMS = 'Chaos Construction Chess Sums',
 	CHAOS_CONSTRUCTION_ARROW_KNOTS = 'Chaos Construction Arrow Knots',
 	CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT = 'Chaos Construction Seen Same Region Count',
-	CHAOS_CONSTRUCTION_NEIGHBOUR_CELLS_SAME_REGION_COUNT = 'Chaos Construction Neighbour Cells Same Region Count',
+	CHAOS_CONSTRUCTION_COUNT_SAME_REGION_NEIGHBOR_CELLS = 'Chaos Construction Count Same Region Neighbor Cells',
+	CHAOS_CONSTRUCTION_COUNT_SAME_REGION_NEIGHBOR_CELLS_AND_SELF = 'Chaos Construction Count Same Region Neighbor Cells And Self',
 
 	NURIKABE_SEEN_WATERWAY_CELLS = 'Nurikabe Seen Waterway Cells',
 	NURIKABE_ISLAND_SIZE_CELL = 'Nurikabe Island Size Cell',

@@ -312,7 +312,8 @@ import {
 	BYOKCageSizeInfo,
 	BYOKNotCageCellInfo,
 	chaosConstructionCountSameRegionNeighborCellsInfo,
-	cellShadedRowColumnBoxNotCounterInfo
+	cellShadedRowColumnBoxNotCounterInfo,
+	chaosConstructionCountSameRegionNeighborCellsAndSelfInfo
 } from './SingleCellElementsInfo/SingleCellElementsInfo';
 import {
 	yinYangAdjacentSameShadeCountInfo,
@@ -516,6 +517,8 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT]: chaosConstructionSeenSameRegionCountInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_COUNT_SAME_REGION_NEIGHBOR_CELLS]:
 		chaosConstructionCountSameRegionNeighborCellsInfo,
+	[TOOLS.CHAOS_CONSTRUCTION_COUNT_SAME_REGION_NEIGHBOR_CELLS_AND_SELF]:
+		chaosConstructionCountSameRegionNeighborCellsAndSelfInfo,
 
 	[TOOLS.BYOK_CAGE_SIZE]: BYOKCageSizeInfo,
 	[TOOLS.BYOK_NOT_CAGE_CELL]: BYOKNotCageCellInfo,
