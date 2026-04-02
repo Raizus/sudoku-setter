@@ -94,7 +94,7 @@
 	<DiagonalElementsRender diagonal_elements={$diagonalElementsStore} />
 
 	<GridLinesRender cells={grid.getAllCells()} />
-	<GridRegionsRender cells={grid.getAllCells()} />
+	<GridRegionsRender cells={$cellsStore} />
 
 	<!-- overlay elements - above the grid lines -->
 
