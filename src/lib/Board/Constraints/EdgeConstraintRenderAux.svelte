@@ -3,7 +3,6 @@
 	import { SHAPE_TYPES, defaultEdgeCircleShape } from '$lib/Puzzle/Shape/Shape';
 	import { getDefaultShape } from '$lib/Puzzle/ElementHandlersUtils';
 	import type { EdgeToolI } from '$src/lib/Puzzle/puzzle_schema';
-	import CircleRender from '$src/lib/Board/SvgComponents/CircleRender.svelte';
 	import { elementInfoRegistry } from '$src/lib/Puzzle/ElementsInfo/ElementInfoRegistry';
 	import {
 		cellToCellCenterVector,
@@ -13,8 +12,15 @@
 	import BorderLineRender from './BorderLineRender.svelte';
 	import RenderShape from '$src/lib/Board/SvgComponents/RenderShape.svelte';
 	import DirectedAdjacentCellsRender from './DirectedAdjacentCellsRender.svelte';
+	import { getCurrentConstraintStore } from './utils';
 
 	export let tool: EdgeToolI;
+	export let c_id: string | undefined = undefined;
+
+	const outline = true;
+	const currentConstraintStore = getCurrentConstraintStore();
+	$: currentConstraintId = $currentConstraintStore?.id;
+	$: is_selected = c_id !== undefined && c_id === currentConstraintId;
 
 	$: defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultEdgeCircleShape;
 	$: shape = tool.shape ?? defaultShape;
@@ -26,6 +32,17 @@
 
 	$: coords = tool.cells;
 	$: center = vectorAverage(cellsToVector2DPoints(coords));
+
+	$: outlineShape = {
+		...shape,
+		stroke: 'var(--grid-background-color)',
+		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.06 : 0.06
+	};
+	$: selectedOutlineShape = {
+		...shape,
+		stroke: 'var(--constraint-selected-color)',
+		strokeWidth: shape.strokeWidth ? shape.strokeWidth + 0.07 : 0.07
+	};
 
 	function getText(tool: EdgeToolI, type: SHAPE_TYPES): string {
 		if (type === SHAPE_TYPES.TEXT_ONLY) {
@@ -47,15 +64,23 @@
 </script>
 
 {#if coords.length === 2}
-	{#if tool.toolId === TOOLS.EDGE_INEQUALITY || tool.toolId === TOOLS.ONE_WAY_DOOR}
-		<CircleRender x={center.x} y={center.y} {shape} />
-	{:else if type === SHAPE_TYPES.ARROW}
-		<DirectedAdjacentCellsRender {tool} />
-	{:else if type === SHAPE_TYPES.TEXT_ONLY}
-		<CircleRender x={center.x} y={center.y} {shape} />
+	{#if type === SHAPE_TYPES.ARROW}
+		{#if outline}
+			<DirectedAdjacentCellsRender cells={coords} shape={outlineShape} />
+		{/if}
+		{#if is_selected}
+			<DirectedAdjacentCellsRender cells={coords} shape={selectedOutlineShape} />
+		{/if}
+		<DirectedAdjacentCellsRender cells={coords} {shape} />
 	{:else if type === SHAPE_TYPES.BORDER_LINE}
 		<BorderLineRender {coords} {shape} />
 	{:else}
+		{#if outline}
+			<RenderShape cx={center.x} cy={center.y} shape={outlineShape} />
+		{/if}
+		{#if is_selected}
+			<RenderShape cx={center.x} cy={center.y} shape={selectedOutlineShape} />
+		{/if}
 		<RenderShape cx={center.x} cy={center.y} {shape} />
 	{/if}
 	<text

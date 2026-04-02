@@ -503,7 +503,7 @@ export const xvInfo: SquareCellElementInfo = {
 	],
 
 	shape: {
-		type: SHAPE_TYPES.TEXT_ONLY,
+		type: SHAPE_TYPES.CIRCLE,
 		r: { editable: false, value: EDGE_R_1 },
 		strokeWidth: { editable: false, value: 0, lb: 0, ub: 1, step: 0.025 },
 		stroke: { editable: false, value: 'none' },
@@ -558,7 +558,7 @@ export const edgeInequalityInfo: SquareCellElementInfo = {
 	toolId: TOOLS.EDGE_INEQUALITY,
 
 	shape: {
-		type: SHAPE_TYPES.TEXT_ONLY,
+		type: SHAPE_TYPES.CIRCLE,
 		r: { editable: false, value: 0.1 },
 		strokeWidth: { editable: false, value: 0, lb: 0, ub: 1, step: 0.025 },
 		stroke: { editable: false, value: 'none' },
@@ -992,8 +992,8 @@ export const oneWayDoorInfo: SquareCellElementInfo = {
 	toolId: TOOLS.ONE_WAY_DOOR,
 
 	shape: {
-		type: SHAPE_TYPES.TEXT_ONLY,
-		r: { editable: false, value: 0.1 },
+		type: SHAPE_TYPES.CIRCLE,
+		r: { editable: false, value: 0.06 },
 		strokeWidth: { editable: false, value: 0, lb: 0, ub: 1, step: 0.025 },
 		stroke: { editable: false, value: 'none' },
 		fontSize: { editable: false, value: 0.4 },
