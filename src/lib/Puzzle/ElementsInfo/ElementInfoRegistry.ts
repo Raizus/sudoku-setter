@@ -80,9 +80,11 @@ import {
 	fillominoRegionBorderInfo,
 	oneWayDoorInfo,
 	ratioInfo,
+	sumIndexingArrowInfo,
 	unknownRegionBorderInfo,
 	xvInfo,
 	xyDifferencesInfo,
+	yinYangEdgeTouchesShadedInfo,
 	yinYangKropkiInfo,
 	yinYangWhiteKropkiInfo
 } from './EdgeToolsElementsInfo';
@@ -571,6 +573,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.XY_DIFFERENCES]: xyDifferencesInfo,
 	[TOOLS.YIN_YANG_WHITE_KROPKI]: yinYangWhiteKropkiInfo,
 	[TOOLS.YIN_YANG_KROPKI]: yinYangKropkiInfo,
+	[TOOLS.YIN_YANG_EDGE_TOUCHES_SHADED]: yinYangEdgeTouchesShadedInfo,
 
 	[TOOLS.FILLOMINO_REGION_BORDER]: fillominoRegionBorderInfo,
 	[TOOLS.UNKNOWN_REGION_BORDER]: unknownRegionBorderInfo,
@@ -579,6 +582,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 
 	[TOOLS.ONE_WAY_DOOR]: oneWayDoorInfo,
 	[TOOLS.DIFFERENCE_INDEXING_ARROW]: differenceIndexingArrowInfo,
+	[TOOLS.SUM_INDEXING_ARROW]: sumIndexingArrowInfo,
 
 	// Corner Constraints
 	[TOOLS.QUADRUPLE]: quadrupleInfo,

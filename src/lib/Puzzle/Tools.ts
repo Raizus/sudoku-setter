@@ -48,6 +48,7 @@ export enum DIAGONAL_CONSTRAINTS {
 
 export enum NEGATIVE_AND_MODIFIER_CONSTRAINTS {
 	ALL_GIVEN = 'All Given',
+	ALL_DIFFERENT = 'All Different',
 	NEGATIVE_V_CONSTRAINT = 'Negative V Constraint',
 	NEGATIVE_X_CONSTRAINT = 'Negative X Constraint',
 	NEGATIVE_XV_CONSTRAINT = 'Negative XV Constraint',
@@ -306,6 +307,7 @@ export enum EDGE_CONSTRAINTS {
 	XY_DIFFERENCES = 'XY Differences',
 	YIN_YANG_KROPKI = 'Yin Yang Kropki',
 	YIN_YANG_WHITE_KROPKI = 'Yin Yang White Kropki',
+	YIN_YANG_EDGE_TOUCHES_SHADED = 'Yin Yang Edge Touches Shaded',
 
 	FILLOMINO_REGION_BORDER = 'Fillomino Region Border',
 
@@ -317,7 +319,8 @@ export enum EDGE_CONSTRAINTS {
 
 	COMBINED_EDGE_CONSTRAINT = 'Combined Edge Constraint',
 
-	DIFFERENCE_INDEXING_ARROW = 'Difference Indexing Arrow'
+	DIFFERENCE_INDEXING_ARROW = 'Difference Indexing Arrow',
+	SUM_INDEXING_ARROW = 'Sum Indexing Arrow'
 }
 
 export enum CORNER_CONSTRAINTS {

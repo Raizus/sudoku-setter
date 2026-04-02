@@ -1135,6 +1135,19 @@ predicate difference_indexing_arrow_p(
     /\ grid[a-1, b-1] = abs(a - b)
 );
 
+predicate sum_indexing_arrow_p(
+    array[int, int] of var int: grid,
+    var int: a,
+    var int: b
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    (a - 1) in rows 
+    /\ (b - 1) in cols
+    /\ grid[a-1, b-1] = a + b
+);
+
 % -------------------------------------------------------------------------------- % 
 % ------ CORNER CONSTRAINTS ------------------------------------------------------ %
 
@@ -2241,7 +2254,10 @@ predicate outside_edge_yin_yang_sum_of_shaded_p(
     sum(i in index_set(cells) where yin_yang_vars[i] == 1)(cells[i]) == val;
 
 predicate yin_yang_white_kropki_p(var int: cell1, var int: cell2, var int: yin_yang1, var int: yin_yang2) =
-    yin_yang1 == yin_yang2 /\ consecutive_p(cell1, cell2);    
+    yin_yang1 == yin_yang2 /\ consecutive_p(cell1, cell2);
+
+predicate yin_yang_edge_touches_shaded_p(var int: yin_yang1, var int: yin_yang2) =
+    yin_yang1 = 1 \/ yin_yang2 = 1;
 
 predicate yin_yang_kropki_p(var int: cell1, var int: cell2, var int: yin_yang1, var int: yin_yang2) =
 (

@@ -22,6 +22,7 @@ import type { ConstraintsElement, EdgeToolI } from '../puzzle_schema';
 import type { Grid } from '../Grid/Grid';
 import type { Cell } from '../Grid/Cell';
 import type { ParseOptions } from '$src/lib/Solver/value_parsing';
+import { combinations } from '$src/lib/utils/functionUtils';
 
 const edgeDefaultCategories = [
 	TOOL_CATEGORIES.EDGE_CONSTRAINT,
@@ -54,6 +55,13 @@ const DEFAULT_BORDER_LINE: EditableShapeI = {
 	strokeWidth: { editable: true, value: 0.1, lb: 0, ub: 1, step: 0.025 },
 	stroke: { editable: true, value: 'black' },
 	opacity: { editable: true, value: 0.9 }
+};
+
+const DEFAULT_BLACK_ARROW: EditableShapeI = {
+	type: SHAPE_TYPES.ARROW,
+	strokeWidth: { editable: true, value: 0.1, lb: 0, ub: 1, step: 0.025 },
+	stroke: { editable: true, value: 'black' },
+	fontSize: { editable: false, value: 0.3 }
 };
 
 export function validateRatioValue(value: string, maxLength = 1): boolean {
@@ -327,7 +335,7 @@ function differenceElement(model: PuzzleModel, element: ConstraintsElement) {
 
 	const mod_constraints = element.negative_constraints;
 	if (!mod_constraints) return out_str;
-	
+
 	// negative constraint
 	const all_given = !!mod_constraints[TOOLS.ALL_GIVEN];
 	const use_values = mod_constraints ? !!mod_constraints[TOOLS.USE_CELL_VALUES] : false;
@@ -832,6 +840,42 @@ export const yinYangWhiteKropkiInfo: SquareCellElementInfo = {
 	}
 };
 
+function yinYangEdgeTouchesShadedConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: EdgeToolI
+) {
+	const coords = constraint.cells;
+	const cells = cellsFromCoords(grid, coords);
+	const cells_vars = cellsToGridVarsName(cells, VAR_2D_NAMES.YIN_YANG);
+	const cell1_var = cells_vars[0];
+	const cell2_var = cells_vars[1];
+
+	const constraint_str = `constraint yin_yang_edge_touches_shaded_p(${cell1_var}, ${cell2_var});\n`;
+	return constraint_str;
+}
+
+export const yinYangEdgeTouchesShadedInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE
+	},
+
+	toolId: TOOLS.YIN_YANG_EDGE_TOUCHES_SHADED,
+
+	shape: DEFAULT_WHITE_CIRCLE,
+
+	meta: {
+		description: 'A white dot touches a shaded yin yang cell.',
+		tags: [],
+		categories: typableEdgeDefaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, yinYangEdgeTouchesShadedConstraint);
+	}
+};
+
 function regionBorderConstraint(grid: Grid, constraint: EdgeToolI, regions_var_name: VAR_2D_NAMES) {
 	const cells = cellsFromCoords(grid, constraint.cells);
 	const region_vars = cellsToGridVarsName(cells, regions_var_name);
@@ -981,6 +1025,30 @@ export const combinedEdgeConstraintInfo: SquareCellElementInfo = {
 	}
 };
 
+function allIndexingArrowsDifferent(model: PuzzleModel, element: ConstraintsElement) {
+	let out_str = '';
+	const mod_constraints = element.negative_constraints;
+	if (!mod_constraints) return out_str;
+
+	// negative constraint
+	const all_different = !!mod_constraints[TOOLS.ALL_DIFFERENT];
+	if (!all_different) return out_str;
+
+	const grid = model.puzzle.grid;
+	const constraints = element.constraints as Record<string, EdgeToolI>;
+	if (!constraints) return out_str;
+
+	out_str += `\n% ${TOOLS.ALL_DIFFERENT}\n`;
+	for (const [c1, c2] of combinations(Object.values(constraints), 2)) {
+		const vars1 = getEdgeVars(grid, c1);
+		const vars2 = getEdgeVars(grid, c2);
+
+		out_str += `constraint (${vars1[0]} != ${vars2[0]}) \\/ (${vars1[1]} != ${vars2[1]});\n`;
+	}
+
+	return out_str;
+}
+
 function differenceIndexingArrowConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -993,8 +1061,15 @@ function differenceIndexingArrowConstraint(
 	const cell1_var = cells_vars[0];
 	const cell2_var = cells_vars[1];
 
-	const constraint_str = `constraint difference_indexing_arrow_p(board, ${cell1_var}, ${cell2_var});\n`;
+	const constraint_str = `constraint difference_indexing_arrow_p(${VAR_2D_NAMES.BOARD}, ${cell1_var}, ${cell2_var});\n`;
 	return constraint_str;
+}
+
+function differenceIndexingArrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	let out_str = simpleElementFunction(model, element, differenceIndexingArrowConstraint);
+	out_str += allIndexingArrowsDifferent(model, element);
+
+	return out_str;
 }
 
 export const differenceIndexingArrowInfo: SquareCellElementInfo = {
@@ -1004,27 +1079,64 @@ export const differenceIndexingArrowInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.DIFFERENCE_INDEXING_ARROW,
-
-	shape: {
-		type: SHAPE_TYPES.ARROW,
-		strokeWidth: { editable: true, value: 0.1, lb: 0, ub: 1, step: 0.025 },
-		stroke: { editable: true, value: 'black' },
-		fontSize: { editable: false, value: 0.3 }
-	},
+	shape: DEFAULT_BLACK_ARROW,
 
 	meta: {
 		description:
 			"The two digits on an arrow give the coordinates of a particular target cell somewhere in the grid. The digit on the arrow's shaft indicates the target cell's row, and the digit on the arrowhead indicates the target cell's column. The difference between the two digits should be placed into the target cell.",
 		tags: [],
-		categories: [
-			TOOL_CATEGORIES.EDGE_CONSTRAINT,
-			TOOL_CATEGORIES.EDGE_TOOL,
-			TOOL_CATEGORIES.LOCAL_ELEMENT,
-			TOOL_CATEGORIES.LOCAL_CONSTRAINT
-		]
+		categories: edgeDefaultCategories
 	},
 
-	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		return simpleElementFunction(model, element, differenceIndexingArrowConstraint);
-	}
+	solver_func: differenceIndexingArrowElement
+};
+
+function sumIndexingArrowConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: EdgeToolI
+) {
+	const coords = constraint.cells;
+	const cells = cellsFromCoords(grid, coords);
+	const cells_vars = cellsToGridVarsName(cells, VAR_2D_NAMES.BOARD);
+	const cell1_var = cells_vars[0];
+	const cell2_var = cells_vars[1];
+
+	const constraint_str = `constraint sum_indexing_arrow_p(${VAR_2D_NAMES.BOARD}, ${cell1_var}, ${cell2_var});\n`;
+	return constraint_str;
+}
+
+function sumIndexingArrowElement(model: PuzzleModel, element: ConstraintsElement) {
+	let out_str = simpleElementFunction(model, element, sumIndexingArrowConstraint);
+	out_str += allIndexingArrowsDifferent(model, element);
+
+	return out_str;
+}
+
+export const sumIndexingArrowInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.DIRECTED_ADJACENT_CELLS,
+		defaultValue: ''
+	},
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_DIFFERENT,
+			description: 'All such arrows are different.'
+		}
+	],
+
+	toolId: TOOLS.SUM_INDEXING_ARROW,
+
+	shape: DEFAULT_BLACK_ARROW,
+
+	meta: {
+		description:
+			"The two digits on an arrow give the coordinates of a particular target cell somewhere in the grid. The digit on the arrow's shaft indicates the target cell's row, and the digit on the arrowhead indicates the target cell's column. The sum of the two digits should be placed into the target cell.",
+		tags: [],
+		categories: edgeDefaultCategories
+	},
+
+	solver_func: sumIndexingArrowElement
 };
