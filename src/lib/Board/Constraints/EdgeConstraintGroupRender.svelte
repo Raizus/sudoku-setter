@@ -9,6 +9,6 @@
 
 {#if c_id !== undefined}
 	<g class="edge-constraint" id={`c-${c_id}`} data-id={`${c_id}`}>
-		<EdgeConstraintRenderAux {tool} />
+		<EdgeConstraintRenderAux {tool} {c_id}/>
 	</g>
 {/if}
