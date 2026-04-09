@@ -8,7 +8,6 @@ import {
 	set_board_regions,
 	type PuzzleAuxI
 } from './solver_utils';
-import { defineFunctionsPredicates } from './solver_mzn_defs';
 import { range } from 'lodash';
 import { elementInfoRegistry } from '../Puzzle/ElementsInfo/ElementInfoRegistry';
 import type { SquareCellElementInfo } from '../Puzzle/ElementInfo';
