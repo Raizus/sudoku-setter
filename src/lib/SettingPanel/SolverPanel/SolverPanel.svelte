@@ -26,6 +26,9 @@
 	let max_sols_str = '100';
 	let sol_count: number | null = null;
 	let status: string = 'IDLE';
+	let next_sol_label: string = '';
+	let curr_solution_count: number = 0;
+	let total_solutions = '??';
 
 	let puzzle_model: PuzzleModel | null = null;
 
@@ -58,6 +61,9 @@
 	function clearQueue() {
 		solutionQueue = [];
 		pendingResolve = null;
+		next_sol_label = '';
+		curr_solution_count = 0;
+		total_solutions = '??';
 	}
 
 	function minizincFileCb() {
@@ -118,6 +124,12 @@
 		timer.stop();
 		is_solving = false;
 		pendingResolve = null;
+
+		// for the next solution label
+		total_solutions = `${sol_count}`;
+		if (next_sol_label !== '') {
+			next_sol_label = ` ${curr_solution_count}/${total_solutions}`;
+		}
 	}
 
 	function onSolverRejection(e: MiniZinc.ExitMessage) {
@@ -211,6 +223,7 @@
 		clearQueue();
 		sol_count = 0;
 		status = 'SOLVING...';
+		next_sol_label = ` ${curr_solution_count}/${total_solutions}`;
 
 		// Initialize MiniZinc
 		const model = new MiniZinc.Model();
@@ -236,6 +249,8 @@
 			if (pendingResolve) {
 				// "Next" was already clicked and is waiting — deliver immediately
 				setBoardOnSolution(solution.output.json, puzzle_model);
+				curr_solution_count += 1;
+				next_sol_label = ` ${curr_solution_count}/??`;
 				pendingResolve();
 				pendingResolve = null;
 				return;
@@ -259,6 +274,8 @@
 			// Solution already arrived, consume it immediately
 			const solution = solutionQueue.shift()!;
 			setBoardOnSolution(solution.output.json, puzzle_model);
+			curr_solution_count += 1;
+			next_sol_label = ` ${curr_solution_count}/${total_solutions}`;
 			return;
 		}
 
@@ -290,7 +307,9 @@
 		<button class="panel-button" disabled={is_solving} on:click={findAllCandidatesCb}>
 			Find all candidates
 		</button>
-		<button class="panel-button" on:click={nextSolution}> Next Solution </button>
+		<button class="panel-button" on:click={nextSolution}>
+			{'Next Solution' + next_sol_label}
+		</button>
 		<button class="panel-button" disabled={!is_solving} on:click={stopSolverCb}> Stop </button>
 		<span class="text-field">{`Max. Solutions: ${max_sols}`}</span>
 		<div class="input-container">
