@@ -7,6 +7,7 @@
 	import Trash from '$icons/Trash.svelte';
 	import { puzzleHistoryStore } from '$stores/PuzzleHistoryStore';
 	import { stateStore } from '$stores/StateStore';
+	import type { ElementsDict } from '$src/lib/Puzzle/Constraints/ElementsDict';
 
 	export let item: PuzzleHistoryItem;
 	export let item_id: number;
@@ -15,7 +16,7 @@
 	export let showModal: boolean;
 	export let confirm_selected: number | undefined = undefined;
 
-	const constraints: string = 'Given Digits, Regions';
+	// const constraints: string = 'Given Digits, Regions';
 	const historyStore = puzzleHistoryStore.history_store;
 
 	$: compressedStr = item.encodedStr;
@@ -25,6 +26,30 @@
 	$: authors = getAuthorsStr(puzzle.puzzleMeta.authors);
 	$: creation_date = formatTimestamp(item.creationTimestamp);
 	$: update_date = formatTimestamp(item.lastUpdateTimestamp);
+	$: constraints = getElementsStr(puzzle.elementsDict);
+
+	function getElementsStr(elements: ElementsDict) {
+		const constraints: string[] = [];
+		for (const element of elements.values()) {
+			const name = element.name ?? element.tool_id;
+			if (!element.negative_constraints) {
+				constraints.push(name);
+				continue;
+			}
+			const neg_constraints: string[] = [];
+			for (const [neg_const, val] of Object.entries(element.negative_constraints)) {
+				if (val) {
+					neg_constraints.push(neg_const);
+				}
+			}
+			if (neg_constraints.length > 0) {
+				constraints.push(`${name} (${neg_constraints.join(', ')})`);
+			} else {
+				constraints.push(name);
+			}
+		}
+		return constraints.join(', ');
+	}
 
 	function clickCb() {
 		selected = item_id;
@@ -64,7 +89,7 @@
 		}
 	}
 
-	// Svelte action: fires callback when a click happens outside the node
+	// fires callback when a click happens outside the node
 	function clickOutside(node: HTMLElement, callback: () => void) {
 		function handleClick(event: MouseEvent) {
 			if (!node.contains(event.target as Node)) {
@@ -107,9 +132,9 @@
 				{/if}
 			</button>
 		</div>
-		<div class="constraints">{constraints}</div>
-		<div class="date">Creation Date: {creation_date}</div>
-		<div class="date">Last Update: {update_date}</div>
+		<div class="item-line constraints">{constraints}</div>
+		<div class="item-line date">Creation Date: {creation_date}</div>
+		<div class="item-line date">Last Update: {update_date}</div>
 	</a>
 </li>
 
@@ -182,5 +207,9 @@
 	.title {
 		font-size: large;
 		font-weight: bold;
+	}
+
+	.item-line {
+		margin-bottom: 0.2rem;
 	}
 </style>
