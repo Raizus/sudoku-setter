@@ -235,7 +235,9 @@ export class Grid implements GridI {
 
 		let [cr, cc] = [r + dr, c + dc];
 		while (0 <= cr && cr < this.nRows && 0 <= cc && cc < this.nCols) {
-			const cell = this.grid[cr][cc];
+			const cell = this.getCell(cr, cc);
+			if (!cell) return cells;
+
 			cells.push(cell);
 			[cr, cc] = [cr + dr, cc + dc];
 		}

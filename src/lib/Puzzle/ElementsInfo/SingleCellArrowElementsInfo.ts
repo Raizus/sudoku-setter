@@ -36,6 +36,24 @@ const DEFAULT_GRAY_ARROW: EditableShapeI = {
 	stroke: { editable: true, value: 'gray' }
 };
 
+function getCellsInDirection(
+	grid: Grid,
+	constraint: CellArrowToolI,
+	include_start: boolean = false
+): Cell[] {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return [];
+
+	const direction = constraint.direction;
+	const cells: Cell[] = grid.getCellsInDirection(cell.r, cell.c, direction);
+
+	if (!include_start) return cells;
+
+	cells.unshift(cell);
+	return cells;
+}
+
 function simpleCellArrowElement(
 	model: PuzzleModel,
 	element: ConstraintsElement,
@@ -58,9 +76,7 @@ function sashiganeArrowPointsToBendConstraint(grid: Grid, constraint: CellArrowT
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
 
-	const direction = constraint.direction;
-	let cells: Cell[] = grid.getCellsInDirection(cell.r, cell.c, direction);
-	cells = [cell, ...cells];
+	const cells = getCellsInDirection(grid, constraint, true);
 
 	const sashigane_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.SASHIGANE);
 	const sashigane_bend_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.SASHIGANE_BENDS);
@@ -97,8 +113,7 @@ function thermoSightlineLoopArrowConstraint(grid: Grid, constraint: CellArrowToo
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
 
-	const direction = constraint.direction;
-	const cells: Cell[] = grid.getCellsInDirection(cell.r, cell.c, direction);
+	const cells = getCellsInDirection(grid, constraint);
 
 	const cells_vars = cellsToVarsName(cells);
 	const cells_vars_str = '[' + cells_vars.join(',') + ']';
@@ -171,8 +186,7 @@ function skyscrapersArrowConstraint(grid: Grid, constraint: CellArrowToolI) {
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
 
-	const direction = constraint.direction;
-	const cells: Cell[] = grid.getCellsInDirection(cell.r, cell.c, direction);
+	const cells = getCellsInDirection(grid, constraint);
 
 	const cell_var = cellToVarName(cell);
 	const cells_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
@@ -197,5 +211,31 @@ export const skyscrapersArrowInfo: SquareCellElementInfo = {
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
 		return simpleCellArrowElement(model, element, skyscrapersArrowConstraint);
+	}
+};
+
+function modularCountCellArrowConstraint(grid: Grid, constraint: CellArrowToolI) {
+	const cells = getCellsInDirection(grid, constraint, true);
+	const cells_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+
+	const out_str = `constraint modular_count_cell_arrow_p(${cells_vars});\n`;
+	return out_str;
+}
+
+export const modularCountCellArrowInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
+
+	toolId: TOOLS.MODULAR_COUNT_CELL_ARROW,
+	shape: DEFAULT_GRAY_ARROW,
+
+	meta: {
+		description:
+			'A digit on an arrow counts how many cells in the indicated direction have the same remainder mod-3 as itself, including itself. (Eg a 4 on an arrow would indicate that exactly four digits (including the 4 itself) in that direction were selected from the digits 1, 4 & 7 (because each of 1,4 & 7 have the same remainder (ie 1) when divided by 3).',
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_ARROW_CATEGORIES
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleCellArrowElement(model, element, modularCountCellArrowConstraint);
 	}
 };

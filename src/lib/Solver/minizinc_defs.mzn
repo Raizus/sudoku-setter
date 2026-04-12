@@ -642,6 +642,17 @@ function array[int] of tuple(int,int): neighbour_frontier_f(
     ]
 } in result;
 
+function var int: modular_count_f(
+    array[int] of var int: arr,
+    var int: n,
+    var int: rem
+) = let {
+    set of int: idxs = index_set(arr);
+    array[idxs] of var bool: matches = [ arr[i] mod n = rem | i in idxs ];
+} in (
+    sum(i in idxs)(bool2int(matches[i]))
+);
+
 % -------------------------------------------------------------------------------- % 
 % ------ HELPER PREDICATES ------------------------------------------------------- %
 
@@ -1069,6 +1080,22 @@ predicate cell_shaded_row_col_box_not_counter_p(
     var int: cell_var
 ) = (
     cell_var == conditional_sum_f(row_vars, row_counters, true) + conditional_sum_f(col_vars, col_counters, true)
+);
+
+% -------------------------------------------------------------------------------- % 
+% ------ SINGLE CELL ARROW CONSTRAINTS ------------------------------------------- %
+
+% A digit on an arrow counts how many cells in the indicated direction have the same remainder mod-3 as itself, including itself.
+predicate modular_count_cell_arrow_p(
+    array[int] of var int: arr    
+) = let {
+    int: n = 3;
+    set of int: idxs = index_set(arr);
+    int: min_idx = min(idxs);
+    var int: first = arr[min_idx];
+    var int: rem = first mod n;
+} in (
+    modular_count_f(arr, n, rem) = first
 );
 
 % -------------------------------------------------------------------------------- % 
