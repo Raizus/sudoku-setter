@@ -115,7 +115,7 @@
 		href={`${base}/?puzzle=${compressedStr}`}
 	>
 		<div class="header">
-			<div class="title">{title} by {authors}</div>
+			<div class="title">{title}</div>
 			<button
 				class="panel-button icon"
 				class:confirm={confirm_selected === item_id}
@@ -132,7 +132,8 @@
 				{/if}
 			</button>
 		</div>
-		<div class="item-line constraints">{constraints}</div>
+		<div class="authors">by {authors}</div>
+		<p class="constraints">{constraints}</p>
 		<div class="item-line date">Creation Date: {creation_date}</div>
 		<div class="item-line date">Last Update: {update_date}</div>
 	</a>
@@ -143,7 +144,8 @@
 		border-radius: 0.5rem;
 		text-decoration: none;
 		padding: 0.25rem 0.5rem;
-		display: block;
+		display: flex;
+		flex-direction: column;
 		padding-left: 1rem;
 	}
 
@@ -209,7 +211,17 @@
 		font-weight: bold;
 	}
 
-	.item-line {
-		margin-bottom: 0.2rem;
+	.authors {
+		color: #b4b4b4;
+	}
+
+	.constraints {
+		color: #9a9a9a;
+		font-size: 0.9em;
+	}
+
+	.date {
+		color: #666666;
+		font-size: 0.9em;
 	}
 </style>
