@@ -182,6 +182,7 @@ export enum GLOBAL_LOOP_CONSTRAINTS {
 	CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY = 'Cell Center Loop Can Touch Diagonally',
 	NOT_LOOP_SIZED_REGIONS = 'Not Loop Sized Regions',
 	MODULAR_LOOP = 'Modular Loop',
+	COUNTING_LOOP = 'Counting Loop',
 	ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES = 'Adjacent Cells Along Loop Are Multiples',
 	ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS = 'Adjacent Cells Along Loop Are German Whispers',
 	LOOP_PARITY = 'Loop Parity'
@@ -286,7 +287,8 @@ export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
 	YIN_YANG_COUNT_SHADED_CELLS = 'Yin Yang Count Shaded Cells',
 	YIN_YANG_COMBINED_SHADED_CELLS_COUNT_EXCEPT_ITSELF = 'Yin Yang Combined Shaded Cells Count Except Itself',
 	YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR = 'Yin Yang Sum Of Cells Of Opposite Color',
-	LOOP_CELL_COUNT_ARROWS = 'Loop Cell Count Arrows',
+	LOOP_COUNT_ALL_CELL_ARROWS = 'Loop Count All Cell Arrows',
+	LOOP_COUNT_EACH_CELL_ARROWS = 'Loop Count Each Cell Arrows',
 	YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS = 'Yin Yang Count Unique Fillomino Same Shading Arrows',
 	SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS = 'Same Galaxy Unobstructed Count Arrows',
 	NURIKABE_COUNT_ISLAND_CELLS_ARROWS = 'Nurikabe Count Island Cells Arrows',

@@ -344,10 +344,11 @@ import {
 	shadedBoundariesCombinedCountArrowsInfo,
 	yinYangCountShadedCellsInfo,
 	yinYangSumOfCellsOfOppositeColorInfo,
-	loopCellCountArrowsInfo,
+	loopCountAllCellArrowsInfo,
 	yinYangCountUniqueFillominoSameShadingInfo,
 	sameGalaxyUnobstructedCountArrowsInfo,
-	yinYangCombinedShadedCellsCountExceptItselfInfo
+	yinYangCombinedShadedCellsCountExceptItselfInfo,
+	loopCountEachCellArrowsInfo
 } from './SingleCellMultiArrowElementsInfo';
 import {
 	forbiddenKnightSumInfo,
@@ -553,7 +554,8 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.YIN_YANG_COUNT_SHADED_CELLS]: yinYangCountShadedCellsInfo,
 	[TOOLS.YIN_YANG_COMBINED_SHADED_CELLS_COUNT_EXCEPT_ITSELF]:
 		yinYangCombinedShadedCellsCountExceptItselfInfo,
-	[TOOLS.LOOP_CELL_COUNT_ARROWS]: loopCellCountArrowsInfo,
+	[TOOLS.LOOP_COUNT_ALL_CELL_ARROWS]: loopCountAllCellArrowsInfo,
+	[TOOLS.LOOP_COUNT_EACH_CELL_ARROWS]: loopCountEachCellArrowsInfo,
 	[TOOLS.YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS]:
 		yinYangCountUniqueFillominoSameShadingInfo,
 	[TOOLS.SAME_GALAXY_UNOBSTRUCTED_COUNT_ARROWS]: sameGalaxyUnobstructedCountArrowsInfo,

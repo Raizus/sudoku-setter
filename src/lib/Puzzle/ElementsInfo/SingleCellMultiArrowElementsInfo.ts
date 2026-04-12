@@ -150,7 +150,7 @@ export const yinYangCountUniqueFillominoSameShadingInfo: SquareCellElementInfo =
 	}
 };
 
-function loopCellsCountArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
+function loopCountAllCellArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
@@ -171,10 +171,10 @@ function loopCellsCountArrowsConstraint(grid: Grid, constraint: CellMultiArrowTo
 	return out_str;
 }
 
-export const loopCellCountArrowsInfo: SquareCellElementInfo = {
+export const loopCountAllCellArrowsInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
 
-	toolId: TOOLS.LOOP_CELL_COUNT_ARROWS,
+	toolId: TOOLS.LOOP_COUNT_ALL_CELL_ARROWS,
 
 	shape: DEFAULT_BLACK_ARROW,
 
@@ -186,7 +186,44 @@ export const loopCellCountArrowsInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		return singleCellMultiArrowElementFunction(model, element, loopCellsCountArrowsConstraint);
+		return singleCellMultiArrowElementFunction(model, element, loopCountAllCellArrowsConstraint);
+	}
+};
+
+function loopCountEachCellArrowsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
+	let out_str: string = '';
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return out_str;
+	const cell_var = cellToVarName(cell);
+
+	const directions = constraint.directions;
+	for (const direction of directions) {
+		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
+
+		const loop_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.CELL_CENTER_LOOP);
+		out_str += `constraint count_loop_vars_f(${loop_vars_str}) = ${cell_var};\n`;
+	}
+
+	return out_str;
+}
+
+export const loopCountEachCellArrowsInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
+
+	toolId: TOOLS.LOOP_COUNT_EACH_CELL_ARROWS,
+
+	shape: DEFAULT_BLACK_ARROW,
+
+	meta: {
+		description:
+			'A digit in a cell containing an arrow counts how many loop cells are in the indicated direction (not including the cell with the arrow). Multiple arrows in the same cell counts loop cells independent of one another. (So, for example, if r6c4 is a 3 then there are three loop cells to its north and three loop cells to its north east).',
+		tags: [],
+		categories: defaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return singleCellMultiArrowElementFunction(model, element, loopCountEachCellArrowsConstraint);
 	}
 };
 

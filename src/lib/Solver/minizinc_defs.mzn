@@ -3851,10 +3851,8 @@ predicate adjacent_loop_cells_are_multiples_p(
     array[int, int] of var int: grid,
     array[int, int] of var 0..1: labels
 ) =
-    assert(index_set_1of2(grid) = index_set_1of2(labels) /\
-       index_set_2of2(grid) = index_set_2of2(labels),
-       "grid and labels must have same dimensions") /\
-    forall(i in index_set_1of2(grid), j in index_set_2of2(grid))(
+    assert(index_sets_agree(grid, labels), "grid and labels must have the same indexes.")
+    /\ forall(i in index_set_1of2(grid), j in index_set_2of2(grid))(
         % Right neighbor
         (j < max(index_set_2of2(grid)) ->
             (labels[i,j] = 1 /\ labels[i,j+1] = 1 ->
@@ -3874,19 +3872,16 @@ predicate adjacent_loop_cells_are_german_whispers_p(
     set of int: rows = index_set_1of2(grid);
     set of int: cols = index_set_2of2(grid);
 } in (
-    assert(rows = index_set_1of2(labels) /\ cols = index_set_2of2(labels),
-       "grid and labels must have same dimensions") /\
-    region_whispers_p(grid, labels, 1, 5)
+    assert(index_sets_agree(grid, labels), "grid and labels must have the same indexes.")
+    /\ region_whispers_p(grid, labels, 1, 5)
 );
 
 predicate loop_parity_p(
     array[int, int] of var int: grid,
     array[int, int] of var 0..1: labels
 ) =
-    assert(index_set_1of2(grid) = index_set_1of2(labels) /\
-       index_set_2of2(grid) = index_set_2of2(labels),
-       "grid and labels must have same dimensions") /\
-    forall(i in index_set_1of2(grid), j in index_set_2of2(grid))(
+    assert(index_sets_agree(grid, labels), "grid and labels must have the same indexes.") 
+    /\ forall(i in index_set_1of2(grid), j in index_set_2of2(grid))(
         % Right neighbor
         (j < max(index_set_2of2(grid)) ->
             (labels[i,j] = 1 /\ labels[i,j+1] = 1 ->
@@ -3901,7 +3896,21 @@ predicate loop_parity_p(
     
 function var int: count_loop_vars_f(array[int] of var 0..1: arr) =
     sum(i in index_set(arr))(bool2int(arr[i] != 0));
-    
+
+% A digit on the loop indicates how many times that digit appears on the loop.
+predicate counting_loop_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var 0..1: labels
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    assert(index_sets_agree(grid, labels), "grid and labels must have the same indexes.")
+    /\ forall(i in rows, j in cols)(
+        labels[i,j] == 1 -> conditional_count_f(array1d(grid), array1d(labels), grid[i,j], labels[i,j]) = grid[i,j]
+    )
+);
+
 predicate modular_loop_aux_p(
     array[int] of var int: arr, 
     array[int] of var 0..1: labels

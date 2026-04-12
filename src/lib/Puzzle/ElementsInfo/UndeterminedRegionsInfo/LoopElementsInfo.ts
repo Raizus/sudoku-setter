@@ -1,4 +1,4 @@
-import type { PuzzleModel } from '$src/lib/Solver/solver_utils';
+import { VAR_2D_NAMES, type PuzzleModel } from '$src/lib/Solver/solver_utils';
 import type { SquareCellElementInfo } from '../../ElementInfo';
 import type { ConstraintsElement } from '../../puzzle_schema';
 import { TOOLS, TOOL_CATEGORIES, type TOOLID } from '../../Tools';
@@ -90,7 +90,8 @@ export function cellCenterLoopNoTouchingElement(model: PuzzleModel, element: Con
 	const loop_german_whispers = !!neg_constr[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS];
 	const loop_adj_multiples = !!neg_constr[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES];
     const modular_loop = !!neg_constr[TOOLS.MODULAR_LOOP];
-    const loop_parity = !!neg_constr[TOOLS.LOOP_PARITY];
+	const loop_parity = !!neg_constr[TOOLS.LOOP_PARITY];
+	const counting_loop = !!neg_constr[TOOLS.COUNTING_LOOP];
 
 	if (loop_german_whispers) {
 		out_str += adjacentLoopCellsAreGermanWhispersConstraint(
@@ -110,6 +111,9 @@ export function cellCenterLoopNoTouchingElement(model: PuzzleModel, element: Con
 	}
 	if (loop_parity) {
 		out_str += loopParityConstraint(model, TOOLS.LOOP_PARITY);
+	}
+	if (counting_loop) {
+		out_str += `constraint counting_loop_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.CELL_CENTER_LOOP});\n`;
 	}
 
 	return out_str;
@@ -137,6 +141,10 @@ export const cellCenterLoopNoTouchingInfo: SquareCellElementInfo = {
 			toolId: TOOLS.NOT_LOOP_SIZED_REGIONS,
 			description:
 				'Non-loop cells form several orthogonally connected groups. Such a group of size N contains exactly the digits from 1 to N.'
+		},
+		{
+			toolId: TOOLS.COUNTING_LOOP,
+			description: 'A digit on the loop indicates how many times that digit appears on the loop.'
 		},
 		{
 			toolId: TOOLS.MODULAR_LOOP,
