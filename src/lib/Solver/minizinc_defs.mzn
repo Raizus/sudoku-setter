@@ -1289,6 +1289,14 @@ predicate adjacent_differences_count_line_p(array[int] of var int: arr) =
         count(differences, differences[i]) == differences[i]
     );
 
+predicate same_adjacent_difference_line_p(array[int] of var int: arr) =
+    let {
+        var int: x;
+        set of int: idxs = index_set(arr);
+    } in forall(i in idxs where i < max(idxs)) (
+        abs(arr[i] - arr[i + 1]) = x
+    );
+
 predicate index_line_p(array[int] of var int: arr) = 
     forall(i in index_set(arr)) (
         element(arr[i], arr, i)
@@ -2143,16 +2151,20 @@ forall(r in rows, c in cols)(
 % -------------------------------------------------------------------------------- % 
 % ------ YIN YANG CONSTRAINTS ---------------------------------------------------- %
 
-predicate yin_yang_no_crossings(array[int, int] of var 0..1: grid) =
+predicate yin_yang_no_crossings(array[int, int] of var int: grid) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);    
+} in (
     % For each possible 2x2 square in the grid
-    forall(r in index_set_1of2(grid) where r < max(index_set_1of2(grid)),
-           c in index_set_2of2(grid) where c < max(index_set_2of2(grid)))(
+    forall(r in rows where r < max(rows),
+           c in cols where c < max(cols))(
 		% no crossing 1's and 0's because it implies the grid is not connected
         % [1, 0]    or  [0, 1]
         % [0, 1]        [1, 0]
         (grid[r,c] == grid[r+1, c+1] -> grid[r+1,c] != grid[r, c+1]) /\
 		(grid[r+1,c] == grid[r, c+1] -> grid[r,c] != grid[r+1, c+1])
-    );
+    )
+);
 
 predicate yin_yang_p(array[int, int] of var 0..1: shading) =
 	connected_region(shading, 0)
@@ -2650,7 +2662,7 @@ predicate no_repeats_in_unknown_regions_p(
         )
     );
 
-predicate chaos_construction_no_2x2_belongs_to_one_region_p(
+predicate no_2x2_belongs_to_one_region_p(
     array[int, int] of var int: regions
 ) = let {
     set of int: rows = index_set_1of2(regions);
@@ -4283,6 +4295,26 @@ function array[int, int] of var int: rank_numbers_grid_f(
     )
 );
 
+predicate somedoku_p(
+    array[int, int] of var int: grid
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    % every row 'r' has 'r' unique values
+    forall(r in rows)(
+        let {
+            array[int] of var int: arr = [grid[r, c] | c in cols];
+        } in count_unique_values(arr) = (r + 1)
+    )
+    % every col 'c' has 'c' unique values
+    /\ forall(c in cols)(
+        let {
+            array[int] of var int: arr = [grid[r, c] | r in rows];
+        } in count_unique_values(arr) = (c + 1)
+    )
+);
+
 % -------------------------------------------------------------------------------- % 
 % ------ GALAXIES CONSTRAINTS ---------------------------------------------------- %
 
@@ -5883,3 +5915,27 @@ predicate shaded_boundaries_adjacent_sum_is_even_boundary_horizontal_p(
 
 % -------------------------------------------------------------------------------- % 
 % -------------------------------------------------------------------------------- %
+
+predicate yin_yang_yong_p(array[int, int] of var 0..2: shading) =
+	connected_region(shading, 0)
+    /\ connected_region(shading, 1)
+    /\ connected_region(shading, 2)
+    /\ no_2x2_belongs_to_one_region_p(shading);
+
+predicate yin_yang_yong_identical_digits_do_not_appear_in_different_regions_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var 0..2: shading
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_1of2(grid);
+} in (
+    assert(index_sets_agree(grid, shading), "grid and shading must have the same indexes")
+    /\ forall(r1 in rows, c1 in cols, r2 in rows, c2 in cols where is_after(r1,c1,r2,c2)) (
+        shading[r1,c1] != shading[r2,c2] -> grid[r1,c1] != grid[r2,c2]
+    )
+);
+
+predicate yin_yang_yong_count_borders_p(
+    array[int] of var int: shading,
+    var int: cell_var
+) = count_transitions_f(shading) == cell_var;

@@ -285,6 +285,20 @@ function setGoldilocksRegionsHighlights(json: JsonT, grid: Grid) {
 	grid_coloring(regions, grid, color_map);
 }
 
+function setYinYangYongHighlights(json: JsonT, grid: Grid) {
+	if (json === undefined) return;
+	const regions = json[VAR_2D_NAMES.YIN_YANG_YONG] as number[][] | undefined;
+	if (regions === undefined) return;
+
+	const color_map: Map<number, number> = new Map([
+		[0, 4],
+		[1, 7],
+		[2, 9]
+	]);
+
+	grid_coloring(regions, grid, color_map);
+}
+
 function setLITSHighlights(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
 	const regions = json['lits_regions'] as number[][] | undefined;
@@ -599,26 +613,27 @@ function setDirectedPathPenMarks(json: JsonT, puzzle_model: PuzzleModel) {
 	stateStore.updatePenTool(action);
 }
 
-export function setBoardOnSolution(json: JsonT, puzzle_model: PuzzleModel) {
+export function setBoardOnSolution(solution: JsonT, puzzle_model: PuzzleModel) {
 	const puzzle = puzzle_model.puzzle;
 	const grid = puzzle.grid;
 
 	stateStore.updatePenTool(resetPenAction());
-	setSolutionValues(json, puzzle);
+	setSolutionValues(solution, puzzle);
 
-	setUnknownRegionsHighlights(json, grid);
-	setUnknownRegionsBorders(json, grid);
-	setGoldilocksRegionsHighlights(json, grid);
-	setLITSHighlights(json, grid);
-	setOrthogonalPathOrLoopLines(json, grid);
-	setOtherHighlights(json, grid);
-	setColoring(json, grid);
-	setBinaryHighlights(json, grid);
-	setStarBattlePenMarks(json, grid);
-	setColoredCountingCirclesHighlights(json, grid);
-	setDirectedPathPenMarks(json, puzzle_model);
-	setConnectFourHighlights(json, grid);
-	setShadedBoundariesBorders(json);
+	setUnknownRegionsHighlights(solution, grid);
+	setUnknownRegionsBorders(solution, grid);
+	setGoldilocksRegionsHighlights(solution, grid);
+	setYinYangYongHighlights(solution, grid);
+	setLITSHighlights(solution, grid);
+	setOrthogonalPathOrLoopLines(solution, grid);
+	setOtherHighlights(solution, grid);
+	setColoring(solution, grid);
+	setBinaryHighlights(solution, grid);
+	setStarBattlePenMarks(solution, grid);
+	setColoredCountingCirclesHighlights(solution, grid);
+	setDirectedPathPenMarks(solution, puzzle_model);
+	setConnectFourHighlights(solution, grid);
+	setShadedBoundariesBorders(solution);
 }
 
 function updateCandidates(json: JsonT, puzzle: PuzzleAuxI) {

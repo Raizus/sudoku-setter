@@ -40,7 +40,7 @@ function chaosConstructionElement(model: PuzzleModel, element: ConstraintsElemen
 	const no_2x2 =
 		!!element.negative_constraints[TOOLS.CHAOS_CONSTRUCTION_2X2_DOES_NOT_BELONG_TO_THE_SAME_REGION];
 	if (no_2x2) {
-		out_str += `constraint chaos_construction_no_2x2_belongs_to_one_region_p(unknown_regions);\n`;
+		out_str += `constraint no_2x2_belongs_to_one_region_p(unknown_regions);\n`;
 	}
 
 	return out_str;
@@ -270,7 +270,8 @@ export const nurikabeInfo: SquareCellElementInfo = {
 		},
 		{
 			toolId: TOOLS.NURIKABE_2X2_CONTAINS_ISLAND_AND_WATER,
-			description: 'Each 2x2 region in the grid contains at least one cell of water and one cell of island.'
+			description:
+				'Each 2x2 region in the grid contains at least one cell of water and one cell of island.'
 		}
 	],
 
@@ -946,4 +947,53 @@ export const shadedRowCollumnBoxCountersInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: shadedRowCollumnBoxCountersElement
+};
+
+function yinYangYongElement(model: PuzzleModel, element: ConstraintsElement) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outisde the grid.`);
+		return '';
+	}
+
+	let out_str: string = `\n% ${tool}\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..2: yin_yang_yong;\n`;
+	out_str += `constraint yin_yang_yong_p(yin_yang_yong);\n`;
+
+	const modifiers = element.negative_constraints;
+	if (!modifiers) return out_str;
+
+	const identical_digits_diff_regions =
+		!!modifiers[TOOLS.YIN_YANG_YONG_IDENTICAL_DIGITS_DO_NOT_APPEAR_IN_DIFFERENT_REGIONS];
+
+	if (identical_digits_diff_regions){
+		out_str += `constraint yin_yang_yong_identical_digits_do_not_appear_in_different_regions_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.YIN_YANG_YONG});\n`;
+	}
+
+	return out_str;
+}
+
+export const yinYangYongInfo: SquareCellElementInfo = {
+	toolId: TOOLS.YIN_YANG_YONG,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.YIN_YANG_YONG_IDENTICAL_DIGITS_DO_NOT_APPEAR_IN_DIFFERENT_REGIONS,
+			description:
+				'Identical digits may not appear in different regions.'
+		}
+	],
+
+	meta: {
+		description:
+			'Divide the grid into three regions. A region is an area of orthogonally connected cells. No 2x2 area may be entirely in one region.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	},
+
+	solver_func: yinYangYongElement
 };

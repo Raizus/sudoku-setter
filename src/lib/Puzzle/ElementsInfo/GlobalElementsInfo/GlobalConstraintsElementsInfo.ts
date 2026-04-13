@@ -493,3 +493,18 @@ export const ranked2x2BoxNumbersInfo: SquareCellElementInfo = {
 
 	solver_func: ranked2x2BoxNumbersElement
 };
+
+export const somedokuInfo: SquareCellElementInfo = {
+	toolId: TOOLS.SOMEDOKU,
+
+	meta: {
+		description:
+			"Fill each cell with a digit from 1-9. For every row 'n' and column 'n' there are exactly 'n' unique digits. The remaining cells are filled with repeats.",
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	},
+
+	solver_func: () => {
+		return `constraint somedoku_p(${VAR_2D_NAMES.BOARD});\n`;
+	}
+};

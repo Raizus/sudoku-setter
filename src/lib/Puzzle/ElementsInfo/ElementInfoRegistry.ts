@@ -107,6 +107,7 @@ import {
 	nonratioInfo,
 	notAllOddIn2x2SquareInfo,
 	ranked2x2BoxNumbersInfo,
+	somedokuInfo,
 	sudokuRulesDoNotApplyInfo,
 	tangoInfo,
 	yinYangChaosConstructionFullyShadedOrFullyUnshadedInfo
@@ -135,7 +136,8 @@ import {
 	shadedBoundariesInfo,
 	starBattleInfo,
 	oneStarPerGalaxyInfo,
-	shadedRowCollumnBoxCountersInfo
+	shadedRowCollumnBoxCountersInfo,
+	yinYangYongInfo
 } from './UndeterminedRegionsInfo/UndeterminedRegionsElementsInfo';
 import { directedPathTeleportRenbanSegmentsInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
 import { directedPathTeleportSegmentsSumInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
@@ -208,7 +210,8 @@ import {
 	nurikabeRegionSumLineInfo,
 	notConsecutiveLineInfo,
 	regionSumArithmeticSequenceLineInfo,
-	chaosConstructionKreskaLineInfo
+	chaosConstructionKreskaLineInfo,
+	sameAdjacentDifferenceLineInfo
 } from './LineElementsInfo/LineElementsInfo';
 import {
 	doubleArrowLineInfo,
@@ -348,7 +351,8 @@ import {
 	yinYangCountUniqueFillominoSameShadingInfo,
 	sameGalaxyUnobstructedCountArrowsInfo,
 	yinYangCombinedShadedCellsCountExceptItselfInfo,
-	loopCountEachCellArrowsInfo
+	loopCountEachCellArrowsInfo,
+	yinYangYongCountBordersInfo
 } from './SingleCellMultiArrowElementsInfo';
 import {
 	forbiddenKnightSumInfo,
@@ -383,6 +387,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.LITS]: LITSInfo,
 	[TOOLS.HEXED_SUDOKU]: hexedSudokuInfo,
 	[TOOLS.FILLOMINO]: fillominoInfo,
+	[TOOLS.SOMEDOKU]: somedokuInfo,
 	[TOOLS.ANTIKNIGHT]: antiknightInfo,
 	[TOOLS.ANTI_LONG_KNIGHT]: antiLongKnightInfo,
 	[TOOLS.ANTIKING]: antikingInfo,
@@ -423,6 +428,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.NUMBERED_CHAOS_CONSTRUCTION]: numberedChaosConstructionInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_SUGURU]: chaosConstructionSuguruInfo,
 	[TOOLS.YIN_YANG]: yinYangInfo,
+	[TOOLS.YIN_YANG_YONG]: yinYangYongInfo,
 	[TOOLS.NURIMISAKI]: nurimisakiInfo,
 	[TOOLS.NURIKABE]: nurikabeInfo,
 	[TOOLS.BUILD_YOUR_OWN_KILLER_CAGES]: buildYourOwnKillerCagesInfo,
@@ -554,6 +560,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.YIN_YANG_COUNT_SHADED_CELLS]: yinYangCountShadedCellsInfo,
 	[TOOLS.YIN_YANG_COMBINED_SHADED_CELLS_COUNT_EXCEPT_ITSELF]:
 		yinYangCombinedShadedCellsCountExceptItselfInfo,
+	[TOOLS.YIN_YANG_YONG_COUNT_BORDERS]: yinYangYongCountBordersInfo,
 	[TOOLS.LOOP_COUNT_ALL_CELL_ARROWS]: loopCountAllCellArrowsInfo,
 	[TOOLS.LOOP_COUNT_EACH_CELL_ARROWS]: loopCountEachCellArrowsInfo,
 	[TOOLS.YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS]:
@@ -645,6 +652,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.PRODUCT_LINE]: productLineInfo,
 	[TOOLS.ADJACENT_MULTIPLES_LINE]: adjacentMultiplesLineInfo,
 	[TOOLS.ADJACENT_DIFFERENCES_COUNT_LINE]: adjacentDifferencesCountLineInfo,
+	[TOOLS.SAME_ADJACENT_DIFFERENCE_LINE]: sameAdjacentDifferenceLineInfo,
 	[TOOLS.LOOK_AND_SAY_LINE]: lookandSayLineInfo,
 	[TOOLS.ARITHMETIC_SEQUENCE_LINE]: arithmeticSequenceLineInfo,
 	[TOOLS.REGION_SUM_ARITHMETIC_SEQUENCE_LINE]: regionSumArithmeticSequenceLineInfo,

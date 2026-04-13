@@ -12,6 +12,7 @@ export enum VAR_2D_NAMES {
 	BOARD = 'board',
 	BOARD_REGIONS = 'board_regions',
 	YIN_YANG = 'yin_yang',
+	YIN_YANG_YONG = 'yin_yang_yong',
 	NURIMISAKI = 'nurimisaki',
 	NURIKABE_SHADING = 'nurikabe_shading',
 	NURIKABE_REGIONS = 'nurikabe_regions',

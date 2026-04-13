@@ -270,6 +270,48 @@ export const yinYangSumOfCellsOfOppositeColorInfo: SquareCellElementInfo = {
 	}
 };
 
+function yinYangYongCountBordersConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const cell_var = cellToVarName(cell);
+
+	const directions = constraint.directions;
+	let out_str: string = '';
+	for (const direction of directions) {
+		let cells = grid.getCellsInDirection(cell.r, cell.c, direction);
+		cells = [cell, ...cells];
+		const yin_yang_yong_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG_YONG);
+
+		out_str += `constraint yin_yang_yong_count_borders_p(${yin_yang_yong_vars_str}, ${cell_var});\n`;
+	}
+
+	return out_str;
+}
+
+export const yinYangYongCountBordersInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
+
+	toolId: TOOLS.YIN_YANG_YONG_COUNT_BORDERS,
+
+	shape: {
+		...DEFAULT_BLACK_ARROW,
+		stroke: { editable: true, value: 'var(--constraint-color-blue)' }
+	},
+
+	meta: {
+		description:
+			"A digit on a blue arrow indicates how many region borders (separating two regions) are seen in the direction of the arrow. (Region edges at the outer perimeter of the grid don't count.)",
+		tags: [],
+		categories: defaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return singleCellMultiArrowElementFunction(model, element, yinYangYongCountBordersConstraint);
+	}
+};
+
 function yinYangCountShadedCellsConstraint(grid: Grid, constraint: CellMultiArrowToolI) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);

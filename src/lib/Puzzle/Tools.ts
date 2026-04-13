@@ -35,6 +35,7 @@ export enum SIMPLE_GLOBAL_CONSTRAINTS {
 	NOT_ALL_ODD_IN_A_2X2_SQUARE = 'Not All Odd In A 2x2 Square',
 
 	RANKED_2X2_BOX_NUMBERS = 'Ranked 2x2 Box Numbers',
+	SOMEDOKU = 'Somedoku',
 }
 
 export enum DIAGONAL_CONSTRAINTS {
@@ -102,7 +103,10 @@ export enum OTHER_UNDETERMINED_REGIONS_CONSTRAINTS {
 	LITS_BLACK_WHITE_STAR_BATTLE = 'LITS Black And White Star Battle',
 	BUILD_YOUR_OWN_KILLER_CAGES = 'Build Your Own Killer Cages',
 
-	SHADED_ROW_COLUMN_BOX_COUNTERS = 'Shaded Row Column and Box Counters'
+	SHADED_ROW_COLUMN_BOX_COUNTERS = 'Shaded Row Column and Box Counters',
+
+	YIN_YANG_YONG = 'Yin Yang Yong',
+	YIN_YANG_YONG_IDENTICAL_DIGITS_DO_NOT_APPEAR_IN_DIFFERENT_REGIONS = 'Yin Yang Yong Identical Digits Do Not Appear In Different Regions'
 }
 
 export enum GLOBAL_PENTOMINO_TILLING_CONSTRAINTS {
@@ -287,6 +291,7 @@ export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
 	YIN_YANG_COUNT_SHADED_CELLS = 'Yin Yang Count Shaded Cells',
 	YIN_YANG_COMBINED_SHADED_CELLS_COUNT_EXCEPT_ITSELF = 'Yin Yang Combined Shaded Cells Count Except Itself',
 	YIN_YANG_SUM_OF_CELLS_OF_OPPOSITE_COLOR = 'Yin Yang Sum Of Cells Of Opposite Color',
+	YIN_YANG_YONG_COUNT_BORDERS = 'Yin Yang Yong Count Borders',
 	LOOP_COUNT_ALL_CELL_ARROWS = 'Loop Count All Cell Arrows',
 	LOOP_COUNT_EACH_CELL_ARROWS = 'Loop Count Each Cell Arrows',
 	YIN_YANG_COUNT_UNIQUE_FILLOMINO_SAME_SHADING_ARROWS = 'Yin Yang Count Unique Fillomino Same Shading Arrows',
@@ -379,6 +384,7 @@ export enum LINE_CONSTRAINTS {
 	PRODUCT_LINE = 'Product Line',
 	ADJACENT_MULTIPLES_LINE = 'Adjacent Multiples Line',
 	ADJACENT_DIFFERENCES_COUNT_LINE = 'Adjacent Differences Count Line',
+	SAME_ADJACENT_DIFFERENCE_LINE = 'Same Adjacent Difference Line',
 	ZIPPER_LINE = 'Zipper Line',
 	SEGMENTED_SUM_LINE = 'Segmented Sum Line',
 	SEGMENTED_SUM_AND_RENBAN_LINE = 'Segmented Sum And Renban Line',

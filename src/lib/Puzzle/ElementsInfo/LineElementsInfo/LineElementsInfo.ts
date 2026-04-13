@@ -1443,6 +1443,26 @@ export const adjacentDifferencesCountLineInfo: SquareCellElementInfo = {
 	}
 };
 
+export const sameAdjacentDifferenceLineInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_LINE_OPTIONS_INTERSECT,
+
+	toolId: TOOLS.SAME_ADJACENT_DIFFERENCE_LINE,
+
+	shape: DEFAULT_LIGHT_BLUE_LINE_SHAPE,
+
+	meta: {
+		description:
+			'Adjacent digits on a turquoise line always have the same difference. This difference must be determined for each turquoise line.',
+		usage: lineUsage(),
+		tags: [],
+		categories: simpleLineDefaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleLineElement(model, element, 'same_adjacent_difference_line_p');
+	}
+};
+
 export const lookandSayLineInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_LINE_OPTIONS_NO_INTERSECT,
 
