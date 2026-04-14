@@ -248,14 +248,16 @@ export function cellEdgeToCellCoords(edge: GridCoordI): GridCoordI[] {
 export function addToCellGroup(
 	group: GridCoordI[],
 	cell: GridCoordI,
-	allowDiagonallyAdjacent: boolean = false
+	allowDiagonallyAdjacent: boolean = false,
+	allowNonAdjacent: boolean = false
 ): GridCoordI[] {
 	const inGroup = group.some((_cell) => areCoordsEqual(_cell, cell));
+
 	const adjacent = allowDiagonallyAdjacent
 		? group.some((_cell) => areCoordsNeighbours(_cell, cell))
 		: group.some((_cell) => areCoordsOrthogonallyAdjacent(_cell, cell));
 
-	if (!inGroup && adjacent) {
+	if (!inGroup && (adjacent || allowNonAdjacent)) {
 		const newGroup = [...group, cell];
 		sortGridCoords(newGroup);
 		return newGroup;

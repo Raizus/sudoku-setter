@@ -39,12 +39,9 @@ export function getCageToolInputHandler(
 		if (!onGrid) return;
 
 		// if shift click on an existing cage or mode is add/edit, set it as current constraint,
-		// if there is no current constraint
 		const elements = stateStore.getElementsDict();
 		const match = findCageConstraint(elements, tool, coords);
 		if (
-			id === null &&
-			currentConstraint === null &&
 			match &&
 			(event.event.shiftKey || mode_aux === BASIC_TOOL_MODE.ADD_EDIT)
 		) {
@@ -62,13 +59,14 @@ export function getCageToolInputHandler(
 		const element_id = stateStore.getSelectedElementId();
 		if (element_id === null) return;
 
+		// delete cage
 		if (match && mode_aux === BASIC_TOOL_MODE.DELETE) {
 			pushRemoveLocalConstraintCommand(element_id, match[0], match[1]);
 			return;
 		}
 
+		// create new cage
 		if (!currentConstraint && mode_aux === BASIC_TOOL_MODE.ADD_EDIT) {
-			// create new cage
 			currentConstraint = cageConstraint(tool, [coords]);
 			id = uniqueId();
 			stateStore.setShapeAndAddConstraint(element_id, id, currentConstraint);
@@ -77,11 +75,14 @@ export function getCageToolInputHandler(
 
 		// add to current cage
 		else if (currentConstraint && id && mode_aux === BASIC_TOOL_MODE.ADD_EDIT) {
-			const allowDiagonallyAdjacent = options?.allowDiagonallyAdjacent ?? false;
+			const allowDiagonallyAdjacent = !!options?.allowDiagonallyAdjacent;
+			const allowNonAdjacent = !!options?.allowNonAdjacent;
+
 			currentConstraint = updateCageConstraintCells(
 				currentConstraint,
 				coords,
-				allowDiagonallyAdjacent
+				allowDiagonallyAdjacent,
+				allowNonAdjacent
 			);
 			stateStore.updateConstraint(element_id, id, currentConstraint);
 			return;
@@ -97,8 +98,11 @@ export function getCageToolInputHandler(
 	}
 
 	pointerHandler.onDragStart = (event: CellDragTapEvent): void => {
-		id = null;
-		currentConstraint = null;
+		if (!event.event.shiftKey) {
+			id = null;
+			currentConstraint = null;
+		}
+
 		mode_aux = stateStore.getCurrentToolMode();
 		handle(event);
 	};
@@ -115,8 +119,6 @@ export function getCageToolInputHandler(
 			// push command to history stack
 			pushAddLocalConstraintCommand(element_id, id, currentConstraint, false);
 		}
-
-		id = null;
 	};
 
 	const inputHandler: InputHandler = {

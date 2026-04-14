@@ -14,9 +14,10 @@ export function cageConstraint(toolId: TOOLID, coords: GridCoordI[], value = '')
 export function updateCageConstraintCells(
 	cage: CageToolI,
 	cell: GridCoordI,
-	allowDiagonallyAdjacent: boolean = false
+	allowDiagonallyAdjacent: boolean = false,
+	allowNonAdjacent: boolean = false
 ): CageToolI {
-	const newGroup = addToCellGroup(cage.cells, cell, allowDiagonallyAdjacent);
+	const newGroup = addToCellGroup(cage.cells, cell, allowDiagonallyAdjacent, allowNonAdjacent);
 
 	if (newGroup !== cage.cells) {
 		const newCage: CageToolI = {

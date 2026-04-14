@@ -76,7 +76,8 @@ const DEFAULT_CAGE_SHAPE: EditableShapeI = {
 const DEFAULT_UNVALUED_CAGE_OPTIONS: CageToolInputOptions = {
 	type: HANDLER_TOOL_TYPE.CAGE,
 	defaultValue: '',
-	allowDiagonallyAdjacent: true
+	allowDiagonallyAdjacent: true,
+	allowNonAdjacent: true
 };
 
 const DEFAULT_CAGE_OPTIONS: CageToolInputOptions = {

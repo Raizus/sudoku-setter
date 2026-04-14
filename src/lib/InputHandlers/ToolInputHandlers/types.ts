@@ -95,6 +95,7 @@ export interface CageToolInputOptions extends ToolOptionsI {
 	type: HANDLER_TOOL_TYPE.CAGE;
 	defaultValue?: string;
 	allowDiagonallyAdjacent?: boolean;
+	allowNonAdjacent?: boolean;
 };
 
 export interface CloneToolInputOptions extends ToolOptionsI {
