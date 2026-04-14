@@ -260,11 +260,6 @@ function minesweeperElement(model: PuzzleModel, element: ConstraintsElement, pre
 	return out_str;
 }
 
-function oddMinesweeperElement(model: PuzzleModel, element: ConstraintsElement) {
-	const out_str = minesweeperElement(model, element, 'odd_count');
-	return out_str;
-}
-
 export const oddMinesweeperInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -285,14 +280,11 @@ export const oddMinesweeperInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: oddMinesweeperElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		const out_str = minesweeperElement(model, element, 'odd_count');
+		return out_str;
+	}
 };
-
-function evenMinesweeperElement(model: PuzzleModel, element: ConstraintsElement) {
-	// A digit in a cell with a red square is the same as the number of the surrounding cells (not counting the cell itself) with even numbers. (So a total of 8 possible surrounding cells).
-	const out_str = minesweeperElement(model, element, 'even_count');
-	return out_str;
-}
 
 export const evenMinesweeperInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
@@ -314,7 +306,10 @@ export const evenMinesweeperInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: evenMinesweeperElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		const out_str = minesweeperElement(model, element, 'even_count');
+		return out_str;
+	}
 };
 
 function countSameParityNeighbourConstraint(
@@ -1764,7 +1759,10 @@ function chaosConstructionChessSumsConstraint(
 	// knight sum
 	const knight_cells = grid.getCellsByKnightMove(cell);
 	const knight_vars = cellsToGridVarsStr(knight_cells, VAR_2D_NAMES.BOARD);
-	const knight_region_vars = cellsToGridVarsStr(knight_cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
+	const knight_region_vars = cellsToGridVarsStr(
+		knight_cells,
+		VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS
+	);
 	out_str += `var int: knight_sum_${c_id};\n`;
 	out_str += `constraint knight_sum_${c_id} = conditional_sum_f(${knight_vars}, ${knight_region_vars}, ${region_var});\n`;
 	out_str += `var bool: knight_${c_id};\n`;
@@ -1778,7 +1776,10 @@ function chaosConstructionChessSumsConstraint(
 		cells.forEach((_cell) => bishop_cells.push(_cell));
 	}
 	const bishop_vars = cellsToGridVarsStr(bishop_cells, VAR_2D_NAMES.BOARD);
-	const bishop_region_vars = cellsToGridVarsStr(bishop_cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
+	const bishop_region_vars = cellsToGridVarsStr(
+		bishop_cells,
+		VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS
+	);
 	out_str += `var int: bishop_sum_${c_id};\n`;
 	out_str += `constraint bishop_sum_${c_id} = conditional_sum_f(${bishop_vars}, ${bishop_region_vars}, ${region_var});\n`;
 	out_str += `var bool: bishop_${c_id};\n`;

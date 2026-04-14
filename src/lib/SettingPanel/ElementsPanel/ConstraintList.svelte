@@ -11,7 +11,7 @@
 	<div class="constraint-list-wrapper">
 		<div class="constraint-list">
 			{#each Object.entries(constraints_element.constraints) as entry (entry[0])}
-				<ConstraintSelectionButton constraint_id={entry[0]} {element_id} />
+				<ConstraintSelectionButton constraint_id={entry[0]} constraint={entry[1]} {element_id} />
 			{/each}
 		</div>
 	</div>

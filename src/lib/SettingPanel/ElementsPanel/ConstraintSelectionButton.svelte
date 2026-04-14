@@ -1,12 +1,13 @@
 <script lang="ts">
 	import Trash from '$icons/Trash.svelte';
-	import {
-		addConstraintAction,
-		removeConstraintAction
-	} from '$src/lib/reducers/ElementsActions';
+	import Visibility from '$icons/Visibility.svelte';
+	import VisibilityOff from '$icons/VisibilityOff.svelte';
+	import type { ConstraintType } from '$src/lib/Puzzle/puzzle_schema';
+	import { addConstraintAction, removeConstraintAction } from '$src/lib/reducers/ElementsActions';
 	import { stateStore } from '$stores/StateStore';
 
 	export let constraint_id: string;
+	export let constraint: ConstraintType;
 	export let element_id: number;
 
 	const svgRefStore = stateStore.svgRefStore;
@@ -29,7 +30,12 @@
 		stateStore.commandHistoryStore.addCommand(command);
 	}
 
+	function enableDisableConstraint() {
+		stateStore.enableDisableConstraint(element_id, constraint_id);
+	}
+
 	$: currentConstraintId = $currentConstraintStore?.id;
+	$: disabled = !!constraint.disabled;
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -43,7 +49,22 @@
 		ID: {constraint_id}
 	</div>
 	<div class="right-side">
-		<button class="remove-constraint-button" on:click|stopPropagation={removeConstraint}>
+		<button
+			class="remove-constraint-button"
+			on:click|stopPropagation={enableDisableConstraint}
+			title={disabled ? "Enable constraint" : "Disable constraint"}
+		>
+			{#if disabled}
+				<VisibilityOff />
+			{:else}
+				<Visibility />
+			{/if}
+		</button>
+		<button
+			class="remove-constraint-button"
+			on:click|stopPropagation={removeConstraint}
+			title="Delete constraint"
+		>
 			<Trash />
 		</button>
 	</div>

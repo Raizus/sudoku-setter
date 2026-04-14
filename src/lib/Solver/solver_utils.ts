@@ -317,6 +317,8 @@ export function simpleElementFunction<T extends ConstraintType>(
 
 	const grid = model.puzzle.grid;
 	for (const [c_id, constraint] of Object.entries(constraints)) {
+		if (constraint.disabled) continue;
+		
 		const constraint_str = func(model, grid, c_id, constraint as T);
 		out_str += constraint_str;
 	}
@@ -588,7 +590,7 @@ export function findSingleCellConstraintMatch<T extends SingleCellTool>(
 	const clist = [...Object.values(constraints)];
 	const match = clist.find((constraint) => {
 		const coord = constraint.cell;
-		if (cell.c === coord.c && cell.r === coord.r) return constraint;
+		if (!constraint.disabled && cell.c === coord.c && cell.r === coord.r) return constraint;
 	});
 	return match;
 }

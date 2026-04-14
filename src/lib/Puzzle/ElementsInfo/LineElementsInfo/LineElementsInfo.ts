@@ -163,6 +163,7 @@ export const slowThermometerInfo: SquareCellElementInfo = {
 };
 
 function rowCycleThermoConstraint(grid: Grid, c_id: string, constraint: LineToolI) {
+	if (constraint.disabled) return '';
 	const cells = cellsFromCoords(grid, constraint.cells);
 
 	let out_str = '';
@@ -663,6 +664,7 @@ function regionSumLineConstraint(
 	c_id: string,
 	constraint: LineToolI
 ) {
+	if (constraint.disabled) return '';
 	let out_str = '';
 	const cells = cellsFromCoords(grid, constraint.cells);
 
@@ -757,6 +759,7 @@ function regionSumArithmeticSequenceLineConstraint(
 	c_id: string,
 	constraint: LineToolI
 ) {
+	if (constraint.disabled) return '';
 	let out_str = '';
 	const cells = cellsFromCoords(grid, constraint.cells);
 
@@ -1250,6 +1253,7 @@ function rowSumLineElement(model: PuzzleModel, element: ConstraintsElement) {
 
 	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
+		if (constraint.disabled) continue;
 		const constraint_str = rowSumLineConstraint(grid, constraint as LineToolI);
 		out_str += constraint_str;
 	}

@@ -166,6 +166,7 @@ function getEdgeVars(grid: Grid, constraint: EdgeToolI, use_values: boolean = fa
 }
 
 function simpleEdgeConstraint(grid: Grid, constraint: EdgeToolI, predicate: string) {
+	if (constraint.disabled) return '';
 	const vars = getEdgeVars(grid, constraint);
 	const [var1, var2] = vars;
 
@@ -198,13 +199,15 @@ function getParsingResult(model: PuzzleModel, value: string, c_id: string) {
 
 function valuedEdgeConstraint(
 	model: PuzzleModel,
-	grid: Grid,
 	c_id: string,
 	constraint: EdgeToolI,
 	predicate: string,
 	default_value: string = '',
 	use_values: boolean = false
 ) {
+	if (constraint.disabled) return '';
+
+	const grid = model.puzzle.grid;
 	const vars = getEdgeVars(grid, constraint, use_values);
 	const [var1, var2] = vars;
 
@@ -231,11 +234,9 @@ function valuedEdgeElement(
 	const mod_constraints = element.negative_constraints;
 	const use_values = mod_constraints ? !!mod_constraints[TOOLS.USE_CELL_VALUES] : false;
 
-	const grid = model.puzzle.grid;
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = valuedEdgeConstraint(
 			model,
-			grid,
 			c_id,
 			constraint as EdgeToolI,
 			predicate,

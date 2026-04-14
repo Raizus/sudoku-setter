@@ -85,14 +85,13 @@ function getParsingResult(model: PuzzleModel, value: string, c_id: string) {
 export function getLineVars(
 	grid: Grid,
 	constraint: LineToolI,
-	use_set: boolean = false,
-	use_values: boolean = false
+	grid_name: string = VAR_2D_NAMES.BOARD,
+	use_set: boolean = false
 ): string[] {
 	let cells = cellsFromCoords(grid, constraint.cells);
 	if (use_set) {
 		cells = [...new Set(cells)];
 	}
-	const grid_name = use_values ? VAR_2D_NAMES.VALUES_GRID : VAR_2D_NAMES.BOARD;
 	const vars = cellsToGridVarsName(cells, grid_name);
 	return vars;
 }
@@ -101,10 +100,11 @@ function simpleLineConstraint(
 	grid: Grid,
 	constraint: LineToolI,
 	predicate: string,
+	grid_name: string = VAR_2D_NAMES.BOARD,
 	use_set: boolean = false,
-	use_values: boolean = false
 ) {
-	const vars = getLineVars(grid, constraint, use_set, use_values);
+	if (constraint.disabled) return '';
+	const vars = getLineVars(grid, constraint, grid_name, use_set);
 	const vars_str = `[${vars.join(',')}]`;
 	const constraint_str: string = `constraint ${predicate}(${vars_str});\n`;
 	return constraint_str;
@@ -122,6 +122,7 @@ export function simpleLineElement(
 
 	const mod_constraints = element.negative_constraints;
 	const use_values = mod_constraints ? !!mod_constraints[TOOLS.USE_CELL_VALUES] : false;
+	const grid_name = use_values ? VAR_2D_NAMES.VALUES_GRID : VAR_2D_NAMES.BOARD;
 
 	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
@@ -129,8 +130,8 @@ export function simpleLineElement(
 			grid,
 			constraint as LineToolI,
 			predicate,
-			use_set,
-			use_values
+			grid_name,
+			use_set
 		);
 		out_str += constraint_str;
 	}
@@ -156,6 +157,7 @@ function valuedLineConstraint(
 	predicate: string,
 	default_value: string = ''
 ) {
+	if (constraint.disabled) return '';
 	const grid = model.puzzle.grid;
 	const vars = getLineVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;

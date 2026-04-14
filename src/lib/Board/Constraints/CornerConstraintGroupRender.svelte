@@ -9,11 +9,12 @@
 	const outline = true;
 	const currentConstraintStore = getCurrentConstraintStore();
 
+	$: disabled = !!tool.disabled;
 	$: currentConstraintId = $currentConstraintStore?.id;
 	$: is_selected = c_id !== undefined && c_id === currentConstraintId;
 	$: filter_url = getOutlineFilterUrl(outline, is_selected);
 </script>
 
-<g class="corner-constraint" data-id={`${c_id}`} filter={filter_url}>
+<g class="corner-constraint" data-id={`${c_id}`} filter={filter_url} opacity={disabled ? 0.2 : 1}>
 	<CornerConstraintRenderAux {tool} />
 </g>

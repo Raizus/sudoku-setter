@@ -581,6 +581,17 @@ export class StateStore {
 		});
 	}
 
+	enableDisableConstraint(element_id: number, c_id: string) {
+		const element = this.getElementsDict().get(element_id);
+		if (!element || !element.constraints) return;
+		const constraint = element.constraints[c_id];
+		if (!constraint) return;
+
+		const value = constraint.disabled ? false : true;
+		const newConstraint = { ...constraint, disabled: value };
+		this.updateConstraint(element_id, c_id, newConstraint);
+	}
+
 	setNegativeConstraint(element_id: number, neg_tool_id: TOOLID, value: boolean) {
 		const element = this.getElementsDict().get(element_id);
 		if (!element) return;

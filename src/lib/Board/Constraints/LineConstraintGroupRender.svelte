@@ -14,9 +14,10 @@
 	const currentConstraintStore = getCurrentConstraintStore();
 	const outline = true;
 
+	$: disabled = !!tool.disabled;
 	$: linePoints = cellsToVector2DPoints(tool.cells);
 	$: shape = tool.shape ?? defaultShape;
-	$: opacity = shape?.opacity ?? 1;
+	// $: opacity = shape?.opacity ?? 1;
 
 	$: outlineShape = {
 		...shape,
@@ -32,12 +33,18 @@
 	$: is_selected = c_id === $currentConstraintStore?.id;
 </script>
 
-<g class="line-constraint" id={`c-${c_id}`} data-id={c_id} {opacity}>
+<g class="line-constraint" id={`c-${c_id}`} data-id={c_id} opacity={disabled ? 0.2 : 1}>
 	{#if outline}
-		<LineConstraintRender {linePoints} shape={outlineShape} />
+		<g class="emphasis-outline">
+			<LineConstraintRender {linePoints} shape={outlineShape} />
+		</g>
 	{/if}
 	{#if is_selected}
-		<LineConstraintRender {linePoints} shape={selectedOutlineShape} />
+		<g class="selection-outline">
+			<LineConstraintRender {linePoints} shape={selectedOutlineShape} />
+		</g>
 	{/if}
-	<LineConstraintRender {linePoints} {shape} />
+	<g class="constraint">
+		<LineConstraintRender {linePoints} {shape} />
+	</g>
 </g>
