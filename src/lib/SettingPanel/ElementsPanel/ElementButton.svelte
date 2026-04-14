@@ -47,6 +47,10 @@
 		}
 	}
 
+	function duplicateElement() {
+		stateStore.duplicateElementCommand(element_id);
+	}
+
 	function getTooltip() {
 		const toolDescription = elementInfo.meta?.description;
 		const toolUsage = elementInfo.meta?.usage ?? getUsageDescription(tool_id);
@@ -116,6 +120,7 @@
 					deleteElementCb={deleteElement}
 					{disabled}
 					enableDisableElementCb={enableDisableElement}
+					duplicateElementCb={duplicateElement}
 				/>
 			{/if}
 		</div>

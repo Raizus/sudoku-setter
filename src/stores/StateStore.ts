@@ -1,4 +1,9 @@
-import { ElementsDict, filterElements } from '$src/lib/Puzzle/Constraints/ElementsDict';
+import {
+	elementFromJson,
+	ElementsDict,
+	elementToJson,
+	filterElements
+} from '$src/lib/Puzzle/Constraints/ElementsDict';
 import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
 import { Grid } from '$src/lib/Puzzle/Grid/Grid';
 import { PenTool } from '$src/lib/Puzzle/PenTool';
@@ -34,7 +39,15 @@ import {
 } from '$src/lib/Puzzle/Tools';
 
 import type { ToolModeT } from '$input/ToolInputHandlers/types';
-import { ELEMENT_ACTIONS, enableDisableElementAction, moveElementDownAction, moveElementUpAction, removeElementAction, restoreElementAction, type ElementAction } from '$src/lib/reducers/ElementsActions';
+import {
+	ELEMENT_ACTIONS,
+	enableDisableElementAction,
+	moveElementDownAction,
+	moveElementUpAction,
+	removeElementAction,
+	restoreElementAction,
+	type ElementAction
+} from '$src/lib/reducers/ElementsActions';
 import {
 	reducerPenTool,
 	resetPenAction,
@@ -575,6 +588,18 @@ export class StateStore {
 		element.negative_constraints[neg_tool_id] = value;
 	}
 
+	duplicateElement(
+		element_id: number
+	): undefined | [element_id: number, element: ConstraintsElement] {
+		const element = this.getElementsDict().get(element_id);
+		if (!element) return;
+		const newElement = elementFromJson(elementToJson(element));
+		if (!newElement) return;
+		const new_ele_id = this.addGroupToElementsDict(newElement);
+
+		return [new_ele_id, newElement];
+	}
+
 	updateElementAction(action: ElementAction): void {
 		if (action.type === ELEMENT_ACTIONS.ADD_CONSTRAINT) {
 			this.addConstraint(action.payload.element_id, action.payload.id, action.payload.constraint);
@@ -639,6 +664,20 @@ export class StateStore {
 		const reverse_action = moveElementDownAction(element_id);
 		const command = this.getUpdateElementCommand(action, reverse_action);
 		this.commandHistoryStore.addCommand(command);
+	}
+
+	duplicateElementCommand(element_id: number | null) {
+		if (element_id === null) return;
+		const new_element_and_id = this.duplicateElement(element_id);
+		if (new_element_and_id === undefined) return;
+
+		const [new_id, new_element] = new_element_and_id;
+		this.setSelectedElementIdStore(new_id);
+
+		const action = restoreElementAction(new_id, new_element);
+		const reverse_action = removeElementAction(new_id);
+		const command = this.getUpdateElementCommand(action, reverse_action);
+		this.commandHistoryStore.addCommand(command, false);		
 	}
 
 	moveElementDownCommand(element_id: number | null) {

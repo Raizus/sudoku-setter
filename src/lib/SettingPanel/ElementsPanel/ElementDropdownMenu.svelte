@@ -1,5 +1,6 @@
 <script lang="ts">
 	import DropdownMenuButton from "$components/ReusableComponents/DropdownMenuButton.svelte";
+	import Copy from "$icons/Copy.svelte";
 	import Trash from "$icons/Trash.svelte";
 	import Visibility from "$icons/Visibility.svelte";
 	import VisibilityOff from "$icons/VisibilityOff.svelte";
@@ -8,6 +9,7 @@
     export let disabled = false;
 	export let deleteElementCb: (() => void) | null = null;
 	export let enableDisableElementCb: (() => void) | null = null;
+	export let duplicateElementCb: (() => void) | null = null;
 
 	const close = getContext<() => void>('closeDropdown');
 </script>
@@ -42,5 +44,18 @@
 			<Trash />
 		</svelte:fragment>
 		<svelte:fragment slot="label">Delete</svelte:fragment>
+	</DropdownMenuButton>
+{/if}
+{#if duplicateElementCb}
+	<DropdownMenuButton
+		clickCb={() => {
+			duplicateElementCb();
+			close();
+		}}
+	>
+		<svelte:fragment slot="icon">
+			<Copy />
+		</svelte:fragment>
+		<svelte:fragment slot="label">Duplicate</svelte:fragment>
 	</DropdownMenuButton>
 {/if}

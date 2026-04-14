@@ -7,6 +7,7 @@ export enum ELEMENT_ACTIONS {
 	ADD_ELEMENT = 'ADD_ELEMENT',
 	REMOVE_ELEMENT = 'REMOVE_ELEMENT',
 	RESTORE_ELEMENT = 'RESTORE_ELEMENT',
+	DUPLICATE_ELEMENT = 'DUPLICATE_ELEMENT',
 	ENABLE_DISABLE_ELEMENT = 'ENABLE_DISABLE_ELEMENT',
 	UPDATE_LOCAL_CONSTRAINT = 'UPDATE_LOCAL_CONSTRAINT',
 	MOVE_ELEMENT_UP = 'MOVE_ELEMENT_UP',
@@ -52,6 +53,13 @@ type RestoreElementAction = {
 	};
 };
 
+type DuplicateElementAction = {
+	type: ELEMENT_ACTIONS.DUPLICATE_ELEMENT;
+	payload: {
+		element_id: number;
+	};
+};
+
 type EnableDisableElementAction = {
 	type: ELEMENT_ACTIONS.ENABLE_DISABLE_ELEMENT;
 	payload: {
@@ -89,6 +97,7 @@ export type ElementAction =
 	| AddElementAction
 	| RemoveElementAction
 	| RestoreElementAction
+	| DuplicateElementAction
 	| UpdateLocalConstraintAction
 	| EnableDisableElementAction
 	| MoveElementUpAction
@@ -109,10 +118,7 @@ export const addConstraintAction = (
 	};
 };
 
-export const removeConstraintAction = (
-	element_id: number,
-	id: string
-): RemoveConstraintAction => {
+export const removeConstraintAction = (element_id: number, id: string): RemoveConstraintAction => {
 	return {
 		type: ELEMENT_ACTIONS.REMOVE_CONSTRAINT,
 		payload: {
@@ -149,6 +155,17 @@ export const restoreElementAction = (
 		payload: {
 			element_id,
 			element: element
+		}
+	};
+};
+
+export const duplicateElementAction = (
+	element_id: number
+): DuplicateElementAction => {
+	return {
+		type: ELEMENT_ACTIONS.DUPLICATE_ELEMENT,
+		payload: {
+			element_id
 		}
 	};
 };
