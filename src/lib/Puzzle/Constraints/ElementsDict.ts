@@ -98,6 +98,70 @@ function constraintFromJson(
 	return constraint;
 }
 
+export function elementFromJson(element_data: ElementData): ConstraintsElement | null {
+	// read tool_id and verify tool is valid and defined in the element handlers
+	const tool_id_str = element_data['tool_id'];
+	if (typeof tool_id_str !== 'string') throw TypeError('tool_id_str must be of type string.');
+
+	const tool = toolKeyFromString(tool_id_str);
+	if (tool === undefined) return null;
+	if (!Object.keys(elementInfoRegistry).includes(tool)) {
+		console.log(`tool ${tool} not defined in squareCellElementHandlers`);
+		return null;
+	}
+
+	// add element
+	const element: ConstraintsElement = { tool_id: tool, constraints: {} };
+
+	// parse negative constraints
+	const neg_constraints_data = element_data['negative_constraints'];
+	if (neg_constraints_data) {
+		element.negative_constraints = {};
+		for (const [neg_const_id, value] of Object.entries(neg_constraints_data)) {
+			element.negative_constraints[neg_const_id] = value;
+		}
+	}
+
+	// parse constraints
+	const constraints_data = element_data['constraints'];
+	for (const constraint_data of constraints_data) {
+		const constraint = constraintFromJson(tool, constraint_data);
+
+		if (constraint === null) continue;
+
+		const c_id = uniqueId();
+		const shape = parseShape(constraint_data, tool);
+		constraint.shape = shape;
+
+		if (!element.constraints) element.constraints = {};
+		element.constraints[c_id] = constraint;
+	}
+
+	return element;
+}
+
+export function elementToJson(element: ConstraintsElement): ElementData {
+	const constraints: Record<string, unknown>[] = [];
+	if (element.constraints) {
+		for (const constraint of Object.values(element.constraints)) {
+			constraints.push(constraintToJson(constraint));
+		}
+	}
+	const element_data: ElementData = {
+		tool_id: element.tool_id,
+		constraints
+	};
+	if (element.negative_constraints) {
+		for (const [neg_tool_id, value] of Object.entries(element.negative_constraints)) {
+			if (!value) continue;
+			if (!element_data.negative_constraints) element_data.negative_constraints = {};
+			element_data.negative_constraints[neg_tool_id] = value;
+		}
+	}
+
+	return element_data;
+}
+
 export interface ElementData {
 	tool_id: TOOLID;
 	name?: string;
@@ -236,71 +300,23 @@ export class ElementsDict extends Map<number, ConstraintsElement> {
 		const elements_data: ElementData[] = [];
 
 		for (const [, element] of this.entries()) {
-			const constraints: Record<string, unknown>[] = [];
-			if (element.constraints) {
-				for (const constraint of Object.values(element.constraints)) {
-					constraints.push(constraintToJson(constraint));
-				}
-			}
-			const element_data: ElementData = {
-				tool_id: element.tool_id,
-				constraints
-			};
-			if (element.negative_constraints) {
-				for (const [neg_tool_id, value] of Object.entries(element.negative_constraints)) {
-					if (!value) continue;
-					if (!element_data.negative_constraints) element_data.negative_constraints = {};
-					element_data.negative_constraints[neg_tool_id] = value;
-				}
-			}
+			const element_data = elementToJson(element);
 			elements_data.push(element_data);
 		}
 		return elements_data;
 	}
 
 	static fromJson(data: ElementData[] | undefined) {
-		const local_constraints = new ElementsDict();
-		if (!data) return local_constraints;
+		const elementsDict = new ElementsDict();
+		if (!data) return elementsDict;
+
 		for (const element_data of data) {
-			// read tool_id and verify tool is valid and defined in the element handlers
-			const tool_id_str = element_data['tool_id'];
-			if (typeof tool_id_str !== 'string') throw TypeError('tool_id_str must be of type string.');
-			const tool = toolKeyFromString(tool_id_str);
-			if (tool === undefined) continue;
-			if (!Object.keys(elementInfoRegistry).includes(tool)) {
-				console.log(`tool ${tool} not defined in squareCellElementHandlers`);
-				continue;
-			}
-
-			// add element
-			const element: ConstraintsElement = { tool_id: tool, constraints: {} };
-			const element_id = local_constraints.addElementToDict(element);
+			const element = elementFromJson(element_data);
 			if (!element) continue;
-
-			// parse negative constraints
-			const neg_constraints_data = element_data['negative_constraints'];
-			if (neg_constraints_data) {
-				element.negative_constraints = {};
-				for (const [neg_const_id, value] of Object.entries(neg_constraints_data)) {
-					element.negative_constraints[neg_const_id] = value;
-				}
-			}
-
-			// parse constraints
-			const constraints_data = element_data['constraints'];
-			for (const constraint_data of constraints_data) {
-				const constraint = constraintFromJson(tool, constraint_data);
-
-				if (constraint !== null) {
-					const c_id = uniqueId();
-					const shape = parseShape(constraint_data, tool);
-					constraint.shape = shape;
-					local_constraints.addConstraint(element_id, c_id, constraint);
-				}
-			}
+			elementsDict.addElementToDict(element);
 		}
 
-		return local_constraints;
+		return elementsDict;
 	}
 }
 
