@@ -87,7 +87,7 @@ export function getLineVars(
 	constraint: LineToolI,
 	use_set: boolean = false,
 	use_values: boolean = false
-) {
+): string[] {
 	let cells = cellsFromCoords(grid, constraint.cells);
 	if (use_set) {
 		cells = [...new Set(cells)];
@@ -151,12 +151,12 @@ export function simpleLineElement(
  */
 function valuedLineConstraint(
 	model: PuzzleModel,
-	grid: Grid,
 	c_id: string,
 	constraint: LineToolI,
 	predicate: string,
 	default_value: string = ''
 ) {
+	const grid = model.puzzle.grid;
 	const vars = getLineVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
 
@@ -181,11 +181,9 @@ export function valuedLineElement(
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
-	const grid = model.puzzle.grid;
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = valuedLineConstraint(
 			model,
-			grid,
 			c_id,
 			constraint as LineToolI,
 			predicate,
@@ -231,7 +229,7 @@ export function circularValuedLineElement(
 	if (!constraints) return out_str;
 
 	const grid = model.puzzle.grid;
-	for (const [c_id, constraint] of Object.entries(constraints)) {
+	for (const [, constraint] of Object.entries(constraints)) {
 		const constraint_str = circularValuedLineConstraint(
 			grid,
 			constraint as LineToolI,
