@@ -50,6 +50,7 @@ function lineToVarsStr(grid: Grid, line: GridCoordI[]) {
 }
 
 function simpleArrowConstraint(grid: Grid, constraint: ArrowToolI, predicate: string) {
+	if (constraint.disabled) return '';
 	let out_str = '';
 	const bulb_vars = getArrowPillVars(grid, constraint);
 	const bulb_str = '[' + bulb_vars.join(',') + ']';

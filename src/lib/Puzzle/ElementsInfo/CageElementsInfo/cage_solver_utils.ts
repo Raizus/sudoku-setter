@@ -120,6 +120,14 @@ export function valuedCageConstraint(
 	return [out_str, var_name];
 }
 
+/**
+ * Generates the string for a cage constraint with a value. Also returns the name of the variable used for the value, so it can be used in other constraints/elements.
+ * @param model 
+ * @param element 
+ * @param predicate 
+ * @returns a tuple with the first element being the string for the constraint, and the second element being the array of variable names used for the value. If there is no constraint or if the value is invalid, returns an empty string and an empty variable name.
+ * 
+ */
 export function valuedCageElement(
 	model: PuzzleModel,
 	element: ConstraintsElement,
@@ -134,7 +142,14 @@ export function valuedCageElement(
 
 	const var_names: string[] = [];
 	for (const [c_id, constraint] of Object.entries(constraints)) {
-		const result = valuedCageConstraint(model, c_id, constraint as CageToolI, predicate, use_values);
+		if (constraint.disabled) continue;
+		const result = valuedCageConstraint(
+			model,
+			c_id,
+			constraint as CageToolI,
+			predicate,
+			use_values
+		);
 		out_str += result[0];
 		var_names.push(result[1]);
 	}

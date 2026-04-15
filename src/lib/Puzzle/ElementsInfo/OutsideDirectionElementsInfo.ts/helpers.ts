@@ -1,4 +1,8 @@
-import { type ValueValidatorOptions, defaultValidateValueOnInput, defaultValueUpdater } from '$input/InputHandler';
+import {
+	type ValueValidatorOptions,
+	defaultValidateValueOnInput,
+	defaultValueUpdater
+} from '$input/InputHandler';
 import { cellsToVarsName, type PuzzleModel } from '$src/lib/Solver/solver_utils';
 import type { ParseOptions } from '$src/lib/Solver/value_parsing';
 import type { GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
@@ -96,6 +100,7 @@ export function simpleOutsideDirectionElement(
 
 	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
+		if (constraint.disabled) continue;
 		const constraint_str = simpleOutsideDirectionPredicate(
 			model,
 			grid,

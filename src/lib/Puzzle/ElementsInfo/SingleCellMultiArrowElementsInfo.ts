@@ -49,6 +49,7 @@ export function singleCellMultiArrowElementFunction(
 
 	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
+		if (constraint.disabled) continue;
 		const constraint_str = func(grid, constraint as CellMultiArrowToolI);
 		out_str += constraint_str;
 	}

@@ -65,6 +65,7 @@ function simpleCellArrowElement(
 
 	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
+		if (constraint.disabled) continue;
 		const constraint_str = func(grid, constraint as CellArrowToolI);
 		out_str += constraint_str;
 	}

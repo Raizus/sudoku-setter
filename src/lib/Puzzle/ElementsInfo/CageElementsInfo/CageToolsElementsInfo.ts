@@ -577,6 +577,7 @@ function yinYangValuedCageElement(
 	if (!constraints) return out_str;
 
 	for (const [c_id, constraint] of Object.entries(constraints)) {
+		if (constraint.disabled) continue;
 		const constraint_str = yinYangValuedCageConstraint(
 			model,
 			c_id,
@@ -646,6 +647,7 @@ function yinYangEqualSumCageElement(model: PuzzleModel, element: ConstraintsElem
 
 	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
+		if (constraint.disabled) continue;
 		const constraint_str = yinYangEqualSumCageConstraint(grid, constraint as CageToolI);
 		out_str += constraint_str;
 	}

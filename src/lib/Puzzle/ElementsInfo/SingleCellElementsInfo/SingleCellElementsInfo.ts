@@ -100,7 +100,7 @@ export const DEFAULT_VALUED_SINGLE_CELL_OPTIONS: SingleCellToolOptions = {
 
 function cellsFromElement(grid: Grid, element: ConstraintsElement) {
 	const constraints = element.constraints as Record<string, CellToolI>;
-	const constl = Object.values(constraints);
+	const constl = Object.values(constraints).filter((constraint) => !constraint.disabled);
 
 	const all_coords = constl.map((constraint) => constraint.cell);
 	const cells = new Set(
@@ -254,6 +254,7 @@ function minesweeperElement(model: PuzzleModel, element: ConstraintsElement, pre
 
 	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
+		if (constraint.disabled) continue;
 		const constraint_str = minesweeperConstraint(grid, constraint as CellToolI, predicate);
 		out_str += constraint_str;
 	}
@@ -378,6 +379,7 @@ function watchtowerFarsightElementHelper(
 
 	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
+		if (constraint.disabled) continue;
 		const constraint_str = watchtowerFarsightHelper(grid, constraint as CellToolI, predicate);
 		out_str += constraint_str;
 	}
@@ -1137,15 +1139,10 @@ function seenOddEvenCountElement(grid: Grid, element: ConstraintsElement, predic
 	if (!constraints) return out_str;
 
 	for (const constraint of Object.values(constraints)) {
+		if (constraint.disabled) continue;
 		const constraint_str = seenOddEvenCountConstraint(grid, constraint as CellToolI, predicate);
 		out_str += constraint_str;
 	}
-	return out_str;
-}
-
-function seenEvenCountElement(model: PuzzleModel, element: ConstraintsElement) {
-	const grid = model.puzzle.grid;
-	const out_str = seenOddEvenCountElement(grid, element, 'seen_even_count_p');
 	return out_str;
 }
 
@@ -1163,7 +1160,11 @@ export const seenEvenCountInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: seenEvenCountElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		const grid = model.puzzle.grid;
+		const out_str = seenOddEvenCountElement(grid, element, 'seen_even_count_p');
+		return out_str;
+	}
 };
 
 function cellKnightWhispersConstraint(
@@ -1216,12 +1217,6 @@ export const cellKnightWhispersInfo: SquareCellElementInfo = {
 	}
 };
 
-function seenOddCountElement(model: PuzzleModel, element: ConstraintsElement) {
-	const grid = model.puzzle.grid;
-	const out_str = seenOddEvenCountElement(grid, element, 'seen_odd_count_p');
-	return out_str;
-}
-
 export const seenOddCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
@@ -1242,7 +1237,11 @@ export const seenOddCountInfo: SquareCellElementInfo = {
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
-	solver_func: seenOddCountElement
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		const grid = model.puzzle.grid;
+		const out_str = seenOddEvenCountElement(grid, element, 'seen_odd_count_p');
+		return out_str;
+	}
 };
 
 function twoConstiguousRegionsRowColumnOppositeSetCountConstraint(
