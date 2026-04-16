@@ -45,15 +45,35 @@
 	const fogLightsStore = stateStore.fogLightsStore;
 	const underlayElementsStore = stateStore.underlayElementsStore;
 	const boundingBoxStore = stateStore.boundingBoxStore;
+	const defaultBboxStore = stateStore.defaultBoundingBoxStore;
 
 	setContext('currentConstraint', stateStore.currentConstraintStore);
+
+	let previous_default_bbox = $defaultBboxStore;
 
 	$: grid = $gridStore;
 	$: gridShape = { nRows: grid.nRows, nCols: grid.nCols } as GridShape;
 	$: boundingBox = $boundingBoxStore;
+	$: defaultBbox = $defaultBboxStore;
+
+	$: viewBox = getViewbox(boundingBox);
 
 	function getViewbox(boundingBox: Rectangle) {
 		return `${boundingBox.x} ${boundingBox.y} ${boundingBox.width} ${boundingBox.height}`;
+	}
+
+	function compareBbox(bbox1: Rectangle, bbox2: Rectangle) {
+		if (bbox1.x !== bbox2.x || bbox1.y !== bbox2.y) return false;
+		if (bbox1.width !== bbox2.width || bbox1.height !== bbox2.height) return false;
+
+		return true;
+	}
+
+	$: {
+		if (!compareBbox(previous_default_bbox, defaultBbox)) {
+			previous_default_bbox = defaultBbox;
+			viewBox = getViewbox(defaultBbox);
+		}
 	}
 </script>
 
@@ -64,7 +84,7 @@
 	xmlns="http://www.w3.org/2000/svg"
 	preserveAspectRatio="xMidYMid meet"
 	tabindex="-1"
-	viewBox={getViewbox(boundingBox)}
+	{viewBox}
 >
 	<!-- TODO: NOTE that the outline filters make the rendering considerably slower, compared with rendering outline components -->
 	<OutlineFilterDefs grid_shape={gridShape} />
