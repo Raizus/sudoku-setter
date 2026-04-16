@@ -65,6 +65,8 @@
 		<ElementButton tool_id={TOOLS.GIVEN} {elementHandlers} />
 		<ElementButton tool_id={TOOLS.REGIONS} {elementHandlers} />
 
+		<!-- TODO: fix bug where when loading a new puzzle, element button will not update because id is the same -->
+		<!-- possible fix: change the id to be a string an append the tool id to it. -->
 		{#each $elementsDictStore.orderedEntries() as [element_id, element], index (element_id)}
 			<li animate:flip={{ duration: 500 }}>
 				{#if isElement(element.tool_id)}
