@@ -316,7 +316,8 @@ import {
 	BYOKNotCageCellInfo,
 	chaosConstructionCountSameRegionNeighborCellsInfo,
 	cellShadedRowColumnBoxNotCounterInfo,
-	chaosConstructionCountSameRegionNeighborCellsAndSelfInfo
+	chaosConstructionCountSameRegionNeighborCellsAndSelfInfo,
+	countWhispersNeighborCellsInfo
 } from './SingleCellElementsInfo/SingleCellElementsInfo';
 import {
 	yinYangAdjacentSameShadeCountInfo,
@@ -475,6 +476,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.FARSIGHT]: farsightInfo,
 	[TOOLS.RADAR]: radarInfo,
 	[TOOLS.COUNT_SAME_PARITY_NEIGHBOUR_CELLS]: countSameParityNeighborCellsInfo,
+	[TOOLS.COUNT_WHISPERS_NEIGHBOR_CELLS]: countWhispersNeighborCellsInfo,
 	[TOOLS.ORTHOGONAL_SUM]: orthogonalSumInfo,
 	[TOOLS.DIAGONALLY_ADJACENT_SUM]: diagonallyAdjacentSumInfo,
 	[TOOLS.INDEXING_COLUMN]: indexingColumnInfo,

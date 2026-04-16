@@ -873,6 +873,15 @@ predicate groups_opposite_parity_p(array[int] of var int: arr1, array[int] of va
 predicate count_same_parity_p(var int: a, array[int] of var int: arr) =
     (odd_p(a) /\ odd_count(arr) == a) \/ (even_p(a) /\ even_count(arr) == a);
 
+predicate count_whispers_p(
+    var int: a, 
+    array[int] of var int: arr
+) = let {
+    array[int] of var bool: bools = [abs(a-val) >= 5 | val in arr];
+} in (
+    sum(bools) = a
+);
+
 function array[int] of var bool: watchtower_bools_f(
     array[int] of var int: arr,
     var int: watchtower, 

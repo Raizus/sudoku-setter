@@ -357,6 +357,50 @@ export const countSameParityNeighborCellsInfo: SquareCellElementInfo = {
 	}
 };
 
+function countWhispersNeighborCellsConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const var1 = cellToVarName(cell);
+	const neighbours = grid.getNeighboorCells(cell);
+	neighbours.push(cell);
+	const vars_str = cellsToGridVarsStr(neighbours, VAR_2D_NAMES.BOARD);
+
+	const constraint_str = `constraint count_whispers_p(${var1}, ${vars_str});\n`;
+	return constraint_str;
+}
+
+export const countWhispersNeighborCellsInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+
+	toolId: TOOLS.COUNT_WHISPERS_NEIGHBOR_CELLS,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: false, value: 'green' },
+		r: { editable: false, value: 0.35 },
+		fill: { editable: false, value: 'none' }
+	},
+
+	meta: {
+		description:
+			"A digit x in a green circle indicates exactly how many of the up to 8 neighboring cells (i.e. orthogonally or diagonally adjacent cells) contain a digit that differs by at least 5 from x.",
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, countWhispersNeighborCellsConstraint);
+	}
+};
+
 function watchtowerFarsightHelper(grid: Grid, constraint: CellToolI, predicate: string) {
 	const coords = constraint.cell;
 	const cell0 = grid.getCell(coords.r, coords.c);

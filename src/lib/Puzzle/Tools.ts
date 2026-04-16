@@ -204,6 +204,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	FARSIGHT = 'Farsight',
 	RADAR = 'Radar',
 	COUNT_SAME_PARITY_NEIGHBOUR_CELLS = 'Count Same Parity Neighbour Cells',
+	COUNT_WHISPERS_NEIGHBOR_CELLS = 'Count Whispers Neighbor Cells',
 	ORTHOGONAL_SUM = 'Orthogonal Sum',
 	INDEXING_COLUMN = 'Indexing Column',
 	INDEXING_ROW = 'Indexing Row',
