@@ -240,3 +240,35 @@ export const modularCountCellArrowInfo: SquareCellElementInfo = {
 		return simpleCellArrowElement(model, element, modularCountCellArrowConstraint);
 	}
 };
+
+function magnetsCellArrowConstraint(grid: Grid, constraint: CellArrowToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const cells = getCellsInDirection(grid, constraint);
+
+	const cell_var = cellToVarName(cell);
+	const cells_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+
+	const out_str = `constraint magnets_cell_arrow_p(${cells_vars}, ${cell_var});\n`;
+	return out_str;
+}
+
+export const magnetsCellArrowInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
+
+	toolId: TOOLS.MAGNETS_CELL_ARROW,
+	shape: DEFAULT_GRAY_ARROW,
+
+	meta: {
+		description:
+			'A digit in a magnet cell (M) is the sum of all digits seen in the indicated direction up to the first cell seen that contains a digit larger than M.',
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_ARROW_CATEGORIES
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleCellArrowElement(model, element, magnetsCellArrowConstraint);
+	}
+};

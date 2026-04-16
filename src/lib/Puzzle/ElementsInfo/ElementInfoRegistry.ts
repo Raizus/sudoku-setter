@@ -333,7 +333,8 @@ import {
 	thermoSightlineLoopArrowInfo,
 	sashiganeArrowPointsToBendInfo,
 	skyscrapersArrowInfo,
-	modularCountCellArrowInfo
+	modularCountCellArrowInfo,
+	magnetsCellArrowInfo
 } from './SingleCellArrowElementsInfo';
 import { customFogClearingInfo, fogLighsInfo } from './FogElementsInfo';
 import {
@@ -549,6 +550,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.INTERNAL_LOOP_SKYSCRAPERS]: internalLoopSkyscrapersInfo,
 	[TOOLS.SKYSCRAPERS_ARROW]: skyscrapersArrowInfo,
 	[TOOLS.MODULAR_COUNT_CELL_ARROW]: modularCountCellArrowInfo,
+	[TOOLS.MAGNETS_CELL_ARROW]: magnetsCellArrowInfo,
 
 	// Single Cell Multi Arrow Constraint
 	[TOOLS.HOT_ARROWS]: hotArrowsInfo,

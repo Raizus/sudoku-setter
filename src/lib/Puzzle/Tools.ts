@@ -281,6 +281,7 @@ export enum SINGLE_CELL_ARROW_CONSTRAINTS {
 	INTERNAL_LOOP_SKYSCRAPERS = 'Internal Loop Skyscrapers',
 	SKYSCRAPERS_ARROW = 'Skyscrapers Arrow',
 	MODULAR_COUNT_CELL_ARROW = 'Modular Count Cell Arrow',
+	MAGNETS_CELL_ARROW = 'Magnets Cell Arrow',
 }
 
 export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {

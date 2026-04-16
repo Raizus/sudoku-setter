@@ -493,6 +493,12 @@ function array[int] of var int: entropic_group_f(
     endif | i in index_set(arr)    
 ];
 
+function array[int] of var bool: skyscrapers_bools_f(
+    array[int] of var int: arr
+) = [
+    forall(j in index_set(arr) where j < i)(arr[j] < arr[i]) | i in index_set(arr)
+];
+
 % -------------------------------------------------------------------------------- % 
 % ------ HELPERS ----------------------------------------------------------------- %
 
@@ -867,20 +873,25 @@ predicate groups_opposite_parity_p(array[int] of var int: arr1, array[int] of va
 predicate count_same_parity_p(var int: a, array[int] of var int: arr) =
     (odd_p(a) /\ odd_count(arr) == a) \/ (even_p(a) /\ even_count(arr) == a);
 
+function array[int] of var bool: watchtower_bools_f(
+    array[int] of var int: arr,
+    var int: watchtower, 
+) = let {
+    int: start_index = min(index_set(arr)),
+} in (
+    [
+        arr[i] <= watchtower /\ forall(j in start_index..i-1)(arr[j] <= watchtower)
+        | i in index_set(arr) 
+    ]
+);
+
 function var int: count_watchtower_f(var int: watchtower, array[int] of var int: arr) =
     if length(arr) == 0 then
         0
     else 
         let {
-            int: start_index = min(index_set(arr)),
-            int: end_index = max(index_set(arr))
-        } in
-        sum(i in index_set(arr))(
-            bool2int(
-                arr[i] <= watchtower /\
-                forall(j in start_index..i-1)(arr[j] <= watchtower)
-            )
-        )
+            array[int] of var bool: bool_vars = watchtower_bools_f(arr, watchtower);
+        } in sum(bool_vars)
   endif;
 	
 function var int: watchtower_sum_f(
@@ -1087,7 +1098,7 @@ predicate cell_shaded_row_col_box_not_counter_p(
 
 % A digit on an arrow counts how many cells in the indicated direction have the same remainder mod-3 as itself, including itself.
 predicate modular_count_cell_arrow_p(
-    array[int] of var int: arr    
+    array[int] of var int: arr
 ) = let {
     int: n = 3;
     set of int: idxs = index_set(arr);
@@ -1096,6 +1107,16 @@ predicate modular_count_cell_arrow_p(
     var int: rem = first mod n;
 } in (
     modular_count_f(arr, n, rem) = first
+);
+
+predicate magnets_cell_arrow_p(
+    array[int] of var int: arr,
+    var int: cell_var
+) = let {
+    set of int: idxs = index_set(arr);
+    array[int] of var bool: bool_vars = watchtower_bools_f(arr, cell_var);
+} in (
+    conditional_sum_f(arr, bool_vars, true) = cell_var
 );
 
 % -------------------------------------------------------------------------------- % 
@@ -1975,7 +1996,6 @@ predicate shifted_x_sum_p(
             shifted_x_sum_f(arr, first) == val
     endif
 );
-
 
 function var int: skyscrapers_count(array[int] of var int: arr) =
     sum(i in index_set(arr)) (
