@@ -14,13 +14,14 @@
 	const defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultArrowShape;
 	const currentConstraintStore = getCurrentConstraintStore();
 
+	$: disabled = !!tool.disabled;
 	$: currentConstraintId = $currentConstraintStore?.id;
 	$: shape = tool.shape ?? defaultShape;
 	$: is_selected = c_id === currentConstraintId;
 	$: filter_url = getOutlineFilterUrl(outline, is_selected);
 </script>
 
-<g class="arrow-constraint" id={`c-${c_id}`} filter={filter_url}>
+<g class="arrow-constraint" id={`c-${c_id}`} filter={filter_url} opacity={disabled ? 0.2 : 1}>
 	{#if shape.type === SHAPE_TYPES.BULBOUS_ARROW}
 		<BulbousArrowRender {tool} arrowId={c_id} />
 	{:else}

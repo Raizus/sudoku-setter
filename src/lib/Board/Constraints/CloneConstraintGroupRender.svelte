@@ -11,9 +11,9 @@
 	export let tool: CloneToolI;
 	export let c_id: string;
 
+	$: disabled = !!tool.disabled;
 	const defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultCloneShape;
 	$: shape = tool.shape ?? defaultShape;
-
 	$: inset = shape.inset ?? 0.15;
 	$: textColor = shape.fontColor ?? shape.stroke ?? 'black';
 	const fontWeight = 800;
@@ -25,14 +25,14 @@
 	$: cell2TL = new Vector2D(cell2.c + 1 - inset - 0.05, cell2.r + 1 - inset - 0.05);
 
 	const outline = true;
-
 	const currentConstraintStore = getCurrentConstraintStore();
+
 	$: currentConstraintId = $currentConstraintStore?.id;
 	$: is_selected = c_id !== undefined && c_id === currentConstraintId;
 	$: filter_url = getOutlineFilterUrl(outline, is_selected);
 </script>
 
-<g class="clone-constraint" data-id={c_id} filter={filter_url}>
+<g class="clone-constraint" data-id={c_id} filter={filter_url} opacity={disabled ? 0.2 : 1}>
 	<CageRender cells={tool.cells} {shape} />
 	<CellTextLabelRender
 		value={label}

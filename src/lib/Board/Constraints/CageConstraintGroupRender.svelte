@@ -13,12 +13,13 @@
 	const defaultShape = getDefaultShape(tool.toolId, elementInfoRegistry) ?? defaultCageShape;
 	const outline = false;
 
+	$: disabled = !!tool.disabled;
 	$: currentConstraintId = $currentConstraintStore?.id;
 	$: shape = tool.shape ?? defaultShape;
 	$: is_selected = c_id === currentConstraintId;
 	$: filter_url = getOutlineFilterUrl(outline, is_selected);
 </script>
 
-<g class="cage-constraint" filter={filter_url}>
+<g class="cage-constraint" filter={filter_url} opacity={disabled ? 0.2 : 1}>
 	<ValuedCageRender cells={tool.cells} {shape} value={tool.value} />
 </g>
