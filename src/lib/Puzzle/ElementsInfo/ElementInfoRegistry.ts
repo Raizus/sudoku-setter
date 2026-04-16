@@ -352,7 +352,8 @@ import {
 	sameGalaxyUnobstructedCountArrowsInfo,
 	yinYangCombinedShadedCellsCountExceptItselfInfo,
 	loopCountEachCellArrowsInfo,
-	yinYangYongCountBordersInfo
+	yinYangYongCountBordersInfo,
+	regionSumLineSourcesCellArrowsInfo
 } from './SingleCellMultiArrowElementsInfo';
 import {
 	forbiddenKnightSumInfo,
@@ -574,6 +575,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 
 	[TOOLS.NEXT_NUMBERED_REGION_DISTANCE_ARROWS]: nextNumberedRegionDistanceArrowsInfo,
 	[TOOLS.SHADED_BOUNDARIES_COMBINED_COUNT_ARROWS]: shadedBoundariesCombinedCountArrowsInfo,
+	[TOOLS.REGION_SUM_LINE_SOURCES_CELL_ARROWS]: regionSumLineSourcesCellArrowsInfo,
 
 	// Edge Constraints
 	[TOOLS.DIFFERENCE]: differenceInfo,

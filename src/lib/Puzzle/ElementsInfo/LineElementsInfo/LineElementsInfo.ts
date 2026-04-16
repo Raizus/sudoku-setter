@@ -23,32 +23,13 @@ import {
 	cellsToGridVarsStr,
 	cellsToVarsName,
 	simpleElementFunction,
+	splitLineByRegion,
 	VAR_2D_NAMES,
 	type PuzzleModel
 } from '$src/lib/Solver/solver_utils';
 import type { Cell } from '../../Grid/Cell';
 import type { Grid } from '../../Grid/Grid';
 import { combinations } from '$src/lib/utils/functionUtils';
-
-function splitLineByRegion(line: Cell[]) {
-	const regions: Cell[][] = [];
-	if (!line.length) return regions;
-
-	let prev_region: number | null = null;
-	let cells: Cell[] = [];
-	for (const cell of line) {
-		const region = cell.region;
-		if (prev_region !== region) {
-			if (cells.length) regions.push(cells);
-			cells = [];
-		}
-		cells.push(cell);
-		prev_region = region;
-	}
-	if (cells.length) regions.push(cells);
-
-	return regions;
-}
 
 function defaultThermoEditableShape() {
 	const shape: EditableShapeI = {

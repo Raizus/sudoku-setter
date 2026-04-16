@@ -646,3 +646,23 @@ export function exactlyNPerRowColumnRegion(
 
 	return out_str;
 }
+
+export function splitLineByRegion(line: Cell[]): Cell[][] {
+	const regions: Cell[][] = [];
+	if (!line.length) return regions;
+
+	let prev_region: number | null = null;
+	let cells: Cell[] = [];
+	for (const cell of line) {
+		const region = cell.region;
+		if (prev_region !== region) {
+			if (cells.length) regions.push(cells);
+			cells = [];
+		}
+		cells.push(cell);
+		prev_region = region;
+	}
+	if (cells.length) regions.push(cells);
+
+	return regions;
+}

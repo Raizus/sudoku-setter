@@ -1121,6 +1121,23 @@ predicate hot_arrows_p(
     arr[cell_var] > cell_var
 );
 
+predicate region_sum_line_source_p(
+    array[int] of var int: region_vars,
+    var int: sum_var,
+    int: start,
+    var int: end_var
+) = let { 
+    set of int: idxs = index_set(region_vars);
+    int: n = length(idxs);
+    array[int] of var bool: bool_vars = [start + idx <= end_var | idx in idxs];
+} in (
+    if start + 1 <= end_var then
+        conditional_sum_f(region_vars, bool_vars, true) = sum_var
+    else 
+        true 
+    endif
+);
+
 % -------------------------------------------------------------------------------- % 
 % ------ EDGE CONSTRAINTS -------------------------------------------------------- %
 

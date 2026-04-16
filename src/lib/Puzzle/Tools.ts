@@ -301,7 +301,9 @@ export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
 
 	NEXT_NUMBERED_REGION_DISTANCE_ARROWS = 'Next Numbered Region Distance Arrows',
 
-	SHADED_BOUNDARIES_COMBINED_COUNT_ARROWS = 'Shaded Boundaries Combined Count Arrows'
+	SHADED_BOUNDARIES_COMBINED_COUNT_ARROWS = 'Shaded Boundaries Combined Count Arrows',
+
+	REGION_SUM_LINE_SOURCES_CELL_ARROWS = 'Region Sum Line Sources Cell Arrows'
 }
 
 export enum EDGE_CONSTRAINTS {

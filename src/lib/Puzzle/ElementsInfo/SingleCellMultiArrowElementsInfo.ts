@@ -9,6 +9,8 @@ import {
 	cellToGridVarName,
 	cellToVarName,
 	findSingleCellConstraintMatch,
+	simpleElementFunction,
+	splitLineByRegion,
 	VAR_2D_NAMES,
 	type PuzzleModel
 } from '$src/lib/Solver/solver_utils';
@@ -373,8 +375,7 @@ export const yinYangCountShadedCellsInfo: SquareCellElementInfo = {
 	negative_constraints: [
 		{
 			toolId: TOOLS.ALL_GIVEN,
-			description:
-				'All possible arrows are given.'
+			description: 'All possible arrows are given.'
 		}
 	],
 
@@ -805,5 +806,64 @@ export const shadedBoundariesCombinedCountArrowsInfo: SquareCellElementInfo = {
 			element,
 			shadedBoundariesCombinedCountArrowsConstraint
 		);
+	}
+};
+
+function regionSumLineSourcesCellArrowsConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellMultiArrowToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const cell_var = cellToVarName(cell);
+	const sum_var: string = `sum_line_${c_id}`;
+	let out_str = `var int: ${sum_var};\n`;
+
+	const directions = constraint.directions;
+	for (const direction of directions) {
+		let cells = grid.getCellsInDirection(cell.r, cell.c, direction);
+		cells = [cell, ...cells];
+
+		// maximum length of the line
+		out_str += `constraint ${cell_var} <= ${cells.length};\n`
+		const by_region = splitLineByRegion(cells);
+
+		// line must cross at least one region -> minimum line length
+		out_str += `constraint ${cell_var} > ${by_region[0].length};\n`;
+
+		let length = 0;
+		for (const region of by_region) {
+			const cell_vars = cellsToGridVarsStr(region, VAR_2D_NAMES.BOARD);
+			out_str += `constraint region_sum_line_source_p(${cell_vars}, ${sum_var}, ${length}, ${cell_var});\n`;
+			length += region.length;
+		}
+	}
+
+	return out_str;
+}
+
+export const regionSumLineSourcesCellArrowsInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_MULTI_ARROW_OPTIONS,
+
+	toolId: TOOLS.REGION_SUM_LINE_SOURCES_CELL_ARROWS,
+
+	shape: {
+		...DEFAULT_BLACK_ARROW,
+		stroke: { editable: false, value: 'var(--constraint-color-blue)' }
+	},
+
+	meta: {
+		description:
+			'A digit N on a cell with an arrow indicates that there is a straight line N cells long starting from the cell the arrow clue is on and extending in the direction of that arrow. This line acts as a region sum line: box borders divide the line into segments with the same sum. Each line must cross at least one box border.',
+		tags: [],
+		categories: defaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, regionSumLineSourcesCellArrowsConstraint);
 	}
 };
