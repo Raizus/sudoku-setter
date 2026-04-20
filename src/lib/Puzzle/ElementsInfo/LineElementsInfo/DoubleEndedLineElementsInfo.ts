@@ -8,7 +8,8 @@ import { lineUsage } from '../../ToolUsage';
 import {
 	DEFAULT_LINE_OPTIONS_INTERSECT,
 	doubleEndedLineDefaultCategories,
-	simpleLineElement
+	simpleLineElement,
+	valuedLineElement
 } from './helpers';
 
 /* ----------------------------------------------------------------------------- */
@@ -74,6 +75,10 @@ export const lockoutLineInfo: SquareCellElementInfo = {
 		usage: lineUsage(),
 		tags: [],
 		categories: doubleEndedLineDefaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return valuedLineElement(model, element, 'lockout_line_p', '4');
 	}
 };
 
@@ -159,7 +164,8 @@ export const doubleArrowLineInfo: SquareCellElementInfo = {
 	negative_constraints: [
 		{
 			toolId: TOOLS.USE_CELL_VALUES,
-			description: 'Double Arrow Line constraints use modified cell values instead of the cell digits.'
+			description:
+				'Double Arrow Line constraints use modified cell values instead of the cell digits.'
 		}
 	],
 
