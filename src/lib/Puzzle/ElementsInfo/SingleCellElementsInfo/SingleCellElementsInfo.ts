@@ -2247,7 +2247,7 @@ function nurikabeIslandProductOfSumAndSizeElement(model: PuzzleModel, element: C
 		count += 1;
 	}
 
-	out_str += `constraint count_unique_values(array1d(${VAR_2D_NAMES.NURIKABE_REGIONS})) == ${count + 1};\n`;
+	out_str += `constraint count_unique_values(array1d(${VAR_2D_NAMES.NURIKABE_REGIONS})) = ${count + 1};\n`;
 
 	return out_str;
 }

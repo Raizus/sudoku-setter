@@ -1539,7 +1539,7 @@ predicate double_renban_p(array[int] of var int: arr) =
 
 predicate renrenbanban_p(array[int] of var int: arr) =
     let {
-        var int: unique_count = count_unique_values(arr),
+        var int: unique_count = nvalue(arr),
         var int: start = min(arr),
         var int: end = max(arr)
     } in (
@@ -2836,10 +2836,11 @@ predicate chaos_construction_neighbour_cells_same_region_count_p(
 
 predicate chaos_construction_regions_count(
     array[int] of var int: region_vars,
-    var int: count
+    var int: num_regions
 ) = (
-    count == count_unique_values(region_vars) /\
-    (if count == 1 then
+    num_regions == nvalue(region_vars) 
+    /\
+    (if num_regions == 1 then
         all_equal(region_vars)
     else
         true
@@ -4396,13 +4397,13 @@ predicate somedoku_p(
     forall(r in rows)(
         let {
             array[int] of var int: arr = [grid[r, c] | c in cols];
-        } in count_unique_values(arr) = (r + 1)
+        } in nvalue(arr) = (r + 1)
     )
     % every col 'c' has 'c' unique values
     /\ forall(c in cols)(
         let {
             array[int] of var int: arr = [grid[r, c] | r in rows];
-        } in count_unique_values(arr) = (c + 1)
+        } in nvalue(arr) = (c + 1)
     )
 );
 
@@ -4593,7 +4594,7 @@ predicate galaxy_restrict_numbering_p(
     array[int, int] of var int: regions
 ) = let{
     var bool: has_0 = member(array1d(regions), 0);
-    var int: num_galaxies = count_unique_values(array1d(regions)) - bool2int(has_0);
+    var int: num_galaxies = nvalue(array1d(regions)) - bool2int(has_0);
     set of int: rows = index_set_1of2(regions);
     set of int: cols = index_set_2of2(regions);
 } in forall(r in rows, c in cols)(
@@ -5460,13 +5461,12 @@ predicate nurikabe_island_product_of_sum_and_size_p(
     set of int: rows = index_set_1of2(grid);
     set of int: cols = index_set_2of2(grid);
     var int: size;
-    var int: island_sum;
+    var int: island_sum = conditional_sum_f(array1d(grid), array1d(regions), region);
 } in (
     assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes")
     % is island and not water
     /\ region != 0
     /\ size = count(array1d(regions), region)
-    /\ island_sum = conditional_sum_f(array1d(grid), array1d(regions), region)
     /\ prod_val = size * island_sum
 );
 

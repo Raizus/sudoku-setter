@@ -75,7 +75,7 @@ function negativeAntidiagonalElement(model: PuzzleModel, element: ConstraintsEle
 	const diag_vars = cellsToVarsName(diag_cells);
 	const vars_str = '[' + diag_vars.join(',') + ']';
 	let out_str = `\n% ${tool}\n`;
-	out_str += `constraint count_unique_values(${vars_str}) == 3;\n`;
+	out_str += `constraint nvalue(${vars_str}) == 3;\n`;
 	return out_str;
 }
 
@@ -105,7 +105,7 @@ function positiveAntidiagonalElement(model: PuzzleModel, element: ConstraintsEle
 	const diag_vars = cellsToVarsName(diag_cells);
 	const vars_str = '[' + diag_vars.join(',') + ']';
 	let out_str = `\n% ${tool}\n`;
-	out_str += `constraint count_unique_values(${vars_str}) == 3;\n`;
+	out_str += `constraint nvalue(${vars_str}) == 3;\n`;
 	return out_str;
 }
 

@@ -233,7 +233,7 @@ function yinYangRegionSumLinesMustCrossColorsAtLeastOnceConstraint(
 			.map((coord) => grid.getCell(coord.r, coord.c))
 			.filter((cell) => !!cell);
 		const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
-		out_str += `constraint count_unique_values(${yin_yang_vars_str}) >= 2;\n`;
+		out_str += `constraint nvalue(${yin_yang_vars_str}) >= 2;\n`;
 	}
 	return out_str;
 }
