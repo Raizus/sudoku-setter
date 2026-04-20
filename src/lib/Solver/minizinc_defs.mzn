@@ -4061,6 +4061,51 @@ predicate loop_pointer_arrow_p(
     /\ direction_loop_vars[tip_var] = 1
 );
 
+predicate counting_circles_loop_or_non_loop_p(
+    array[int] of var int: circle_vars,
+    array[int] of var int: loop_vars,
+    set of int: allowed
+) = let {
+    int: n = length(circle_vars);
+    set of int: idxs = index_set(circle_vars);
+    set of int: allowed_inds = index_set(allowed);
+    array[allowed_inds] of var bool: used_vals_on_loop;
+    array[allowed_inds] of var bool: used_vals_not_on_loop;
+} in (
+    assert(index_sets_agree(circle_vars, loop_vars), "circle_vars and loop_vars must have the same indexes.")
+
+    % the sum of unique values in circles is equal to the number of circles
+    /\ (
+    conditional_sum_f(allowed, used_vals_on_loop, true) + 
+    conditional_sum_f(allowed, used_vals_not_on_loop, true) = n
+    )
+
+    /\ forall(i in allowed_inds)(
+        let {
+            int: value = allowed_inds[i];
+            var bool: used_on_loop = used_vals_on_loop[i];
+            var bool: used_not_on_loop = used_vals_not_on_loop[i];
+        } in (
+            (not used_on_loop -> forall(j in idxs where loop_vars[j] != 0)(
+                circle_vars[j] != value
+            ))
+            /\ (used_on_loop -> exists(j in idxs where loop_vars[j] != 0)(
+                circle_vars[j] == value
+            ))
+            /\ (not used_not_on_loop -> forall(j in idxs where loop_vars[j] = 0)(
+                circle_vars[j] != value
+            ))
+            /\ (used_not_on_loop -> exists(j in idxs where loop_vars[j] = 0)(
+                circle_vars[j] == value
+            ))
+        )
+    )
+
+    /\ forall(i in idxs)(
+        conditional_count_f(circle_vars, loop_vars, circle_vars[i], loop_vars[i]) = circle_vars[i]
+    )
+);
+
 % -------------------------------------------------------------------------------- % 
 % ------ GLOBAL CONSTRAINTS ------------------------------------------------------ %
 

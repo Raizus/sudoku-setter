@@ -1662,6 +1662,40 @@ export const countLoopNeighbourCellsInfo: SquareCellElementInfo = {
 	}
 };
 
+function countingCirclesLoopOrNonLoopCellsElement(model: PuzzleModel, element: ConstraintsElement) {
+	const cells = cellsFromElement(model.puzzle.grid, element);
+	const vars = cellsToVarsName([...cells]);
+	const vars_str = `${vars.join(',\n\t')}`;
+
+	const loop_vars = cellsToGridVarsName([...cells], VAR_2D_NAMES.CELL_CENTER_LOOP);
+	const loop_vars_str = `${loop_vars.join(',\n\t')}`;
+
+	let out_str = '';
+	out_str += `array[int] of var int: loop_counting_circles = [\n\t${vars_str}\n];\n`;
+	out_str += `array[int] of var int: loop_counting_circles_labels = [\n\t${loop_vars_str}\n];\n`;
+
+	out_str += `constraint counting_circles_loop_or_non_loop_p(loop_counting_circles, loop_counting_circles_labels, ALLOWED_DIGITS);\n`;
+
+	return out_str;
+}
+
+export const countCirclesLoopOrNonLoopCellsInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+
+	toolId: TOOLS.COUNTING_CIRCLES_LOOP_OR_NON_LOOP_CELLS,
+
+	shape: DEFAULT_CIRCLE_SHAPE,
+
+	meta: {
+		description:
+			'A digit in a circle on the loop indicates how many circles on the loop contain that digit. Similarly, a digit in a circle off the loop indicates how many circles off the loop contain that digit.',
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	},
+
+	solver_func: countingCirclesLoopOrNonLoopCellsElement
+};
+
 export const twilightCaveFillominoClueInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 

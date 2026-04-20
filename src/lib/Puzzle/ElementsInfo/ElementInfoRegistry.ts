@@ -319,7 +319,8 @@ import {
 	cellShadedRowColumnBoxNotCounterInfo,
 	chaosConstructionCountSameRegionNeighborCellsAndSelfInfo,
 	countWhispersNeighborCellsInfo,
-	coloredGroupsRegionSizeInfo
+	coloredGroupsRegionSizeInfo,
+	countCirclesLoopOrNonLoopCellsInfo
 } from './SingleCellElementsInfo/SingleCellElementsInfo';
 import {
 	yinYangAdjacentSameShadeCountInfo,
@@ -517,6 +518,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.CELL_ON_THE_LOOP]: cellOnTheLoopInfo,
 	[TOOLS.CELL_NOT_ON_THE_LOOP]: cellNotOnTheLoopInfo,
 	[TOOLS.COUNT_LOOP_NEIGHBOUR_CELLS]: countLoopNeighbourCellsInfo,
+	[TOOLS.COUNTING_CIRCLES_LOOP_OR_NON_LOOP_CELLS]: countCirclesLoopOrNonLoopCellsInfo,
 
 	[TOOLS.CAVE_CLUE]: caveClueInfo,
 	[TOOLS.CAVE_SHADED_REGION_SIZE_UNSHADED_SEEN_ORTHOGONALLY_CLUE]:

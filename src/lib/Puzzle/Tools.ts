@@ -228,6 +228,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	CELL_ON_THE_LOOP = 'Cell On The Loop',
 	CELL_NOT_ON_THE_LOOP = 'Cell Not On The Loop',
 	COUNT_LOOP_NEIGHBOUR_CELLS = 'Count Loop Neighbour Cells',
+	COUNTING_CIRCLES_LOOP_OR_NON_LOOP_CELLS = 'Counting Circles Loop Or Non Loop Cells',
 
 	YIN_YANG_SHADED_CELL = 'Yin Yang Shaded Cell',
 	YIN_YANG_MINESWEEPER = 'Yin Yang Minesweeper',
