@@ -345,6 +345,28 @@ export const antiEntropyInfo: SquareCellElementInfo = {
 	solver_func: antiEntropyElement
 };
 
+function diagonalityElement(model: PuzzleModel, element: ConstraintsElement): string {
+	const tool = element.tool_id;
+
+	let out_str: string = '';
+	out_str += `constraint diagonality_p(board);\n`;
+	out_str = addHeader(out_str, `${tool}`);
+	return out_str;
+}
+
+export const diagonalityInfo: SquareCellElementInfo = {
+	toolId: TOOLS.DIAGONALITY,
+
+	meta: {
+		description:
+			'Every diagonal contains at most 3 distinct digits.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.SIMPLE_GLOBAL_CONSTRAINT]
+	},
+
+	solver_func: diagonalityElement
+};
+
 function globalEntropyElement(): string {
 	const out_str = `constraint global_entropy_p(board);\n`;
 	return out_str;

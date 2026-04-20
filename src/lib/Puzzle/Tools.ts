@@ -23,6 +23,7 @@ export enum SIMPLE_GLOBAL_CONSTRAINTS {
 	NONCONSECUTIVE = 'Nonconsecutive',
 	NONRATIO = 'Nonratio',
 	ANTI_ENTROPY = 'Anti-Entropy',
+	DIAGONALITY = 'Diagonality',
 
 	BOX_ROWS_AND_COLUMNS_FORM_MODULARITY_AND_ENTROPY_SETS = 'Box Rows And Columns Form Modularity and Entropy Sets',
 

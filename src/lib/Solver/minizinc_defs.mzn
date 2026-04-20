@@ -4264,6 +4264,33 @@ predicate global_entropy_p(
     )
 );
 
+predicate diagonality_p(
+    array[int, int] of var int: grid
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    % Main diagonals (top-left to bottom-right): row - col = constant
+    forall(d in (min(rows) - max(cols))..(max(rows) - min(cols))) (
+        let {
+            array[int] of var int: diag = [
+                grid[r, c] | r in rows, c in cols where r - c == d
+            ]
+        } in
+        length(diag) > 0 -> nvalue(diag) <= 3
+    )
+    /\
+    % Anti-diagonals (top-right to bottom-left): row + col = constant
+    forall(d in (min(rows) + min(cols))..(max(rows) + max(cols))) (
+        let {
+            array[int] of var int: diag = [
+                grid[r, c] | r in rows, c in cols where r + c == d
+            ]
+        } in
+        length(diag) > 0 -> nvalue(diag) <= 3
+    )
+);
+
 predicate not_all_odd_in_2x2_square_p(
     array[int,int] of var int: grid
 ) = let {
