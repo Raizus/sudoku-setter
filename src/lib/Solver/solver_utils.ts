@@ -624,14 +624,14 @@ export function exactlyNPerRegion(
 	let out_str: string = '';
 
 	const chaos_construction = hasEnabledElement(puzzle, TOOLS.CHAOS_CONSTRUCTION);
-	if (!chaos_construction) {
-		out_str += `\n% Exactly ${n} per region \n`;
-		const regions = grid.getUsedRegions();
-		for (const region of regions) {
-			const region_cells = grid.getRegion(region);
-			const vars_str = cellsToGridVarsStr(region_cells, grid_name);
-			out_str += `constraint count_eq(${vars_str}, ${target}, ${n});\n`;
-		}
+	if (chaos_construction) return out_str;
+
+	out_str += `\n% Exactly ${n} per region \n`;
+	const regions = grid.getUsedRegions();
+	for (const region of regions) {
+		const region_cells = grid.getRegion(region);
+		const vars_str = cellsToGridVarsStr(region_cells, grid_name);
+		out_str += `constraint count_eq(${vars_str}, ${target}, ${n});\n`;
 	}
 
 	return out_str;
