@@ -6010,8 +6010,9 @@ predicate unknown_connected_regions_p(
         endif
     )
 
-    /\ forall(r in rows, c in cols where when[r, c] == 1)(
-        regions[r, c] = (r) * n_cols + c + 1
+    % root fix
+    /\ forall(r in rows, c in cols)(
+        when[r,c] == 1 <-> regions[r, c] = (r * n_cols + c + 1)
     )
 
     % 2. Symmetry breaking: canonical numbering of regions (reduces search space, tested)
