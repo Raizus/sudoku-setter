@@ -5960,7 +5960,7 @@ predicate shaded_boundaries_adjacent_sum_is_even_boundary_horizontal_p(
 );
 
 % -------------------------------------------------------------------------------- % 
-% -------------------------------------------------------------------------------- %
+% ------ YIN YANG YONG ----------------------------------------------------------- %
 
 predicate yin_yang_yong_p(array[int, int] of var 0..2: shading) =
 	connected_region(shading, 0)
@@ -5985,3 +5985,121 @@ predicate yin_yang_yong_count_borders_p(
     array[int] of var int: shading,
     var int: cell_var
 ) = count_transitions_f(shading) == cell_var;
+
+% -------------------------------------------------------------------------------- % 
+% ------ COLORED GROUPS ---------------------------------------------------------- %
+
+predicate unknown_connected_regions_p(
+    array[int, int] of var int: regions,
+) = let { 
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+    int: n_rows = length(rows);
+    int: n_cols = length(cols);
+    int: g_size = n_rows * n_cols;
+    array [rows, cols] of var 0..g_size: same_before;
+    array[rows, cols] of var 1..g_size: when;
+} in (
+    same_before_p(regions, same_before)
+    /\ forall (r in rows, c in cols) (
+        if same_before[r,c] = 0 then
+            % 0-indexing arrays!!!!
+            when[r,c] = 1 /\ regions[r, c] = (r) * n_cols + c + 1
+        else
+            true
+        endif
+    )
+
+    /\ forall(r in rows, c in cols where when[r, c] == 1)(
+        regions[r, c] = (r) * n_cols + c + 1
+    )
+
+    % 2. Symmetry breaking: canonical numbering of regions (reduces search space, tested)
+    /\ forall(r in rows, c in cols) (
+        regions[r, c] <= (r * n_cols + c + 1) /\
+        regions[r, c] >= 0
+    )
+
+    % 6. Lex-order roots for symmetry breaking
+    /\ forall(r in rows, c in cols where when[r, c] == 1) (
+        forall(r2 in rows, c2 in cols) (
+            (regions[r2, c2] = regions[r, c]) -> (r2 > r \/ (r2 = r /\ c2 >= c))
+        )
+    )
+
+    /\ floodfill_p(regions, when)
+);
+
+predicate colored_groups_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var 0..1: groups,
+    array[int, int] of var int: regions,
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    assert(index_sets_agree(grid, groups), "grid and groups must have the same indexes")
+    /\ assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes")
+
+    /\ unknown_connected_regions_p(regions)
+
+    % adjacent cells with the same shading must belong to the same region (horiz adjacent)
+    /\ forall (r in rows, c in cols where c > min(cols)) (
+        let {
+            var int: id1 = regions[r, c - 1], 
+            var int: id2 = regions[r, c] 
+        } in (groups[r,c] = groups[r, c - 1]) <-> id1 = id2
+    )
+    
+    % adjacent cells with the same shading must belong to the same region (vertical adjacent)
+    /\ forall (r in rows, c in cols where r > min(rows)) (
+        let { var int: id1 = regions[r - 1, c], var int: id2 = regions[r, c] } in
+        groups[r,c] = groups[r - 1, c] <-> id1 = id2
+    )
+
+    % the same digit must have the same shading
+    /\ forall(r1 in rows, c1 in cols, r2 in rows, c2 in cols where is_after(r1,c1,r2,c2)) (
+        grid[r1,c1] = grid[r2,c2] -> groups[r1,c1] = groups[r2,c2]
+    )
+);
+
+predicate colored_groups_region_sizes_p(
+    array[int, int] of var int: regions,
+    array[int, int] of var int: region_sizes,
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+    int: n_rows = length(rows);
+    int: n_cols = length(cols);
+    int: max_size = n_rows * n_cols;
+} in (
+    assert(index_sets_agree(regions, region_sizes), "regions and region_sizes must have the same indexes")
+
+    % minimum region size
+    /\ forall(r1 in rows, c1 in cols) (
+        region_sizes[r1,c1] >= 0
+    )
+
+    % maximum region size
+    /\ forall(r1 in rows, c1 in cols) (
+        region_sizes[r1,c1] <= max_size
+    )
+
+    % cells in the same region must have the same region size
+    /\ forall(r1 in rows, c1 in cols, r2 in rows, c2 in cols where is_after(r1,c1,r2,c2)) (
+        regions[r1,c1] = regions[r2,c2] -> region_sizes[r1,c1] = region_sizes[r2,c2]
+    )
+
+    % region size is the count of cells in the same region
+    /\ forall(r1 in rows, c1 in cols) (
+        count(array1d(regions), regions[r1,c1]) = region_sizes[r1, c1]
+    )
+);
+
+predicate colored_groups_region_size_p(
+    var int: region_size_var,
+    var int: cell_var,
+) = (
+    region_size_var = cell_var
+);
+

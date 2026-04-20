@@ -137,7 +137,8 @@ import {
 	starBattleInfo,
 	oneStarPerGalaxyInfo,
 	shadedRowCollumnBoxCountersInfo,
-	yinYangYongInfo
+	yinYangYongInfo,
+	coloredGroupsInfo
 } from './UndeterminedRegionsInfo/UndeterminedRegionsElementsInfo';
 import { directedPathTeleportRenbanSegmentsInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
 import { directedPathTeleportSegmentsSumInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
@@ -317,7 +318,8 @@ import {
 	chaosConstructionCountSameRegionNeighborCellsInfo,
 	cellShadedRowColumnBoxNotCounterInfo,
 	chaosConstructionCountSameRegionNeighborCellsAndSelfInfo,
-	countWhispersNeighborCellsInfo
+	countWhispersNeighborCellsInfo,
+	coloredGroupsRegionSizeInfo
 } from './SingleCellElementsInfo/SingleCellElementsInfo';
 import {
 	yinYangAdjacentSameShadeCountInfo,
@@ -440,6 +442,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 		yinYangChaosConstructionFullyShadedOrFullyUnshadedInfo,
 
 	[TOOLS.TWO_CONTIGUOUS_REGIONS]: twoContiguousRegionsInfo,
+	[TOOLS.COLORED_GROUPS]: coloredGroupsInfo,
 	[TOOLS.SASHIGANE]: sashiganeRegionsInfo,
 	[TOOLS.NORINORI]: norinoriInfo,
 	[TOOLS.SHIKAKU]: shikakuInfo,
@@ -543,6 +546,8 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 
 	[TOOLS.CONNECT_FOUR_YELLOW]: connectFourYellowInfo,
 	[TOOLS.CONNECT_FOUR_RED]: connectFourRedInfo,
+
+	[TOOLS.COLORED_GROUPS_REGION_SIZE]: coloredGroupsRegionSizeInfo,
 
 	[TOOLS.CELL_SHADED_ROW_COLUMN_BOX_NOT_COUNTER]: cellShadedRowColumnBoxNotCounterInfo,
 

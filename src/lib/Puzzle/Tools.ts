@@ -106,7 +106,8 @@ export enum OTHER_UNDETERMINED_REGIONS_CONSTRAINTS {
 	SHADED_ROW_COLUMN_BOX_COUNTERS = 'Shaded Row Column and Box Counters',
 
 	YIN_YANG_YONG = 'Yin Yang Yong',
-	YIN_YANG_YONG_IDENTICAL_DIGITS_DO_NOT_APPEAR_IN_DIFFERENT_REGIONS = 'Yin Yang Yong Identical Digits Do Not Appear In Different Regions'
+	YIN_YANG_YONG_IDENTICAL_DIGITS_DO_NOT_APPEAR_IN_DIFFERENT_REGIONS = 'Yin Yang Yong Identical Digits Do Not Appear In Different Regions',
+	COLORED_GROUPS = 'Colored Groups'
 }
 
 export enum GLOBAL_PENTOMINO_TILLING_CONSTRAINTS {
@@ -272,6 +273,8 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 
 	CONNECT_FOUR_YELLOW = 'Connect Four Yellow',
 	CONNECT_FOUR_RED = 'Connect Four Red',
+
+	COLORED_GROUPS_REGION_SIZE = 'Colored Groups Region Size',
 
 	CELL_SHADED_ROW_COLUMN_BOX_NOT_COUNTER = 'Cell Shaded Row Column Box Not Counter'
 }

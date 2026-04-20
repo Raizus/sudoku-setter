@@ -391,7 +391,7 @@ export const countWhispersNeighborCellsInfo: SquareCellElementInfo = {
 
 	meta: {
 		description:
-			"A digit x in a green circle indicates exactly how many of the up to 8 neighboring cells (i.e. orthogonally or diagonally adjacent cells) contain a digit that differs by at least 5 from x.",
+			'A digit x in a green circle indicates exactly how many of the up to 8 neighboring cells (i.e. orthogonally or diagonally adjacent cells) contain a digit that differs by at least 5 from x.',
 		tags: [],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
@@ -2690,4 +2690,41 @@ export const cellShadedRowColumnBoxNotCounterInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: cellShadedRowColumnBoxNotCounterElement
+};
+
+function coloredGroupsRegionSizeElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid = model.puzzle.grid;
+	const constraints = element.constraints as Record<string, CellToolI>;
+
+	let out_str = '';
+
+	for (const constraint of Object.values(constraints)) {
+		const coords = constraint.cell;
+		const cell = grid.getCell(coords.r, coords.c);
+		if (!cell) continue;
+		const cell_var = cellToVarName(cell);
+		const region_size_var = cellToGridVarName(cell, VAR_2D_NAMES.COLORED_GROUPS_REGION_SIZES);
+		out_str += `constraint colored_groups_region_size_p(${region_size_var}, ${cell_var});\n`;
+	}
+
+	return out_str;
+}
+
+export const coloredGroupsRegionSizeInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+
+	toolId: TOOLS.COLORED_GROUPS_REGION_SIZE,
+
+	negative_constraints: [],
+
+	shape: DEFAULT_CIRCLE_SHAPE,
+
+	meta: {
+		description:
+			'A circle in a cell indicates the size of the orthogonally connected group of cells of the same colour it belongs to.',
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	},
+
+	solver_func: coloredGroupsRegionSizeElement
 };

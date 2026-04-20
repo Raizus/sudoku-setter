@@ -208,6 +208,7 @@ function setBinaryHighlights(json: JsonT, grid: Grid) {
 		'nurikabe_shading',
 		'even_odd_grid',
 		'cave_shading',
+		VAR_2D_NAMES.COLORED_GROUPS,
 		VAR_2D_NAMES.SHADED_BOUNDARIES_REGIONS,
 		VAR_2D_NAMES.SHADED_ROW_COLUMN_BOX_COUNTERS_SHADED_GRID
 	];

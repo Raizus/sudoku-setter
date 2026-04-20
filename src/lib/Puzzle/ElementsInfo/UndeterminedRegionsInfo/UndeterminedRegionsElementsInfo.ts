@@ -997,3 +997,31 @@ export const yinYangYongInfo: SquareCellElementInfo = {
 
 	solver_func: yinYangYongElement
 };
+
+function coloredGroupsElement() {
+	const grid_name = VAR_2D_NAMES.COLORED_GROUPS;
+	const grid_name_2 = VAR_2D_NAMES.COLORED_GROUPS_REGIONS;
+	const grid_name_3 = VAR_2D_NAMES.COLORED_GROUPS_REGION_SIZES;
+	let out_str = `array[ROW_IDXS, COL_IDXS] of var 0..1: ${grid_name};`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name_2};\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name_3};\n`;
+	out_str += `constraint colored_groups_p(${VAR_2D_NAMES.BOARD}, ${grid_name}, ${grid_name_2});\n`;
+	out_str += `constraint colored_groups_region_sizes_p(${grid_name_2}, ${grid_name_3});\n`;
+	return out_str;
+}
+
+export const coloredGroupsInfo: SquareCellElementInfo = {
+	toolId: TOOLS.COLORED_GROUPS,
+
+	negative_constraints: [
+	],
+
+	meta: {
+		description:
+			'Color each cell in one of two different colors, where cells containing the same digit must have the same color.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	},
+
+	solver_func: coloredGroupsElement
+};

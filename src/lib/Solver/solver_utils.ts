@@ -53,7 +53,10 @@ export enum VAR_2D_NAMES {
 	SHADED_BOUNDARIES_HORIZONTAL = 'shaded_boundaries_horizontal',
 	SHADED_ROW_COLUMN_BOX_COUNTERS = 'shaded_row_column_box_counters',
 	SHADED_ROW_COLUMN_BOX_COUNTERS_SHADED_GRID = 'shaded_row_column_box_counters_shaded_grid',
-	RANKED_2X2_NUMBERS_GRID = 'ranked_2x2_numbers_grid'
+	RANKED_2X2_NUMBERS_GRID = 'ranked_2x2_numbers_grid',
+	COLORED_GROUPS = 'colored_groups',
+	COLORED_GROUPS_REGIONS = 'colored_groups_regions',
+	COLORED_GROUPS_REGION_SIZES = 'colored_groups_region_sizes'
 }
 
 export function cellToGridVarName(cell: Cell, name: string): string {
@@ -204,7 +207,7 @@ export class PuzzleModel implements ModelI {
 
 		const parsed_value = parseValue(value, parse_opts);
 		if (!parsed_value) return null;
-		
+
 		// parse number
 		if (parsed_value.type === 'number') {
 			const value = parsed_value.parsed;
@@ -318,7 +321,7 @@ export function simpleElementFunction<T extends ConstraintType>(
 	const grid = model.puzzle.grid;
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		if (constraint.disabled) continue;
-		
+
 		const constraint_str = func(model, grid, c_id, constraint as T);
 		out_str += constraint_str;
 	}
