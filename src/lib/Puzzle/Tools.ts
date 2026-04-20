@@ -84,6 +84,7 @@ export enum OTHER_UNDETERMINED_REGIONS_CONSTRAINTS {
 	CHAOS_CONSTRUCTION_2X2_DOES_NOT_BELONG_TO_THE_SAME_REGION = 'Chaos Construction 2x2 Does Not Belong To The Same Region',
 	NUMBERED_CHAOS_CONSTRUCTION = 'Numbered Chaos Construction',
 	CHAOS_CONSTRUCTION_SUGURU = 'Chaos Construction Suguru',
+	DECONSTRUCTION = 'Deconstruction',
 	TWO_CONTIGUOUS_REGIONS = 'Two Contiguous Regions',
 	SHADED_BOUNDARIES = 'Shaded Boundaries',
 	SHADED_BOUNDARIES_ADJACENT_CELL_SUM_IS_EVEN = 'Shaded Boundaries Adjacent Cell Sum Is Even',

@@ -21,6 +21,7 @@ export enum VAR_2D_NAMES {
 	SHIKAKU_WIDTH = 'shikaku_width',
 	SHIKAKU_HEIGHT = 'shikaku_height',
 	CHAOS_CONSTRUCTION_REGIONS = 'unknown_regions',
+	DECONSTRUCTION_REGIONS = 'deconstruction_regions',
 	TWO_CONTIGUOUS_REGIONS = 'two_contiguous_regions',
 	SUGURU_REGIONS = 'suguru_regions',
 	DOUBLERS = 'doublers_grid',

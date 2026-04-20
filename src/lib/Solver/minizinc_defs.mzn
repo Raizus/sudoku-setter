@@ -2907,6 +2907,116 @@ predicate shaded_row_col_box_counters_p(
 );
 
 % -------------------------------------------------------------------------------- % 
+% ------ CHAOS DECONSTRUCTION CONSTRAINTS ---------------------------------------- %
+
+predicate deconstruction_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions,
+    int: num_regions
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_rows = card(rows);
+    int: n_cols = card(cols);
+    int: min_row = min(rows);
+    int: min_col = min(cols);
+
+    % Top-left corner of each region (row and col indices into the grid)
+    array[1..num_regions] of var rows: first_cells_rows;
+    array[1..num_regions] of var cols: first_cells_cols;
+} in (
+    assert(index_sets_agree(grid, regions), "board and regions must have the same indexes")
+
+    % Each region's top-left corner must leave room for a full 3x3 block
+    /\ forall(r in 1..num_regions) (
+        first_cells_rows[r] <= max(rows) - 2
+        /\ first_cells_cols[r] <= max(cols) - 2
+    )
+
+    % Regions are labeled in lexicographic order of their top-left corner
+    /\ forall(r in 1..num_regions - 1) (
+        first_cells_rows[r] < first_cells_rows[r+1]
+        \/ (first_cells_rows[r] = first_cells_rows[r+1]
+            /\ first_cells_cols[r] < first_cells_cols[r+1])
+    )
+
+    % No two regions overlap: their top-left corners must be at least 3 apart
+    % in row or column, or they would share a cell
+    /\ forall(r1 in 1..num_regions, r2 in 1..num_regions where r1 < r2) (
+        first_cells_rows[r1] + 3 <= first_cells_rows[r2]
+        \/ first_cells_rows[r2] + 3 <= first_cells_rows[r1]
+        \/ first_cells_cols[r1] + 3 <= first_cells_cols[r2]
+        \/ first_cells_cols[r2] + 3 <= first_cells_cols[r1]
+    )
+
+    % Assign region labels: cells inside a region get the region number,
+    % cells outside all regions get 0
+    /\ forall(i in rows, j in cols) (
+        regions[i, j] = sum(r in 1..num_regions) (
+            r * bool2int(
+                i >= first_cells_rows[r] /\ i <= first_cells_rows[r] + 2
+                /\ j >= first_cells_cols[r] /\ j <= first_cells_cols[r] + 2
+            )
+        )
+    )
+
+    % Each cell belongs to at most one region (enforced implicitly by
+    % non-overlap, but we assert regions[i,j] in 0..num_regions for safety)
+    /\ forall(i in rows, j in cols) (
+        regions[i, j] >= 0 /\ regions[i, j] <= num_regions
+    )
+
+    % Within each region, grid values must all be distinct
+    /\ forall(r in 1..num_regions) (
+        alldifferent(
+            [grid[first_cells_rows[r] + dr, first_cells_cols[r] + dc]
+             | dr in 0..2, dc in 0..2]
+        )
+    )
+);
+
+predicate deconstruction_outside_cells_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions,
+    int: val
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    assert(index_sets_agree(grid, regions), "board and regions must have the same indexes")
+    /\ forall(r in rows, c in cols)(
+        regions[r,c] = 0 -> grid[r,c] = val
+    )
+    /\ forall(r in rows, c in cols)(
+        regions[r,c] != 0 -> grid[r,c] != val
+    )
+);
+
+predicate deconstruction_no_repeats_on_rows_and_cols_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    assert(index_sets_agree(grid, regions), "board and regions must have the same indexes")
+
+    % For each row: values at cells belonging to a region must all be distinct
+    /\ forall(i in rows) (
+        alldifferent_except_0(
+            [if regions[i, j] != 0 then grid[i, j] else 0 endif | j in cols]
+        )
+    )
+
+    % For each col: values at cells belonging to a region must all be distinct
+    /\ forall(j in cols) (
+        alldifferent_except_0(
+            [if regions[i, j] != 0 then grid[i, j] else 0 endif | i in rows]
+        )
+    )
+);
+
+% -------------------------------------------------------------------------------- % 
 % ------ NURIMISAKI CONSTRAINTS -------------------------------------------------- %
 
 predicate nurimisaki_p(array[int, int] of var int: grid) =

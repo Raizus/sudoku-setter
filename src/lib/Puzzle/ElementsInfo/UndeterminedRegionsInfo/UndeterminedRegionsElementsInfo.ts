@@ -136,6 +136,42 @@ export const chaosConstructionSuguruInfo: SquareCellElementInfo = {
 	solver_func: chaosConstructionSuguruElement
 };
 
+function deconstructionElement(model: PuzzleModel, element: ConstraintsElement) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const num_regions = 9;
+	const outside_val = 0;
+	const grid_name = VAR_2D_NAMES.DECONSTRUCTION_REGIONS;
+	let out_str: string = '';
+	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name};\n`;
+	out_str += `constraint deconstruction_p(board, ${grid_name}, ${num_regions});\n`;
+	out_str += `constraint deconstruction_outside_cells_p(board, ${grid_name}, ${outside_val});\n`;
+	out_str += `constraint deconstruction_no_repeats_on_rows_and_cols_p(board, ${grid_name});\n`;
+
+	return out_str;
+}
+
+export const deconstructionInfo: SquareCellElementInfo = {
+	toolId: TOOLS.DECONSTRUCTION,
+
+	meta: {
+		description:
+			'Within the 11x11 grid, there exist nine non-overlapping 3x3 square regions which must be located by the solver. Each region contains the digits 1-9 such that no digit repeats in any row, column, or 3x3 region. Cells outside these regions do not contain digits, but have a value of 0.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	},
+
+	solver_func: deconstructionElement
+};
+
 function nurimisakiPathGermanWhispersConstraint(puzzle: PuzzleAuxI, toolId: TOOLID): string {
 	const grid = puzzle.grid;
 	let out_str: string = `\n% ${toolId}\n`;

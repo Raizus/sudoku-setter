@@ -139,7 +139,8 @@ import {
 	oneStarPerGalaxyInfo,
 	shadedRowCollumnBoxCountersInfo,
 	yinYangYongInfo,
-	coloredGroupsInfo
+	coloredGroupsInfo,
+	deconstructionInfo
 } from './UndeterminedRegionsInfo/UndeterminedRegionsElementsInfo';
 import { directedPathTeleportRenbanSegmentsInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
 import { directedPathTeleportSegmentsSumInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
@@ -435,6 +436,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.CHAOS_CONSTRUCTION]: chaosConstructionInfo,
 	[TOOLS.NUMBERED_CHAOS_CONSTRUCTION]: numberedChaosConstructionInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_SUGURU]: chaosConstructionSuguruInfo,
+	[TOOLS.DECONSTRUCTION]: deconstructionInfo,
 	[TOOLS.YIN_YANG]: yinYangInfo,
 	[TOOLS.YIN_YANG_YONG]: yinYangYongInfo,
 	[TOOLS.NURIMISAKI]: nurimisakiInfo,

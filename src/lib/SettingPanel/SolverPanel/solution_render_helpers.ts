@@ -250,9 +250,9 @@ function setOtherHighlights(json: JsonT, grid: Grid) {
 	}
 }
 
-function setUnknownRegionsHighlights(json: JsonT, grid: Grid) {
+function setUnknownRegionsHighlights(json: JsonT, grid: Grid, var_name: string) {
 	if (json === undefined) return;
-	const unknown_regions = json[VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS] as number[][] | undefined;
+	const unknown_regions = json[var_name] as number[][] | undefined;
 
 	if (unknown_regions === undefined) return;
 
@@ -350,6 +350,7 @@ function setUnknownRegionsBorders(json: JsonT, grid: Grid) {
 		VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS,
 		VAR_2D_NAMES.SASHIGANE,
 		VAR_2D_NAMES.SHIKAKU_REGIONS,
+		VAR_2D_NAMES.DECONSTRUCTION_REGIONS,
 		'fillomino_area',
 		VAR_2D_NAMES.GALAXY_REGIONS,
 		VAR_2D_NAMES.SUGURU_REGIONS,
@@ -621,7 +622,8 @@ export function setBoardOnSolution(solution: JsonT, puzzle_model: PuzzleModel) {
 	stateStore.updatePenTool(resetPenAction());
 	setSolutionValues(solution, puzzle);
 
-	setUnknownRegionsHighlights(solution, grid);
+	setUnknownRegionsHighlights(solution, grid, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
+	setUnknownRegionsHighlights(solution, grid, VAR_2D_NAMES.DECONSTRUCTION_REGIONS);
 	setUnknownRegionsBorders(solution, grid);
 	setGoldilocksRegionsHighlights(solution, grid);
 	setYinYangYongHighlights(solution, grid);
