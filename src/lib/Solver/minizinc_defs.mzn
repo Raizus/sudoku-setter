@@ -2887,10 +2887,10 @@ predicate chaos_construction_neighbour_cells_same_region_count_p(
 	var int: cell_val,
     var int: cell_region,
 	array[int] of var int: neighbour_regions
-) = let {
-    set of int: idxs1 = index_set(neighbour_regions);
-} in (
-    cell_val = count(neighbour_regions, cell_region)
+) = (
+    cell_val >= 0
+    /\ cell_val <= length(neighbour_regions)
+    /\ cell_val = count(neighbour_regions, cell_region)
 );
 
 predicate chaos_construction_regions_count(
