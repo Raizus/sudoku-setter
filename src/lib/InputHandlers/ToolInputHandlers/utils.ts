@@ -89,7 +89,7 @@ export function getSimilarCells(coords: GridCoordI, grid: Grid, toolId: TOOLID) 
 }
 
 export function pushAddLocalConstraintCommand(
-	element_id: number,
+	element_id: string,
 	id: string | null,
 	currentConstraint: ConstraintType | null,
 	execute: boolean = false
@@ -105,7 +105,7 @@ export function pushAddLocalConstraintCommand(
 }
 
 export function pushRemoveLocalConstraintCommand(
-	element_id: number,
+	element_id: string,
 	id: string | null,
 	currentConstraint: ConstraintType | null,
 	execute: boolean = true
@@ -121,7 +121,7 @@ export function pushRemoveLocalConstraintCommand(
 }
 
 export function pushUpdateLocalConstraintCommand(
-	element_id: number,
+	element_id: string,
 	id: string | null,
 	oldConstraint: ConstraintType | null,
 	currentConstraint: ConstraintType | null,

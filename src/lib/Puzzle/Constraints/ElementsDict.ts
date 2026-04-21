@@ -170,20 +170,20 @@ export interface ElementData {
 	disabled?: boolean;
 }
 
-export class ElementsDict extends Map<number, ConstraintsElement> {
+export class ElementsDict extends Map<string, ConstraintsElement> {
 	id_count: number = 0;
-	order: number[] = [];
+	order: string[] = [];
 
 	addElementToDict(element: ConstraintsElement) {
-		const element_id = this.id_count;
-		this.set(this.id_count, element);
-		this.order.push(this.id_count);
+		const element_id = uniqueId('element_');
+		this.set(element_id, element);
+		this.order.push(element_id);
 		this.id_count += 1;
 
 		return element_id;
 	}
 
-	*orderedEntries(): Generator<[number, ConstraintsElement], void, unknown> {
+	*orderedEntries(): Generator<[string, ConstraintsElement], void, unknown> {
 		for (const element_id of this.order) {
 			const element = this.get(element_id);
 			if (element) {
@@ -209,7 +209,7 @@ export class ElementsDict extends Map<number, ConstraintsElement> {
 		return false;
 	}
 
-	removeFromDict(element_id: number) {
+	removeFromDict(element_id: string) {
 		const elementToRemove = this.get(element_id);
 		if (elementToRemove === undefined) return;
 		this.delete(element_id);
@@ -218,7 +218,7 @@ export class ElementsDict extends Map<number, ConstraintsElement> {
 		return [element_id, elementToRemove];
 	}
 
-	getConstraint<T extends ConstraintType>(element_id: number, constraintId: string) {
+	getConstraint<T extends ConstraintType>(element_id: string, constraintId: string) {
 		const element = this.get(element_id);
 		if (!element || !element.constraints) return null;
 		const constraint = element.constraints[constraintId];
@@ -235,7 +235,7 @@ export class ElementsDict extends Map<number, ConstraintsElement> {
 		return null;
 	}
 
-	addConstraint<T extends ConstraintType>(element_id: number, constraintId: string, constraint: T) {
+	addConstraint<T extends ConstraintType>(element_id: string, constraintId: string, constraint: T) {
 		if (!this.get(element_id)) {
 			const element: ConstraintsElement = { tool_id: constraint.toolId, constraints: {} };
 			this.addElementToDict(element);
@@ -247,7 +247,7 @@ export class ElementsDict extends Map<number, ConstraintsElement> {
 		element.constraints[constraintId] = constraint;
 	}
 
-	setElement(element_id: number, element: ConstraintsElement) {
+	setElement(element_id: string, element: ConstraintsElement) {
 		if (this.has(element_id)) {
 			this.set(element_id, element);
 		} else {
@@ -256,25 +256,25 @@ export class ElementsDict extends Map<number, ConstraintsElement> {
 		}
 	}
 
-	moveElementUp(element_id: number) {
+	moveElementUp(element_id: string) {
 		const idx = this.order.indexOf(element_id);
 		if (idx <= 0) return;
 		[this.order[idx - 1], this.order[idx]] = [this.order[idx], this.order[idx - 1]];
 	}
 
-	moveElementDown(element_id: number) {
+	moveElementDown(element_id: string) {
 		const idx = this.order.indexOf(element_id);
 		if (idx === -1 || idx >= this.order.length - 1) return;
 		[this.order[idx + 1], this.order[idx]] = [this.order[idx], this.order[idx + 1]];
 	}
 
-	enableDisableElement(element_id: number, value: boolean) {
+	enableDisableElement(element_id: string, value: boolean) {
 		const element = this.get(element_id);
 		if (!element) return;
 		element.disabled = value;
 	}
 
-	removeConstraint(element_id: number, constraintId: string) {
+	removeConstraint(element_id: string, constraintId: string) {
 		const element = this.get(element_id);
 		if (!element || !element.constraints) return;
 
@@ -284,7 +284,7 @@ export class ElementsDict extends Map<number, ConstraintsElement> {
 	}
 
 	updateConstraint<T extends ConstraintType>(
-		element_id: number,
+		element_id: string,
 		constraintId: string,
 		constraint: T
 	) {

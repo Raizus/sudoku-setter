@@ -12,7 +12,7 @@
 
 	export let tool_id: TOOLID;
 	export let order: number | null = null;
-	export let element_id: number | null = null;
+	export let element_id: string | null = null;
 	export let element: ConstraintsElement | undefined = undefined;
 	export let elementHandlers: AbstractElementHandlers;
 

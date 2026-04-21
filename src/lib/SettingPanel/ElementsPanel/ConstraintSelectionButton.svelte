@@ -8,7 +8,7 @@
 
 	export let constraint_id: string;
 	export let constraint: ConstraintType;
-	export let element_id: number;
+	export let element_id: string;
 
 	const svgRefStore = stateStore.svgRefStore;
 	const elementsDictStore = stateStore.elementsDictStore;

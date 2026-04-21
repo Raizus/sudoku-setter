@@ -17,7 +17,7 @@ export enum ELEMENT_ACTIONS {
 type AddConstraintAction = {
 	type: ELEMENT_ACTIONS.ADD_CONSTRAINT;
 	payload: {
-		element_id: number;
+		element_id: string;
 		id: string;
 		constraint: ConstraintType;
 	};
@@ -26,7 +26,7 @@ type AddConstraintAction = {
 type RemoveConstraintAction = {
 	type: ELEMENT_ACTIONS.REMOVE_CONSTRAINT;
 	payload: {
-		element_id: number;
+		element_id: string;
 		c_id: string;
 	};
 };
@@ -41,14 +41,14 @@ type AddElementAction = {
 type RemoveElementAction = {
 	type: ELEMENT_ACTIONS.REMOVE_ELEMENT;
 	payload: {
-		element_id: number;
+		element_id: string;
 	};
 };
 
 type RestoreElementAction = {
 	type: ELEMENT_ACTIONS.RESTORE_ELEMENT;
 	payload: {
-		element_id: number;
+		element_id: string;
 		element: ConstraintsElement;
 	};
 };
@@ -56,14 +56,14 @@ type RestoreElementAction = {
 type DuplicateElementAction = {
 	type: ELEMENT_ACTIONS.DUPLICATE_ELEMENT;
 	payload: {
-		element_id: number;
+		element_id: string;
 	};
 };
 
 type EnableDisableElementAction = {
 	type: ELEMENT_ACTIONS.ENABLE_DISABLE_ELEMENT;
 	payload: {
-		element_id: number;
+		element_id: string;
 		value: boolean;
 	};
 };
@@ -71,7 +71,7 @@ type EnableDisableElementAction = {
 type UpdateLocalConstraintAction = {
 	type: ELEMENT_ACTIONS.UPDATE_LOCAL_CONSTRAINT;
 	payload: {
-		element_id: number;
+		element_id: string;
 		constraintId: string;
 		constraint: ConstraintType;
 	};
@@ -80,14 +80,14 @@ type UpdateLocalConstraintAction = {
 type MoveElementUpAction = {
 	type: ELEMENT_ACTIONS.MOVE_ELEMENT_UP;
 	payload: {
-		element_id: number;
+		element_id: string;
 	};
 };
 
 type MoveElementDownAction = {
 	type: ELEMENT_ACTIONS.MOVE_ELEMENT_DOWN;
 	payload: {
-		element_id: number;
+		element_id: string;
 	};
 };
 
@@ -104,7 +104,7 @@ export type ElementAction =
 	| MoveElementDownAction;
 
 export const addConstraintAction = (
-	element_id: number,
+	element_id: string,
 	id: string,
 	constraint: ConstraintType
 ): AddConstraintAction => {
@@ -118,7 +118,7 @@ export const addConstraintAction = (
 	};
 };
 
-export const removeConstraintAction = (element_id: number, id: string): RemoveConstraintAction => {
+export const removeConstraintAction = (element_id: string, id: string): RemoveConstraintAction => {
 	return {
 		type: ELEMENT_ACTIONS.REMOVE_CONSTRAINT,
 		payload: {
@@ -137,7 +137,7 @@ export const addElementAction = (element: ConstraintsElement): AddElementAction 
 	};
 };
 
-export const removeElementAction = (element_id: number): RemoveElementAction => {
+export const removeElementAction = (element_id: string): RemoveElementAction => {
 	return {
 		type: ELEMENT_ACTIONS.REMOVE_ELEMENT,
 		payload: {
@@ -147,7 +147,7 @@ export const removeElementAction = (element_id: number): RemoveElementAction => 
 };
 
 export const restoreElementAction = (
-	element_id: number,
+	element_id: string,
 	element: ConstraintsElement
 ): RestoreElementAction => {
 	return {
@@ -160,7 +160,7 @@ export const restoreElementAction = (
 };
 
 export const duplicateElementAction = (
-	element_id: number
+	element_id: string
 ): DuplicateElementAction => {
 	return {
 		type: ELEMENT_ACTIONS.DUPLICATE_ELEMENT,
@@ -171,7 +171,7 @@ export const duplicateElementAction = (
 };
 
 export const enableDisableElementAction = (
-	element_id: number,
+	element_id: string,
 	value: boolean
 ): EnableDisableElementAction => {
 	return {
@@ -184,7 +184,7 @@ export const enableDisableElementAction = (
 };
 
 export const updateLocalConstraintAction = (
-	element_id: number,
+	element_id: string,
 	id: string,
 	constraint: ConstraintType
 ): UpdateLocalConstraintAction => {
@@ -198,7 +198,7 @@ export const updateLocalConstraintAction = (
 	};
 };
 
-export const moveElementUpAction = (element_id: number): MoveElementUpAction => {
+export const moveElementUpAction = (element_id: string): MoveElementUpAction => {
 	return {
 		type: ELEMENT_ACTIONS.MOVE_ELEMENT_UP,
 		payload: {
@@ -207,7 +207,7 @@ export const moveElementUpAction = (element_id: number): MoveElementUpAction => 
 	};
 };
 
-export const moveElementDownAction = (element_id: number): MoveElementDownAction => {
+export const moveElementDownAction = (element_id: string): MoveElementDownAction => {
 	return {
 		type: ELEMENT_ACTIONS.MOVE_ELEMENT_DOWN,
 		payload: {

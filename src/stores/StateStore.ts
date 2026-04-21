@@ -87,7 +87,7 @@ export class StateStore {
 	public selectOnStore = writable<boolean>(false);
 	public toolModeStore = writable<ToolModeT>(undefined);
 
-	private _selectedElementIdStore = writable<number | null>(null);
+	private _selectedElementIdStore = writable<string | null>(null);
 	private _previousToolStore = writable<TOOLID | null>(TOOLS.DIGIT);
 	private _selectionStore = writable<SelectionState>(initSelection());
 
@@ -438,7 +438,7 @@ export class StateStore {
 		this._currentConstraintStore.set(constraintId);
 	}
 
-	setSelectedElementIdStore(element_id: number | null) {
+	setSelectedElementIdStore(element_id: string | null) {
 		this._selectedElementIdStore.set(element_id);
 	}
 
@@ -446,7 +446,7 @@ export class StateStore {
 		this._currentShapeStore.set(shape);
 	}
 
-	selectConstraint(element_id: number, c_id: string) {
+	selectConstraint(element_id: string, c_id: string) {
 		const elementsDict = get(this._elementsDictStore);
 		const element = elementsDict.get(element_id);
 		if (!element || !element.constraints) return;
@@ -456,7 +456,7 @@ export class StateStore {
 		this.setCurrentConstraint({ id: c_id, constraint });
 	}
 
-	updateToolAndCurrentConstraintStores(tool: TOOLID, element_id: number | null): void {
+	updateToolAndCurrentConstraintStores(tool: TOOLID, element_id: string | null): void {
 		const currTool = get(this.toolStore);
 		const currElementId = get(this._selectedElementIdStore);
 		if (currElementId === element_id && tool === currTool) return;
@@ -483,7 +483,7 @@ export class StateStore {
 		}
 	}
 
-	addGroupToElementsDict(element: ConstraintsElement): number {
+	addGroupToElementsDict(element: ConstraintsElement): string {
 		const elements_dict = this.getElementsDict();
 		const element_id = elements_dict.addElementToDict(element);
 
@@ -499,7 +499,7 @@ export class StateStore {
 	 * For example, it removes all Renban constraints
 	 * @param element_id
 	 */
-	removeGroupFromElementsDict(element_id: number) {
+	removeGroupFromElementsDict(element_id: string) {
 		this._elementsDictStore.update((elementsDict) => {
 			elementsDict.removeFromDict(element_id);
 			return elementsDict;
@@ -508,28 +508,28 @@ export class StateStore {
 		this.setCurrentShape(undefined);
 	}
 
-	restoreElement(element_id: number, element: ConstraintsElement) {
+	restoreElement(element_id: string, element: ConstraintsElement) {
 		this._elementsDictStore.update((elementsDict) => {
 			elementsDict.setElement(element_id, element);
 			return elementsDict;
 		});
 	}
 
-	enableDisableElement(element_id: number, value: boolean) {
+	enableDisableElement(element_id: string, value: boolean) {
 		this._elementsDictStore.update((elementsDict) => {
 			elementsDict.enableDisableElement(element_id, value);
 			return elementsDict;
 		});
 	}
 
-	moveElementUp(element_id: number) {
+	moveElementUp(element_id: string) {
 		this._elementsDictStore.update((elementsDict) => {
 			elementsDict.moveElementUp(element_id);
 			return elementsDict;
 		});
 	}
 
-	moveElementDown(element_id: number) {
+	moveElementDown(element_id: string) {
 		this._elementsDictStore.update((elementsDict) => {
 			elementsDict.moveElementDown(element_id);
 			return elementsDict;
@@ -542,7 +542,7 @@ export class StateStore {
 	 * @param id
 	 * @param newConstraint
 	 */
-	updateConstraint<T extends ConstraintType>(element_id: number, id: string, newConstraint: T) {
+	updateConstraint<T extends ConstraintType>(element_id: string, id: string, newConstraint: T) {
 		this._elementsDictStore.update((elementsDict) => {
 			elementsDict.updateConstraint(element_id, id, newConstraint);
 			return elementsDict;
@@ -550,7 +550,7 @@ export class StateStore {
 		this.setCurrentConstraint({ id, constraint: newConstraint });
 	}
 
-	addConstraint(element_id: number, id: string, constraint: ConstraintType) {
+	addConstraint(element_id: string, id: string, constraint: ConstraintType) {
 		this._elementsDictStore.update((elementsDict) => {
 			elementsDict.addConstraint(element_id, id, constraint);
 			return elementsDict;
@@ -558,7 +558,7 @@ export class StateStore {
 		this.setCurrentConstraint({ id, constraint });
 	}
 
-	setShapeAndAddConstraint(element_id: number, id: string, constraint: ConstraintType) {
+	setShapeAndAddConstraint(element_id: string, id: string, constraint: ConstraintType) {
 		const currentShape = get(this._currentShapeStore);
 		if (currentShape) {
 			constraint.shape = { ...currentShape };
@@ -573,7 +573,7 @@ export class StateStore {
 	 * @param id
 	 * @returns
 	 */
-	removeConstraint(element_id: number, id: string | null) {
+	removeConstraint(element_id: string, id: string | null) {
 		if (!id) return;
 		this._elementsDictStore.update((elementsDict) => {
 			elementsDict.removeConstraint(element_id, id);
@@ -581,7 +581,7 @@ export class StateStore {
 		});
 	}
 
-	enableDisableConstraint(element_id: number, c_id: string) {
+	enableDisableConstraint(element_id: string, c_id: string) {
 		const element = this.getElementsDict().get(element_id);
 		if (!element || !element.constraints) return;
 		const constraint = element.constraints[c_id];
@@ -592,7 +592,7 @@ export class StateStore {
 		this.updateConstraint(element_id, c_id, newConstraint);
 	}
 
-	setNegativeConstraint(element_id: number, neg_tool_id: TOOLID, value: boolean) {
+	setNegativeConstraint(element_id: string, neg_tool_id: TOOLID, value: boolean) {
 		const element = this.getElementsDict().get(element_id);
 		if (!element) return;
 		if (!element.negative_constraints) element.negative_constraints = {};
@@ -600,8 +600,8 @@ export class StateStore {
 	}
 
 	duplicateElement(
-		element_id: number
-	): undefined | [element_id: number, element: ConstraintsElement] {
+		element_id: string
+	): undefined | [element_id: string, element: ConstraintsElement] {
 		const element = this.getElementsDict().get(element_id);
 		if (!element) return;
 		const newElement = elementFromJson(elementToJson(element));
@@ -646,7 +646,7 @@ export class StateStore {
 		return command;
 	}
 
-	removeElementCommand(element_id: number | null) {
+	removeElementCommand(element_id: string | null) {
 		if (element_id === null) return;
 		const element = this.getElementsDict().get(element_id);
 		if (!element) return;
@@ -657,7 +657,7 @@ export class StateStore {
 		this.commandHistoryStore.addCommand(command);
 	}
 
-	toggleDisableElementCommand(element_id: number | null) {
+	toggleDisableElementCommand(element_id: string | null) {
 		if (element_id === null) return;
 		const element = this.getElementsDict().get(element_id);
 		if (!element) return;
@@ -669,7 +669,7 @@ export class StateStore {
 		this.commandHistoryStore.addCommand(command);
 	}
 
-	moveElementUpCommand(element_id: number | null) {
+	moveElementUpCommand(element_id: string | null) {
 		if (element_id === null) return;
 		const action = moveElementUpAction(element_id);
 		const reverse_action = moveElementDownAction(element_id);
@@ -677,7 +677,7 @@ export class StateStore {
 		this.commandHistoryStore.addCommand(command);
 	}
 
-	duplicateElementCommand(element_id: number | null) {
+	duplicateElementCommand(element_id: string | null) {
 		if (element_id === null) return;
 		const new_element_and_id = this.duplicateElement(element_id);
 		if (new_element_and_id === undefined) return;
@@ -688,10 +688,10 @@ export class StateStore {
 		const action = restoreElementAction(new_id, new_element);
 		const reverse_action = removeElementAction(new_id);
 		const command = this.getUpdateElementCommand(action, reverse_action);
-		this.commandHistoryStore.addCommand(command, false);		
+		this.commandHistoryStore.addCommand(command, false);
 	}
 
-	moveElementDownCommand(element_id: number | null) {
+	moveElementDownCommand(element_id: string | null) {
 		if (element_id === null) return;
 		const action = moveElementDownAction(element_id);
 		const reverse_action = moveElementUpAction(element_id);

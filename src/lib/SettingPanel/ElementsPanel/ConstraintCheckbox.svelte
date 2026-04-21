@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { stateStore } from '$stores/StateStore';
 
-	export let element_id: number;
+	export let element_id: string;
 	export let neg_tool_id: string;
 	export let description: string;
 

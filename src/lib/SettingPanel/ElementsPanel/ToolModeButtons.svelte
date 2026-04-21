@@ -13,7 +13,7 @@
 	import { stateStore } from '$stores/StateStore';
 
 	export let tool_id: TOOLID;
-	export let element_id: number;
+	export let element_id: string;
 
 	const toolModeStore = stateStore.toolModeStore;
 	$: modes = getToolModes(tool_id);

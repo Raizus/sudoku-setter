@@ -2,7 +2,7 @@
 	import { stateStore } from '$stores/StateStore';
 	import ConstraintSelectionButton from './ConstraintSelectionButton.svelte';
 
-	export let element_id: number;
+	export let element_id: string;
 	const elementsDictStore = stateStore.elementsDictStore;
 	$: constraints_element = $elementsDictStore.get(element_id);
 </script>

@@ -13,7 +13,7 @@
 	import ToolModeButtons from './ToolModeButtons.svelte';
 
 	export let tool_id: TOOLID;
-	export let element_id: number;
+	export let element_id: string;
 
 	const element_info = elementInfoRegistry[tool_id];
 	const negative_constraints = element_info.negative_constraints;
