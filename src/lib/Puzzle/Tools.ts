@@ -462,6 +462,7 @@ export enum CAGE_CONSTRAINTS {
 	UNIQUE_DIGITS_CAGE = 'Unique Digits Cage',
 	INVERTED_KILLER_CAGE = 'Inverted Killer Cage',
 	SUM_CAGE = 'Sum Cage',
+	ONE_CELL_SUM_OF_OTHERS_CAGE = 'One Cell Sum Of Others Cage',
 	KILLER_CAGE_LOOK_AND_SAY = 'Killer Cage Look And Say',
 	SUM_CAGE_LOOK_AND_SAY = 'Sum Cage Look And Say',
 	PARITY_BALANCE_CAGE = 'Parity Balance Cage',

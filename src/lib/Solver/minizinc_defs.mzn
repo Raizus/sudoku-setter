@@ -1933,6 +1933,15 @@ predicate vaulted_cage_p(
     not member(cage, cell_v)
 );
 
+predicate one_cell_sum_of_others_cage_p(
+    array[int] of var int: cage,
+) = (
+    % In a cage, there is one cell that equals the sum of the others.
+    exists(i in index_set(cage))(
+        cage[i] = sum(j in index_set(cage) where j != i)(cage[j])
+    )
+);
+
 % -------------------------------------------------------------------------------- % 
 % ------ OUTSIDE EDGE CONSTRAINTS ------------------------------------------------ %
 

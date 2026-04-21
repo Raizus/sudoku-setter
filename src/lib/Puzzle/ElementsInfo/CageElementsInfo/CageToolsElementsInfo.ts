@@ -293,6 +293,28 @@ export const sumCageInfo: SquareCellElementInfo = {
 	}
 };
 
+export const oneCellSumOfOthersCageInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_UNVALUED_CAGE_OPTIONS,
+
+	toolId: TOOLS.ONE_CELL_SUM_OF_OTHERS_CAGE,
+
+	shape: DEFAULT_CAGE_SHAPE,
+
+	meta: {
+		description:
+			'In a cage, there is one digit that equals the sum of the other three digits in that cage. Digits may repeat in cages if allowed by sudoku rules.',
+		usage: cageUsage(),
+		tags: [],
+		categories: nonTypableCageDefaultCategories
+	},
+
+	negative_constraints: [],
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleCageElement(model, element, 'one_cell_sum_of_others_cage_p');
+	}
+};
+
 export const sumCageLookAndSayInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_UNVALUED_CAGE_OPTIONS,
 

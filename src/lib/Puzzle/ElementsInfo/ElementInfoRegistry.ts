@@ -24,7 +24,8 @@ import {
 	vaultedCageInfo,
 	vaultedKillerCageInfo,
 	shadedRowCollumnBoxCountersShadedDigitSumCageInfo,
-	yinYangEqualSumCageInfo
+	yinYangEqualSumCageInfo,
+	oneCellSumOfOthersCageInfo
 } from './CageElementsInfo/CageToolsElementsInfo';
 import {
 	centerPMInfo,
@@ -733,6 +734,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.INVERTED_KILLER_CAGE]: invertedKillerCageInfo,
 	[TOOLS.SUM_CAGE]: sumCageInfo,
 	[TOOLS.SUM_CAGE_LOOK_AND_SAY]: sumCageLookAndSayInfo,
+	[TOOLS.ONE_CELL_SUM_OF_OTHERS_CAGE]: oneCellSumOfOthersCageInfo,
 	[TOOLS.PARITY_BALANCE_CAGE]: parityBalanceCageInfo,
 	[TOOLS.DIVISIBLE_KILLER_CAGE]: divisibleKillerCageInfo,
 	[TOOLS.SPOTLIGHT_CAGE]: spotlightCageInfo,
