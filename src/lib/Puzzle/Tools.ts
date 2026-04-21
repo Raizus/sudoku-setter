@@ -501,6 +501,7 @@ export enum OUTSIDE_EDGE_CONSTRAINTS {
 	RISING_STREAK = 'Rising Streak',
 	ROW_OR_COLUMN_RANK = 'Row Or Column Rank',
 	OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED = 'Outside Edge Yin Yang Sum Of Shaded',
+	YIN_YANG_COLOURED_SUM_FRAME_OUTSIDE_EDGE = 'Yin Yang Coloured Sum Frame Outside Edge',
 	CHAOS_CONSTRUCTION_X_SUM_REGION_BORDERS = 'Chaos Construction X-Sum Region Borders',
 	OUTSIDE_CONSECUTIVE_SUM = 'Outside Consecutive Sum',
 	LOOPWICHES = 'Loopwhiches',

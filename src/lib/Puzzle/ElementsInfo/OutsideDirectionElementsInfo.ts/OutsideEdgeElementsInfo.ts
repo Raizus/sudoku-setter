@@ -430,6 +430,46 @@ export const outsideEdgeYinYangSumOfShadedInfo: SquareCellElementInfo = {
 	}
 };
 
+function yinYangColouredSumFrameOutsideEdgeConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	const cell_coord = constraint.cell;
+	const direction = constraint.direction;
+
+	const cells = grid.getCellsInDirection(cell_coord.r, cell_coord.c, direction);
+	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+	const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
+
+	const value = constraint.value;
+	if (value) {
+		const val = parseInt(value);
+		const constraint_str = `constraint yin_yang_coloured_sum_frame_outside_edge_p(${vars_str}, ${yin_yang_vars_str}, ${val});\n`;
+		return constraint_str;
+	}
+	return '';
+}
+
+export const yinYangColouredSumFrameOutsideEdgeInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
+
+	toolId: TOOLS.YIN_YANG_COLOURED_SUM_FRAME_OUTSIDE_EDGE,
+
+	shape: OUTSIDE_DEFAULT_SHAPE,
+
+	meta: {
+		...DEFAULT_META,
+		description:
+			'Outside clues give the sum of the first three digits seen from that direction. Each Sum Frame clue only sees digits of one Yin Yang colour, while digits of the other colour are completely meaningless for that clue. Which colour corresponds to each clue must be determined. (Each clue sees at least three digits of its color.'
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, yinYangColouredSumFrameOutsideEdgeConstraint);
+	}
+};
+
 export const outsideConsecutiveSumInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,

@@ -2341,6 +2341,42 @@ predicate outside_edge_yin_yang_sum_of_shaded_p(
     index_set(cells) = index_set(yin_yang_vars) /\
     sum(i in index_set(cells) where yin_yang_vars[i] == 1)(cells[i]) == val;
 
+predicate yin_yang_coloured_sum_frame_outside_edge_p(
+    array[int] of var int: cells, 
+    array[int] of var int: yin_yang_vars, 
+    var int: val
+) = let {
+    set of int: idxs = index_set(cells);
+    array[int] of var bool: bool_vars_0 = [
+        yin_yang_vars[i] == 0 
+        /\ count([yin_yang_vars[j] | j in idxs where j <= i], 0) <= 3
+        | i in idxs
+    ];
+    array[int] of var bool: bool_vars_1 = [
+        yin_yang_vars[i] == 1
+        /\ count([yin_yang_vars[j] | j in idxs where j <= i], 1) <= 3
+        | i in idxs
+    ];
+} in (
+    assert(index_sets_agree(cells, yin_yang_vars), "cells and yin_yang_vars must have the same indexes")
+    % Outside clues give the sum of the first three digits seen from that direction. 
+    % Each Sum Frame clue only sees digits of one Yin Yang colour, while digits of the other colour are completely meaningless for that clue. 
+    % Which colour corresponds to each clue must be determined. 
+    % (Each clue sees at least three digits of its color.)
+    % Either at least 3 yin_yang_vars are 0 and their sum is equal to val
+    % or at least 3 yin_yang_vars are 1 and their sum is equal to val
+    /\ (
+        (
+            count(yin_yang_vars, 0) >= 3
+            /\ conditional_sum_f(cells, bool_vars_0, true) == val
+        )
+        \/ (
+            count(yin_yang_vars, 1) >= 3
+            /\ conditional_sum_f(cells, bool_vars_1, true) == val
+        )
+    )
+);
+
 predicate yin_yang_white_kropki_p(var int: cell1, var int: cell2, var int: yin_yang1, var int: yin_yang2) =
     yin_yang1 == yin_yang2 /\ consecutive_p(cell1, cell2);
 
