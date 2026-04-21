@@ -1,3 +1,4 @@
+import { defaultValidateValueOnInput, defaultValueUpdater, type ValueValidatorOptions } from '$input/InputHandler';
 import { type LineToolInputOptions, HANDLER_TOOL_TYPE } from '$input/ToolInputHandlers/types';
 import {
 	cellsFromCoords,
@@ -45,6 +46,25 @@ export const DEFAULT_LINE_OPTIONS_NO_INTERSECT: LineToolInputOptions = {
 	type: HANDLER_TOOL_TYPE.LINE,
 	allowSelfIntersection: false
 };
+
+export function validateLineValue(value: string, maxLength = 5): boolean {
+	const options: ValueValidatorOptions = {
+		maxLength: maxLength,
+		allowSymbolicVariables: true,
+		allowInequalities: true,
+		allowNegatives: true
+	};
+	const valid = defaultValidateValueOnInput(value, options);
+	return valid;
+}
+
+export function defaultLineValueUpdater(
+	oldValue: string | undefined,
+	key: string,
+	validatorFunc: (val: string) => boolean
+): string | undefined {
+	return defaultValueUpdater(oldValue, key, validatorFunc);
+}
 
 export function defaultEditableLineOptions() {
 	const linePathOptions: EditablePathOptions = {
@@ -197,11 +217,13 @@ export function valuedLineElement(
 }
 
 function circularValuedLineConstraint(
-	grid: Grid,
+	model: PuzzleModel,
+	c_id: string,
 	constraint: LineToolI,
 	predicate: string,
 	default_value: string = ''
 ) {
+	const grid = model.puzzle.grid;
 	const cells_coords = constraint.cells;
 	let cells = cells_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell);
 	let circular = false;
@@ -215,9 +237,14 @@ function circularValuedLineConstraint(
 	let value = constraint.value;
 	if (!value) value = default_value;
 
-	const val = parseInt(value);
-	const constraint_str: string = `constraint ${predicate}(${vars_str}, ${val}, ${circular});\n`;
-	return constraint_str;
+	const result = getParsingResult(model, value, c_id);
+	if (!result) return '';
+
+	const var_name = result[1];
+	let out_str: string = result[0];
+
+	out_str += `constraint ${predicate}(${vars_str}, ${var_name}, ${circular});\n`;
+	return out_str;
 }
 
 export function circularValuedLineElement(
@@ -230,10 +257,10 @@ export function circularValuedLineElement(
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
-	const grid = model.puzzle.grid;
-	for (const [, constraint] of Object.entries(constraints)) {
+	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = circularValuedLineConstraint(
-			grid,
+			model,
+			c_id,
 			constraint as LineToolI,
 			predicate,
 			default_value

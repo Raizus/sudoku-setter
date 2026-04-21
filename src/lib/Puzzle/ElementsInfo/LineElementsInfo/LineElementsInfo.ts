@@ -15,7 +15,9 @@ import {
 	simpleLineDefaultCategories,
 	simpleLineElement,
 	valuedLineElement,
-	DEFAULT_GRAY_LINE
+	DEFAULT_GRAY_LINE,
+	defaultLineValueUpdater,
+	validateLineValue
 } from './helpers';
 import type { ConstraintsElement, LineToolI } from '../../puzzle_schema';
 import {
@@ -1512,7 +1514,9 @@ export const segmentedSumLineInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.LINE,
 		allowSelfIntersection: true,
-		defaultValue: '10'
+		defaultValue: '10',
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+			defaultLineValueUpdater(oldValue, key, validateLineValue)
 	},
 
 	toolId: TOOLS.SEGMENTED_SUM_LINE,

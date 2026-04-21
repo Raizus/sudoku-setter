@@ -1639,20 +1639,14 @@ predicate segmented_sum_line_not_circular_p(array[int] of var int: arr, var int:
     split_after[max(idxs)] = 0 
     % Calculate running sum for each position
     /\ forall(i in idxs)(
-        segment_sum[i] = 
-            if i = min(idxs) then
-                arr[i]
-            else 
-                arr[i] +
-                if split_after[i-1] then 
-                    0 
-                else 
-                    segment_sum[i-1]
-                endif
-            endif
-    ) /\
+        let {
+            var int: previous = if i = min(idxs) \/ split_after[i-1] then 0 else segment_sum[i-1] endif;
+        } in (
+            segment_sum[i] = arr[i] + previous
+        )
+    )
     % Each segment must sum to val
-    forall(i in idxs)(
+    /\ forall(i in idxs)(
         % If this is start of segment (first pos or after split), sum must be val
         i = max(idxs) \/ (i < max(idxs) /\ split_after[i]) -> segment_sum[i] = val
     )
