@@ -476,6 +476,39 @@ export const multisetCageInfo: SquareCellElementInfo = {
 	solver_func: multisetCageElement
 };
 
+function digitCountingCageConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CageToolI
+) {
+	const cells = cellsFromCoords(model.puzzle.grid, constraint.cells);
+	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+
+	const constraint_str = `constraint counting_circles_p(${vars_str}, ALLOWED_DIGITS);\n`;
+	return constraint_str;
+}
+
+export const digitCountingCageInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_UNVALUED_CAGE_OPTIONS,
+
+	toolId: TOOLS.DIGIT_COUNTING_CAGE,
+
+	shape: DEFAULT_CAGE_SHAPE,
+
+	meta: {
+		description:
+			'Every digit on a cage counts how many times that digit appears on that cage. For example, if there is a 3 on a cage, then there are exactly three 3s on the cage.',
+		usage: typableCageUsage(),
+		tags: [],
+		categories: typableCageDefaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, digitCountingCageConstraint);
+	}
+};
+
 function vaultedCageConstraint(
 	model: PuzzleModel,
 	grid: Grid,

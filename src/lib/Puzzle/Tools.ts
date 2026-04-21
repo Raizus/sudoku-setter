@@ -471,6 +471,7 @@ export enum CAGE_CONSTRAINTS {
 	PUTTERIA_CAGE = 'Putteria Cage',
 	AQUARIUM_CAGE = 'Aquarium Cage',
 	MULTISET_CAGE = 'Multiset Cage',
+	DIGIT_COUNTING_CAGE = 'Digit Counting Cage',
 	VAULTED_CAGE = 'Vaulted Cage',
 	VAULTED_KILLER_CAGE = 'Vaulted Killer Cage',
 	YIN_YANG_ANTITHESIS_KILLER_CAGE = 'Yin Yang Antithesis Killer Cage',
