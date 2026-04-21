@@ -20,7 +20,7 @@ import type { SquareCellElementInfo } from '../ElementInfo';
 import type { Cell } from '../Grid/Cell';
 import type { Grid } from '../Grid/Grid';
 import type { CenterCornerOrEdgeToolI, ConstraintsElement } from '../puzzle_schema';
-import { SHAPE_TYPES } from '../Shape/Shape';
+import { SHAPE_TYPES, type EditableShapeI } from '../Shape/Shape';
 import { TOOL_CATEGORIES, TOOLS } from '../Tools';
 import { centerCornerOrEdgeUsage } from '../ToolUsage';
 
@@ -34,6 +34,14 @@ const DEFAULT_CENTER_EDGE_CORNER_CATEGORIES = [
 	TOOL_CATEGORIES.CENTER_CORNER_EDGE_CONSTRAINT,
 	TOOL_CATEGORIES.LOCAL_ELEMENT
 ];
+
+const DEFAULT_GALAXY_SHAPE: EditableShapeI = {
+	type: SHAPE_TYPES.CIRCLE,
+	r: { editable: false, value: 0.15 },
+	strokeWidth: { editable: false, value: 0.02, lb: 0, ub: 1, step: 0.025 },
+	stroke: { editable: false, value: 'black' },
+	fill: { editable: false, value: 'var(--grid-background-color)' }
+};
 
 function getCellRot180(grid: Grid, cell: Cell, r: number, c: number) {
 	const center_r = cell.r + 0.5;
@@ -131,13 +139,7 @@ export const rotationallySymmetricGalaxyCenterInfo: SquareCellElementInfo = {
 		}
 	],
 
-	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: 0.15 },
-		strokeWidth: { editable: false, value: 0.02, lb: 0, ub: 1, step: 0.025 },
-		stroke: { editable: false, value: 'black' },
-		fill: { editable: false, value: 'var(--grid-background-color)' }
-	},
+	shape: DEFAULT_GALAXY_SHAPE,
 
 	meta: {
 		description:
@@ -202,13 +204,7 @@ export const rotationallySymmetricGalaxyCenterSumInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.ROTATIONALLY_SYMMETRIC_GALAXY_CENTER_SUM,
 
-	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: 0.15 },
-		strokeWidth: { editable: false, value: 0.02, lb: 0, ub: 1, step: 0.025 },
-		stroke: { editable: false, value: 'black' },
-		fill: { editable: false, value: 'var(--grid-background-color)' }
-	},
+	shape: DEFAULT_GALAXY_SHAPE,
 
 	meta: {
 		description:
