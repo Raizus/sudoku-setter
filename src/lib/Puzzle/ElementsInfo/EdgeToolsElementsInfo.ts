@@ -14,6 +14,7 @@ import {
 	cellsToVarsName,
 	cellToGridVarName,
 	cellToVarName,
+	get_grid_name,
 	PuzzleModel,
 	simpleElementFunction,
 	VAR_2D_NAMES
@@ -158,8 +159,7 @@ function findEdgeConstraintMatch(constraints: Record<string, EdgeToolI>, cell1: 
 	return match;
 }
 
-function getEdgeVars(grid: Grid, constraint: EdgeToolI, use_values: boolean = false) {
-	const grid_name = use_values ? VAR_2D_NAMES.VALUES_GRID : VAR_2D_NAMES.BOARD;
+function getEdgeVars(grid: Grid, constraint: EdgeToolI, grid_name: string) {
 	const cells = cellsFromCoords(grid, constraint.cells);
 	const vars = cellsToGridVarsName(cells, grid_name);
 	return vars;
@@ -167,7 +167,8 @@ function getEdgeVars(grid: Grid, constraint: EdgeToolI, use_values: boolean = fa
 
 function simpleEdgeConstraint(grid: Grid, constraint: EdgeToolI, predicate: string) {
 	if (constraint.disabled) return '';
-	const vars = getEdgeVars(grid, constraint);
+	const vars = getEdgeVars(grid, constraint, VAR_2D_NAMES.BOARD
+	);
 	const [var1, var2] = vars;
 
 	const constraint_str = `constraint ${predicate}(${var1}, ${var2});\n`;
@@ -203,12 +204,12 @@ function valuedEdgeConstraint(
 	constraint: EdgeToolI,
 	predicate: string,
 	default_value: string = '',
-	use_values: boolean = false
+	grid_name: string
 ) {
 	if (constraint.disabled) return '';
 
 	const grid = model.puzzle.grid;
-	const vars = getEdgeVars(grid, constraint, use_values);
+	const vars = getEdgeVars(grid, constraint, grid_name);
 	const [var1, var2] = vars;
 
 	const value = constraint.value?.length ? constraint.value : default_value;
@@ -221,6 +222,14 @@ function valuedEdgeConstraint(
 	return out_str;
 }
 
+/**
+ *
+ * @param model
+ * @param element
+ * @param predicate name of the predicate. Must have the following signature predicate predicate_name(var int: a, var int: b, var int: c). The variable names can be different.
+ * @param default_value
+ * @returns
+ */
 function valuedEdgeElement(
 	model: PuzzleModel,
 	element: ConstraintsElement,
@@ -231,8 +240,7 @@ function valuedEdgeElement(
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
-	const mod_constraints = element.negative_constraints;
-	const use_values = mod_constraints ? !!mod_constraints[TOOLS.USE_CELL_VALUES] : false;
+	const grid_name = get_grid_name(element.negative_constraints);
 
 	for (const [c_id, constraint] of Object.entries(constraints)) {
 		const constraint_str = valuedEdgeConstraint(
@@ -241,7 +249,7 @@ function valuedEdgeElement(
 			constraint as EdgeToolI,
 			predicate,
 			default_value,
-			use_values
+			grid_name
 		);
 		out_str += constraint_str;
 	}
@@ -422,8 +430,8 @@ export const edgeSumInfo: SquareCellElementInfo = {
 	}
 };
 
-function xvConstraint(grid: Grid, constraint: EdgeToolI, use_values: boolean = false) {
-	const vars = getEdgeVars(grid, constraint, use_values);
+function xvConstraint(grid: Grid, constraint: EdgeToolI, grid_name: string) {
+	const vars = getEdgeVars(grid, constraint, grid_name);
 	const [var1, var2] = vars;
 	if (constraint.value === 'V' || constraint.value === 'v') {
 		const constraint_str = `constraint ${var1} + ${var2} = 5;\n`;
@@ -437,21 +445,20 @@ function xvElement(model: PuzzleModel, element: ConstraintsElement) {
 	let out_str = '';
 	const constraints = element.constraints as Record<string, EdgeToolI>;
 
-	const mod_constraints = element.negative_constraints;
-	const use_values = mod_constraints ? !!mod_constraints[TOOLS.USE_CELL_VALUES] : false;
+	const grid_name = get_grid_name(element.negative_constraints);
 
 	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
-		const constraint_str = xvConstraint(grid, constraint as EdgeToolI, use_values);
+		const constraint_str = xvConstraint(grid, constraint as EdgeToolI, grid_name);
 		out_str += constraint_str;
 	}
 
 	// negative constraints
+	const mod_constraints = element.negative_constraints;
 	if (!mod_constraints) return out_str;
 	const all_v_given = !!mod_constraints[TOOLS.NEGATIVE_V_CONSTRAINT];
 	const all_x_given = !!mod_constraints[TOOLS.NEGATIVE_X_CONSTRAINT];
 	const all_xv_given = !!mod_constraints[TOOLS.NEGATIVE_XV_CONSTRAINT];
-	const grid_name = use_values ? VAR_2D_NAMES.VALUES_GRID : VAR_2D_NAMES.BOARD;
 
 	if (!all_v_given && !all_x_given && !all_xv_given) return out_str;
 
@@ -521,8 +528,8 @@ export const xvInfo: SquareCellElementInfo = {
 	solver_func: xvElement
 };
 
-function edgeInequalityConstraint(grid: Grid, constraint: EdgeToolI) {
-	const vars = getEdgeVars(grid, constraint);
+function edgeInequalityConstraint(grid: Grid, constraint: EdgeToolI, grid_name: string) {
+	const vars = getEdgeVars(grid, constraint, grid_name);
 	const [var1, var2] = vars;
 	const value = constraint.value;
 
@@ -541,9 +548,11 @@ export function edgeInequalityElement(model: PuzzleModel, element: ConstraintsEl
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const grid_name = get_grid_name(element.negative_constraints);
+
 	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
-		const constraint_str = edgeInequalityConstraint(grid, constraint as EdgeToolI);
+		const constraint_str = edgeInequalityConstraint(grid, constraint as EdgeToolI, grid_name);
 		out_str += constraint_str;
 	}
 	return out_str;
@@ -1035,14 +1044,15 @@ function allIndexingArrowsDifferent(model: PuzzleModel, element: ConstraintsElem
 	const all_different = !!mod_constraints[TOOLS.ALL_DIFFERENT];
 	if (!all_different) return out_str;
 
+	const grid_name = get_grid_name(mod_constraints);
 	const grid = model.puzzle.grid;
 	const constraints = element.constraints as Record<string, EdgeToolI>;
 	if (!constraints) return out_str;
 
 	out_str += `\n% ${TOOLS.ALL_DIFFERENT}\n`;
 	for (const [c1, c2] of combinations(Object.values(constraints), 2)) {
-		const vars1 = getEdgeVars(grid, c1);
-		const vars2 = getEdgeVars(grid, c2);
+		const vars1 = getEdgeVars(grid, c1, grid_name);
+		const vars2 = getEdgeVars(grid, c2, grid_name);
 
 		out_str += `constraint (${vars1[0]} != ${vars2[0]}) \\/ (${vars1[1]} != ${vars2[1]});\n`;
 	}
@@ -1094,24 +1104,39 @@ export const differenceIndexingArrowInfo: SquareCellElementInfo = {
 
 function sumIndexingArrowConstraint(
 	model: PuzzleModel,
-	grid: Grid,
 	c_id: string,
-	constraint: EdgeToolI
+	constraint: EdgeToolI,
+	grid_name: string
 ) {
+	const grid = model.puzzle.grid;
 	const coords = constraint.cells;
 	const cells = cellsFromCoords(grid, coords);
-	const cells_vars = cellsToGridVarsName(cells, VAR_2D_NAMES.BOARD);
+	const cells_vars = cellsToGridVarsName(cells, grid_name);
 	const cell1_var = cells_vars[0];
 	const cell2_var = cells_vars[1];
 
-	const constraint_str = `constraint sum_indexing_arrow_p(${VAR_2D_NAMES.BOARD}, ${cell1_var}, ${cell2_var});\n`;
+	const constraint_str = `constraint sum_indexing_arrow_p(${grid_name}, ${cell1_var}, ${cell2_var});\n`;
 	return constraint_str;
 }
 
 function sumIndexingArrowElement(model: PuzzleModel, element: ConstraintsElement) {
-	let out_str = simpleElementFunction(model, element, sumIndexingArrowConstraint);
-	out_str += allIndexingArrowsDifferent(model, element);
+	const grid_name = get_grid_name(element.negative_constraints);
 
+	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
+	for (const [c_id, constraint] of Object.entries(constraints)) {
+		const constraint_str = sumIndexingArrowConstraint(
+			model,
+			c_id,
+			constraint as EdgeToolI,
+			grid_name
+		);
+		out_str += constraint_str;
+	}
+
+	out_str += allIndexingArrowsDifferent(model, element);
 	return out_str;
 }
 
@@ -1125,6 +1150,11 @@ export const sumIndexingArrowInfo: SquareCellElementInfo = {
 		{
 			toolId: TOOLS.ALL_DIFFERENT,
 			description: 'All such arrows are different.'
+		},
+		{
+			toolId: TOOLS.USE_CELL_VALUES,
+			description:
+				'Sum Indexing Arrow constraints use modified cell values instead of the cell digits.'
 		}
 	],
 

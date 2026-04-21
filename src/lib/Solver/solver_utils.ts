@@ -153,6 +153,12 @@ export function getDirectionsVars(
 	return vars_arr;
 }
 
+export function get_grid_name(negative_constraints: Record<string, boolean> | undefined) {
+	const use_values = negative_constraints ? !!negative_constraints[TOOLS.USE_CELL_VALUES] : false;
+	const grid_name = use_values ? VAR_2D_NAMES.VALUES_GRID : VAR_2D_NAMES.BOARD;
+	return grid_name;
+}
+
 export interface PuzzleAuxI {
 	grid: Grid;
 	valid_digits: number[];
