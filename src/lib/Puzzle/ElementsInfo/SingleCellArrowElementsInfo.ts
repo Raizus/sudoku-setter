@@ -8,6 +8,7 @@ import {
 	cellsToVarsName,
 	cellToGridVarName,
 	cellToVarName,
+	simpleElementFunction,
 	VAR_2D_NAMES,
 	type PuzzleModel
 } from '$src/lib/Solver/solver_utils';
@@ -36,6 +37,12 @@ const DEFAULT_GRAY_ARROW: EditableShapeI = {
 	stroke: { editable: true, value: 'gray' }
 };
 
+const DEFAULT_BLACK_ARROW: EditableShapeI = {
+	type: SHAPE_TYPES.CELL_ARROW,
+	strokeWidth: { editable: false, value: 0.05 },
+	stroke: { editable: true, value: 'black' }
+};
+
 function getCellsInDirection(
 	grid: Grid,
 	constraint: CellArrowToolI,
@@ -54,10 +61,24 @@ function getCellsInDirection(
 	return cells;
 }
 
+function simpleCellArrowConstraint(grid: Grid, constraint: CellArrowToolI, predicate: string) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const cells = getCellsInDirection(grid, constraint);
+
+	const cell_var = cellToVarName(cell);
+	const cells_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+
+	const out_str = `constraint ${predicate}(${cells_vars}, ${cell_var});\n`;
+	return out_str;
+}
+
 function simpleCellArrowElement(
 	model: PuzzleModel,
 	element: ConstraintsElement,
-	func: (grid: Grid, constraint: CellArrowToolI) => string
+	predicate: string
 ) {
 	let out_str = '';
 	const constraints = element.constraints;
@@ -66,13 +87,18 @@ function simpleCellArrowElement(
 	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
 		if (constraint.disabled) continue;
-		const constraint_str = func(grid, constraint as CellArrowToolI);
+		const constraint_str = simpleCellArrowConstraint(grid, constraint as CellArrowToolI, predicate);
 		out_str += constraint_str;
 	}
 	return out_str;
 }
 
-function sashiganeArrowPointsToBendConstraint(grid: Grid, constraint: CellArrowToolI) {
+function sashiganeArrowPointsToBendConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellArrowToolI
+) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
@@ -105,11 +131,16 @@ export const sashiganeArrowPointsToBendInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		return simpleCellArrowElement(model, element, sashiganeArrowPointsToBendConstraint);
+		return simpleElementFunction(model, element, sashiganeArrowPointsToBendConstraint);
 	}
 };
 
-function thermoSightlineLoopArrowConstraint(grid: Grid, constraint: CellArrowToolI) {
+function thermoSightlineLoopArrowConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellArrowToolI
+) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
@@ -141,11 +172,16 @@ export const thermoSightlineLoopArrowInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		return simpleCellArrowElement(model, element, thermoSightlineLoopArrowConstraint);
+		return simpleElementFunction(model, element, thermoSightlineLoopArrowConstraint);
 	}
 };
 
-function internalLoopSkyscrapersConstraint(grid: Grid, constraint: CellArrowToolI) {
+function internalLoopSkyscrapersConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellArrowToolI
+) {
 	const coords = constraint.cell;
 	const cell = grid.getCell(coords.r, coords.c);
 	if (!cell) return '';
@@ -178,23 +214,9 @@ export const internalLoopSkyscrapersInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		return simpleCellArrowElement(model, element, internalLoopSkyscrapersConstraint);
+		return simpleElementFunction(model, element, internalLoopSkyscrapersConstraint);
 	}
 };
-
-function skyscrapersArrowConstraint(grid: Grid, constraint: CellArrowToolI) {
-	const coords = constraint.cell;
-	const cell = grid.getCell(coords.r, coords.c);
-	if (!cell) return '';
-
-	const cells = getCellsInDirection(grid, constraint);
-
-	const cell_var = cellToVarName(cell);
-	const cells_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
-
-	const out_str = `constraint skyscrapers_p(${cells_vars}, ${cell_var});\n`;
-	return out_str;
-}
 
 export const skyscrapersArrowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
@@ -211,11 +233,16 @@ export const skyscrapersArrowInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		return simpleCellArrowElement(model, element, skyscrapersArrowConstraint);
+		return simpleCellArrowElement(model, element, 'skyscrapers_p');
 	}
 };
 
-function modularCountCellArrowConstraint(grid: Grid, constraint: CellArrowToolI) {
+function modularCountCellArrowConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellArrowToolI
+) {
 	const cells = getCellsInDirection(grid, constraint, true);
 	const cells_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
 
@@ -237,23 +264,9 @@ export const modularCountCellArrowInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		return simpleCellArrowElement(model, element, modularCountCellArrowConstraint);
+		return simpleElementFunction(model, element, modularCountCellArrowConstraint);
 	}
 };
-
-function magnetsCellArrowConstraint(grid: Grid, constraint: CellArrowToolI) {
-	const coords = constraint.cell;
-	const cell = grid.getCell(coords.r, coords.c);
-	if (!cell) return '';
-
-	const cells = getCellsInDirection(grid, constraint);
-
-	const cell_var = cellToVarName(cell);
-	const cells_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
-
-	const out_str = `constraint magnets_cell_arrow_p(${cells_vars}, ${cell_var});\n`;
-	return out_str;
-}
 
 export const magnetsCellArrowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
@@ -269,6 +282,45 @@ export const magnetsCellArrowInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		return simpleCellArrowElement(model, element, magnetsCellArrowConstraint);
+		return simpleCellArrowElement(model, element, 'magnets_cell_arrow_p');
+	}
+};
+
+export const blackKropkiCellArrowInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
+
+	toolId: TOOLS.BLACK_KROPKI_CELL_ARROW,
+	shape: DEFAULT_BLACK_ARROW,
+
+	meta: {
+		description:
+			'A black arrow indicates how many digits in the indicated direction are double or half its value.',
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_ARROW_CATEGORIES
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleCellArrowElement(model, element, 'black_kropki_cell_arrow_p');
+	}
+};
+
+export const whiteKropkiCellArrowInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
+	toolId: TOOLS.WHITE_KROPKI_CELL_ARROW,
+	
+	shape: {
+		...DEFAULT_BLACK_ARROW,
+		stroke: { editable: true, value: '#dddddd' }
+	},
+
+	meta: {
+		description:
+			'A white arrow indicates how many digits in the indicated direction are double or half its value.',
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_ARROW_CATEGORIES
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleCellArrowElement(model, element, 'white_kropki_cell_arrow_p');
 	}
 };

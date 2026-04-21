@@ -343,7 +343,9 @@ import {
 	sashiganeArrowPointsToBendInfo,
 	skyscrapersArrowInfo,
 	modularCountCellArrowInfo,
-	magnetsCellArrowInfo
+	magnetsCellArrowInfo,
+	blackKropkiCellArrowInfo,
+	whiteKropkiCellArrowInfo
 } from './SingleCellArrowElementsInfo';
 import { customFogClearingInfo, fogLighsInfo } from './FogElementsInfo';
 import {
@@ -567,6 +569,8 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.SKYSCRAPERS_ARROW]: skyscrapersArrowInfo,
 	[TOOLS.MODULAR_COUNT_CELL_ARROW]: modularCountCellArrowInfo,
 	[TOOLS.MAGNETS_CELL_ARROW]: magnetsCellArrowInfo,
+	[TOOLS.BLACK_KROPKI_CELL_ARROW]: blackKropkiCellArrowInfo,
+	[TOOLS.WHITE_KROPKI_CELL_ARROW]: whiteKropkiCellArrowInfo,
 
 	// Single Cell Multi Arrow Constraint
 	[TOOLS.HOT_ARROWS]: hotArrowsInfo,

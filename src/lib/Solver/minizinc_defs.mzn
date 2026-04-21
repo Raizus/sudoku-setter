@@ -739,6 +739,9 @@ predicate regular_distance_p(array[int] of var int: arr, var int: dist) =
 		arr[i+1] - arr[i] == dist
 	);
 
+predicate consecutive_p(var int: a, var int: b) = 
+    abs(a - b) = 1;
+
 predicate sum_p(array[int] of var int: arr, var int: val) =
     sum(arr) == val;
 
@@ -1128,6 +1131,26 @@ predicate magnets_cell_arrow_p(
     conditional_sum_f(arr, bool_vars, true) = cell_var
 );
 
+predicate black_kropki_cell_arrow_p(
+    array[int] of var int: arr,
+    var int: cell_var
+) = let {
+    set of int: idxs = index_set(arr);
+    array[int] of var bool: bool_vars = [ratio_p(cell_var, arr[i], 2) | i in idxs];
+} in (
+    sum(bool2int(bool_vars)) = cell_var
+);
+
+predicate white_kropki_cell_arrow_p(
+    array[int] of var int: arr,
+    var int: cell_var
+) = let {
+    set of int: idxs = index_set(arr);
+    array[int] of var bool: bool_vars = [consecutive_p(cell_var, arr[i]) | i in idxs];
+} in (
+    sum(bool2int(bool_vars)) = cell_var
+);
+
 % -------------------------------------------------------------------------------- % 
 % ------ SINGLE CELL MULTI ARROW CONSTRAINTS ------------------------------------- %
 
@@ -1170,9 +1193,6 @@ predicate region_sum_line_source_p(
 
 % -------------------------------------------------------------------------------- % 
 % ------ EDGE CONSTRAINTS -------------------------------------------------------- %
-
-predicate consecutive_p(var int: a, var int: b) = 
-    abs(a - b) = 1;
 
 predicate abs_difference(var int: a, var int: b, var int: d) =
 	abs(a - b) = d;
