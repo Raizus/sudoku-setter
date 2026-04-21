@@ -259,7 +259,7 @@ export const cornerSumOfThreeEqualsTheOtherInfo: SquareCellElementInfo = {
 
 	shape: {
 		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: 0.2 },
+		r: { editable: false, value: 0.15 },
 		strokeWidth: { editable: false, value: 0.023 },
 		stroke: { editable: false, value: 'black' },
 		fill: { editable: false, value: 'var(--grid-background-color)' }
