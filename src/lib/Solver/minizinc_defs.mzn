@@ -4626,7 +4626,11 @@ predicate no_2x2_belongs_to_one_galaxy_p(
       } in (regions[r,c] = 0 /\ all_eq) \/ not all_eq
 );
 
-predicate gallaxy_connected_regions_p(
+% regions with id > 0 must be orthofonally conneted
+% regions will not be rooted based on the first cell in the 
+% region. This is useful when specific regions can be rooted to
+% given constraints (e.g. galaxy centers)
+predicate unrooted_connected_regions_not_0_p(
     array[int, int] of var int: regions
 ) =  let {
         set of int: rows = index_set_1of2(regions);
@@ -4653,7 +4657,7 @@ predicate gallaxy_connected_regions_p(
     )
 
     /\forall (r in rows, c in cols) (
-        regions[r, c] != 0 -> when[r,c] >= 1
+        regions[r, c] > 0 -> when[r,c] >= 1
     )
     % floodfilling
     /\ floodfill_p(regions, when)
@@ -4721,8 +4725,8 @@ predicate galaxy_center_p(
     /\ forall(cell in not_in_galaxy) (cell != galaxy_id)
     /\ forall(i in idxs)(
         group[i] == galaxy_id <-> mapped_group[i] == galaxy_id
-    ) /\
-    count(group, galaxy_id) >= 1 /\ count(mapped_group, galaxy_id) >= 1
+    )
+    /\ count(group, galaxy_id) >= 1 /\ count(mapped_group, galaxy_id) >= 1
 );
 
 predicate all_galaxy_centers_given_p(
@@ -6275,6 +6279,39 @@ predicate unknown_connected_regions_p(
     /\ floodfill_p(regions, when)
 );
 
+predicate orthogonally_connected_region_sizes_p(
+    array[int, int] of var int: regions,
+    array[int, int] of var int: region_sizes,
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+    int: n_rows = length(rows);
+    int: n_cols = length(cols);
+    int: max_size = n_rows * n_cols;
+} in (
+    assert(index_sets_agree(regions, region_sizes), "regions and region_sizes must have the same indexes")
+    
+    % minimum region size
+    /\ forall(r1 in rows, c1 in cols) (
+        region_sizes[r1,c1] >= 0
+    )
+
+    % maximum region size
+    /\ forall(r1 in rows, c1 in cols) (
+        region_sizes[r1,c1] <= max_size
+    )
+
+    % cells in the same region must have the same region size
+    /\ forall(r1 in rows, c1 in cols, r2 in rows, c2 in cols where is_after(r1,c1,r2,c2)) (
+        regions[r1,c1] = regions[r2,c2] -> region_sizes[r1,c1] = region_sizes[r2,c2]
+    )
+
+    % region size is the count of cells in the same region
+    /\ forall(r1 in rows, c1 in cols) (
+        count(array1d(regions), regions[r1,c1]) = region_sizes[r1, c1]
+    )
+)
+
 predicate colored_groups_p(
     array[int, int] of var int: grid,
     array[int, int] of var 0..1: groups,
@@ -6306,26 +6343,8 @@ predicate colored_groups_region_sizes_p(
     int: max_size = n_rows * n_cols;
 } in (
     assert(index_sets_agree(regions, region_sizes), "regions and region_sizes must have the same indexes")
-
-    % minimum region size
-    /\ forall(r1 in rows, c1 in cols) (
-        region_sizes[r1,c1] >= 0
-    )
-
-    % maximum region size
-    /\ forall(r1 in rows, c1 in cols) (
-        region_sizes[r1,c1] <= max_size
-    )
-
-    % cells in the same region must have the same region size
-    /\ forall(r1 in rows, c1 in cols, r2 in rows, c2 in cols where is_after(r1,c1,r2,c2)) (
-        regions[r1,c1] = regions[r2,c2] -> region_sizes[r1,c1] = region_sizes[r2,c2]
-    )
-
-    % region size is the count of cells in the same region
-    /\ forall(r1 in rows, c1 in cols) (
-        count(array1d(regions), regions[r1,c1]) = region_sizes[r1, c1]
-    )
+    /\ orthogonally_connected_region_sizes_p(regions, region_sizes)
+    /\ unknown_connected_regions_p(regions)
 );
 
 predicate colored_groups_region_size_p(
