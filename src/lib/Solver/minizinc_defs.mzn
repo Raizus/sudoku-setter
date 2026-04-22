@@ -659,6 +659,32 @@ function var int: modular_count_f(
     sum(i in idxs)(bool2int(matches[i]))
 );
 
+predicate shaded_adjacent_neighbours_same_region_p(
+    array[int, int] of var int: shading,
+    array[int, int] of var int: regions,
+) = let {
+    set of int: rows = index_set_1of2(shading);
+    set of int: cols = index_set_2of2(shading);
+} in (
+    assert(index_sets_agree(shading, regions), "shading and regions must have the same indexes")
+    
+    % adjacent cells with the same shading must belong to the same region (horiz adjacent)
+    /\ forall (r in rows, c in cols where c > min(cols)) (
+        let {
+            var int: id1 = regions[r, c - 1], 
+            var int: id2 = regions[r, c] 
+        } in (shading[r,c] = shading[r, c - 1]) <-> id1 = id2
+    )
+
+    % adjacent cells with the same shading must belong to the same region (vertical adjacent)
+    /\ forall (r in rows, c in cols where r > min(rows)) (
+        let {
+            var int: id1 = regions[r - 1, c],
+            var int: id2 = regions[r, c]
+        } in shading[r,c] = shading[r - 1, c] <-> id1 = id2
+    )
+);
+
 % -------------------------------------------------------------------------------- % 
 % ------ HELPER PREDICATES ------------------------------------------------------- %
 
@@ -3649,19 +3675,8 @@ predicate cave_nurikabe_helper_p(
         shading[r,c] = 1 <-> regions[r, c] != 0
     )
     
-    % adjacent shading = 1 cells must belong to the same region (horiz adjacent)
-    /\ forall (r in rows, c in cols where c > min(cols)) (
-        let { 
-            var int: id1 = regions[r, c - 1], 
-            var int: id2 = regions[r, c] 
-        } in (shading[r,c] = 1 /\ shading[r, c - 1] = 1) -> id1 = id2
-    )
-    
-    % adjacent shading = 1 cells must belong to the same region (vertical adjacent)
-    /\ forall (r in rows, c in cols where r > min(rows)) (
-        let { var int: id1 = regions[r - 1, c], var int: id2 = regions[r, c] } in
-        (shading[r,c] = 1 /\ shading[r - 1, c] = 1) -> id1 = id2
-    )
+    /\ shaded_adjacent_neighbours_same_region_p(shading, regions)
+
     % we need to remove ambiguity from the region numbering 
     % use the numbering each region by the id of the first element of that region
     /\ cave_floodfill_p(regions)
@@ -4020,19 +4035,7 @@ predicate cell_center_loop_regions_p(
         shading[r,c] = 0 <-> regions[r, c] != 0
     )
     
-    % adjacent unshaded cells must belong to the same region (horiz adjacent)
-    /\ forall (r in rows, c in cols where c > 0) (
-        let { 
-            var int: id1 = regions[r, c - 1], 
-            var int: id2 = regions[r, c] 
-        } in (shading[r,c] = 0 /\ shading[r, c - 1] = 0) -> id1 = id2
-    )
-    
-    % adjacent unshaded cells must belong to the same region (vertical adjacent)
-    /\ forall (r in rows, c in cols where r > 0) (
-        let { var int: id1 = regions[r - 1, c], var int: id2 = regions[r, c] } in
-        (shading[r,c] = 0 /\ shading[r - 1, c] = 0) -> id1 = id2
-    )
+    /\ shaded_adjacent_neighbours_same_region_p(shading, regions)
 
     /\ cave_floodfill_p(regions)
 );
@@ -5125,7 +5128,7 @@ predicate lits_region_and_ids_p(
     % No two tetrominoes of the same shape may share an edge - reflections/rotations count as the same shape.
     assert(index_sets_agree(regions, ids_grid), "regions and ids_grid must have the same indexes.")
 
-    % if adjacent cells are in different regions than ids cannot be the same (unless they're both zero)
+    % if adjacent cells are in different regions then ids cannot be the same (unless they're both zero)
     % horizontally adjacent
     /\ forall (r in rows, c in cols where c > min(cols)) (
         let { var int: id1 = ids_grid[r,c], var int: id2 = ids_grid[r,c-1] } in (
@@ -6284,20 +6287,7 @@ predicate colored_groups_p(
     /\ assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes")
 
     /\ unknown_connected_regions_p(regions)
-
-    % adjacent cells with the same shading must belong to the same region (horiz adjacent)
-    /\ forall (r in rows, c in cols where c > min(cols)) (
-        let {
-            var int: id1 = regions[r, c - 1], 
-            var int: id2 = regions[r, c] 
-        } in (groups[r,c] = groups[r, c - 1]) <-> id1 = id2
-    )
-    
-    % adjacent cells with the same shading must belong to the same region (vertical adjacent)
-    /\ forall (r in rows, c in cols where r > min(rows)) (
-        let { var int: id1 = regions[r - 1, c], var int: id2 = regions[r, c] } in
-        groups[r,c] = groups[r - 1, c] <-> id1 = id2
-    )
+    /\ shaded_adjacent_neighbours_same_region_p(groups, regions)
 
     % the same digit must have the same shading
     /\ forall(r1 in rows, c1 in cols, r2 in rows, c2 in cols where is_after(r1,c1,r2,c2)) (
