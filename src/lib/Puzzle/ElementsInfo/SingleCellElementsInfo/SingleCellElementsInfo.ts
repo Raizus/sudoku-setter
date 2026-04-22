@@ -2762,3 +2762,131 @@ export const coloredGroupsRegionSizeInfo: SquareCellElementInfo = {
 
 	solver_func: coloredGroupsRegionSizeElement
 };
+
+function orthogonallyConnectedRegionsRegionZeroCellElement(
+	model: PuzzleModel,
+	element: ConstraintsElement
+) {
+	const grid = model.puzzle.grid;
+	const cells = cellsFromElement(grid, element);
+	const cell_vars = cellsToGridVarsStr([...cells], VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGIONS);
+	let out_str: string = `constraint all_zero_p(${cell_vars});\n`;
+
+	// negative constraint
+	if (!element.negative_constraints) return out_str;
+	const all_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
+	if (!all_given) return out_str;
+
+	out_str += `\n% ${TOOLS.ALL_GIVEN}\n`;
+	const all_cells = grid.getAllCells();
+	const other_cells = all_cells.filter((cell) => !cells.has(cell));
+	const other_cells_vars = cellsToGridVarsStr(
+		other_cells,
+		VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGIONS,
+		',\n\t'
+	);
+	out_str += `array[int] of var int: orth_connected_regions_non_zero_cells = ${other_cells_vars};\n`;
+	out_str += `constraint all_not_zero_p(orth_connected_regions_non_zero_cells);\n`;
+
+	return out_str;
+}
+
+export const orthogonallyConnectedRegionsRegionZeroCellInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+
+	toolId: TOOLS.ORTHOGONALLY_CONNECTED_REGIONS_REGION_ZERO_CELL,
+
+	negative_constraints: [{ toolId: TOOLS.ALL_GIVEN, description: 'All grey cells are given.' }],
+
+	shape: {
+		type: SHAPE_TYPES.SQUARE,
+		strokeWidth: { editable: true, value: 0 },
+		stroke: { editable: true, value: 'none' },
+		r: { editable: true, value: 0.5 },
+		fill: { editable: true, value: '#94949499' }
+	},
+
+	meta: {
+		description: `Grey cells do not belong to any orthogonally connected regions.`,
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	},
+
+	solver_func: orthogonallyConnectedRegionsRegionZeroCellElement
+};
+
+function orthogonallyConnectedRegionsRegionSizeCellElement(
+	model: PuzzleModel,
+	element: ConstraintsElement
+) {
+	let out_str = '';
+	const constraints = element.constraints as Record<string, CellToolI>;
+	if (!constraints) return out_str;
+	const constraints_list = [...Object.values(constraints)];
+
+	const grid = model.puzzle.grid;
+	let region_counter = 0;
+
+	const grid_var_name_1 = VAR_2D_NAMES.BOARD;
+	const grid_var_name_2 = VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGIONS;
+	const grid_var_name_3 = VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGION_SIZES;
+	const c_cells: Cell[] = [];
+	for (let i = 0; i < constraints_list.length; i++) {
+		const constraint = constraints_list[i];
+		const coord = constraint.cell;
+		const region_id = i + 1;
+
+		const cell0 = grid.getCell(coord.r, coord.c);
+		if (!cell0) continue;
+
+		c_cells.push(cell0);
+		const cell_var = cellToGridVarName(cell0, grid_var_name_1);
+		const region_var = cellToGridVarName(cell0, grid_var_name_2);
+		const size_var = cellToGridVarName(cell0, grid_var_name_3);
+		out_str += `constraint ${region_var} = ${region_id};\n`;
+		out_str += `constraint orthogonally_connected_regions_region_size_cell_p(${cell_var}, ${size_var});\n`;
+		out_str += `constraint connected_region(${grid_var_name_2}, ${region_id});\n`;
+		out_str += `constraint orthogonally_connected_regions_largest_or_smallest_in_region_p(${grid_var_name_1}, ${grid_var_name_2}, ${cell_var}, ${region_var});\n`;
+		region_counter++;
+	}
+
+	// negative constraint
+	if (!element.negative_constraints) return out_str;
+	const all_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
+	if (!all_given) return out_str;
+
+	const cells_vars = cellsToGridVarsStr(
+		c_cells,
+		VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGION_SIZES,
+		',\n\t'
+	);
+
+	out_str += `\n% ${TOOLS.ALL_GIVEN}\n`;
+	out_str += `array[int] of var int: orth_connected_regions_size_cells = ${cells_vars};\n`;
+	out_str += `constraint max_region_id_p(${VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGIONS}, ${region_counter});\n`;
+	out_str += `constraint orthogonally_connected_regions_region_size_cell_all_given_p(orth_connected_regions_size_cells, ${VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGIONS});\n`;
+	return out_str;
+}
+
+export const orthogonallyConnectedRegionsRegionSizeCellInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+
+	toolId: TOOLS.ORTHOGONALLY_CONNECTED_REGIONS_REGION_SIZE_CELL,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_GIVEN,
+			description: 'Every group contains exactly one cell with a square.'
+		}
+	],
+
+	shape: DEFAULT_SQUARE_SHAPE,
+
+	meta: {
+		description: `The digit in a square cell, N, indicates the number of cells in that group. N will either be the largest or the smallest digit in its group`,
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	},
+
+	solver_func: orthogonallyConnectedRegionsRegionSizeCellElement
+};

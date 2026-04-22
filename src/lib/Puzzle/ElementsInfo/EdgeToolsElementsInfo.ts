@@ -167,8 +167,7 @@ function getEdgeVars(grid: Grid, constraint: EdgeToolI, grid_name: string) {
 
 function simpleEdgeConstraint(grid: Grid, constraint: EdgeToolI, predicate: string) {
 	if (constraint.disabled) return '';
-	const vars = getEdgeVars(grid, constraint, VAR_2D_NAMES.BOARD
-	);
+	const vars = getEdgeVars(grid, constraint, VAR_2D_NAMES.BOARD);
 	const [var1, var2] = vars;
 
 	const constraint_str = `constraint ${predicate}(${var1}, ${var2});\n`;
@@ -1170,4 +1169,24 @@ export const sumIndexingArrowInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: sumIndexingArrowElement
+};
+
+export const orthogonallyConnectedRegionBorderInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE
+	},
+
+	toolId: TOOLS.ORTHOGONALLY_CONNECTED_REGION_BORDER,
+
+	shape: DEFAULT_BORDER_LINE,
+
+	meta: {
+		description: 'A line in the border between cells indicates a region border.',
+		tags: [],
+		categories: edgeDefaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return regionBorderElement(model.puzzle.grid, element, VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGIONS);
+	}
 };

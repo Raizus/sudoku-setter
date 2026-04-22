@@ -81,6 +81,7 @@ import {
 	edgeSumInfo,
 	fillominoRegionBorderInfo,
 	oneWayDoorInfo,
+	orthogonallyConnectedRegionBorderInfo,
 	ratioInfo,
 	sumIndexingArrowInfo,
 	unknownRegionBorderInfo,
@@ -142,7 +143,8 @@ import {
 	shadedRowCollumnBoxCountersInfo,
 	yinYangYongInfo,
 	coloredGroupsInfo,
-	deconstructionInfo
+	deconstructionInfo,
+	orthogonallyConnectedRegionsInfo,
 } from './UndeterminedRegionsInfo/UndeterminedRegionsElementsInfo';
 import { directedPathTeleportRenbanSegmentsInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
 import { directedPathTeleportSegmentsSumInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
@@ -325,7 +327,9 @@ import {
 	chaosConstructionCountSameRegionNeighborCellsAndSelfInfo,
 	countWhispersNeighborCellsInfo,
 	coloredGroupsRegionSizeInfo,
-	countCirclesLoopOrNonLoopCellsInfo
+	countCirclesLoopOrNonLoopCellsInfo,
+	orthogonallyConnectedRegionsRegionZeroCellInfo,
+	orthogonallyConnectedRegionsRegionSizeCellInfo
 } from './SingleCellElementsInfo/SingleCellElementsInfo';
 import {
 	yinYangAdjacentSameShadeCountInfo,
@@ -453,6 +457,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 
 	[TOOLS.TWO_CONTIGUOUS_REGIONS]: twoContiguousRegionsInfo,
 	[TOOLS.COLORED_GROUPS]: coloredGroupsInfo,
+	[TOOLS.ORTHOGONALLY_CONNECTED_REGIONS]: orthogonallyConnectedRegionsInfo,
 	[TOOLS.SASHIGANE]: sashiganeRegionsInfo,
 	[TOOLS.NORINORI]: norinoriInfo,
 	[TOOLS.SHIKAKU]: shikakuInfo,
@@ -535,6 +540,9 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_CLUE]: twilightCaveFillominoClueInfo,
 	[TOOLS.YIN_YANG_FILLOMINO_PARITY]: yinYangFillominoParityInfo,
 
+	[TOOLS.ORTHOGONALLY_CONNECTED_REGIONS_REGION_ZERO_CELL]: orthogonallyConnectedRegionsRegionZeroCellInfo,
+	[TOOLS.ORTHOGONALLY_CONNECTED_REGIONS_REGION_SIZE_CELL]: orthogonallyConnectedRegionsRegionSizeCellInfo,
+
 	[TOOLS.SHIKAKU_REGION_SIZE]: shikakuRegionSizeInfo,
 	[TOOLS.SHIKAKU_REGION_SUM]: shikakuRegionSumInfo,
 
@@ -615,6 +623,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 
 	[TOOLS.FILLOMINO_REGION_BORDER]: fillominoRegionBorderInfo,
 	[TOOLS.UNKNOWN_REGION_BORDER]: unknownRegionBorderInfo,
+	[TOOLS.ORTHOGONALLY_CONNECTED_REGION_BORDER]: orthogonallyConnectedRegionBorderInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_SUGURU_BORDER]: chaosConstructionSuguruBorderInfo,
 	[TOOLS.EDGE_CAVE_ONE_OF_EACH]: edgeCaveOneOfEachInfo,
 

@@ -116,7 +116,7 @@ function rotationallySymmetricGalaxyCenterElement(model: PuzzleModel, element: C
 	const all_galaxy_centers_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
 
 	if (all_galaxy_centers_given) {
-		out_str += `\nconstraint all_galaxy_centers_given_p(${VAR_2D_NAMES.GALAXY_REGIONS}, ${center_count});\n`;
+		out_str += `\nconstraint max_region_id_p(${VAR_2D_NAMES.GALAXY_REGIONS}, ${center_count});\n`;
 	} else {
 		const max_galaxies = grid.nCols * grid.nRows;
 		const given_galaxies = center_count;

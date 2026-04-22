@@ -355,6 +355,7 @@ function setUnknownRegionsBorders(json: JsonT, grid: Grid) {
 		VAR_2D_NAMES.GALAXY_REGIONS,
 		VAR_2D_NAMES.SUGURU_REGIONS,
 		VAR_2D_NAMES.PENTOMINO_REGIONS,
+		VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGIONS
 		// 'lits_regions'
 	];
 
@@ -505,16 +506,17 @@ function setOrthogonalPathOrLoopLines(json: JsonT, grid: Grid) {
 function setColoring(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
 	const grid_vars_names = [
-		'sashigane',
-		'cave_regions',
-		'fillomino_area',
-		'galaxy_regions',
+		VAR_2D_NAMES.SASHIGANE,
+		VAR_2D_NAMES.CAVE_REGIONS,
+		VAR_2D_NAMES.FILLOMINO_REGIONS,
+		VAR_2D_NAMES.GALAXY_REGIONS,
 		'tilling_regions',
 		'region_labels',
-		'suguru_regions',
-		'shikaku_regions',
-		'pentomino_regions',
-		VAR_2D_NAMES.BYOKC_GRID
+		VAR_2D_NAMES.SUGURU_REGIONS,
+		VAR_2D_NAMES.SHIKAKU_REGIONS,
+		VAR_2D_NAMES.PENTOMINO_REGIONS,
+		VAR_2D_NAMES.BYOKC_GRID,
+		VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGIONS
 	];
 
 	for (const name of grid_vars_names) {

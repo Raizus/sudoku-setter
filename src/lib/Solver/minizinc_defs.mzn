@@ -190,6 +190,14 @@ test is_after(int: r1, int: c1, int: r2, int: c2) =
 % -------------------------------------------------------------------------------- % 
 % ------ HELPERS ----------------------------------------------------------------- % 
 
+predicate all_zero_p(
+    array[int] of var int: vars
+) = forall(val in vars)(val = 0);
+
+predicate all_not_zero_p(
+    array[int] of var int: vars
+) = forall(val in vars)(val != 0);
+
 % Returns the coordinates of the 4 orthogonally adjacent cells to (r, c).
 function array[1..4] of tuple(int, int): orth_adjacent_idxs(int: r, int: c) =
     [(r-1,c),(r+1,c),(r,c-1),(r,c+1)];
@@ -877,6 +885,21 @@ predicate pairwise_equal_p(
     assert(index_set(arr1) = index_set(arr2), "Arrays must have same index set")
     /\ forall(i in index_set(arr1))(
         arr1[i] = arr2[i]
+    )
+);
+
+% digits do not repeat in regions with id != 0
+predicate no_repeats_in_regions_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions,
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes")
+    /\ forall(r in rows, c in cols, r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
+            (regions[r,c] == regions[r2,c2] /\ regions[r,c] != 0 /\ regions[r2,c2] != 0) -> 
+            grid[r,c] != grid[r2,c2]
     )
 );
 
@@ -4705,12 +4728,7 @@ predicate no_repeats_in_galaxy_p(
     set of int: rows = index_set_1of2(regions);
     set of int: cols = index_set_2of2(regions);
 } in (
-    assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes.")
-    /\ forall(r in rows, c in cols)(
-        forall(r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
-            regions[r,c] == regions[r2,c2] /\ regions[r,c] != 0 /\ regions[r2,c2] != 0 -> grid[r,c] != grid[r2,c2]
-        )
-    )
+    no_repeats_in_regions_p(grid, regions)
 );
 
 predicate galaxy_center_p(
@@ -4729,7 +4747,7 @@ predicate galaxy_center_p(
     /\ count(group, galaxy_id) >= 1 /\ count(mapped_group, galaxy_id) >= 1
 );
 
-predicate all_galaxy_centers_given_p(
+predicate max_region_id_p(
     array[int, int] of var int: regions,
     int: max_galaxy_id
 ) = let {
@@ -5614,12 +5632,7 @@ predicate nurikabe_no_repeats_in_islands_p(
     set of int: rows = index_set_1of2(grid);
     set of int: cols = index_set_2of2(grid);
 } in (
-    assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes")
-    /\ forall(r in rows, c in cols)(
-        forall(r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
-            regions[r,c] == regions[r2,c2] /\ regions[r,c] != 0 /\ regions[r2,c2] != 0 -> grid[r,c] != grid[r2,c2]
-        )
-    )
+    no_repeats_in_regions_p(grid, regions)
 );
 
 predicate nurikabe_islands_cannot_touch_diagonally_p(
@@ -6056,10 +6069,7 @@ predicate byok_no_repeats_in_regions(
     set of int: rows = index_set_1of2(grid);
     set of int: cols = index_set_2of2(grid);
 } in (
-    assert(index_sets_agree(grid, byok_grid), "grid and byok_grid must have the same indexes")
-    /\ forall(r in rows, c in cols, r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
-        byok_grid[r,c] != 0 /\ byok_grid[r2,c2] != 0 /\ byok_grid[r,c] == byok_grid[r2,c2] -> grid[r,c] != grid[r2,c2]
-    )
+    no_repeats_in_regions_p(grid, byok_grid)
 );
 
 predicate byok_not_cage_cell_p(
@@ -6310,7 +6320,7 @@ predicate orthogonally_connected_region_sizes_p(
     /\ forall(r1 in rows, c1 in cols) (
         count(array1d(regions), regions[r1,c1]) = region_sizes[r1, c1]
     )
-)
+);
 
 predicate colored_groups_p(
     array[int, int] of var int: grid,
@@ -6354,3 +6364,103 @@ predicate colored_groups_region_size_p(
     region_size_var = cell_var
 );
 
+predicate regions_of_size_1_p(
+    array[int, int] of var int: regions,
+    array[int, int] of var int: region_sizes,
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+} in (
+    assert(index_sets_agree(regions, region_sizes), "regions and region_sizes must have the same indexes")
+    /\ forall(r in rows, c in cols)(
+        region_sizes[r,c] == 1 -> (
+            forall(t in orth_adjacent_idxs(r,c) where in_bounds_2d(t.1, t.2, regions))(
+                regions[r,c] != regions[t.1, t.2]
+            )
+        )
+    )    
+);
+
+predicate regions_of_size_2_p(
+    array[int, int] of var int: regions,
+    array[int, int] of var int: region_sizes,
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+} in (
+    assert(index_sets_agree(regions, region_sizes), "regions and region_sizes must have the same indexes")
+    
+    % all cells with a value equal to 2 must have exactly 1 neighbour equal to it
+    /\ forall(r in rows, c in cols where region_sizes[r,c] == 2)(
+        sum(t in orth_adjacent_idxs(r,c) where in_bounds_2d(t.1, t.2, regions))(
+            regions[r,c] == regions[t.1,t.2]
+        ) == 1
+    )
+
+    % all cells with a value greater than 2 must have at least a neighbour equal to it
+    /\ forall(r in rows, c in cols where region_sizes[r,c] > 2)(
+        exists(t in orth_adjacent_idxs(r,c) where in_bounds_2d(t.1, t.2, regions))(
+            regions[r,c] == regions[t.1,t.2]
+        )
+    )
+);
+
+% regions with id > 0 must be orthogonally connected, but the number of regions is unknown
+predicate orthogonally_connected_regions_p(
+    array[int, int] of var int: regions,
+    array[int, int] of var int: region_sizes,
+) = (
+    assert(index_sets_agree(regions, region_sizes), "regions and region_sizes must have the same indexes")
+    /\ unrooted_connected_regions_not_0_p(regions)
+    /\ orthogonally_connected_region_sizes_p(regions, region_sizes)
+    /\ regions_of_size_1_p(regions, region_sizes)
+    /\ regions_of_size_2_p(regions, region_sizes)
+);
+
+predicate orthogonally_connected_regions_no_0_p(
+    array[int, int] of var int: regions,
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+} in (
+    forall(r in rows, c in cols)(
+        regions[r,c] != 0
+    )
+);
+
+predicate orthogonally_connected_regions_region_size_cell_p(
+    var int: cell_var,
+    var int: size_var
+) = (cell_var = size_var);
+
+predicate orthogonally_connected_regions_region_size_cell_all_given_p(
+    array[int] of var int: cell_vars,
+    array[int, int] of var int: regions
+) = let {
+    array[int] of var bool: in_region_cells = [region != 0 | region in array1d(regions)];
+} in (
+    sum(cell_vars) = sum(bool2int(in_region_cells))
+);
+
+predicate orthogonally_connected_regions_largest_or_smallest_in_region_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions,    
+    var int: cell_var,
+    var int: region_var,
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes")
+    /\ (
+        % either cell_var is the largest in the region
+        forall(r in rows, c in cols)(
+            regions[r,c] == region_var -> cell_var >= grid[r,c]
+        )
+        \/
+        % OR cell_var is the smallest in the region
+        forall(r in rows, c in cols)(
+            regions[r,c] == region_var -> cell_var <= grid[r,c]
+        )    
+    )
+);

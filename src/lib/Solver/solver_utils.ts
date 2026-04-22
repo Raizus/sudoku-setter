@@ -57,7 +57,9 @@ export enum VAR_2D_NAMES {
 	RANKED_2X2_NUMBERS_GRID = 'ranked_2x2_numbers_grid',
 	COLORED_GROUPS = 'colored_groups',
 	COLORED_GROUPS_REGIONS = 'colored_groups_regions',
-	COLORED_GROUPS_REGION_SIZES = 'colored_groups_region_sizes'
+	COLORED_GROUPS_REGION_SIZES = 'colored_groups_region_sizes',
+	ORTHOGONALLY_CONNECTED_REGIONS = 'orthogonally_connected_regions',
+	ORTHOGONALLY_CONNECTED_REGION_SIZES = 'orthogonally_connected_region_sizes'
 }
 
 export function cellToGridVarName(cell: Cell, name: string): string {
@@ -69,8 +71,8 @@ export function cellsToGridVarsName(cells: Cell[], name: string): string[] {
 	return vars;
 }
 
-export function cellsToGridVarsStr(cells: Cell[], name: string): string {
-	const out = '[' + cellsToGridVarsName(cells, name).join(',') + ']';
+export function cellsToGridVarsStr(cells: Cell[], name: string, sep: string = ','): string {
+	const out = '[' + cellsToGridVarsName(cells, name).join(sep) + ']';
 	return out;
 }
 

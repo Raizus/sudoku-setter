@@ -65,7 +65,9 @@ export enum NEGATIVE_AND_MODIFIER_CONSTRAINTS {
 	YIN_YANG_REGION_SUM_LINES_MUST_CROSS_COLORS_AT_LEAST_ONCE = 'Yin Yang Region Sum Lines Must Cross Colors At Least Once',
 
 	SHIKAKU_EACH_REGION_CONTAINS_ONE_SIZE_CIRCLE = 'Shikaku Each Regions Contains One Size Circle',
-	SHIKAKU_EACH_REGION_CONTAINS_ONE_REGION_SUM_CLUE = 'Shikaku Each Regions Contains One Region Sum Clue'
+	SHIKAKU_EACH_REGION_CONTAINS_ONE_REGION_SUM_CLUE = 'Shikaku Each Regions Contains One Region Sum Clue',
+
+	NO_REPEATS_IN_REGIONS = 'No Repeats In Regions',
 }
 
 export enum VALUE_MODIFIER_CONSTRAINTS {
@@ -109,7 +111,8 @@ export enum OTHER_UNDETERMINED_REGIONS_CONSTRAINTS {
 
 	YIN_YANG_YONG = 'Yin Yang Yong',
 	YIN_YANG_YONG_IDENTICAL_DIGITS_DO_NOT_APPEAR_IN_DIFFERENT_REGIONS = 'Yin Yang Yong Identical Digits Do Not Appear In Different Regions',
-	COLORED_GROUPS = 'Colored Groups'
+	COLORED_GROUPS = 'Colored Groups',
+	ORTHOGONALLY_CONNECTED_REGIONS = 'Orthogonally Connected Regions'
 }
 
 export enum GLOBAL_PENTOMINO_TILLING_CONSTRAINTS {
@@ -253,6 +256,9 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	CAVE_UNSHADED_CELL = 'Cave Unshaded Cell',
 	CAVE_SHADED_REGION_SIZE_UNSHADED_SEEN_ORTHOGONALLY_CLUE = 'Cave Shaded Region Size Unshaded Seen Orthogonally Clue',
 
+	ORTHOGONALLY_CONNECTED_REGIONS_REGION_ZERO_CELL = 'Orthogonally Connected Regions Region Zero Cell',
+	ORTHOGONALLY_CONNECTED_REGIONS_REGION_SIZE_CELL = 'Orthogonally Connected Regions Region Size Cell',
+
 	SHIKAKU_REGION_SIZE = 'Shikaku Region Size',
 	SHIKAKU_REGION_SUM = 'Shikaku Region Sum',
 
@@ -333,6 +339,7 @@ export enum EDGE_CONSTRAINTS {
 	FILLOMINO_REGION_BORDER = 'Fillomino Region Border',
 
 	UNKNOWN_REGION_BORDER = 'Unknown Region Border',
+	ORTHOGONALLY_CONNECTED_REGION_BORDER = 'Orthogonally Connected Region Border',
 	CHAOS_CONSTRUCTION_SUGURU_BORDER = 'Chaos Construction Suguru Border',
 	EDGE_CAVE_ONE_OF_EACH = 'Edge Cave One Of Each',
 

@@ -1061,3 +1061,42 @@ export const coloredGroupsInfo: SquareCellElementInfo = {
 
 	solver_func: coloredGroupsElement
 };
+
+function orthogonallyConnectedRegionsElement(model: PuzzleModel, element: ConstraintsElement) {
+	const grid_name = VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGIONS;
+	const grid_name_2 = VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGION_SIZES;
+	let out_str = `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name};\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name_2};\n`;
+	out_str += `constraint orthogonally_connected_regions_p(${grid_name}, ${grid_name_2});\n`;
+
+	const modifiers = element.negative_constraints;
+	if (!modifiers) return out_str;
+
+	const no_repeats_in_regions =
+		!!modifiers[TOOLS.NO_REPEATS_IN_REGIONS];
+
+	if (no_repeats_in_regions) {
+		out_str += `constraint no_repeats_in_regions_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGIONS});\n`;
+	}
+
+	return out_str;
+}
+
+export const orthogonallyConnectedRegionsInfo: SquareCellElementInfo = {
+	toolId: TOOLS.ORTHOGONALLY_CONNECTED_REGIONS,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.NO_REPEATS_IN_REGIONS,
+			description: 'Digits do not repeat in any region.'
+		}
+	],
+
+	meta: {
+		description: 'Divide all cells in the grid into regions of orthogonally connected cells.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	},
+
+	solver_func: orthogonallyConnectedRegionsElement
+};
