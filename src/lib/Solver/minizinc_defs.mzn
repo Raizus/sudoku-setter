@@ -4749,13 +4749,13 @@ predicate galaxy_center_p(
 
 predicate max_region_id_p(
     array[int, int] of var int: regions,
-    int: max_galaxy_id
+    int: max_region_id
 ) = let {
     set of int: rows = index_set_1of2(regions);
     set of int: cols = index_set_2of2(regions); 
 } in (
     forall(r in rows, c in cols)(
-        regions[r,c] <= max_galaxy_id
+        regions[r,c] <= max_region_id
     )
 );
 
