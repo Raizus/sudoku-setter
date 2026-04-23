@@ -2738,7 +2738,7 @@ function coloredGroupsRegionSizeElement(model: PuzzleModel, element: Constraints
 		if (!cell) continue;
 		const cell_var = cellToVarName(cell);
 		const region_size_var = cellToGridVarName(cell, VAR_2D_NAMES.COLORED_GROUPS_REGION_SIZES);
-		out_str += `constraint colored_groups_region_size_p(${region_size_var}, ${cell_var});\n`;
+		out_str += `constraint ${region_size_var} == ${cell_var};\n`;
 	}
 
 	return out_str;
@@ -2844,7 +2844,7 @@ function orthogonallyConnectedRegionsRegionSizeCellElement(
 		const region_var = cellToGridVarName(cell0, grid_var_name_2);
 		const size_var = cellToGridVarName(cell0, grid_var_name_3);
 		out_str += `constraint ${region_var} = ${region_id};\n`;
-		out_str += `constraint orthogonally_connected_regions_region_size_cell_p(${cell_var}, ${size_var});\n`;
+		out_str += `constraint ${cell_var} == ${size_var};\n`;
 		out_str += `constraint connected_region(${grid_var_name_2}, ${region_id});\n`;
 		out_str += `constraint orthogonally_connected_regions_largest_or_smallest_in_region_p(${grid_var_name_1}, ${grid_var_name_2}, ${cell_var}, ${region_var});\n`;
 		region_counter++;

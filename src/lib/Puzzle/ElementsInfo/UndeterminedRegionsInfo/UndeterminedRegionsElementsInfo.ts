@@ -1042,7 +1042,7 @@ function coloredGroupsElement() {
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name_2};\n`;
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name_3};\n`;
 	out_str += `constraint colored_groups_p(${VAR_2D_NAMES.BOARD}, ${grid_name}, ${grid_name_2});\n`;
-	out_str += `constraint colored_groups_region_sizes_p(${grid_name_2}, ${grid_name_3});\n`;
+	out_str += `constraint orthogonally_connected_region_sizes_p(${grid_name_2}, ${grid_name_3});\n`;
 	return out_str;
 }
 

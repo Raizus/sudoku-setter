@@ -6320,6 +6320,13 @@ predicate orthogonally_connected_region_sizes_p(
     /\ forall(r1 in rows, c1 in cols) (
         count(array1d(regions), regions[r1,c1]) = region_sizes[r1, c1]
     )
+
+    % Distance-based region pruning
+    /\ forall(r in rows, c in cols, r2 in rows, c2 in cols where is_after(r,c,r2,c2)) (
+        (
+            (abs(r2-r) + abs(c2-c) >= region_sizes[r,c])
+        ) -> regions[r, c] != regions[r2,c2]
+    )
 );
 
 predicate colored_groups_p(
@@ -6340,28 +6347,6 @@ predicate colored_groups_p(
     /\ forall(r1 in rows, c1 in cols, r2 in rows, c2 in cols where is_after(r1,c1,r2,c2)) (
         grid[r1,c1] = grid[r2,c2] -> groups[r1,c1] = groups[r2,c2]
     )
-);
-
-predicate colored_groups_region_sizes_p(
-    array[int, int] of var int: regions,
-    array[int, int] of var int: region_sizes,
-) = let {
-    set of int: rows = index_set_1of2(regions);
-    set of int: cols = index_set_2of2(regions);
-    int: n_rows = length(rows);
-    int: n_cols = length(cols);
-    int: max_size = n_rows * n_cols;
-} in (
-    assert(index_sets_agree(regions, region_sizes), "regions and region_sizes must have the same indexes")
-    /\ orthogonally_connected_region_sizes_p(regions, region_sizes)
-    /\ unknown_connected_regions_p(regions)
-);
-
-predicate colored_groups_region_size_p(
-    var int: region_size_var,
-    var int: cell_var,
-) = (
-    region_size_var = cell_var
 );
 
 predicate regions_of_size_1_p(
@@ -6427,11 +6412,6 @@ predicate orthogonally_connected_regions_no_0_p(
         regions[r,c] != 0
     )
 );
-
-predicate orthogonally_connected_regions_region_size_cell_p(
-    var int: cell_var,
-    var int: size_var
-) = (cell_var = size_var);
 
 predicate orthogonally_connected_regions_region_size_cell_all_given_p(
     array[int] of var int: cell_vars,
