@@ -1299,7 +1299,7 @@ predicate quadruple_p(
     array[int] of var int: values
 ) =
     forall(i in index_set(values)) (
-        count(arr, values[i]) == count(values, values[i])
+        count(arr, values[i]) >= count(values, values[i])
     );
     
 predicate corner_sum_p(array[int] of var int: arr, var int: val) =
