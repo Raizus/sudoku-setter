@@ -455,7 +455,9 @@ export const maximumAdjacentDifferenceLineInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.LINE,
 		allowSelfIntersection: true,
-		defaultValue: '2'
+		defaultValue: '2',
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+			defaultLineValueUpdater(oldValue, key, validateLineValue)
 	},
 
 	toolId: TOOLS.MAXIMUM_ADJACENT_DIFFERENCE_LINE,
@@ -687,7 +689,9 @@ export const sumLineInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.LINE,
 		allowSelfIntersection: true,
-		defaultValue: ''
+		defaultValue: '',
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+			defaultLineValueUpdater(oldValue, key, validateLineValue)
 	},
 
 	toolId: TOOLS.SUM_LINE,

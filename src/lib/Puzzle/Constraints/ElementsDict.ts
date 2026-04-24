@@ -530,7 +530,7 @@ export function constraintToJson(constraint: ConstraintType): Record<string, unk
 		jsonObj['directions'] = directions;
 	}
 
-	if ('value' in constraint && constraint['value']) {
+	if ('value' in constraint && constraint['value'] !== undefined) {
 		jsonObj['value'] = constraint['value'];
 	}
 
