@@ -266,7 +266,8 @@ import {
 	xIndexInfo,
 	xSumInfo,
 	xSumSkyscrapersInfo,
-	yinYangColouredSumFrameOutsideEdgeInfo
+	yinYangColouredSumFrameOutsideEdgeInfo,
+	yinYangXSumOutsideEdgeInfo
 } from './OutsideDirectionElementsInfo.ts/OutsideEdgeElementsInfo';
 import {
 	adjacentCellsInDifferentDirectionsHaveOpositeParityInfo,
@@ -785,6 +786,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	// [TOOLS.ROW_OR_COLUMN_RANK]: rowOrColumnRankInfo,
 	[TOOLS.OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED]: outsideEdgeYinYangSumOfShadedInfo,
 	[TOOLS.YIN_YANG_COLOURED_SUM_FRAME_OUTSIDE_EDGE]: yinYangColouredSumFrameOutsideEdgeInfo,
+	[TOOLS.YIN_YANG_X_SUM_OUTSIDE_EDGE]: yinYangXSumOutsideEdgeInfo,
 	[TOOLS.OUTSIDE_CONSECUTIVE_SUM]: outsideConsecutiveSumInfo,
 	[TOOLS.LOOPWICHES]: loopwhichesInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION]: chaosConstructionSumOfFirstEachRegionInfo,

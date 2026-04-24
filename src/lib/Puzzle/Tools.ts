@@ -512,9 +512,10 @@ export enum OUTSIDE_EDGE_CONSTRAINTS {
 	ROW_OR_COLUMN_RANK = 'Row Or Column Rank',
 	OUTSIDE_EDGE_YIN_YANG_SUM_OF_SHADED = 'Outside Edge Yin Yang Sum Of Shaded',
 	YIN_YANG_COLOURED_SUM_FRAME_OUTSIDE_EDGE = 'Yin Yang Coloured Sum Frame Outside Edge',
-	CHAOS_CONSTRUCTION_X_SUM_REGION_BORDERS = 'Chaos Construction X-Sum Region Borders',
+	YIN_YANG_X_SUM_OUTSIDE_EDGE = 'Yin Yang X-Sum Outside Edge',
 	OUTSIDE_CONSECUTIVE_SUM = 'Outside Consecutive Sum',
 	LOOPWICHES = 'Loopwhiches',
+	CHAOS_CONSTRUCTION_X_SUM_REGION_BORDERS = 'Chaos Construction X-Sum Region Borders',
 	CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION = 'Chaos Construction Sum Of First Each Region',
 	CHAOS_CONSTRUCTION_X_INDEX_REGION = 'Chaos Construction X-Index Region',
 	PENTOMINO_BORDER_COUNT = 'Pentomino Border Count'

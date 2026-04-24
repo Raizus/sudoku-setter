@@ -83,7 +83,7 @@ export const sandwichSumInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META,
 		description:
-			'A number outside the grid gives the sum of the digits sandwiched between the "a" and "b" (default a = 1, b = 9) in that direction.',
+			'A number outside the grid gives the sum of the digits sandwiched between the "a" and "b" (default a = 1, b = 9) in that direction.'
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -139,7 +139,7 @@ export const mysterySandwichSumInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META,
 		description:
-			'A number outside the grid gives the sum of the digits sandwiched between the "a" and "b" in that direction. "a" and "b" must be determined by the solver.',
+			'A number outside the grid gives the sum of the digits sandwiched between the "a" and "b" in that direction. "a" and "b" must be determined by the solver.'
 	},
 
 	solver_func: mysterySandwichSumElement
@@ -184,7 +184,7 @@ export const sandwichSumXorXSumInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META,
 		description:
-			'A clue outside the grid is either an X-Sums clue or a Sandwich clue, but not both. I.e. exactly one of the following is true: the clue gives the sum of the digits between the 1 and 9 in the indicated row or column; or the clue gives the sum of the first X digits in that row or column, starting from the digit next to the clue, which is equal to X.',
+			'A clue outside the grid is either an X-Sums clue or a Sandwich clue, but not both. I.e. exactly one of the following is true: the clue gives the sum of the digits between the 1 and 9 in the indicated row or column; or the clue gives the sum of the first X digits in that row or column, starting from the digit next to the clue, which is equal to X.'
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -202,7 +202,7 @@ export const xSumInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META,
 		description:
-			'A clue outside the grid gives the sum of the first X digits from that direction, where X is the first of those digits.',
+			'A clue outside the grid gives the sum of the first X digits from that direction, where X is the first of those digits.'
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -220,7 +220,7 @@ export const shortsightedXSumInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META,
 		description:
-			'A clue outside the grid gives the sum of the nearest X or (X-1) numbers, where X is the number in the first cell from that direction.',
+			'A clue outside the grid gives the sum of the nearest X or (X-1) numbers, where X is the number in the first cell from that direction.'
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -238,7 +238,7 @@ export const shiftedXSumInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META,
 		description:
-			'Clues outside the grid indicate the sum of the first X digits from the Nth cell from that side, where X is the value in the Nth cell and N is the value in the first cell from that side. Example: in a row with 514839762 the clue from the left would be 19 (3+9+7) and from the right would be 37 (6+7+9+3+8+4).',
+			'Clues outside the grid indicate the sum of the first X digits from the Nth cell from that side, where X is the value in the Nth cell and N is the value in the first cell from that side. Example: in a row with 514839762 the clue from the left would be 19 (3+9+7) and from the right would be 37 (6+7+9+3+8+4).'
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -256,7 +256,7 @@ export const brokenXSumInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META,
 		description:
-			'A clue outside the grid indicates the sum of the first (X-1) or (X+1) digits from that side, where X is the digit in the first cell from that side.',
+			'A clue outside the grid indicates the sum of the first (X-1) or (X+1) digits from that side, where X is the digit in the first cell from that side.'
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -274,7 +274,7 @@ export const xSumSkyscrapersInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META,
 		description:
-			'A clue outside the grid gives the sum of the first X cells, where X would be the skyscraper clue outside the grid in that position.',
+			'A clue outside the grid gives the sum of the first X cells, where X would be the skyscraper clue outside the grid in that position.'
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -292,7 +292,7 @@ export const battlefieldInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META,
 		description:
-			"Consider the first X cells and the last Y cells of a row or column where X is the number in the first cell and Y is the number in the last cell. A clue outside the grid gives the sum of the digits where these groups overlap, or the sum of the digits in the gap between the groups if they don't overlap.",
+			"Consider the first X cells and the last Y cells of a row or column where X is the number in the first cell and Y is the number in the last cell. A clue outside the grid gives the sum of the digits where these groups overlap, or the sum of the digits in the gap between the groups if they don't overlap."
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -309,7 +309,7 @@ export const skyscrapersInfo: SquareCellElementInfo = {
 
 	meta: {
 		...DEFAULT_META,
-		description: 'A clue outside the grid indicates the number of skyscrapers seen from that side.',
+		description: 'A clue outside the grid indicates the number of skyscrapers seen from that side.'
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -350,7 +350,7 @@ export const xIndexInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META,
 		description:
-			'Clues outside the grid indicates the digit which has to be placed in the Xth cell in the corresponding direction, where X is the 1st digit in their row/column seen from the side of the clue.',
+			'Clues outside the grid indicates the digit which has to be placed in the Xth cell in the corresponding direction, where X is the 1st digit in their row/column seen from the side of the clue.'
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -368,7 +368,7 @@ export const risingStreakInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META,
 		description:
-			"A number outside the grid indicates there is a streak of AT LEAST that many increasing, consecutive digits in the row or column in that direction (e.g. a number above the grid indicates a downward streak in that column). For instance, the row '214678935' has a maximal streak of 4 digits to the right (6789) and 2 digits to the left (21).",
+			"A number outside the grid indicates there is a streak of AT LEAST that many increasing, consecutive digits in the row or column in that direction (e.g. a number above the grid indicates a downward streak in that column). For instance, the row '214678935' has a maximal streak of 4 digits to the right (6789) and 2 digits to the left (21)."
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -386,15 +386,16 @@ export const rowOrColumnRankInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META,
 		description:
-			'Considering all rows and columns as numbers read from the direction of the clue and ranked from lowest (1) to highest (36), a clue represents where in the ranking that row/column lies.',
+			'Considering all rows and columns as numbers read from the direction of the clue and ranked from lowest (1) to highest (36), a clue represents where in the ranking that row/column lies.'
 	}
 };
 
-function outsideEdgeYinYangAdjacentSumOfShadedConstraint(
+function outsideEdgeYinYangConstraint(
 	model: PuzzleModel,
 	grid: Grid,
 	c_id: string,
-	constraint: OutsideDirectionToolI
+	constraint: OutsideDirectionToolI,
+	predicate: string
 ) {
 	const cell_coord = constraint.cell;
 	const direction = constraint.direction;
@@ -406,10 +407,25 @@ function outsideEdgeYinYangAdjacentSumOfShadedConstraint(
 	const value = constraint.value;
 	if (value) {
 		const val = parseInt(value);
-		const constraint_str = `constraint outside_edge_yin_yang_sum_of_shaded_p(${vars_str}, ${yin_yang_vars_str}, ${val});\n`;
+		const constraint_str = `constraint ${predicate}(${vars_str}, ${yin_yang_vars_str}, ${val});\n`;
 		return constraint_str;
 	}
 	return '';
+}
+
+function outsideEdgeYinYangAdjacentSumOfShadedConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	return outsideEdgeYinYangConstraint(
+		model,
+		grid,
+		c_id,
+		constraint,
+		'outside_edge_yin_yang_sum_of_shaded_p'
+	);
 }
 
 export const outsideEdgeYinYangSumOfShadedInfo: SquareCellElementInfo = {
@@ -422,7 +438,7 @@ export const outsideEdgeYinYangSumOfShadedInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META,
 		description:
-			'Numbers outside the grid indicate the sum of the digits in shaded cells in the corresponding row/column.',
+			'Numbers outside the grid indicate the sum of the digits in shaded cells in the corresponding row/column.'
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -436,20 +452,13 @@ function yinYangColouredSumFrameOutsideEdgeConstraint(
 	c_id: string,
 	constraint: OutsideDirectionToolI
 ) {
-	const cell_coord = constraint.cell;
-	const direction = constraint.direction;
-
-	const cells = grid.getCellsInDirection(cell_coord.r, cell_coord.c, direction);
-	const vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
-	const yin_yang_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.YIN_YANG);
-
-	const value = constraint.value;
-	if (value) {
-		const val = parseInt(value);
-		const constraint_str = `constraint yin_yang_coloured_sum_frame_outside_edge_p(${vars_str}, ${yin_yang_vars_str}, ${val});\n`;
-		return constraint_str;
-	}
-	return '';
+	return outsideEdgeYinYangConstraint(
+		model,
+		grid,
+		c_id,
+		constraint,
+		'yin_yang_coloured_sum_frame_outside_edge_p'
+	);
 }
 
 export const yinYangColouredSumFrameOutsideEdgeInfo: SquareCellElementInfo = {
@@ -470,6 +479,39 @@ export const yinYangColouredSumFrameOutsideEdgeInfo: SquareCellElementInfo = {
 	}
 };
 
+function yinYangXSumOutsideEdgeConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	return outsideEdgeYinYangConstraint(
+		model,
+		grid,
+		c_id,
+		constraint,
+		'yin_yang_colored_x_sum_outside_edge_p'
+	);
+}
+
+export const yinYangXSumOutsideEdgeInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
+
+	toolId: TOOLS.YIN_YANG_X_SUM_OUTSIDE_EDGE,
+
+	shape: OUTSIDE_DEFAULT_SHAPE,
+
+	meta: {
+		...DEFAULT_META,
+		description:
+			'Outside clues give the sum of the first three digits seen from that direction. Each X-Sum clue only sees digits of one Yin Yang colour, while digits of the other colour are completely meaningless for that clue. Which colour corresponds to each clue must be determined. (Each clue sees at least three digits of its color.'
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, yinYangXSumOutsideEdgeConstraint);
+	}
+};
+
 export const outsideConsecutiveSumInfo: SquareCellElementInfo = {
 	inputOptions: {
 		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
@@ -486,7 +528,7 @@ export const outsideConsecutiveSumInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META,
 		description:
-			'A clue outside the grid indicates the total of any digits in its row or column that neighbour at least one consecutive digit within that row or column. For example, if a column, reading downwards, contains the digits 128396547, the clue at the top of the column would be 18; the sum of 1, 2, 4, 5, and 6, which are the only digits which neighbour a consecutive digit within that sequence.',
+			'A clue outside the grid indicates the total of any digits in its row or column that neighbour at least one consecutive digit within that row or column. For example, if a column, reading downwards, contains the digits 128396547, the clue at the top of the column would be 18; the sum of 1, 2, 4, 5, and 6, which are the only digits which neighbour a consecutive digit within that sequence.'
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -532,7 +574,7 @@ export const loopwhichesInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META,
 		description:
-			'Clues outside the grid are Loopwiches. Loopwiches indicate the sum of the digits between the first and last loop cell in their row or column. (Both loop and nonloop cells between the 2 crust cells are summed).',
+			'Clues outside the grid are Loopwiches. Loopwiches indicate the sum of the digits between the first and last loop cell in their row or column. (Both loop and nonloop cells between the 2 crust cells are summed).'
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -583,7 +625,7 @@ export const chaosConstructionSumOfFirstEachRegionInfo: SquareCellElementInfo = 
 	meta: {
 		...DEFAULT_META,
 		description:
-			'Stepping Stones: Clues outside the grid give the sum of the first digit seen in each successive region in that row or column. **The summed digits always appear in increasing order.**',
+			'Stepping Stones: Clues outside the grid give the sum of the first digit seen in each successive region in that row or column. **The summed digits always appear in increasing order.**'
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -625,7 +667,7 @@ export const chaosConstructionXIndexRegionInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META,
 		description:
-			'Clues outside the grid indicate the first N cells pointing in that direction are in the same region - followed by a region border - where N is the first digit seen by the clue.',
+			'Clues outside the grid indicate the first N cells pointing in that direction are in the same region - followed by a region border - where N is the first digit seen by the clue.'
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -676,7 +718,7 @@ export const chaosConstructionXSumRegionBordersInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META,
 		description:
-			'A number outside the grid gives the sum of the first M cells of the row/column from that direction. M is the number of region borders in that row/column.**',
+			'A number outside the grid gives the sum of the first M cells of the row/column from that direction. M is the number of region borders in that row/column.**'
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
@@ -725,7 +767,7 @@ export const pentominoBorderCountInfo: SquareCellElementInfo = {
 	meta: {
 		...DEFAULT_META,
 		description:
-			'Clues outside the grid indicate the number of borders between pentominoes present in that row or column.',
+			'Clues outside the grid indicate the number of borders between pentominoes present in that row or column.'
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {

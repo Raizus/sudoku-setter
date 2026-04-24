@@ -468,24 +468,28 @@ function array[int,int] of var int: rotate_2d_i(
         endif;
 } in result;
 
-function var int: first_idx(array[int] of var int: arr, var int: x) =
+function var int: first_idx(array[int] of var int: arr, var int: x) = let {
+    set of int: idxs = index_set(arr);
+    int: min_i = min(idxs);
+} in (
     if length(arr) = 0 then
-        -1
+        min_i-1
     else
         let {
             % For each position, is it the first occurrence?
-            array[index_set(arr)] of var bool: is_first = [
+            array[idxs] of var bool: is_first = [
                 arr[i] = x /\
-                forall(j in min(index_set(arr))..i-1)(arr[j] != x)
-                | i in index_set(arr)
+                forall(j in min_i..i-1)(arr[j] != x)
+                | i in idxs
             ]
         } in
-        if exists(i in index_set(arr))(is_first[i]) then
-            min([i | i in index_set(arr) where is_first[i]])
+        if exists(i in idxs)(is_first[i]) then
+            min([i | i in idxs where is_first[i]])
         else
-            -1
+            min_i-1
         endif
-    endif;
+    endif
+);
     
 function array[int] of var int: entropic_group_f(
     array[int] of var int: arr,
@@ -2407,8 +2411,8 @@ predicate outside_edge_yin_yang_sum_of_shaded_p(
     array[int] of var int: yin_yang_vars, 
     var int: val
 ) =  
-    index_set(cells) = index_set(yin_yang_vars) /\
-    sum(i in index_set(cells) where yin_yang_vars[i] == 1)(cells[i]) == val;
+    assert(index_sets_agree(cells, yin_yang_vars), "cells and yin_yang_vars must have the same indexes")
+    /\ sum(i in index_set(cells) where yin_yang_vars[i] == 1)(cells[i]) == val;
 
 predicate yin_yang_coloured_sum_frame_outside_edge_p(
     array[int] of var int: cells, 
@@ -2443,6 +2447,52 @@ predicate yin_yang_coloured_sum_frame_outside_edge_p(
             count(yin_yang_vars, 1) >= 3
             /\ conditional_sum_f(cells, bool_vars_1, true) == val
         )
+    )
+);
+
+predicate conditional_x_sum_p(
+    array[int] of var int: arr,
+    array[int] of var $$T: labels,
+    var $$T: label,
+    var int: val
+) = let {
+    set of int: idxs = index_set(labels);
+    int: min_i = min(idxs);
+    var int: count_l = count(labels, label);
+    var int: first_idx = first_idx(labels, label);
+    constraint first_idx >= min_i;
+    var int: x = arr[first_idx];
+    array[idxs] of var int: counts; 
+    constraint counts[min_i] = bool2int(labels[min_i] == label);
+    constraint forall(i in idxs where i > min_i)(
+        counts[i] = counts[i-1] + bool2int(labels[i] == label)
+    );
+} in (
+    assert(index_sets_agree(arr, labels), "arr and labels must have the same indexes")
+    /\ first_idx >= min_i
+    /\ count_l >= x
+    /\ sum(i in idxs where labels[i] == label /\ counts[i] <= x)(arr[i]) = val
+);
+
+predicate yin_yang_colored_x_sum_outside_edge_p(
+    array[int] of var int: cells, 
+    array[int] of var int: yin_yang_vars, 
+    var int: val
+) = let {
+    set of int: idxs = index_set(yin_yang_vars);
+    int: min_i = min(idxs);
+} in (
+    assert(index_sets_agree(cells, yin_yang_vars), "cells and yin_yang_vars must have the same indexes")
+    % Outside clues give the sum of the first x digits seen from that direction. 
+    % Each x-sum clue only sees digits of one Yin Yang colour, while digits of the other colour are completely meaningless for that clue.
+    % Which colour corresponds to each clue must be determined. 
+    % (Each clue sees at least x digits of its color.)
+    % Either at least x yin_yang_vars are 0 and their sum is equal to val
+    % or at least x yin_yang_vars are 1 and their sum is equal to val
+    /\ (
+        conditional_x_sum_p(cells, yin_yang_vars, 0, val)
+        \/
+        conditional_x_sum_p(cells, yin_yang_vars, 1, val)
     )
 );
 
