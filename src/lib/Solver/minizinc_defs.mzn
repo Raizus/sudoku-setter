@@ -672,7 +672,7 @@ function var int: modular_count_f(
 );
 
 predicate shaded_adjacent_neighbours_same_region_p(
-    array[int, int] of var int: shading,
+    array[int, int] of var $$T: shading,
     array[int, int] of var int: regions,
 ) = let {
     set of int: rows = index_set_1of2(shading);
@@ -4045,6 +4045,111 @@ predicate cave_cells_fillomino_p(
 % -------------------------------------------------------------------------------- % 
 % ------ CELL CENTER LOOP CONSTRAINTS -------------------------------------------- %
 
+function var int: grid_graph_h_degree_f(
+    array[int,int] of var bool: edge_h,
+    int: i, int: j
+) = let {
+    set of int: cols = index_set_2of2(edge_h);
+} in (
+    (if in_bounds_2d(i, j-1, edge_h) then bool2int(edge_h[i, j-1]) else 0 endif)   % left
+    + (if in_bounds_2d(i, j, edge_h) then bool2int(edge_h[i, j])   else 0 endif)   % right
+);
+
+function var int: grid_graph_v_degree_f(
+    array[int,int] of var bool: edge_v,
+    int: i, int: j
+) = let {
+    set of int: rows = index_set_1of2(edge_v);
+} in (
+    (if in_bounds_2d(i-1, j, edge_v) then bool2int(edge_v[i-1, j]) else 0 endif)   % up
+    + (if in_bounds_2d(i, j, edge_v) then bool2int(edge_v[i, j])   else 0 endif)  % down
+);
+
+function var int: grid_graph_degree_f(
+    array[int,int] of var bool: edge_h, 
+    array[int,int] of var bool: edge_v, 
+    int: i, int: j
+) = (
+    grid_graph_h_degree_f(edge_h, i, j) + grid_graph_v_degree_f(edge_v, i, j)
+);
+
+% Linearise node index: node (i,j) -> (i - r_min) * ncols + (j - c_min) + 1
+function int: nid(int: i, int: j, int: r_min, int: ncols, int: c_min) =
+    (i - r_min) * ncols + (j - c_min) + 1;
+
+
+predicate loop_edges_p(
+    array[int, int] of var bool: loop_nodes,
+    array[int, int] of var bool: edges_h,
+    array[int, int] of var bool: edges_v,
+) = let {
+    set of int: rows = index_set_1of2(loop_nodes);
+    set of int: cols = index_set_2of2(loop_nodes);
+    set of int: rows_h = index_set_1of2(edges_h);
+    set of int: cols_h = index_set_2of2(edges_h);
+    set of int: rows_v = index_set_1of2(edges_v);
+    set of int: cols_v = index_set_2of2(edges_v);
+
+    int: r_min = min(rows); int: r_max = max(rows);
+    int: c_min = min(cols); int: c_max = max(cols);
+    int: ncols = c_max - c_min + 1;
+
+    int: N = card(rows) * card(cols);
+
+    % Build flat from/to arrays for all grid edges (both h and v)
+    int: E_h = card(rows) * (card(cols) - 1);
+    int: E_v = (card(rows) - 1) * card(cols);
+    int: E = E_h + E_v;
+
+    array[1..E] of int: from =
+        [nid(i, j,   r_min, ncols, c_min) | i in rows, j in c_min..c_max-1] ++
+        [nid(i, j,   r_min, ncols, c_min) | i in r_min..r_max-1, j in cols];
+
+    array[1..E] of int: to =
+        [nid(i, j+1, r_min, ncols, c_min) | i in rows, j in c_min..c_max-1] ++
+        [nid(i+1, j, r_min, ncols, c_min) | i in r_min..r_max-1, j in cols];
+
+    % Flat node and edge bool arrays for connected/2
+    array[1..N] of var bool: ns =
+        [loop_nodes[i, j] | i in rows, j in cols];
+
+    array[1..E] of var bool: es =
+        [edges_h[i, j]   | i in rows, j in c_min..c_max-1] ++
+        [edges_v[i, j]   | i in r_min..r_max-1, j in cols];
+} in (
+    % Assert edge index sets match expected dimensions
+    assert(rows_h = rows,   "edges_h row index mismatch")
+    /\
+    assert(cols_h = min(cols)..max(cols)-1, "edges_h col index mismatch")
+    /\
+    assert(rows_v = min(rows)..max(rows)-1, "edges_v row index mismatch")
+    /\
+    assert(cols_v = cols,   "edges_v col index mismatch")
+    /\
+    % Horizontal edges: only active if both endpoint nodes are active
+    forall(i in rows, j in min(cols)..max(cols)-1)(
+        edges_h[i,j] -> (loop_nodes[i,j] /\ loop_nodes[i,j+1])
+    )
+    /\
+    % Vertical edges: only active if both endpoint nodes are active
+    forall(i in min(rows)..max(rows)-1, j in cols)(
+        edges_v[i,j] -> (loop_nodes[i,j] /\ loop_nodes[i+1,j])
+    )
+    /\
+    % For every node: if false -> all incident edges false
+    %                 if true  -> exactly 2 incident edges true (loop condition)
+    forall(i in rows, j in cols)(
+        let {
+            var int: deg = grid_graph_degree_f(edges_h, edges_v, i ,j);
+        } in (
+            if loop_nodes[i,j] then deg = 2 else deg = 0 endif
+        )
+    )
+    /\
+    % The active subgraph must be connected
+    connected(from, to, ns, es)
+);
+
 predicate cell_center_loop_no_diagonal_touching_p(array[int, int] of var 0..1: grid) = let {
         set of int: rows = index_set_1of2(grid);
         set of int: cols = index_set_2of2(grid);
@@ -4074,20 +4179,6 @@ predicate cell_center_loop_no_orthogonal_touching_p(
         )
     )
 );
-
-% draw a 1-cell wide loop of orthogonally connected cells which does not branch or touch itself, even diagonally
-predicate cell_center_loop_p(array[int, int] of var 0..1: grid, bool: diag_touch) =
-    let {
-        set of int: rows = index_set_1of2(grid);
-        set of int: cols = index_set_2of2(grid);
-    } in (
-        connected_region(grid, 1)
-        % no diagonal touching
-        /\ (diag_touch \/ cell_center_loop_no_diagonal_touching_p(grid))
-        % If cell is on the loop then then there are exactly two edges attached to it
-        % Count orthogonally adjacent 1s (must be exactly 2)
-        /\ cell_center_loop_no_orthogonal_touching_p(grid)
-    );
 
 predicate cell_center_loop_regions_p(
     array[int, int] of var 0..1: shading, % loop / non-loop cells
@@ -4178,6 +4269,30 @@ predicate adjacent_loop_cells_are_german_whispers_p(
 } in (
     assert(index_sets_agree(grid, labels), "grid and labels must have the same indexes.")
     /\ region_whispers_p(grid, labels, 1, 5)
+);
+
+predicate connected_loop_nodes_are_german_whispers_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var bool: edges_h,
+    array[int, int] of var bool: edges_v,
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    set of int: rows_h = index_set_1of2(edges_h);
+    set of int: cols_h = index_set_2of2(edges_h);
+    set of int: rows_v = index_set_1of2(edges_v);
+    set of int: cols_v = index_set_2of2(edges_v);
+} in (
+    % if two nodes are connected then abs(grid[r1,c1]-grid[r2,c2]) >= 5
+    % Horizontal edges: if edge is active, adjacent nodes differ by >= 5
+    forall(i in rows_h, j in cols_h)(
+        edges_h[i,j] -> abs(grid[i,j] - grid[i,j+1]) >= 5
+    )
+    /\
+    % Vertical edges: if edge is active, adjacent nodes differ by >= 5
+    forall(i in rows_v, j in cols_v)(
+        edges_v[i,j] -> abs(grid[i,j] - grid[i+1,j]) >= 5
+    )
 );
 
 predicate loop_parity_p(
@@ -4349,6 +4464,35 @@ predicate counting_circles_loop_or_non_loop_p(
 
     /\ forall(i in idxs)(
         conditional_count_f(circle_vars, loop_vars, circle_vars[i], loop_vars[i]) = circle_vars[i]
+    )
+);
+
+function var int: count_loop_turns_f(
+    array[int] of tuple(int, int): coords,
+    array[int, int] of var bool: loop_nodes,
+    array[int, int] of var bool: edges_h,
+    array[int, int] of var bool: edges_v,   
+) = let {
+    set of int: rows = index_set_1of2(loop_nodes);
+    set of int: cols = index_set_2of2(loop_nodes);
+    set of int: rows_h = index_set_1of2(edges_h);
+    set of int: cols_h = index_set_2of2(edges_h);
+    set of int: rows_v = index_set_1of2(edges_v);
+    set of int: cols_v = index_set_2of2(edges_v);
+    constraint assert(rows_h = rows,   "edges_h row index mismatch");
+    constraint assert(cols_h = min(cols)..max(cols)-1, "edges_h col index mismatch");
+    constraint assert(rows_v = min(rows)..max(rows)-1, "edges_v row index mismatch");
+    constraint assert(cols_v = cols,   "edges_v col index mismatch");
+} in (
+    sum(k in index_set(coords))(
+        let {
+            int: r = coords[k].1;
+            int: c = coords[k].2;
+
+            var int: h_count = grid_graph_h_degree_f(edges_h, r, c);
+            var int: v_count = grid_graph_v_degree_f(edges_v, r, c);
+        } in
+            bool2int(loop_nodes[r,c] /\ h_count = 1 /\ v_count = 1)
     )
 );
 

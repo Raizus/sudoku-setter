@@ -125,7 +125,7 @@
   ],
   "elements": [
     {
-      "tool_id": "Cell Center Loop No Touching",
+      "tool_id": "Cell Center Loop Cannot Touch Orthogonally",
       "constraints": [],
       "negative_constraints": {
         "Cell Center Loop Can Touch Diagonally": true,

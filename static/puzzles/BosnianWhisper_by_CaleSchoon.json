@@ -119,11 +119,12 @@
   ],
   "elements": [
     {
-      "tool_id": "Cell Center Loop No Touching",
+      "tool_id": "Cell Center Loop Cannot Touch Orthogonally",
       "constraints": [],
       "negative_constraints": {
-        "Adjacent Cells Along Loop Are German Whispers": true
-      }
+				"Cell Center Loop Cannot Touch Diagonally": true,
+				"Adjacent Cells Along Loop Are German Whispers": true
+			}
     },
     {
       "tool_id": "Cell Not On The Loop",

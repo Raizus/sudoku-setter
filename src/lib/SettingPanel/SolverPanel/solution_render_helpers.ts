@@ -466,6 +466,58 @@ function setShadedBoundariesBorders(json: JsonT) {
 	}
 }
 
+function setLoopEdges(json: JsonT, grid: Grid) {
+	if (json === undefined) return;
+	const edges_h = json[VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_H] as boolean[][] | undefined;
+	const edges_v = json[VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_V] as boolean[][] | undefined;
+	const loops_grid = json[VAR_2D_NAMES.CELL_CENTER_LOOP] as boolean[][] | undefined;
+
+	if (!loops_grid || !edges_h || !edges_v) return;
+	const line_markers: LineMarker[] = [];
+	for (let i = 0; i < loops_grid.length; i++) {
+		const row = loops_grid[i];
+		for (let j = 0; j < row.length; j++) {
+			const cell = grid.getCell(i, j);
+			if (!cell) continue;
+
+			const val = row[j];
+
+			if (!val) continue;
+			const cell_down = grid.getCell(cell.r + 1, cell.c);
+			const cell_right = grid.getCell(cell.r, cell.c + 1);
+
+			if (cell_down) {
+				const edge_v = edges_v[i][j];
+
+				if (edge_v) {
+					const marker: LineMarker = {
+						colorId: 4,
+						p1: { r: cell.r + 0.5, c: cell.c + 0.5 },
+						p2: { r: cell_down.r + 0.5, c: cell_down.c + 0.5 }
+					};
+					line_markers.push(marker);
+				}
+			}
+
+			if (cell_right) {
+				const edge_h = edges_h[i][j];
+				if (edge_h) {
+					const marker: LineMarker = {
+						colorId: 4,
+						p1: { r: cell.r + 0.5, c: cell.c + 0.5 },
+						p2: { r: cell_right.r + 0.5, c: cell_right.c + 0.5 }
+					};
+					line_markers.push(marker);
+				}
+			}
+		}
+	}
+
+	const action = addLineMarkersAction(line_markers);
+	stateStore.updatePenTool(action);
+	return;
+}
+
 function setOrthogonalPathOrLoopLines(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
 	const grid_vars_names = ['cell_center_loop'];
@@ -630,7 +682,7 @@ export function setBoardOnSolution(solution: JsonT, puzzle_model: PuzzleModel) {
 	setGoldilocksRegionsHighlights(solution, grid);
 	setYinYangYongHighlights(solution, grid);
 	setLITSHighlights(solution, grid);
-	setOrthogonalPathOrLoopLines(solution, grid);
+	// setOrthogonalPathOrLoopLines(solution, grid);
 	setOtherHighlights(solution, grid);
 	setColoring(solution, grid);
 	setBinaryHighlights(solution, grid);
@@ -639,6 +691,7 @@ export function setBoardOnSolution(solution: JsonT, puzzle_model: PuzzleModel) {
 	setDirectedPathPenMarks(solution, puzzle_model);
 	setConnectFourHighlights(solution, grid);
 	setShadedBoundariesBorders(solution);
+	setLoopEdges(solution, grid);
 }
 
 function updateCandidates(json: JsonT, puzzle: PuzzleAuxI) {

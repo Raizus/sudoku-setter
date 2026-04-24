@@ -54,7 +54,8 @@ import {
 	equalDiagonalDifferencesInfo,
 	productSquareInfo,
 	quadrupleInfo,
-	differentCornerDiagonalSumsInfo
+	differentCornerDiagonalSumsInfo,
+	cornerCountLoopTurnsInfo
 } from './CornerToolsElementsInfo';
 import {
 	cosmeticArrowInfo,
@@ -160,7 +161,7 @@ import {
 	chaosConstructionInfo
 } from './UndeterminedRegionsInfo/UndeterminedRegionsElementsInfo';
 import { yinYangInfo } from './UndeterminedRegionsInfo/YinYangElementsInfo';
-import { cellCenterLoopNoTouchingInfo } from './UndeterminedRegionsInfo/LoopElementsInfo';
+import { cellCenterLoopCannotTouchOrthogonallyInfo, cellCenterLoopInfo } from './UndeterminedRegionsInfo/LoopElementsInfo';
 import { caveInfo } from './UndeterminedRegionsInfo/CaveElementsInfo';
 import {
 	adjacentMultiplesLineInfo,
@@ -463,7 +464,8 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.NORINORI]: norinoriInfo,
 	[TOOLS.SHIKAKU]: shikakuInfo,
 	[TOOLS.GOLDILOCKS_ZONE]: goldilocksZoneInfo,
-	[TOOLS.CELL_CENTER_LOOP_NO_TOUCHING]: cellCenterLoopNoTouchingInfo,
+	[TOOLS.CELL_CENTER_LOOP_CANNOT_TOUCH_ORTHOGONALLY]: cellCenterLoopCannotTouchOrthogonallyInfo,
+	[TOOLS.CELL_CENTER_LOOP]: cellCenterLoopInfo,
 	[TOOLS.CAVE]: caveInfo,
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING]: twilightCaveFillominoRegionShadingInfo,
 
@@ -541,8 +543,10 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_CLUE]: twilightCaveFillominoClueInfo,
 	[TOOLS.YIN_YANG_FILLOMINO_PARITY]: yinYangFillominoParityInfo,
 
-	[TOOLS.ORTHOGONALLY_CONNECTED_REGIONS_REGION_ZERO_CELL]: orthogonallyConnectedRegionsRegionZeroCellInfo,
-	[TOOLS.ORTHOGONALLY_CONNECTED_REGIONS_REGION_SIZE_CELL]: orthogonallyConnectedRegionsRegionSizeCellInfo,
+	[TOOLS.ORTHOGONALLY_CONNECTED_REGIONS_REGION_ZERO_CELL]:
+		orthogonallyConnectedRegionsRegionZeroCellInfo,
+	[TOOLS.ORTHOGONALLY_CONNECTED_REGIONS_REGION_SIZE_CELL]:
+		orthogonallyConnectedRegionsRegionSizeCellInfo,
 
 	[TOOLS.SHIKAKU_REGION_SIZE]: shikakuRegionSizeInfo,
 	[TOOLS.SHIKAKU_REGION_SUM]: shikakuRegionSumInfo,
@@ -645,6 +649,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.CHAOS_CONSTRUCTION_CORNER_CELLS_BELONG_TO_SAME_REGION]:
 		chaosConstructionCornerCellsBelongToSameRegionsInfo,
 	[TOOLS.BOX_2X2_NUMBER_RANKING]: box2x2NumberRankingInfo,
+	[TOOLS.CORNER_COUNT_LOOP_TURNS]: cornerCountLoopTurnsInfo,
 
 	// Line Constraints
 	[TOOLS.THERMOMETER]: thermometerInfo,

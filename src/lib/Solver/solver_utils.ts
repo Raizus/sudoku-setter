@@ -32,6 +32,8 @@ export enum VAR_2D_NAMES {
 	SASHIGANE = 'sashigane',
 	SASHIGANE_BENDS = 'sashigane_bends',
 	CELL_CENTER_LOOP = 'cell_center_loop',
+	CELL_CENTER_LOOP_EDGES_H = 'cell_center_loop_edges_h',
+	CELL_CENTER_LOOP_EDGES_V = 'cell_center_loop_edges_v',
 	CAVE_SHADING = 'cave_shading',
 	CAVE_REGIONS = 'cave_regions',
 	CAVE_CELLS_FILLOMINO_REGIONS = 'cave_cells_fillomino_regions',

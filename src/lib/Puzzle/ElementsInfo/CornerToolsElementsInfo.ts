@@ -85,11 +85,12 @@ function simpleCornerConstraint(grid: Grid, constraint: CornerToolI, predicate: 
 	return constraint_str;
 }
 
-function simpleCornerElement(grid: Grid, element: ConstraintsElement, predicate: string) {
+function simpleCornerElement(model: PuzzleModel, element: ConstraintsElement, predicate: string) {
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
-
+	
+	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = simpleCornerConstraint(grid, constraint as CornerToolI, predicate);
 		out_str += constraint_str;
@@ -274,8 +275,7 @@ export const cornerSumOfThreeEqualsTheOtherInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		const grid = model.puzzle.grid;
-		const out_str = simpleCornerElement(grid, element, 'corner_sum_of_three_equals_the_other_p');
+		const out_str = simpleCornerElement(model, element, 'corner_sum_of_three_equals_the_other_p');
 		return out_str;
 	}
 };
@@ -424,8 +424,7 @@ export const productSquareInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		const grid = model.puzzle.grid;
-		const out_str = simpleCornerElement(grid, element, 'product_square_p');
+		const out_str = simpleCornerElement(model, element, 'product_square_p');
 		return out_str;
 	}
 };
@@ -455,8 +454,7 @@ export const equalDiagonalDifferencesInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		const grid = model.puzzle.grid;
-		const out_str = simpleCornerElement(grid, element, 'equal_diagonal_differences_p');
+		const out_str = simpleCornerElement(model, element, 'equal_diagonal_differences_p');
 		return out_str;
 	}
 };
@@ -486,8 +484,7 @@ export const differentCornerDiagonalSumsInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		const grid = model.puzzle.grid;
-		const out_str = simpleCornerElement(grid, element, 'different_corner_diagonal_sums_p');
+		const out_str = simpleCornerElement(model, element, 'different_corner_diagonal_sums_p');
 		return out_str;
 	}
 };
@@ -553,4 +550,61 @@ export const box2x2NumberRankingInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: box2x2NumberRankingElement
+};
+
+function cornerCountLoopTurnsConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CornerToolI
+) {
+	const grid_1 = VAR_2D_NAMES.CELL_CENTER_LOOP;
+	const edges_h = VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_H;
+	const edges_v = VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_V;
+
+	const cells = cellsFromCoords(grid, constraint.cells);
+	const loop_vars_str = cellsToGridVarsStr(cells, grid_1);
+
+	const value = constraint.value;
+	if (!value) return '';
+	const val = parseInt(value);
+	if (Number.isNaN(val)) return '';
+
+	const coords = '['+cells.map(cell => `(${cell.r}, ${cell.c})`).join(',')+']';
+
+	let out_str = `constraint count(${loop_vars_str}, true) >= ${val};\n`;
+	out_str += `constraint count_loop_turns_f(${coords}, ${grid_1}, ${edges_h}, ${edges_v}) = ${val};\n`
+
+	return out_str;
+}
+
+export const cornerCountLoopTurnsInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.CORNER,
+		valueUpdater: (oldValue: string | undefined, key: string) =>
+			quadrupleValueUpdater(oldValue, key),
+		defaultValue: ''
+	},
+
+	toolId: TOOLS.CORNER_COUNT_LOOP_TURNS,
+
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		r: { editable: false, value: 0.25 },
+		strokeWidth: { editable: false, value: 0.023 },
+		stroke: { editable: false, value: 'black' },
+		fill: { editable: false, value: 'var(--grid-background-color)' }
+	},
+
+	meta: {
+		description:
+			'A digit in a circle indicates how many of the four surrounding cells contain turns of the loop.',
+		tags: [],
+		usage: quadrupleUsage(),
+		categories: DEFAULT_TYPABLE_CORNER_CATEGORIES
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, cornerCountLoopTurnsConstraint);
+	}
 };

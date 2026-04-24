@@ -65,7 +65,10 @@ function loopParityConstraint(model: PuzzleModel, tool: TOOLID) {
 	return out_str;
 }
 
-export function cellCenterLoopNoTouchingElement(model: PuzzleModel, element: ConstraintsElement) {
+export function cellCenterLoopCannotTouchOrthogonallyElement(
+	model: PuzzleModel,
+	element: ConstraintsElement
+) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 	const tool = element.tool_id;
@@ -77,19 +80,24 @@ export function cellCenterLoopNoTouchingElement(model: PuzzleModel, element: Con
 	}
 
 	const neg_constr = element.negative_constraints;
-	const loop_diag_touch = neg_constr
-		? !!neg_constr[TOOLS.CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY]
+	const loop_no_diag_touch = neg_constr
+		? !!neg_constr[TOOLS.CELL_CENTER_LOOP_CANNOT_TOUCH_DIAGONALLY]
 		: false;
 
+	const loop_grid_name = VAR_2D_NAMES.CELL_CENTER_LOOP;
 	let out_str: string = `\n% ${tool}\n`;
-	out_str += `array[ROW_IDXS, COL_IDXS] of var 0..1: cell_center_loop;\n`;
-	out_str += `constraint cell_center_loop_p(cell_center_loop, ${loop_diag_touch});\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: cell_center_loop;\n`;
+	out_str += `constraint cell_center_loop_no_orthogonal_touching_p(${loop_grid_name});\n`;
+
+	if (loop_no_diag_touch) {
+		out_str += `constraint cell_center_loop_no_diagonal_touching_p(${loop_grid_name});\n`;
+	}
 
 	if (!neg_constr) return out_str;
 	const non_loop_sized_regions = !!neg_constr[TOOLS.NOT_LOOP_SIZED_REGIONS];
 	const loop_german_whispers = !!neg_constr[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS];
 	const loop_adj_multiples = !!neg_constr[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES];
-    const modular_loop = !!neg_constr[TOOLS.MODULAR_LOOP];
+	const modular_loop = !!neg_constr[TOOLS.MODULAR_LOOP];
 	const loop_parity = !!neg_constr[TOOLS.LOOP_PARITY];
 	const counting_loop = !!neg_constr[TOOLS.COUNTING_LOOP];
 
@@ -119,12 +127,12 @@ export function cellCenterLoopNoTouchingElement(model: PuzzleModel, element: Con
 	return out_str;
 }
 
-export const cellCenterLoopNoTouchingInfo: SquareCellElementInfo = {
-	toolId: TOOLS.CELL_CENTER_LOOP_NO_TOUCHING,
+export const cellCenterLoopCannotTouchOrthogonallyInfo: SquareCellElementInfo = {
+	toolId: TOOLS.CELL_CENTER_LOOP_CANNOT_TOUCH_ORTHOGONALLY,
 
 	negative_constraints: [
 		{
-			toolId: TOOLS.CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY,
+			toolId: TOOLS.CELL_CENTER_LOOP_CANNOT_TOUCH_DIAGONALLY,
 			description:
 				'Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself orthogonally, but can touch itself diagonally.'
 		},
@@ -159,10 +167,66 @@ export const cellCenterLoopNoTouchingInfo: SquareCellElementInfo = {
 
 	meta: {
 		description:
-			'Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself orthogonally.',
+			'Draw a single loop that travels orthogonally and passes through the centers of cells. The loop may go straight through a cell or turn within a cell, but it cannot branch, cross itself or touch itself orthogonally.',
 		tags: [],
 		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
 	},
 
-	solver_func: cellCenterLoopNoTouchingElement
+	solver_func: cellCenterLoopCannotTouchOrthogonallyElement
+};
+
+export function cellCenterLoopElement(model: PuzzleModel, element: ConstraintsElement) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const neg_constr = element.negative_constraints;
+
+	const nrows = grid.nRows;
+	const ncols = grid.nCols;
+
+	const edges_h = VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_H;
+	const edges_v = VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_V;
+
+	let out_str = `array[ROW_IDXS, COL_IDXS] of var bool: cell_center_loop;\n`;
+	out_str += `array[ROW_IDXS, 0..${ncols - 2}] of var bool: cell_center_loop_edges_h;\n`;
+	out_str += `array[0..${nrows - 2}, COL_IDXS] of var bool: cell_center_loop_edges_v;\n`;
+
+	out_str += `constraint loop_edges_p(cell_center_loop, ${edges_h}, ${edges_v});\n`;
+
+	if (!neg_constr) return out_str;
+	const loop_german_whispers = !!neg_constr[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS];
+
+	if (loop_german_whispers) {
+		out_str += `\n% ${TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS}\n`;
+		out_str += `constraint connected_loop_nodes_are_german_whispers_p(board, ${edges_h}, ${edges_v});\n`;
+	}
+
+	return out_str;
+}
+
+export const cellCenterLoopInfo: SquareCellElementInfo = {
+	toolId: TOOLS.CELL_CENTER_LOOP,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS,
+			description: 'Adjacent cells along a loop differ by 5 or more.'
+		}
+	],
+
+	meta: {
+		description:
+			'Draw a single loop that travels orthogonally and passes through the centers of cells. The loop may go straight through a cell or turn within a cell, but it cannot branch, cross itself.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.UNDETERMINED_REGIONS_CONSTRAINT]
+	},
+
+	solver_func: cellCenterLoopElement
 };

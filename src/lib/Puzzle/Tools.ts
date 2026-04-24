@@ -188,8 +188,8 @@ export enum GLOBAL_CONNECT_FOUR_CONSTRAINTS {
 
 export enum GLOBAL_LOOP_CONSTRAINTS {
 	CELL_CENTER_LOOP = 'Cell Center Loop',
-	CELL_CENTER_LOOP_NO_TOUCHING = 'Cell Center Loop No Touching',
-	CELL_CENTER_LOOP_CAN_TOUCH_DIAGONALLY = 'Cell Center Loop Can Touch Diagonally',
+	CELL_CENTER_LOOP_CANNOT_TOUCH_ORTHOGONALLY = 'Cell Center Loop Cannot Touch Orthogonally',
+	CELL_CENTER_LOOP_CANNOT_TOUCH_DIAGONALLY = 'Cell Center Loop Cannot Touch Diagonally',
 	NOT_LOOP_SIZED_REGIONS = 'Not Loop Sized Regions',
 	MODULAR_LOOP = 'Modular Loop',
 	COUNTING_LOOP = 'Counting Loop',
@@ -361,7 +361,8 @@ export enum CORNER_CONSTRAINTS {
 	PRODUCT_SQUARE = 'Product Square',
 	EQUAL_DIAGONAL_DIFFERENCES = 'Equal Diagonal Differences',
 	DIFFERENT_CORNER_DIAGONAL_SUMS = 'Different Corner Diagonal Sums',
-	BOX_2X2_NUMBER_RANKING = 'Box 2x2 Number Ranking'
+	BOX_2X2_NUMBER_RANKING = 'Box 2x2 Number Ranking',
+	CORNER_COUNT_LOOP_TURNS = 'Corner Count Loop Turns',
 }
 
 export enum LINE_CONSTRAINTS {
