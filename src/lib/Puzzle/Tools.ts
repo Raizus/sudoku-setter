@@ -230,6 +230,8 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	SEEN_EVEN_COUNT = 'Seen Even Count',
 	CELL_KNIGHT_WHISPERS = 'Cell Knight Whispers',
 
+	COUNT_EXACT_DISTANCE_MATCH_CELL = 'Count Exact Distance Match Cell',
+	
 	CELL_ON_THE_LOOP = 'Cell On The Loop',
 	CELL_NOT_ON_THE_LOOP = 'Cell Not On The Loop',
 	COUNT_LOOP_NEIGHBOUR_CELLS = 'Count Loop Neighbour Cells',

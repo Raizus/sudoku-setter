@@ -333,7 +333,8 @@ import {
 	coloredGroupsRegionSizeInfo,
 	countCirclesLoopOrNonLoopCellsInfo,
 	orthogonallyConnectedRegionsRegionZeroCellInfo,
-	orthogonallyConnectedRegionsRegionSizeCellInfo
+	orthogonallyConnectedRegionsRegionSizeCellInfo,
+	countExactDistanceMatchCellInfo
 } from './SingleCellElementsInfo/SingleCellElementsInfo';
 import {
 	yinYangAdjacentSameShadeCountInfo,
@@ -517,6 +518,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.SEEN_EVEN_COUNT]: seenEvenCountInfo,
 	[TOOLS.SEEN_ODD_COUNT]: seenOddCountInfo,
 	[TOOLS.CELL_KNIGHT_WHISPERS]: cellKnightWhispersInfo,
+	[TOOLS.COUNT_EXACT_DISTANCE_MATCH_CELL]: countExactDistanceMatchCellInfo,
 
 	[TOOLS.YIN_YANG_SHADED_CELL]: yinYangShadedCellInfo,
 	[TOOLS.YIN_YANG_MINESWEEPER]: yinYangMinesweeperInfo,

@@ -1069,6 +1069,35 @@ predicate radar_p(
 	var int: min_dist = min_non_negative([dist1, dist2, dist3, dist4])
 } in min_dist == val;
 
+function var int: count_exact_distance_match_f(
+    array[int] of var int: arr
+) = let {
+    set of int: idxs = index_set(arr);
+    int: n = card(idxs);
+} in (
+    if n = 0 then
+        0
+    else
+        let {
+            array[idxs] of var bool: matches = [
+                arr[i] = i | i in idxs]
+        } in sum(matches)
+    endif
+);
+
+predicate count_exact_distance_match_cell_p(
+	var int: val, 
+	array[int] of var int: arr1, 
+	array[int] of var int: arr2, 
+	array[int] of var int: arr3, 
+	array[int] of var int: arr4,
+) = let {
+	var int: dist1 = count_exact_distance_match_f(arr1);
+	var int: dist2 = count_exact_distance_match_f(arr2);  
+	var int: dist3 = count_exact_distance_match_f(arr3);
+	var int: dist4 = count_exact_distance_match_f(arr4);
+} in dist1 + dist2 + dist3 + dist4 == val;
+
 predicate counting_circles_p(
     array[int] of var int: circles,
     set of int: allowed

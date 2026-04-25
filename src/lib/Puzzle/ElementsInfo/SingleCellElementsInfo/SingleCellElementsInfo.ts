@@ -1261,6 +1261,48 @@ export const cellKnightWhispersInfo: SquareCellElementInfo = {
 	}
 };
 
+function countExactDistanceMatchCellConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	const coords = constraint.cell;
+	const cell0 = grid.getCell(coords.r, coords.c);
+	if (!cell0) return '';
+
+	const var0 = cellToVarName(cell0);
+	const [up_vars, down_vars, left_vars, right_vars] = getDirectionsVars(grid, cell0);
+	const constraint_str = `constraint count_exact_distance_match_cell_p(${var0}, ${up_vars}, ${down_vars}, ${left_vars}, ${right_vars});\n`;
+	return constraint_str;
+}
+
+export const countExactDistanceMatchCellInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+
+	toolId: TOOLS.COUNT_EXACT_DISTANCE_MATCH_CELL,
+
+	shape: {
+		type: SHAPE_TYPES.SQUARE,
+		strokeWidth: { editable: false, value: 0.04 },
+		stroke: { editable: true, value: '#4873ff' },
+		r: { editable: true, value: 0.25 },
+		angle: { editable: true, value: 45 },
+		fill: { editable: false, value: '#4873ff' }
+	},
+
+	meta: {
+		description:
+			'The digit in a blue diamond equals the number of cells in the same row or column whose digits match their distance from the diamond (e.g., any 1 exactly one cell away, any 2 exactly two cells away, any 3 exactly three cells away, etc.).',
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, countExactDistanceMatchCellConstraint);
+	}
+};
+
 export const seenOddCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
 
