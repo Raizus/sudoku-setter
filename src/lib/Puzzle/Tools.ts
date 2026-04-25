@@ -36,7 +36,7 @@ export enum SIMPLE_GLOBAL_CONSTRAINTS {
 	NOT_ALL_ODD_IN_A_2X2_SQUARE = 'Not All Odd In A 2x2 Square',
 
 	RANKED_2X2_BOX_NUMBERS = 'Ranked 2x2 Box Numbers',
-	SOMEDOKU = 'Somedoku',
+	SOMEDOKU = 'Somedoku'
 }
 
 export enum DIAGONAL_CONSTRAINTS {
@@ -67,7 +67,7 @@ export enum NEGATIVE_AND_MODIFIER_CONSTRAINTS {
 	SHIKAKU_EACH_REGION_CONTAINS_ONE_SIZE_CIRCLE = 'Shikaku Each Regions Contains One Size Circle',
 	SHIKAKU_EACH_REGION_CONTAINS_ONE_REGION_SUM_CLUE = 'Shikaku Each Regions Contains One Region Sum Clue',
 
-	NO_REPEATS_IN_REGIONS = 'No Repeats In Regions',
+	NO_REPEATS_IN_REGIONS = 'No Repeats In Regions'
 }
 
 export enum VALUE_MODIFIER_CONSTRAINTS {
@@ -143,7 +143,7 @@ export enum GLOBAL_YIN_YANG_CONSTRAINTS {
 	YIN_YANG_SHADED_CELLS_ARE_GERMAN_WHISPERS = 'Yin Yang Shaded Cells Are German Whispers',
 	YIN_YANG_IDENTICAL_DIGITS_DIAGONALLY_BELONG_TO_THE_SAME_REGION = 'Ying Yang Identical Digits Diagonally Belong To Same The Region',
 	YIN_YANG_CHAOS_CONSTRUCTION_FULLY_SHADED_OR_FULLY_UNSHADED = 'Yin Yang Chaos Construction Fully Shaded Or Fully Unshaded',
-	YIN_YANG_2X2_SHADED_DIFFERENT_MOD_3 = 'Yin Yang 2x2 Shaded Different Mod 3',
+	YIN_YANG_2X2_SHADED_DIFFERENT_MOD_3 = 'Yin Yang 2x2 Shaded Different Mod 3'
 }
 
 export enum GLOBAL_DIRECTED_PATH_CONSTRAINTS {
@@ -325,6 +325,7 @@ export enum SINGLE_CELL_MULTIARROW_CONSTRAINTS {
 export enum EDGE_CONSTRAINTS {
 	RATIO = 'Ratio',
 	DIFFERENCE = 'Difference',
+	RATIO_OR_DIFFERENCE_KROPKI = 'Ratio Or Difference Kropki',
 	XV = 'XV',
 	EDGE_INEQUALITY = 'Edge Inequality',
 	EDGE_SUM = 'Edge Sum',
@@ -348,7 +349,9 @@ export enum EDGE_CONSTRAINTS {
 	COMBINED_EDGE_CONSTRAINT = 'Combined Edge Constraint',
 
 	DIFFERENCE_INDEXING_ARROW = 'Difference Indexing Arrow',
-	SUM_INDEXING_ARROW = 'Sum Indexing Arrow'
+	SUM_INDEXING_ARROW = 'Sum Indexing Arrow',
+
+	EDGE_MID_LOOP_SEGMENT = 'Edge Mid Loop Segment'
 }
 
 export enum CORNER_CONSTRAINTS {
@@ -362,7 +365,7 @@ export enum CORNER_CONSTRAINTS {
 	EQUAL_DIAGONAL_DIFFERENCES = 'Equal Diagonal Differences',
 	DIFFERENT_CORNER_DIAGONAL_SUMS = 'Different Corner Diagonal Sums',
 	BOX_2X2_NUMBER_RANKING = 'Box 2x2 Number Ranking',
-	CORNER_COUNT_LOOP_TURNS = 'Corner Count Loop Turns',
+	CORNER_COUNT_LOOP_TURNS = 'Corner Count Loop Turns'
 }
 
 export enum LINE_CONSTRAINTS {

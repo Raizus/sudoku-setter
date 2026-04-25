@@ -77,6 +77,7 @@ import {
 	edgeCaveOneOfEachInfo,
 	edgeFactorInfo,
 	edgeInequalityInfo,
+	edgeMidLoopSegmentInfo,
 	edgeModuloInfo,
 	edgeProductInfo,
 	edgeSumInfo,
@@ -84,6 +85,7 @@ import {
 	oneWayDoorInfo,
 	orthogonallyConnectedRegionBorderInfo,
 	ratioInfo,
+	ratioOrDifferenceKropkiInfo,
 	sumIndexingArrowInfo,
 	unknownRegionBorderInfo,
 	xvInfo,
@@ -615,6 +617,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	// Edge Constraints
 	[TOOLS.DIFFERENCE]: differenceInfo,
 	[TOOLS.RATIO]: ratioInfo,
+	[TOOLS.RATIO_OR_DIFFERENCE_KROPKI]: ratioOrDifferenceKropkiInfo,
 	[TOOLS.XV]: xvInfo,
 	[TOOLS.EDGE_INEQUALITY]: edgeInequalityInfo,
 	[TOOLS.EDGE_SUM]: edgeSumInfo,
@@ -635,6 +638,8 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.ONE_WAY_DOOR]: oneWayDoorInfo,
 	[TOOLS.DIFFERENCE_INDEXING_ARROW]: differenceIndexingArrowInfo,
 	[TOOLS.SUM_INDEXING_ARROW]: sumIndexingArrowInfo,
+
+	[TOOLS.EDGE_MID_LOOP_SEGMENT]: edgeMidLoopSegmentInfo,
 
 	// Corner Constraints
 	[TOOLS.QUADRUPLE]: quadrupleInfo,

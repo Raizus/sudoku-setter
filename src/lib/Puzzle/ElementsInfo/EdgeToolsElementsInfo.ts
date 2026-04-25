@@ -51,6 +51,11 @@ const DEFAULT_WHITE_CIRCLE: EditableShapeI = {
 	fill: { editable: true, value: 'var(--grid-background-color)' }
 };
 
+const DEFAULT_GRAY_CIRCLE: EditableShapeI = {
+		...DEFAULT_WHITE_CIRCLE,
+		fill: { editable: true, value: 'gray' },
+	}
+
 const DEFAULT_BORDER_LINE: EditableShapeI = {
 	type: SHAPE_TYPES.BORDER_LINE,
 	strokeWidth: { editable: true, value: 0.1, lb: 0, ub: 1, step: 0.025 },
@@ -136,6 +141,10 @@ const DEFAULT_EDGE_OPTIONS: EdgeToolOptions = {
 		defaultEdgeValueUpdater(oldValue, key, validateEdgeValue)
 };
 
+const NONTYPABLE_EDGE_OPTIONS: EdgeToolOptions = {
+	type: HANDLER_TOOL_TYPE.EDGE,
+};
+
 function findEdgeConstraintMatch(constraints: Record<string, EdgeToolI>, cell1: Cell, cell2: Cell) {
 	const clist = [...Object.values(constraints)];
 	const match = clist.find((constraint) => {
@@ -174,11 +183,12 @@ function simpleEdgeConstraint(grid: Grid, constraint: EdgeToolI, predicate: stri
 	return constraint_str;
 }
 
-function simpleEdgeElement(grid: Grid, element: ConstraintsElement, predicate: string) {
+function simpleEdgeElement(model: PuzzleModel, element: ConstraintsElement, predicate: string) {
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
 
+	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = simpleEdgeConstraint(grid, constraint as EdgeToolI, predicate);
 		out_str += constraint_str;
@@ -405,6 +415,26 @@ export const differenceInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: differenceElement
+};
+
+export const ratioOrDifferenceKropkiInfo: SquareCellElementInfo = {
+	inputOptions: NONTYPABLE_EDGE_OPTIONS,
+
+	toolId: TOOLS.RATIO_OR_DIFFERENCE_KROPKI,
+
+	negative_constraints: [],
+
+	shape: DEFAULT_GRAY_CIRCLE,
+
+	meta: {
+		description: 'Digits separated by a grey dot are consecutive or one is double the other.',
+		tags: [],
+		categories: edgeDefaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleEdgeElement(model, element, 'ratio_or_consecutive_p');
+	}
 };
 
 export const edgeSumInfo: SquareCellElementInfo = {
@@ -643,7 +673,7 @@ export const edgeFactorInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		return simpleEdgeElement(model.puzzle.grid, element, 'edge_factor_p');
+		return simpleEdgeElement(model, element, 'edge_factor_p');
 	}
 };
 
@@ -1188,5 +1218,49 @@ export const orthogonallyConnectedRegionBorderInfo: SquareCellElementInfo = {
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
 		return regionBorderElement(model.puzzle.grid, element, VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGIONS);
+	}
+};
+
+function edgeMidLoopConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: EdgeToolI,
+) {
+	const coords = constraint.cells;
+	const cells = cellsFromCoords(grid, coords);
+	const loop_vars = cellsToGridVarsName(cells, VAR_2D_NAMES.CELL_CENTER_LOOP);
+	const loop_var_1 = loop_vars[0];
+	const loop_var_2 = loop_vars[1];
+
+	const coord1 = `(${cells[0].r}, ${cells[0].c})`;
+	const coord2 = `(${cells[1].r}, ${cells[1].c})`;
+
+	const edges_h = VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_H;
+	const edges_v = VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_V;
+
+	let out_str = `constraint edge_loop_p(${loop_var_1}, ${loop_var_2});\n`;
+	out_str += `constraint edge_mid_loop_segment_p(${coord1}, ${coord2}, ${edges_h}, ${edges_v});\n`;
+	return out_str;
+}
+
+export const edgeMidLoopSegmentInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE
+	},
+
+	toolId: TOOLS.EDGE_MID_LOOP_SEGMENT,
+
+	shape: DEFAULT_GRAY_CIRCLE,
+
+	meta: {
+		description:
+			'The loop must pass through the grey dots, and the dots must be in the middle of a straight loop segment (i.e., the distance from a dot to the next turn along the loop must be identical in both directions)',
+		tags: [],
+		categories: edgeDefaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, edgeMidLoopConstraint);
 	}
 };

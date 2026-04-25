@@ -187,6 +187,14 @@ test is_before(int: r1, int: c1, int: r2, int: c2) =
 test is_after(int: r1, int: c1, int: r2, int: c2) =
     ( r2 > r1 \/  ( r2 = r1 /\  c2 > c1 ));
 
+test test_orth_adjacent_2d(
+    int: r1, int: c1, 
+    int: r2, int: c2
+) = let {
+    int: d1 = abs(r2-r1);
+    int: d2 = abs(c2-c1);
+} in d1 <= 1 /\ d2 <= 1 /\ d1 + d2 = 1;
+
 % -------------------------------------------------------------------------------- % 
 % ------ HELPERS ----------------------------------------------------------------- % 
 
@@ -780,6 +788,15 @@ predicate regular_distance_p(array[int] of var int: arr, var int: dist) =
 predicate consecutive_p(var int: a, var int: b) = 
     abs(a - b) = 1;
 
+predicate abs_difference(var int: a, var int: b, var int: d) =
+	abs(a - b) = d;
+
+predicate ratio_p(var int: a, var int: b, var int: r) =
+    (a = r * b) \/ (b = r * a);
+
+predicate ratio_or_consecutive_p(var int: a, var int: b) =
+    consecutive_p(a, b) \/ ratio_p(a, b, 2);
+
 predicate sum_p(array[int] of var int: arr, var int: val) =
     sum(arr) == val;
 
@@ -1246,12 +1263,6 @@ predicate region_sum_line_source_p(
 
 % -------------------------------------------------------------------------------- % 
 % ------ EDGE CONSTRAINTS -------------------------------------------------------- %
-
-predicate abs_difference(var int: a, var int: b, var int: d) =
-	abs(a - b) = d;
-
-predicate ratio_p(var int: a, var int: b, var int: r) =
-    (a = r * b) \/ (b = r * a);
 
 predicate edge_sum_p(var int: a, var int: b, var int: val) =
     a + b == val;
@@ -4494,6 +4505,63 @@ function var int: count_loop_turns_f(
         } in
             bool2int(loop_nodes[r,c] /\ h_count = 1 /\ v_count = 1)
     )
+);
+
+predicate edge_loop_p(var bool: loop_var_1, var bool: loop_var_2) = 
+    loop_var_1 /\ loop_var_2;
+
+predicate edge_mid_loop_segment_p(
+    tuple(int, int): coord1,
+    tuple(int, int): coord2,
+    array[int, int] of var bool: edges_h,
+    array[int, int] of var bool: edges_v
+) = let {
+    set of int: rows_v = index_set_1of2(edges_v);
+    set of int: cols_v = index_set_2of2(edges_v);
+    set of int: rows_h = index_set_1of2(edges_h);
+    set of int: cols_h = index_set_2of2(edges_h);
+
+    int: r1 = coord1.1; int: c1 = coord1.2;
+    int: r2 = coord2.1; int: c2 = coord2.2;
+} in (
+    assert(test_orth_adjacent_2d(r1, c1, r2, c2), "coord1 and coord2 must be adjacent")
+    /\
+    if c1 = c2 then
+        % Vertical adjacency: coord1 is above coord2 (r1 < r2)
+        % The connecting edge is edges_v[min(r1,r2), c1]
+        assert(r1<r2, "coord1 must be above coord2")
+        /\ edges_v[r1, c1]
+        /\ (
+        let {
+            % Run of consecutive true edges above r1 (going upward from r1-1)
+            var int: run_above = sum(k in min(rows_v)..r1-1)(
+                bool2int(forall(m in k..r1-1)(edges_v[m, c1]))
+            );
+            % Run of consecutive true edges below r2 (going downward from r2)
+            var int: run_below = sum(k in r2..max(rows_v))(
+                bool2int(forall(m in r2..k)(edges_v[m, c1]))
+            );
+        } in
+            run_above = run_below
+        )
+    else
+        % Horizontal adjacency: coord1 is left of coord2 (c1 < c2)
+        % The connecting edge is edges_h[r1, min(c1,c2)]
+        assert(c1<c2, "coord1 must be to the left of coord2")
+        /\ edges_h[r1, c1]
+        /\
+        let {
+            % Run of consecutive true edges left of c1 (going leftward from c1-1)
+            var int: run_left = sum(k in min(cols_h)..c1-1)(
+                bool2int(forall(m in k..c1-1)(edges_h[r1, m]))
+            );
+            % Run of consecutive true edges right of c2 (going rightward from c2)
+            var int: run_right = sum(k in c2..max(cols_h))(
+                bool2int(forall(m in c2..k)(edges_h[r1, m]))
+            );
+        } in
+            run_left = run_right
+    endif
 );
 
 % -------------------------------------------------------------------------------- % 
