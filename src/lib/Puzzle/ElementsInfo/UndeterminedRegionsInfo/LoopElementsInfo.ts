@@ -134,7 +134,7 @@ export const cellCenterLoopCannotTouchOrthogonallyInfo: SquareCellElementInfo = 
 		{
 			toolId: TOOLS.CELL_CENTER_LOOP_CANNOT_TOUCH_DIAGONALLY,
 			description:
-				'Draw a 1-cell wide loop or orthogonally connected cells, which does not branch or touch itself orthogonally, but can touch itself diagonally.'
+				'Draw a 1-cell wide loop of orthogonally connected cells, which does not branch or touch itself orthogonally, but can touch itself diagonally.'
 		},
 		{
 			toolId: TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES,
