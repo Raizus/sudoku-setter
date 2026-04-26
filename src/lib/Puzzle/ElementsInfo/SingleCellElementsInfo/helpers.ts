@@ -9,6 +9,7 @@ import {
 import type { ParseOptions } from '$src/lib/Solver/value_parsing';
 import type { Grid } from '../../Grid/Grid';
 import type { CellToolI, ConstraintsElement } from '../../puzzle_schema';
+import { type EditableShapeI, SHAPE_TYPES } from '../../Shape/Shape';
 
 function simpleSingleCellConstraint(grid: Grid, constraint: CellToolI, predicate: string) {
 	const coords = constraint.cell;
@@ -117,6 +118,26 @@ export function orthogonalRegionSeenCountConstraint(
 	return constraint_str;
 }
 
+export function countNeighbourConstraint(
+	grid: Grid,
+	constraint: CellToolI,
+	region_var_name: VAR_2D_NAMES,
+	predicate: string,
+	include_cell: boolean
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const var1 = cellToVarName(cell);
+	const neighbours = grid.getNeighboorCells(cell);
+	if (include_cell) neighbours.push(cell);
+	const vars_str = cellsToGridVarsStr(neighbours, region_var_name);
+
+	const constraint_str = `constraint ${predicate}(${var1}, ${vars_str});\n`;
+	return constraint_str;
+}
+
 export function orthogonalRegionSeenCountElement(
 	model: PuzzleModel,
 	element: ConstraintsElement,
@@ -139,3 +160,20 @@ export function orthogonalRegionSeenCountElement(
 	}
 	return out_str;
 }
+
+export const DEFAULT_SQUARE_SHAPE: EditableShapeI = {
+	type: SHAPE_TYPES.SQUARE,
+	strokeWidth: { editable: true, value: 0.03 },
+	stroke: { editable: true, value: 'black' },
+	r: { editable: true, value: 0.35 },
+	fill: { editable: true, value: 'none' }
+};
+
+export const DEFAULT_CIRCLE_SHAPE: EditableShapeI = {
+	type: SHAPE_TYPES.CIRCLE,
+	r: { editable: true, value: 0.35 },
+	strokeWidth: { editable: true, value: 0.02 },
+	stroke: { editable: true, value: 'black' },
+	fill: { editable: true, value: 'none' }
+};
+

@@ -247,6 +247,8 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	COUNTING_CIRCLES_LOOP_OR_NON_LOOP_CELLS = 'Counting Circles Loop Or Non Loop Cells',
 
 	SNAKE_ENDPOINT = 'Snake Endpoint',
+	SNAKE_CELL = 'Snake Cell',
+	COUNT_SNAKE_NEIGHBOR_CELLS = 'Count Snake Neighbor Cells',
 
 	YIN_YANG_SHADED_CELL = 'Yin Yang Shaded Cell',
 	YIN_YANG_MINESWEEPER = 'Yin Yang Minesweeper',

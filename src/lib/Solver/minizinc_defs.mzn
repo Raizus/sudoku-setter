@@ -4688,6 +4688,13 @@ predicate snake_no_orthogonal_touching_p(
     )
 );
 
+predicate count_snake_cells_p(
+    var int: cell_var,
+    array[int] of var bool: snake_vars
+) = (
+    sum(snake_vars) = cell_var
+);
+
 % -------------------------------------------------------------------------------- % 
 % ------ GLOBAL CONSTRAINTS ------------------------------------------------------ %
 

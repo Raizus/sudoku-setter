@@ -16,9 +16,9 @@ import { orthogonalRegionSeenCountElement } from './helpers';
 import {
 	DEFAULT_SINGLE_CELL_OPTIONS,
 	DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES,
-	DEFAULT_SQUARE_SHAPE,
 	DEFAULT_VALUED_SINGLE_CELL_OPTIONS
 } from './SingleCellElementsInfo';
+import { DEFAULT_SQUARE_SHAPE } from './helpers';
 
 function yinYangShadedCellConstraint(
 	model: PuzzleModel,

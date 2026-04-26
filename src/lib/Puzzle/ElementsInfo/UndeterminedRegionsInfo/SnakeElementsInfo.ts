@@ -1,10 +1,23 @@
-import { cellToGridVarName, simpleElementFunction, VAR_2D_NAMES, type PuzzleModel } from '$src/lib/Solver/solver_utils';
+import {
+	cellToGridVarName,
+	simpleElementFunction,
+	VAR_2D_NAMES,
+	type PuzzleModel
+} from '$src/lib/Solver/solver_utils';
 import type { SquareCellElementInfo } from '../../ElementInfo';
 import type { Grid } from '../../Grid/Grid';
 import type { CellToolI, ConstraintsElement } from '../../puzzle_schema';
 import { SHAPE_TYPES } from '../../Shape/Shape';
 import { TOOL_CATEGORIES, TOOLS } from '../../Tools';
-import { DEFAULT_SINGLE_CELL_OPTIONS, DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES } from '../SingleCellElementsInfo/SingleCellElementsInfo';
+import {
+	countNeighbourConstraint,
+	DEFAULT_SQUARE_SHAPE,
+	DEFAULT_CIRCLE_SHAPE
+} from '../SingleCellElementsInfo/helpers';
+import {
+	DEFAULT_SINGLE_CELL_OPTIONS,
+	DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+} from '../SingleCellElementsInfo/SingleCellElementsInfo';
 
 export function snakeElement(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
@@ -100,31 +113,95 @@ function snakeEndpointConstraint(
 	const edges_v = VAR_2D_NAMES.SNAKE_EDGES_V;
 
 	const snake_var = cellToGridVarName(cell, VAR_2D_NAMES.SNAKE);
-    let out_str = `constraint ${snake_var} == true;\n`;
-    // only 1 of the connected edges is true -> node has degree 1
-    out_str += `constraint grid_graph_degree_f(${edges_h}, ${edges_v}, ${cell.r}, ${cell.c}) = 1;\n`;
-    return out_str;
+	let out_str = `constraint ${snake_var} == true;\n`;
+	// only 1 of the connected edges is true -> node has degree 1
+	out_str += `constraint grid_graph_degree_f(${edges_h}, ${edges_v}, ${cell.r}, ${cell.c}) = 1;\n`;
+	return out_str;
 }
 
 export const snakeEndpointInfo: SquareCellElementInfo = {
-    inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
-    toolId: TOOLS.SNAKE_ENDPOINT,
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+	toolId: TOOLS.SNAKE_ENDPOINT,
 
-    shape: {
-        type: SHAPE_TYPES.CIRCLE,
-        strokeWidth: { editable: true, value: 0.01 },
-        stroke: { editable: true, value: 'green' },
-        r: { editable: true, value: 0.2 },
-        fill: { editable: true, value: 'green' }
-    },
+	shape: {
+		type: SHAPE_TYPES.CIRCLE,
+		strokeWidth: { editable: true, value: 0.01 },
+		stroke: { editable: true, value: 'green' },
+		r: { editable: true, value: 0.2 },
+		fill: { editable: true, value: 'green' }
+	},
 
-    meta: {
-        description: 'A green circle is a snake endpoint.',
-        tags: [],
-        categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
-    },
+	meta: {
+		description: 'A green circle is a snake endpoint.',
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	},
 
-    solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-        return simpleElementFunction(model, element, snakeEndpointConstraint);
-    }
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, snakeEndpointConstraint);
+	}
+};
+
+function snakeCellConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: CellToolI) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const snake_var = cellToGridVarName(cell, VAR_2D_NAMES.SNAKE);
+	const out_str = `constraint ${snake_var} == true;\n`;
+	return out_str;
+}
+
+export const snakeCellInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+	toolId: TOOLS.SNAKE_CELL,
+
+	shape: {
+		...DEFAULT_SQUARE_SHAPE,
+		stroke: { editable: true, value: 'green' },
+		fill: { editable: true, value: 'green' }
+	},
+
+	meta: {
+		description: 'A green circle is a snake cell.',
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, snakeCellConstraint);
+	}
+};
+
+function countSnakeNeighborCellsConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	return countNeighbourConstraint(
+		model.puzzle.grid,
+		constraint,
+		VAR_2D_NAMES.SNAKE,
+		'count_snake_cells_p',
+		true
+	);
+}
+
+export const countSnakeNeighborCellsInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+	toolId: TOOLS.COUNT_SNAKE_NEIGHBOR_CELLS,
+
+	shape: DEFAULT_CIRCLE_SHAPE,
+
+	meta: {
+		description:
+			'A digit in a circle is equal to the number of snake cells in the (up to) 9 surrounding cells, including itself.',
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, countSnakeNeighborCellsConstraint);
+	}
 };

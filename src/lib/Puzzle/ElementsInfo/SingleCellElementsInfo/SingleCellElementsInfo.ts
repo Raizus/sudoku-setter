@@ -4,7 +4,7 @@ import {
 	defaultValueUpdater,
 	type ValueValidatorOptions
 } from '$src/lib/InputHandlers/InputHandler';
-import { SHAPE_TYPES, type EditableShapeI } from '../../Shape/Shape';
+import { SHAPE_TYPES } from '../../Shape/Shape';
 import type { SquareCellElementInfo } from '../../ElementInfo';
 import { HANDLER_TOOL_TYPE, type SingleCellToolOptions } from '$input/ToolInputHandlers/types';
 import {
@@ -22,6 +22,9 @@ import {
 	type PuzzleModel
 } from '$src/lib/Solver/solver_utils';
 import {
+	countNeighbourConstraint,
+	DEFAULT_CIRCLE_SHAPE,
+	DEFAULT_SQUARE_SHAPE,
 	getParsingResult,
 	orthogonalRegionSeenCountConstraint,
 	simpleSingleCellElement,
@@ -46,22 +49,6 @@ const DEFAULT_SINGLE_CELL_COLOR_CATEGORIES = [
 	TOOL_CATEGORIES.SINGLE_CELL_COLOR_TOOL,
 	TOOL_CATEGORIES.LOCAL_ELEMENT
 ];
-
-export const DEFAULT_SQUARE_SHAPE: EditableShapeI = {
-	type: SHAPE_TYPES.SQUARE,
-	strokeWidth: { editable: true, value: 0.03 },
-	stroke: { editable: true, value: 'black' },
-	r: { editable: true, value: 0.35 },
-	fill: { editable: true, value: 'none' }
-};
-
-const DEFAULT_CIRCLE_SHAPE: EditableShapeI = {
-	type: SHAPE_TYPES.CIRCLE,
-	r: { editable: true, value: 0.35 },
-	strokeWidth: { editable: true, value: 0.02 },
-	stroke: { editable: true, value: 'black' },
-	fill: { editable: true, value: 'none' }
-};
 
 export function validateSingleCellValue(value: string, maxLength = 3): boolean {
 	const options: ValueValidatorOptions = {
@@ -319,17 +306,13 @@ function countSameParityNeighbourConstraint(
 	c_id: string,
 	constraint: CellToolI
 ) {
-	const coords = constraint.cell;
-	const cell = grid.getCell(coords.r, coords.c);
-	if (!cell) return '';
-
-	const var1 = cellToVarName(cell);
-	const neighbours = grid.getNeighboorCells(cell);
-	neighbours.push(cell);
-	const vars_str = cellsToGridVarsStr(neighbours, VAR_2D_NAMES.BOARD);
-
-	const constraint_str = `constraint count_same_parity_p(${var1}, ${vars_str});\n`;
-	return constraint_str;
+	return countNeighbourConstraint(
+		model.puzzle.grid,
+		constraint,
+		VAR_2D_NAMES.BOARD,
+		'count_same_parity_p',
+		true
+	);
 }
 
 export const countSameParityNeighborCellsInfo: SquareCellElementInfo = {
@@ -363,17 +346,13 @@ function countWhispersNeighborCellsConstraint(
 	c_id: string,
 	constraint: CellToolI
 ) {
-	const coords = constraint.cell;
-	const cell = grid.getCell(coords.r, coords.c);
-	if (!cell) return '';
-
-	const var1 = cellToVarName(cell);
-	const neighbours = grid.getNeighboorCells(cell);
-	neighbours.push(cell);
-	const vars_str = cellsToGridVarsStr(neighbours, VAR_2D_NAMES.BOARD);
-
-	const constraint_str = `constraint count_whispers_p(${var1}, ${vars_str});\n`;
-	return constraint_str;
+	return countNeighbourConstraint(
+		model.puzzle.grid,
+		constraint,
+		VAR_2D_NAMES.BOARD,
+		'count_whispers_p',
+		true
+	);
 }
 
 export const countWhispersNeighborCellsInfo: SquareCellElementInfo = {
@@ -2965,8 +2944,7 @@ export const orthogonallyConnectedRegionsSmallestOrLargestInRegionInfo: SquareCe
 
 	toolId: TOOLS.ORTHOGONALLY_CONNECTED_REGIONS_SMALLEST_OR_LARGEST_IN_REGION,
 
-	negative_constraints: [
-	],
+	negative_constraints: [],
 
 	shape: DEFAULT_SQUARE_SHAPE,
 
