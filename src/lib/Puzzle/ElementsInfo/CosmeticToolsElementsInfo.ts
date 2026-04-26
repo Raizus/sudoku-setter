@@ -33,8 +33,10 @@ export const cosmeticCellShapeInfo: SquareCellElementInfo = {
 		n: { editable: true, value: 3, lb: 3, ub: 10, step: 1 },
 		width: { editable: true, value: 0.6, lb: 0.01, ub: 1, step: 0.01 },
 		height: { editable: true, value: 0.6, lb: 0.01, ub: 1, step: 0.01 },
+		angle: { editable: true, value: 0, lb: 0, ub: 360, step: 5 },
 		strokeWidth: { editable: true, value: 0.03, lb: 0.01, ub: 0.2, step: 0.01 },
-		stroke: { editable: true, value: 'black' }
+		stroke: { editable: true, value: 'black' },
+		fill: { editable: true, value: 'none' }
 	},
 
 	meta: {
