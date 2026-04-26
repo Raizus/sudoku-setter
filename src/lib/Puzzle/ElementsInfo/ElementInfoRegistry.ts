@@ -392,6 +392,7 @@ import {
 } from './ValueModifierConstraintsElementsInfo';
 import { mazeWallInfo } from './CornerLineToolsElementsInfo';
 import { variableConstraintInfo } from './OtherConstraintsElementsInfo';
+import { snakeEndpointInfo, snakeInfo } from './UndeterminedRegionsInfo/SnakeElementsInfo';
 import { cellCenterLoopInfo } from './UndeterminedRegionsInfo/LoopElementsInfo';
 
 export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
@@ -857,3 +858,5 @@ export function registerElementInfo(tool: string, element_info: SquareCellElemen
 }
 
 registerElementInfo(TOOLS.CELL_CENTER_LOOP, cellCenterLoopInfo);
+registerElementInfo(TOOLS.SNAKE, snakeInfo);
+registerElementInfo(TOOLS.SNAKE_ENDPOINT, snakeEndpointInfo);

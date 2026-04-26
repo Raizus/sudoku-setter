@@ -4644,6 +4644,51 @@ predicate edge_mid_loop_segment_p(
 );
 
 % -------------------------------------------------------------------------------- % 
+% ------ SNAKE CONSTRAINTS ------------------------------------------------------- %
+
+predicate snake_edges_p(
+    array[int, int] of var bool: snake_nodes,
+    array[int, int] of var bool: edges_h,
+    array[int, int] of var bool: edges_v,
+) = let {
+    set of int: rows = index_set_1of2(snake_nodes);
+    set of int: cols = index_set_1of2(snake_nodes);
+    array[rows, cols] of var int: node_degree = array2d(
+        rows,
+        cols,
+        [grid_graph_degree_f(edges_h, edges_v, r, c) | r in rows, c in cols]
+    );
+} in (
+    % For every node: if false -> all incident edges false
+    %                 if true  -> exactly 2 incident edges true (loop condition)
+    forall(r in rows, c in cols)(
+        if snake_nodes[r,c] then 
+            node_degree[r, c] = 2 \/ node_degree[r,c] = 1
+        else
+            node_degree[r, c] = 0
+        endif
+    )
+    % only 2 endpoints
+    /\ count(array1d(node_degree), 1) = 2
+);
+
+predicate snake_no_orthogonal_touching_p(
+    array[int, int] of var bool: snake_nodes
+) = let {
+    set of int: rows = index_set_1of2(snake_nodes);
+    set of int: cols = index_set_2of2(snake_nodes);
+} in (
+    forall(i in rows, j in cols)(
+        let {
+            array[int] of tuple(int, int): idxs = orth_adjacent_idxs_in_bounds(i, j, snake_nodes);
+        } in (
+            (not snake_nodes[i,j]) \/ 
+            (snake_nodes[i,j] /\ sum(b in idxs)(bool2int(snake_nodes[b.1, b.2])) <= 2)
+        )
+    )
+);
+
+% -------------------------------------------------------------------------------- % 
 % ------ GLOBAL CONSTRAINTS ------------------------------------------------------ %
 
 predicate antiking_p(
