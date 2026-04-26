@@ -1006,7 +1006,7 @@ function yinYangYongElement(model: PuzzleModel, element: ConstraintsElement) {
 	const identical_digits_diff_regions =
 		!!modifiers[TOOLS.YIN_YANG_YONG_IDENTICAL_DIGITS_DO_NOT_APPEAR_IN_DIFFERENT_REGIONS];
 
-	if (identical_digits_diff_regions){
+	if (identical_digits_diff_regions) {
 		out_str += `constraint yin_yang_yong_identical_digits_do_not_appear_in_different_regions_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.YIN_YANG_YONG});\n`;
 	}
 
@@ -1019,8 +1019,7 @@ export const yinYangYongInfo: SquareCellElementInfo = {
 	negative_constraints: [
 		{
 			toolId: TOOLS.YIN_YANG_YONG_IDENTICAL_DIGITS_DO_NOT_APPEAR_IN_DIFFERENT_REGIONS,
-			description:
-				'Identical digits may not appear in different regions.'
+			description: 'Identical digits may not appear in different regions.'
 		}
 	],
 
@@ -1049,8 +1048,7 @@ function coloredGroupsElement() {
 export const coloredGroupsInfo: SquareCellElementInfo = {
 	toolId: TOOLS.COLORED_GROUPS,
 
-	negative_constraints: [
-	],
+	negative_constraints: [],
 
 	meta: {
 		description:
@@ -1072,11 +1070,18 @@ function orthogonallyConnectedRegionsElement(model: PuzzleModel, element: Constr
 	const modifiers = element.negative_constraints;
 	if (!modifiers) return out_str;
 
-	const no_repeats_in_regions =
-		!!modifiers[TOOLS.NO_REPEATS_IN_REGIONS];
+	const all_cells_belong_in_a_region = !!modifiers[TOOLS.ALL_CELLS_BELONG_TO_A_REGION];
+	const no_repeats_in_regions = !!modifiers[TOOLS.NO_REPEATS_IN_REGIONS];
+	const renban_regions = !!modifiers[TOOLS.RENBAN_REGIONS];
 
+	if (all_cells_belong_in_a_region) {
+		out_str += `constraint orthogonally_connected_regions_no_0_p(${grid_name});\n`;
+	}
 	if (no_repeats_in_regions) {
-		out_str += `constraint no_repeats_in_regions_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGIONS});\n`;
+		out_str += `constraint no_repeats_in_regions_p(${VAR_2D_NAMES.BOARD}, ${grid_name});\n`;
+	}
+	if (renban_regions) {
+		out_str += `constraint renban_regions_except_region_0_p(${VAR_2D_NAMES.BOARD}, ${grid_name}, ${grid_name_2});\n`;
 	}
 
 	return out_str;
@@ -1087,8 +1092,17 @@ export const orthogonallyConnectedRegionsInfo: SquareCellElementInfo = {
 
 	negative_constraints: [
 		{
+			toolId: TOOLS.ALL_CELLS_BELONG_TO_A_REGION,
+			description: 'Every cell belongs to a region.'
+		},
+		{
 			toolId: TOOLS.NO_REPEATS_IN_REGIONS,
 			description: 'Digits do not repeat in any region.'
+		},
+		{
+			toolId: TOOLS.RENBAN_REGIONS,
+			description:
+				'Each region contains a consecutive set of non-repeating digits, e.g: {2,3,4},{1},{4,5,6,7,8,9}. The digits do not have to start at 1 and may appear in any order within the region.'
 		}
 	],
 

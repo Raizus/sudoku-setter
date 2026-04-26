@@ -6681,6 +6681,9 @@ predicate regions_of_size_2_p(
     )
 );
 
+% -------------------------------------------------------------------------------- % 
+% ------ ORTHOGONALLY CONNECTED REGIONS ------------------------------------------ %
+
 % regions with id > 0 must be orthogonally connected, but the number of regions is unknown
 predicate orthogonally_connected_regions_p(
     array[int, int] of var int: regions,
@@ -6733,5 +6736,29 @@ predicate orthogonally_connected_regions_largest_or_smallest_in_region_p(
         forall(r in rows, c in cols)(
             regions[r,c] == region_var -> cell_var <= grid[r,c]
         )    
+    )
+);
+
+predicate renban_regions_except_region_0_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions,
+    array[int, int] of var int: region_sizes,
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+} in (
+    assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes")
+    /\ assert(index_sets_agree(regions, region_sizes), "regions and region_sizes must have the same indexes")
+    /\ forall(r in rows, c in cols, r2 in rows, c2 in cols where is_after(r, c, r2, c2))(
+        let {
+            var int: id1 = regions[r, c];
+            var int: id2 = regions[r2, c2];
+            var int: abs_diff = abs(grid[r,c] - grid[r2, c2]);
+        } in
+        id1 != 0 /\ id2 != 0 /\ id1 == id2 -> (
+            abs_diff <= region_sizes[r,c] - 1 
+            /\ abs_diff <= region_sizes[r2,c2] - 1 
+            /\ grid[r,c] != grid[r2,c2]
+        )
     )
 );

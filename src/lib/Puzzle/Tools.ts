@@ -67,7 +67,9 @@ export enum NEGATIVE_AND_MODIFIER_CONSTRAINTS {
 	SHIKAKU_EACH_REGION_CONTAINS_ONE_SIZE_CIRCLE = 'Shikaku Each Regions Contains One Size Circle',
 	SHIKAKU_EACH_REGION_CONTAINS_ONE_REGION_SUM_CLUE = 'Shikaku Each Regions Contains One Region Sum Clue',
 
-	NO_REPEATS_IN_REGIONS = 'No Repeats In Regions'
+	ALL_CELLS_BELONG_TO_A_REGION = 'All Cells Belong To A Region',
+	NO_REPEATS_IN_REGIONS = 'No Repeats In Regions',
+	RENBAN_REGIONS = 'Renban Regions'
 }
 
 export enum VALUE_MODIFIER_CONSTRAINTS {
@@ -260,6 +262,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 
 	ORTHOGONALLY_CONNECTED_REGIONS_REGION_ZERO_CELL = 'Orthogonally Connected Regions Region Zero Cell',
 	ORTHOGONALLY_CONNECTED_REGIONS_REGION_SIZE_CELL = 'Orthogonally Connected Regions Region Size Cell',
+	ORTHOGONALLY_CONNECTED_REGIONS_SMALLEST_OR_LARGEST_IN_REGION = 'Orthogonally Connected Regions Smallest Or Largest In Region',
 
 	SHIKAKU_REGION_SIZE = 'Shikaku Region Size',
 	SHIKAKU_REGION_SUM = 'Shikaku Region Sum',
@@ -343,6 +346,7 @@ export enum EDGE_CONSTRAINTS {
 
 	UNKNOWN_REGION_BORDER = 'Unknown Region Border',
 	ORTHOGONALLY_CONNECTED_REGION_BORDER = 'Orthogonally Connected Region Border',
+	ORTHOGONALLY_CONNECTED_REGION_SAME_REGION_EDGE = 'Orthogonally Connected Region Same Region Edge',
 	CHAOS_CONSTRUCTION_SUGURU_BORDER = 'Chaos Construction Suguru Border',
 	EDGE_CAVE_ONE_OF_EACH = 'Edge Cave One Of Each',
 

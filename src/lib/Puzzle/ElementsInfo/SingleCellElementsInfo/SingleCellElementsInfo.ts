@@ -2888,7 +2888,6 @@ function orthogonallyConnectedRegionsRegionSizeCellElement(
 		out_str += `constraint ${region_var} = ${region_id};\n`;
 		out_str += `constraint ${cell_var} == ${size_var};\n`;
 		out_str += `constraint connected_region(${grid_var_name_2}, ${region_id});\n`;
-		out_str += `constraint orthogonally_connected_regions_largest_or_smallest_in_region_p(${grid_var_name_1}, ${grid_var_name_2}, ${cell_var}, ${region_var});\n`;
 		region_counter++;
 	}
 
@@ -2922,13 +2921,60 @@ export const orthogonallyConnectedRegionsRegionSizeCellInfo: SquareCellElementIn
 		}
 	],
 
-	shape: DEFAULT_SQUARE_SHAPE,
+	shape: DEFAULT_CIRCLE_SHAPE,
 
 	meta: {
-		description: `The digit in a square cell, N, indicates the number of cells in that group. N will either be the largest or the smallest digit in its group`,
+		description: `The digit in a circle cell, N, indicates the number of cells in that group.`,
 		tags: [],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
 	solver_func: orthogonallyConnectedRegionsRegionSizeCellElement
+};
+
+function orthogonallyConnectedRegionsSmallestOrLargestInRegionElement(
+	model: PuzzleModel,
+	element: ConstraintsElement
+) {
+	let out_str = '';
+	const constraints = element.constraints as Record<string, CellToolI>;
+	if (!constraints) return out_str;
+	const constraints_list = [...Object.values(constraints)];
+
+	const grid = model.puzzle.grid;
+
+	const grid_var_name_1 = VAR_2D_NAMES.BOARD;
+	const grid_var_name_2 = VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGIONS;
+	for (let i = 0; i < constraints_list.length; i++) {
+		const constraint = constraints_list[i];
+		const coord = constraint.cell;
+
+		const cell0 = grid.getCell(coord.r, coord.c);
+		if (!cell0) continue;
+
+		const cell_var = cellToGridVarName(cell0, grid_var_name_1);
+		const region_var = cellToGridVarName(cell0, grid_var_name_2);
+		out_str += `constraint orthogonally_connected_regions_largest_or_smallest_in_region_p(${grid_var_name_1}, ${grid_var_name_2}, ${cell_var}, ${region_var});\n`;
+	}
+
+	return out_str;
+}
+
+export const orthogonallyConnectedRegionsSmallestOrLargestInRegionInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+
+	toolId: TOOLS.ORTHOGONALLY_CONNECTED_REGIONS_SMALLEST_OR_LARGEST_IN_REGION,
+
+	negative_constraints: [
+	],
+
+	shape: DEFAULT_SQUARE_SHAPE,
+
+	meta: {
+		description: `The digit in a square cell, N, will either be the largest or the smallest digit in its group`,
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	},
+
+	solver_func: orthogonallyConnectedRegionsSmallestOrLargestInRegionElement
 };

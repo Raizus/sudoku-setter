@@ -84,6 +84,7 @@ import {
 	fillominoRegionBorderInfo,
 	oneWayDoorInfo,
 	orthogonallyConnectedRegionBorderInfo,
+	orthogonallyConnectedRegionSameRegionEdgeInfo,
 	ratioInfo,
 	ratioOrDifferenceKropkiInfo,
 	sumIndexingArrowInfo,
@@ -334,7 +335,8 @@ import {
 	countCirclesLoopOrNonLoopCellsInfo,
 	orthogonallyConnectedRegionsRegionZeroCellInfo,
 	orthogonallyConnectedRegionsRegionSizeCellInfo,
-	countExactDistanceMatchCellInfo
+	countExactDistanceMatchCellInfo,
+	orthogonallyConnectedRegionsSmallestOrLargestInRegionInfo
 } from './SingleCellElementsInfo/SingleCellElementsInfo';
 import {
 	yinYangAdjacentSameShadeCountInfo,
@@ -551,6 +553,8 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 		orthogonallyConnectedRegionsRegionZeroCellInfo,
 	[TOOLS.ORTHOGONALLY_CONNECTED_REGIONS_REGION_SIZE_CELL]:
 		orthogonallyConnectedRegionsRegionSizeCellInfo,
+	[TOOLS.ORTHOGONALLY_CONNECTED_REGIONS_SMALLEST_OR_LARGEST_IN_REGION]:
+		orthogonallyConnectedRegionsSmallestOrLargestInRegionInfo,
 
 	[TOOLS.SHIKAKU_REGION_SIZE]: shikakuRegionSizeInfo,
 	[TOOLS.SHIKAKU_REGION_SUM]: shikakuRegionSumInfo,
@@ -634,6 +638,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.FILLOMINO_REGION_BORDER]: fillominoRegionBorderInfo,
 	[TOOLS.UNKNOWN_REGION_BORDER]: unknownRegionBorderInfo,
 	[TOOLS.ORTHOGONALLY_CONNECTED_REGION_BORDER]: orthogonallyConnectedRegionBorderInfo,
+	[TOOLS.ORTHOGONALLY_CONNECTED_REGION_SAME_REGION_EDGE]: orthogonallyConnectedRegionSameRegionEdgeInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_SUGURU_BORDER]: chaosConstructionSuguruBorderInfo,
 	[TOOLS.EDGE_CAVE_ONE_OF_EACH]: edgeCaveOneOfEachInfo,
 

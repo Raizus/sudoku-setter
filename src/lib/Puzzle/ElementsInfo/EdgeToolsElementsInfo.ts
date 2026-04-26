@@ -52,9 +52,9 @@ const DEFAULT_WHITE_CIRCLE: EditableShapeI = {
 };
 
 const DEFAULT_GRAY_CIRCLE: EditableShapeI = {
-		...DEFAULT_WHITE_CIRCLE,
-		fill: { editable: true, value: 'gray' },
-	}
+	...DEFAULT_WHITE_CIRCLE,
+	fill: { editable: true, value: 'gray' }
+};
 
 const DEFAULT_BORDER_LINE: EditableShapeI = {
 	type: SHAPE_TYPES.BORDER_LINE,
@@ -142,7 +142,7 @@ const DEFAULT_EDGE_OPTIONS: EdgeToolOptions = {
 };
 
 const NONTYPABLE_EDGE_OPTIONS: EdgeToolOptions = {
-	type: HANDLER_TOOL_TYPE.EDGE,
+	type: HANDLER_TOOL_TYPE.EDGE
 };
 
 function findEdgeConstraintMatch(constraints: Record<string, EdgeToolI>, cell1: Cell, cell2: Cell) {
@@ -1217,7 +1217,40 @@ export const orthogonallyConnectedRegionBorderInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
-		return regionBorderElement(model.puzzle.grid, element, VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGIONS);
+		return regionBorderElement(
+			model.puzzle.grid,
+			element,
+			VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGIONS
+		);
+	}
+};
+
+function sameRegionConstraint(model: PuzzleModel, grid: Grid, c_id: string, constraint: EdgeToolI) {
+	const cells = cellsFromCoords(grid, constraint.cells);
+	const region_vars = cellsToGridVarsName(cells, VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGIONS);
+	const [region1, region2] = region_vars;
+
+	const constraint_str = `constraint ${region1} == ${region2};\n`;
+	return constraint_str;
+}
+
+export const orthogonallyConnectedRegionSameRegionEdgeInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE
+	},
+
+	toolId: TOOLS.ORTHOGONALLY_CONNECTED_REGION_SAME_REGION_EDGE,
+
+	shape: DEFAULT_WHITE_CIRCLE,
+
+	meta: {
+		description: 'A white dot between cells indicates the two cells belong to the same region.',
+		tags: [],
+		categories: edgeDefaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, sameRegionConstraint);
 	}
 };
 
@@ -1225,7 +1258,7 @@ function edgeMidLoopConstraint(
 	model: PuzzleModel,
 	grid: Grid,
 	c_id: string,
-	constraint: EdgeToolI,
+	constraint: EdgeToolI
 ) {
 	const coords = constraint.cells;
 	const cells = cellsFromCoords(grid, coords);
