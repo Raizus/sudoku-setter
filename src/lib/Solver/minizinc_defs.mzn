@@ -4190,32 +4190,32 @@ predicate loop_edges_p(
     connected(from, to, ns, es)
 );
 
-predicate cell_center_loop_no_diagonal_touching_p(array[int, int] of var 0..1: grid) = let {
-        set of int: rows = index_set_1of2(grid);
-        set of int: cols = index_set_2of2(grid);
+predicate cell_center_loop_no_diagonal_touching_p(array[int, int] of var 0..1: loop_nodes) = let {
+        set of int: rows = index_set_1of2(loop_nodes);
+        set of int: cols = index_set_2of2(loop_nodes);
     } in (
         % no crossing 1's and 0's because it implies the the loop is touching diagonally
         % [1, 0]    or  [0, 1]
         % [0, 1]        [1, 0]
         forall(r in rows where r < max(rows), c in cols where c < max(cols))(
-            (grid[r,c] == 1 /\ grid[r+1, c+1] == 1 -> grid[r+1,c] == 1 \/ grid[r, c+1] ==1)
+            (loop_nodes[r,c] == 1 /\ loop_nodes[r+1, c+1] == 1 -> loop_nodes[r+1,c] == 1 \/ loop_nodes[r, c+1] ==1)
         ) /\
         forall(r in rows where r < max(rows), c in cols where c < max(cols))(
-            (grid[r,c+1] == 1 /\ grid[r+1, c] == 1 -> grid[r,c] == 1 \/ grid[r+1, c+1] ==1)
+            (loop_nodes[r,c+1] == 1 /\ loop_nodes[r+1, c] == 1 -> loop_nodes[r,c] == 1 \/ loop_nodes[r+1, c+1] ==1)
         )
     );
 
 predicate cell_center_loop_no_orthogonal_touching_p(
-    array[int, int] of var 0..1: grid
+    array[int, int] of var 0..1: loop_nodes
 ) = let {
-    set of int: rows = index_set_1of2(grid);
-    set of int: cols = index_set_2of2(grid);
+    set of int: rows = index_set_1of2(loop_nodes);
+    set of int: cols = index_set_2of2(loop_nodes);
 } in (
     forall(i in rows, j in cols)(
         let {
-            array[int] of var int: adj_values = get_adjacent_values(i, j, grid)
+            array[int] of var int: adj_values = get_adjacent_values(i, j, loop_nodes)
         } in (
-            grid[i,j] = 0 \/ (grid[i,j] = 1 /\ sum(adj_values) = 2)
+            loop_nodes[i,j] = 0 \/ (loop_nodes[i,j] = 1 /\ sum(adj_values) = 2)
         )
     )
 );
@@ -4284,31 +4284,31 @@ predicate not_loop_sized_regions_p(
 
 predicate adjacent_loop_cells_are_multiples_p(
     array[int, int] of var int: grid,
-    array[int, int] of var 0..1: labels
+    array[int, int] of var 0..1: loop_nodes
 ) =
-    assert(index_sets_agree(grid, labels), "grid and labels must have the same indexes.")
+    assert(index_sets_agree(grid, loop_nodes), "grid and loop_nodes must have the same indexes.")
     /\ forall(i in index_set_1of2(grid), j in index_set_2of2(grid))(
         % Right neighbor
         (j < max(index_set_2of2(grid)) ->
-            (labels[i,j] = 1 /\ labels[i,j+1] = 1 ->
+            (loop_nodes[i,j] = 1 /\ loop_nodes[i,j+1] = 1 ->
                 multiples_p(grid[i,j], grid[i,j+1]))
         ) /\
         % Down neighbor
         (i < max(index_set_1of2(grid)) ->
-            (labels[i,j] = 1 /\ labels[i+1,j] = 1 ->
+            (loop_nodes[i,j] = 1 /\ loop_nodes[i+1,j] = 1 ->
                 multiples_p(grid[i,j], grid[i+1,j]))
         )
     );
 
 predicate adjacent_loop_cells_are_german_whispers_p(
     array[int, int] of var int: grid,
-    array[int, int] of var 0..1: labels
+    array[int, int] of var 0..1: loop_nodes
 ) = let {
     set of int: rows = index_set_1of2(grid);
     set of int: cols = index_set_2of2(grid);
 } in (
-    assert(index_sets_agree(grid, labels), "grid and labels must have the same indexes.")
-    /\ region_whispers_p(grid, labels, 1, 5)
+    assert(index_sets_agree(grid, loop_nodes), "grid and loop_nodes must have the same indexes.")
+    /\ region_whispers_p(grid, loop_nodes, 1, 5)
 );
 
 predicate connected_loop_nodes_are_german_whispers_p(
@@ -4337,18 +4337,18 @@ predicate connected_loop_nodes_are_german_whispers_p(
 
 predicate loop_parity_p(
     array[int, int] of var int: grid,
-    array[int, int] of var 0..1: labels
+    array[int, int] of var 0..1: loop_nodes
 ) =
-    assert(index_sets_agree(grid, labels), "grid and labels must have the same indexes.") 
+    assert(index_sets_agree(grid, loop_nodes), "grid and loop_nodes must have the same indexes.") 
     /\ forall(i in index_set_1of2(grid), j in index_set_2of2(grid))(
         % Right neighbor
         (j < max(index_set_2of2(grid)) ->
-            (labels[i,j] = 1 /\ labels[i,j+1] = 1 ->
+            (loop_nodes[i,j] = 1 /\ loop_nodes[i,j+1] = 1 ->
                 different_parity_p(grid[i,j], grid[i,j+1]))
         ) /\
         % Down neighbor
         (i < max(index_set_1of2(grid)) ->
-            (labels[i,j] = 1 /\ labels[i+1,j] = 1 ->
+            (loop_nodes[i,j] = 1 /\ loop_nodes[i+1,j] = 1 ->
                 different_parity_p(grid[i,j], grid[i+1,j]))
         )
     );
@@ -4359,24 +4359,24 @@ function var int: count_loop_vars_f(array[int] of var 0..1: arr) =
 % A digit on the loop indicates how many times that digit appears on the loop.
 predicate counting_loop_p(
     array[int, int] of var int: grid,
-    array[int, int] of var 0..1: labels
+    array[int, int] of var 0..1: loop_nodes
 ) = let {
     set of int: rows = index_set_1of2(grid);
     set of int: cols = index_set_2of2(grid);
 } in (
-    assert(index_sets_agree(grid, labels), "grid and labels must have the same indexes.")
+    assert(index_sets_agree(grid, loop_nodes), "grid and loop_nodes must have the same indexes.")
     /\ forall(i in rows, j in cols)(
-        labels[i,j] == 1 -> conditional_count_f(array1d(grid), array1d(labels), grid[i,j], labels[i,j]) = grid[i,j]
+        loop_nodes[i,j] == 1 -> conditional_count_f(array1d(grid), array1d(loop_nodes), grid[i,j], loop_nodes[i,j]) = grid[i,j]
     )
 );
 
 predicate modular_loop_aux_p(
     array[int] of var int: arr, 
-    array[int] of var 0..1: labels
+    array[int] of var 0..1: loop_nodes
 ) = let {
     set of int: idxs = index_set(arr)
 } in (
-    if all_equal(labels) /\ labels[min(idxs)] = 1 then
+    if all_equal(loop_nodes) /\ loop_nodes[min(idxs)] = 1 then
         modular_line_p(arr, 3)
     else
         true
@@ -4385,33 +4385,33 @@ predicate modular_loop_aux_p(
 
 predicate modular_loop_p(
     array[int,int] of var int: grid, 
-    array[int,int] of var 0..1: loop
+    array[int,int] of var 0..1: loop_nodes
 ) = let {
     set of int: rows = index_set_1of2(grid);
     set of int: cols = index_set_2of2(grid);
 } in (
     forall(r in rows where r < max(rows), c in cols where c < max(cols)) (
-        modular_loop_aux_p([grid[r, c], grid[r, c+1], grid[r+1, c+1]], [loop[r, c], loop[r, c+1], loop[r+1, c+1]]) /\
-        modular_loop_aux_p([grid[r+1, c], grid[r, c], grid[r, c+1]], [loop[r+1, c], loop[r, c], loop[r, c+1]]) /\
-        modular_loop_aux_p([grid[r, c], grid[r+1, c], grid[r+1, c+1]], [loop[r, c], loop[r+1, c], loop[r+1, c+1]]) /\
-        modular_loop_aux_p([grid[r, c+1], grid[r+1, c+1], grid[r+1, c]], [loop[r, c+1], loop[r+1, c+1], loop[r+1, c]])
+        modular_loop_aux_p([grid[r, c], grid[r, c+1], grid[r+1, c+1]], [loop_nodes[r, c], loop_nodes[r, c+1], loop_nodes[r+1, c+1]]) /\
+        modular_loop_aux_p([grid[r+1, c], grid[r, c], grid[r, c+1]], [loop_nodes[r+1, c], loop_nodes[r, c], loop_nodes[r, c+1]]) /\
+        modular_loop_aux_p([grid[r, c], grid[r+1, c], grid[r+1, c+1]], [loop_nodes[r, c], loop_nodes[r+1, c], loop_nodes[r+1, c+1]]) /\
+        modular_loop_aux_p([grid[r, c+1], grid[r+1, c+1], grid[r+1, c]], [loop_nodes[r, c+1], loop_nodes[r+1, c+1], loop_nodes[r+1, c]])
     ) /\
     forall(r in rows where r < max(rows) - 1, c in cols where c < max(cols) - 1) (
-        modular_loop_aux_p([grid[r, c+1], grid[r+1, c+1], grid[r+2, c+1]], [loop[r, c+1], loop[r+1, c+1], loop[r+2, c+1]]) /\
-        modular_loop_aux_p([grid[r+1, c], grid[r+1, c+1], grid[r+1, c+2]], [loop[r+1, c], loop[r+1, c+1], loop[r+1, c+2]])
+        modular_loop_aux_p([grid[r, c+1], grid[r+1, c+1], grid[r+2, c+1]], [loop_nodes[r, c+1], loop_nodes[r+1, c+1], loop_nodes[r+2, c+1]]) /\
+        modular_loop_aux_p([grid[r+1, c], grid[r+1, c+1], grid[r+1, c+2]], [loop_nodes[r+1, c], loop_nodes[r+1, c+1], loop_nodes[r+1, c+2]])
     )
 );
 
 predicate thermo_sightline_loop_arrow_p(
     array[int] of var int: arr, 
-    array[int] of var 0..1: labels, 
+    array[int] of var 0..1: loop_nodes, 
     var int: cell_var
 ) = let {
         % Get array bounds
         set of int: idxs = index_set(arr);
         int: min_i = min(idxs);
         array[index_set(arr)] of var bool: counts;
-        constraint count_uninterrupted_counts_p(labels, counts, 1);
+        constraint count_uninterrupted_counts_p(loop_nodes, counts, 1);
     } in (
         % cell value is the number of seen loop cells
         cell_var == sum(counts) /\
@@ -4424,16 +4424,16 @@ predicate thermo_sightline_loop_arrow_p(
 
 predicate loopwhiches_p(
     array[int] of var int: arr, 
-    array[int] of var 0..1: labels, 
+    array[int] of var 0..1: loop_nodes, 
     var int: val
 ) = let {
     set of int: idxs = index_set(arr);
     array[idxs] of var bool: sandwiched = [
         exists(j in idxs where j<i)(
-            labels[j] == 1
+            loop_nodes[j] == 1
         ) /\
         exists(k in idxs where k>i)(
-            labels[k] == 1
+            loop_nodes[k] == 1
         )
     | i in idxs]
 } in (
