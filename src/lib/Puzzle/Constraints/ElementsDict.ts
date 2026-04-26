@@ -299,7 +299,7 @@ export class ElementsDict extends Map<string, ConstraintsElement> {
 	toJSON() {
 		const elements_data: ElementData[] = [];
 
-		for (const [, element] of this.entries()) {
+		for (const [, element] of this.orderedEntries()) {
 			const element_data = elementToJson(element);
 			elements_data.push(element_data);
 		}
