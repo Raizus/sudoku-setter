@@ -1603,7 +1603,7 @@ function cellOnLoopConstraint(model: PuzzleModel, grid: Grid, c_id: string, cons
 
 	const cell_center_loop_var = cellToGridVarName(cell, VAR_2D_NAMES.CELL_CENTER_LOOP);
 
-	const constraint_str = `constraint ${cell_center_loop_var} == 1;\n`;
+	const constraint_str = `constraint ${cell_center_loop_var} == true;\n`;
 	return constraint_str;
 }
 
@@ -1637,7 +1637,7 @@ function cellNotOnLoopConstraint(
 
 	const cell_center_loop_var = cellToGridVarName(cell, VAR_2D_NAMES.CELL_CENTER_LOOP);
 
-	const constraint_str = `constraint ${cell_center_loop_var} == 0;\n`;
+	const constraint_str = `constraint ${cell_center_loop_var} == false;\n`;
 	return constraint_str;
 }
 
@@ -1714,7 +1714,7 @@ function countingCirclesLoopOrNonLoopCellsElement(model: PuzzleModel, element: C
 
 	let out_str = '';
 	out_str += `array[int] of var int: loop_counting_circles = [\n\t${vars_str}\n];\n`;
-	out_str += `array[int] of var int: loop_counting_circles_labels = [\n\t${loop_vars_str}\n];\n`;
+	out_str += `array[int] of var bool: loop_counting_circles_labels = [\n\t${loop_vars_str}\n];\n`;
 
 	out_str += `constraint counting_circles_loop_or_non_loop_p(loop_counting_circles, loop_counting_circles_labels, ALLOWED_DIGITS);\n`;
 

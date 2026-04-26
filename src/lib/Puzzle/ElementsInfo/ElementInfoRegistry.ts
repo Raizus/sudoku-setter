@@ -148,7 +148,7 @@ import {
 	yinYangYongInfo,
 	coloredGroupsInfo,
 	deconstructionInfo,
-	orthogonallyConnectedRegionsInfo,
+	orthogonallyConnectedRegionsInfo
 } from './UndeterminedRegionsInfo/UndeterminedRegionsElementsInfo';
 import { directedPathTeleportRenbanSegmentsInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
 import { directedPathTeleportSegmentsSumInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
@@ -164,7 +164,6 @@ import {
 	chaosConstructionInfo
 } from './UndeterminedRegionsInfo/UndeterminedRegionsElementsInfo';
 import { yinYangInfo } from './UndeterminedRegionsInfo/YinYangElementsInfo';
-import { cellCenterLoopCannotTouchOrthogonallyInfo, cellCenterLoopInfo } from './UndeterminedRegionsInfo/LoopElementsInfo';
 import { caveInfo } from './UndeterminedRegionsInfo/CaveElementsInfo';
 import {
 	adjacentMultiplesLineInfo,
@@ -393,6 +392,7 @@ import {
 } from './ValueModifierConstraintsElementsInfo';
 import { mazeWallInfo } from './CornerLineToolsElementsInfo';
 import { variableConstraintInfo } from './OtherConstraintsElementsInfo';
+import { cellCenterLoopInfo } from './UndeterminedRegionsInfo/LoopElementsInfo';
 
 export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	// Cell input elements
@@ -469,8 +469,6 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.NORINORI]: norinoriInfo,
 	[TOOLS.SHIKAKU]: shikakuInfo,
 	[TOOLS.GOLDILOCKS_ZONE]: goldilocksZoneInfo,
-	[TOOLS.CELL_CENTER_LOOP_CANNOT_TOUCH_ORTHOGONALLY]: cellCenterLoopCannotTouchOrthogonallyInfo,
-	[TOOLS.CELL_CENTER_LOOP]: cellCenterLoopInfo,
 	[TOOLS.CAVE]: caveInfo,
 	[TOOLS.TWILIGHT_CAVE_FILLOMINO_REGION_SHADING]: twilightCaveFillominoRegionShadingInfo,
 
@@ -638,7 +636,8 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.FILLOMINO_REGION_BORDER]: fillominoRegionBorderInfo,
 	[TOOLS.UNKNOWN_REGION_BORDER]: unknownRegionBorderInfo,
 	[TOOLS.ORTHOGONALLY_CONNECTED_REGION_BORDER]: orthogonallyConnectedRegionBorderInfo,
-	[TOOLS.ORTHOGONALLY_CONNECTED_REGION_SAME_REGION_EDGE]: orthogonallyConnectedRegionSameRegionEdgeInfo,
+	[TOOLS.ORTHOGONALLY_CONNECTED_REGION_SAME_REGION_EDGE]:
+		orthogonallyConnectedRegionSameRegionEdgeInfo,
 	[TOOLS.CHAOS_CONSTRUCTION_SUGURU_BORDER]: chaosConstructionSuguruBorderInfo,
 	[TOOLS.EDGE_CAVE_ONE_OF_EACH]: edgeCaveOneOfEachInfo,
 
@@ -852,3 +851,9 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.COSMETIC_CAGE]: cosmeticCageInfo,
 	[TOOLS.COSMETIC_OUTSIDE_DIRECTION]: cosmeticOutsideDirectionInfo
 };
+
+export function registerElementInfo(tool: string, element_info: SquareCellElementInfo) {
+	elementInfoRegistry[tool] = element_info;
+}
+
+registerElementInfo(TOOLS.CELL_CENTER_LOOP, cellCenterLoopInfo);

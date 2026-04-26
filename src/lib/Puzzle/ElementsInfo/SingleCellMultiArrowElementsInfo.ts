@@ -200,11 +200,13 @@ function loopCountEachCellArrowsConstraint(grid: Grid, constraint: CellMultiArro
 	if (!cell) return out_str;
 	const cell_var = cellToVarName(cell);
 
+	const loop = VAR_2D_NAMES.CELL_CENTER_LOOP;
+
 	const directions = constraint.directions;
 	for (const direction of directions) {
 		const cells = grid.getCellsInDirection(cell.r, cell.c, direction);
 
-		const loop_vars_str = cellsToGridVarsStr(cells, VAR_2D_NAMES.CELL_CENTER_LOOP);
+		const loop_vars_str = cellsToGridVarsStr(cells, loop);
 		out_str += `constraint count_loop_vars_f(${loop_vars_str}) = ${cell_var};\n`;
 	}
 

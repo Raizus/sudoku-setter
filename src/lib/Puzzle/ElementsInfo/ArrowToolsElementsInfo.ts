@@ -202,7 +202,10 @@ function chaosConstructionArrowConstraint(
 	const circle_cells = constraint.cells
 		.map((coord) => grid.getCell(coord.r, coord.c))
 		.filter((cell) => !!cell);
-	const circle_region_vars = cellsToGridVarsStr(circle_cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
+	const circle_region_vars = cellsToGridVarsStr(
+		circle_cells,
+		VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS
+	);
 	const lines_cells = constraint.lines.map((line) =>
 		line.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
 	);
@@ -252,15 +255,17 @@ function loopPointerArrowConstraint(
 
 	if (circle_cells.length != 1) return out_str;
 
+	const loop = VAR_2D_NAMES.CELL_CENTER_LOOP;
+
 	const circle_cell_var = cellToGridVarName(circle_cells[0], VAR_2D_NAMES.BOARD);
-	const circle_cell_loop_var = cellToGridVarName(circle_cells[0], VAR_2D_NAMES.CELL_CENTER_LOOP);
+	const circle_cell_loop_var = cellToGridVarName(circle_cells[0], loop);
 
 	const lines_cells = constraint.lines.map((line) =>
 		line.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
 	);
 
 	// circle cell is on the loop
-	out_str += `constraint ${circle_cell_loop_var} == 1;\n`;
+	out_str += `constraint ${circle_cell_loop_var} == true;\n`;
 	out_str += simpleArrowConstraint(grid, constraint, 'arrow_p');
 
 	for (const line of lines_cells) {
@@ -281,10 +286,7 @@ function loopPointerArrowConstraint(
 			direction
 		);
 		const dir_cells_vars = cellsToGridVarsStr(cells_in_direction, VAR_2D_NAMES.BOARD);
-		const dir_cells_loop_vars = cellsToGridVarsStr(
-			cells_in_direction,
-			VAR_2D_NAMES.CELL_CENTER_LOOP
-		);
+		const dir_cells_loop_vars = cellsToGridVarsStr(cells_in_direction, loop);
 
 		out_str += `constraint loop_pointer_arrow_p(${circle_cell_var}, ${arrow_tip_var}, ${dir_cells_vars}, ${dir_cells_loop_vars});\n`;
 	}
