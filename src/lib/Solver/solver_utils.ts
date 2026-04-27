@@ -593,7 +593,7 @@ export function* adjCellPairGen(grid: Grid) {
 	for (const cell of grid.getAllCells()) {
 		const adj_cells = grid
 			.getOrthogonallyAdjacentCells(cell)
-			.filter((cell2) => cell2.r >= cell.r || cell2.c >= cell.c);
+			.filter((cell2) => cell2.r > cell.r || (cell2.r === cell.r && cell2.c > cell.c));
 		for (const cell2 of adj_cells) {
 			yield [cell, cell2];
 		}
