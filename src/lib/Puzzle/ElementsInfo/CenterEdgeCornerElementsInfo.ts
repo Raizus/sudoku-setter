@@ -5,8 +5,10 @@ import {
 	type CenterCornerOrEdgeToolInputOptions
 } from '$input/ToolInputHandlers/types';
 import {
+	adjCellPairGen,
 	cellsFromCoords,
 	cellsToGridVarsStr,
+	cellToGridVarName,
 	simpleElementFunction,
 	VAR_2D_NAMES,
 	type PuzzleModel
@@ -45,6 +47,16 @@ const DEFAULT_GALAXY_SHAPE: EditableShapeI = {
 	stroke: { editable: false, value: 'black' },
 	fill: { editable: false, value: 'var(--grid-background-color)' }
 };
+
+function match_constraint(r: number, c: number, element: ConstraintsElement): boolean {
+	const constraints = element.constraints as Record<string, CenterCornerOrEdgeToolI>;
+	const constraints_list = [...Object.values(constraints)];
+
+	return constraints_list.some((constraint) => {
+		const coord = constraint.cell;
+		return coord.r === r && coord.c === c;
+	});
+}
 
 function getCellRot180(grid: Grid, cell: Cell, r: number, c: number) {
 	const center_r = cell.r + 0.5;
@@ -305,26 +317,66 @@ function balancedLoopSegmentSumCenterOrEdgeConstraint(
 	const edges_v = VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_V;
 	const board = VAR_2D_NAMES.BOARD;
 
-	let out_str: string = result[0];
 	const cells_coords = coordToAdjCellsCoords(coord);
 	const cells = cellsFromCoords(grid, cells_coords);
 	const loop_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.CELL_CENTER_LOOP);
+
 	// cells are loop cells
-	out_str += `constraint loop_cells_p(${loop_vars});\n`;
+	let out_str = `constraint loop_cells_p(${loop_vars});\n`;
 
 	// segment sum, two cases:
-	//  - edge point -> segments on both sides of the cells are equal
 	//  - center point -> segments on the cell sum to the same
+	out_str += result[0];
 	if (cells.length == 1) {
 		const [r, c] = [cells[0].r, cells[0].c];
 		out_str += `constraint balanced_loop_segment_sum_p((${r},${c}), ${board}, ${edges_h}, ${edges_v}, ${var_name});\n`;
 	} else {
+		//  - edge point -> segments on both sides of the cells are equal
 		const [r1, c1] = [cells[0].r, cells[0].c];
 		const [r2, c2] = [cells[1].r, cells[1].c];
 		const dr = r2 - r1;
 		const dc = c2 - c1;
+		// the edge connecting the two cells is part of the graph
+		out_str += `constraint edge_in_path_graph_p((${r1},${c1}), (${r2},${c2}), ${edges_h}, ${edges_v});\n`;
 		out_str += `constraint arm_sum_f(${r1}, ${c1}, ${dr}, ${dc}, ${board}, ${edges_h}, ${edges_v}) = ${var_name};\n`;
 		out_str += `constraint arm_sum_f(${r2}, ${c2}, ${-dr}, ${-dc}, ${board}, ${edges_h}, ${edges_v}) = ${var_name};\n`;
+	}
+
+	return out_str;
+}
+
+function balancedLoopSegmentSumCenterAllGiven(model: PuzzleModel, element: ConstraintsElement) {
+	let out_str: string = '';
+	const grid = model.puzzle.grid;
+
+	const edges_h = VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_H;
+	const edges_v = VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_V;
+	const board = VAR_2D_NAMES.BOARD;
+
+	// cell center constraints
+	out_str += `% ${TOOLS.ALL_GIVEN}\n`
+	for (const cell of grid.getAllCells()) {
+		const [r, c] = [cell.r, cell.c];
+		// find cell center matches
+		const match = match_constraint(r + 0.5, c + 0.5, element);
+		if (match) continue;
+
+		out_str += `constraint not balanced_loop_segment_sum_2_p((${r},${c}), ${board}, ${edges_h}, ${edges_v});\n`;
+	}
+
+	for (const [cell1, cell2] of adjCellPairGen(grid)) {
+		const [r1, c1] = [cell1.r, cell1.c];
+		const [r2, c2] = [cell2.r, cell2.c];
+		const [r_avg, c_avg] = [(r1 + r2) / 2, (c1 + c2) / 2];
+		const match = match_constraint(r_avg + 0.5, c_avg + 0.5, element);
+		if (match) continue;
+
+		const loop_var1 = cellToGridVarName(cell1, VAR_2D_NAMES.CELL_CENTER_LOOP);
+		const loop_var2 = cellToGridVarName(cell2, VAR_2D_NAMES.CELL_CENTER_LOOP);
+
+		const dr = r2 - r1;
+		const dc = c2 - c1;
+		out_str += `constraint (${loop_var1} /\\ ${loop_var2}) -> arm_sum_f(${r1}, ${c1}, ${dr}, ${dc}, ${board}, ${edges_h}, ${edges_v}) != arm_sum_f(${r2}, ${c2}, ${-dr}, ${-dc}, ${board}, ${edges_h}, ${edges_v});\n`;
 	}
 
 	return out_str;
@@ -334,13 +386,15 @@ function balancedLoopSegmentSumCenterOrEdgeElement(
 	model: PuzzleModel,
 	element: ConstraintsElement
 ): string {
-	const out_str = simpleElementFunction(model, element, balancedLoopSegmentSumCenterOrEdgeConstraint);
+	let out_str = simpleElementFunction(model, element, balancedLoopSegmentSumCenterOrEdgeConstraint);
 
 	if (!element.negative_constraints) return out_str;
 
-	// // negative constraint
-	// const all_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
-	// if (!all_given) return out_str;
+	// negative constraint
+	const all_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
+	if (all_given) {
+		out_str += balancedLoopSegmentSumCenterAllGiven(model, element);
+	}
 
 	return out_str;
 }
@@ -356,6 +410,13 @@ export const balancedLoopSegmentSumCenterOrEdgeInfo: SquareCellElementInfo = {
 		},
 		defaultValue: ''
 	},
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.ALL_GIVEN,
+			description: 'All possible dots are given.'
+		}
+	],
 
 	toolId: TOOLS.BALANCED_LOOP_SEGMENT_SUM_CENTER_OR_EDGE,
 

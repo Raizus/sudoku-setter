@@ -4139,6 +4139,25 @@ predicate assert_graph_edges_p(
     assert(cols_v = cols,   "edges_v col index mismatch")
 );
 
+predicate edge_in_path_graph_p(
+    tuple(int, int): coord1,
+    tuple(int, int): coord2,
+    array[int, int] of var bool: edges_h,
+    array[int, int] of var bool: edges_v,
+) = let {
+    int: r1 = coord1.1; int: c1 = coord1.2;
+    int: r2 = coord2.1; int: c2 = coord2.2;
+    bool: is_adjacent = test_orth_adjacent_2d(r1, c1, r2, c2);
+    int: dr = abs(r1-r2);
+    int: dc = abs(c1-c2);
+} in (
+    is_adjacent -> (
+        (dr = 1 /\ dc = 0 /\ edges_v[min(r1,r2),c1])
+        \/
+        (dr = 0 /\ dc = 1 /\ edges_h[r1,min(c1,c2)])
+    )
+);
+
 predicate graph_edges_p(
     array[int, int] of var bool: loop_nodes,
     array[int, int] of var bool: edges_h,
@@ -4711,28 +4730,6 @@ function var int: arm_sum_f(
     )
 );
 
-function array[int] of var bool: edges_up(
-    int: r, int: c,
-    array[int, int] of var bool: edges_v,
-) = let {
-    set of int: rows_v = index_set_1of2(edges_v);
-    set of int: cols_v = index_set_2of2(edges_v);
-    int: max_steps = r - min(rows_v) + 1;
-} in (
-    [edges_v[r-k,c] | k in 1..max_steps where in_bounds_2d(r-k, c, edges_v)]
-);
-
-function array[int] of var bool: edges_down(
-    int: r, int: c,
-    array[int, int] of var bool: edges_v,
-) = let {
-    set of int: rows_v = index_set_1of2(edges_v);
-    set of int: cols_v = index_set_2of2(edges_v);
-    int: max_steps = r - max(rows_v) + 1;
-} in (
-    [edges_v[r+k,c] | k in 1..max_steps where in_bounds_2d(r+k, c, edges_v)]
-);
-
 predicate balanced_loop_segment_sum_p(
     tuple(int, int): coord,
     array[int, int] of var int: grid,
@@ -4796,6 +4793,65 @@ predicate balanced_loop_segment_sum_p(
       arm_sum_f(r, c,  1,  0, grid, edges_h, edges_v) = sum_var
       /\
       arm_sum_f(r, c,  0, -1, grid, edges_h, edges_v) = sum_var
+    )
+);
+
+predicate balanced_loop_segment_sum_2_p(
+    tuple(int, int): coord,
+    array[int, int] of var int: grid,
+    array[int, int] of var bool: edges_h,
+    array[int, int] of var bool: edges_v,
+) = let {
+    set of int: rows_v = index_set_1of2(edges_v);
+    set of int: cols_v = index_set_2of2(edges_v);
+    set of int: rows_h = index_set_1of2(edges_h);
+    set of int: cols_h = index_set_2of2(edges_h);
+
+    int: r = coord.1; int: c = coord.2;
+
+    % Active edges at this node
+    var bool: has_left  = (in_bounds_2d(r, c-1, edges_h) /\ edges_h[r, c-1]);  % edge to the left
+    var bool: has_right = (in_bounds_2d(r, c, edges_h)  /\ edges_h[r, c]);    % edge to the right
+    var bool: has_up    = (in_bounds_2d(r-1, c, edges_v) /\ edges_v[r-1, c]);  % edge upward
+    var bool: has_down  = (in_bounds_2d(r, c, edges_v)  /\ edges_v[r, c]);    % edge downward
+} in (
+    % coord is a loop node and 
+    % The two loop segments extending from both sides of coord must be balanced ie the sum of the digits (of grid) up to and including the digit in the cell containing the first turn must be the same.
+    % we don't know the path the loop takes through the cell, it could be vertical, horizontal, or it could form a corner at the coord, so we need to consider all the options
+    % straight horizontal: arms go left and right
+    (has_left /\ has_right /\ not has_up /\ not has_down /\
+        arm_sum_f(r, c, 0, -1, grid, edges_h, edges_v) = 
+        arm_sum_f(r, c, 0,  1, grid, edges_h, edges_v)
+    )
+    \/ 
+    % straight vertical: arms go up and down
+    (has_up /\ has_down /\ not has_left /\ not has_right /\
+        arm_sum_f(r, c, -1, 0, grid, edges_h, edges_v) = 
+        arm_sum_f(r, c,  1, 0, grid, edges_h, edges_v)
+    )
+    \/ 
+    % corner up-right: arms go up and right
+    (has_up /\ has_right /\ not has_left /\ not has_down /\
+        arm_sum_f(r, c, -1, 0, grid, edges_h, edges_v) = 
+        arm_sum_f(r, c,  0, 1, grid, edges_h, edges_v)
+    )
+    \/
+    % corner up-left: arms go up and left
+    (has_up /\ has_left /\ not has_right /\ not has_down /\
+        arm_sum_f(r, c, -1,  0, grid, edges_h, edges_v) = 
+        arm_sum_f(r, c,  0, -1, grid, edges_h, edges_v) 
+    )
+    \/
+    % corner down-right: arms go down and right
+    (has_down /\ has_right /\ not has_left /\ not has_up /\
+        arm_sum_f(r, c, 1, 0, grid, edges_h, edges_v) = 
+        arm_sum_f(r, c, 0, 1, grid, edges_h, edges_v)
+    )
+    \/
+    % corner down-left: arms go down and left
+    (has_down /\ has_left /\ not has_right /\ not has_up /\
+      arm_sum_f(r, c,  1,  0, grid, edges_h, edges_v) = 
+      arm_sum_f(r, c,  0, -1, grid, edges_h, edges_v)
     )
 );
 
