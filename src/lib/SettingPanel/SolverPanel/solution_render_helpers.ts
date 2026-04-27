@@ -695,7 +695,7 @@ function updateCandidates(json: JsonT, puzzle: PuzzleAuxI) {
 			const pencilmarks = cell.centerMarks;
 			const new_pencilamrks = new Set([...pencilmarks, value]);
 			cells.push(cell);
-			pm_values.push([...new_pencilamrks]);
+			pm_values.push([...new_pencilamrks].toSorted());
 		}
 	}
 	const action = restoreCellsPencilmarksAction(cells, pm_values, TOOLS.CENTER_PM);
