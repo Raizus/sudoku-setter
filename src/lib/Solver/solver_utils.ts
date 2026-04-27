@@ -169,7 +169,7 @@ export function get_grid_name(negative_constraints: Record<string, boolean> | un
 export interface PuzzleAuxI {
 	grid: Grid;
 	valid_digits: number[];
-	elementsDict: Map<number, ConstraintsElement>;
+	elementsDict: Map<string, ConstraintsElement>;
 }
 
 export interface ModelI {
