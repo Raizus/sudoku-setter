@@ -30,7 +30,9 @@ export function coordsScale(coords: GridCoordI, scalar: number): GridCoordI {
 }
 
 export function areCoordsOnGrid(coords: GridCoordI, gridShape: GridShape): boolean {
-	return coords.c >= 0 && coords.c <= gridShape.nCols && coords.r >= 0 && coords.r <= gridShape.nRows;
+	return (
+		coords.c >= 0 && coords.c <= gridShape.nCols && coords.r >= 0 && coords.r <= gridShape.nRows
+	);
 }
 
 export function areCoordsNeighbours(c1: GridCoordI, c2: GridCoordI): boolean {
@@ -112,10 +114,12 @@ export function cellCoordToCornerCoords(cell: GridCoordI): GridCoordI[] {
 
 export function cornerCoordToAdjCellCoords(corner: GridCoordI): GridCoordI[] {
 	const adj: GridCoordI[] = [];
-	adj.push({ r: corner.r - 1, c: corner.c - 1 });
-	adj.push({ r: corner.r - 1, c: corner.c });
-	adj.push({ r: corner.r, c: corner.c - 1 });
-	adj.push({ r: corner.r, c: corner.c });
+	if (corner.r % 1 === 0 && corner.c % 1 === 0) {
+		adj.push({ r: corner.r - 1, c: corner.c - 1 });
+		adj.push({ r: corner.r - 1, c: corner.c });
+		adj.push({ r: corner.r, c: corner.c - 1 });
+		adj.push({ r: corner.r, c: corner.c });
+	}
 
 	return adj;
 }
@@ -152,7 +156,6 @@ const gridDirectionCoords: GridCoordI[] = [
 	{ r: -1, c: 1 }
 ];
 
-
 const idxToDirectionMap: Map<number, DIRECTION> = new Map([
 	[6, DIRECTION.N],
 	[2, DIRECTION.S],
@@ -164,9 +167,8 @@ const idxToDirectionMap: Map<number, DIRECTION> = new Map([
 	[3, DIRECTION.SW]
 ]);
 
-
 export function idxToDirection(idx: number): DIRECTION {
-	idx = idx % 8
+	idx = idx % 8;
 	const direction = idxToDirectionMap.get(idx);
 	if (direction === undefined) {
 		throw Error('Direction is not valid');
@@ -184,7 +186,6 @@ const directionToCoordsMap: Map<DIRECTION, GridCoordI> = new Map([
 	[DIRECTION.SE, { r: 1, c: 1 }],
 	[DIRECTION.SW, { r: 1, c: -1 }]
 ]);
-
 
 export function directionToCoords(direction: DIRECTION): GridCoordI {
 	const delta = directionToCoordsMap.get(direction);
@@ -204,13 +205,13 @@ export function coordsToDirection(delta: GridCoordI): DIRECTION {
 	if (delta.r === -1 && delta.c == 1) return DIRECTION.NE;
 	if (delta.r === -1 && delta.c == -1) return DIRECTION.NW;
 
-	throw Error('delta is not a valid direction.')
+	throw Error('delta is not a valid direction.');
 }
 
 export function gridCoordsNextInDirection(cell: GridCoordI, direction: DIRECTION): GridCoordI {
-	const delta = directionToCoords(direction)
-	const cell2 = coordsAdd(cell, delta)
-	return cell2
+	const delta = directionToCoords(direction);
+	const cell2 = coordsAdd(cell, delta);
+	return cell2;
 }
 
 export function gridCoordsNeighbour(cell: GridCoordI, idx: number): GridCoordI {
@@ -222,11 +223,11 @@ export function gridCoordsNeighbour(cell: GridCoordI, idx: number): GridCoordI {
 }
 
 export function getGridCoordsOrthogonalNeighbours(cell: GridCoordI): GridCoordI[] {
-	const idxs = [0, 2, 4, 6]
+	const idxs = [0, 2, 4, 6];
 	const neighbours: GridCoordI[] = [];
 	for (const idx of idxs) {
-		const neighbour = gridCoordsNeighbour(cell, idx)
-		neighbours.push(neighbour)
+		const neighbour = gridCoordsNeighbour(cell, idx);
+		neighbours.push(neighbour);
 	}
 	return neighbours;
 }
@@ -243,6 +244,24 @@ export function cellEdgeToCellCoords(edge: GridCoordI): GridCoordI[] {
 	}
 
 	return cells;
+}
+
+export function cellCenterToCellCoords(coord: GridCoordI): GridCoordI[] {
+	const cells: GridCoordI[] = [];
+	if (coord.r % 1 === 0.5 && coord.c % 1 === 0.5) {
+		cells.push({ r: Math.floor(coord.r), c: Math.floor(coord.c) });
+	}
+
+	return cells;
+}
+
+export function coordToAdjCellsCoords(coord: GridCoordI): GridCoordI[] {
+	const coords: GridCoordI[] = [];
+
+	coords.push(...cellEdgeToCellCoords(coord));
+	coords.push(...cornerCoordToAdjCellCoords(coord));
+	coords.push(...cellCenterToCellCoords(coord));
+	return coords;
 }
 
 export function addToCellGroup(

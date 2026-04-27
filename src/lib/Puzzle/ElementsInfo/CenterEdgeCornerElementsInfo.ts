@@ -5,6 +5,7 @@ import {
 	type CenterCornerOrEdgeToolInputOptions
 } from '$input/ToolInputHandlers/types';
 import {
+	cellsFromCoords,
 	cellsToGridVarsStr,
 	simpleElementFunction,
 	VAR_2D_NAMES,
@@ -13,6 +14,7 @@ import {
 import type { ParseOptions } from '$src/lib/Solver/value_parsing';
 import {
 	cellEdgeToCellCoords,
+	coordToAdjCellsCoords,
 	cornerCoordToAdjCellCoords,
 	type GridCoordI
 } from '$src/lib/utils/SquareCellGridCoords';
@@ -23,6 +25,7 @@ import type { CenterCornerOrEdgeToolI, ConstraintsElement } from '../puzzle_sche
 import { SHAPE_TYPES, type EditableShapeI } from '../Shape/Shape';
 import { TOOL_CATEGORIES, TOOLS } from '../Tools';
 import { centerCornerOrEdgeUsage } from '../ToolUsage';
+import { DEFAULT_WHITE_CIRCLE } from './EdgeElementsInfo/helpers';
 
 const DEFAULT_CLOSEST_OPTIONS: CenterCornerOrEdgeToolInputOptions = {
 	type: HANDLER_TOOL_TYPE.CENTER_CORNER_OR_EDGE,
@@ -283,4 +286,88 @@ export const yinYangSumOfAdjacentShadedEdgeOrCornerInfo: SquareCellElementInfo =
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
 		return simpleElementFunction(model, element, yinYangSumOfAdjacentShadedEdgeOrCornerConstraints);
 	}
+};
+
+function balancedLoopSegmentSumCenterOrEdgeConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CenterCornerOrEdgeToolI
+) {
+	const coord = constraint.cell;
+	const value = constraint.value;
+
+	const result = getParsingResult(model, value, c_id);
+	if (!result) return '';
+	const var_name = result[1];
+
+	const edges_h = VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_H;
+	const edges_v = VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_V;
+	const board = VAR_2D_NAMES.BOARD;
+
+	let out_str: string = result[0];
+	const cells_coords = coordToAdjCellsCoords(coord);
+	const cells = cellsFromCoords(grid, cells_coords);
+	const loop_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.CELL_CENTER_LOOP);
+	// cells are loop cells
+	out_str += `constraint loop_cells_p(${loop_vars});\n`;
+
+	// segment sum, two cases:
+	//  - edge point -> segments on both sides of the cells are equal
+	//  - center point -> segments on the cell sum to the same
+	if (cells.length == 1) {
+		const [r, c] = [cells[0].r, cells[0].c];
+		out_str += `constraint balanced_loop_segment_sum_p((${r},${c}), ${board}, ${edges_h}, ${edges_v}, ${var_name});\n`;
+	} else {
+		const [r1, c1] = [cells[0].r, cells[0].c];
+		const [r2, c2] = [cells[1].r, cells[1].c];
+		const dr = r2 - r1;
+		const dc = c2 - c1;
+		out_str += `constraint arm_sum_f(${r1}, ${c1}, ${dr}, ${dc}, ${board}, ${edges_h}, ${edges_v}) = ${var_name};\n`;
+		out_str += `constraint arm_sum_f(${r2}, ${c2}, ${-dr}, ${-dc}, ${board}, ${edges_h}, ${edges_v}) = ${var_name};\n`;
+	}
+
+	return out_str;
+}
+
+function balancedLoopSegmentSumCenterOrEdgeElement(
+	model: PuzzleModel,
+	element: ConstraintsElement
+): string {
+	const out_str = simpleElementFunction(model, element, balancedLoopSegmentSumCenterOrEdgeConstraint);
+
+	if (!element.negative_constraints) return out_str;
+
+	// // negative constraint
+	// const all_given = !!element.negative_constraints[TOOLS.ALL_GIVEN];
+	// if (!all_given) return out_str;
+
+	return out_str;
+}
+
+export const balancedLoopSegmentSumCenterOrEdgeInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.CENTER_CORNER_OR_EDGE,
+		targets: CornerOrEdge.EDGE_OR_CENTER,
+		valueUpdater: (oldValue: string | undefined, key: string) => {
+			return defaultValueUpdater(oldValue, key, () => {
+				return true;
+			});
+		},
+		defaultValue: ''
+	},
+
+	toolId: TOOLS.BALANCED_LOOP_SEGMENT_SUM_CENTER_OR_EDGE,
+
+	shape: DEFAULT_WHITE_CIRCLE,
+
+	meta: {
+		description:
+			'The loop must travel through each dot. The two loop segments extending from both sides of a dot must be balanced ie the sum of the digits up to and including the digit in the cell containing the first turn must be the same.',
+		usage: centerCornerOrEdgeUsage(),
+		tags: [],
+		categories: DEFAULT_CENTER_EDGE_CORNER_CATEGORIES
+	},
+
+	solver_func: balancedLoopSegmentSumCenterOrEdgeElement
 };

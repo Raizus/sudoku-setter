@@ -557,7 +557,8 @@ export enum OUTSIDE_CORNER_CONSTRAINTS {
 export enum CENTER_EDGE_CORNER_CONSTRAINTS {
 	ROTATIONALLY_SYMMETRIC_GALAXY_CENTER = 'Rotationally Symmetric Galaxy Center',
 	ROTATIONALLY_SYMMETRIC_GALAXY_CENTER_SUM = 'Rotationally Symmetric Galaxy Center Sum',
-	YIN_YANG_SUM_OF_ADJACENT_SHADED_EDGE_CORNER = 'Yin Yang Sum Of Adjacent Shaded Edge Or Corner'
+	YIN_YANG_SUM_OF_ADJACENT_SHADED_EDGE_CORNER = 'Yin Yang Sum Of Adjacent Shaded Edge Or Corner',
+	BALANCED_LOOP_SEGMENT_SUM_CENTER_OR_EDGE = 'Balanced Loop Segment Sum Center Or Edge'
 }
 
 export enum CORNER_LINE_CONSTRAINTS {

@@ -39,6 +39,7 @@ import {
 	regionsInfo
 } from './CellInputElementsInfo';
 import {
+	balancedLoopSegmentSumCenterOrEdgeInfo,
 	rotationallySymmetricGalaxyCenterInfo,
 	rotationallySymmetricGalaxyCenterSumInfo,
 	yinYangSumOfAdjacentShadedEdgeOrCornerInfo
@@ -863,6 +864,10 @@ export function registerElementInfo(tool: string, element_info: SquareCellElemen
 }
 
 registerElementInfo(TOOLS.CELL_CENTER_LOOP, cellCenterLoopInfo);
+registerElementInfo(
+	TOOLS.BALANCED_LOOP_SEGMENT_SUM_CENTER_OR_EDGE,
+	balancedLoopSegmentSumCenterOrEdgeInfo
+);
 registerElementInfo(TOOLS.SNAKE, snakeInfo);
 registerElementInfo(TOOLS.SNAKE_ENDPOINT, snakeEndpointInfo);
 registerElementInfo(TOOLS.SNAKE_CELL, snakeCellInfo);
