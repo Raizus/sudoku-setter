@@ -31,6 +31,7 @@
 	import { setContext } from 'svelte';
 	import CreateFogDefs from './Fog/CreateFogDefs.svelte';
 	import OutlineFilterDefs from './OutlineFilterDefs.svelte';
+	// import GridLinesResolution from './GridLines/GridLinesResolution.svelte';
 
 	export let svgRef: SVGSVGElement | null = null;
 
@@ -113,6 +114,7 @@
 	/>
 	<DiagonalElementsRender diagonal_elements={$diagonalElementsStore} />
 
+	<!-- <GridLinesResolution n_rows={gridShape.nRows} n_cols={gridShape.nCols}/> -->
 	<GridLinesRender cells={grid.getAllCells()} />
 	<GridRegionsRender cells={$cellsStore} />
 
