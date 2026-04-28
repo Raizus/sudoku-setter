@@ -284,6 +284,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	CHAOS_CONSTRUCTION_SEEN_SAME_REGION_COUNT = 'Chaos Construction Seen Same Region Count',
 	CHAOS_CONSTRUCTION_COUNT_SAME_REGION_NEIGHBOR_CELLS = 'Chaos Construction Count Same Region Neighbor Cells',
 	CHAOS_CONSTRUCTION_COUNT_SAME_REGION_NEIGHBOR_CELLS_AND_SELF = 'Chaos Construction Count Same Region Neighbor Cells And Self',
+	CHAOS_CONSTRUCTION_SPOTLIGHT = 'Chaos Construction Spotlight',
 
 	NURIKABE_SEEN_WATERWAY_CELLS = 'Nurikabe Seen Waterway Cells',
 	NURIKABE_ISLAND_SIZE_CELL = 'Nurikabe Island Size Cell',
@@ -544,6 +545,7 @@ export enum OUTSIDE_EDGE_CONSTRAINTS {
 	CHAOS_CONSTRUCTION_X_SUM_REGION_BORDERS = 'Chaos Construction X-Sum Region Borders',
 	CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION = 'Chaos Construction Sum Of First Each Region',
 	CHAOS_CONSTRUCTION_X_INDEX_REGION = 'Chaos Construction X-Index Region',
+	OUTSIDE_CHAOS_CONSTRUCTION_REGION_VARIETY = 'Outside Chaos Construction Region Variety',
 	PENTOMINO_BORDER_COUNT = 'Pentomino Border Count'
 }
 

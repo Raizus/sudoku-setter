@@ -41,6 +41,11 @@ const DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS: OutsideDirectionToolInputOptions = {
 	cornerOrEdge: CornerOrEdge.EDGE
 };
 
+const DEFAULT_OUTSIDE_CORNER_OR_EDGE_INPUT_OPTIONS: OutsideDirectionToolInputOptions = {
+	...DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
+	cornerOrEdge: CornerOrEdge.EDGE
+};
+
 const DEFAULT_META = {
 	description: '',
 	usage: outsideEdgeUsage(),
@@ -127,10 +132,7 @@ function mysterySandwichSumElement(model: PuzzleModel, element: ConstraintsEleme
 }
 
 export const mysterySandwichSumInfo: SquareCellElementInfo = {
-	inputOptions: {
-		...DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
-		cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
-	},
+	inputOptions: DEFAULT_OUTSIDE_CORNER_OR_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.MYSTERY_SANDWICH_SUM,
 
@@ -513,13 +515,7 @@ export const yinYangXSumOutsideEdgeInfo: SquareCellElementInfo = {
 };
 
 export const outsideConsecutiveSumInfo: SquareCellElementInfo = {
-	inputOptions: {
-		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
-		valueUpdater: (oldValue: string | undefined, key: string) =>
-			defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-		defaultValue: '',
-		cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
-	},
+	inputOptions: DEFAULT_OUTSIDE_CORNER_OR_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.OUTSIDE_CONSECUTIVE_SUM,
 
@@ -559,13 +555,7 @@ function loopwhichesConstraint(
 }
 
 export const loopwhichesInfo: SquareCellElementInfo = {
-	inputOptions: {
-		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
-		valueUpdater: (oldValue: string | undefined, key: string) =>
-			defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-		defaultValue: '',
-		cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
-	},
+	inputOptions: DEFAULT_OUTSIDE_CORNER_OR_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.LOOPWICHES,
 
@@ -610,13 +600,7 @@ function chaosConstructionSumOfFirstEachRegionConstraint(
 }
 
 export const chaosConstructionSumOfFirstEachRegionInfo: SquareCellElementInfo = {
-	inputOptions: {
-		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
-		valueUpdater: (oldValue: string | undefined, key: string) =>
-			defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-		defaultValue: '',
-		cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
-	},
+	inputOptions: DEFAULT_OUTSIDE_CORNER_OR_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_SUM_OF_FIRST_EACH_REGION,
 
@@ -654,11 +638,7 @@ function chaosConstructionXIndexRegionConstraint(
 }
 
 export const chaosConstructionXIndexRegionInfo: SquareCellElementInfo = {
-	inputOptions: {
-		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
-		defaultValue: '',
-		cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
-	},
+	inputOptions: DEFAULT_OUTSIDE_CORNER_OR_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_X_INDEX_REGION,
 
@@ -703,13 +683,7 @@ function chaosConstructionXSumRegionBordersConstraint(
 }
 
 export const chaosConstructionXSumRegionBordersInfo: SquareCellElementInfo = {
-	inputOptions: {
-		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
-		valueUpdater: (oldValue: string | undefined, key: string) =>
-			defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-		defaultValue: '',
-		cornerOrEdge: CornerOrEdge.EDGE
-	},
+	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_X_SUM_REGION_BORDERS,
 
@@ -723,6 +697,48 @@ export const chaosConstructionXSumRegionBordersInfo: SquareCellElementInfo = {
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
 		return simpleElementFunction(model, element, chaosConstructionXSumRegionBordersConstraint);
+	}
+};
+
+function outsideChaosConstructionRegionVarietyConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: OutsideDirectionToolI
+) {
+	const cell_coord = constraint.cell;
+	const direction = constraint.direction;
+	const cell = grid.getCell(cell_coord.r, cell_coord.c);
+	
+	const cells = grid.getCellsInDirection(cell_coord.r, cell_coord.c, direction);
+	const region_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
+
+	const value = constraint.value;
+	const result = getParsingResult(model, value, cell_coord, cell);
+	if (!result) return '';
+
+	const var_name = result[1];
+	let out_str: string = result[0];
+	out_str += `constraint nvalue(${region_vars}) == ${var_name};\n`;
+
+	return out_str;
+}
+
+export const outsideChaosConstructionRegionVarietyInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_OUTSIDE_CORNER_OR_EDGE_INPUT_OPTIONS,
+
+	toolId: TOOLS.OUTSIDE_CHAOS_CONSTRUCTION_REGION_VARIETY,
+
+	shape: OUTSIDE_DEFAULT_SHAPE,
+
+	meta: {
+		...DEFAULT_META,
+		description:
+			'A number X outside indicates exactly X different regions have cells in that direction.'
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, outsideChaosConstructionRegionVarietyConstraint);
 	}
 };
 
@@ -752,13 +768,7 @@ function pentominoBorderCountConstraint(
 }
 
 export const pentominoBorderCountInfo: SquareCellElementInfo = {
-	inputOptions: {
-		type: HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION,
-		valueUpdater: (oldValue: string | undefined, key: string) =>
-			defaultOutsideDirectionValueUpdater(oldValue, key, validateOutsideDirectionValue),
-		defaultValue: '',
-		cornerOrEdge: CornerOrEdge.EDGE
-	},
+	inputOptions: DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
 
 	toolId: TOOLS.PENTOMINO_BORDER_COUNT,
 

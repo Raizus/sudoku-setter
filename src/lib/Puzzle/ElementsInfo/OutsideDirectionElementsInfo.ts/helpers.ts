@@ -78,8 +78,8 @@ function simpleOutsideDirectionPredicate(
 
 	const vars = getOutsideDirectionConstraintVars(grid, constraint);
 	const vars_str = `[${vars.join(',')}]`;
-	const value = constraint.value;
 
+	const value = constraint.value;
 	const result = getParsingResult(model, value, cell_coord, cell);
 	if (!result) return '';
 

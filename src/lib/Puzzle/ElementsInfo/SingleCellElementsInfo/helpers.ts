@@ -177,3 +177,9 @@ export const DEFAULT_CIRCLE_SHAPE: EditableShapeI = {
 	fill: { editable: true, value: 'none' }
 };
 
+export const DEFAULT_INVISIBLE_CAGE: EditableShapeI = {
+	type: SHAPE_TYPES.CAGE,
+	strokeWidth: { editable: false, value: 0 },
+	stroke: { editable: false, value: 'none' },
+	fill: { editable: false, value: 'none' }
+};

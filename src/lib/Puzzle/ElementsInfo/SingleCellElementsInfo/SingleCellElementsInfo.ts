@@ -24,6 +24,7 @@ import {
 import {
 	countNeighbourConstraint,
 	DEFAULT_CIRCLE_SHAPE,
+	DEFAULT_INVISIBLE_CAGE,
 	DEFAULT_SQUARE_SHAPE,
 	getParsingResult,
 	orthogonalRegionSeenCountConstraint,
@@ -1894,12 +1895,7 @@ export const chaosConstructionChessSumsInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.CHAOS_CONSTRUCTION_CHESS_SUMS,
 
-	shape: {
-		type: SHAPE_TYPES.CAGE,
-		strokeWidth: { editable: false, value: 0 },
-		stroke: { editable: false, value: 'none' },
-		fill: { editable: false, value: 'none' }
-	},
+	shape: DEFAULT_INVISIBLE_CAGE,
 
 	meta: {
 		description: `A cell with a number in its top-left corner is a Chess Sums cell. The number in the top-left corner indicates the amount of Chess Sums satisfied by the digit in that cell. A digit in a Chess Sums cell gives one or more of the following:
@@ -2100,6 +2096,48 @@ export const chaosConstructionCountSameRegionNeighborCellsAndSelfInfo: SquareCel
 	}
 };
 
+function chaosConstructionSpotlightConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const cell_var = cellToVarName(cell);
+	const region_var = cellToGridVarName(cell, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
+	const orthogonal_cells = grid.getOrthogonallyAdjacentCells(cell);
+
+	const region_vars = cellsToGridVarsStr(orthogonal_cells, VAR_2D_NAMES.CHAOS_CONSTRUCTION_REGIONS);
+
+	const constraint_str = `constraint count_eq(${region_vars}, ${region_var}, ${cell_var});\n`;
+	return constraint_str;
+}
+
+export const chaosConstructionSpotlightInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.SINGLE_CELL,
+		defaultValue: 's'
+	},
+
+	toolId: TOOLS.CHAOS_CONSTRUCTION_SPOTLIGHT,
+
+	shape: DEFAULT_INVISIBLE_CAGE,
+
+	meta: {
+		description:
+			"A 's' cell's digit equals the number of its orthogonal neighbors in the same region.",
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, chaosConstructionSpotlightConstraint);
+	}
+};
+
 function directedPathStartConstraint(
 	model: PuzzleModel,
 	grid: Grid,
@@ -2278,12 +2316,7 @@ export const nurikabeIslandProductOfSumAndSizeInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.NURIKABE_ISLAND_PRODUCT_OF_SUM_AND_SIZE_CLUE,
 
-	shape: {
-		type: SHAPE_TYPES.CAGE,
-		strokeWidth: { editable: false, value: 0 },
-		stroke: { editable: false, value: 'none' },
-		fill: { editable: false, value: 'none' }
-	},
+	shape: DEFAULT_INVISIBLE_CAGE,
 
 	meta: {
 		description: `Each island contains exactly one numbered clue, which gives the product of the sum of the digits on the island and the size (number of cells) of the island, e.g. an island filled with 346 is would have a "39" clue (13x3). A "?" may represent any single, double, or triple-digit number.`,
@@ -2587,12 +2620,7 @@ export const shikakuRegionSumInfo: SquareCellElementInfo = {
 		}
 	],
 
-	shape: {
-		type: SHAPE_TYPES.CAGE,
-		strokeWidth: { editable: false, value: 0 },
-		stroke: { editable: false, value: 'none' },
-		fill: { editable: false, value: 'none' }
-	},
+	shape: DEFAULT_INVISIBLE_CAGE,
 
 	meta: {
 		description:

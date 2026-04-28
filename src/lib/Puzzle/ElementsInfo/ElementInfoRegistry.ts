@@ -260,6 +260,7 @@ import {
 	chaosConstructionXSumRegionBordersInfo,
 	loopwhichesInfo,
 	mysterySandwichSumInfo,
+	outsideChaosConstructionRegionVarietyInfo,
 	outsideConsecutiveSumInfo,
 	outsideEdgeYinYangSumOfShadedInfo,
 	pentominoBorderCountInfo,
@@ -338,7 +339,8 @@ import {
 	orthogonallyConnectedRegionsRegionZeroCellInfo,
 	orthogonallyConnectedRegionsRegionSizeCellInfo,
 	countExactDistanceMatchCellInfo,
-	orthogonallyConnectedRegionsSmallestOrLargestInRegionInfo
+	orthogonallyConnectedRegionsSmallestOrLargestInRegionInfo,
+	chaosConstructionSpotlightInfo
 } from './SingleCellElementsInfo/SingleCellElementsInfo';
 import {
 	yinYangAdjacentSameShadeCountInfo,
@@ -865,6 +867,11 @@ export function registerElementInfo(tool: string, element_info: SquareCellElemen
 	elementInfoRegistry[tool] = element_info;
 }
 
+registerElementInfo(
+	TOOLS.OUTSIDE_CHAOS_CONSTRUCTION_REGION_VARIETY,
+	outsideChaosConstructionRegionVarietyInfo
+);
+registerElementInfo(TOOLS.CHAOS_CONSTRUCTION_SPOTLIGHT, chaosConstructionSpotlightInfo);
 registerElementInfo(TOOLS.CORNER_COUNTING_CIRCLES, cornerCountingCirclesInfo);
 registerElementInfo(TOOLS.RENBAN_CAGE, renbanCageInfo);
 registerElementInfo(TOOLS.CELL_CENTER_LOOP, cellCenterLoopInfo);
