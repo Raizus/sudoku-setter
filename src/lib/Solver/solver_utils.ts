@@ -1,4 +1,4 @@
-import type { ConstraintType } from '../Puzzle/puzzle_schema';
+import type { ConstraintType, ElementsDictI } from '../Puzzle/puzzle_schema';
 import type { ConstraintsElement } from '../Puzzle/puzzle_schema';
 import type { SingleCellTool } from '../Puzzle/puzzle_schema';
 import type { Cell } from '../Puzzle/Grid/Cell';
@@ -169,7 +169,7 @@ export function get_grid_name(negative_constraints: Record<string, boolean> | un
 export interface PuzzleAuxI {
 	grid: Grid;
 	valid_digits: number[];
-	elementsDict: Map<string, ConstraintsElement>;
+	elementsDict: ElementsDictI;
 }
 
 export interface ModelI {

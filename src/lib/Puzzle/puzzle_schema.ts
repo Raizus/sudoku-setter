@@ -153,3 +153,28 @@ export interface ToolPreview<T extends ConstraintType> {
 	match_id?: string;
 	mode: 'add' | 'remove';
 }
+
+export interface ElementsDictI extends Map<string, ConstraintsElement> {
+	addElementToDict(element: ConstraintsElement): string;
+	orderedEntries(): Generator<[string, ConstraintsElement], void, unknown>;
+	findElementsByTool(toolId: TOOLID): ConstraintsElement[];
+	hasTool(toolId: TOOLID): boolean;
+	removeFromDict(element_id: string): [string, ConstraintsElement] | undefined;
+	getConstraint<T extends ConstraintType>(element_id: string, constraintId: string): T | null;
+	addConstraint<T extends ConstraintType>(
+		element_id: string,
+		constraintId: string,
+		constraint: T
+	): void;
+	setElement(element_id: string, element: ConstraintsElement): void;
+	moveElementUp(element_id: string): void;
+	moveElementDown(element_id: string): void;
+	enableDisableElement(element_id: string, value: boolean): void;
+	removeConstraint(element_id: string, constraintId: string): void;
+	updateConstraint<T extends ConstraintType>(
+		element_id: string,
+		constraintId: string,
+		constraint: T
+	): void;
+	
+}

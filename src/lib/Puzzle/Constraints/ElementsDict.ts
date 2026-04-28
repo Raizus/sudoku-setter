@@ -209,7 +209,7 @@ export class ElementsDict extends Map<string, ConstraintsElement> {
 		return false;
 	}
 
-	removeFromDict(element_id: string) {
+	removeFromDict(element_id: string): [string, ConstraintsElement] | undefined {
 		const elementToRemove = this.get(element_id);
 		if (elementToRemove === undefined) return;
 		this.delete(element_id);
@@ -218,7 +218,7 @@ export class ElementsDict extends Map<string, ConstraintsElement> {
 		return [element_id, elementToRemove];
 	}
 
-	getConstraint<T extends ConstraintType>(element_id: string, constraintId: string) {
+	getConstraint<T extends ConstraintType>(element_id: string, constraintId: string): T | null {
 		const element = this.get(element_id);
 		if (!element || !element.constraints) return null;
 		const constraint = element.constraints[constraintId];
@@ -235,7 +235,7 @@ export class ElementsDict extends Map<string, ConstraintsElement> {
 		return null;
 	}
 
-	addConstraint<T extends ConstraintType>(element_id: string, constraintId: string, constraint: T) {
+	addConstraint<T extends ConstraintType>(element_id: string, constraintId: string, constraint: T): void {
 		if (!this.get(element_id)) {
 			const element: ConstraintsElement = { tool_id: constraint.toolId, constraints: {} };
 			this.addElementToDict(element);
@@ -247,7 +247,7 @@ export class ElementsDict extends Map<string, ConstraintsElement> {
 		element.constraints[constraintId] = constraint;
 	}
 
-	setElement(element_id: string, element: ConstraintsElement) {
+	setElement(element_id: string, element: ConstraintsElement): void {
 		if (this.has(element_id)) {
 			this.set(element_id, element);
 		} else {
@@ -256,25 +256,25 @@ export class ElementsDict extends Map<string, ConstraintsElement> {
 		}
 	}
 
-	moveElementUp(element_id: string) {
+	moveElementUp(element_id: string): void {
 		const idx = this.order.indexOf(element_id);
 		if (idx <= 0) return;
 		[this.order[idx - 1], this.order[idx]] = [this.order[idx], this.order[idx - 1]];
 	}
 
-	moveElementDown(element_id: string) {
+	moveElementDown(element_id: string): void {
 		const idx = this.order.indexOf(element_id);
 		if (idx === -1 || idx >= this.order.length - 1) return;
 		[this.order[idx + 1], this.order[idx]] = [this.order[idx], this.order[idx + 1]];
 	}
 
-	enableDisableElement(element_id: string, value: boolean) {
+	enableDisableElement(element_id: string, value: boolean): void {
 		const element = this.get(element_id);
 		if (!element) return;
 		element.disabled = value;
 	}
 
-	removeConstraint(element_id: string, constraintId: string) {
+	removeConstraint(element_id: string, constraintId: string): void {
 		const element = this.get(element_id);
 		if (!element || !element.constraints) return;
 
@@ -287,7 +287,7 @@ export class ElementsDict extends Map<string, ConstraintsElement> {
 		element_id: string,
 		constraintId: string,
 		constraint: T
-	) {
+	): void {
 		const element = this.get(element_id);
 		if (!element || !element.constraints) return;
 
@@ -296,7 +296,7 @@ export class ElementsDict extends Map<string, ConstraintsElement> {
 		}
 	}
 
-	toJSON() {
+	toJSON(): ElementData[] {
 		const elements_data: ElementData[] = [];
 
 		for (const [, element] of this.orderedEntries()) {
@@ -306,7 +306,7 @@ export class ElementsDict extends Map<string, ConstraintsElement> {
 		return elements_data;
 	}
 
-	static fromJson(data: ElementData[] | undefined) {
+	static fromJson(data: ElementData[] | undefined): ElementsDict {
 		const elementsDict = new ElementsDict();
 		if (!data) return elementsDict;
 
