@@ -378,6 +378,7 @@ export enum CORNER_CONSTRAINTS {
 	CORNER_SUM = 'Corner Sum',
 	CORNER_SUM_OF_THREE_EQUALS_THE_OTHER = 'Corner Sum of Three Equals The Other',
 	CORNER_EVEN_COUNT = 'Corner Even Count',
+	CORNER_COUNTING_CIRCLES = 'Corner Counting Circles',
 	CHAOS_CONSTRUCTION_CORNER_CELLS_BELONG_TO_EXACTLY_THREE_REGIONS = 'Chaos Construction Corner Cells Belong To Exactly Three Regions',
 	CHAOS_CONSTRUCTION_CORNER_CELLS_BELONG_TO_SAME_REGION = 'Chaos Construction Corner Cells Belong To Same Region',
 	PRODUCT_SQUARE = 'Product Square',

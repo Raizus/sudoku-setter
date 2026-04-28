@@ -56,7 +56,8 @@ import {
 	productSquareInfo,
 	quadrupleInfo,
 	differentCornerDiagonalSumsInfo,
-	cornerCountLoopTurnsInfo
+	cornerCountLoopTurnsInfo,
+	cornerCountingCirclesInfo
 } from './CornerToolsElementsInfo';
 import {
 	cosmeticArrowInfo,
@@ -863,6 +864,7 @@ export function registerElementInfo(tool: string, element_info: SquareCellElemen
 	elementInfoRegistry[tool] = element_info;
 }
 
+registerElementInfo(TOOLS.CORNER_COUNTING_CIRCLES, cornerCountingCirclesInfo);
 registerElementInfo(TOOLS.CELL_CENTER_LOOP, cellCenterLoopInfo);
 registerElementInfo(
 	TOOLS.BALANCED_LOOP_SEGMENT_SUM_CENTER_OR_EDGE,

@@ -3,7 +3,7 @@ import {
 	defaultValueUpdater,
 	type ValueValidatorOptions
 } from '$src/lib/InputHandlers/InputHandler';
-import { SHAPE_TYPES } from '$lib/Puzzle/Shape/Shape';
+import { SHAPE_TYPES, type EditableShapeI } from '$lib/Puzzle/Shape/Shape';
 import { TOOLS, TOOL_CATEGORIES } from '$lib/Puzzle/Tools';
 import type { SquareCellElementInfo } from '../ElementInfo';
 import { cornerUsage, quadrupleUsage } from '../ToolUsage';
@@ -20,6 +20,20 @@ import type { ConstraintsElement, CornerToolI } from '../puzzle_schema';
 import type { Grid } from '../Grid/Grid';
 import { parseVarList, type ParseOptions } from '$src/lib/Solver/value_parsing';
 import { combinations } from '$src/lib/utils/functionUtils';
+import type { GridCoordI } from '$src/lib/utils/SquareCellGridCoords';
+
+const DEFAULT_MEDIUM_BACKGROUND_CORNER_CIRCLE: EditableShapeI = {
+	type: SHAPE_TYPES.CIRCLE,
+	r: { editable: false, value: 0.15 },
+	strokeWidth: { editable: false, value: 0.023 },
+	stroke: { editable: false, value: 'black' },
+	fill: { editable: false, value: 'var(--grid-background-color)' }
+};
+
+const DEFAULT_LARGE_BACKGROUND_CORNER_CIRCLE: EditableShapeI = {
+	...DEFAULT_MEDIUM_BACKGROUND_CORNER_CIRCLE,
+	r: { editable: false, value: 0.25 },
+};
 
 const DEFAULT_UNTYPABLE_CORNER_CATEGORIES = [
 	TOOL_CATEGORIES.CORNER_CONSTRAINT,
@@ -35,6 +49,19 @@ const DEFAULT_TYPABLE_CORNER_CATEGORIES = [
 	TOOL_CATEGORIES.CORNER_TOOL,
 	TOOL_CATEGORIES.LOCAL_ELEMENT
 ];
+
+function cellsFromElement(grid: Grid, element: ConstraintsElement) {
+	const constraints = element.constraints as Record<string, CornerToolI>;
+	const constl = Object.values(constraints).filter((constraint) => !constraint.disabled);
+	const all_coords: GridCoordI[] = [];
+
+	constl.forEach((constraint) => all_coords.push(...constraint.cells));
+	const cells = new Set(
+		all_coords.map((coord) => grid.getCell(coord.r, coord.c)).filter((cell) => !!cell)
+	);
+
+	return cells;
+}
 
 export function validateCornerValue(value: string, maxLength = 3): boolean {
 	const options: ValueValidatorOptions = {
@@ -89,7 +116,7 @@ function simpleCornerElement(model: PuzzleModel, element: ConstraintsElement, pr
 	let out_str = '';
 	const constraints = element.constraints;
 	if (!constraints) return out_str;
-	
+
 	const grid = model.puzzle.grid;
 	for (const constraint of Object.values(constraints)) {
 		const constraint_str = simpleCornerConstraint(grid, constraint as CornerToolI, predicate);
@@ -204,14 +231,7 @@ export const quadrupleInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.QUADRUPLE,
-
-	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: 0.25 },
-		strokeWidth: { editable: false, value: 0.023 },
-		stroke: { editable: false, value: 'black' },
-		fill: { editable: false, value: 'var(--grid-background-color)' }
-	},
+	shape: DEFAULT_LARGE_BACKGROUND_CORNER_CIRCLE,
 
 	meta: {
 		description: 'Digits in a circle appear at least once in the four surrounding cells.',
@@ -227,14 +247,7 @@ export const cornerSumInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CORNER_OPTIONS,
 
 	toolId: TOOLS.CORNER_SUM,
-
-	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: 0.25 },
-		strokeWidth: { editable: false, value: 0.023 },
-		stroke: { editable: false, value: 'black' },
-		fill: { editable: false, value: 'var(--grid-background-color)' }
-	},
+	shape: DEFAULT_LARGE_BACKGROUND_CORNER_CIRCLE,
 
 	meta: {
 		description:
@@ -257,14 +270,7 @@ export const cornerSumOfThreeEqualsTheOtherInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.CORNER_SUM_OF_THREE_EQUALS_THE_OTHER,
-
-	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: 0.15 },
-		strokeWidth: { editable: false, value: 0.023 },
-		stroke: { editable: false, value: 'black' },
-		fill: { editable: false, value: 'var(--grid-background-color)' }
-	},
+	shape: DEFAULT_MEDIUM_BACKGROUND_CORNER_CIRCLE,
 
 	meta: {
 		description:
@@ -280,18 +286,43 @@ export const cornerSumOfThreeEqualsTheOtherInfo: SquareCellElementInfo = {
 	}
 };
 
+function countingCirclesElement(model: PuzzleModel, element: ConstraintsElement) {
+	const cells = cellsFromElement(model.puzzle.grid, element);
+	const vars = cellsToVarsName([...cells]);
+	const vars_str = `${vars.join(',\n\t')}`;
+
+	let out_str = '';
+	out_str += `array[int] of var int: counting_circles = [\n\t${vars_str}\n];\n`;
+	out_str += `constraint counting_circles_p(counting_circles, ALLOWED_DIGITS);\n`;
+
+	return out_str;
+}
+
+export const cornerCountingCirclesInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.CORNER,
+		defaultValue: ''
+	},
+
+	toolId: TOOLS.CORNER_COUNTING_CIRCLES,
+	shape: DEFAULT_LARGE_BACKGROUND_CORNER_CIRCLE,
+
+	meta: {
+		description:
+			'If the digit N appears in any of the four cells adjacent to a circle then it appears exactly N times adjacent to a circle across the grid.',
+		tags: [],
+		usage: cornerUsage(),
+		categories: DEFAULT_UNTYPABLE_CORNER_CATEGORIES
+	},
+
+	solver_func: countingCirclesElement
+};
+
 export const cornerEvenCountInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CORNER_OPTIONS,
 
 	toolId: TOOLS.CORNER_EVEN_COUNT,
-
-	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: 0.25 },
-		strokeWidth: { editable: false, value: 0.023 },
-		stroke: { editable: false, value: 'black' },
-		fill: { editable: false, value: 'var(--grid-background-color)' }
-	},
+	shape: DEFAULT_LARGE_BACKGROUND_CORNER_CIRCLE,
 
 	meta: {
 		description:
@@ -437,13 +468,7 @@ export const equalDiagonalDifferencesInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.EQUAL_DIAGONAL_DIFFERENCES,
 
-	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: 0.15 },
-		strokeWidth: { editable: false, value: 0.023 },
-		stroke: { editable: false, value: 'black' },
-		fill: { editable: false, value: 'var(--grid-background-color)' }
-	},
+	shape: DEFAULT_MEDIUM_BACKGROUND_CORNER_CIRCLE,
 
 	meta: {
 		description:
@@ -466,14 +491,7 @@ export const differentCornerDiagonalSumsInfo: SquareCellElementInfo = {
 	},
 
 	toolId: TOOLS.DIFFERENT_CORNER_DIAGONAL_SUMS,
-
-	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: 0.15 },
-		strokeWidth: { editable: false, value: 0.023 },
-		stroke: { editable: false, value: 'black' },
-		fill: { editable: false, value: 'var(--grid-background-color)' }
-	},
+	shape: DEFAULT_MEDIUM_BACKGROUND_CORNER_CIRCLE,
 
 	meta: {
 		description:
@@ -533,13 +551,7 @@ export const box2x2NumberRankingInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CORNER_OPTIONS,
 	toolId: TOOLS.BOX_2X2_NUMBER_RANKING,
 
-	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: 0.15 },
-		strokeWidth: { editable: false, value: 0.023 },
-		stroke: { editable: false, value: 'black' },
-		fill: { editable: false, value: 'var(--grid-background-color)' }
-	},
+	shape: DEFAULT_MEDIUM_BACKGROUND_CORNER_CIRCLE,
 
 	meta: {
 		description:
@@ -570,10 +582,10 @@ function cornerCountLoopTurnsConstraint(
 	const val = parseInt(value);
 	if (Number.isNaN(val)) return '';
 
-	const coords = '['+cells.map(cell => `(${cell.r}, ${cell.c})`).join(',')+']';
+	const coords = '[' + cells.map((cell) => `(${cell.r}, ${cell.c})`).join(',') + ']';
 
 	let out_str = `constraint count(${loop_vars_str}, true) >= ${val};\n`;
-	out_str += `constraint count_loop_turns_f(${coords}, ${grid_1}, ${edges_h}, ${edges_v}) = ${val};\n`
+	out_str += `constraint count_loop_turns_f(${coords}, ${grid_1}, ${edges_h}, ${edges_v}) = ${val};\n`;
 
 	return out_str;
 }
@@ -588,13 +600,7 @@ export const cornerCountLoopTurnsInfo: SquareCellElementInfo = {
 
 	toolId: TOOLS.CORNER_COUNT_LOOP_TURNS,
 
-	shape: {
-		type: SHAPE_TYPES.CIRCLE,
-		r: { editable: false, value: 0.25 },
-		strokeWidth: { editable: false, value: 0.023 },
-		stroke: { editable: false, value: 'black' },
-		fill: { editable: false, value: 'var(--grid-background-color)' }
-	},
+	shape: DEFAULT_LARGE_BACKGROUND_CORNER_CIRCLE,
 
 	meta: {
 		description:
