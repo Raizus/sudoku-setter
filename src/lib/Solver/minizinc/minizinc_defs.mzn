@@ -4114,8 +4114,18 @@ function var int: grid_graph_degree_f(
 );
 
 % Linearise node index: node (i,j) -> (i - r_min) * ncols + (j - c_min) + 1
-function int: nid(int: i, int: j, int: r_min, int: ncols, int: c_min) =
-    (i - r_min) * ncols + (j - c_min) + 1;
+function int: nid(
+    int: r, int: c, 
+    array[int, int] of var $$T: grid
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: r_min = min(rows);
+    int: c_min = min(cols);
+    int: ncols = card(cols);
+} in (
+    (r - r_min) * ncols + (c - c_min) + 1
+);
 
 predicate assert_graph_edges_p(
     array[int, int] of var bool: loop_nodes,
@@ -4178,12 +4188,12 @@ predicate graph_edges_p(
     int: E = E_h + E_v;
 
     array[1..E] of int: from =
-        [nid(i, j,   r_min, ncols, c_min) | i in rows, j in c_min..c_max-1] ++
-        [nid(i, j,   r_min, ncols, c_min) | i in r_min..r_max-1, j in cols];
+        [nid(i, j, loop_nodes) | i in rows, j in c_min..c_max-1] ++
+        [nid(i, j, loop_nodes) | i in r_min..r_max-1, j in cols];
 
     array[1..E] of int: to =
-        [nid(i, j+1, r_min, ncols, c_min) | i in rows, j in c_min..c_max-1] ++
-        [nid(i+1, j, r_min, ncols, c_min) | i in r_min..r_max-1, j in cols];
+        [nid(i, j+1, loop_nodes) | i in rows, j in c_min..c_max-1] ++
+        [nid(i+1, j, loop_nodes) | i in r_min..r_max-1, j in cols];
 
     % Flat node and edge bool arrays for connected/2
     array[1..N] of var bool: ns =
@@ -4685,7 +4695,6 @@ predicate path_is_turn_p(
 } in (
     (has_left xor has_right) /\ (has_up xor has_down)
 );
-
 
 function var int: arm_sum_f(
     int: r, int: c,
@@ -5966,31 +5975,6 @@ function tuple(var int, var int): idx_to_coord2d(var int: n, int: n_cols) = let 
     var int: c1 = (n - 1) mod n_cols;
 } in (r1, c1);
 
-predicate direct_path_adjacent_sum_is_prime(
-    array[int, int] of var int: grid,
-    array[int] of int: from,
-    array[int] of int: to,
-    array[int] of var bool: es
-) = let {
-    set of int: e_idxs = index_set(es);
-    set of int: rows = index_set_1of2(grid);
-    set of int: cols = index_set_2of2(grid);
-    int: n_cols = length(cols);
-} in (
-    forall(k in e_idxs)(
-        es[k] -> let {
-            int: n1 = from[k];
-            int: n2 = to[k];
-            tuple(var int, var int): t1 = idx_to_coord2d(n1, n_cols);
-            tuple(var int, var int): t2 = idx_to_coord2d(n2, n_cols);
-            var int: sum_var;
-        } in (
-            sum_var = grid[t1.1,t1.2] + grid[t2.1,t2.2] /\
-            is_prime_p(sum_var)
-        )
-    )
-);
-
 predicate directed_path_is_region_sum_line_p(
     array[int, int] of var int: grid,
     array[int, int] of var int: regions, % sudoku regions
@@ -6035,29 +6019,6 @@ predicate directed_path_is_region_sum_line_p(
         exists(r in rows, c in cols)(rsl_labels[r,c]==label) ->
             sum_var = conditional_sum_f(array1d(grid), array1d(rsl_labels), label)
     )
-);
-
-predicate directed_path_sum_path_cells_in_region_is_prime_p(
-    array[int, int] of var int: grid,
-    array[int, int] of var int: regions,
-    array[int] of var bool: ns,
-    set of int: region_vals
-) = let {
-    array[int] of var int: regions_1d = array1d(regions);
-    set of int: idxs = index_set(regions_1d);
-} in (
-   forall(reg in region_vals)(
-       let {
-           array[idxs] of var bool: region_bools;
-           var int: sum_var;
-       } in (
-           forall(i in idxs)(
-               region_bools[i] = (regions_1d[i] == reg /\ ns[i])
-           ) 
-           /\ sum_var = conditional_sum_f(array1d(grid), region_bools, true)
-           /\ is_prime_p(sum_var)
-       )
-   )
 );
 
 predicate direct_path_adjacent_dutch_whispers(
