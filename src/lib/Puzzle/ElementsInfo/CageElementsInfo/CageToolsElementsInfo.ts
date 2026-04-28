@@ -586,6 +586,26 @@ export const vaultedKillerCageInfo: SquareCellElementInfo = {
 	}
 };
 
+export const renbanCageInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_CAGE_OPTIONS,
+
+	toolId: TOOLS.RENBAN_CAGE,
+
+	shape: DEFAULT_CAGE_SHAPE,
+
+	meta: {
+		description:
+			'Numbers in a cage form a set of non-repeating consecutive digits (which can be in any order).',
+		usage: typableCageUsage(),
+		tags: [],
+		categories: typableCageDefaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleCageElement(model, element, 'renban');
+	}
+};
+
 export const aquariumCageInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_CAGE_OPTIONS,
 

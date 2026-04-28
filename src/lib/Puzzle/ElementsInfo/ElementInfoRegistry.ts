@@ -26,7 +26,8 @@ import {
 	shadedRowCollumnBoxCountersShadedDigitSumCageInfo,
 	yinYangEqualSumCageInfo,
 	oneCellSumOfOthersCageInfo,
-	digitCountingCageInfo
+	digitCountingCageInfo,
+	renbanCageInfo
 } from './CageElementsInfo/CageToolsElementsInfo';
 import {
 	centerPMInfo,
@@ -865,6 +866,7 @@ export function registerElementInfo(tool: string, element_info: SquareCellElemen
 }
 
 registerElementInfo(TOOLS.CORNER_COUNTING_CIRCLES, cornerCountingCirclesInfo);
+registerElementInfo(TOOLS.RENBAN_CAGE, renbanCageInfo);
 registerElementInfo(TOOLS.CELL_CENTER_LOOP, cellCenterLoopInfo);
 registerElementInfo(
 	TOOLS.BALANCED_LOOP_SEGMENT_SUM_CENTER_OR_EDGE,

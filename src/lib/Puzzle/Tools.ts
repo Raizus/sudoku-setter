@@ -507,6 +507,8 @@ export enum CAGE_CONSTRAINTS {
 	DIGIT_COUNTING_CAGE = 'Digit Counting Cage',
 	VAULTED_CAGE = 'Vaulted Cage',
 	VAULTED_KILLER_CAGE = 'Vaulted Killer Cage',
+	RENBAN_CAGE = 'Renban Cage',
+
 	YIN_YANG_ANTITHESIS_KILLER_CAGE = 'Yin Yang Antithesis Killer Cage',
 	YIN_YANG_BREAKEVEN_KILLER_CAGE = 'Yin Yang Breakeven Killer Cage',
 	YIN_YANG_EQUAL_SUM_CAGE = 'Yin Yang Equal Sum Cage',
