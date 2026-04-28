@@ -43,7 +43,7 @@ const DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS: OutsideDirectionToolInputOptions = {
 
 const DEFAULT_OUTSIDE_CORNER_OR_EDGE_INPUT_OPTIONS: OutsideDirectionToolInputOptions = {
 	...DEFAULT_OUTSIDE_EDGE_INPUT_OPTIONS,
-	cornerOrEdge: CornerOrEdge.EDGE
+	cornerOrEdge: CornerOrEdge.CORNER_OR_EDGE
 };
 
 const DEFAULT_META = {
