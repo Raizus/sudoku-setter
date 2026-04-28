@@ -4128,7 +4128,7 @@ function int: nid(
 );
 
 predicate assert_graph_edges_p(
-    array[int, int] of var bool: loop_nodes,
+    array[int, int] of var $$T: loop_nodes,
     array[int, int] of var bool: edges_h,
     array[int, int] of var bool: edges_v,    
 ) = let {
@@ -4405,6 +4405,48 @@ predicate connected_path_nodes_are_german_whispers_p(
     % Vertical edges: if edge is active, adjacent nodes differ by >= 5
     forall(i in rows_v, j in cols_v)(
         edges_v[i,j] -> abs(grid[i,j] - grid[i+1,j]) >= 5
+    )
+);
+
+predicate connected_path_nodes_forbidden_adjacent_sum_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var bool: edges_h,
+    array[int, int] of var bool: edges_v,
+    var int: val
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    set of int: rows_h = index_set_1of2(edges_h);
+    set of int: cols_h = index_set_2of2(edges_h);
+    set of int: rows_v = index_set_1of2(edges_v);
+    set of int: cols_v = index_set_2of2(edges_v);
+} in (
+    assert_graph_edges_p(grid, edges_h, edges_v)
+    /\
+    % if two nodes are connected then grid[r1,c1]+grid[r2,c2] != val
+    % Horizontal edges
+    forall(i in rows_h, j in cols_h)(
+        edges_h[i,j] -> grid[i,j] + grid[i,j+1] != val
+    )
+    /\
+    % Vertical edges
+    forall(i in rows_v, j in cols_v)(
+        edges_v[i,j] -> grid[i,j] + grid[i+1,j] != val
+    )
+);
+
+predicate connected_path_visits_every_cell_except_x_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var bool: loop_nodes,
+    var int: val
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in (
+    assert(index_sets_agree(grid, loop_nodes), "grid and loop_nodes must have the same indexes.")
+    /\ 
+    forall(r in rows, c in cols)(
+        (loop_nodes[r,c] /\ grid[r,c] != val) \/ (not loop_nodes[r,c] /\ grid[r,c] == val)
     )
 );
 

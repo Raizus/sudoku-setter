@@ -574,7 +574,9 @@ export enum VALUED_GLOBAL_CONSTRAINTS {
 	FORBIDDEN_ORTHOGONALLY_ADJACENT_SUM = 'Forbidden Orthogonally Adjacent Sum',
 	FORBIDDEN_KNIGHT_SUM = 'Forbidden Knight Sum',
 	MINIMUM_DIAGONALLY_ADJACENT_DIFFERENCE = 'Minimum Diagonally Adjacent Difference',
-	LITS_MAX_TETROMINO_SUM = 'LITS Max Tetromino Sum'
+	LITS_MAX_TETROMINO_SUM = 'LITS Max Tetromino Sum',
+	LOOP_FORBIDDEN_ADJACENT_SUM = 'Loop Forbidden Adjacent Sum',
+	LOOP_VISITS_EVERY_CELL_EXCEPT_X = 'Loop Visits Every Cell Except X'
 }
 
 export enum OTHER_CONSTRAINTS {

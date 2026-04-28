@@ -386,6 +386,8 @@ import {
 	forbiddenKnightSumInfo,
 	forbiddenOrthogonallyAdjacentSumInfo,
 	litsMaxTetrominoSumInfo,
+	loopForbiddenAdjacentSumInfo,
+	loopVisitsEveryCellExceptXInfo,
 	minimumDiagonallyAdjacentDifferenceInfo
 } from './ValuedGlobalConstraintsElementsInfo';
 import {
@@ -875,6 +877,8 @@ registerElementInfo(TOOLS.CHAOS_CONSTRUCTION_SPOTLIGHT, chaosConstructionSpotlig
 registerElementInfo(TOOLS.CORNER_COUNTING_CIRCLES, cornerCountingCirclesInfo);
 registerElementInfo(TOOLS.RENBAN_CAGE, renbanCageInfo);
 registerElementInfo(TOOLS.CELL_CENTER_LOOP, cellCenterLoopInfo);
+registerElementInfo(TOOLS.LOOP_FORBIDDEN_ADJACENT_SUM, loopForbiddenAdjacentSumInfo);
+registerElementInfo(TOOLS.LOOP_VISITS_EVERY_CELL_EXCEPT_X, loopVisitsEveryCellExceptXInfo);
 registerElementInfo(
 	TOOLS.BALANCED_LOOP_SEGMENT_SUM_CENTER_OR_EDGE,
 	balancedLoopSegmentSumCenterOrEdgeInfo

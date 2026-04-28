@@ -150,3 +150,67 @@ export const litsMaxTetrominoSumInfo: SquareCellElementInfo = {
 
 	solver_func: litsMaxTetrominoSumElement
 };
+
+function loopForbiddenAdjacentSumConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: ValuedGlobalToolI
+) {
+	const value = constraint.value;
+	if (!value) return '';
+
+	const val = parseInt(value);
+	if (isNaN(val)) return '';
+
+	const constraint_str = `constraint connected_path_nodes_forbidden_adjacent_sum_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_H}, ${VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_V}, ${val});\n`;
+	return constraint_str;
+}
+
+export const loopForbiddenAdjacentSumInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_OPTIONS,
+
+	toolId: TOOLS.LOOP_FORBIDDEN_ADJACENT_SUM,
+
+	meta: {
+		description: 'No two adjacent cells directly connected by the loop may sum to X.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.VALUED_GLOBAL_CONSTRAINT]
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, loopForbiddenAdjacentSumConstraint);
+	}
+};
+
+function loopVisitsEveryCellExceptXConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: ValuedGlobalToolI
+) {
+	const value = constraint.value;
+	if (!value) return '';
+
+	const val = parseInt(value);
+	if (isNaN(val)) return '';
+
+	const constraint_str = `constraint connected_path_visits_every_cell_except_x_p(${VAR_2D_NAMES.BOARD}, ${VAR_2D_NAMES.CELL_CENTER_LOOP}, ${val});\n`;
+	return constraint_str;
+}
+
+export const loopVisitsEveryCellExceptXInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_OPTIONS,
+
+	toolId: TOOLS.LOOP_VISITS_EVERY_CELL_EXCEPT_X,
+
+	meta: {
+		description: 'The loop must visit every cell except for the nine cells containing a X.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.VALUED_GLOBAL_CONSTRAINT]
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, loopVisitsEveryCellExceptXConstraint);
+	}
+};
