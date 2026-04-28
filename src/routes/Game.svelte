@@ -20,7 +20,7 @@
 </script>
 
 <div class="game" class:desktop-layout={!isPortrait} class:mobile-layout={isPortrait}>
-	{#if game_mode === GAME_MODE.SETTING}
+	{#if game_mode === GAME_MODE.SETTING && !isPortrait}
 		<div class="left-panel">
 			<SettingPanel />
 		</div>
