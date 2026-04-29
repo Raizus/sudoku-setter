@@ -22,7 +22,6 @@ export function getCornerLineToolInputHandler(
 	stateStore: StateStore,
 	options?: CornerLineToolInputOptions
 ): InputHandler {
-	// console.log('getRCLineToolInputHandler');
 	const pointerHandler = new CellCornerPointerHandler();
 
 	const grid = stateStore.getGrid();
@@ -62,7 +61,7 @@ export function getCornerLineToolInputHandler(
 			stateStore.setShapeAndAddConstraint(element_id, id, currentConstraint);
 			return;
 		}
-		// add to current cage
+		// add to current line
 		else if (currentConstraint && id && mode === CORNER_LINE_TOOL_MODE.ADD_EDIT) {
 			currentConstraint = updateCornerLineConstraintCoords(currentConstraint, coord);
 			stateStore.updateConstraint(element_id, id, currentConstraint);

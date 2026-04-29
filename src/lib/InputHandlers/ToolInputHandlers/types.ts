@@ -153,7 +153,7 @@ export interface ToolOptionsRegistry {
 	[HANDLER_TOOL_TYPE.CLONE]: CloneToolInputOptions;
 	[HANDLER_TOOL_TYPE.LINE]: LineToolInputOptions;
 	[HANDLER_TOOL_TYPE.ARROW]: ArrowToolInputOptions;
-	// [HANDLER_TOOL_TYPE.CORNER_LINE]: CornerLineToolInputOptions;
+	[HANDLER_TOOL_TYPE.CORNER_LINE]: CornerLineToolInputOptions;
 	[HANDLER_TOOL_TYPE.CENTER_CORNER_OR_EDGE]: CenterCornerOrEdgeToolInputOptions;
 	[HANDLER_TOOL_TYPE.OUTSIDE_DIRECTION]: OutsideDirectionToolInputOptions;
 	[HANDLER_TOOL_TYPE.PEN]: PenToolInputOptions;

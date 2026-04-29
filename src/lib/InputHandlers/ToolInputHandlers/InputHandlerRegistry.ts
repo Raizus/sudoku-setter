@@ -5,6 +5,7 @@ import { getArrowToolInputHandler } from './ArrowToolInputHandler';
 import { getCageToolInputHandler } from './CageToolInputHandler';
 import { getCenterCornerOrEdgeToolInputHandler } from './CenterCornerOrEdgeInputHandler';
 import { getCloneToolInputHandler } from './CloneToolInputHandler';
+import { getCornerLineToolInputHandler } from './CornerLineToolInputHandler';
 import { getCornerToolInputHandler } from './CornerToolInputHandler';
 import { getEdgeToolInputHandler } from './EdgeToolInputHandler';
 import { getLineToolInputHandler } from './LineToolInputHandler';
@@ -19,6 +20,7 @@ import {
 	type ArrowToolInputOptions,
 	type CageToolInputOptions,
 	type CenterCornerOrEdgeToolInputOptions,
+	type CornerLineToolInputOptions,
 	type CornerToolOptions,
 	type DirectedAdjacentCellsToolOptions,
 	type EdgeToolOptions,
@@ -123,6 +125,13 @@ const inputHandlerFactoryRegistry: {
 		options: OutsideDirectionToolInputOptions
 	) => {
 		return getOutsideDirectionToolInputHandler(svgRef, stateStore, options);
+	},
+	[HANDLER_TOOL_TYPE.CORNER_LINE]: (
+		svgRef: SVGSVGElement,
+		stateStore: StateStore,
+		options: CornerLineToolInputOptions
+	) => {
+		return getCornerLineToolInputHandler(svgRef, stateStore, options);
 	},
 	[HANDLER_TOOL_TYPE.PEN]: (svgRef: SVGSVGElement, stateStore: StateStore) => {
 		return getPenToolInputHandler(svgRef, stateStore);

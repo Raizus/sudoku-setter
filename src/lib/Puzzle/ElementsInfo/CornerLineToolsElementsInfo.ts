@@ -21,9 +21,9 @@ export const mazeWallInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.MAZE_WALL,
 		r: { editable: true, value: 0.13 },
 		strokeWidth: { editable: true, value: 0.12 },
-		opacity: { editable: true, value: 1.0 },
-		stroke: { editable: true, value: 'darkblue' },
-		fill: { editable: true, value: 'darkblue' },
+		opacity: { editable: true, value: 0.5 },
+		stroke: { editable: true, value: 'rgb(119, 167, 255)' },
+		fill: { editable: true, value: 'rgb(119, 167, 255)' },
 		linePathOptions: {
 			shortenHead: { editable: false, value: 0 },
 			shortenTail: { editable: false, value: 0 },
