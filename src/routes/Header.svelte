@@ -99,10 +99,10 @@
 		font-weight: 500;
 		transition: color 0.2s ease;
 		padding: 0.5rem;
-	}
 
-	.nav-link:hover {
-		color: var(--color-primary);
+		&:hover {
+			color: var(--focus-highlight-color);
+		}
 	}
 
 	.mobile-menu {
