@@ -808,30 +808,33 @@ predicate minimum_p(array[int] of var int: arr, var int: min_val) =
 
 predicate unknown_regions_region_sum_line_p(
     array[int] of var int: arr,
-    array[int] of var int: labels
-) =
+    array[int] of var $$T: labels
+) = let {
     % Ensure arrays have same size
-    index_set(arr) = index_set(labels)
-    /\ let {
-        % Find start indices of each segment
-        array[index_set(arr)] of var bool: is_start = [
-            i = min(index_set(arr)) \/ 
-            labels[i] != labels[i-1]
-            | i in index_set(arr)
-        ],
-        % Find end indices of each segment
-        array[index_set(arr)] of var bool: is_end = [
-            i = max(index_set(arr)) \/ 
-            labels[i] != labels[i+1]
-            | i in index_set(arr)
-        ],
-        var int: sum_var;
-    } in
+
+    set of int: idxs = index_set(labels);
+    % Find start indices of each segment
+    array[idxs] of var bool: is_start = [
+        i = min(idxs) \/ 
+        labels[i] != labels[i-1]
+        | i in idxs
+    ];
+    % Find end indices of each segment
+    array[idxs] of var bool: is_end = [
+        i = max(idxs) \/ 
+        labels[i] != labels[i+1]
+        | i in idxs
+    ];
+    var int: sum_var;
+} in (
+    assert(index_sets_agree(arr, labels), "arr and labels must have the same indexes")
+    /\
     % All segments must sum to the same value
-    forall(i in index_set(arr) where is_start[i])(
-        sum(k in i..min([l | l in index_set(arr) where is_end[l] /\ l >= i]))(arr[k]) =
+    forall(i in idxs where is_start[i])(
+        sum(k in i..min([l | l in idxs where is_end[l] /\ l >= i]))(arr[k]) =
         sum_var
-    );
+    )
+);
 
 predicate one_of_each_digit_p(
     array[int, int] of var int: grid, 
@@ -4114,7 +4117,7 @@ function var int: grid_graph_degree_f(
 );
 
 % Linearise node index: node (i,j) -> (i - r_min) * ncols + (j - c_min) + 1
-function int: nid(
+function int: coords_to_id_f(
     int: r, int: c, 
     array[int, int] of var $$T: grid
 ) = let {
@@ -4125,6 +4128,22 @@ function int: nid(
     int: ncols = card(cols);
 } in (
     (r - r_min) * ncols + (c - c_min) + 1
+);
+
+function tuple(var int, var int): id_to_coords_f(
+    var int: id,
+    array[int, int] of var $$T: grid
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: r_min = min(rows);
+    int: c_min = min(cols);
+    int: ncols = card(cols);
+
+    var int: r = r_min + (id - 1) div ncols;
+    var int: c = c_min + (id - 1) mod ncols;
+} in (
+    (r, c)
 );
 
 predicate assert_graph_edges_p(
@@ -4188,12 +4207,12 @@ predicate graph_edges_p(
     int: E = E_h + E_v;
 
     array[1..E] of int: from =
-        [nid(i, j, loop_nodes) | i in rows, j in c_min..c_max-1] ++
-        [nid(i, j, loop_nodes) | i in r_min..r_max-1, j in cols];
+        [coords_to_id_f(i, j, loop_nodes) | i in rows, j in c_min..c_max-1] ++
+        [coords_to_id_f(i, j, loop_nodes) | i in r_min..r_max-1, j in cols];
 
     array[1..E] of int: to =
-        [nid(i, j+1, loop_nodes) | i in rows, j in c_min..c_max-1] ++
-        [nid(i+1, j, loop_nodes) | i in r_min..r_max-1, j in cols];
+        [coords_to_id_f(i, j+1, loop_nodes) | i in rows, j in c_min..c_max-1] ++
+        [coords_to_id_f(i+1, j, loop_nodes) | i in r_min..r_max-1, j in cols];
 
     % Flat node and edge bool arrays for connected/2
     array[1..N] of var bool: ns =
@@ -6005,215 +6024,6 @@ predicate star_battle_no_touching_p(
             where in_bounds_2d(idx.1, idx.2, star_battle_grid)
         )(
             star_battle_grid[idx.1, idx.2] = 0
-        )
-    )
-);
-
-% -------------------------------------------------------------------------------- % 
-% ------ DIRECTED PATH CONSTRAINTS ----------------------------------------------- %
-
-function tuple(var int, var int): idx_to_coord2d(var int: n, int: n_cols) = let {
-    var int: r1 = (n - 1) div n_cols;
-    var int: c1 = (n - 1) mod n_cols;
-} in (r1, c1);
-
-predicate directed_path_is_region_sum_line_p(
-    array[int, int] of var int: grid,
-    array[int, int] of var int: regions, % sudoku regions
-    array[int] of int: from,
-    array[int] of int: to,
-    array[int] of var bool: ns,
-    array[int] of var bool: es,
-    var int: source
-) = let {
-    set of int: rows = index_set_1of2(grid);
-    set of int: cols = index_set_2of2(grid);
-    int: n_cols = length(cols);
-    int: n_rows = length(rows);
-    array[rows, cols] of var 0..(n_cols*n_rows): rsl_labels; % region sum lines labels
-
-    set of int: e_idxs = index_set(es);
-    set of int: n_idxs = index_set(ns);
-    tuple(var int, var int): tsource = idx_to_coord2d(source, n_cols);
-    var int: sum_var;
-} in (
-    rsl_labels[tsource.1, tsource.2] = 1
-    % set region sum line labels for nodes not in the path
-    /\ forall(k in n_idxs)(
-        not ns[k] -> let {
-            tuple(var int, var int): t1 = idx_to_coord2d(k, n_cols);
-        } in (rsl_labels[t1.1, t1.2] = 0)
-    )
-    % set region sum line labels for nodes connected by an edge
-    /\ forall(k in e_idxs)(
-        es[k] -> let {
-            int: n1 = from[k];
-            int: n2 = to[k];
-            tuple(var int, var int): t1 = idx_to_coord2d(n1, n_cols);
-            tuple(var int, var int): t2 = idx_to_coord2d(n2, n_cols);
-        } in (
-            (regions[t1.1, t1.2] == regions[t2.1, t2.2] -> rsl_labels[t1.1, t1.2] == rsl_labels[t2.1, t2.2]) /\
-            (regions[t1.1, t1.2] != regions[t2.1, t2.2] -> rsl_labels[t2.1, t2.2] == rsl_labels[t1.1, t1.2] + 1)
-        )
-    )
-    % region sum line
-    /\ forall(label in 1..n_cols*n_rows)(
-        exists(r in rows, c in cols)(rsl_labels[r,c]==label) ->
-            sum_var = conditional_sum_f(array1d(grid), array1d(rsl_labels), label)
-    )
-);
-
-predicate direct_path_adjacent_dutch_whispers(
-    array[int, int] of var int: grid,
-    array[int] of int: from,
-    array[int] of int: to,
-    array[int] of var bool: es
-) = let {
-    set of int: e_idxs = index_set(es);
-    set of int: rows = index_set_1of2(grid);
-    set of int: cols = index_set_2of2(grid);
-    int: n_cols = length(cols);
-} in (
-    forall(k in e_idxs)(
-        es[k] -> let {
-            int: n1 = from[k];
-            int: n2 = to[k];
-            int: r1 = (n1 - 1) div n_cols;
-            int: c1 = (n1 - 1) mod n_cols;
-            int: r2 = (n2 - 1) div n_cols;
-            int: c2 = (n2 - 1) mod n_cols;
-        } in (
-            abs(grid[r1,c1] - grid[r2,c2]) >= 4
-        )
-    )
-);
-
-predicate directed_path_teleport_segments_p(
-    array[int, int] of var int: regions,
-    array[int, int] of var int: teleports,
-    array[int] of int: from,
-    array[int] of int: to,
-    array[int] of var bool: ns,
-    array[int] of var bool: es,
-    var int: source
-) = let {
-    set of int: rows = index_set_1of2(regions);
-    set of int: cols = index_set_2of2(regions);
-    int: n_cols = length(cols);
-    int: n_rows = length(rows);
-    set of int: n_idxs = index_set(ns);
-    set of int: e_idxs = index_set(es);
-    tuple(var int, var int): tsource = idx_to_coord2d(source, n_cols);
-} in (
-    regions[tsource.1, tsource.2] = 1
-    % set region labels for nodes not in the path
-    /\ forall(k in n_idxs)(
-        not ns[k] -> let {
-            tuple(var int, var int): t1 = idx_to_coord2d(k, n_cols);
-        } in (regions[t1.1, t1.2] = 0)
-    )
-    % set region labels for nodes connected by an edge
-    /\ forall(k in e_idxs)(
-        es[k] -> let {
-            int: n1 = from[k];
-            int: n2 = to[k];
-            tuple(var int, var int): t1 = idx_to_coord2d(n1, n_cols);
-            tuple(var int, var int): t2 = idx_to_coord2d(n2, n_cols);
-            var bool: is_tp = teleports[t1.1, t1.2] != 0 /\ teleports[t2.1, t2.2] != 0 /\ teleports[t1.1, t1.2] = teleports[t2.1, t2.2]
-        } in (
-            (not is_tp -> regions[t1.1, t1.2] == regions[t2.1, t2.2]) /\
-            (is_tp -> regions[t2.1, t2.2] == regions[t1.1, t1.2] + 1)
-        )
-    )
-);
-
-predicate directed_path_teleport_segments_sum_p(
-    array[int, int] of var int: grid,
-    array[int, int] of var int: teleports,    
-    array[int] of int: from,
-    array[int] of int: to,
-    array[int] of var bool: ns,
-    array[int] of var bool: es,
-    var int: source
-) = let {
-    set of int: rows = index_set_1of2(grid);
-    set of int: cols = index_set_2of2(grid);
-    int: n_cols = length(cols);
-    int: n_rows = length(rows);
-    array[rows, cols] of var 0..(n_cols*n_rows): rsl_labels; % region sum lines labels
-    var int: sum_var;
-} in (
-    directed_path_teleport_segments_p(rsl_labels, teleports, from, to, ns, es, source)
-    % region sum line
-    /\ forall(label in 1..2)(
-        sum_var = conditional_sum_f(array1d(grid), array1d(rsl_labels), label)
-    )
-    % /\ forall(label in 1..n_cols*n_rows)(
-    %     exists(r in rows, c in cols)(rsl_labels[r,c]==label) ->
-    %         sum_var = conditional_sum_f(array1d(grid), array1d(rsl_labels), label)
-    % )
-);
-
-predicate directed_path_teleport_renban_segments_p(
-    array[int, int] of var int: grid,
-    array[int, int] of var int: teleports,
-    array[int] of int: from,
-    array[int] of int: to,
-    array[int] of var bool: ns,
-    array[int] of var bool: es,
-    var int: source,
-    int: max_reg_size
-) = let {
-    set of int: rows = index_set_1of2(grid);
-    set of int: cols = index_set_2of2(grid);
-    int: n_cols = length(cols);
-    int: n_rows = length(rows);
-    int: g_size = n_rows * n_cols;
-    array[rows, cols] of var 0..(n_cols*n_rows): region_labels;
-
-    tuple(var int, var int): tsource = idx_to_coord2d(source, n_cols);
-    set of int: ids = 1..g_size;
-    array[ids] of var 0..max_reg_size: sizes;
-} in (
-    directed_path_teleport_segments_p(region_labels, teleports, from, to, ns, es, source)
-    /\ forall (id in ids) (
-        sizes[id] = sum (r in rows, c in cols) (region_labels[r, c] = id)
-    )
-    % renban line
-    /\ forall(r in rows, c in cols)(
-        forall(r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
-            let {
-                var int: id1 = region_labels[r, c];
-                var int: id2 = region_labels[r2, c2];
-            } in
-            id1 != 0 /\ id2 != 0 /\ id1 == id2 -> grid[r,c] != grid[r2, c2] /\ abs(grid[r,c] - grid[r2, c2]) <= sizes[id1] - 1
-        )
-    )
-);
-
-predicate directed_path_is_parity_line_p(
-    array[int, int] of var int: grid,
-    array[int] of int: from,
-    array[int] of int: to,
-    array[int] of var bool: es
-) = let {
-    set of int: rows = index_set_1of2(grid);
-    set of int: cols = index_set_2of2(grid);
-    int: n_cols = length(cols);
-    int: n_rows = length(rows);
-    int: g_size = n_rows * n_cols;
-    set of int: idxs = index_set(from);
-    array[int] of var int: grid1d = array1d(grid);
-} in (
-    forall(i in idxs)(
-        let {
-            int: n1 = from[i];
-            int: n2 = to[i];
-            var bool: in_edge = es[i];
-            var int: cell1 = grid1d[n1];
-            var int: cell2 = grid1d[n2];
-        } in (
-            in_edge -> different_parity_p(cell1, cell2)
         )
     )
 );

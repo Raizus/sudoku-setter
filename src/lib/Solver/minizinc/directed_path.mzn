@@ -74,28 +74,28 @@ function array[int] of int: directed_path_from_all_f(
     set of int: diag_cols = min_cols+1..max_cols;
 
     % Leftward: (i,j+1) -> (i,j)
-    array[int] of int: from_l = [nid(i, j+1, nodes) | i in rows,   j in lr_cols];
+    array[int] of int: from_l = [coords_to_id_f(i, j+1, nodes) | i in rows,   j in lr_cols];
 
     % Rightward: (i,j) -> (i,j+1)
-    array[int] of int: from_r = [nid(i, j, nodes)   | i in rows,   j in lr_cols];
+    array[int] of int: from_r = [coords_to_id_f(i, j, nodes)   | i in rows,   j in lr_cols];
 
     % Upward: (i+1,j) -> (i,j)
-    array[int] of int: from_u = [nid(i+1, j, nodes) | i in ud_rows, j in cols];
+    array[int] of int: from_u = [coords_to_id_f(i+1, j, nodes) | i in ud_rows, j in cols];
 
     % Downward: (i,j) -> (i+1,j)
-    array[int] of int: from_d = [nid(i, j, nodes)   | i in ud_rows, j in cols];
+    array[int] of int: from_d = [coords_to_id_f(i, j, nodes)   | i in ud_rows, j in cols];
 
     % Diagonal up-left: (i+1,j+1) -> (i,j)
-    array[int] of int: from_ul = [nid(i+1, j+1, nodes) | i in ud_rows, j in lr_cols];
+    array[int] of int: from_ul = [coords_to_id_f(i+1, j+1, nodes) | i in ud_rows, j in lr_cols];
 
     % Diagonal up-right: (i+1,j-1) -> (i,j), same index space as dl
-    array[int] of int: from_ur = [nid(i+1, j-1, nodes) | i in ud_rows, j in diag_cols];
+    array[int] of int: from_ur = [coords_to_id_f(i+1, j-1, nodes) | i in ud_rows, j in diag_cols];
 
     % Diagonal down-left: (i,j) -> (i+1,j-1), indexed by top node (i,j), j in 2..cols
-    array[int] of int: from_dl = [nid(i, j, nodes)     | i in ud_rows, j in diag_cols];
+    array[int] of int: from_dl = [coords_to_id_f(i, j, nodes)     | i in ud_rows, j in diag_cols];
 
     % Diagonal down-right: (i,j) -> (i+1,j+1)
-    array[int] of int: from_dr = [nid(i, j, nodes)     | i in ud_rows, j in lr_cols];
+    array[int] of int: from_dr = [coords_to_id_f(i, j, nodes)     | i in ud_rows, j in lr_cols];
 
     % Shortcuts (both directions)
     % array[int] of int: from_sc_fwd = sc_from;
@@ -138,28 +138,28 @@ function array[int] of int: directed_path_to_all_f(
     set of int: diag_cols = min_cols+1..max_cols;
 
     % Leftward: (i,j+1) -> (i,j)
-    array[int] of int: to_l   = [nid(i, j, nodes)   | i in rows,   j in lr_cols];
+    array[int] of int: to_l   = [coords_to_id_f(i, j, nodes)   | i in rows,   j in lr_cols];
 
     % Rightward: (i,j) -> (i,j+1)
-    array[int] of int: to_r   = [nid(i, j+1, nodes) | i in rows,   j in lr_cols];
+    array[int] of int: to_r   = [coords_to_id_f(i, j+1, nodes) | i in rows,   j in lr_cols];
 
     % Upward: (i+1,j) -> (i,j)
-    array[int] of int: to_u   = [nid(i, j, nodes)   | i in ud_rows, j in cols];
+    array[int] of int: to_u   = [coords_to_id_f(i, j, nodes)   | i in ud_rows, j in cols];
 
     % Downward: (i,j) -> (i+1,j)
-    array[int] of int: to_d   = [nid(i+1, j, nodes) | i in ud_rows, j in cols];
+    array[int] of int: to_d   = [coords_to_id_f(i+1, j, nodes) | i in ud_rows, j in cols];
 
     % Diagonal up-left: (i+1,j+1) -> (i,j)
-    array[int] of int: to_ul   = [nid(i, j, nodes)     | i in ud_rows, j in lr_cols];
+    array[int] of int: to_ul   = [coords_to_id_f(i, j, nodes)     | i in ud_rows, j in lr_cols];
 
     % Diagonal up-right: (i+1,j-1) -> (i,j), same index space as dl
-    array[int] of int: to_ur   = [nid(i, j, nodes)     | i in ud_rows, j in diag_cols];
+    array[int] of int: to_ur   = [coords_to_id_f(i, j, nodes)     | i in ud_rows, j in diag_cols];
 
     % Diagonal down-left: (i,j) -> (i+1,j-1), indexed by top node (i,j), j in 2..cols
-    array[int] of int: to_dl   = [nid(i+1, j-1, nodes) | i in ud_rows, j in diag_cols];
+    array[int] of int: to_dl   = [coords_to_id_f(i+1, j-1, nodes) | i in ud_rows, j in diag_cols];
 
     % Diagonal down-right: (i,j) -> (i+1,j+1)
-    array[int] of int: to_dr   = [nid(i+1, j+1, nodes) | i in ud_rows, j in lr_cols];
+    array[int] of int: to_dr   = [coords_to_id_f(i+1, j+1, nodes) | i in ud_rows, j in lr_cols];
 
     % Shortcuts (both directions)
     % array[int] of int: from_sc_fwd = sc_from;
@@ -227,8 +227,8 @@ predicate directed_path_p(
     array[int] of var bool: ns,
     array[int] of var bool: es,
 ) = let {
-    % int: source_n = nid(source_r, source_c, nodes);
-    % int: target_n = nid(target_r, target_c, nodes);
+    % int: source_n = coords_to_id_f(source_r, source_c, nodes);
+    % int: target_n = coords_to_id_f(target_r, target_c, nodes);
     
 } in (
     assert(index_sets_agree(from_all, to_all), "from_all and to_all must have the same indexes") /\
@@ -251,8 +251,8 @@ predicate direct_path_adjacent_sum_is_prime(
         es[k] -> let {
             int: n1 = from[k];
             int: n2 = to[k];
-            tuple(var int, var int): t1 = idx_to_coord2d(n1, n_cols);
-            tuple(var int, var int): t2 = idx_to_coord2d(n2, n_cols);
+            tuple(var int, var int): t1 = id_to_coords_f(n1, grid);
+            tuple(var int, var int): t2 = id_to_coords_f(n2, grid);
             var int: sum_var;
         } in (
             sum_var = grid[t1.1,t1.2] + grid[t2.1,t2.2] /\
@@ -282,5 +282,209 @@ predicate directed_path_sum_path_cells_in_region_is_prime_p(
            /\ is_prime_p(sum_var)
        )
    )
+);
+
+predicate directed_path_is_region_sum_line_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions, % sudoku regions
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: ns,
+    array[int] of var bool: es,
+    var int: source
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_cols = length(cols);
+    int: n_rows = length(rows);
+    array[rows, cols] of var 0..(n_cols*n_rows): rsl_labels; % region sum lines labels
+
+    set of int: e_idxs = index_set(es);
+    set of int: n_idxs = index_set(ns);
+    tuple(var int, var int): tsource = id_to_coords_f(source, grid);
+    var int: sum_var;
+} in (
+    rsl_labels[tsource.1, tsource.2] = 1
+    % set region sum line labels for nodes not in the path
+    /\ forall(k in n_idxs)(
+        not ns[k] -> let {
+            tuple(var int, var int): t1 = id_to_coords_f(k, grid);
+        } in (rsl_labels[t1.1, t1.2] = 0)
+    )
+    % set region sum line labels for nodes connected by an edge
+    /\ forall(k in e_idxs)(
+        es[k] -> let {
+            int: n1 = from[k];
+            int: n2 = to[k];
+            tuple(var int, var int): t1 = id_to_coords_f(n1, grid);
+            tuple(var int, var int): t2 = id_to_coords_f(n2, grid);
+        } in (
+            % two connected cells in the same region belong to the same region sum line segment
+            (regions[t1.1, t1.2] == regions[t2.1, t2.2] -> rsl_labels[t1.1, t1.2] == rsl_labels[t2.1, t2.2]) 
+            /\
+            % two connected cells in different regions: the target cell (n2) is in the next region sum line segment
+            (regions[t1.1, t1.2] != regions[t2.1, t2.2] -> rsl_labels[t2.1, t2.2] == rsl_labels[t1.1, t1.2] + 1)
+        )
+    )
+    % region sum line
+    /\ forall(label in 1..n_cols*n_rows)(
+        exists(r in rows, c in cols)(rsl_labels[r,c]==label) ->
+            sum_var = conditional_sum_f(array1d(grid), array1d(rsl_labels), label)
+    )
+);
+
+predicate direct_path_adjacent_dutch_whispers(
+    array[int, int] of var int: grid,
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: es
+) = let {
+    set of int: e_idxs = index_set(es);
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_cols = length(cols);
+} in (
+    forall(k in e_idxs)(
+        es[k] -> let {
+            int: n1 = from[k];
+            int: n2 = to[k];
+            int: r1 = (n1 - 1) div n_cols;
+            int: c1 = (n1 - 1) mod n_cols;
+            int: r2 = (n2 - 1) div n_cols;
+            int: c2 = (n2 - 1) mod n_cols;
+        } in (
+            abs(grid[r1,c1] - grid[r2,c2]) >= 4
+        )
+    )
+);
+
+predicate directed_path_teleport_segments_p(
+    array[int, int] of var int: regions,
+    array[int, int] of var int: teleports,
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: ns,
+    array[int] of var bool: es,
+    var int: source
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+    int: n_cols = length(cols);
+    int: n_rows = length(rows);
+    set of int: n_idxs = index_set(ns);
+    set of int: e_idxs = index_set(es);
+    tuple(var int, var int): tsource = id_to_coords_f(source, regions);
+} in (
+    regions[tsource.1, tsource.2] = 1
+    % set region labels for nodes not in the path
+    /\ forall(k in n_idxs)(
+        not ns[k] -> let {
+            tuple(var int, var int): t1 = id_to_coords_f(k, regions);
+        } in (regions[t1.1, t1.2] = 0)
+    )
+    % set region labels for nodes connected by an edge
+    /\ forall(k in e_idxs)(
+        es[k] -> let {
+            int: n1 = from[k];
+            int: n2 = to[k];
+            tuple(var int, var int): t1 = id_to_coords_f(n1, regions);
+            tuple(var int, var int): t2 = id_to_coords_f(n2, regions);
+            var bool: is_tp = teleports[t1.1, t1.2] != 0 /\ teleports[t2.1, t2.2] != 0 /\ teleports[t1.1, t1.2] = teleports[t2.1, t2.2]
+        } in (
+            (not is_tp -> regions[t1.1, t1.2] == regions[t2.1, t2.2]) /\
+            (is_tp -> regions[t2.1, t2.2] == regions[t1.1, t1.2] + 1)
+        )
+    )
+);
+
+predicate directed_path_teleport_segments_sum_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: teleports,    
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: ns,
+    array[int] of var bool: es,
+    var int: source
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_cols = length(cols);
+    int: n_rows = length(rows);
+    array[rows, cols] of var 0..(n_cols*n_rows): rsl_labels; % region sum lines labels
+    var int: sum_var;
+} in (
+    directed_path_teleport_segments_p(rsl_labels, teleports, from, to, ns, es, source)
+    % region sum line
+    /\ forall(label in 1..2)(
+        sum_var = conditional_sum_f(array1d(grid), array1d(rsl_labels), label)
+    )
+    % /\ forall(label in 1..n_cols*n_rows)(
+    %     exists(r in rows, c in cols)(rsl_labels[r,c]==label) ->
+    %         sum_var = conditional_sum_f(array1d(grid), array1d(rsl_labels), label)
+    % )
+);
+
+predicate directed_path_teleport_renban_segments_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: teleports,
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: ns,
+    array[int] of var bool: es,
+    var int: source,
+    int: max_reg_size
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_cols = length(cols);
+    int: n_rows = length(rows);
+    int: g_size = n_rows * n_cols;
+    array[rows, cols] of var 0..(n_cols*n_rows): region_labels;
+
+    tuple(var int, var int): tsource = id_to_coords_f(source, grid);
+    set of int: ids = 1..g_size;
+    array[ids] of var 0..max_reg_size: sizes;
+} in (
+    directed_path_teleport_segments_p(region_labels, teleports, from, to, ns, es, source)
+    /\ forall (id in ids) (
+        sizes[id] = sum (r in rows, c in cols) (region_labels[r, c] = id)
+    )
+    % renban line
+    /\ forall(r in rows, c in cols)(
+        forall(r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
+            let {
+                var int: id1 = region_labels[r, c];
+                var int: id2 = region_labels[r2, c2];
+            } in
+            id1 != 0 /\ id2 != 0 /\ id1 == id2 -> grid[r,c] != grid[r2, c2] /\ abs(grid[r,c] - grid[r2, c2]) <= sizes[id1] - 1
+        )
+    )
+);
+
+predicate directed_path_is_parity_line_p(
+    array[int, int] of var int: grid,
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: es
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_cols = length(cols);
+    int: n_rows = length(rows);
+    int: g_size = n_rows * n_cols;
+    set of int: idxs = index_set(from);
+    array[int] of var int: grid1d = array1d(grid);
+} in (
+    forall(i in idxs)(
+        let {
+            int: n1 = from[i];
+            int: n2 = to[i];
+            var bool: in_edge = es[i];
+            var int: cell1 = grid1d[n1];
+            var int: cell2 = grid1d[n2];
+        } in (
+            in_edge -> different_parity_p(cell1, cell2)
+        )
+    )
 );
 
