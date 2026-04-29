@@ -1,4 +1,4 @@
-import { VAR_2D_NAMES, type PuzzleModel } from '$src/lib/Solver/solver_utils';
+import { cellsToGridVarsStr, VAR_2D_NAMES, type PuzzleModel } from '$src/lib/Solver/solver_utils';
 import type { SquareCellElementInfo } from '../../ElementInfo';
 import type { ConstraintsElement } from '../../puzzle_schema';
 import { TOOLS, TOOL_CATEGORIES, type TOOLID } from '../../Tools';
@@ -17,6 +17,37 @@ function notLoopSizedRegionsConstraint(model: PuzzleModel, tool: TOOLID) {
 	out_str += `array[ROW_IDXS, COL_IDXS] of var int: loop_regions;\n`;
 	out_str += `constraint cell_center_loop_regions_p(cell_center_loop, loop_regions);\n`;
 	out_str += `constraint not_loop_sized_regions_p(board, loop_regions, ALLOWED_DIGITS);\n`;
+
+	return out_str;
+}
+
+function loopBoxLocalSumsConstraint(model: PuzzleModel, tool: TOOLID) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	let out_str = `\n% ${tool}\n`;
+	const used_regions = grid.getUsedRegions();
+	for (const region of used_regions) {
+		const cells = grid.getRegion(region);
+		const coords = '[' + cells.map((cell) => `(${cell.r},${cell.c})`).join(', ') + ']';
+		const grid_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+		const name1 = `lbls_region_${region}_coords`;
+		const name2 = `lbls_region_${region}_values`;
+		out_str += `array[int] of tuple(int, int): ${name1} = ${coords};\n`;
+		out_str += `array[int] of var int: ${name2} = ${grid_vars};\n`;
+
+		const loop = VAR_2D_NAMES.CELL_CENTER_LOOP;
+		const edges_h = VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_H;
+		const edges_v = VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_V;
+
+		out_str += `constraint path_same_segment_sum_in_region_p(${name1}, ${name2}, ${loop}, ${edges_h}, ${edges_v});\n`;
+	}
 
 	return out_str;
 }
@@ -75,6 +106,7 @@ export function cellCenterLoopElement(model: PuzzleModel, element: ConstraintsEl
 	const loop_adj_multiples = !!neg_constr[TOOLS.ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES];
 	const loop_parity = !!neg_constr[TOOLS.LOOP_PARITY];
 	const non_loop_sized_regions = !!neg_constr[TOOLS.NOT_LOOP_SIZED_REGIONS];
+	const loop_box_local_sums = !!neg_constr[TOOLS.LOOP_BOX_LOCAL_SUMS];
 
 	if (no_orthogonal_touch) {
 		out_str += `constraint cell_center_loop_no_orthogonal_touching_p(${loop});\n`;
@@ -97,6 +129,9 @@ export function cellCenterLoopElement(model: PuzzleModel, element: ConstraintsEl
 	}
 	if (non_loop_sized_regions) {
 		out_str += notLoopSizedRegionsConstraint(model, TOOLS.NOT_LOOP_SIZED_REGIONS);
+	}
+	if (loop_box_local_sums) {
+		out_str += loopBoxLocalSumsConstraint(model, TOOLS.LOOP_BOX_LOCAL_SUMS);
 	}
 
 	return out_str;
@@ -137,6 +172,11 @@ export const cellCenterLoopInfo: SquareCellElementInfo = {
 			toolId: TOOLS.NOT_LOOP_SIZED_REGIONS,
 			description:
 				'Non-loop cells form several orthogonally connected groups. Such a group of size N contains exactly the digits from 1 to N.'
+		},
+		{
+			toolId: TOOLS.LOOP_BOX_LOCAL_SUMS,
+			description:
+				'Each sudoku region divides the loop into segments. Within a region, every segment must have the same sum. (This sum may vary from region to region). Every region must have at least two segments.'
 		}
 		// {
 		// 	toolId: TOOLS.MODULAR_LOOP,

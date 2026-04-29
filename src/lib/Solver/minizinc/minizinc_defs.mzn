@@ -195,6 +195,20 @@ test test_orth_adjacent_2d(
     int: d2 = abs(c2-c1);
 } in d1 <= 1 /\ d2 <= 1 /\ d1 + d2 = 1;
 
+test vert_adjacent_2d(
+    int: r1, int: c1,
+    int: r2, int: c2,
+) = (
+    c1 == c2 /\ abs(r2-r1) == 1
+);
+
+test horiz_adjacent_2d(
+    int: r1, int: c1,
+    int: r2, int: c2,
+) = (
+    r1 == r2 /\ abs(c2-c1) == 1
+);
+
 % -------------------------------------------------------------------------------- % 
 % ------ HELPERS ----------------------------------------------------------------- % 
 
@@ -4975,6 +4989,62 @@ predicate count_snake_cells_p(
     array[int] of var bool: snake_vars
 ) = (
     sum(snake_vars) = cell_var
+);
+
+predicate path_same_segment_sum_in_region_p(
+    array[int] of tuple(int,int): coords, % coords in the same region
+    array[int] of var int: values, % grid values
+    array[int, int] of var bool: nodes,
+    array[int, int] of var bool: edges_h,
+    array[int, int] of var bool: edges_v,
+) = let {
+    set of int: idxs = index_set(coords);
+    int: n = length(idxs);
+    set of int: rows = index_set_1of2(nodes);
+    set of int: cols = index_set_2of2(nodes);
+
+    var int: sum_var;
+    array[idxs] of var 0..n: labels;
+} in (
+    assert(index_sets_agree(coords, values), "coords and values must have the same indexes.")
+    /\
+    % has at least 2 segments
+    exists(i in idxs)(labels[i] == 1) /\ exists(i in idxs)(labels[i] == 2)
+    /\
+    % Requires that i precedes i+1 in the array x for all positive i 
+    % (to avoid permutating label values)
+    seq_precede_chain(labels)
+    /\
+    % non-path cells labeled with 0, path cells not 0
+    forall(i in idxs)(
+        let {
+            tuple(int, int): n1 = coords[i];
+            int: r1 = n1.1; int: c1 = n1.2;
+        } in (
+            (not nodes[r1,c1] /\ labels[i] = 0)
+            \/
+            (nodes[r1,c1] /\ labels[i] != 0)
+        )
+    )
+    /\
+    % if two cells are adjacent they have the same label
+    forall(i in idxs, j in idxs where j != i)(
+        let {
+            tuple(int, int): n1 = coords[i];
+            tuple(int, int): n2 = coords[j];
+            int: r1 = n1.1; int: c1 = n1.2;
+            int: r2 = n2.1; int: c2 = n2.2;
+            var bool: v_adj = (vert_adjacent_2d(r1, c1, r2, c2) /\ r1 < r2 /\ edges_v[r1,c1]);
+            var bool: h_adj = (horiz_adjacent_2d(r1, c1, r2, c2) /\ c1 < c2 /\ edges_h[r1,c1]);
+        } in (
+            (v_adj \/ h_adj) -> labels[i] == labels[j]
+        )
+    )
+    % segment sum
+    /\ forall(i in 1..n) (
+        exists([labels[j] = i | j in idxs]) ->
+            sum_var = conditional_sum_f(values, labels, i)
+    )
 );
 
 % -------------------------------------------------------------------------------- % 

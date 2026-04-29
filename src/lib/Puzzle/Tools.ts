@@ -197,7 +197,8 @@ export enum GLOBAL_LOOP_CONSTRAINTS {
 	COUNTING_LOOP = 'Counting Loop',
 	ADJACENT_CELLS_ALONG_LOOP_ARE_MULTIPLES = 'Adjacent Cells Along Loop Are Multiples',
 	ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS = 'Adjacent Cells Along Loop Are German Whispers',
-	LOOP_PARITY = 'Loop Parity'
+	LOOP_PARITY = 'Loop Parity',
+	LOOP_BOX_LOCAL_SUMS = 'Loop Box-Local Sums',
 }
 
 export enum GLOBAL_SNAKE_CONSTRAINTS {
