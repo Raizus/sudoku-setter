@@ -566,83 +566,79 @@ function tuple(var int, var int): id_to_coords_f(
     (r, c)
 );
 
-function array[int] of int: grid_to_graph_from_edges(array[int,int] of var int: grid) = 
-    let {
-        set of int: rows = index_set_1of2(grid);
-        set of int: cols = index_set_2of2(grid);
-        int: width = card(cols); int: height = card(rows);
+function array[int] of int: grid_to_graph_from_edges(
+    array[int,int] of var $$T: grid
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
 
-        % Calculate number of edges
-        int: num_edges = (width-1)*height + (height-1)*width;
-    } in
-        % Horizontal edges first, then vertical edges
-        [ if i <= (width-1)*height then
-            % Horizontal edges
-            let {
-                int: r = (i-1) div (width-1),
-                int: c = (i-1) mod (width-1)
-            } in r*width + c + 1
-          else
-            % Vertical edges
-            let {
-                int: remaining = i - (width-1)*height,
-                int: c = (remaining-1) div (height-1),
-                int: r = (remaining-1) mod (height-1)
-            } in r*width + c + 1
-          endif
-          | i in 1..num_edges];
+    int: r_min = min(rows); int: r_max = max(rows);
+    int: c_min = min(cols); int: c_max = max(cols);
 
-function array[int] of int: grid_to_graph_to_edges(array[int,int] of var int: grid) = 
-    let {
-        set of int: rows = index_set_1of2(grid);
-        set of int: cols = index_set_2of2(grid);
-        int: width = card(cols); int: height = card(rows);
+    int: n_rows = card(rows); int: n_cols = card(cols);
+    int: N = n_rows * n_cols;
 
-        % Calculate number of edges
-        int: num_edges = (width-1)*height + (height-1)*width;
-    } in
-        % Horizontal edges first, then vertical edges
-        [ if i <= (width-1)*height then
-            % Horizontal edges
-            let {
-                int: r = (i-1) div (width-1),
-                int: c = (i-1) mod (width-1)
-            } in r*width + c + 2
-          else
-              % Vertical edges
-              let {
-                  int: remaining = i - (width-1)*height,
-                  int: c = (remaining-1) div (height-1),
-                  int: r = (remaining-1) mod (height-1)
-              } in (r+1)*width + c + 1
-          endif | i in 1..num_edges];
+    set of int: edges_h_cols = c_min..c_max-1;
+    set of int: edges_v_rows = r_min..r_max-1;
 
-predicate graph_edges_connected_region_p(array[int,int] of var int: grid, array[int] of var bool: es, var int: x) = 
-    let {
-        set of int: rows = index_set_1of2(grid);
-        set of int: cols = index_set_2of2(grid);
-        int: width = card(cols); int: height = card(rows);
-        
-        % Calculate number of edges
-        int: num_edges = (width-1)*height + (height-1)*width;
-    } in
-        % Set edge conditions
-        forall(i in 1..num_edges) (
-            if i <= (width-1)*height then
-                % Horizontal edges
-                let {
-                    int: r = (i-1) div (width-1) + min(rows),
-                    int: c = (i-1) mod (width-1) + min(cols)
-                } in es[i] = (grid[r,c] = x /\ grid[r,c+1] = x)
-            else
-                % Vertical edges
-                let {
-                    int: remaining = i - (width-1)*height,
-                    int: c = (remaining-1) div (height-1) + min(cols),
-                    int: r = (remaining-1) mod (height-1) + min(rows)
-                } in es[i] = (grid[r,c] = x /\ grid[r+1,c] = x)
-            endif
-        );
+    % Build flat from/to arrays for all grid edges (both h and v)
+    int: E_h = n_rows * (n_cols - 1);
+    int: E_v = (n_rows - 1) * n_cols;
+    int: E = E_h + E_v;
+
+    array[1..E] of int: from =
+        [coords_to_id_f(i, j, grid) | i in rows, j in edges_h_cols] ++
+        [coords_to_id_f(i, j, grid) | i in edges_v_rows, j in cols];
+} in (from);
+
+function array[int] of int: grid_to_graph_to_edges(
+    array[int,int] of var int: grid
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+
+    int: r_min = min(rows); int: r_max = max(rows);
+    int: c_min = min(cols); int: c_max = max(cols);
+
+    int: n_rows = card(rows); int: n_cols = card(cols);
+    int: N = n_rows * n_cols;
+
+    set of int: edges_h_cols = c_min..c_max-1;
+    set of int: edges_v_rows = r_min..r_max-1;
+
+    % Build flat from/to arrays for all grid edges (both h and v)
+    int: E_h = n_rows * (n_cols - 1);
+    int: E_v = (n_rows - 1) * n_cols;
+    int: E = E_h + E_v;
+
+    array[1..E] of int: to =
+        [coords_to_id_f(i, j+1, grid) | i in rows, j in edges_h_cols] ++
+        [coords_to_id_f(i+1, j, grid) | i in edges_v_rows, j in cols];
+} in (to);
+
+% adjacent cells with value x are connected by an edge
+predicate graph_edges_connected_region_p(
+    array[int] of var int: flat_grid,
+    array[int] of var bool: es,
+    array[int] of int: from,
+    array[int] of int: to,
+    var int: x
+) = let {
+    set of int: edges_idxs = index_set(from);
+    int: num_edges = card(edges_idxs);
+} in (
+    % Set edge conditions
+    forall(i in edges_idxs) (
+        let {
+            int: from_id = from[i];
+            int: to_id = to[i];
+            var int: n1 = flat_grid[from_id];
+            var int: n2 = flat_grid[to_id];
+        } in (
+            es[i] = (n1 = x /\ n2 = x)
+        )
+    )
+);
 
 predicate connected_region(array[int,int] of var int: grid, var int: x) =
     let {
@@ -654,6 +650,9 @@ predicate connected_region(array[int,int] of var int: grid, var int: x) =
         % Create nodes array (flattened grid)
         array[1..n] of var bool: ns = 
             [grid[r,c] = x | r in rows, c in cols];
+
+        array[1..n] of var int: flat_grid = 
+            [grid[r,c] | r in rows, c in cols];
         
         % Calculate number of edges
         int: num_edges = (width-1)*height + (height-1)*width;
@@ -666,7 +665,7 @@ predicate connected_region(array[int,int] of var int: grid, var int: x) =
     } in (
         % set up es (edges var array). Jf two adjacent cells have the same region value,
         % then the corresponding edge is true, otherwise it's false
-        graph_edges_connected_region_p(grid, es, x) /\
+        graph_edges_connected_region_p(flat_grid, es, from, to, x) /\
         % Apply connected constraint
         connected(from, to, ns, es)
     );
@@ -4199,12 +4198,12 @@ predicate edge_in_path_graph_p(
 );
 
 predicate graph_edges_p(
-    array[int, int] of var bool: loop_nodes,
+    array[int, int] of var bool: nodes,
     array[int, int] of var bool: edges_h,
     array[int, int] of var bool: edges_v,
 ) = let {
-    set of int: rows = index_set_1of2(loop_nodes);
-    set of int: cols = index_set_2of2(loop_nodes);
+    set of int: rows = index_set_1of2(nodes);
+    set of int: cols = index_set_2of2(nodes);
 
     int: r_min = min(rows); int: r_max = max(rows);
     int: c_min = min(cols); int: c_max = max(cols);
@@ -4220,31 +4219,27 @@ predicate graph_edges_p(
     int: E = E_h + E_v;
 
     array[1..E] of int: from =
-        [coords_to_id_f(i, j, loop_nodes) | i in rows, j in edges_h_cols] ++
-        [coords_to_id_f(i, j, loop_nodes) | i in edges_v_rows, j in cols];
+        [coords_to_id_f(i, j, nodes) | i in rows, j in edges_h_cols] ++
+        [coords_to_id_f(i, j, nodes) | i in edges_v_rows, j in cols];
 
     array[1..E] of int: to =
-        [coords_to_id_f(i, j+1, loop_nodes) | i in rows, j in edges_h_cols] ++
-        [coords_to_id_f(i+1, j, loop_nodes) | i in edges_v_rows, j in cols];
+        [coords_to_id_f(i, j+1, nodes) | i in rows, j in edges_h_cols] ++
+        [coords_to_id_f(i+1, j, nodes) | i in edges_v_rows, j in cols];
 
-    % Flat node and edge bool arrays for connected/2
-    array[1..N] of var bool: ns =
-        [loop_nodes[i, j] | i in rows, j in cols];
-
-    array[1..E] of var bool: es =
-        [edges_h[i, j]   | i in rows, j in edges_h_cols] ++
-        [edges_v[i, j]   | i in edges_v_rows, j in cols];
+    % Flat node and edge bool arrays for connected
+    array[1..N] of var bool: ns = array1d(nodes);
+    array[1..E] of var bool: es = array1d(edges_h) ++ array1d(edges_v);
 } in (
-    assert_graph_edges_p(loop_nodes, edges_h, edges_v)
+    assert_graph_edges_p(nodes, edges_h, edges_v)
     /\
     % Horizontal edges: only active if both endpoint nodes are active
     forall(i in rows, j in edges_h_cols)(
-        edges_h[i,j] -> (loop_nodes[i,j] /\ loop_nodes[i,j+1])
+        edges_h[i,j] -> (nodes[i,j] /\ nodes[i,j+1])
     )
     /\
     % Vertical edges: only active if both endpoint nodes are active
     forall(i in edges_v_rows, j in cols)(
-        edges_v[i,j] -> (loop_nodes[i,j] /\ loop_nodes[i+1,j])
+        edges_v[i,j] -> (nodes[i,j] /\ nodes[i+1,j])
     )
     /\
     % The active subgraph must be connected
@@ -6604,6 +6599,10 @@ function array[1..4] of var int: polyomino_bounding_box_f(
 % -------------------------------------------------------------------------------- % 
 % ------ SHADED BOUNDARIES CONSTRAINTS ------------------------------------------- %
 
+% Shade the boundary between adjacent cells (for some constraint provided elsewhere).
+% Shaded boundaries must divide the grid into exactly 2 regions.
+% There may be shaded boundaries that lie within a region without fully dividing it, 
+% as allowed by other rules.
 predicate shaded_boundaries_two_regions_p(
     array[int, int] of var 0..1: shaded_boundaries_grid,
     array[int, int] of var bool: shaded_boundaries_horizontal,
@@ -6612,30 +6611,36 @@ predicate shaded_boundaries_two_regions_p(
     set of int: rows = index_set_1of2(shaded_boundaries_grid);
     set of int: cols = index_set_2of2(shaded_boundaries_grid);
 
-    int: width = max(cols) - min(cols) + 1;
-    int: height = max(rows) - min(rows) + 1;
-  
-    % Calculate number of edges
-    int: num_edges = (width-1)*height + (height-1)*width;    
+    int: width = card(cols); int: height = card(rows);
+    int: N = width*height;
+
+    array[1..N] of var int: flat_grid = array1d(shaded_boundaries_grid);
 
     % Create nodes array (flattened grid)
-    array[1..width*height] of var bool: ns0 = 
-        [shaded_boundaries_grid[r,c] = 0 | r in rows, c in cols];
-    array[1..width*height] of var bool: ns1 = 
-        [shaded_boundaries_grid[r,c] = 1 | r in rows, c in cols];
+    array[1..N] of var bool: ns0 = [val = 0 | val in flat_grid];
+    array[1..N] of var bool: ns1 = [val = 1 | val in flat_grid];
+
+    % Calculate number of edges
+    int: num_edges = (width-1)*height + (height-1)*width;
 
     array[1..num_edges] of int: from = grid_to_graph_from_edges(shaded_boundaries_grid);
     array[1..num_edges] of int: to = grid_to_graph_to_edges(shaded_boundaries_grid);
 
     array[1..num_edges] of var bool: flat_edges = array1d(shaded_boundaries_horizontal) ++ 
-        [shaded_boundaries_vertical[r,c] | c in index_set_2of2(shaded_boundaries_vertical), r in index_set_1of2(shaded_boundaries_vertical)];
+        array1d(shaded_boundaries_vertical);
 
     % edges
-    array[1..num_edges] of var bool: es0 = [((not flat_edges[edge_id]) /\ ns0[from[edge_id]] /\ ns0[to[edge_id]]) | edge_id in 1..num_edges];
-    array[1..num_edges] of var bool: es1 = [((not flat_edges[edge_id]) /\ ns1[from[edge_id]] /\ ns1[to[edge_id]]) | edge_id in 1..num_edges];
+    array[1..num_edges] of var bool: es0 = [
+        ((not flat_edges[edge_id]) /\ ns0[from[edge_id]] /\ ns0[to[edge_id]]) 
+        | edge_id in 1..num_edges
+    ];
+    array[1..num_edges] of var bool: es1 = [
+        ((not flat_edges[edge_id]) /\ ns1[from[edge_id]] /\ ns1[to[edge_id]]) 
+        | edge_id in 1..num_edges
+    ];
 } in (
-    exists(val in array1d(shaded_boundaries_grid))(val == 0)
-    /\ exists(val in array1d(shaded_boundaries_grid))(val == 1)
+    exists(val in flat_grid)(val == 0)
+    /\ exists(val in flat_grid)(val == 1)
     /\ connected(from, to, ns0, es0)
     /\ connected(from, to, ns1, es1)
     /\ connected_region(shaded_boundaries_grid, 0)
