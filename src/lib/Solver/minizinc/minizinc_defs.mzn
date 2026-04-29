@@ -536,12 +536,41 @@ function array[int] of var bool: skyscrapers_bools_f(
 % -------------------------------------------------------------------------------- % 
 % ------ HELPERS ----------------------------------------------------------------- %
 
+% Linearise node index: node (i,j) -> (i - r_min) * ncols + (j - c_min) + 1
+function int: coords_to_id_f(
+    int: r, int: c, 
+    array[int, int] of var $$T: grid
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: r_min = min(rows);
+    int: c_min = min(cols);
+    int: ncols = card(cols);
+} in (
+    (r - r_min) * ncols + (c - c_min) + 1
+);
+
+function tuple(var int, var int): id_to_coords_f(
+    var int: id,
+    array[int, int] of var $$T: grid
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: r_min = min(rows);
+    int: c_min = min(cols);
+    int: ncols = card(cols);
+
+    var int: r = r_min + (id - 1) div ncols;
+    var int: c = c_min + (id - 1) mod ncols;
+} in (
+    (r, c)
+);
+
 function array[int] of int: grid_to_graph_from_edges(array[int,int] of var int: grid) = 
     let {
         set of int: rows = index_set_1of2(grid);
         set of int: cols = index_set_2of2(grid);
-        int: width = max(cols) - min(cols) + 1;
-        int: height = max(rows) - min(rows) + 1;
+        int: width = card(cols); int: height = card(rows);
 
         % Calculate number of edges
         int: num_edges = (width-1)*height + (height-1)*width;
@@ -567,8 +596,7 @@ function array[int] of int: grid_to_graph_to_edges(array[int,int] of var int: gr
     let {
         set of int: rows = index_set_1of2(grid);
         set of int: cols = index_set_2of2(grid);
-        int: width = max(cols) - min(cols) + 1;
-        int: height = max(rows) - min(rows) + 1;
+        int: width = card(cols); int: height = card(rows);
 
         % Calculate number of edges
         int: num_edges = (width-1)*height + (height-1)*width;
@@ -593,8 +621,7 @@ predicate graph_edges_connected_region_p(array[int,int] of var int: grid, array[
     let {
         set of int: rows = index_set_1of2(grid);
         set of int: cols = index_set_2of2(grid);
-        int: width = max(cols) - min(cols) + 1;
-        int: height = max(rows) - min(rows) + 1;
+        int: width = card(cols); int: height = card(rows);
         
         % Calculate number of edges
         int: num_edges = (width-1)*height + (height-1)*width;
@@ -621,11 +648,11 @@ predicate connected_region(array[int,int] of var int: grid, var int: x) =
     let {
         set of int: rows = index_set_1of2(grid);
         set of int: cols = index_set_2of2(grid);
-        int: width = max(cols) - min(cols) + 1;
-        int: height = max(rows) - min(rows) + 1;
+        int: width = card(cols); int: height = card(rows);
+        int: n = width * height;
         
         % Create nodes array (flattened grid)
-        array[1..width*height] of var bool: ns = 
+        array[1..n] of var bool: ns = 
             [grid[r,c] = x | r in rows, c in cols];
         
         % Calculate number of edges
@@ -4130,36 +4157,6 @@ function var int: grid_graph_degree_f(
     grid_graph_h_degree_f(edge_h, i, j) + grid_graph_v_degree_f(edge_v, i, j)
 );
 
-% Linearise node index: node (i,j) -> (i - r_min) * ncols + (j - c_min) + 1
-function int: coords_to_id_f(
-    int: r, int: c, 
-    array[int, int] of var $$T: grid
-) = let {
-    set of int: rows = index_set_1of2(grid);
-    set of int: cols = index_set_2of2(grid);
-    int: r_min = min(rows);
-    int: c_min = min(cols);
-    int: ncols = card(cols);
-} in (
-    (r - r_min) * ncols + (c - c_min) + 1
-);
-
-function tuple(var int, var int): id_to_coords_f(
-    var int: id,
-    array[int, int] of var $$T: grid
-) = let {
-    set of int: rows = index_set_1of2(grid);
-    set of int: cols = index_set_2of2(grid);
-    int: r_min = min(rows);
-    int: c_min = min(cols);
-    int: ncols = card(cols);
-
-    var int: r = r_min + (id - 1) div ncols;
-    var int: c = c_min + (id - 1) mod ncols;
-} in (
-    (r, c)
-);
-
 predicate assert_graph_edges_p(
     array[int, int] of var $$T: loop_nodes,
     array[int, int] of var bool: edges_h,
@@ -4211,40 +4208,42 @@ predicate graph_edges_p(
 
     int: r_min = min(rows); int: r_max = max(rows);
     int: c_min = min(cols); int: c_max = max(cols);
-    int: ncols = c_max - c_min + 1;
+    int: n_rows = card(rows); int: n_cols = card(cols);
+    int: N = n_rows * n_cols;
 
-    int: N = card(rows) * card(cols);
+    set of int: edges_h_cols = c_min..c_max-1;
+    set of int: edges_v_rows = r_min..r_max-1;
 
     % Build flat from/to arrays for all grid edges (both h and v)
-    int: E_h = card(rows) * (card(cols) - 1);
-    int: E_v = (card(rows) - 1) * card(cols);
+    int: E_h = n_rows * (n_cols - 1);
+    int: E_v = (n_rows - 1) * n_cols;
     int: E = E_h + E_v;
 
     array[1..E] of int: from =
-        [coords_to_id_f(i, j, loop_nodes) | i in rows, j in c_min..c_max-1] ++
-        [coords_to_id_f(i, j, loop_nodes) | i in r_min..r_max-1, j in cols];
+        [coords_to_id_f(i, j, loop_nodes) | i in rows, j in edges_h_cols] ++
+        [coords_to_id_f(i, j, loop_nodes) | i in edges_v_rows, j in cols];
 
     array[1..E] of int: to =
-        [coords_to_id_f(i, j+1, loop_nodes) | i in rows, j in c_min..c_max-1] ++
-        [coords_to_id_f(i+1, j, loop_nodes) | i in r_min..r_max-1, j in cols];
+        [coords_to_id_f(i, j+1, loop_nodes) | i in rows, j in edges_h_cols] ++
+        [coords_to_id_f(i+1, j, loop_nodes) | i in edges_v_rows, j in cols];
 
     % Flat node and edge bool arrays for connected/2
     array[1..N] of var bool: ns =
         [loop_nodes[i, j] | i in rows, j in cols];
 
     array[1..E] of var bool: es =
-        [edges_h[i, j]   | i in rows, j in c_min..c_max-1] ++
-        [edges_v[i, j]   | i in r_min..r_max-1, j in cols];
+        [edges_h[i, j]   | i in rows, j in edges_h_cols] ++
+        [edges_v[i, j]   | i in edges_v_rows, j in cols];
 } in (
     assert_graph_edges_p(loop_nodes, edges_h, edges_v)
     /\
     % Horizontal edges: only active if both endpoint nodes are active
-    forall(i in rows, j in min(cols)..max(cols)-1)(
+    forall(i in rows, j in edges_h_cols)(
         edges_h[i,j] -> (loop_nodes[i,j] /\ loop_nodes[i,j+1])
     )
     /\
     % Vertical edges: only active if both endpoint nodes are active
-    forall(i in min(rows)..max(rows)-1, j in cols)(
+    forall(i in edges_v_rows, j in cols)(
         edges_v[i,j] -> (loop_nodes[i,j] /\ loop_nodes[i+1,j])
     )
     /\
