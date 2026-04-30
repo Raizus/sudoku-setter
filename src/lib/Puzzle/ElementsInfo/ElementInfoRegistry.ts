@@ -85,6 +85,7 @@ import {
 	edgeParityInfo,
 	edgeProductInfo,
 	edgeSumInfo,
+	edgeWhispersInfo,
 	fillominoRegionBorderInfo,
 	forbiddenDoorsInfo,
 	oneWayDoorInfo,
@@ -341,7 +342,8 @@ import {
 	orthogonallyConnectedRegionsRegionSizeCellInfo,
 	countExactDistanceMatchCellInfo,
 	orthogonallyConnectedRegionsSmallestOrLargestInRegionInfo,
-	chaosConstructionSpotlightInfo
+	chaosConstructionSpotlightInfo,
+	directedPathMotionSensorInfo
 } from './SingleCellElementsInfo/SingleCellElementsInfo';
 import {
 	yinYangAdjacentSameShadeCountInfo,
@@ -384,6 +386,7 @@ import {
 	regionSumLineSourcesCellArrowsInfo
 } from './SingleCellMultiArrowElementsInfo';
 import {
+	directedPathVisitedRowColumnOrRegionSumsToXInfo,
 	forbiddenKnightSumInfo,
 	forbiddenOrthogonallyAdjacentSumInfo,
 	litsMaxTetrominoSumInfo,
@@ -396,7 +399,8 @@ import {
 	hotCellsInfo,
 	indexerCellsInfo,
 	negatorsInfo,
-	nexusInfo
+	nexusInfo,
+	nullifiersInfo
 } from './ValueModifierConstraintsElementsInfo';
 import { mazeWallInfo } from './CornerLineToolsElementsInfo';
 import { variableConstraintInfo } from './OtherConstraintsElementsInfo';
@@ -454,6 +458,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 
 	[TOOLS.DOUBLERS]: doublersInfo,
 	[TOOLS.NEGATORS]: negatorsInfo,
+	[TOOLS.NULLIFIERS]: nullifiersInfo,
 	[TOOLS.NEXUS]: nexusInfo,
 	[TOOLS.INDEXER_CELLS]: indexerCellsInfo,
 	// [TOOLS.VAMPIRE_AND_PREY]: vampireAndPreyInfo,
@@ -586,6 +591,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.DIRECTED_PATH_START]: directedPathStartInfo,
 	[TOOLS.DIRECTED_PATH_END]: directedPathEndInfo,
 	[TOOLS.TELEPORT]: teleportInfo,
+	[TOOLS.DIRECTED_PATH_MOTION_SENSOR]: directedPathMotionSensorInfo,
 
 	[TOOLS.CONNECT_FOUR_YELLOW]: connectFourYellowInfo,
 	[TOOLS.CONNECT_FOUR_RED]: connectFourRedInfo,
@@ -642,6 +648,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.EDGE_MODULO]: edgeModuloInfo,
 	[TOOLS.EDGE_FACTOR]: edgeFactorInfo,
 	[TOOLS.EDGE_PARITY]: edgeParityInfo,
+	[TOOLS.EDGE_WHISPERS]: edgeWhispersInfo,
 	[TOOLS.XY_DIFFERENCES]: xyDifferencesInfo,
 	[TOOLS.YIN_YANG_WHITE_KROPKI]: yinYangWhiteKropkiInfo,
 	[TOOLS.YIN_YANG_KROPKI]: yinYangKropkiInfo,
@@ -881,6 +888,10 @@ registerElementInfo(TOOLS.RENBAN_CAGE, renbanCageInfo);
 registerElementInfo(TOOLS.CELL_CENTER_LOOP, cellCenterLoopInfo);
 registerElementInfo(TOOLS.LOOP_FORBIDDEN_ADJACENT_SUM, loopForbiddenAdjacentSumInfo);
 registerElementInfo(TOOLS.LOOP_VISITS_EVERY_CELL_EXCEPT_X, loopVisitsEveryCellExceptXInfo);
+registerElementInfo(
+	TOOLS.DIRECTED_PATH_VISITED_ROW_COLUMN_OR_REGION_SUMS_TO_X,
+	directedPathVisitedRowColumnOrRegionSumsToXInfo
+);
 registerElementInfo(
 	TOOLS.BALANCED_LOOP_SEGMENT_SUM_CENTER_OR_EDGE,
 	balancedLoopSegmentSumCenterOrEdgeInfo

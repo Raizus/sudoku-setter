@@ -10,7 +10,7 @@ import type { CellToolI, ConstraintsElement } from '../../puzzle_schema';
 import { SHAPE_TYPES } from '../../Shape/Shape';
 import { TOOL_CATEGORIES, TOOLS } from '../../Tools';
 import {
-	countNeighbourConstraint,
+	countNeighbourPredicateConstraint,
 	DEFAULT_SQUARE_SHAPE,
 	DEFAULT_CIRCLE_SHAPE
 } from '../SingleCellElementsInfo/helpers';
@@ -179,7 +179,7 @@ function countSnakeNeighborCellsConstraint(
 	c_id: string,
 	constraint: CellToolI
 ) {
-	return countNeighbourConstraint(
+	return countNeighbourPredicateConstraint(
 		model.puzzle.grid,
 		constraint,
 		VAR_2D_NAMES.SNAKE,

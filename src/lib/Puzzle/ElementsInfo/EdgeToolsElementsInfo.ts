@@ -656,6 +656,36 @@ export const edgeParityInfo: SquareCellElementInfo = {
 	}
 };
 
+export const edgeWhispersInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_EDGE_OPTIONS,
+
+	toolId: TOOLS.EDGE_WHISPERS,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.USE_CELL_VALUES,
+			description: 'Constraints use modified cell values instead of the cell digits.'
+		}
+	],
+
+	shape: {
+		...DEFAULT_WHITE_CIRCLE,
+		stroke: { editable: true, value: 'green' },
+		fill: { editable: true, value: 'green' }
+	},
+
+	meta: {
+		description:
+			'For two cells that share an edge separated by a green dot, they must have a difference of at least (X) (default 5)',
+		tags: [],
+		categories: typableEdgeDefaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return valuedEdgeElement(model, element, 'whispers2_p', '5');
+	}
+};
+
 function xyDiffHelper(grid: Grid, cell1: Cell, cell2: Cell) {
 	const var1 = cellToVarName(cell1);
 	const var2 = cellToVarName(cell2);

@@ -118,7 +118,7 @@ export function orthogonalRegionSeenCountConstraint(
 	return constraint_str;
 }
 
-export function countNeighbourConstraint(
+export function countNeighbourPredicateConstraint(
 	grid: Grid,
 	constraint: CellToolI,
 	region_var_name: VAR_2D_NAMES,
@@ -135,6 +135,28 @@ export function countNeighbourConstraint(
 	const vars_str = cellsToGridVarsStr(neighbours, region_var_name);
 
 	const constraint_str = `constraint ${predicate}(${var1}, ${vars_str});\n`;
+	return constraint_str;
+}
+
+export function countRegionNeighboursConstraint(
+	grid: Grid,
+	constraint: CellToolI,
+	grid_var_name: VAR_2D_NAMES,
+	region_var_name: VAR_2D_NAMES,
+	target_value: number | boolean,
+	include_cell: boolean
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const cell_var = cellToGridVarName(cell, grid_var_name);
+	const neighbours = grid.getNeighboorCells(cell);
+	if (include_cell) neighbours.push(cell);
+
+	const neighbour_vars_str = cellsToGridVarsStr(neighbours, region_var_name);
+
+	const constraint_str = `constraint count(${neighbour_vars_str}, ${target_value}) == ${cell_var};\n`;
 	return constraint_str;
 }
 

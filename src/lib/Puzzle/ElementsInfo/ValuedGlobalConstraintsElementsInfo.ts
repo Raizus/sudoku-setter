@@ -1,6 +1,7 @@
 import { defaultValidateValueOnInput, type ValueValidatorOptions } from '$input/InputHandler';
 import { HANDLER_TOOL_TYPE, type ValueToolInputOptions } from '$input/ToolInputHandlers/types';
 import {
+	cellsToGridVarsStr,
 	simpleElementFunction,
 	VAR_2D_NAMES,
 	type PuzzleModel
@@ -214,3 +215,71 @@ export const loopVisitsEveryCellExceptXInfo: SquareCellElementInfo = {
 		return simpleElementFunction(model, element, loopVisitsEveryCellExceptXConstraint);
 	}
 };
+
+function directedPathVisitedRowColumnOrRegionSumsToXConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: ValuedGlobalToolI
+) {
+	const value = constraint.value;
+	if (!value) return '';
+
+	const val = parseInt(value);
+	if (isNaN(val)) return '';
+
+	let out_str = '';
+	const grid_name = VAR_2D_NAMES.VALUES_GRID;
+
+	const nrows = grid.nRows;
+	for (let i = 0; i < nrows; i++) {
+		const cells = grid.getRow(i);
+		const cell_vars = cellsToGridVarsStr(cells, grid_name);
+		const node_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.MAZE_DIRECTED_PATH);
+		const constraint = `constraint directed_path_visited_sums_to_x_p(${cell_vars}, ${node_vars}, ${val});\n`;
+		out_str += constraint;
+	}
+
+	// col constraints (digits do not repeat on cols)
+	const ncols = grid.nCols;
+	for (let i = 0; i < ncols; i++) {
+		const cells = grid.getCol(i);
+		const cell_vars = cellsToGridVarsStr(cells, grid_name);
+		const node_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.MAZE_DIRECTED_PATH);
+		const constraint = `constraint directed_path_visited_sums_to_x_p(${cell_vars}, ${node_vars}, ${val});\n`;
+		out_str += constraint;
+	}
+
+	// region constraints (digits do not repeat on regions)
+	const regions = grid.getUsedRegions();
+	for (const region of regions) {
+		const cells = grid.getRegion(region);
+		const cell_vars = cellsToGridVarsStr(cells, grid_name);
+		const node_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.MAZE_DIRECTED_PATH);
+		const constraint = `constraint directed_path_visited_sums_to_x_p(${cell_vars}, ${node_vars}, ${val});\n`;
+		out_str += constraint;
+	}
+
+	return out_str;
+}
+
+export const directedPathVisitedRowColumnOrRegionSumsToXInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_OPTIONS,
+
+	toolId: TOOLS.DIRECTED_PATH_VISITED_ROW_COLUMN_OR_REGION_SUMS_TO_X,
+
+	meta: {
+		description: "If a row / column / region is visited by a directed path, then the values of ALL the visited cells in that row / column / box must sum to exactly X (even if the cells aren't all adjacent on the path.)",
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.VALUED_GLOBAL_CONSTRAINT]
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(
+			model,
+			element,
+			directedPathVisitedRowColumnOrRegionSumsToXConstraint
+		);
+	}
+};
+

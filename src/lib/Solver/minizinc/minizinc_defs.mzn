@@ -831,6 +831,9 @@ predicate consecutive_p(var int: a, var int: b) =
 predicate abs_difference(var int: a, var int: b, var int: d) =
 	abs(a - b) = d;
 
+predicate whispers2_p(var int: a, var int: b, var int: d) =
+	abs(a - b) >= d;
+
 predicate ratio_p(var int: a, var int: b, var int: r) =
     (a = r * b) \/ (b = r * a);
 
@@ -3316,6 +3319,17 @@ function array[int,int] of var int: negators_value_grid_f(
     array2d(index_set_1of2(grid), index_set_2of2(grid),
         [if labels[i,j] then -1*grid[i,j] else grid[i,j] endif
          | i in index_set_1of2(grid), j in index_set_2of2(grid)]);
+
+function array[int,int] of var int: nullifiers_value_grid_f(
+    array[int,int] of var int: grid,
+    array[int,int] of var bool: labels
+) =  let {
+    constraint assert(index_sets_agree(grid, labels), "grid and labels must have the same indexes");
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+} in
+    array2d(rows, cols,
+        [if labels[i,j] then 0 else grid[i,j] endif | i in rows, j in cols]);
 
 function array[int,int] of var int: hot_cells_grid_f(
     array[int,int] of var int: grid,

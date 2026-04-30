@@ -81,9 +81,10 @@ function directedPathIsRegionSumLineConstraint(toolId: TOOLID): string {
 	return out_str;
 }
 
-function directedPathRegionSegmentIsNabnerLineConstraint(
+function directedPathRegionSegmentAbstractConstraint(
 	element: ConstraintsElement,
-	toolId: TOOLID
+	toolId: TOOLID,
+	predicate: string
 ): string {
 	let out_str: string = '';
 
@@ -97,7 +98,7 @@ function directedPathRegionSegmentIsNabnerLineConstraint(
 	const edges_bools = VAR_1D_NAMES.DIRECTED_PATH_EDGES_BOOLS;
 	const dpath_source = 'dpath_source';
 
-	out_str += `constraint directed_path_region_segments_is_nabner_line_p(${grid_name}, board_regions, ${edges_from}, ${edges_to}, ${nodes_bools}, ${edges_bools}, ${dpath_source});\n`;
+	out_str += `constraint ${predicate}(${grid_name}, board_regions, ${edges_from}, ${edges_to}, ${nodes_bools}, ${edges_bools}, ${dpath_source});\n`;
 	out_str = addHeader(out_str, `${toolId}`);
 	return out_str;
 }
@@ -164,8 +165,10 @@ function directedPathModifierConstraints(model: PuzzleModel, element: Constraint
 	if (!element.negative_constraints) return out_str;
 
 	const puzzle = model.puzzle;
+	const board = VAR_2D_NAMES.BOARD;
+	const path = VAR_2D_NAMES.MAZE_DIRECTED_PATH;
 
-	let tool = TOOLS.DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME;
+	let tool: TOOLID = TOOLS.DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME;
 	const directed_path_adjacent_sum_prime = !!element.negative_constraints[tool];
 	if (directed_path_adjacent_sum_prime) {
 		out_str += directedPathAdjacentCellsSumIsPrimeConstraint(
@@ -212,7 +215,27 @@ function directedPathModifierConstraints(model: PuzzleModel, element: Constraint
 	tool = TOOLS.DIRECTED_PATH_REGION_SEGMENTS_NABNER_LINE;
 	const directed_path_region_segments_nabner = !!element.negative_constraints[tool];
 	if (directed_path_region_segments_nabner) {
-		out_str += directedPathRegionSegmentIsNabnerLineConstraint(element, tool);
+		out_str += directedPathRegionSegmentAbstractConstraint(
+			element,
+			tool,
+			'directed_path_region_segments_is_nabner_line_p'
+		);
+	}
+
+	tool = TOOLS.PATH_NODES_SUM_OF_FIRST_CELL_IN_COLUMN_AND_ROW;
+	const path_nodes_sum_of_first_cell_in_column_and_row = !!element.negative_constraints[tool];
+	if (path_nodes_sum_of_first_cell_in_column_and_row) {
+		out_str += `constraint path_nodes_sum_of_first_cell_in_column_and_row_p(${board}, ${path});\n`;
+	}
+
+	tool = TOOLS.DIRECTED_PATH_REGION_SEGMENTS_INDEX_LINE;
+	const directed_path_region_segments_index = !!element.negative_constraints[tool];
+	if (directed_path_region_segments_index) {
+		out_str += directedPathRegionSegmentAbstractConstraint(
+			element,
+			tool,
+			'directed_path_region_segments_index_line_p'
+		);
 	}
 
 	return out_str;
@@ -703,8 +726,7 @@ export const mazeDirectedPathInfo: SquareCellElementInfo = {
 	negative_constraints: [
 		{
 			toolId: TOOLS.USE_CELL_VALUES,
-			description:
-				'For path constraints use modified cell values instead of digits.'
+			description: 'For path constraints use modified cell values instead of digits.'
 		},
 		{
 			toolId: TOOLS.DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME,
@@ -744,7 +766,17 @@ export const mazeDirectedPathInfo: SquareCellElementInfo = {
 			toolId: TOOLS.DIRECTED_PATH_ADJACENT_CELLS_ARE_MULTIPLES,
 			description:
 				'Any two adjacent digits along the correct path, one can be divided by the other to give an exact integer (ie; one is a multiple of the other.)'
+		},
+		{
+			toolId: TOOLS.PATH_NODES_SUM_OF_FIRST_CELL_IN_COLUMN_AND_ROW,
+			description:
+				'Any cell on the path equals the digit at the top of its column plus the digit at the left-hand end of its row.'
 		}
+		// {
+		// 	toolId: TOOLS.DIRECTED_PATH_REGION_SEGMENTS_INDEX_LINE,
+		// 	description:
+		// 		'Region borders divide the correct path into "index lines"; In any box, the Nth cell visited by the directed path is called "position N". The digit in position N always indicates which position along that segment contains the digit N. Eg: In a box, a path might visit the digits 35142 in that order. The first digit being a 3 indicates that the third digit is a 1, the second digit being a 5 indicates that the fifth digit is a 2, and so on.'
+		// }
 	],
 
 	meta: {

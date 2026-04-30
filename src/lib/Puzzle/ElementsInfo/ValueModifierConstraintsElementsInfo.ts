@@ -98,7 +98,45 @@ export const negatorsInfo: SquareCellElementInfo = {
 	solver_func: negatorsElement
 };
 
-export function hotCellsElement(model: PuzzleModel, element: ConstraintsElement) {
+function nullifiersElement(model: PuzzleModel, element: ConstraintsElement) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name = VAR_2D_NAMES.NULLIFIERS;
+
+	let out_str: string = `\n% ${tool}\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: ${grid_name};\n`;
+
+	out_str += exactlyNPerRowColumnRegion(puzzle, 1, true, grid_name);
+	// only one of each digit
+	out_str += `\nconstraint one_of_each_digit_p(board, ${grid_name}, ALLOWED_DIGITS);\n`;
+	// values grid
+	out_str += `array[int, int] of var int: values_grid = nullifiers_value_grid_f(board, ${grid_name});\n`;
+
+	return out_str;
+}
+
+export const nullifiersInfo: SquareCellElementInfo = {
+	toolId: TOOLS.NULLIFIERS,
+
+	meta: {
+		description:
+			'The grid contains 9 nullifiers (cells with 0 value), one in each row, column and box. Each digit appears as a nullifier exactly once.',
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.VALUE_MODIFIER_CONSTRAINT]
+	},
+
+	solver_func: nullifiersElement
+};
+
+function hotCellsElement(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;
 	const tool = element.tool_id;
