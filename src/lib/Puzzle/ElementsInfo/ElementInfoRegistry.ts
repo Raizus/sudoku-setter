@@ -82,9 +82,11 @@ import {
 	edgeInequalityInfo,
 	edgeMidLoopSegmentInfo,
 	edgeModuloInfo,
+	edgeParityInfo,
 	edgeProductInfo,
 	edgeSumInfo,
 	fillominoRegionBorderInfo,
+	forbiddenDoorsInfo,
 	oneWayDoorInfo,
 	orthogonallyConnectedRegionBorderInfo,
 	orthogonallyConnectedRegionSameRegionEdgeInfo,
@@ -154,7 +156,6 @@ import {
 	orthogonallyConnectedRegionsInfo
 } from './UndeterminedRegionsInfo/UndeterminedRegionsElementsInfo';
 import { directedPathTeleportRenbanSegmentsInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
-import { directedPathTeleportSegmentsSumInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
 import { mazeDirectedPathInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
 import { connectFourInfo } from './UndeterminedRegionsInfo/ConnectFourElementsInfo';
 import { galaxiesInfo } from './UndeterminedRegionsInfo/GalaxyElementsInfo';
@@ -494,7 +495,6 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.NORINORI_STAR_BATTLE]: norinoriStarBattleInfo,
 
 	[TOOLS.MAZE_DIRECTED_PATH]: mazeDirectedPathInfo,
-	[TOOLS.DIRECTED_PATH_TELEPORT_SEGMENTS_SUM]: directedPathTeleportSegmentsSumInfo,
 	[TOOLS.DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS]: directedPathTeleportRenbanSegmentsInfo,
 
 	[TOOLS.CONNECT_FOUR]: connectFourInfo,
@@ -641,6 +641,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.EDGE_PRODUCT]: edgeProductInfo,
 	[TOOLS.EDGE_MODULO]: edgeModuloInfo,
 	[TOOLS.EDGE_FACTOR]: edgeFactorInfo,
+	[TOOLS.EDGE_PARITY]: edgeParityInfo,
 	[TOOLS.XY_DIFFERENCES]: xyDifferencesInfo,
 	[TOOLS.YIN_YANG_WHITE_KROPKI]: yinYangWhiteKropkiInfo,
 	[TOOLS.YIN_YANG_KROPKI]: yinYangKropkiInfo,
@@ -655,6 +656,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.EDGE_CAVE_ONE_OF_EACH]: edgeCaveOneOfEachInfo,
 
 	[TOOLS.ONE_WAY_DOOR]: oneWayDoorInfo,
+	[TOOLS.FORBIDDEN_DOORS]: forbiddenDoorsInfo,
 	[TOOLS.DIFFERENCE_INDEXING_ARROW]: differenceIndexingArrowInfo,
 	[TOOLS.SUM_INDEXING_ARROW]: sumIndexingArrowInfo,
 

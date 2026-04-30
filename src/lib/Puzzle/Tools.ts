@@ -153,7 +153,9 @@ export enum GLOBAL_DIRECTED_PATH_CONSTRAINTS {
 	DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME = 'Directed Path Adjacent Cells Sum Is Prime',
 	DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME = 'Directed Path Sum Of Cells Per Region Is Prime',
 	DIRECTED_PATH_ADJACENT_CELLS_DUTCH_WHISPERS = 'Directed Path Adjacent Cells Dutch Whispers',
+	DIRECTED_PATH_ADJACENT_CELLS_ARE_MULTIPLES = 'Directed Path Adjacent Cells Are Multiples',
 	DIRECTED_PATH_IS_REGION_SUM_LINE = 'Directed Path Is Region Sum Line',
+	DIRECTED_PATH_REGION_SEGMENTS_NABNER_LINE = 'Directed Path Region Segments Nabner Line',
 	DIRECTED_PATH_TELEPORT_SEGMENTS_SUM = 'Directed Path Teleport Segments Sum',
 	DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS = 'Directed Path Teleport Renban Segments',
 	DIRECTED_PATH_IS_PARITY_LINE = 'Directed Path Is Parity Line'
@@ -352,6 +354,7 @@ export enum EDGE_CONSTRAINTS {
 	EDGE_PRODUCT = 'Edge Product',
 	EDGE_MODULO = 'Edge Modulo',
 	EDGE_FACTOR = 'Edge Factor',
+	EDGE_PARITY = 'Edge Parity',
 	XY_DIFFERENCES = 'XY Differences',
 	YIN_YANG_KROPKI = 'Yin Yang Kropki',
 	YIN_YANG_WHITE_KROPKI = 'Yin Yang White Kropki',
@@ -366,6 +369,7 @@ export enum EDGE_CONSTRAINTS {
 	EDGE_CAVE_ONE_OF_EACH = 'Edge Cave One Of Each',
 
 	ONE_WAY_DOOR = 'One Way Door',
+	FORBIDDEN_DOORS = 'Forbidden Doors',
 
 	COMBINED_EDGE_CONSTRAINT = 'Combined Edge Constraint',
 

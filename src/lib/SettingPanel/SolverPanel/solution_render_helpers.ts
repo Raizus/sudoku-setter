@@ -1,3 +1,4 @@
+import { idxToCoords } from '$src/lib/Puzzle/ElementsInfo/UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
 import type { Cell } from '$src/lib/Puzzle/Grid/Cell';
 import type { Grid } from '$src/lib/Puzzle/Grid/Grid';
 import type { CellMarker, LineMarker } from '$src/lib/Puzzle/PenTool';
@@ -234,6 +235,7 @@ function setOtherHighlights(json: JsonT, grid: Grid) {
 		VAR_2D_NAMES.NEGATORS,
 		VAR_2D_NAMES.INDEXER_CELLS_GRID,
 		VAR_2D_NAMES.CELL_CENTER_LOOP,
+		VAR_2D_NAMES.MAZE_DIRECTED_PATH,
 		VAR_2D_NAMES.SNAKE,
 		'nexus'
 	];
@@ -467,7 +469,7 @@ function setShadedBoundariesBorders(json: JsonT) {
 	}
 }
 
-function setPathEdges(json: JsonT, grid: Grid) {
+function setUndirectedPathEdges(json: JsonT, grid: Grid) {
 	if (json === undefined) return;
 
 	const names: [name1: string, name2: string, name3: string][] = [
@@ -614,8 +616,9 @@ function setStarBattlePenMarks(json: JsonT, grid: Grid) {
 
 function setDirectedPathPenMarks(json: JsonT, puzzle_model: PuzzleModel) {
 	if (json === undefined) return;
-	const dpath_es = json['dpath_es'] as boolean[] | undefined;
+	const dpath_es = json['directed_path_edges_bools'] as boolean[] | undefined;
 	if (dpath_es === undefined) return;
+	console.log(dpath_es);
 
 	const edge_list = puzzle_model.edge_list;
 	const grid = puzzle_model.puzzle.grid;
@@ -628,8 +631,8 @@ function setDirectedPathPenMarks(json: JsonT, puzzle_model: PuzzleModel) {
 		const edge = edge_list[i];
 		const [n1, n2] = edge;
 
-		const [r1, c1] = [Math.floor((n1 - 1) / grid.nCols), (n1 - 1) % grid.nCols];
-		const [r2, c2] = [Math.floor((n2 - 1) / grid.nCols), (n2 - 1) % grid.nCols];
+		const [r1, c1] = idxToCoords(n1, grid);
+		const [r2, c2] = idxToCoords(n2, grid);
 
 		const coord1: GridCoordI = { r: r1, c: c1 };
 		const coord2: GridCoordI = { r: r2, c: c2 };
@@ -668,7 +671,7 @@ export function setBoardOnSolution(solution: JsonT, puzzle_model: PuzzleModel) {
 	setDirectedPathPenMarks(solution, puzzle_model);
 	setConnectFourHighlights(solution, grid);
 	setShadedBoundariesBorders(solution);
-	setPathEdges(solution, grid);
+	setUndirectedPathEdges(solution, grid);
 }
 
 function updateCandidates(json: JsonT, puzzle: PuzzleAuxI) {

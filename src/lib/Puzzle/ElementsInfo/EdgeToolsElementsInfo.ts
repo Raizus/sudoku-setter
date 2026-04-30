@@ -633,6 +633,29 @@ export const edgeFactorInfo: SquareCellElementInfo = {
 	}
 };
 
+export const edgeParityInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_EDGE_OPTIONS,
+
+	toolId: TOOLS.EDGE_PARITY,
+
+	shape: {
+		...DEFAULT_WHITE_CIRCLE,
+		stroke: { editable: true, value: 'red' },
+		fill: { editable: true, value: 'red' }
+	},
+
+	meta: {
+		description:
+			'For two cells that share an edge separated by a red dot, one must be odd and the other must be even.',
+		tags: [],
+		categories: typableEdgeDefaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleEdgeElement(model, element, 'different_parity_p');
+	}
+};
+
 function xyDiffHelper(grid: Grid, cell1: Cell, cell2: Cell) {
 	const var1 = cellToVarName(cell1);
 	const var2 = cellToVarName(cell2);
@@ -999,11 +1022,37 @@ export const oneWayDoorInfo: SquareCellElementInfo = {
 	meta: {
 		description:
 			'The path may only pass directly through a purple arrow if moving in the direction the arrow is pointing. An arrow always points to the smaller of the two digits it sits between.',
-		tags: [],
+		tags: ["Rat run"],
 		categories: typableEdgeDefaultCategories
 	},
 
 	solver_func: edgeInequalityElement
+};
+
+export const forbiddenDoorsInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE
+	},
+
+	toolId: TOOLS.FORBIDDEN_DOORS,
+
+	shape: {
+		type: SHAPE_TYPES.CROSS,
+		r: { editable: false, value: 0.1 },
+		strokeWidth: { editable: false, value: 0.05, lb: 0, ub: 1, step: 0.025 },
+		stroke: { editable: false, value: 'red' },
+	},
+
+	meta: {
+		description:
+			'The directed path may never pass through a red X.',
+		tags: ['Rat run'],
+		categories: typableEdgeDefaultCategories
+	},
+
+	solver_func: () => {
+		return '';
+	}
 };
 
 export const combinedEdgeConstraintInfo: SquareCellElementInfo = {

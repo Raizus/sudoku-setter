@@ -34,7 +34,7 @@ export const mazeWallInfo: SquareCellElementInfo = {
 
 	meta: {
 		description: 'Maze wall for directed paths.',
-		tags: [],
+		tags: ["Rat Run"],
 		categories: cornerLineDefaultCategories
 	}
 };

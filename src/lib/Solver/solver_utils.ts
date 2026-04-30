@@ -51,7 +51,16 @@ export enum VAR_2D_NAMES {
 	STAR_BATTLE = 'star_battle',
 	LITS_WHITE_BLACK_STAR_BATTLE = 'lits_white_black_star_battle',
 	COUNTING_CIRCLES_COLORS = 'counting_circles_colors_board',
-	MAZE_DIRECTED_PATH = 'maze_directed_path',
+	MAZE_DIRECTED_PATH = 'directed_path',
+	MAZE_DIRECTED_PATH_EDGES_L = 'directed_path_edges_l',
+	MAZE_DIRECTED_PATH_EDGES_R = 'directed_path_edges_r',
+	MAZE_DIRECTED_PATH_EDGES_U = 'directed_path_edges_u',
+	MAZE_DIRECTED_PATH_EDGES_D = 'directed_path_edges_d',
+	MAZE_DIRECTED_PATH_EDGES_DR = 'directed_path_edges_dr',
+	MAZE_DIRECTED_PATH_EDGES_DL = 'directed_path_edges_dl',
+	MAZE_DIRECTED_PATH_EDGES_UR = 'directed_path_edges_ur',
+	MAZE_DIRECTED_PATH_EDGES_UL = 'directed_path_edges_ul',
+	DIRECTED_PATH_TELEPORTS = 'directed_path_teleports',
 	CONNECT_FOUR = 'connect_four',
 	BYOKC_GRID = 'byokc_grid',
 	SHADED_BOUNDARIES_REGIONS = 'shaded_boundaries_regions',
@@ -65,6 +74,13 @@ export enum VAR_2D_NAMES {
 	COLORED_GROUPS_REGION_SIZES = 'colored_groups_region_sizes',
 	ORTHOGONALLY_CONNECTED_REGIONS = 'orthogonally_connected_regions',
 	ORTHOGONALLY_CONNECTED_REGION_SIZES = 'orthogonally_connected_region_sizes'
+}
+
+export enum VAR_1D_NAMES {
+	DIRECTED_PATH_EDGES_FROM = 'directed_path_from',
+	DIRECTED_PATH_EDGES_TO = 'directed_path_to',
+	DIRECTED_PATH_EDGES_BOOLS = 'directed_path_edges_bools',
+	DIRECTED_PATH_NODES_BOOLS = 'directed_path_nodes_bools',
 }
 
 export function cellToGridVarName(cell: Cell, name: string): string {
@@ -379,6 +395,7 @@ function _pruneMinizincModel(model: string): string {
 	let curlyBracketCount = 0;
 	let squareBracketCount = 0;
 
+	// find definitions
 	for (let i = 0; i < lines.length; i++) {
 		const line = lines[i].trim();
 
@@ -396,18 +413,12 @@ function _pruneMinizincModel(model: string): string {
 				content: [lines[i]],
 				type: funcMatch ? 'function' : predMatch ? 'predicate' : testMatch ? 'test' : 'variable'
 			};
-
-			// Count opening brackets/parentheses in the first line
-			bracketCount = (line.match(/\(/g) || []).length - (line.match(/\)/g) || []).length;
-			curlyBracketCount = (line.match(/\{/g) || []).length - (line.match(/\}/g) || []).length;
-			squareBracketCount = (line.match(/\[/g) || []).length - (line.match(/\]/g) || []).length;
-			continue;
+		} else if(currentDef) {
+			currentDef.content.push(lines[i]);
 		}
 
 		// Add content to current definition if we're inside one
 		if (currentDef) {
-			currentDef.content.push(lines[i]);
-
 			// Update bracket count
 			bracketCount += (line.match(/\(/g) || []).length - (line.match(/\)/g) || []).length;
 			curlyBracketCount += (line.match(/\{/g) || []).length - (line.match(/\}/g) || []).length;

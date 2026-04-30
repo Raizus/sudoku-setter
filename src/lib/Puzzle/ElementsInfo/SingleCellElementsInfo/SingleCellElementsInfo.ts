@@ -2170,7 +2170,7 @@ export const directedPathStartInfo: SquareCellElementInfo = {
 
 	meta: {
 		description: `A green triangle marks the start of a directed path.`,
-		tags: [],
+		tags: ["Rat run"],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
@@ -2211,7 +2211,7 @@ export const directedPathEndInfo: SquareCellElementInfo = {
 
 	meta: {
 		description: `A red hexagon marks the end of a directed path.`,
-		tags: [],
+		tags: ["Rat Run"],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
@@ -2259,16 +2259,15 @@ export const teleportInfo: SquareCellElementInfo = {
 	toolId: TOOLS.TELEPORT,
 
 	shape: {
-		type: SHAPE_TYPES.CIRCLE,
+		type: SHAPE_TYPES.CAGE,
 		strokeWidth: { editable: false, value: 0.04 },
 		stroke: { editable: false, value: 'yellow' },
-		r: { editable: false, value: 0.35 },
 		fill: { editable: false, value: 'none' }
 	},
 
 	meta: {
 		description: `Entering a yellow teleport will cause Finkz to be instantly transported to the other teleport. From there she can continue her journey. The teleports contain the same digit.`,
-		tags: [],
+		tags: ["Rat run"],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 

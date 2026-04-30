@@ -22,6 +22,13 @@ export function coordsAdd(coords1: GridCoordI, coords2: GridCoordI): GridCoordI 
 	};
 }
 
+export function coordsSubtract(coords1: GridCoordI, coords2: GridCoordI): GridCoordI {
+	return {
+		r: coords1.r - coords2.r,
+		c: coords1.c - coords2.c
+	};
+}
+
 export function coordsScale(coords: GridCoordI, scalar: number): GridCoordI {
 	return {
 		r: coords.r * scalar,
