@@ -498,14 +498,23 @@ interface TpResult {
 	tp_array: number[][];
 }
 
-function getTeleports(puzzle: PuzzleAuxI): TpResult | null {
+function getTeleports(puzzle: PuzzleAuxI): TpResult {
 	const grid = puzzle.grid;
 	const tp_edges: Edge2d[] = [];
 	const tp_entries: [label: string, coord: GridCoordI][] = [];
 	const elements = puzzle.elementsDict;
 	const teleport_elements = elements.findElementsByTool(TOOLS.TELEPORT);
 
-	if (!teleport_elements) return null;
+	const tp_array: number[][] = Array.from(Array(grid.nRows), () => new Array(grid.nRows).fill(0));
+
+	const result: TpResult = {
+		tp_entries,
+		tp_edges,
+		tp_groups_count: 0,
+		tp_array
+	};
+
+	if (!teleport_elements) return result;
 
 	const tp_constraints: CellToolI[] = [];
 	for (const element of teleport_elements) {
@@ -516,9 +525,7 @@ function getTeleports(puzzle: PuzzleAuxI): TpResult | null {
 		}
 	}
 
-	if (tp_constraints.length === 0) return null;
-
-	const tp_array: number[][] = Array.from(Array(grid.nRows), () => new Array(grid.nRows).fill(0));
+	if (tp_constraints.length === 0) return result;
 
 	const groups = groupConstraintsByValue(tp_constraints);
 	let k = 0; // group id
@@ -541,13 +548,6 @@ function getTeleports(puzzle: PuzzleAuxI): TpResult | null {
 			tp_array[e2.cell.r][e2.cell.c] = k;
 		}
 	}
-
-	const result: TpResult = {
-		tp_entries,
-		tp_edges,
-		tp_groups_count: k,
-		tp_array
-	};
 
 	return result;
 }
@@ -722,17 +722,15 @@ export function mazeDirectedPathElement(model: PuzzleModel, element: Constraints
 
 	// add teleport edges
 	const tp_res = getTeleports(puzzle);
-	if (tp_res && tp_res.tp_edges.length > 0) {
-		for (const edge of tp_res.tp_edges) {
-			const n1 = coordsToIdx(edge[0].r, edge[0].c, grid);
-			const n2 = coordsToIdx(edge[1].r, edge[1].c, grid);
-			edge_list.push([n1, n2]);
-		}
-		const array_str = format_2d_array(tp_res.tp_array);
-		const l = tp_res.tp_groups_count;
-		out_str += `\n% teleports grid\n`;
-		out_str += `array[ROW_IDXS, COL_IDXS] of 0..${l}: ${teleports} = array2d(ROW_IDXS, COL_IDXS, ${array_str});\n`;
+	for (const edge of tp_res.tp_edges) {
+		const n1 = coordsToIdx(edge[0].r, edge[0].c, grid);
+		const n2 = coordsToIdx(edge[1].r, edge[1].c, grid);
+		edge_list.push([n1, n2]);
 	}
+	const array_str = format_2d_array(tp_res.tp_array);
+	const l = tp_res.tp_groups_count;
+	out_str += `\n% teleports grid\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of 0..${l}: ${teleports} = array2d(ROW_IDXS, COL_IDXS, ${array_str});\n`;
 
 	model.edge_list = edge_list;
 	// const n = grid.nRows * grid.nCols;
