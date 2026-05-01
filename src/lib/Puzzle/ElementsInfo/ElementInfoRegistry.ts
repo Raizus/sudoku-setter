@@ -362,7 +362,8 @@ import {
 	modularCountCellArrowInfo,
 	magnetsCellArrowInfo,
 	blackKropkiCellArrowInfo,
-	whiteKropkiCellArrowInfo
+	whiteKropkiCellArrowInfo,
+	entropicCountCellArrowInfo
 } from './SingleCellArrowElementsInfo';
 import { customFogClearingInfo, fogLighsInfo } from './FogElementsInfo';
 import {
@@ -606,6 +607,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.INTERNAL_LOOP_SKYSCRAPERS]: internalLoopSkyscrapersInfo,
 	[TOOLS.SKYSCRAPERS_ARROW]: skyscrapersArrowInfo,
 	[TOOLS.MODULAR_COUNT_CELL_ARROW]: modularCountCellArrowInfo,
+	[TOOLS.ENTROPIC_COUNT_CELL_ARROW]: entropicCountCellArrowInfo,
 	[TOOLS.MAGNETS_CELL_ARROW]: magnetsCellArrowInfo,
 	[TOOLS.BLACK_KROPKI_CELL_ARROW]: blackKropkiCellArrowInfo,
 	[TOOLS.WHITE_KROPKI_CELL_ARROW]: whiteKropkiCellArrowInfo,

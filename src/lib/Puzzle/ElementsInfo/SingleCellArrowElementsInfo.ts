@@ -268,6 +268,37 @@ export const modularCountCellArrowInfo: SquareCellElementInfo = {
 	}
 };
 
+function entropicCountCellArrowConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellArrowToolI
+) {
+	const cells = getCellsInDirection(grid, constraint, true);
+	const cells_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.BOARD);
+
+	const out_str = `constraint entropic_count_cell_arrow_p(${cells_vars});\n`;
+	return out_str;
+}
+
+export const entropicCountCellArrowInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
+
+	toolId: TOOLS.ENTROPIC_COUNT_CELL_ARROW,
+	shape: DEFAULT_GRAY_ARROW,
+
+	meta: {
+		description:
+			'A digit on an arrow counts how many cells in the indicated direction are in same entropic group (123, 456, 789) as itself, including itself. (Eg a 4 on an arrow would indicate that exactly four digits (including the 4 itself) in that direction were selected from the digits 4, 5, 6.',
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_ARROW_CATEGORIES
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, entropicCountCellArrowConstraint);
+	}
+};
+
 export const magnetsCellArrowInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_SINGLE_CELL_ARROW_OPTIONS,
 

@@ -327,6 +327,8 @@ export enum SINGLE_CELL_ARROW_CONSTRAINTS {
 
 	SKYSCRAPERS_ARROW = 'Skyscrapers Arrow',
 	MODULAR_COUNT_CELL_ARROW = 'Modular Count Cell Arrow',
+	ENTROPIC_COUNT_CELL_ARROW = 'Entropic Count Cell Arrow',
+
 	MAGNETS_CELL_ARROW = 'Magnets Cell Arrow',
 	BLACK_KROPKI_CELL_ARROW = 'Black Kropki Cell Arrow',
 	WHITE_KROPKI_CELL_ARROW = 'White Kropki Cell Arrow'

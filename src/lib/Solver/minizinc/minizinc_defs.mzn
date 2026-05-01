@@ -719,6 +719,16 @@ function var int: modular_count_f(
     sum(i in idxs)(bool2int(matches[i]))
 );
 
+function var int: entropic_count_f(
+    array[int] of var int: arr,
+    var int: group_id
+) = let {
+    set of int: idxs = index_set(arr);
+    array[idxs] of var int: entropic_group = entropic_group_f(arr);
+} in (
+    count(entropic_group, group_id)
+);
+
 predicate shaded_adjacent_neighbours_same_region_p(
     array[int, int] of var $$T: shading,
     array[int, int] of var int: regions,
@@ -1264,6 +1274,17 @@ predicate modular_count_cell_arrow_p(
     var int: rem = first mod n;
 } in (
     modular_count_f(arr, n, rem) = first
+);
+
+predicate entropic_count_cell_arrow_p(
+    array[int] of var int: arr
+) = let {
+    set of int: idxs = index_set(arr);
+    int: min_idx = min(idxs);
+    var int: first = arr[min_idx];
+    array[int] of var int: group_first = entropic_group_f([first]);
+} in (
+    entropic_count_f(arr, group_first[1]) = first
 );
 
 predicate magnets_cell_arrow_p(
