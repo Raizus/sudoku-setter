@@ -4,6 +4,7 @@ export enum SHAPE_TYPES {
 	CELL_MULTI_ARROW = 'Cell Multi Arrow',
 	ADJACENT_CELLS_ARROW = 'Adjacent Cells Arrow',
 	CIRCLE = 'Circle',
+	CROSS = 'Cross',
 	SQUARE = 'Square',
 	ELLIPSE = 'Ellipse',
 	RECTANGLE = 'Rectangle',

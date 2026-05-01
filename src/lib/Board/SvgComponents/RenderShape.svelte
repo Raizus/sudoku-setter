@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { SHAPE_TYPES, type ShapeI } from "$src/lib/Puzzle/Shape/Shape";
 	import CircleRender from "./CircleRender.svelte";
+	import CrossRender from "./CrossRender.svelte";
 	import EllipseRender from "./EllipseRender.svelte";
 	import PolygonRender from "./PolygonRender.svelte";
 	import RectangleRender from "./RectangleRender.svelte";
@@ -23,6 +24,8 @@
 	<RectangleRender cx={cx} cy={cy} {shape} />
 {:else if type === SHAPE_TYPES.POLYGON}
 	<PolygonRender cx={cx} cy={cy} {shape} />
+{:else if type === SHAPE_TYPES.CROSS}
+	<CrossRender cx={cx} cy={cy} {shape} />
 {:else}
     <CircleRender x={cx} y={cy} {shape} />
 {/if}

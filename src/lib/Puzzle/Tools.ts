@@ -69,7 +69,9 @@ export enum NEGATIVE_AND_MODIFIER_CONSTRAINTS {
 
 	ALL_CELLS_BELONG_TO_A_REGION = 'All Cells Belong To A Region',
 	NO_REPEATS_IN_REGIONS = 'No Repeats In Regions',
-	RENBAN_REGIONS = 'Renban Regions'
+	RENBAN_REGIONS = 'Renban Regions',
+
+	PATH_NODES_SUM_OF_FIRST_CELL_IN_COLUMN_AND_ROW = 'Path Nodes Sum Of First Cell In Column And Row',
 }
 
 export enum VALUE_MODIFIER_CONSTRAINTS {
@@ -77,6 +79,8 @@ export enum VALUE_MODIFIER_CONSTRAINTS {
 	MARKED_CELLS = 'Marked Cells',
 	DOUBLERS = 'Doublers',
 	NEGATORS = 'Negators',
+	NULLIFIERS = 'Nullifiers',
+	MIRROR_CELLS = 'Mirror Cells',
 	HOT_CELLS = 'Hot Cells',
 	COLD_CELLS = 'Cold Cells',
 	DECREMENT_FOUNTAIN = 'Decrement Fountain',
@@ -150,13 +154,21 @@ export enum GLOBAL_YIN_YANG_CONSTRAINTS {
 
 export enum GLOBAL_DIRECTED_PATH_CONSTRAINTS {
 	MAZE_DIRECTED_PATH = 'Directed Path',
-	DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME = 'Directed Path Adjacent Cells Sum Is Prime',
+
 	DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME = 'Directed Path Sum Of Cells Per Region Is Prime',
+
+	DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME = 'Directed Path Adjacent Cells Sum Is Prime',
 	DIRECTED_PATH_ADJACENT_CELLS_DUTCH_WHISPERS = 'Directed Path Adjacent Cells Dutch Whispers',
-	DIRECTED_PATH_IS_REGION_SUM_LINE = 'Directed Path Is Region Sum Line',
+	DIRECTED_PATH_ADJACENT_CELLS_WHISPERS = 'Directed Path Adjacent Cells Whispers',
+	DIRECTED_PATH_ADJACENT_CELLS_ARE_MULTIPLES = 'Directed Path Adjacent Cells Are Multiples',
+	DIRECTED_PATH_IS_PARITY_LINE = 'Directed Path Is Parity Line',
+
 	DIRECTED_PATH_TELEPORT_SEGMENTS_SUM = 'Directed Path Teleport Segments Sum',
-	DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS = 'Directed Path Teleport Renban Segments',
-	DIRECTED_PATH_IS_PARITY_LINE = 'Directed Path Is Parity Line'
+	DIRECTED_PATH_TELEPORT_SEGMENTS_RENBAN_LINE = 'Directed Path Teleport Segments Renban Line',
+
+	DIRECTED_PATH_IS_REGION_SUM_LINE = 'Directed Path Is Region Sum Line',
+	DIRECTED_PATH_REGION_SEGMENTS_NABNER_LINE = 'Directed Path Region Segments Nabner Line',
+	DIRECTED_PATH_REGION_SEGMENTS_INDEX_LINE = 'Directed Path Region Segments Index Line'
 }
 
 export enum GLOBAL_GALAXY_CONSTRAINTS {
@@ -297,6 +309,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	DIRECTED_PATH_START = 'Directed Path Start',
 	DIRECTED_PATH_END = 'Directed Path End',
 	TELEPORT = 'Teleport',
+	DIRECTED_PATH_MOTION_SENSOR = 'Directed Path Motion Sensor',
 
 	CONNECT_FOUR_YELLOW = 'Connect Four Yellow',
 	CONNECT_FOUR_RED = 'Connect Four Red',
@@ -352,6 +365,8 @@ export enum EDGE_CONSTRAINTS {
 	EDGE_PRODUCT = 'Edge Product',
 	EDGE_MODULO = 'Edge Modulo',
 	EDGE_FACTOR = 'Edge Factor',
+	EDGE_PARITY = 'Edge Parity',
+	EDGE_WHISPERS = 'Edge Whispers',
 	XY_DIFFERENCES = 'XY Differences',
 	YIN_YANG_KROPKI = 'Yin Yang Kropki',
 	YIN_YANG_WHITE_KROPKI = 'Yin Yang White Kropki',
@@ -366,6 +381,7 @@ export enum EDGE_CONSTRAINTS {
 	EDGE_CAVE_ONE_OF_EACH = 'Edge Cave One Of Each',
 
 	ONE_WAY_DOOR = 'One Way Door',
+	FORBIDDEN_DOORS = 'Forbidden Doors',
 
 	COMBINED_EDGE_CONSTRAINT = 'Combined Edge Constraint',
 
@@ -577,7 +593,9 @@ export enum VALUED_GLOBAL_CONSTRAINTS {
 	MINIMUM_DIAGONALLY_ADJACENT_DIFFERENCE = 'Minimum Diagonally Adjacent Difference',
 	LITS_MAX_TETROMINO_SUM = 'LITS Max Tetromino Sum',
 	LOOP_FORBIDDEN_ADJACENT_SUM = 'Loop Forbidden Adjacent Sum',
-	LOOP_VISITS_EVERY_CELL_EXCEPT_X = 'Loop Visits Every Cell Except X'
+	LOOP_VISITS_EVERY_CELL_EXCEPT_X = 'Loop Visits Every Cell Except X',
+	DIRECTED_PATH_VISITED_ROW_COLUMN_OR_REGION_SUMS_TO_X = 'Directed Path Visited Row Column Or Region Sums To X'
+
 }
 
 export enum OTHER_CONSTRAINTS {

@@ -1,11 +1,14 @@
 import { defaultValidateValueOnInput, type ValueValidatorOptions } from '$input/InputHandler';
 import { HANDLER_TOOL_TYPE, type ValueToolInputOptions } from '$input/ToolInputHandlers/types';
 import {
+	cellsToGridVarsStr,
+	get_grid_name,
 	simpleElementFunction,
 	VAR_2D_NAMES,
 	type PuzzleModel
 } from '$src/lib/Solver/solver_utils';
 import type { SquareCellElementInfo } from '../ElementInfo';
+import type { Cell } from '../Grid/Cell';
 import type { Grid } from '../Grid/Grid';
 import type { ConstraintsElement, ValuedGlobalToolI } from '../puzzle_schema';
 import { TOOL_CATEGORIES, TOOLS } from '../Tools';
@@ -212,5 +215,91 @@ export const loopVisitsEveryCellExceptXInfo: SquareCellElementInfo = {
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
 		return simpleElementFunction(model, element, loopVisitsEveryCellExceptXConstraint);
+	}
+};
+
+function cellsToDirectedPathVisitedRowColumnOrRegionSumsToXString(
+	cells: Cell[],
+	grid_name: string,
+	val: number
+) {
+	const cell_vars = cellsToGridVarsStr(cells, grid_name);
+	const node_vars = cellsToGridVarsStr(cells, VAR_2D_NAMES.MAZE_DIRECTED_PATH);
+	const constraint = `constraint directed_path_visited_sums_to_x_p(${cell_vars}, ${node_vars}, ${val});\n`;
+	return constraint;
+}
+
+function directedPathVisitedRowColumnOrRegionSumsToXConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: ValuedGlobalToolI,
+	element: ConstraintsElement
+) {
+	const value = constraint.value;
+	if (!value) return '';
+
+	const val = parseInt(value);
+	if (isNaN(val)) return '';
+
+	let out_str = '';
+	const grid_name = get_grid_name(element.negative_constraints);
+
+	const nrows = grid.nRows;
+	for (let i = 0; i < nrows; i++) {
+		const cells = grid.getRow(i);
+		out_str += cellsToDirectedPathVisitedRowColumnOrRegionSumsToXString(cells, grid_name, val);
+	}
+
+	// col constraints (digits do not repeat on cols)
+	const ncols = grid.nCols;
+	for (let i = 0; i < ncols; i++) {
+		const cells = grid.getCol(i);
+		out_str += cellsToDirectedPathVisitedRowColumnOrRegionSumsToXString(cells, grid_name, val);
+	}
+
+	// region constraints (digits do not repeat on regions)
+	const regions = grid.getUsedRegions();
+	for (const region of regions) {
+		const cells = grid.getRegion(region);
+		out_str += cellsToDirectedPathVisitedRowColumnOrRegionSumsToXString(cells, grid_name, val);
+	}
+
+	return out_str;
+}
+
+export const directedPathVisitedRowColumnOrRegionSumsToXInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_OPTIONS,
+
+	toolId: TOOLS.DIRECTED_PATH_VISITED_ROW_COLUMN_OR_REGION_SUMS_TO_X,
+
+	negative_constraints: [
+		{
+			toolId: TOOLS.USE_CELL_VALUES,
+			description: 'Constraints use modified cell values instead of the cell digits.'
+		}
+	],
+
+	meta: {
+		description:
+			"If a row / column / region is visited by a directed path, then the values of ALL the visited cells in that row / column / region must sum to exactly X (even if the cells aren't all adjacent on the path.)",
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.VALUED_GLOBAL_CONSTRAINT]
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction<ValuedGlobalToolI>(
+			model,
+			element,
+			(model, grid, c_id, constraint) => {
+				return directedPathVisitedRowColumnOrRegionSumsToXConstraint(
+					model,
+					grid,
+					c_id,
+					constraint,
+					element
+				);
+			}
+		);
 	}
 };

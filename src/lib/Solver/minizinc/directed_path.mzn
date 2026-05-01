@@ -264,24 +264,73 @@ predicate direct_path_adjacent_sum_is_prime(
 predicate directed_path_sum_path_cells_in_region_is_prime_p(
     array[int, int] of var int: grid,
     array[int, int] of var int: regions,
-    array[int] of var bool: ns,
+    array[int, int] of var bool: path_nodes,
     set of int: region_vals
 ) = let {
-    array[int] of var int: regions_1d = array1d(regions);
-    set of int: idxs = index_set(regions_1d);
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
 } in (
-   forall(reg in region_vals)(
-       let {
-           array[idxs] of var bool: region_bools;
-           var int: sum_var;
-       } in (
-           forall(i in idxs)(
-               region_bools[i] = (regions_1d[i] == reg /\ ns[i])
-           ) 
-           /\ sum_var = conditional_sum_f(array1d(grid), region_bools, true)
-           /\ is_prime_p(sum_var)
-       )
-   )
+    assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes")
+    /\ 
+    assert(index_sets_agree(grid, path_nodes), "grid and path_nodes must have the same indexes")
+    /\
+    forall(reg in region_vals)(
+        let {
+            var int: sum_var;
+            array[int] of var bool: region_and_path = [
+                regions[r,c] = reg /\ path_nodes[r,c]
+                | r in rows, c in cols
+            ];
+        } in (
+            sum_var = conditional_sum_f(array1d(grid), region_and_path, true)
+            /\ is_prime_p(sum_var)
+        )
+    )
+);
+
+predicate directed_path_region_segments_p(
+    array[int, int] of var int: rs_labels, % region segment labels
+    array[int, int] of var int: regions, % sudoku regions
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: ns,
+    array[int] of var bool: es,
+    var int: source
+) = let {
+    set of int: rows = index_set_1of2(rs_labels);
+    set of int: cols = index_set_2of2(rs_labels);
+    int: n_cols = length(cols);
+    int: n_rows = length(rows);
+
+    set of int: e_idxs = index_set(es);
+    set of int: n_idxs = index_set(ns);
+    tuple(var int, var int): tsource = id_to_coords_f(source, regions);
+} in (
+    assert(index_sets_agree(rs_labels, regions), "grid and regions must have the same indexes")
+    /\
+    % source node is the start of the region sum line
+    rs_labels[tsource.1, tsource.2] = 1
+    % nodes not in the path have a region label of 0
+    /\ forall(k in n_idxs)(
+        not ns[k] -> let {
+            tuple(var int, var int): t1 = id_to_coords_f(k, regions);
+        } in (rs_labels[t1.1, t1.2] = 0)
+    )
+    % set region sum line labels for nodes connected by an edge
+    /\ forall(k in e_idxs)(
+        es[k] -> let {
+            int: n1 = from[k];
+            int: n2 = to[k];
+            tuple(var int, var int): t1 = id_to_coords_f(n1, regions);
+            tuple(var int, var int): t2 = id_to_coords_f(n2, regions);
+        } in (
+            % two connected cells in the same region belong to the same region sum line segment
+            (regions[t1.1, t1.2] == regions[t2.1, t2.2] -> rs_labels[t1.1, t1.2] == rs_labels[t2.1, t2.2]) 
+            /\
+            % two connected cells in different regions: the target cell (n2) is in the next region sum line segment
+            (regions[t1.1, t1.2] != regions[t2.1, t2.2] -> rs_labels[t2.1, t2.2] == rs_labels[t1.1, t1.2] + 1)
+        )
+    )
 );
 
 predicate directed_path_is_region_sum_line_p(
@@ -304,32 +353,44 @@ predicate directed_path_is_region_sum_line_p(
     tuple(var int, var int): tsource = id_to_coords_f(source, grid);
     var int: sum_var;
 } in (
-    rsl_labels[tsource.1, tsource.2] = 1
-    % set region sum line labels for nodes not in the path
-    /\ forall(k in n_idxs)(
-        not ns[k] -> let {
-            tuple(var int, var int): t1 = id_to_coords_f(k, grid);
-        } in (rsl_labels[t1.1, t1.2] = 0)
-    )
-    % set region sum line labels for nodes connected by an edge
-    /\ forall(k in e_idxs)(
-        es[k] -> let {
-            int: n1 = from[k];
-            int: n2 = to[k];
-            tuple(var int, var int): t1 = id_to_coords_f(n1, grid);
-            tuple(var int, var int): t2 = id_to_coords_f(n2, grid);
-        } in (
-            % two connected cells in the same region belong to the same region sum line segment
-            (regions[t1.1, t1.2] == regions[t2.1, t2.2] -> rsl_labels[t1.1, t1.2] == rsl_labels[t2.1, t2.2]) 
-            /\
-            % two connected cells in different regions: the target cell (n2) is in the next region sum line segment
-            (regions[t1.1, t1.2] != regions[t2.1, t2.2] -> rsl_labels[t2.1, t2.2] == rsl_labels[t1.1, t1.2] + 1)
-        )
-    )
+    assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes")
+    /\
+    directed_path_region_segments_p(rsl_labels, regions, from, to, ns, es, source)
     % region sum line
     /\ forall(label in 1..n_cols*n_rows)(
         exists(r in rows, c in cols)(rsl_labels[r,c]==label) ->
             sum_var = conditional_sum_f(array1d(grid), array1d(rsl_labels), label)
+    )
+);
+
+predicate directed_path_region_segments_is_nabner_line_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions, % sudoku regions
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: ns,
+    array[int] of var bool: es,
+    var int: source
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_cols = length(cols);
+    int: n_rows = length(rows);
+    array[rows, cols] of var 0..(n_cols*n_rows): rs_labels; % region segment labels
+
+    set of int: e_idxs = index_set(es);
+    set of int: n_idxs = index_set(ns);
+    tuple(var int, var int): tsource = id_to_coords_f(source, grid);
+    var int: sum_var;
+} in (
+    assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes")
+    /\
+    directed_path_region_segments_p(rs_labels, regions, from, to, ns, es, source)
+    % region segment nabner line
+    % no two cells anywhere on a path segment can have consecutive or equal values
+    /\ forall(r1 in rows, c1 in cols, r2 in rows, c2 in cols where is_after(r1,c1,r2,c2))(
+        rs_labels[r1,c1] != 0 /\ rs_labels[r2,c2] != 0 /\ rs_labels[r1,c1] == rs_labels[r2,c2] ->
+        grid[r1,c1] != grid[r2,c2] /\ not consecutive_p(grid[r1,c1], grid[r2,c2])
     )
 );
 
@@ -348,12 +409,65 @@ predicate direct_path_adjacent_dutch_whispers(
         es[k] -> let {
             int: n1 = from[k];
             int: n2 = to[k];
-            int: r1 = (n1 - 1) div n_cols;
-            int: c1 = (n1 - 1) mod n_cols;
-            int: r2 = (n2 - 1) div n_cols;
-            int: c2 = (n2 - 1) mod n_cols;
+            tuple(var int, var int): t1 = id_to_coords_f(n1, grid);
+            tuple(var int, var int): t2 = id_to_coords_f(n2, grid);
         } in (
-            abs(grid[r1,c1] - grid[r2,c2]) >= 4
+            abs(grid[t1.1,t1.2] - grid[t2.1,t2.2]) >= 4
+        )
+    )
+);
+
+predicate direct_path_adjacent_multiples_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: teleports,
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: es
+) = let {
+    set of int: e_idxs = index_set(es);
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_cols = length(cols);
+} in (
+    assert(index_sets_agree(grid, teleports), "grid and teleports must have the same indexes")
+    /\
+    forall(k in e_idxs)(
+        es[k] -> let {
+            int: n1 = from[k];
+            int: n2 = to[k];
+            tuple(var int, var int): t1 = id_to_coords_f(n1, grid);
+            tuple(var int, var int): t2 = id_to_coords_f(n2, grid);
+            var bool: tp_edge = teleports[t1.1, t1.2] != 0 /\ teleports[t2.1, t2.2] != 0 /\ teleports[t1.1, t1.2] = teleports[t2.1, t2.2]
+        } in (
+            not tp_edge -> multiples_p(grid[t1.1,t1.2], grid[t2.1,t2.2])
+        )
+    )
+);
+
+predicate direct_path_adjacent_whispers_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: teleports,
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: es,
+    var int: val
+) = let {
+    set of int: e_idxs = index_set(es);
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_cols = length(cols);
+} in (
+    assert(index_sets_agree(grid, teleports), "grid and teleports must have the same indexes")
+    /\
+    forall(k in e_idxs)(
+        es[k] -> let {
+            int: n1 = from[k];
+            int: n2 = to[k];
+            tuple(var int, var int): t1 = id_to_coords_f(n1, grid);
+            tuple(var int, var int): t2 = id_to_coords_f(n2, grid);
+            var bool: tp_edge = teleports[t1.1, t1.2] != 0 /\ teleports[t2.1, t2.2] != 0 /\ teleports[t1.1, t1.2] = teleports[t2.1, t2.2]
+        } in (
+            not tp_edge -> abs(grid[t1.1,t1.2] - grid[t2.1,t2.2]) >= val
         )
     )
 );
@@ -375,8 +489,11 @@ predicate directed_path_teleport_segments_p(
     set of int: e_idxs = index_set(es);
     tuple(var int, var int): tsource = id_to_coords_f(source, regions);
 } in (
+    assert(index_sets_agree(regions, teleports), "grid and teleports must have the same indexes")
+    /\
+    % first segment of the teleport segment region (starts at source)
     regions[tsource.1, tsource.2] = 1
-    % set region labels for nodes not in the path
+    % nodes not in the path are not in the teleport segment region
     /\ forall(k in n_idxs)(
         not ns[k] -> let {
             tuple(var int, var int): t1 = id_to_coords_f(k, regions);
@@ -389,17 +506,17 @@ predicate directed_path_teleport_segments_p(
             int: n2 = to[k];
             tuple(var int, var int): t1 = id_to_coords_f(n1, regions);
             tuple(var int, var int): t2 = id_to_coords_f(n2, regions);
-            var bool: is_tp = teleports[t1.1, t1.2] != 0 /\ teleports[t2.1, t2.2] != 0 /\ teleports[t1.1, t1.2] = teleports[t2.1, t2.2]
+            var bool: is_tp_edge = teleports[t1.1, t1.2] != 0 /\ teleports[t2.1, t2.2] != 0 /\ teleports[t1.1, t1.2] = teleports[t2.1, t2.2]
         } in (
-            (not is_tp -> regions[t1.1, t1.2] == regions[t2.1, t2.2]) /\
-            (is_tp -> regions[t2.1, t2.2] == regions[t1.1, t1.2] + 1)
+            (not is_tp_edge /\ regions[t1.1, t1.2] == regions[t2.1, t2.2]) \/
+            (is_tp_edge /\ regions[t2.1, t2.2] == regions[t1.1, t1.2] + 1)
         )
     )
 );
 
 predicate directed_path_teleport_segments_sum_p(
     array[int, int] of var int: grid,
-    array[int, int] of var int: teleports,    
+    array[int, int] of var int: teleports,
     array[int] of int: from,
     array[int] of int: to,
     array[int] of var bool: ns,
@@ -413,6 +530,8 @@ predicate directed_path_teleport_segments_sum_p(
     array[rows, cols] of var 0..(n_cols*n_rows): rsl_labels; % region sum lines labels
     var int: sum_var;
 } in (
+    assert(index_sets_agree(grid, teleports), "grid and teleports must have the same indexes")
+    /\
     directed_path_teleport_segments_p(rsl_labels, teleports, from, to, ns, es, source)
     % region sum line
     /\ forall(label in 1..2)(
@@ -450,14 +569,13 @@ predicate directed_path_teleport_renban_segments_p(
         sizes[id] = sum (r in rows, c in cols) (region_labels[r, c] = id)
     )
     % renban line
-    /\ forall(r in rows, c in cols)(
-        forall(r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
-            let {
-                var int: id1 = region_labels[r, c];
-                var int: id2 = region_labels[r2, c2];
-            } in
-            id1 != 0 /\ id2 != 0 /\ id1 == id2 -> grid[r,c] != grid[r2, c2] /\ abs(grid[r,c] - grid[r2, c2]) <= sizes[id1] - 1
-        )
+    /\ forall(r in rows, c in cols, r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
+        let {
+            var int: id1 = region_labels[r, c];
+            var int: id2 = region_labels[r2, c2];
+        } in
+        (id1 != 0 /\ id2 != 0 /\ id1 == id2) -> 
+        grid[r,c] != grid[r2, c2] /\ abs(grid[r,c] - grid[r2, c2]) <= sizes[id1] - 1
     )
 );
 
@@ -486,5 +604,122 @@ predicate directed_path_is_parity_line_p(
             in_edge -> different_parity_p(cell1, cell2)
         )
     )
+);
+
+predicate path_nodes_sum_of_first_cell_in_column_and_row_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var bool: nodes
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: min_r = min(rows);
+    int: min_c = min(cols);
+} in (
+    assert(index_sets_agree(grid, nodes), "grid and nodes must have the same indexes")
+    /\
+    forall(r in rows, c in cols)(
+        nodes[r,c] -> grid[r,c] = grid[min_r, c] + grid[r, min_c]
+    )
+);
+
+predicate directed_path_region_segments_visiting_order_p(
+    array[int, int] of var int: rsvo_labels, % region segment visiting order labels
+    array[int, int] of var int: regions, % sudoku regions
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: ns,
+    array[int] of var bool: es,
+    var int: source
+) = let {
+    set of int: rows = index_set_1of2(rsvo_labels);
+    set of int: cols = index_set_2of2(rsvo_labels);
+    int: n_cols = length(cols);
+    int: n_rows = length(rows);
+
+    set of int: e_idxs = index_set(es);
+    set of int: n_idxs = index_set(ns);
+    tuple(var int, var int): tsource = id_to_coords_f(source, regions);
+} in (
+    assert(index_sets_agree(rsvo_labels, regions), "grid and regions must have the same indexes")
+    /\
+    % source node is the start of the region segment visiting order
+    rsvo_labels[tsource.1, tsource.2] = 1
+    % nodes not in the path have a label of 0
+    /\ forall(k in n_idxs)(
+        not ns[k] -> let {
+            tuple(var int, var int): t1 = id_to_coords_f(k, regions);
+        } in (rsvo_labels[t1.1, t1.2] = 0)
+    )
+    % set region sum line labels for nodes connected by an edge
+    /\ forall(k in e_idxs)(
+        es[k] -> let {
+            int: n1 = from[k];
+            int: n2 = to[k];
+            tuple(var int, var int): t1 = id_to_coords_f(n1, regions);
+            tuple(var int, var int): t2 = id_to_coords_f(n2, regions);
+        } in (
+            % two connected cells in the same region then cell2 is labeled with cell1+1
+            (regions[t1.1, t1.2] == regions[t2.1, t2.2] -> rsvo_labels[t2.1, t2.2] == rsvo_labels[t1.1, t1.2] + 1) 
+            /\
+            % two connected cells in different regions: the target cell (n2) is in the next region sum line segment
+            (regions[t1.1, t1.2] != regions[t2.1, t2.2] -> rsvo_labels[t2.1, t2.2] == 1)
+        )
+    )
+);
+
+predicate directed_path_region_segments_index_line_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions, % sudoku regions
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: ns,
+    array[int] of var bool: es,
+    var int: source
+) = let {
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_cols = length(cols);
+    int: n_rows = length(rows);
+    array[rows, cols] of var 0..(n_cols*n_rows): rs_labels; % region segment labels
+    array[rows, cols] of var 0..(n_cols*n_rows): visiting_order;
+
+    set of int: e_idxs = index_set(es);
+    set of int: n_idxs = index_set(ns);
+    tuple(var int, var int): tsource = id_to_coords_f(source, grid);
+    var int: sum_var;
+} in (
+    assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes")
+    /\
+    directed_path_region_segments_p(rs_labels, regions, from, to, ns, es, source)
+    /\
+    directed_path_region_segments_visiting_order_p(visiting_order, regions, from, to, ns, es, source)
+    % region segment is an index line
+    /\ forall(label in 1..n_cols*n_rows)(
+        exists(r in rows, c in cols)(rs_labels[r,c]==label) ->
+            forall(r in rows, c in cols where rs_labels[r,c]==label)(
+                let {
+                    var int: order = visiting_order[r,c];
+                    var int: val = grid[r,c];
+                } in exists(r2 in rows, c2 in cols where rs_labels[r2,c2]==label /\ visiting_order[r2,c2] = val)(
+                    grid[r2,c2] = order
+                )
+            )
+    )
+);
+
+predicate directed_path_visited_sums_to_x_p(
+    array[int] of var int: cell_values,
+    array[int] of var bool: nodes,
+    var int: sum_var
+) = let {
+    set of int: idxs = index_set(cell_values);
+} in (
+    assert(index_sets_agree(cell_values, nodes), "cell_values and nodes must have the same indexes")
+    /\
+    if exists(i in idxs)(nodes[i]) then
+        sum_var = conditional_sum_f(cell_values, nodes, true)
+    else
+        true
+    endif
 );
 

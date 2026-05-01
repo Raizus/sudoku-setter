@@ -82,9 +82,12 @@ import {
 	edgeInequalityInfo,
 	edgeMidLoopSegmentInfo,
 	edgeModuloInfo,
+	edgeParityInfo,
 	edgeProductInfo,
 	edgeSumInfo,
+	edgeWhispersInfo,
 	fillominoRegionBorderInfo,
+	forbiddenDoorsInfo,
 	oneWayDoorInfo,
 	orthogonallyConnectedRegionBorderInfo,
 	orthogonallyConnectedRegionSameRegionEdgeInfo,
@@ -153,8 +156,6 @@ import {
 	deconstructionInfo,
 	orthogonallyConnectedRegionsInfo
 } from './UndeterminedRegionsInfo/UndeterminedRegionsElementsInfo';
-import { directedPathTeleportRenbanSegmentsInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
-import { directedPathTeleportSegmentsSumInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
 import { mazeDirectedPathInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
 import { connectFourInfo } from './UndeterminedRegionsInfo/ConnectFourElementsInfo';
 import { galaxiesInfo } from './UndeterminedRegionsInfo/GalaxyElementsInfo';
@@ -340,7 +341,8 @@ import {
 	orthogonallyConnectedRegionsRegionSizeCellInfo,
 	countExactDistanceMatchCellInfo,
 	orthogonallyConnectedRegionsSmallestOrLargestInRegionInfo,
-	chaosConstructionSpotlightInfo
+	chaosConstructionSpotlightInfo,
+	directedPathMotionSensorInfo
 } from './SingleCellElementsInfo/SingleCellElementsInfo';
 import {
 	yinYangAdjacentSameShadeCountInfo,
@@ -383,6 +385,7 @@ import {
 	regionSumLineSourcesCellArrowsInfo
 } from './SingleCellMultiArrowElementsInfo';
 import {
+	directedPathVisitedRowColumnOrRegionSumsToXInfo,
 	forbiddenKnightSumInfo,
 	forbiddenOrthogonallyAdjacentSumInfo,
 	litsMaxTetrominoSumInfo,
@@ -394,8 +397,10 @@ import {
 	doublersInfo,
 	hotCellsInfo,
 	indexerCellsInfo,
+	mirrorCellsInfo,
 	negatorsInfo,
-	nexusInfo
+	nexusInfo,
+	nullifiersInfo
 } from './ValueModifierConstraintsElementsInfo';
 import { mazeWallInfo } from './CornerLineToolsElementsInfo';
 import { variableConstraintInfo } from './OtherConstraintsElementsInfo';
@@ -453,6 +458,8 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 
 	[TOOLS.DOUBLERS]: doublersInfo,
 	[TOOLS.NEGATORS]: negatorsInfo,
+	[TOOLS.NULLIFIERS]: nullifiersInfo,
+	[TOOLS.MIRROR_CELLS]: mirrorCellsInfo,
 	[TOOLS.NEXUS]: nexusInfo,
 	[TOOLS.INDEXER_CELLS]: indexerCellsInfo,
 	// [TOOLS.VAMPIRE_AND_PREY]: vampireAndPreyInfo,
@@ -494,8 +501,6 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.NORINORI_STAR_BATTLE]: norinoriStarBattleInfo,
 
 	[TOOLS.MAZE_DIRECTED_PATH]: mazeDirectedPathInfo,
-	[TOOLS.DIRECTED_PATH_TELEPORT_SEGMENTS_SUM]: directedPathTeleportSegmentsSumInfo,
-	[TOOLS.DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS]: directedPathTeleportRenbanSegmentsInfo,
 
 	[TOOLS.CONNECT_FOUR]: connectFourInfo,
 	[TOOLS.SHADED_ROW_COLUMN_BOX_COUNTERS]: shadedRowCollumnBoxCountersInfo,
@@ -586,6 +591,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.DIRECTED_PATH_START]: directedPathStartInfo,
 	[TOOLS.DIRECTED_PATH_END]: directedPathEndInfo,
 	[TOOLS.TELEPORT]: teleportInfo,
+	[TOOLS.DIRECTED_PATH_MOTION_SENSOR]: directedPathMotionSensorInfo,
 
 	[TOOLS.CONNECT_FOUR_YELLOW]: connectFourYellowInfo,
 	[TOOLS.CONNECT_FOUR_RED]: connectFourRedInfo,
@@ -641,6 +647,8 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.EDGE_PRODUCT]: edgeProductInfo,
 	[TOOLS.EDGE_MODULO]: edgeModuloInfo,
 	[TOOLS.EDGE_FACTOR]: edgeFactorInfo,
+	[TOOLS.EDGE_PARITY]: edgeParityInfo,
+	[TOOLS.EDGE_WHISPERS]: edgeWhispersInfo,
 	[TOOLS.XY_DIFFERENCES]: xyDifferencesInfo,
 	[TOOLS.YIN_YANG_WHITE_KROPKI]: yinYangWhiteKropkiInfo,
 	[TOOLS.YIN_YANG_KROPKI]: yinYangKropkiInfo,
@@ -655,6 +663,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.EDGE_CAVE_ONE_OF_EACH]: edgeCaveOneOfEachInfo,
 
 	[TOOLS.ONE_WAY_DOOR]: oneWayDoorInfo,
+	[TOOLS.FORBIDDEN_DOORS]: forbiddenDoorsInfo,
 	[TOOLS.DIFFERENCE_INDEXING_ARROW]: differenceIndexingArrowInfo,
 	[TOOLS.SUM_INDEXING_ARROW]: sumIndexingArrowInfo,
 
@@ -879,6 +888,10 @@ registerElementInfo(TOOLS.RENBAN_CAGE, renbanCageInfo);
 registerElementInfo(TOOLS.CELL_CENTER_LOOP, cellCenterLoopInfo);
 registerElementInfo(TOOLS.LOOP_FORBIDDEN_ADJACENT_SUM, loopForbiddenAdjacentSumInfo);
 registerElementInfo(TOOLS.LOOP_VISITS_EVERY_CELL_EXCEPT_X, loopVisitsEveryCellExceptXInfo);
+registerElementInfo(
+	TOOLS.DIRECTED_PATH_VISITED_ROW_COLUMN_OR_REGION_SUMS_TO_X,
+	directedPathVisitedRowColumnOrRegionSumsToXInfo
+);
 registerElementInfo(
 	TOOLS.BALANCED_LOOP_SEGMENT_SUM_CENTER_OR_EDGE,
 	balancedLoopSegmentSumCenterOrEdgeInfo

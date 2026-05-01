@@ -70,6 +70,7 @@ export function createMinizincModel(puzzle: PuzzleAuxI, randomize_search: boolea
 	model.add(minizincDefs);
 	model.add(minizincLoopAndSnake);
 	model.add(minizincDirectPath);
+	
 	const max_val = Math.max(nrows, ncols);
 	let allowed_digits_str = `1..${max_val}`;
 

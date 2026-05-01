@@ -22,7 +22,8 @@ import {
 	type PuzzleModel
 } from '$src/lib/Solver/solver_utils';
 import {
-	countNeighbourConstraint,
+	countNeighbourPredicateConstraint,
+	countRegionNeighboursConstraint,
 	DEFAULT_CIRCLE_SHAPE,
 	DEFAULT_INVISIBLE_CAGE,
 	DEFAULT_SQUARE_SHAPE,
@@ -307,7 +308,7 @@ function countSameParityNeighbourConstraint(
 	c_id: string,
 	constraint: CellToolI
 ) {
-	return countNeighbourConstraint(
+	return countNeighbourPredicateConstraint(
 		model.puzzle.grid,
 		constraint,
 		VAR_2D_NAMES.BOARD,
@@ -347,7 +348,7 @@ function countWhispersNeighborCellsConstraint(
 	c_id: string,
 	constraint: CellToolI
 ) {
-	return countNeighbourConstraint(
+	return countNeighbourPredicateConstraint(
 		model.puzzle.grid,
 		constraint,
 		VAR_2D_NAMES.BOARD,
@@ -2170,7 +2171,7 @@ export const directedPathStartInfo: SquareCellElementInfo = {
 
 	meta: {
 		description: `A green triangle marks the start of a directed path.`,
-		tags: [],
+		tags: ['Rat run'],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
@@ -2211,7 +2212,7 @@ export const directedPathEndInfo: SquareCellElementInfo = {
 
 	meta: {
 		description: `A red hexagon marks the end of a directed path.`,
-		tags: [],
+		tags: ['Rat Run'],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
@@ -2259,20 +2260,71 @@ export const teleportInfo: SquareCellElementInfo = {
 	toolId: TOOLS.TELEPORT,
 
 	shape: {
-		type: SHAPE_TYPES.CIRCLE,
+		type: SHAPE_TYPES.CAGE,
 		strokeWidth: { editable: false, value: 0.04 },
 		stroke: { editable: false, value: 'yellow' },
-		r: { editable: false, value: 0.35 },
 		fill: { editable: false, value: 'none' }
 	},
 
 	meta: {
 		description: `Entering a yellow teleport will cause Finkz to be instantly transported to the other teleport. From there she can continue her journey. The teleports contain the same digit.`,
-		tags: [],
+		tags: ['Rat run'],
 		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
 	},
 
 	solver_func: teleportElement
+};
+
+function directedPathMotionSensorElement(model: PuzzleModel, element: ConstraintsElement) {
+	let out_str = '';
+	const constraints = element.constraints;
+	if (!constraints) return out_str;
+
+	const mod_constraints = element.negative_constraints;
+	const use_values = mod_constraints ? !!mod_constraints[TOOLS.USE_CELL_VALUES] : false;
+
+	const grid_name = use_values ? VAR_2D_NAMES.VALUES_GRID : VAR_2D_NAMES.BOARD;
+
+	const grid = model.puzzle.grid;
+	for (const constraint of Object.values(constraints)) {
+		const constraint_str = countRegionNeighboursConstraint(
+			grid,
+			constraint as CellToolI,
+			grid_name,
+			VAR_2D_NAMES.MAZE_DIRECTED_PATH,
+			true,
+			true
+		);
+		out_str += constraint_str;
+	}
+	return out_str;
+}
+
+export const directedPathMotionSensorInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
+
+	toolId: TOOLS.DIRECTED_PATH_MOTION_SENSOR,
+	
+	negative_constraints: [
+		{
+			toolId: TOOLS.USE_CELL_VALUES,
+			description: 'Constraints use modified cell values instead of the cell digits.'
+		}
+	],
+
+	shape: {
+		...DEFAULT_CIRCLE_SHAPE,
+		stroke: { editable: false, value: 'pink' },
+		strokeDasharray: { editable: false, value: 0.08 }
+	},
+
+	meta: {
+		description: `The digit on a pink dashed circle indicates how many of the (up to 9) cells immediately surrounding the sensor are visited by a directed path. The sensor itself is counted, if visited.`,
+		tags: ['Rat run'],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	},
+
+	solver_func: directedPathMotionSensorElement
 };
 
 function nurikabeIslandProductOfSumAndSizeElement(model: PuzzleModel, element: ConstraintsElement) {
