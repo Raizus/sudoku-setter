@@ -27,7 +27,8 @@ import {
 	yinYangEqualSumCageInfo,
 	oneCellSumOfOthersCageInfo,
 	digitCountingCageInfo,
-	renbanCageInfo
+	renbanCageInfo,
+	adjacentNonConsecutiveCageInfo
 } from './CageElementsInfo/CageToolsElementsInfo';
 import {
 	centerPMInfo,
@@ -887,6 +888,7 @@ registerElementInfo(
 registerElementInfo(TOOLS.CHAOS_CONSTRUCTION_SPOTLIGHT, chaosConstructionSpotlightInfo);
 registerElementInfo(TOOLS.CORNER_COUNTING_CIRCLES, cornerCountingCirclesInfo);
 registerElementInfo(TOOLS.RENBAN_CAGE, renbanCageInfo);
+registerElementInfo(TOOLS.ADJACENT_NON_CONSECUTIVE_CAGE, adjacentNonConsecutiveCageInfo);
 registerElementInfo(TOOLS.CELL_CENTER_LOOP, cellCenterLoopInfo);
 registerElementInfo(TOOLS.LOOP_FORBIDDEN_ADJACENT_SUM, loopForbiddenAdjacentSumInfo);
 registerElementInfo(TOOLS.LOOP_VISITS_EVERY_CELL_EXCEPT_X, loopVisitsEveryCellExceptXInfo);

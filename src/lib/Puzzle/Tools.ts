@@ -528,6 +528,7 @@ export enum CAGE_CONSTRAINTS {
 	VAULTED_CAGE = 'Vaulted Cage',
 	VAULTED_KILLER_CAGE = 'Vaulted Killer Cage',
 	RENBAN_CAGE = 'Renban Cage',
+	ADJACENT_NON_CONSECUTIVE_CAGE = 'Adjacent Non Consecutive Cage',
 
 	YIN_YANG_ANTITHESIS_KILLER_CAGE = 'Yin Yang Antithesis Killer Cage',
 	YIN_YANG_BREAKEVEN_KILLER_CAGE = 'Yin Yang Breakeven Killer Cage',

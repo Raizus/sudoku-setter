@@ -8,6 +8,7 @@ import {
 	allDifferentConstraint,
 	cellsFromCoords,
 	cellsToGridVarsStr,
+	cellToGridVarName,
 	groupConstraintsByValue,
 	simpleElementFunction,
 	VAR_2D_NAMES,
@@ -603,6 +604,49 @@ export const renbanCageInfo: SquareCellElementInfo = {
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
 		return simpleCageElement(model, element, 'renban');
+	}
+};
+
+function adjacentNonConsecutiveCageConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CageToolI
+) {
+	const cells = cellsFromCoords(model.puzzle.grid, constraint.cells);
+	const cells_set = new Set(cells);
+
+	let out_str = '';
+
+	for (const cell of cells_set) {
+		const adj = grid.getOrthogonallyAdjacentCells(cell);
+		const var1 = cellToGridVarName(cell, VAR_2D_NAMES.BOARD);
+		for (const cell2 of adj) {
+			if (!cells_set.has(cell2)) continue;
+			const var2 = cellToGridVarName(cell2, VAR_2D_NAMES.BOARD);
+			out_str += `constraint not consecutive_p(${var1}, ${var2});\n`;
+		}
+	}
+
+	return out_str;
+}
+
+export const adjacentNonConsecutiveCageInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_CAGE_OPTIONS,
+
+	toolId: TOOLS.ADJACENT_NON_CONSECUTIVE_CAGE,
+
+	shape: DEFAULT_CAGE_SHAPE,
+
+	meta: {
+		description: 'No two orthogonally adjacent cells on a cage can contain consecutive digits.',
+		usage: typableCageUsage(),
+		tags: [],
+		categories: typableCageDefaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, adjacentNonConsecutiveCageConstraint);
 	}
 };
 
