@@ -444,6 +444,34 @@ predicate direct_path_adjacent_multiples_p(
     )
 );
 
+predicate direct_path_adjacent_whispers_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: teleports,
+    array[int] of int: from,
+    array[int] of int: to,
+    array[int] of var bool: es,
+    var int: val
+) = let {
+    set of int: e_idxs = index_set(es);
+    set of int: rows = index_set_1of2(grid);
+    set of int: cols = index_set_2of2(grid);
+    int: n_cols = length(cols);
+} in (
+    assert(index_sets_agree(grid, teleports), "grid and teleports must have the same indexes")
+    /\
+    forall(k in e_idxs)(
+        es[k] -> let {
+            int: n1 = from[k];
+            int: n2 = to[k];
+            tuple(var int, var int): t1 = id_to_coords_f(n1, grid);
+            tuple(var int, var int): t2 = id_to_coords_f(n2, grid);
+            var bool: tp_edge = teleports[t1.1, t1.2] != 0 /\ teleports[t2.1, t2.2] != 0 /\ teleports[t1.1, t1.2] = teleports[t2.1, t2.2]
+        } in (
+            not tp_edge -> abs(grid[t1.1,t1.2] - grid[t2.1,t2.2]) >= val
+        )
+    )
+);
+
 predicate directed_path_teleport_segments_p(
     array[int, int] of var int: regions,
     array[int, int] of var int: teleports,
@@ -541,14 +569,13 @@ predicate directed_path_teleport_renban_segments_p(
         sizes[id] = sum (r in rows, c in cols) (region_labels[r, c] = id)
     )
     % renban line
-    /\ forall(r in rows, c in cols)(
-        forall(r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
-            let {
-                var int: id1 = region_labels[r, c];
-                var int: id2 = region_labels[r2, c2];
-            } in
-            id1 != 0 /\ id2 != 0 /\ id1 == id2 -> grid[r,c] != grid[r2, c2] /\ abs(grid[r,c] - grid[r2, c2]) <= sizes[id1] - 1
-        )
+    /\ forall(r in rows, c in cols, r2 in rows, c2 in cols where is_after(r,c,r2,c2))(
+        let {
+            var int: id1 = region_labels[r, c];
+            var int: id2 = region_labels[r2, c2];
+        } in
+        (id1 != 0 /\ id2 != 0 /\ id1 == id2) -> 
+        grid[r,c] != grid[r2, c2] /\ abs(grid[r,c] - grid[r2, c2]) <= sizes[id1] - 1
     )
 );
 

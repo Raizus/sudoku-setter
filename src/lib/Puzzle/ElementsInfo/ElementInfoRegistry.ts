@@ -156,7 +156,6 @@ import {
 	deconstructionInfo,
 	orthogonallyConnectedRegionsInfo
 } from './UndeterminedRegionsInfo/UndeterminedRegionsElementsInfo';
-import { directedPathTeleportRenbanSegmentsInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
 import { mazeDirectedPathInfo } from './UndeterminedRegionsInfo/MazeDirectedPathElementsInfo';
 import { connectFourInfo } from './UndeterminedRegionsInfo/ConnectFourElementsInfo';
 import { galaxiesInfo } from './UndeterminedRegionsInfo/GalaxyElementsInfo';
@@ -398,6 +397,7 @@ import {
 	doublersInfo,
 	hotCellsInfo,
 	indexerCellsInfo,
+	mirrorCellsInfo,
 	negatorsInfo,
 	nexusInfo,
 	nullifiersInfo
@@ -459,6 +459,7 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.DOUBLERS]: doublersInfo,
 	[TOOLS.NEGATORS]: negatorsInfo,
 	[TOOLS.NULLIFIERS]: nullifiersInfo,
+	[TOOLS.MIRROR_CELLS]: mirrorCellsInfo,
 	[TOOLS.NEXUS]: nexusInfo,
 	[TOOLS.INDEXER_CELLS]: indexerCellsInfo,
 	// [TOOLS.VAMPIRE_AND_PREY]: vampireAndPreyInfo,
@@ -500,7 +501,6 @@ export const elementInfoRegistry: Record<string, SquareCellElementInfo> = {
 	[TOOLS.NORINORI_STAR_BATTLE]: norinoriStarBattleInfo,
 
 	[TOOLS.MAZE_DIRECTED_PATH]: mazeDirectedPathInfo,
-	[TOOLS.DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS]: directedPathTeleportRenbanSegmentsInfo,
 
 	[TOOLS.CONNECT_FOUR]: connectFourInfo,
 	[TOOLS.SHADED_ROW_COLUMN_BOX_COUNTERS]: shadedRowCollumnBoxCountersInfo,

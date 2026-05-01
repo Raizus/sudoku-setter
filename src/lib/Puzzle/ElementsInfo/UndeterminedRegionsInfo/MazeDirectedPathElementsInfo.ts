@@ -1,6 +1,7 @@
 import {
 	addHeader,
 	format_2d_array,
+	get_grid_name,
 	groupConstraintsByValue,
 	PuzzleModel,
 	VAR_1D_NAMES,
@@ -20,7 +21,7 @@ import {
 	isCellOnGrid,
 	type GridCoordI
 } from '$src/lib/utils/SquareCellGridCoords';
-import type { AbstractElementInfo, SquareCellElementInfo } from '../../ElementInfo';
+import type { SquareCellElementInfo } from '../../ElementInfo';
 import type { Grid } from '../../Grid/Grid';
 import type {
 	CellToolI,
@@ -67,6 +68,21 @@ function directedPathAdjacentCellsAreMultiplesConstraint(toolId: TOOLID): string
 	return out_str;
 }
 
+function directedPathAdjacentCellsWhispersConstraint(
+	element: ConstraintsElement,
+	toolId: TOOLID
+): string {
+	let out_str: string = '';
+	const grid_name = get_grid_name(element.negative_constraints);
+	const edges_from = VAR_1D_NAMES.DIRECTED_PATH_EDGES_FROM;
+	const edges_to = VAR_1D_NAMES.DIRECTED_PATH_EDGES_TO;
+	const edges_bools = VAR_1D_NAMES.DIRECTED_PATH_EDGES_BOOLS;
+	const teleports = VAR_2D_NAMES.DIRECTED_PATH_TELEPORTS;
+	out_str += `constraint direct_path_adjacent_whispers_p(${grid_name}, ${teleports}, ${edges_from}, ${edges_to}, ${edges_bools}, 5);\n`;
+	out_str = addHeader(out_str, `${toolId}`);
+	return out_str;
+}
+
 function directedPathIsRegionSumLineConstraint(toolId: TOOLID): string {
 	let out_str: string = '';
 	const board = VAR_2D_NAMES.BOARD;
@@ -88,9 +104,7 @@ function directedPathRegionSegmentAbstractConstraint(
 ): string {
 	let out_str: string = '';
 
-	const mod_constraints = element.negative_constraints;
-	const use_values = mod_constraints ? !!mod_constraints[TOOLS.USE_CELL_VALUES] : false;
-	const grid_name = use_values ? VAR_2D_NAMES.VALUES_GRID : VAR_2D_NAMES.BOARD;
+	const grid_name = get_grid_name(element.negative_constraints);
 
 	const edges_from = VAR_1D_NAMES.DIRECTED_PATH_EDGES_FROM;
 	const edges_to = VAR_1D_NAMES.DIRECTED_PATH_EDGES_TO;
@@ -124,7 +138,16 @@ function directedPathTeleportRenbanSegmentsConstraint(puzzle: PuzzleAuxI, toolId
 	const used_regions = puzzle.grid.getUsedRegions();
 	const reg_sizes = [...used_regions].map((reg) => puzzle.grid.getRegion(reg).length);
 	const max_reg_size = reg_sizes.length ? Math.max(...reg_sizes) : grid.nCols * grid.nRows;
-	out_str += `constraint directed_path_teleport_renban_segments_p(board, teleports, dpath_from, dpath_to, dpath_ns, dpath_es, dpath_source, ${max_reg_size});\n`;
+
+	const board = VAR_2D_NAMES.BOARD;
+	const teleports = VAR_2D_NAMES.DIRECTED_PATH_TELEPORTS;
+	const edges_from = VAR_1D_NAMES.DIRECTED_PATH_EDGES_FROM;
+	const edges_to = VAR_1D_NAMES.DIRECTED_PATH_EDGES_TO;
+	const nodes_bools = VAR_1D_NAMES.DIRECTED_PATH_NODES_BOOLS;
+	const edges_bools = VAR_1D_NAMES.DIRECTED_PATH_EDGES_BOOLS;
+	const dpath_source = 'dpath_source';
+
+	out_str += `constraint directed_path_teleport_renban_segments_p(${board}, ${teleports}, ${edges_from}, ${edges_to}, ${nodes_bools}, ${edges_bools}, ${dpath_source}, ${max_reg_size});\n`;
 
 	out_str = addHeader(out_str, `${toolId}`);
 	return out_str;
@@ -206,10 +229,22 @@ function directedPathModifierConstraints(model: PuzzleModel, element: Constraint
 		out_str += directedPathTeleportSegmentsSumConstraint(tool);
 	}
 
+	tool = TOOLS.DIRECTED_PATH_TELEPORT_SEGMENTS_RENBAN_LINE;
+	const directed_path_teleport_segments_renban = !!element.negative_constraints[tool];
+	if (directed_path_teleport_segments_renban) {
+		out_str += directedPathTeleportRenbanSegmentsConstraint(puzzle, tool);
+	}
+
 	tool = TOOLS.DIRECTED_PATH_ADJACENT_CELLS_ARE_MULTIPLES;
 	const directed_path_adjacent_are_multiples = !!element.negative_constraints[tool];
 	if (directed_path_adjacent_are_multiples) {
 		out_str += directedPathAdjacentCellsAreMultiplesConstraint(tool);
+	}
+
+	tool = TOOLS.DIRECTED_PATH_ADJACENT_CELLS_WHISPERS;
+	const directed_path_adjacent_cells_whispers = !!element.negative_constraints[tool];
+	if (directed_path_adjacent_cells_whispers) {
+		out_str += directedPathAdjacentCellsWhispersConstraint(element, tool);
 	}
 
 	tool = TOOLS.DIRECTED_PATH_REGION_SEGMENTS_NABNER_LINE;
@@ -738,6 +773,11 @@ export const mazeDirectedPathInfo: SquareCellElementInfo = {
 				'The correct path will be a valid Dutch Whisper line - adjacent digits along the path must have a difference of at least 4.'
 		},
 		{
+			toolId: TOOLS.DIRECTED_PATH_ADJACENT_CELLS_WHISPERS,
+			description:
+				'The values of any two physically adjacent cells along the path (ie; not separated by teleportation) must have a difference of at least 5.'
+		},
+		{
 			toolId: TOOLS.DIRECTED_PATH_IS_PARITY_LINE,
 			description:
 				'The correct path will be a valid alternating parity line - ie: any pair of adjacent cells along the path must contain one even digit and one odd digit.'
@@ -761,6 +801,11 @@ export const mazeDirectedPathInfo: SquareCellElementInfo = {
 			toolId: TOOLS.DIRECTED_PATH_TELEPORT_SEGMENTS_SUM,
 			description:
 				'The sum of the digits on the path before teleporting must equal the sum of the digits on the path after teleporting.'
+		},
+		{
+			toolId: TOOLS.DIRECTED_PATH_TELEPORT_SEGMENTS_RENBAN_LINE,
+			description:
+				'The directed path is formed of one or more segments. Any uses of teleports will divide the path up into physically separate segments, ie; if a teleport is used, the current path segment ends at the entry teleport, and a new separate path segment begins at the matching exit teleport. Any path segment must function as a renban; it must consist entirely of a set of non-repeating, consecutive digits, which can be arranged in any order along the path segment.'
 		},
 		{
 			toolId: TOOLS.DIRECTED_PATH_ADJACENT_CELLS_ARE_MULTIPLES,
@@ -787,18 +832,4 @@ export const mazeDirectedPathInfo: SquareCellElementInfo = {
 	},
 
 	solver_func: mazeDirectedPathElement
-};
-
-export const directedPathTeleportRenbanSegmentsInfo: AbstractElementInfo = {
-	toolId: TOOLS.DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS,
-
-	meta: {
-		description:
-			'The directed path is formed of one or more segments. Any uses of teleports will divide the path up into physically separate segments, ie; if a teleport is used, the current path segment ends at the entry teleport, and a new separate path segment begins at the matching exit teleport. Any path segment must function as a renban; it must consist entirely of a set of non-repeating, consecutive digits, which can be arranged in any order along the path segment.',
-		tags: [],
-		categories: [
-			TOOL_CATEGORIES.GLOBAL_CONSTRAINT,
-			TOOL_CATEGORIES.GLOBAL_DIRECTED_PATH_CONSTRAINTS
-		]
-	}
 };

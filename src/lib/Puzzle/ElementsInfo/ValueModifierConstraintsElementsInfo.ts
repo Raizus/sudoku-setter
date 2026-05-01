@@ -136,6 +136,44 @@ export const nullifiersInfo: SquareCellElementInfo = {
 	solver_func: nullifiersElement
 };
 
+function mirrorCellsElement(model: PuzzleModel, element: ConstraintsElement) {
+	const puzzle = model.puzzle;
+	const grid = puzzle.grid;
+	const tool = element.tool_id;
+
+	const all_cells = grid.getAllCells();
+	if (all_cells.some((cell) => cell.outside)) {
+		console.warn(`${tool} not implemented when there are cells outside the grid.`);
+		return '';
+	}
+
+	const grid_name = VAR_2D_NAMES.MIRROR_CELLS;
+
+	let out_str: string = `\n% ${tool}\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var bool: ${grid_name};\n`;
+
+	out_str += exactlyNPerRowColumnRegion(puzzle, 1, true, grid_name);
+	// only one of each digit
+	out_str += `\nconstraint one_of_each_digit_p(board, ${grid_name}, ALLOWED_DIGITS);\n`;
+	// values grid
+	out_str += `array[int, int] of var int: values_grid = mirror_cells_value_grid_f(board, ${grid_name});\n`;
+
+	return out_str;
+}
+
+export const mirrorCellsInfo: SquareCellElementInfo = {
+	toolId: TOOLS.MIRROR_CELLS,
+
+	meta: {
+		description:
+			"Each row, column and box contains exactly one mirror cell. Mirror cells may not contain teleports. The value of a mirror cell equals the digit in that cell subtracted from 10. Eg: a 2 in a mirror cell is 'mirrored' on the 1-9 scale, and has a value of 8. Every mirror cell contains a different digit.",
+		tags: [],
+		categories: [TOOL_CATEGORIES.LOCAL_ELEMENT, TOOL_CATEGORIES.VALUE_MODIFIER_CONSTRAINT]
+	},
+
+	solver_func: mirrorCellsElement
+};
+
 function hotCellsElement(model: PuzzleModel, element: ConstraintsElement) {
 	const puzzle = model.puzzle;
 	const grid = puzzle.grid;

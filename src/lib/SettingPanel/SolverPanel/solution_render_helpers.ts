@@ -233,6 +233,8 @@ function setOtherHighlights(json: JsonT, grid: Grid) {
 		VAR_2D_NAMES.HOT_CELLS,
 		VAR_2D_NAMES.DOUBLERS,
 		VAR_2D_NAMES.NEGATORS,
+		VAR_2D_NAMES.NULLIFIERS,
+		VAR_2D_NAMES.MIRROR_CELLS,
 		VAR_2D_NAMES.INDEXER_CELLS_GRID,
 		VAR_2D_NAMES.CELL_CENTER_LOOP,
 		VAR_2D_NAMES.MAZE_DIRECTED_PATH,
@@ -618,7 +620,6 @@ function setDirectedPathPenMarks(json: JsonT, puzzle_model: PuzzleModel) {
 	if (json === undefined) return;
 	const dpath_es = json['directed_path_edges_bools'] as boolean[] | undefined;
 	if (dpath_es === undefined) return;
-	console.log(dpath_es);
 
 	const edge_list = puzzle_model.edge_list;
 	const grid = puzzle_model.puzzle.grid;

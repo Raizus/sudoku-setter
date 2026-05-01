@@ -80,6 +80,7 @@ export enum VALUE_MODIFIER_CONSTRAINTS {
 	DOUBLERS = 'Doublers',
 	NEGATORS = 'Negators',
 	NULLIFIERS = 'Nullifiers',
+	MIRROR_CELLS = 'Mirror Cells',
 	HOT_CELLS = 'Hot Cells',
 	COLD_CELLS = 'Cold Cells',
 	DECREMENT_FOUNTAIN = 'Decrement Fountain',
@@ -153,15 +154,20 @@ export enum GLOBAL_YIN_YANG_CONSTRAINTS {
 
 export enum GLOBAL_DIRECTED_PATH_CONSTRAINTS {
 	MAZE_DIRECTED_PATH = 'Directed Path',
-	DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME = 'Directed Path Adjacent Cells Sum Is Prime',
+
 	DIRECTED_PATH_SUM_OF_CELLS_PER_REGION_IS_PRIME = 'Directed Path Sum Of Cells Per Region Is Prime',
+
+	DIRECTED_PATH_ADJACENT_CELLS_SUM_IS_PRIME = 'Directed Path Adjacent Cells Sum Is Prime',
 	DIRECTED_PATH_ADJACENT_CELLS_DUTCH_WHISPERS = 'Directed Path Adjacent Cells Dutch Whispers',
+	DIRECTED_PATH_ADJACENT_CELLS_WHISPERS = 'Directed Path Adjacent Cells Whispers',
 	DIRECTED_PATH_ADJACENT_CELLS_ARE_MULTIPLES = 'Directed Path Adjacent Cells Are Multiples',
+	DIRECTED_PATH_IS_PARITY_LINE = 'Directed Path Is Parity Line',
+
+	DIRECTED_PATH_TELEPORT_SEGMENTS_SUM = 'Directed Path Teleport Segments Sum',
+	DIRECTED_PATH_TELEPORT_SEGMENTS_RENBAN_LINE = 'Directed Path Teleport Segments Renban Line',
+
 	DIRECTED_PATH_IS_REGION_SUM_LINE = 'Directed Path Is Region Sum Line',
 	DIRECTED_PATH_REGION_SEGMENTS_NABNER_LINE = 'Directed Path Region Segments Nabner Line',
-	DIRECTED_PATH_TELEPORT_SEGMENTS_SUM = 'Directed Path Teleport Segments Sum',
-	DIRECTED_PATH_TELEPORT_RENBAN_SEGMENTS = 'Directed Path Teleport Renban Segments',
-	DIRECTED_PATH_IS_PARITY_LINE = 'Directed Path Is Parity Line',
 	DIRECTED_PATH_REGION_SEGMENTS_INDEX_LINE = 'Directed Path Region Segments Index Line'
 }
 
