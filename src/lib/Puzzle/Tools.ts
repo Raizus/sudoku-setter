@@ -70,6 +70,7 @@ export enum NEGATIVE_AND_MODIFIER_CONSTRAINTS {
 	ALL_CELLS_BELONG_TO_A_REGION = 'All Cells Belong To A Region',
 	NO_REPEATS_IN_REGIONS = 'No Repeats In Regions',
 	RENBAN_REGIONS = 'Renban Regions',
+	CELLS_IN_REGION_HAVE_SAME_PARITY_AS_REGION_SIZE = 'Cells In Region Have Same Parity As Region Size',
 
 	PATH_NODES_SUM_OF_FIRST_CELL_IN_COLUMN_AND_ROW = 'Path Nodes Sum Of First Cell In Column And Row',
 }

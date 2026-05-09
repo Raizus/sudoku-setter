@@ -1061,11 +1061,13 @@ export const coloredGroupsInfo: SquareCellElementInfo = {
 };
 
 function orthogonallyConnectedRegionsElement(model: PuzzleModel, element: ConstraintsElement) {
-	const grid_name = VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGIONS;
-	const grid_name_2 = VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGION_SIZES;
-	let out_str = `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name};\n`;
-	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${grid_name_2};\n`;
-	out_str += `constraint orthogonally_connected_regions_p(${grid_name}, ${grid_name_2});\n`;
+	const grid_name = VAR_2D_NAMES.BOARD;
+	const connected_regions = VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGIONS;
+	const region_sizes = VAR_2D_NAMES.ORTHOGONALLY_CONNECTED_REGION_SIZES;
+
+	let out_str = `array[ROW_IDXS, COL_IDXS] of var int: ${connected_regions};\n`;
+	out_str += `array[ROW_IDXS, COL_IDXS] of var int: ${region_sizes};\n`;
+	out_str += `constraint orthogonally_connected_regions_p(${connected_regions}, ${region_sizes});\n`;
 
 	const modifiers = element.negative_constraints;
 	if (!modifiers) return out_str;
@@ -1073,15 +1075,19 @@ function orthogonallyConnectedRegionsElement(model: PuzzleModel, element: Constr
 	const all_cells_belong_in_a_region = !!modifiers[TOOLS.ALL_CELLS_BELONG_TO_A_REGION];
 	const no_repeats_in_regions = !!modifiers[TOOLS.NO_REPEATS_IN_REGIONS];
 	const renban_regions = !!modifiers[TOOLS.RENBAN_REGIONS];
+	const cells_in_region_have_parity_equal_to_region_size = !!modifiers[TOOLS.CELLS_IN_REGION_HAVE_SAME_PARITY_AS_REGION_SIZE];
 
 	if (all_cells_belong_in_a_region) {
-		out_str += `constraint orthogonally_connected_regions_no_0_p(${grid_name});\n`;
+		out_str += `constraint orthogonally_connected_regions_no_0_p(${connected_regions});\n`;
 	}
 	if (no_repeats_in_regions) {
-		out_str += `constraint no_repeats_in_regions_p(${VAR_2D_NAMES.BOARD}, ${grid_name});\n`;
+		out_str += `constraint no_repeats_in_regions_p(${grid_name}, ${connected_regions});\n`;
 	}
 	if (renban_regions) {
-		out_str += `constraint renban_regions_except_region_0_p(${VAR_2D_NAMES.BOARD}, ${grid_name}, ${grid_name_2});\n`;
+		out_str += `constraint renban_regions_except_region_0_p(${grid_name}, ${connected_regions}, ${region_sizes});\n`;
+	}
+	if (cells_in_region_have_parity_equal_to_region_size) {
+		out_str += `constraint cells_in_region_have_same_parity_as_region_size_p(${grid_name}, ${connected_regions}, ${region_sizes});\n`;
 	}
 
 	return out_str;
@@ -1103,6 +1109,11 @@ export const orthogonallyConnectedRegionsInfo: SquareCellElementInfo = {
 			toolId: TOOLS.RENBAN_REGIONS,
 			description:
 				'Each region contains a consecutive set of non-repeating digits, e.g: {2,3,4},{1},{4,5,6,7,8,9}. The digits do not have to start at 1 and may appear in any order within the region.'
+		},
+		{
+			toolId: TOOLS.CELLS_IN_REGION_HAVE_SAME_PARITY_AS_REGION_SIZE,
+			description:
+				'All cells in a group have the same parity as N, its group size. As an example, a group of size 4 is a group of 4 orthogonally connected cells that are all even.'
 		}
 	],
 

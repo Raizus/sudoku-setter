@@ -823,6 +823,11 @@ predicate multisets_equal_p(array[int] of var int: arr1, array[int] of var int: 
 predicate all_equal_to_p(array[int] of var int: arr, var int: val) =
     forall(v in arr)(v = val);
 
+
+predicate same_parity_p(var int: val1, var int: val2) = (
+    (val1 mod 2) == (val2 mod 2)
+);
+
 predicate different_parity_p(var int: val1, var int: val2) = (
     (val1 mod 2) != (val2 mod 2)
 );
@@ -5943,12 +5948,12 @@ predicate orthogonally_connected_region_sizes_p(
         count(array1d(regions), regions[r1,c1]) = region_sizes[r1, c1]
     )
 
-    % Distance-based region pruning
-    /\ forall(r in rows, c in cols, r2 in rows, c2 in cols where is_after(r,c,r2,c2)) (
-        (
-            (abs(r2-r) + abs(c2-c) >= region_sizes[r,c])
-        ) -> regions[r, c] != regions[r2,c2]
-    )
+    % Distance-based region pruning (TODO will not work if region 0 is not orthogonally connected)
+    % /\ forall(r in rows, c in cols, r2 in rows, c2 in cols where regions[r,c] != 0 /\ is_after(r,c,r2,c2)) (
+    %     (
+    %         (abs(r2-r) + abs(c2-c) >= region_sizes[r,c])
+    %     ) -> regions[r, c] != regions[r2,c2]
+    % )
 );
 
 predicate colored_groups_p(
@@ -5971,7 +5976,7 @@ predicate colored_groups_p(
     )
 );
 
-predicate regions_of_size_1_p(
+predicate regions_of_size_1_except_region_0_p(
     array[int, int] of var int: regions,
     array[int, int] of var int: region_sizes,
 ) = let {
@@ -5979,7 +5984,7 @@ predicate regions_of_size_1_p(
     set of int: cols = index_set_2of2(regions);
 } in (
     assert(index_sets_agree(regions, region_sizes), "regions and region_sizes must have the same indexes")
-    /\ forall(r in rows, c in cols)(
+    /\ forall(r in rows, c in cols where regions[r,c] != 0)(
         region_sizes[r,c] == 1 -> (
             forall(t in orth_adjacent_idxs(r,c) where in_bounds_2d(t.1, t.2, regions))(
                 regions[r,c] != regions[t.1, t.2]
@@ -5988,7 +5993,7 @@ predicate regions_of_size_1_p(
     )    
 );
 
-predicate regions_of_size_2_p(
+predicate regions_of_size_2_except_region_0_p(
     array[int, int] of var int: regions,
     array[int, int] of var int: region_sizes,
 ) = let {
@@ -5998,14 +6003,14 @@ predicate regions_of_size_2_p(
     assert(index_sets_agree(regions, region_sizes), "regions and region_sizes must have the same indexes")
     
     % all cells with a value equal to 2 must have exactly 1 neighbour equal to it
-    /\ forall(r in rows, c in cols where region_sizes[r,c] == 2)(
+    /\ forall(r in rows, c in cols where regions[r,c] != 0 /\ region_sizes[r,c] == 2)(
         sum(t in orth_adjacent_idxs(r,c) where in_bounds_2d(t.1, t.2, regions))(
             regions[r,c] == regions[t.1,t.2]
         ) == 1
     )
 
     % all cells with a value greater than 2 must have at least a neighbour equal to it
-    /\ forall(r in rows, c in cols where region_sizes[r,c] > 2)(
+    /\ forall(r in rows, c in cols where regions[r,c] != 0 /\ region_sizes[r,c] > 2)(
         exists(t in orth_adjacent_idxs(r,c) where in_bounds_2d(t.1, t.2, regions))(
             regions[r,c] == regions[t.1,t.2]
         )
@@ -6023,8 +6028,8 @@ predicate orthogonally_connected_regions_p(
     assert(index_sets_agree(regions, region_sizes), "regions and region_sizes must have the same indexes")
     /\ unrooted_connected_regions_not_0_p(regions)
     /\ orthogonally_connected_region_sizes_p(regions, region_sizes)
-    /\ regions_of_size_1_p(regions, region_sizes)
-    /\ regions_of_size_2_p(regions, region_sizes)
+    /\ regions_of_size_1_except_region_0_p(regions, region_sizes) 
+    /\ regions_of_size_2_except_region_0_p(regions, region_sizes) 
 );
 
 predicate orthogonally_connected_regions_no_0_p(
@@ -6091,6 +6096,21 @@ predicate renban_regions_except_region_0_p(
             /\ abs_diff <= region_sizes[r2,c2] - 1 
             /\ grid[r,c] != grid[r2,c2]
         )
+    )
+);
+
+predicate cells_in_region_have_same_parity_as_region_size_p(
+    array[int, int] of var int: grid,
+    array[int, int] of var int: regions,
+    array[int, int] of var int: region_sizes,
+) = let {
+    set of int: rows = index_set_1of2(regions);
+    set of int: cols = index_set_2of2(regions);
+} in (
+    assert(index_sets_agree(grid, regions), "grid and regions must have the same indexes")
+    /\ assert(index_sets_agree(regions, region_sizes), "regions and region_sizes must have the same indexes")
+    /\ forall(r in rows, c in cols)(
+        regions[r,c] != 0 -> same_parity_p(grid[r,c], region_sizes[r,c])
     )
 );
 
