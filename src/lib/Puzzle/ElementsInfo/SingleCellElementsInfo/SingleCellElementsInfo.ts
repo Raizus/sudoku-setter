@@ -1719,6 +1719,45 @@ export const countCirclesLoopOrNonLoopCellsInfo: SquareCellElementInfo = {
 	solver_func: countingCirclesLoopOrNonLoopCellsElement
 };
 
+function loopRegionSegmentSizeConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: CellToolI
+) {
+	const coords = constraint.cell;
+	const cell = grid.getCell(coords.r, coords.c);
+	if (!cell) return '';
+
+	const region = cell.region;
+	const cell_var = cellToVarName(cell);
+	const region_cells = grid.getRegion(region);
+
+	const segment_var = cellToGridVarName(cell, VAR_2D_NAMES.CELL_CENTER_LOOP_REGION_SEGMENTS);
+	const segment_vars = cellsToGridVarsStr(region_cells, VAR_2D_NAMES.CELL_CENTER_LOOP_REGION_SEGMENTS);
+
+	const out_str = `constraint path_region_segment_size_p(${cell_var}, ${segment_var}, ${segment_vars});\n`;
+	return out_str;
+}
+
+export const loopRegionSegmentSizeInfo: SquareCellElementInfo = {
+	inputOptions: DEFAULT_SINGLE_CELL_OPTIONS,
+
+	toolId: TOOLS.LOOP_REGION_SEGMENT_SIZE,
+	shape: DEFAULT_CIRCLE_SHAPE,
+
+	meta: {
+		description:
+			'A loop must pass straight though a circle and a digit in a circle indicates the size of that loop region segment.',
+		tags: [],
+		categories: DEFAULT_SINGLE_CELL_SHAPE_CATEGORIES
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, loopRegionSegmentSizeConstraint);
+	}
+};
+
 export const twilightCaveFillominoClueInfo: SquareCellElementInfo = {
 	inputOptions: DEFAULT_VALUED_SINGLE_CELL_OPTIONS,
 

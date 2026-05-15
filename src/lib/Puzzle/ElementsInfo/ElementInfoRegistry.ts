@@ -89,6 +89,7 @@ import {
 	edgeWhispersInfo,
 	fillominoRegionBorderInfo,
 	forbiddenDoorsInfo,
+	nonLoopSegmentInfo,
 	oneWayDoorInfo,
 	orthogonallyConnectedRegionBorderInfo,
 	orthogonallyConnectedRegionSameRegionEdgeInfo,
@@ -343,7 +344,8 @@ import {
 	countExactDistanceMatchCellInfo,
 	orthogonallyConnectedRegionsSmallestOrLargestInRegionInfo,
 	chaosConstructionSpotlightInfo,
-	directedPathMotionSensorInfo
+	directedPathMotionSensorInfo,
+	loopRegionSegmentSizeInfo
 } from './SingleCellElementsInfo/SingleCellElementsInfo';
 import {
 	yinYangAdjacentSameShadeCountInfo,
@@ -892,6 +894,9 @@ registerElementInfo(TOOLS.ADJACENT_NON_CONSECUTIVE_CAGE, adjacentNonConsecutiveC
 registerElementInfo(TOOLS.CELL_CENTER_LOOP, cellCenterLoopInfo);
 registerElementInfo(TOOLS.LOOP_FORBIDDEN_ADJACENT_SUM, loopForbiddenAdjacentSumInfo);
 registerElementInfo(TOOLS.LOOP_VISITS_EVERY_CELL_EXCEPT_X, loopVisitsEveryCellExceptXInfo);
+registerElementInfo(TOOLS.NON_LOOP_EDGE, nonLoopSegmentInfo);
+registerElementInfo(TOOLS.LOOP_REGION_SEGMENT_SIZE, loopRegionSegmentSizeInfo);
+
 registerElementInfo(
 	TOOLS.DIRECTED_PATH_VISITED_ROW_COLUMN_OR_REGION_SUMS_TO_X,
 	directedPathVisitedRowColumnOrRegionSumsToXInfo

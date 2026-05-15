@@ -614,6 +614,35 @@ predicate edge_mid_loop_segment_p(
     endif
 );
 
+predicate non_loop_edge_p(
+    tuple(int, int): coord1,
+    tuple(int, int): coord2,
+    array[int, int] of var bool: edges_h,
+    array[int, int] of var bool: edges_v
+) = let {
+    set of int: rows_v = index_set_1of2(edges_v);
+    set of int: cols_v = index_set_2of2(edges_v);
+    set of int: rows_h = index_set_1of2(edges_h);
+    set of int: cols_h = index_set_2of2(edges_h);
+
+    int: r1 = coord1.1; int: c1 = coord1.2;
+    int: r2 = coord2.1; int: c2 = coord2.2;
+} in (
+    assert(test_orth_adjacent_2d(r1, c1, r2, c2), "coord1 and coord2 must be adjacent")
+    /\
+    if c1 = c2 then
+        % Vertical adjacency: coord1 is above coord2 (r1 < r2)
+        % The connecting edge is edges_v[min(r1,r2), c1]
+        assert(r1<r2, "coord1 must be above coord2")
+        /\ not edges_v[r1, c1]
+    else
+        % Horizontal adjacency: coord1 is left of coord2 (c1 < c2)
+        % The connecting edge is edges_h[r1, min(c1,c2)]
+        assert(c1<c2, "coord1 must be to the left of coord2")
+        /\ not edges_h[r1, c1]
+    endif
+);
+
 predicate loop_cells_p(
     array[int] of var bool: loop_nodes,
 ) = (
@@ -858,6 +887,55 @@ predicate count_snake_cells_p(
     sum(snake_vars) = cell_var
 );
 
+% if coords represent a region, then labels will label each connected segment
+% of that region,
+predicate path_region_segment_p(
+    array[int] of tuple(int,int): coords, % coords in the same region
+    array[int] of var int: labels, 
+    array[int, int] of var bool: nodes,
+    array[int, int] of var bool: edges_h,
+    array[int, int] of var bool: edges_v,    
+) = let {
+    set of int: idxs = index_set(coords);
+    int: n = length(idxs);
+} in (
+    assert(index_sets_agree(coords, labels), "coords and labels must have the same indexes.")
+    /\
+    forall(i in idxs)(
+        labels[i] >= 0 /\ labels[i] <= n
+    )
+    /\
+    % non-path cells labeled with 0, path cells not 0
+    forall(i in idxs)(
+        let {
+            tuple(int, int): n1 = coords[i];
+            int: r1 = n1.1; int: c1 = n1.2;
+        } in (
+            (not nodes[r1,c1] /\ labels[i] = 0)
+            \/
+            (nodes[r1,c1] /\ labels[i] > 0)
+        )
+    )
+    /\
+    % if two cells are adjacent they have the same label
+    forall(i in idxs, j in idxs where j > i)(
+        let {
+            tuple(int, int): n1 = coords[i];
+            tuple(int, int): n2 = coords[j];
+            int: r1 = n1.1; int: c1 = n1.2;
+            int: r2 = n2.1; int: c2 = n2.2;
+            var bool: v_adj = (vert_adjacent_2d(r1, c1, r2, c2) /\ r1 < r2 /\ in_bounds_2d(r1,c1,edges_v) /\ edges_v[r1,c1]);
+            var bool: h_adj = (horiz_adjacent_2d(r1, c1, r2, c2) /\ c1 < c2 /\ in_bounds_2d(r1,c1,edges_h) /\ edges_h[r1,c1]);
+        } in (
+            (v_adj \/ h_adj) -> labels[i] == labels[j]
+        )
+    )
+    /\
+    % Requires that i precedes i+1 in the array x for all positive i 
+    % (to avoid permutating label values)
+    seq_precede_chain(labels)
+);
+
 predicate path_same_segment_sum_in_region_p(
     array[int] of tuple(int,int): coords, % coords in the same region
     array[int] of var int: values, % grid values
@@ -878,35 +956,7 @@ predicate path_same_segment_sum_in_region_p(
     % has at least 2 segments
     exists(i in idxs)(labels[i] == 1) /\ exists(i in idxs)(labels[i] == 2)
     /\
-    % Requires that i precedes i+1 in the array x for all positive i 
-    % (to avoid permutating label values)
-    seq_precede_chain(labels)
-    /\
-    % non-path cells labeled with 0, path cells not 0
-    forall(i in idxs)(
-        let {
-            tuple(int, int): n1 = coords[i];
-            int: r1 = n1.1; int: c1 = n1.2;
-        } in (
-            (not nodes[r1,c1] /\ labels[i] = 0)
-            \/
-            (nodes[r1,c1] /\ labels[i] != 0)
-        )
-    )
-    /\
-    % if two cells are adjacent they have the same label
-    forall(i in idxs, j in idxs where j != i)(
-        let {
-            tuple(int, int): n1 = coords[i];
-            tuple(int, int): n2 = coords[j];
-            int: r1 = n1.1; int: c1 = n1.2;
-            int: r2 = n2.1; int: c2 = n2.2;
-            var bool: v_adj = (vert_adjacent_2d(r1, c1, r2, c2) /\ r1 < r2 /\ edges_v[r1,c1]);
-            var bool: h_adj = (horiz_adjacent_2d(r1, c1, r2, c2) /\ c1 < c2 /\ edges_h[r1,c1]);
-        } in (
-            (v_adj \/ h_adj) -> labels[i] == labels[j]
-        )
-    )
+    path_region_segment_p(coords, labels, nodes, edges_h, edges_v)
     % segment sum
     /\ forall(i in 1..n) (
         exists([labels[j] = i | j in idxs]) ->
@@ -914,3 +964,38 @@ predicate path_same_segment_sum_in_region_p(
     )
 );
 
+predicate path_region_segment_size_p(
+    var int: cell_var,
+    var int: segment_var,
+    array[int] of var int: segment_vars,
+) = (
+    segment_var != 0 -> count(segment_vars, segment_var) == cell_var
+);
+
+predicate path_segment_cells_not_co_prime_p(
+    array[int] of tuple(int,int): coords, % coords in the same region
+    array[int] of var int: values, % grid values
+    array[int, int] of var bool: nodes,
+    array[int, int] of var bool: edges_h,
+    array[int, int] of var bool: edges_v,
+) = let {
+    set of int: idxs = index_set(coords);
+    int: n = length(idxs);
+    set of int: rows = index_set_1of2(nodes);
+    set of int: cols = index_set_2of2(nodes);
+
+    var int: sum_var;
+    array[idxs] of var 0..n: labels;
+} in (
+    assert(index_sets_agree(coords, values), "coords and values must have the same indexes.")
+    /\
+    path_region_segment_p(coords, labels, nodes, edges_h, edges_v)
+    % segment sum
+    /\ forall(i in idxs, j in idxs where j > i) (
+        labels[i] != 0 /\ labels[j] != 0  /\ labels[i] == labels[j] -> (
+            forall(p in PRIMES_TILL_271)(
+                not (values[i] mod p == 0 /\ values[j] mod p == 0)
+            )
+        )
+    )
+);

@@ -24,7 +24,16 @@ import type { Grid } from '../Grid/Grid';
 import type { Cell } from '../Grid/Cell';
 import type { ParseOptions } from '$src/lib/Solver/value_parsing';
 import { combinations } from '$src/lib/utils/functionUtils';
-import { EDGE_R_1, typableEdgeDefaultCategories, DEFAULT_WHITE_CIRCLE, DEFAULT_GRAY_CIRCLE, edgeDefaultCategories, EDGE_STROKE_WIDTH_1, DEFAULT_BORDER_LINE, DEFAULT_BLACK_ARROW } from './EdgeElementsInfo/helpers';
+import {
+	EDGE_R_1,
+	typableEdgeDefaultCategories,
+	DEFAULT_WHITE_CIRCLE,
+	DEFAULT_GRAY_CIRCLE,
+	edgeDefaultCategories,
+	EDGE_STROKE_WIDTH_1,
+	DEFAULT_BORDER_LINE,
+	DEFAULT_BLACK_ARROW
+} from './EdgeElementsInfo/helpers';
 
 export function validateRatioValue(value: string, maxLength = 1): boolean {
 	const options: ValueValidatorOptions = {
@@ -1052,7 +1061,7 @@ export const oneWayDoorInfo: SquareCellElementInfo = {
 	meta: {
 		description:
 			'The path may only pass directly through a purple arrow if moving in the direction the arrow is pointing. An arrow always points to the smaller of the two digits it sits between.',
-		tags: ["Rat run"],
+		tags: ['Rat run'],
 		categories: typableEdgeDefaultCategories
 	},
 
@@ -1070,12 +1079,11 @@ export const forbiddenDoorsInfo: SquareCellElementInfo = {
 		type: SHAPE_TYPES.CROSS,
 		r: { editable: false, value: 0.1 },
 		strokeWidth: { editable: false, value: 0.05, lb: 0, ub: 1, step: 0.025 },
-		stroke: { editable: false, value: 'red' },
+		stroke: { editable: false, value: 'red' }
 	},
 
 	meta: {
-		description:
-			'The directed path may never pass through a red X.',
+		description: 'The directed path may never pass through a red X.',
 		tags: ['Rat run'],
 		categories: typableEdgeDefaultCategories
 	},
@@ -1330,5 +1338,52 @@ export const edgeMidLoopSegmentInfo: SquareCellElementInfo = {
 
 	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
 		return simpleElementFunction(model, element, edgeMidLoopConstraint);
+	}
+};
+
+function nonLoopEdgeConstraint(
+	model: PuzzleModel,
+	grid: Grid,
+	c_id: string,
+	constraint: EdgeToolI
+) {
+	const coords = constraint.cells;
+	const cells = cellsFromCoords(grid, coords);
+
+	const coord1 = `(${cells[0].r}, ${cells[0].c})`;
+	const coord2 = `(${cells[1].r}, ${cells[1].c})`;
+
+	const edges_h = VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_H;
+	const edges_v = VAR_2D_NAMES.CELL_CENTER_LOOP_EDGES_V;
+
+	const out_str = `constraint non_loop_edge_p(${coord1}, ${coord2}, ${edges_h}, ${edges_v});\n`;
+	return out_str;
+}
+
+export const nonLoopSegmentInfo: SquareCellElementInfo = {
+	inputOptions: {
+		type: HANDLER_TOOL_TYPE.EDGE
+	},
+
+	toolId: TOOLS.NON_LOOP_EDGE,
+
+	shape: {
+		type: SHAPE_TYPES.POLYGON,
+		n: { editable: false, value: 4 },
+		r: { editable: false, value: EDGE_R_1 },
+		strokeWidth: { editable: false, value: EDGE_STROKE_WIDTH_1, lb: 0, ub: 1, step: 0.025 },
+		stroke: { editable: false, value: 'black' },
+		fill: { editable: false, value: 'black' }
+	},
+
+	meta: {
+		description:
+			'The loop must not pass through a black diamond.',
+		tags: [],
+		categories: edgeDefaultCategories
+	},
+
+	solver_func: (model: PuzzleModel, element: ConstraintsElement) => {
+		return simpleElementFunction(model, element, nonLoopEdgeConstraint);
 	}
 };

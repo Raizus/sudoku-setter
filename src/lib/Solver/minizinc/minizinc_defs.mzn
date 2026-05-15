@@ -4,6 +4,13 @@
 % Defining poliominoes as as array of tuple coordinates, 
 % for all possible rotations and reflections, with the top-left cell as (0, 0).
 
+set of int: PRIMES_TILL_271 = {
+    2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 
+    79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 
+    167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 
+    257, 263, 269, 271
+};
+
 array[int] of array[int] of tuple(int, int): P3_I = [
     [(0, 0), (0, 1), (0, 2)],
     [(0, 0), (1, 0), (2, 0)],
@@ -940,13 +947,7 @@ predicate conditional_strictly_increasing_p(
     );
     
 predicate is_prime_p(var int: val) = let {
-    set of int: primes = {
-        2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 
-        79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 
-        167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 
-        257, 263, 269, 271
-    }
-} in member(primes, val);
+} in member(PRIMES_TILL_271, val);
  
 % Predicate to check if ms2 is a subset of ms1 (multiset subset)
 predicate subset_p(

@@ -36,6 +36,7 @@ export enum VAR_2D_NAMES {
 	CELL_CENTER_LOOP = 'cell_center_loop',
 	CELL_CENTER_LOOP_EDGES_H = 'cell_center_loop_edges_h',
 	CELL_CENTER_LOOP_EDGES_V = 'cell_center_loop_edges_v',
+	CELL_CENTER_LOOP_REGION_SEGMENTS = 'cell_center_loop_region_segments',
 	SNAKE = 'snake',
 	SNAKE_EDGES_H = 'snake_edges_h',
 	SNAKE_EDGES_V = 'snake_edges_v',

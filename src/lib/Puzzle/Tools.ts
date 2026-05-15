@@ -212,6 +212,7 @@ export enum GLOBAL_LOOP_CONSTRAINTS {
 	ADJACENT_CELLS_ALONG_LOOP_ARE_GERMAN_WHISPERS = 'Adjacent Cells Along Loop Are German Whispers',
 	LOOP_PARITY = 'Loop Parity',
 	LOOP_BOX_LOCAL_SUMS = 'Loop Box-Local Sums',
+	LOOP_REGION_SEGMENT_CELLS_NOT_CO_PRIME = 'Loop Region Segment Cells Not Co-Prime'
 }
 
 export enum GLOBAL_SNAKE_CONSTRAINTS {
@@ -259,6 +260,7 @@ export enum SIMPLE_SINGLE_CELL_CONSTRAINTS {
 	CELL_NOT_ON_THE_LOOP = 'Cell Not On The Loop',
 	COUNT_LOOP_NEIGHBOUR_CELLS = 'Count Loop Neighbour Cells',
 	COUNTING_CIRCLES_LOOP_OR_NON_LOOP_CELLS = 'Counting Circles Loop Or Non Loop Cells',
+	LOOP_REGION_SEGMENT_SIZE = 'Loop Region Segment Size',
 
 	SNAKE_ENDPOINT = 'Snake Endpoint',
 	SNAKE_CELL = 'Snake Cell',
@@ -391,7 +393,8 @@ export enum EDGE_CONSTRAINTS {
 	DIFFERENCE_INDEXING_ARROW = 'Difference Indexing Arrow',
 	SUM_INDEXING_ARROW = 'Sum Indexing Arrow',
 
-	EDGE_MID_LOOP_SEGMENT = 'Edge Mid Loop Segment'
+	EDGE_MID_LOOP_SEGMENT = 'Edge Mid Loop Segment',
+	NON_LOOP_EDGE = 'Non Loop Edge',
 }
 
 export enum CORNER_CONSTRAINTS {
