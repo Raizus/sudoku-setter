@@ -889,6 +889,7 @@ predicate count_snake_cells_p(
 
 % if coords represent a region, then labels will label each connected segment
 % of that region,
+% TODO: fix labeling (like connected region constraints)
 predicate path_region_segment_p(
     array[int] of tuple(int,int): coords, % coords in the same region
     array[int] of var int: labels, 
@@ -924,8 +925,8 @@ predicate path_region_segment_p(
             tuple(int, int): n2 = coords[j];
             int: r1 = n1.1; int: c1 = n1.2;
             int: r2 = n2.1; int: c2 = n2.2;
-            var bool: v_adj = (vert_adjacent_2d(r1, c1, r2, c2) /\ r1 < r2 /\ in_bounds_2d(r1,c1,edges_v) /\ edges_v[r1,c1]);
-            var bool: h_adj = (horiz_adjacent_2d(r1, c1, r2, c2) /\ c1 < c2 /\ in_bounds_2d(r1,c1,edges_h) /\ edges_h[r1,c1]);
+            var bool: v_adj = (vert_adjacent_2d(r1, c1, r2, c2) /\ r1 < r2 /\ edges_v[r1,c1]);
+            var bool: h_adj = (horiz_adjacent_2d(r1, c1, r2, c2) /\ c1 < c2 /\ edges_h[r1,c1]);
         } in (
             (v_adj \/ h_adj) -> labels[i] == labels[j]
         )
